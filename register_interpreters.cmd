@@ -3,17 +3,14 @@ rem  Useful for removing old interpreters that don't exist in git anymore, or sw
 
 : META_PATH=C:\Users\kevin\Documents\meta-tonka\
 Setlocal EnableDelayedExpansion
-pushd META
 bin\Python27\Scripts\Python.exe -c "reg = __import__('win32com.client').client.DispatchEx('Mga.MgaRegistrar'); [reg.UnregisterComponent(progid, 2) for progid in reg.GetAssociatedComponentsDisp('CyPhyML', 7, 2)]" || exit /b !ERRORLEVEL!
 bin\Python27\Scripts\Python.exe -c "reg = __import__('win32com.client').client.DispatchEx('Mga.MgaRegistrar'); [reg.UnregisterComponent(progid, 1) for progid in reg.GetAssociatedComponentsDisp('CyPhyML', 7, 1)]" || exit /b !ERRORLEVEL!
 bin\Python27\Scripts\Python.exe -c "import sys; import os.path; filename=r'generated\CyPhyML\models\CyPhyML.mta'; not os.path.isfile(filename) and sys.exit(0); reg = __import__('win32com.client').client.DispatchEx('Mga.MgaRegistrar'); reg.RegisterParadigmFromDataDisp('MGA=' + os.path.abspath(filename), 1)" || exit /b !ERRORLEVEL!
 %windir%\SysWOW64\reg add HKLM\Software\META /v META_PATH /t REG_SZ /d "%~dp0\" /f || exit /b !ERRORLEVEL!
-if exist "src\bin\CPMDecorator.dll" regsvr32 /s "src\bin\CPMDecorator.dll" || exit /b !ERRORLEVEL!
-if exist "src\WorkflowDecorator\bin\Release\WorkflowDecorator.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\WorkflowDecorator\bin\Release\WorkflowDecorator.dll" || exit /b !ERRORLEVEL!
-popd
-rem TODO: register more Decorators?
 if exist "src\CyPhyComponentFidelitySelector\bin\Release\CyPhyComponentFidelitySelector.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\CyPhyComponentFidelitySelector\bin\Release\CyPhyComponentFidelitySelector.dll" || exit /b !ERRORLEVEL!
 if exist "src\CyPhyGUIs\bin\Release\CyPhyGUIs.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase /tlb "src\CyPhyGUIs\bin\Release\CyPhyGUIs.dll" || exit /b !ERRORLEVEL!
+if exist "src\bin\CPMDecorator.dll" %windir%\SysWOW64\regsvr32 /s "src\bin\CPMDecorator.dll" || exit /b !ERRORLEVEL!
+if exist "src\WorkflowDecorator\bin\Release\WorkflowDecorator.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\WorkflowDecorator\bin\Release\WorkflowDecorator.dll" || exit /b !ERRORLEVEL!
 if exist "src\bin\CyPhyAddOn.dll" %windir%\SysWOW64\regsvr32 /s "src\bin\CyPhyAddOn.dll" || exit /b !ERRORLEVEL!
 if exist "src\ComponentLibraryManagerAddOn\bin\Release\ComponentLibraryManagerAddOn.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\ComponentLibraryManagerAddOn\bin\Release\ComponentLibraryManagerAddOn.dll" || exit /b !ERRORLEVEL!
 if exist "src\CyPhyDecoratorAddon\bin\Release\CyPhyDecoratorAddon.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\CyPhyDecoratorAddon\bin\Release\CyPhyDecoratorAddon.dll" || exit /b !ERRORLEVEL!
