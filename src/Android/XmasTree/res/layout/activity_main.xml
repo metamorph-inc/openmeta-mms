@@ -1,0 +1,185 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
+
+        <TextView
+            android:id="@+id/bustv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginEnd="100dp"
+            android:text="Bus Connection"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ToggleButton
+            android:id="@+id/busButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onBusButton"
+            android:text="ToggleButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </LinearLayout>
+    
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="OFF"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="ON"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Blink"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+
+        
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED0" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED0off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led0 off" />
+            <RadioButton android:id="@+id/LED0on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led0 on" />
+            <RadioButton android:id="@+id/LED0blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led0 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED1" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED1off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led1 off" />
+            <RadioButton android:id="@+id/LED1on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led1 on" />
+            <RadioButton android:id="@+id/LED1blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led1 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED2" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED2off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led2 off" />
+            <RadioButton android:id="@+id/LED2on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led2 on" />
+            <RadioButton android:id="@+id/LED2blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led2 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED3" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED3off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led3 off" />
+            <RadioButton android:id="@+id/LED3on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led3 on" />
+            <RadioButton android:id="@+id/LED3blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led3 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED4" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED4off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led4 off" />
+            <RadioButton android:id="@+id/LED4on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led4 on" />
+            <RadioButton android:id="@+id/LED4blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led4 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED5" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED5off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led5 off" />
+            <RadioButton android:id="@+id/LED5on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led5 on" />
+            <RadioButton android:id="@+id/LED5blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led5 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED6" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED6off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led6 off" />
+            <RadioButton android:id="@+id/LED6on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led6 on" />
+            <RadioButton android:id="@+id/LED6blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led6 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED7" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED7off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led7 off" />
+            <RadioButton android:id="@+id/LED7on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led7 on" />
+            <RadioButton android:id="@+id/LED7blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led7 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED8" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED8off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led8 off" />
+            <RadioButton android:id="@+id/LED8on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led8 on" />
+            <RadioButton android:id="@+id/LED8blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led8 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED9" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED9off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led9 off" />
+            <RadioButton android:id="@+id/LED9on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led9 on" />
+            <RadioButton android:id="@+id/LED9blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led9 blink" />
+        </TableRow>
+
+
+        <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content" >
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:text="LED10" android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioButton android:id="@+id/LED10off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:checked="true" android:tag="led10 off" />
+            <RadioButton android:id="@+id/LED10on"  android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led10 on" />
+            <RadioButton android:id="@+id/LED10blink" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:tag="led10 blink" />
+        </TableRow>
+        
+    </TableLayout>
+
+</LinearLayout>

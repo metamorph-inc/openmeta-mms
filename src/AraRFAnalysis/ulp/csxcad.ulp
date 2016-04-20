@@ -1,0 +1,424 @@
+/*
+ * Eagle to CSXCAD exporter
+ *
+ * Exports Eagle boards and library packages into CSXCAD format for OpenEMS simulations.
+ *
+ * Author:  Sandor Szilvasi <sszilvasi@metamorphsoftware.com>
+ * Version: 0.1
+ *
+ * Copyright (c) 2014, MetaMorph Software Inc.
+ * All rights reserved.
+ */
+
+#require 6.0500
+
+#usage "en: <b>Export to CSXCAD</b>"
+        "<p>Converts a board into CSXCAD geometry format for OpenEMS.</p>"
+        "<p>Usage: RUN csxcad</p>"
+
+// Globals
+
+UL_PACKAGE g_package;
+string file_name;
+
+real e[]; // elevation (z-coordinate of layer bottoms)
+real h[]; // height (z-height of layers)
+
+real xmin = 1e6, xmax = -1e6, xd = 1.0;
+real ymin = 1e6, ymax = -1e6, yd = 1.0;
+real zmin = 0, zmax = 0.56, zd = 0.1; // FIXME
+
+// -------------------- Low-level CSXCAD functions ------------------ //
+
+int indent = 0;
+string indentString = "    ";
+void iprintf(string s)
+{
+    for (int i = 0; i < indent; i++)
+    {
+        printf("%s", indentString   );
+    }
+    printf(s);
+}
+
+int poly_idx;
+real poly_x[], poly_y[];
+real poly_e, poly_h;
+
+void PrintPoly(int p)
+{
+    printf("\t\t\t\t\t<LinPoly Priority=\"%d\" Elevation=\"%f\" Length=\"%f\" NormDir=\"2\">\n", p, poly_e, poly_h);
+    for (int i = 0; i < poly_idx; i++)
+    {
+        printf("\t\t\t\t\t\t<Vertex X1=\"%f\" X2=\"%f\"></Vertex>\n", poly_x[i], poly_y[i]);
+    }
+    printf("\t\t\t\t\t</LinPoly>\n");
+}
+
+real wire_corner_x;
+real wire_corner_y;
+// scale vector to w / 2 and rotate 90 degrees
+void ScaleAndRotate90(real x1, real y1, real x2, real y2, real w)
+{
+    real s = w / sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1));
+    wire_corner_x = x1 - s * (y2 - y1);
+    wire_corner_y = y1 + s * (x2 - x1);
+}
+
+int wire_idx;
+real wire_x[], wire_y[];
+real wire_e, wire_h, wire_w;
+
+// NOTE: arrays are passed as global variables
+void PrintWire(int p)
+{
+    for (int i = 0; i < wire_idx-1; i++)
+    {
+        printf("\t\t\t\t\t<Box Priority=\"%d\">\n", p);
+        ScaleAndRotate90(wire_x[i], wire_y[i], wire_x[i+1], wire_y[i+1], wire_w / 2);
+        printf("\t\t\t\t\t\t<P1 X=\"%f\" Y=\"%f\" Z=\"%f\"></P1>\n", wire_corner_x, wire_corner_y, wire_e);
+        ScaleAndRotate90(wire_x[i+1], wire_y[i+1], wire_x[i], wire_y[i], wire_w / 2);
+        printf("\t\t\t\t\t\t<P2 X=\"%f\" Y=\"%f\" Z=\"%f\"></P2>\n", wire_corner_x, wire_corner_y, wire_e + wire_h);
+        printf("\t\t\t\t\t</Box>\n");
+
+        //if (i > 0)
+        {
+            printf("\t\t\t\t\t<Cylinder Priority=\"%d\" Radius=\"%f\">\n", p, wire_w / 2);
+            printf("\t\t\t\t\t\t<P1 X=\"%f\" Y=\"%f\" Z=\"%f\"></P1>\n", wire_x[i], wire_y[i], wire_e);
+            printf("\t\t\t\t\t\t<P2 X=\"%f\" Y=\"%f\" Z=\"%f\"></P2>\n", wire_x[i], wire_y[i], wire_e + wire_h);
+            printf("\t\t\t\t\t</Cylinder>\n");
+
+            printf("\t\t\t\t\t<Cylinder Priority=\"%d\" Radius=\"%f\">\n", p, wire_w / 2);
+            printf("\t\t\t\t\t\t<P1 X=\"%f\" Y=\"%f\" Z=\"%f\"></P1>\n", wire_x[i+1], wire_y[i+1], wire_e);
+            printf("\t\t\t\t\t\t<P2 X=\"%f\" Y=\"%f\" Z=\"%f\"></P2>\n", wire_x[i+1], wire_y[i+1], wire_e + wire_h);
+            printf("\t\t\t\t\t</Cylinder>\n");
+        }
+    }
+}
+
+void PrintVia(UL_VIA v, int p)
+{
+    printf("\t\t\t\t\t<Cylinder Priority=\"%d\" Radius=\"%f\">\n", p, u2mm(v.diameter[v.start] / 2)); // FIXME: diamter might change per layer
+    printf("\t\t\t\t\t\t<P1 X=\"%f\" Y=\"%f\" Z=\"%f\"></P1>\n", u2mm(v.x), u2mm(v.y), e[LAYER_BOTTOM]);
+    printf("\t\t\t\t\t\t<P2 X=\"%f\" Y=\"%f\" Z=\"%f\"></P2>\n", u2mm(v.x), u2mm(v.y), e[LAYER_TOP] + h[LAYER_TOP]);
+    printf("\t\t\t\t\t</Cylinder>\n");
+}
+
+
+// -------------------- Low-level EAGLE functions ------------------ //
+
+// extracts polygon parameters into the poly_* global variables
+void ProcessPoly(UL_POLYGON P)
+{
+    int x0, y0;
+    int first = 1;
+    poly_idx = 0;
+    int ctr = 0;
+
+    switch (P.layer)
+    {
+        case LAYER_TOP:
+            poly_e = e[LAYER_TOP];
+            poly_h = h[LAYER_TOP];
+            break;
+        case LAYER_BOTTOM:
+            poly_e = e[LAYER_BOTTOM];
+            poly_h = h[LAYER_BOTTOM];
+            break;
+        default:
+            break;
+    }
+
+    // FIXME: negative polygons should be accounted for or filling should be used instead
+    P.contours(W)
+    {
+        if (first)
+        {
+            x0 = W.x1;
+            y0 = W.y1;
+        }
+
+        // process segment
+        poly_x[poly_idx] = u2mm(W.x1);
+        poly_y[poly_idx] = u2mm(W.y1);
+        poly_idx++;
+
+        if (first)
+        {
+            first = 0;
+        }
+        else if (W.x2 == x0 && W.y2 == y0)
+        {
+            first = 1;
+            return;
+        }
+    }
+}
+
+void ProcessWire(UL_WIRE W)
+{
+    wire_idx = 0;
+    int first = 1;
+
+    W.pieces(P)
+    {
+        if (first)
+        {
+            wire_x[wire_idx] = u2mm(P.x1);
+            wire_y[wire_idx] = u2mm(P.y1);
+            wire_idx++;
+            first = 0;
+        }
+
+        wire_x[wire_idx] = u2mm(P.x2);
+        wire_y[wire_idx] = u2mm(P.y2);
+        wire_idx++;
+    }
+
+    switch (W.layer)
+    {
+        case LAYER_TOP:
+            wire_e = e[LAYER_TOP];
+            wire_h = h[LAYER_TOP];
+            break;
+        case LAYER_BOTTOM:
+            wire_e = e[LAYER_BOTTOM];
+            wire_h = h[LAYER_BOTTOM];
+            break;
+        default:
+            break;
+    }
+
+    wire_w = u2mm(W.width);
+}
+
+
+// ------------------- High-level EAGLE functions ------------------ //
+
+void ProcessDimensions()
+{
+    if (board) board(B) B.wires(W)
+    {
+        if (W.layer == LAYER_DIMENSION)
+        {
+            W.pieces(P)
+            {
+                if (u2mm(P.x1) < xmin) xmin = u2mm(P.x1);
+                if (u2mm(P.y1) < ymin) ymin = u2mm(P.y1);
+                if (u2mm(P.x1) > xmax) xmax = u2mm(P.x1);
+                if (u2mm(P.y1) > ymax) ymax = u2mm(P.y1);
+            }
+        }
+    }
+
+    if (library)
+    {
+        UL_AREA A = g_package.area;
+
+        xmin = u2mm(A.x1);
+        ymin = u2mm(A.y1);
+        xmax = u2mm(A.x2);
+        ymax = u2mm(A.y2);
+    }
+
+}
+
+
+void Initialize()
+{
+    // Layers
+    e[LAYER_TOP] = 0.0;
+    e[LAYER_BOTTOM] = -0.56;
+    h[LAYER_TOP] = 0.1;
+    h[LAYER_BOTTOM] = 0.1;
+
+    // Grid
+    xmin = 1e6, xmax = -1e6, xd = 1.0;
+    ymin = 1e6, ymax = -1e6, yd = 1.0;
+    zmin = e[LAYER_BOTTOM], zmax = e[LAYER_TOP] + h[LAYER_TOP], zd = 0.1;
+
+    if (board) board(B)
+    {
+        ProcessDimensions();
+        file_name = strlwr(filesetext(B.name, ".xml"));
+    }
+    else if (library)
+    {
+        ProcessDimensions();
+        file_name = strlwr(g_package.name) + ".xml";
+    }
+    else
+    {
+        exit(1);
+    }
+}
+
+// ------------------- High-level CSXCAD functions ------------------ //
+
+void PrintHeader()
+{
+    printf("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n");
+    printf("<!--Eagle generated openEMS simulation file-->\n");
+    printf("<!--%s-->\n", file_name);
+}
+
+void PrintProperties()
+{
+    int priority = 100;
+    printf("\t\t<Properties>\n");
+
+    if (board)
+    {
+        board(B) B.signals(S)
+        {
+            printf("\t\t\t<Metal Name=\"%s\">\n", strlwr(filename(S.name)));
+            printf("\t\t\t\t<FillColor R=\"235\" G=\"148\" B=\"7\" a=\"255\"></FillColor>\n");
+            printf("\t\t\t\t<EdgeColor R=\"235\" G=\"148\" B=\"7\" a=\"255\"></EdgeColor>\n");
+            printf("\t\t\t\t<Primitives>\n");
+
+            S.polygons(P)
+            {
+                ProcessPoly(P);
+                PrintPoly(priority);
+            }
+
+            S.wires(W)
+            {
+                ProcessWire(W);
+                PrintWire(priority);
+            }
+
+            S.vias(V)
+            {
+                PrintVia(V, priority);
+            }
+
+            printf("\t\t\t\t</Primitives>\n");
+            printf("\t\t\t</Metal>\n");
+        }
+
+        real radius = 0.25;
+        printf("\t\t\t<Material Name=\"%s\">\n", "pcb");
+        printf("\t\t\t\t<FillColor R=\"85\" G=\"170\" B=\"0\" a=\"123\"></FillColor>\n");
+        printf("\t\t\t\t<EdgeColor R=\"12\" G=\"62\" B=\"153\" a=\"255\"></EdgeColor>\n");
+        printf("\t\t\t\t<Property Epsilon=\"4.88\" Kappa=\"0.0007\"></Property>\n");
+        printf("\t\t\t\t<Primitives>\n");
+        printf("\t\t\t\t\t<Box Priority=\"%d\">\n", priority-1);
+        printf("\t\t\t\t\t\t<P1 X=\"%f\" Y=\"%f\" Z=\"%f\"></P1>\n", xmin, ymin, e[LAYER_BOTTOM] + h[LAYER_BOTTOM]);
+        printf("\t\t\t\t\t\t<P2 X=\"%f\" Y=\"%f\" Z=\"%f\"></P2>\n", xmax, ymax, e[LAYER_TOP]);
+        printf("\t\t\t\t\t</Box>\n");
+        printf("\t\t\t\t</Primitives>\n");
+        printf("\t\t\t</Material>\n");
+    }
+
+    if (library)
+    {
+        printf("\t\t\t<Metal Name=\"%s\">\n", strlwr(g_package.name));
+        printf("\t\t\t\t<FillColor R=\"235\" G=\"148\" B=\"7\" a=\"255\"></FillColor>\n");
+        printf("\t\t\t\t<EdgeColor R=\"235\" G=\"148\" B=\"7\" a=\"255\"></EdgeColor>\n");
+        printf("\t\t\t\t<Primitives>\n");
+
+        g_package.polygons(P)
+        {
+            ProcessPoly(P);
+            PrintPoly(priority);
+        }
+
+        g_package.wires(W)
+        {
+            ProcessWire(W);
+            PrintWire(priority);
+        }
+
+        printf("\t\t\t\t</Primitives>\n");
+        printf("\t\t\t</Metal>\n");
+
+        real radius = 0.25;
+        printf("\t\t\t<Metal Name=\"%s\">\n", "feed-point");
+        printf("\t\t\t\t<FillColor R=\"255\" G=\"0\" B=\"0\" a=\"255\"></FillColor>\n");
+        printf("\t\t\t\t<EdgeColor R=\"255\" G=\"0\" B=\"0\" a=\"255\"></EdgeColor>\n");
+        printf("\t\t\t\t<Primitives>\n");
+        printf("\t\t\t\t\t<Sphere Priority=\"%d\" Radius=\"%f\">\n", priority, radius);
+        printf("\t\t\t\t\t\t<Center X=\"0\" Y=\"0\" Z=\"0\"></Center>\n");
+        printf("\t\t\t\t\t</Sphere>\n");
+        printf("\t\t\t\t</Primitives>\n");
+        printf("\t\t\t</Metal>\n");
+    }
+
+    printf("\t\t</Properties>\n");
+}
+
+void PrintGrid()
+{
+
+    real l;
+    printf("\t\t<RectilinearGrid DeltaUnit=\"0.001\" CoordSystem=\"0\">\n");
+    printf("\t\t\t<XLines>");
+    for (l = xmin; l < xmax; l += xd)
+    {
+        printf("%.2f, ", l);
+    }
+    printf("%.2f", l);
+    printf("</XLines>\n");
+
+    printf("\t\t\t<YLines>");
+    for (l = ymin; l < ymax; l += xd)
+    {
+        printf("%.2f, ", l);
+    }
+    printf("%.2f", l);
+    printf("</YLines>\n");
+
+    printf("\t\t\t<ZLines>");
+    for (l = zmin; l < zmax; l += (zmax-zmin)/4)
+    {
+        printf("%.2f, ", l);
+    }
+    printf("%.2f", l);
+    printf("</ZLines>\n");
+    printf("\t\t</RectilinearGrid>\n");
+}
+
+void PrintContStruct()
+{
+    printf("\t<ContinuousStructure CoordSystem=\"0\">\n");
+    PrintProperties();
+    PrintGrid();
+    printf("\t</ContinuousStructure>\n");
+}
+
+void ExportToCSXCAD()
+{
+    output(file_name, "wt")
+    {
+        PrintHeader();
+        printf("<openEMS>\n");
+        PrintContStruct();
+        printf("</openEMS>\n");
+    }
+}
+
+
+// ------------------------  Main ------------------------ //
+
+if (board)
+{
+    Initialize();
+    ExportToCSXCAD();
+    exit(0);
+}
+else if (library)
+{
+    library(L) L.packages(P)
+    {
+        g_package = P;
+        Initialize();
+        ExportToCSXCAD();
+    }
+    exit(0);
+}
+else
+{
+    dlgMessageBox(":This program can only be invoked from the board and library editors.");
+    exit(1);
+}

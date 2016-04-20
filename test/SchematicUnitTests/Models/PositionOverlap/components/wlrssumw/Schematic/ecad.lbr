@@ -1,0 +1,52 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="2_PIN_EIA0201" xmlns="eagle">
+          <smd name="1" x="-0.233" y="0" dx="0.215" dy="0.33" layer="1" stop="no" />
+          <smd name="2" x="0.233" y="0" dx="0.215" dy="0.33" layer="1" stop="no" />
+          <rectangle x1="-0.39375" y1="-0.2125" x2="-0.07875" y2="0.2175" layer="29" />
+          <rectangle x1="0.075" y1="-0.21875" x2="0.39" y2="0.21125" layer="29" />
+          <circle x="-0.95625" y="0" radius="0.0635" width="0.16" layer="21" />
+          
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="BIDIRECTIONAL_DIODE">
+          <wire x1="-1.27" y1="0" x2="0" y2="-2.54" width="0.254" layer="94" />
+          <wire x1="0" y1="-2.54" x2="1.27" y2="0" width="0.254" layer="94" />
+          <wire x1="1.27" y1="0" x2="-1.27" y2="0" width="0.254" layer="94" />
+          <pin name="C2" x="0" y="-7.62" visible="off" length="short" direction="pas" rot="R90" />
+          <pin name="C1" x="0" y="2.54" visible="off" length="short" direction="pas" rot="R270" />
+          
+          
+          <wire x1="0" y1="-2.54" x2="1.27" y2="-2.54" width="0.254" layer="94" />
+          <wire x1="1.27" y1="-2.54" x2="2.54" y2="-1.27" width="0.254" layer="94" />
+          <wire x1="0" y1="-2.54" x2="-1.27" y2="-2.54" width="0.254" layer="94" />
+          <wire x1="-1.27" y1="-2.54" x2="-2.54" y2="-3.81" width="0.254" layer="94" />
+          <wire x1="0" y1="-2.54" x2="-1.27" y2="-5.08" width="0.254" layer="94" />
+          <wire x1="-1.27" y1="-5.08" x2="1.27" y2="-5.08" width="0.254" layer="94" />
+          <wire x1="1.27" y1="-5.08" x2="0" y2="-2.54" width="0.254" layer="94" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="TEA10201V15A0" prefix="D">
+          <gates>
+            <gate name="G$1" symbol="BIDIRECTIONAL_DIODE" x="0" y="2.54" />
+          </gates>
+          <devices>
+            <device name="" package="2_PIN_EIA0201" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="C1" pad="1" />
+                <connect gate="G$1" pin="C2" pad="2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

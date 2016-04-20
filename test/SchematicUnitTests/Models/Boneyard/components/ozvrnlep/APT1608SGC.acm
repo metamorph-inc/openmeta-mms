@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="e7e04133-9d12-4bc1-90d0-bac73fb2c6bb" Name="APT1608SGC" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-63d88dd5-417d-4329-b3a4-0291301d62d5" Author="" Notes="" XPosition="371" YPosition="245" Name="EDAModel" ID="id-447f056d-6fd4-4ce8-86e5-efe9bebbc44b" Package="0603-LED-KINGBRIGHT" Device="" Library="ecad" DeviceSet="LED-0603-KINGBRIGHT" xmlns="">
+    <Pin ID="id-7fdae280-b0bb-4537-a59d-552534fc4733" PortMap="id-8446c119-a190-4c09-88c8-92cabd4fa2a4" Notes="" XPosition="25" Definition="" YPosition="25" Name="A" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="7.62" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-c8eb33e5-0bb2-4817-b54f-03d2d84ec64b" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="C" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="0" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </DomainModel>
+  <DomainModel xmlns:q2="spice" xsi:type="q2:SPICEModel" UsesResource="id-0f27f0ca-789e-4ba2-ab4c-52247af77d22" Author="" Notes="Created using SPICE Model CAT Module" XPosition="350" YPosition="578" Name="D_green_SPICEModel" Class="D:D_green" xmlns="">
+    <Pin ID="id-e1c8f997-eede-4975-8e85-473118e8a132" PortMap="id-8446c119-a190-4c09-88c8-92cabd4fa2a4" Notes="" XPosition="50" Definition="" YPosition="50" Name="ANODE" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Pin ID="id-843588b5-0cef-4df5-bb76-0a6e82199572" PortMap="" Notes="" XPosition="50" Definition="" YPosition="150" Name="CATHODE" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="1" />
+  </DomainModel>
+  <Property xmlns:q3="avm" xsi:type="q3:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-e61b1e36-a6d1-4126-9655-0a4fc1dadf2a" XPosition="287" YPosition="21" xmlns="">
+    <Value ID="id-e61b1e36-a6d1-4126-9655-0a4fc1dadf2a" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q3:FixedValue">
+        <Value>APT1608SGC</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency XPosition="161" YPosition="7" Name="APT1608SGC_datasheet.pdf" Path="doc\APT1608SGC_datasheet.pdf" Hash="" ID="id-8bdd077c-27db-4206-b3cd-36aa088103c0" Notes="" xmlns="" />
+  <ResourceDependency XPosition="550" YPosition="478" Name="SPICEModelFile" Path="Spice\LED.cir" Hash="" ID="id-0f27f0ca-789e-4ba2-ab4c-52247af77d22" Notes="Derived from 'C:\Users\Will\Desktop\LED.cir'.&#xA;" xmlns="" />
+  <ResourceDependency XPosition="777" YPosition="70" Name="APT1608SGC.mdown" Path="doc\APT1608SGC.mdown" Hash="" ID="id-7d2709ec-e1a5-4551-80b3-e0d68c4dc961" Notes="" xmlns="" />
+  <ResourceDependency XPosition="420" YPosition="91" Name="ecad(1)" Path="Schematic\ecad(1).lbr" Hash="" ID="id-63d88dd5-417d-4329-b3a4-0291301d62d5" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency XPosition="28" YPosition="7" Name="Icon.png" Path="Icon.png" Hash="" ID="id-85d9221e-e20c-4f8c-a008-96b9087f1030" Notes="Custom icon for this component" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-655f26c6-8fa2-4dcd-b7c6-066a4e463501" ApplyJoinData="" Notes="" Name="Cath" Definition="" YPosition="336" XPosition="644" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-dc622909-5265-47f9-8fd6-80ede0ddf43c" PortMap="id-c8eb33e5-0bb2-4817-b54f-03d2d84ec64b id-843588b5-0cef-4df5-bb76-0a6e82199572" Notes="" XPosition="28" Definition="" YPosition="28" Name="Pin" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-138f592b-c6e2-4bf2-8a2c-43253809e986" ApplyJoinData="" Notes="" Name="Anode" Definition="" YPosition="378" XPosition="63" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-8446c119-a190-4c09-88c8-92cabd4fa2a4" PortMap="" Notes="" XPosition="56" Definition="" YPosition="35" Name="Pin" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">optoelectronics.light_sources_and_emitters.leds.leds</Classifications>
+</Component>

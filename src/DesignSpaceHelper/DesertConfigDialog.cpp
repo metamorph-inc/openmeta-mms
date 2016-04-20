@@ -1,7 +1,7 @@
 // DesertConfigDialog.cpp : implementation file
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "DesertConfigDialog.h"
 #include "commctrl.h"
 #include <fstream>
@@ -52,7 +52,7 @@ BEGIN_MESSAGE_MAP(CDesertConfigDialog, CDialog)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_CFGLIST, &CDesertConfigDialog::OnLvnItemchangedCfglist)
 	ON_BN_CLICKED(IDC_CLEARALLBTN, &CDesertConfigDialog::OnBnClickedClearallbtn)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_CONSTRAINTLIST, &CDesertConfigDialog::OnNMCustomdrawConstraintlist)
-	ON_NOTIFY(NM_CLICK, IDC_CFGTREE, &CDesertConfigDialog::OnNMClickCfgtree)
+	// ON_NOTIFY(NM_CLICK, IDC_CFGTREE, &CDesertConfigDialog::OnNMClickCfgtree)
 	ON_MESSAGE(TREE_VIEW_CHECK_STATE_CHANGE, OnTreeViewCheckStateChange)
 	ON_BN_CLICKED(IDC_CYPHY2MORPHMATRIX, &CDesertConfigDialog::OnBnClickedCyPhy2MorphMatrix)
 	ON_BN_CLICKED(IDC_MORPHMATRIX2CYPHY, &CDesertConfigDialog::OnBnClickedMorphMatrix2CyPhy)

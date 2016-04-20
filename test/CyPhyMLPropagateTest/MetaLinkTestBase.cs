@@ -198,7 +198,7 @@ namespace CyPhyPropagateTest
                 int handle = WaitHandle.WaitAny(new WaitHandle[] { metalinkEvent, workEvent });
                 if (exception != null)
                 {
-                    throw new Exception("Test failed", exception);
+                    throw new Exception("Test failed: " + exception.Message, exception);
                 }
                 if (handle == 0)
                 {

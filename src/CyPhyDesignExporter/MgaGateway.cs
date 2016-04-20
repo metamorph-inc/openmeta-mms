@@ -19,6 +19,8 @@ namespace GME.CSharp
         public IMgaProject project = null;
         public IMgaTerritory territory = null;
 
+        private bool projectWasInTransaction = false;
+        private bool projectHasBeenAborted = false;
         #region TRANSACTION HANDLING
         public void BeginTransaction(transactiontype_enum mode = transactiontype_enum.TRANSACTION_GENERAL)
         {
@@ -27,32 +29,67 @@ namespace GME.CSharp
 
         public void CommitTransaction()
         {
-            if ((project.ProjectStatus & 8) != 0)
-            {
-                project.CommitTransaction();
-            }
+            project.CommitTransaction();
         }
 
         public void AbortTransaction()
         {
-            if ((project.ProjectStatus & 8) != 0)
-            {
-                project.AbortTransaction();
-            }
+            project.AbortTransaction();
         }
 
         public delegate void voidDelegate();
-        public void PerformInTransaction(voidDelegate d, transactiontype_enum mode = transactiontype_enum.TRANSACTION_GENERAL)
+        public void PerformInTransaction(
+            voidDelegate d,
+            transactiontype_enum mode = transactiontype_enum.TRANSACTION_GENERAL,
+            bool abort = true)
         {
-            BeginTransaction(mode);
+            this.projectWasInTransaction = (project.ProjectStatus & 8) != 0;
+            this.projectHasBeenAborted = false;
+
+            if (this.projectWasInTransaction == false)
+            {
+                BeginTransaction(mode);
+            }
+
+            if (this.projectWasInTransaction && abort)
+            {
+                CommitTransaction();
+                BeginTransaction(mode);
+            }
+
             try
             {
                 d();
-                CommitTransaction();
+                if (abort)
+                {
+                    AbortTransaction();
+                    projectHasBeenAborted = true;
+                    if (this.projectWasInTransaction)
+                    {
+                        BeginTransaction(mode);
+                    }
+                }
+                else
+                {
+                    if (this.projectWasInTransaction == false)
+                    {
+                        CommitTransaction();
+                    }
+                }
             }
-            finally
+            catch
             {
-                AbortTransaction();
+                if (projectHasBeenAborted == false)
+                {
+                    AbortTransaction();
+                }
+
+                if (this.projectWasInTransaction)
+                {
+                    BeginTransaction(mode);
+                }
+
+                throw;
             }
         }
         #endregion

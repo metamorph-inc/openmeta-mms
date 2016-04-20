@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="e414e181-2d72-4b89-92e9-471cdded6d4a" Name="1x2_template" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="cad" xsi:type="q1:CADModel" UsesResource="id-88c50373-e23a-4abf-8411-85c67fbaf48d" Author="" Notes="" XPosition="455" YPosition="182" Name="CADModel" ID="id-eedc090d-25fe-491b-9079-0f2dae73f718" Format="AP_203" xmlns="">
+    <Parameter XPosition="189" YPosition="133" Name="BASE_001">
+      <Value Unit="" DataType="String">
+        <ValueExpression xmlns:q2="avm" xsi:type="q2:FixedValue">
+          <Value>BASE_001</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter XPosition="350" YPosition="42" Name="PCB">
+      <Value Unit="" DataType="String">
+        <ValueExpression xmlns:q3="avm" xsi:type="q3:FixedValue">
+          <Value>PCB</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter XPosition="350" YPosition="133" Name="PCB_SHIELD">
+      <Value Unit="" DataType="String">
+        <ValueExpression xmlns:q4="avm" xsi:type="q4:FixedValue">
+          <Value>PCB_SHIELD</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter XPosition="350" YPosition="308" Name="SHELL">
+      <Value Unit="" DataType="String">
+        <ValueExpression xmlns:q5="avm" xsi:type="q5:FixedValue">
+          <Value>SHELL</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter XPosition="182" YPosition="224" Name="BASE_002">
+      <Value Unit="" DataType="String">
+        <ValueExpression xmlns:q6="avm" xsi:type="q6:FixedValue">
+          <Value>BASE_002</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter XPosition="189" YPosition="308" Name="BASE_003">
+      <Value Unit="" DataType="String">
+        <ValueExpression xmlns:q7="avm" xsi:type="q7:FixedValue">
+          <Value>BASE</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter XPosition="350" YPosition="217" Name="SPEAKER_METAL">
+      <Value Unit="" DataType="String">
+        <ValueExpression xmlns:q8="avm" xsi:type="q8:FixedValue">
+          <Value>SPEAKER_METAL</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter XPosition="189" YPosition="42" Name="BASE">
+      <Value Unit="" DataType="String">
+        <ValueExpression xmlns:q9="avm" xsi:type="q9:FixedValue">
+          <Value>BASE</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+  </DomainModel>
+  <ResourceDependency Name="CAD" Path="CAD\ara_1x2_template.step" Hash="" ID="id-88c50373-e23a-4abf-8411-85c67fbaf48d" Notes="" XPosition="455" YPosition="105" xmlns="" />
+  <Classifications xmlns="">ara_template</Classifications>
+</Component>

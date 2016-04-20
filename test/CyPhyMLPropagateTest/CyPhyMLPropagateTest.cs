@@ -283,7 +283,7 @@ namespace CyPhyPropagateTest
                     project.BeginTransactionInNewTerr();
                     try
                     {
-                        var imported = project.RootFolder.GetObjectByPathDisp("/@Imported_Components");
+                        var imported = project.RootFolder.GetObjectByPathDisp("/@Components");
                         var result = imported.ChildObjects.Cast<IMgaObject>().Count(o => o.Name == "Damper_Test");
                         Xunit.Assert.Equal(1, result);
                     }

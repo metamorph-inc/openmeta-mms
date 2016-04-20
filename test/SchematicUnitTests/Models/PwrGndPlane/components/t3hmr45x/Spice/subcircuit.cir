@@ -1,0 +1,5 @@
+* Simple LED Model
+.subckt simpleLED 1 2
+Dledx 1 2  DLed_test
+.model Dled_test D (IS=1a RS=3.3 N=1.8)
+.ends

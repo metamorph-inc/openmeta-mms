@@ -1,0 +1,48 @@
+
+{
+	"boardHeight" : 40.50,
+	"boardWidth" : 18.0,
+	"constraints" : null,
+	"numLayers" : 2,
+	"packages" : 
+	[
+		
+		{
+			"ComponentID" : "{1930108a-b02a-44ac-8932-779602ad480b}",
+			"constraints" : null,
+			"doNotPlace" : null,
+			"height" : 1.0,
+			"koHeight" : 1.0,
+			"koWidth" : 1.0,
+			"layer" : 0,
+			"name" : "FIDUCIAL_1MM",
+			"originX" : 0.0,
+			"originY" : 0.0,
+			"package" : "FIDUCIAL_1MM",
+			"pkg_idx" : 0,
+			"rotation" : 0,
+			"width" : 1.0,
+			"x" : 0.20,
+			"y" : 0.20
+		},		
+		{
+			"ComponentID" : "{1930108a-b02a-44ac-8932-779602ad480c}",
+			"constraints" : null,
+			"doNotPlace" : null,
+			"height" : 1.0,
+			"koHeight" : 1.0,
+			"koWidth" : 1.0,
+			"layer" : 1,
+			"name" : "FIDUCIAL_1MMb",
+			"originX" : 0.0,
+			"originY" : 0.0,
+			"package" : "FIDUCIAL_1MM",
+			"pkg_idx" : 0,
+			"rotation" : 0,
+			"width" : 1.0,
+			"x" : 3.20,
+			"y" : 0.20
+		}
+	],
+	"signals" : []
+}

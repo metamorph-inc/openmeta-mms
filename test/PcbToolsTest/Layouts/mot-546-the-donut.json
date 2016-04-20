@@ -1,0 +1,481 @@
+{
+  "boardWidth": 71.0,
+  "boardHeight": 71.0,
+  "numLayers": 2,
+  "boardTemplate": "irregularCircularBoard.brd",
+  "omitBoundary": true,
+  "packages": [
+    {
+      "name": "Capacitor_C0805",
+      "package": "C0805",
+      "pkg_idx": 0,
+      "ComponentID": "{c9ede091-cd2a-4f95-a89f-16b5fff11bf5}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$1",
+      "package": "C0805",
+      "pkg_idx": 1,
+      "ComponentID": "{b5e59d83-c49f-4646-a8e7-a36e9d6b8c88}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$2",
+      "package": "C0805",
+      "pkg_idx": 2,
+      "ComponentID": "{46bc51dd-e61d-47da-a97b-d0165aa0b936}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$3",
+      "package": "C0805",
+      "pkg_idx": 3,
+      "ComponentID": "{39194dbd-1563-4246-82a1-0f3ebcfb794f}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$4",
+      "package": "C0805",
+      "pkg_idx": 4,
+      "ComponentID": "{042004ca-3e46-4932-b0a6-0003e9ab3d54}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$5",
+      "package": "C0805",
+      "pkg_idx": 5,
+      "ComponentID": "{851d76c9-7463-431b-ab9d-b3b57afeecfb}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$6",
+      "package": "C0805",
+      "pkg_idx": 6,
+      "ComponentID": "{92655fa3-9c85-45a9-b741-ad1793236af1}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$7",
+      "package": "C0805",
+      "pkg_idx": 7,
+      "ComponentID": "{934af7e8-27b1-4ab0-9461-900cc9540192}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$8",
+      "package": "C0805",
+      "pkg_idx": 8,
+      "ComponentID": "{cef5b99e-94c6-4ebd-9786-2fded9d028fd}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 9,
+      "ComponentID": "{27f013e2-81b6-4e1e-b364-7c9dd713364d}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    }
+  ],
+  "signals": [
+    {
+      "name": "N$0",
+      "pins": [
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "CAPACITOR_C0805"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "CAPACITOR_C0805$4"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL"
+        }
+      ]
+    },
+    {
+      "name": "N$1",
+      "pins": [
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "CAPACITOR_C0805"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "CAPACITOR_C0805$4"
+        }
+      ]
+    },
+    {
+      "name": "N$2",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL"
+        }
+      ]
+    },
+    {
+      "name": "N$3",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL"
+        }
+      ]
+    }
+  ],
+  "constraints": [
+    {
+      "x": "29:42",
+      "y": "29:42",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "29:42",
+      "y": "29:42",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "0:5",
+      "y": "0:29",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "0:5",
+      "y": "0:29",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "5:10",
+      "y": "0:17",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "5:10",
+      "y": "0:17",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "10:15",
+      "y": "0:11",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "10:15",
+      "y": "0:11",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "15:20",
+      "y": "0:6",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "15:20",
+      "y": "0:6",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "20:51",
+      "y": "0:3",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "20:51",
+      "y": "0:3",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "51:56",
+      "y": "0:6",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "51:56",
+      "y": "0:6",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "56:61",
+      "y": "0:11",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "56:61",
+      "y": "0:11",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "61:66",
+      "y": "0:17",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "61:66",
+      "y": "0:17",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "66:71",
+      "y": "0:29",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "66:71",
+      "y": "0:29",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "0:5",
+      "y": "42:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "0:5",
+      "y": "42:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "5:10",
+      "y": "54:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "5:10",
+      "y": "54:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "10:15",
+      "y": "60:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "10:15",
+      "y": "60:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "15:20",
+      "y": "65:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "15:20",
+      "y": "65:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "20:51",
+      "y": "68:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "20:51",
+      "y": "68:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "51:56",
+      "y": "65:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "51:56",
+      "y": "65:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "56:61",
+      "y": "60:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "56:61",
+      "y": "60:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "61:66",
+      "y": "54:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "61:66",
+      "y": "54:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "66:71",
+      "y": "42:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "66:71",
+      "y": "42:71",
+      "layer": "1",
+      "type": "ex-region"
+    }
+  ]
+}

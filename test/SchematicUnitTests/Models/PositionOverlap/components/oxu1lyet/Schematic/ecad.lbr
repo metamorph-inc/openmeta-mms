@@ -1,0 +1,524 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="BGA107" xmlns="eagle">
+          <wire x1="-2.5" y1="-2.5" x2="-2.5" y2="2.5" width="0.127" layer="51" />
+          <wire x1="-2.5" y1="2.5" x2="2.5" y2="2.5" width="0.127" layer="51" />
+          <wire x1="2.5" y1="2.5" x2="2.5" y2="-2.5" width="0.127" layer="51" />
+          <wire x1="2.5" y1="-2.5" x2="-2.1" y2="-2.5" width="0.127" layer="51" />
+          <smd name="G8" x="0.8" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="0" radius="0.127" width="0" layer="29" />
+          <smd name="G5" x="-0.4" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="-0.4" radius="0.127" width="0" layer="29" />
+          <smd name="E9" x="1.2" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="-0.4" radius="0.127" width="0" layer="29" />
+          <smd name="F7" x="0.4" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="E7" x="0.4" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.4" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="E5" x="-0.4" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="D9" x="1.2" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="C6" x="0" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="C7" x="0.4" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.4" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="E6" x="0" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="C9" x="1.2" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="F2" x="-1.6" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="0" radius="0.127" width="0" layer="29" />
+          <smd name="F3" x="-1.2" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="0" radius="0.127" width="0" layer="29" />
+          <smd name="E2" x="-1.6" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="-0.4" radius="0.127" width="0" layer="29" />
+          <smd name="E3" x="-1.2" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="-0.4" radius="0.127" width="0" layer="29" />
+          <smd name="D2" x="-1.6" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="D3" x="-1.2" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="F6" x="0" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="F5" x="-0.4" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.4" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="C2" x="-1.6" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="C3" x="-1.2" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="C4" x="-0.8" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="C5" x="-0.4" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.4" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="K6" x="0" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="K7" x="0.4" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.4" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="K8" x="0.8" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="K9" x="1.2" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="J6" x="0" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="J7" x="0.4" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.4" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="J8" x="0.8" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="J9" x="1.2" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="G6" x="0" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="G7" x="0.4" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.4" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="H8" x="0.8" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="H9" x="1.2" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="G9" x="1.2" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="0.4" radius="0.127" width="0" layer="29" />
+          <smd name="K2" x="-1.6" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="K3" x="-1.2" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="K4" x="-0.8" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="K5" x="-0.4" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.4" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="J2" x="-1.6" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="J3" x="-1.2" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="J4" x="-0.8" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="J5" x="-0.4" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.4" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="H2" x="-1.6" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="H3" x="-1.2" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="H7" x="0.4" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="H6" x="0" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.4" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="G2" x="-1.6" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="0.4" radius="0.127" width="0" layer="29" />
+          <smd name="G3" x="-1.2" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="0.4" radius="0.127" width="0" layer="29" />
+          <smd name="F10" x="1.6" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="0" radius="0.127" width="0" layer="29" />
+          <smd name="F11" x="2" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="0" radius="0.127" width="0" layer="29" />
+          <smd name="E10" x="1.6" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="-0.4" radius="0.127" width="0" layer="29" />
+          <smd name="E11" x="2" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="-0.4" radius="0.127" width="0" layer="29" />
+          <smd name="D10" x="1.6" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="D11" x="2" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="C10" x="1.6" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="C11" x="2" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="K10" x="1.6" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="K11" x="2" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="J10" x="1.6" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="J11" x="2" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="H10" x="1.6" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="H11" x="2" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="G10" x="1.6" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="0.4" radius="0.127" width="0" layer="29" />
+          <smd name="G11" x="2" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="0.4" radius="0.127" width="0" layer="29" />
+          <smd name="F1" x="-2" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="0" radius="0.127" width="0" layer="29" />
+          <smd name="E1" x="-2" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="-0.4" radius="0.127" width="0" layer="29" />
+          <smd name="D1" x="-2" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="-0.8" radius="0.127" width="0" layer="29" />
+          <smd name="C1" x="-2" y="-1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="-1.2" radius="0.127" width="0" layer="29" />
+          <smd name="K1" x="-2" y="1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="1.6" radius="0.127" width="0" layer="29" />
+          <smd name="J1" x="-2" y="1.2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="1.2" radius="0.127" width="0" layer="29" />
+          <smd name="H1" x="-2" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="0.8" radius="0.127" width="0" layer="29" />
+          <smd name="G1" x="-2" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="0.4" radius="0.127" width="0" layer="29" />
+          <smd name="L6" x="0" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L7" x="0.4" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.4" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L8" x="0.8" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L9" x="1.2" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L2" x="-1.6" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L3" x="-1.2" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L4" x="-0.8" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L5" x="-0.4" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.4" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L10" x="1.6" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L11" x="2" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="L1" x="-2" y="2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="2" radius="0.127" width="0" layer="29" />
+          <smd name="B6" x="0" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="B7" x="0.4" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.4" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="B8" x="0.8" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="B9" x="1.2" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="A6" x="0" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="A7" x="0.4" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.4" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="A8" x="0.8" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="0.8" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="A9" x="1.2" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.2" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="B2" x="-1.6" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="B3" x="-1.2" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="B4" x="-0.8" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="B5" x="-0.4" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.4" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="A2" x="-1.6" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.6" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="A3" x="-1.2" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-1.2" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="A4" x="-0.8" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="A5" x="-0.4" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.4" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="B10" x="1.6" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="B11" x="2" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="A10" x="1.6" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="1.6" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="A11" x="2" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="2" y="-2" radius="0.127" width="0" layer="29" />
+          <smd name="B1" x="-2" y="-1.6" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="-1.6" radius="0.127" width="0" layer="29" />
+          <smd name="A1" x="-2" y="-2" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-2" y="-2" radius="0.127" width="0" layer="29" />
+          
+          <wire x1="-2.1" y1="-2.5" x2="-2.5" y2="-2.5" width="0.127" layer="51" />
+          <wire x1="-2.6" y1="-2.2" x2="-3" y2="-2.2" width="0.127" layer="51" />
+          <wire x1="-3" y1="-2.2" x2="-3" y2="-3" width="0.127" layer="51" />
+          <wire x1="-3" y1="-3" x2="-2.1" y2="-3" width="0.127" layer="51" />
+          <wire x1="-2.1" y1="-3" x2="-2.1" y2="-2.5" width="0.127" layer="51" />
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="GP_BRIDGE">
+          <pin name="VSS1" x="-38.1" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS2" x="-35.56" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS3" x="-33.02" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS4" x="-30.48" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS5" x="-27.94" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS6" x="-25.4" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS7" x="-22.86" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS8" x="-20.32" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS9" x="-17.78" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS10" x="-15.24" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS11" x="-12.7" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS12" x="-10.16" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS13" x="-7.62" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS14" x="-5.08" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS15" x="-2.54" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS16" x="0" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS17" x="2.54" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS18" x="5.08" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS19" x="7.62" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS20" x="10.16" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS21" x="12.7" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS22" x="15.24" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS23" x="17.78" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS24" x="20.32" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS25" x="22.86" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VDDIO" x="-17.78" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDDIO1" x="-15.24" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_SDIO" x="-12.7" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_SDIO1" x="-10.16" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_CORE" x="-5.08" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_CORE1" x="-2.54" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_PLL1" x="2.54" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_PLL2" x="5.08" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="GND" x="-22.86" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_UNIPRO" x="10.16" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_HSIC" x="22.86" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="GPIO0" x="-60.96" y="-10.16" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="GPIO1" x="-60.96" y="-12.7" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="GPIO2" x="-60.96" y="-15.24" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="GPIO3" x="-60.96" y="-17.78" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="GPIO4" x="-60.96" y="-20.32" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="GPIO5" x="-60.96" y="-22.86" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="GPIO6" x="-60.96" y="-25.4" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="GPIO7" x="-60.96" y="-27.94" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="GPIO8" x="-60.96" y="-30.48" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="DBG_TCK" x="-60.96" y="-35.56" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="DBG_TDI/GPIO11" x="-60.96" y="-38.1" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="DBG_TMS/GPIO12" x="-60.96" y="-40.64" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="DBG_TRST_N" x="-60.96" y="-43.18" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="SPIB_IO0/GPIO13" x="58.42" y="33.02" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="SPIB_IO1/GPIO14" x="58.42" y="35.56" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="DBG_TDO/GPIO10" x="-60.96" y="-45.72" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="SPIBOOT_N" x="58.42" y="38.1" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="SPIB_CS_N/GPIO15" x="58.42" y="40.64" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="SPIB_CLK/SD_POWER" x="58.42" y="43.18" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <text x="30.48" y="38.1" size="1.27" layer="94" rot="R180" xmlns="eagle">SPI</text>
+          <text x="-33.02" y="-40.64" size="1.27" layer="94" xmlns="eagle">DEBUG</text>
+          <text x="-33.02" y="-20.32" size="1.27" layer="94" xmlns="eagle">GPIO</text>
+          <text x="-5.08" y="-50.8" size="1.27" layer="94" xmlns="eagle">GROUND</text>
+          <text x="-15.24" y="38.1" size="1.27" layer="94" rot="R90" xmlns="eagle">IO (1.8V)</text>
+          <text x="-5.08" y="50.8" size="1.27" layer="94" rot="R270" xmlns="eagle">DIGITAL(1.1V)</text>
+          <text x="-22.86" y="38.1" size="1.27" layer="94" rot="R90" xmlns="eagle">eFUSE WRITE (0V)</text>
+          <text x="2.54" y="38.1" size="1.27" layer="94" rot="R90" xmlns="eagle">SYSTEM (1.1V)</text>
+          <text x="5.08" y="38.1" size="1.27" layer="94" rot="R90" xmlns="eagle">AUDIO (1.1V)</text>
+          <text x="15.24" y="38.1" size="1.27" layer="94" rot="R90" xmlns="eagle">M-PHY (1.8V)</text>
+          <text x="22.86" y="38.1" size="1.27" layer="94" rot="R90" xmlns="eagle">HSIC (1.2V)</text>
+          <wire x1="-7.62" y1="30.48" x2="-7.62" y2="68.58" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="0" y1="30.48" x2="0" y2="68.58" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="7.62" y1="68.58" x2="7.62" y2="30.48" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="20.32" y1="68.58" x2="20.32" y2="30.48" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-25.4" y1="68.58" x2="-25.4" y2="45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-20.32" y1="68.58" x2="-20.32" y2="30.48" width="0.254" layer="94" xmlns="eagle" />
+          <pin name="CDSI0_CP" x="-60.96" y="43.18" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_CN" x="-60.96" y="40.64" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_D0P" x="-60.96" y="38.1" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_D0N" x="-60.96" y="35.56" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_D1P" x="-60.96" y="33.02" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_D1N" x="-60.96" y="30.48" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_D2P" x="-60.96" y="27.94" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_D2N" x="-60.96" y="25.4" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_D3P" x="-60.96" y="22.86" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI0_D3N" x="-60.96" y="20.32" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_CP" x="-60.96" y="17.78" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_CN" x="-60.96" y="15.24" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_D0P" x="-60.96" y="12.7" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_D0N" x="-60.96" y="10.16" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_D1P" x="-60.96" y="7.62" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_D1N" x="-60.96" y="5.08" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_D2P" x="-60.96" y="2.54" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_D2N" x="-60.96" y="0" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_D3P" x="-60.96" y="-2.54" length="middle" direction="pas" xmlns="eagle" />
+          <pin name="CDSI1_D3N" x="-60.96" y="-5.08" length="middle" direction="pas" xmlns="eagle" />
+          <text x="-27.94" y="20.32" size="1.27" layer="94" rot="MR0" xmlns="eagle">MIPI D-PHY</text>
+          <text x="25.4" y="2.54" size="1.27" layer="94" xmlns="eagle">SYSTEM</text>
+          <pin name="SYS_RESET_N" x="58.42" y="5.08" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="SYS_CLK" x="58.42" y="2.54" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="TEST0" x="58.42" y="0" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="I2C0_SDA" x="58.42" y="-5.08" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="ISC0_SCL" x="58.42" y="-7.62" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="I2S_BCK/TRACEDATA0" x="58.42" y="-12.7" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="I2S_LRCK/TRACEDATA1" x="58.42" y="-15.24" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="I2S_AMCLK/TRACECLK" x="58.42" y="-17.78" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="I2S_SDI/TRACEDATA3" x="58.42" y="-22.86" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <text x="25.4" y="-7.62" size="1.27" layer="94" xmlns="eagle">I2C</text>
+          <text x="22.86" y="-17.78" size="1.27" layer="94" xmlns="eagle">I2S</text>
+          <pin name="I2S_SDO/TRACEDATA2" x="58.42" y="-20.32" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="WDT_RESET_N" x="58.42" y="-43.18" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="PWM0" x="58.42" y="-27.94" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="PWM1/GPIO9" x="58.42" y="-30.48" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <text x="25.4" y="-30.48" size="1.27" layer="94" xmlns="eagle">PWM</text>
+          <pin name="HSIC_STROBE" x="58.42" y="-35.56" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="HSIC_DATA" x="58.42" y="-38.1" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <text x="25.4" y="-38.1" size="1.27" layer="94" xmlns="eagle">HSIC</text>
+          <pin name="UNIPRO_TXD0P" x="58.42" y="27.94" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="UNIPRO_RXD0P" x="58.42" y="17.78" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="UNIPRO_TXD0N" x="58.42" y="25.4" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="UNIPRO_RXD0N" x="58.42" y="15.24" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="UNIPRO_TXD1P" x="58.42" y="22.86" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="UNIPRO_RXD1P" x="58.42" y="12.7" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="UNIPRO_TXD1N" x="58.42" y="20.32" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <pin name="UNIPRO_RXD1N" x="58.42" y="10.16" length="middle" direction="pas" rot="R180" xmlns="eagle" />
+          <text x="25.4" y="17.78" size="1.27" layer="94" xmlns="eagle">MIPI M-PHY</text>
+          <wire x1="53.34" y1="-25.4" x2="20.32" y2="-25.4" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="-10.16" x2="20.32" y2="-10.16" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="-2.54" x2="20.32" y2="-2.54" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="7.62" x2="20.32" y2="7.62" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-55.88" y1="-48.26" x2="-55.88" y2="-33.02" width="0.254" layer="94" xmlns="eagle" />
+          
+          
+          <pin name="VSS26" x="25.4" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS27" x="27.94" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS28" x="30.48" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS29" x="33.02" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS30" x="35.56" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VSS31" x="38.1" y="-68.58" length="middle" direction="pas" rot="R90" xmlns="eagle" />
+          <pin name="VDD_UNIPRO1" x="12.7" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_UNIPRO2" x="15.24" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <pin name="VDD_UNIPRO3" x="17.78" y="73.66" length="middle" direction="pas" rot="R270" xmlns="eagle" />
+          <text x="-10.16" y="38.1" size="1.27" layer="94" rot="R90" xmlns="eagle">SDIO (1.8V/3V3)</text>
+          <wire x1="-55.88" y1="-33.02" x2="-55.88" y2="-7.62" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-55.88" y1="-7.62" x2="-55.88" y2="45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="-40.64" x2="53.34" y2="-33.02" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="-33.02" x2="53.34" y2="7.62" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="7.62" x2="53.34" y2="30.48" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="30.48" x2="53.34" y2="45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="-33.02" x2="20.32" y2="-33.02" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="30.48" x2="25.4" y2="30.48" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="-40.64" x2="20.32" y2="-40.64" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="-40.64" x2="53.34" y2="-45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="53.34" y1="-45.72" x2="40.64" y2="-45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="40.64" y1="-45.72" x2="20.32" y2="-45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-40.64" y1="-63.5" x2="40.64" y2="-63.5" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="40.64" y1="-63.5" x2="40.64" y2="-45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-40.64" y1="-63.5" x2="-40.64" y2="-48.26" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-55.88" y1="-48.26" x2="-27.94" y2="-48.26" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-55.88" y1="-33.02" x2="-27.94" y2="-33.02" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-55.88" y1="-7.62" x2="-27.94" y2="-7.62" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-55.88" y1="45.72" x2="-25.4" y2="45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-25.4" y1="45.72" x2="-25.4" y2="30.48" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="25.4" y1="68.58" x2="25.4" y2="45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="25.4" y1="45.72" x2="25.4" y2="30.48" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="25.4" y1="45.72" x2="53.34" y2="45.72" width="0.254" layer="94" xmlns="eagle" />
+          <wire x1="-25.4" y1="68.58" x2="25.4" y2="68.58" width="0.254" layer="94" xmlns="eagle" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="T6WR6XBG">
+          <gates>
+            <gate name="G$1" symbol="GP_BRIDGE" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="BGA107" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="CDSI0_CN" pad="D2" />
+                <connect gate="G$1" pin="CDSI0_CP" pad="D1" />
+                <connect gate="G$1" pin="CDSI0_D0N" pad="F2" />
+                <connect gate="G$1" pin="CDSI0_D0P" pad="F1" />
+                <connect gate="G$1" pin="CDSI0_D1N" pad="E2" />
+                <connect gate="G$1" pin="CDSI0_D1P" pad="E1" />
+                <connect gate="G$1" pin="CDSI0_D2N" pad="C2" />
+                <connect gate="G$1" pin="CDSI0_D2P" pad="C1" />
+                <connect gate="G$1" pin="CDSI0_D3N" pad="B2" />
+                <connect gate="G$1" pin="CDSI0_D3P" pad="B1" />
+                <connect gate="G$1" pin="CDSI1_CN" pad="B5" />
+                <connect gate="G$1" pin="CDSI1_CP" pad="A5" />
+                <connect gate="G$1" pin="CDSI1_D0N" pad="B3" />
+                <connect gate="G$1" pin="CDSI1_D0P" pad="A3" />
+                <connect gate="G$1" pin="CDSI1_D1N" pad="B4" />
+                <connect gate="G$1" pin="CDSI1_D1P" pad="A4" />
+                <connect gate="G$1" pin="CDSI1_D2N" pad="B6" />
+                <connect gate="G$1" pin="CDSI1_D2P" pad="A6" />
+                <connect gate="G$1" pin="CDSI1_D3N" pad="B7" />
+                <connect gate="G$1" pin="CDSI1_D3P" pad="A7" />
+                <connect gate="G$1" pin="DBG_TCK" pad="L10" />
+                <connect gate="G$1" pin="DBG_TDI/GPIO11" pad="H11" />
+                <connect gate="G$1" pin="DBG_TDO/GPIO10" pad="K11" />
+                <connect gate="G$1" pin="DBG_TMS/GPIO12" pad="J11" />
+                <connect gate="G$1" pin="DBG_TRST_N" pad="K10" />
+                <connect gate="G$1" pin="GND" pad="A2" />
+                <connect gate="G$1" pin="GPIO0" pad="H3" />
+                <connect gate="G$1" pin="GPIO1" pad="J3" />
+                <connect gate="G$1" pin="GPIO2" pad="K3" />
+                <connect gate="G$1" pin="GPIO3" pad="D10" />
+                <connect gate="G$1" pin="GPIO4" pad="C11" />
+                <connect gate="G$1" pin="GPIO5" pad="C10" />
+                <connect gate="G$1" pin="GPIO6" pad="B11" />
+                <connect gate="G$1" pin="GPIO7" pad="A10" />
+                <connect gate="G$1" pin="GPIO8" pad="B10" />
+                <connect gate="G$1" pin="HSIC_DATA" pad="G1" />
+                <connect gate="G$1" pin="HSIC_STROBE" pad="H1" />
+                <connect gate="G$1" pin="I2C0_SDA" pad="J1" />
+                <connect gate="G$1" pin="I2S_AMCLK/TRACECLK" pad="F10" />
+                <connect gate="G$1" pin="I2S_BCK/TRACEDATA0" pad="G11" />
+                <connect gate="G$1" pin="I2S_LRCK/TRACEDATA1" pad="F11" />
+                <connect gate="G$1" pin="I2S_SDI/TRACEDATA3" pad="E10" />
+                <connect gate="G$1" pin="I2S_SDO/TRACEDATA2" pad="E11" />
+                <connect gate="G$1" pin="ISC0_SCL" pad="J2" />
+                <connect gate="G$1" pin="PWM0" pad="A9" />
+                <connect gate="G$1" pin="PWM1/GPIO9" pad="J4" />
+                <connect gate="G$1" pin="SPIBOOT_N" pad="J5" />
+                <connect gate="G$1" pin="SPIB_CLK/SD_POWER" pad="K1" />
+                <connect gate="G$1" pin="SPIB_CS_N/GPIO15" pad="K2" />
+                <connect gate="G$1" pin="SPIB_IO0/GPIO13" pad="L1" />
+                <connect gate="G$1" pin="SPIB_IO1/GPIO14" pad="L2" />
+                <connect gate="G$1" pin="SYS_CLK" pad="L4" />
+                <connect gate="G$1" pin="SYS_RESET_N" pad="K4" />
+                <connect gate="G$1" pin="TEST0" pad="L3" />
+                <connect gate="G$1" pin="UNIPRO_RXD0N" pad="K8" />
+                <connect gate="G$1" pin="UNIPRO_RXD0P" pad="L8" />
+                <connect gate="G$1" pin="UNIPRO_RXD1N" pad="K6" />
+                <connect gate="G$1" pin="UNIPRO_RXD1P" pad="L6" />
+                <connect gate="G$1" pin="UNIPRO_TXD0N" pad="H9" />
+                <connect gate="G$1" pin="UNIPRO_TXD0P" pad="J9" />
+                <connect gate="G$1" pin="UNIPRO_TXD1N" pad="H7" />
+                <connect gate="G$1" pin="UNIPRO_TXD1P" pad="J7" />
+                <connect gate="G$1" pin="VDDIO" pad="G5" />
+                <connect gate="G$1" pin="VDDIO1" pad="G9" />
+                <connect gate="G$1" pin="VDD_CORE" pad="E5" />
+                <connect gate="G$1" pin="VDD_CORE1" pad="G7" />
+                <connect gate="G$1" pin="VDD_HSIC" pad="G2" />
+                <connect gate="G$1" pin="VDD_PLL1" pad="L5" />
+                <connect gate="G$1" pin="VDD_PLL2" pad="K5" />
+                <connect gate="G$1" pin="VDD_SDIO" pad="D9" />
+                <connect gate="G$1" pin="VDD_SDIO1" pad="E9" />
+                <connect gate="G$1" pin="VDD_UNIPRO" pad="J6" />
+                <connect gate="G$1" pin="VDD_UNIPRO1" pad="J8" />
+                <connect gate="G$1" pin="VDD_UNIPRO2" pad="K7" />
+                <connect gate="G$1" pin="VDD_UNIPRO3" pad="K9" />
+                <connect gate="G$1" pin="VSS1" pad="A1" />
+                <connect gate="G$1" pin="VSS10" pad="C7" />
+                <connect gate="G$1" pin="VSS11" pad="C9" />
+                <connect gate="G$1" pin="VSS12" pad="D3" />
+                <connect gate="G$1" pin="VSS13" pad="E3" />
+                <connect gate="G$1" pin="VSS14" pad="E6" />
+                <connect gate="G$1" pin="VSS15" pad="E7" />
+                <connect gate="G$1" pin="VSS16" pad="F3" />
+                <connect gate="G$1" pin="VSS17" pad="F5" />
+                <connect gate="G$1" pin="VSS18" pad="F6" />
+                <connect gate="G$1" pin="VSS19" pad="F7" />
+                <connect gate="G$1" pin="VSS2" pad="A8" />
+                <connect gate="G$1" pin="VSS20" pad="G3" />
+                <connect gate="G$1" pin="VSS21" pad="G6" />
+                <connect gate="G$1" pin="VSS22" pad="G8" />
+                <connect gate="G$1" pin="VSS23" pad="G10" />
+                <connect gate="G$1" pin="VSS24" pad="H2" />
+                <connect gate="G$1" pin="VSS25" pad="H6" />
+                <connect gate="G$1" pin="VSS26" pad="H8" />
+                <connect gate="G$1" pin="VSS27" pad="H10" />
+                <connect gate="G$1" pin="VSS28" pad="J10" />
+                <connect gate="G$1" pin="VSS29" pad="L7" />
+                <connect gate="G$1" pin="VSS3" pad="A11" />
+                <connect gate="G$1" pin="VSS30" pad="L9" />
+                <connect gate="G$1" pin="VSS31" pad="L11" />
+                <connect gate="G$1" pin="VSS4" pad="B8" />
+                <connect gate="G$1" pin="VSS5" pad="B9" />
+                <connect gate="G$1" pin="VSS6" pad="C3" />
+                <connect gate="G$1" pin="VSS7" pad="C4" />
+                <connect gate="G$1" pin="VSS8" pad="C5" />
+                <connect gate="G$1" pin="VSS9" pad="C6" />
+                <connect gate="G$1" pin="WDT_RESET_N" pad="D11" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

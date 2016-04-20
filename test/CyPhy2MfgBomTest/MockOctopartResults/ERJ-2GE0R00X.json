@@ -1,0 +1,1834 @@
+﻿{
+  "descriptions": [
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "element14 APAC",
+            "uid": "cdc808c2c94e1e0f"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RESISTOR, 0R, 100MW; Resistance:0ohm; Resistance Tolerance:-; Power Rating:100mW; Voltage Rating:50V; Temperature Coefficient:-100ppm/°C to +600ppm/°C; Resistor Element Material:Thick Film; Resistor Case Style:0402 [1005 Metric]; Resistor Mounting:SMD"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Farnell",
+            "uid": "58989d9272cd8b5f"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RESISTOR, 0R, 100MW; Resistance:0ohm; Power Rating:100mW; Resistance Tolerance:-; Resistor Case Style:0402 [1005 Metric]; Resistor Element Material:Thick Film; Temperature Coefficient:-100ppm/°C to +600ppm/°C; Voltage Rating:50V; Resistor Mounting:SMD"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Newark",
+            "uid": "d294179ef2900153"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RESISTOR, CHIP THICK FILM, 0 OHM, 0.1W; Resistance:0ohm; Power Rating:0.1W; Resistor Case Style:0402 [1005 Metric]; Resistor Element Type:Thick Film; Voltage Rating:50V; Voltage Rating:50V ;RoHS Compliant: Yes"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Allied Electronics",
+            "uid": "f9e13cebd0892a26"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "Resistor;Thick Film;Res 0 Ohms;Pwr-Rtg 0.1 W;Jumper;SMT;0402;Tape & Reel"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Future Electronics",
+            "uid": "e4032109c4f337c4"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "ERJ Series 1 O ±2 % 0.1 W Jumper 0402 SMT Thick Film Chip Resistor"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Sager",
+            "uid": "8ec14bcb9b775d06"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "Res Thick Film 0402 0 Ohm Molded SMD SMD Punched Carrier T/R"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Verical",
+            "uid": "3c6cf966007befab"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "Res Thick Film 0402 0 Ohm Molded SMD SMD Punched Carrier T/R"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Jameco",
+            "uid": "bab57fbf9ab96972"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RES,ERJ-2GE0R00X,THICK FILM CH IP RESISTOR 0402, JUMPER<TX"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Avnet Express",
+            "uid": "c1e404eefe3c1223"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "Res Thick Film 0402 0 Ohm Molded SMD Punched Carrier T/R"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Master Electronics",
+            "uid": "a89e6d948bdb7b59"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RES THKFLM 0402 0 OHM 1/16W SMD"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Digi-Key",
+            "uid": "2c3be9310496fffc"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RES 0.0 OHM 1/10W JUMP 0402 SMD"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Avnet Express Asia",
+            "uid": "547e91744a7e87b9"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RES SM 0 OHM 0402 +/-5% 1/16W"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Component Electronics",
+            "uid": "7c78b9721661afbf"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RES SMT 0R 5% 0402 T/R"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "TTI",
+            "uid": "75dcb0d65f0ca61b"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "ZERO OHM JUMPER 1 AMP"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Cyclops Electronics",
+            "uid": "6bd5aedf7d8db812"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "RESISTORS"
+    },
+    {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Avnet Express Europe",
+            "uid": "a7c762cdb2197400"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "__class__": "Description",
+      "value": "10000"
+    }
+  ],
+  "offers": [
+    {
+      "sku": "P0.0JCT-ND",
+      "packaging": "Cut Tape",
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T15:44:21Z",
+      "order_multiple": null,
+      "in_stock_quantity": 5211146,
+      "moq": 1,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Digi-Key",
+        "__class__": "Seller",
+        "homepage_url": "http://www.digikey.com",
+        "uid": "2c3be9310496fffc"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0b75b34&vpid=1250716",
+      "factory_order_multiple": null,
+      "factory_lead_days": 48,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.10000"
+          ],
+          [
+            50,
+            "0.01380"
+          ],
+          [
+            100,
+            "0.01050"
+          ],
+          [
+            250,
+            "0.00780"
+          ],
+          [
+            500,
+            "0.00576"
+          ],
+          [
+            1000,
+            "0.00384"
+          ],
+          [
+            5000,
+            "0.00270"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "P0.0JDKR-ND",
+      "packaging": "Custom Reel",
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T15:44:21Z",
+      "order_multiple": null,
+      "in_stock_quantity": 5211146,
+      "moq": 1,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Digi-Key",
+        "__class__": "Seller",
+        "homepage_url": "http://www.digikey.com",
+        "uid": "2c3be9310496fffc"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0c688f9&vpid=1262597",
+      "factory_order_multiple": null,
+      "factory_lead_days": 48,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.10000"
+          ],
+          [
+            50,
+            "0.01380"
+          ],
+          [
+            100,
+            "0.01050"
+          ],
+          [
+            250,
+            "0.00780"
+          ],
+          [
+            500,
+            "0.00576"
+          ],
+          [
+            1000,
+            "0.00384"
+          ],
+          [
+            5000,
+            "0.00270"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "P0.0JTR-ND",
+      "packaging": "Tape & Reel",
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T15:44:21Z",
+      "order_multiple": null,
+      "in_stock_quantity": 5050000,
+      "moq": 10000,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Digi-Key",
+        "__class__": "Seller",
+        "homepage_url": "http://www.digikey.com",
+        "uid": "2c3be9310496fffc"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=006d20e&vpid=1699468",
+      "factory_order_multiple": null,
+      "factory_lead_days": 48,
+      "prices": {
+        "USD": [
+          [
+            10000,
+            "0.00198"
+          ],
+          [
+            30000,
+            "0.00174"
+          ],
+          [
+            50000,
+            "0.00160"
+          ],
+          [
+            100000,
+            "0.00156"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "97W7189",
+      "packaging": "Tape & Reel",
+      "on_order_eta": null,
+      "last_updated": "2014-04-10T12:48:40Z",
+      "order_multiple": null,
+      "in_stock_quantity": 330000,
+      "moq": 10000,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Newark",
+        "__class__": "Seller",
+        "homepage_url": "http://www.newark.com",
+        "uid": "d294179ef2900153"
+      },
+      "product_url": "http://octopart.com/click/vptrack?ak=22becbab&sig=04635d1&vpid=84311031",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.00200"
+          ],
+          [
+            10000,
+            "0.00200"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "65T8307",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-10T12:48:40Z",
+      "order_multiple": null,
+      "in_stock_quantity": 4930,
+      "moq": 1,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Newark",
+        "__class__": "Seller",
+        "homepage_url": "http://www.newark.com",
+        "uid": "d294179ef2900153"
+      },
+      "product_url": "http://octopart.com/click/vptrack?ak=22becbab&sig=08c0311&vpid=46226844",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.08000"
+          ],
+          [
+            50,
+            "0.01400"
+          ],
+          [
+            100,
+            "0.01100"
+          ],
+          [
+            250,
+            "0.00800"
+          ],
+          [
+            500,
+            "0.00400"
+          ],
+          [
+            5000,
+            "0.00300"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T16:40:17Z",
+      "order_multiple": null,
+      "in_stock_quantity": 650000,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Verical",
+        "__class__": "Seller",
+        "homepage_url": "http://www.verical.com",
+        "uid": "3c6cf966007befab"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=019b240&vpid=30520788",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            40000,
+            "0.00150"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-10T20:14:58Z",
+      "order_multiple": 10000,
+      "in_stock_quantity": 650000,
+      "moq": 10000,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Arrow",
+        "__class__": "Seller",
+        "homepage_url": "http://www.arrownac.com/",
+        "uid": "9d5b5851b06f4e9c"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0c57d41&vpid=15132265",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.00210"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "667-ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T07:50:18Z",
+      "order_multiple": null,
+      "in_stock_quantity": 1899598,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Mouser",
+        "__class__": "Seller",
+        "homepage_url": "http://www.mouser.com",
+        "uid": "a5e060ea85e77627"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0f4657f&vpid=37907275",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.15000"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T00:56:19Z",
+      "order_multiple": null,
+      "in_stock_quantity": 130000,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "CA",
+        "has_ecommerce": true,
+        "name": "Future Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://futureelectronics.com",
+        "uid": "e4032109c4f337c4"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=083b686&vpid=64494482",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            10000,
+            "0.00230"
+          ],
+          [
+            190000,
+            "0.00200"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T08:16:08Z",
+      "order_multiple": null,
+      "in_stock_quantity": 1000000,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "TTI",
+        "__class__": "Seller",
+        "homepage_url": "http://ttiinc.com",
+        "uid": "75dcb0d65f0ca61b"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=067b020&vpid=83149275",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            10000,
+            "0.00190"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T11:18:26Z",
+      "order_multiple": null,
+      "in_stock_quantity": 987022,
+      "moq": 1,
+      "on_order_quantity": 0,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Onlinecomponents.com",
+        "__class__": "Seller",
+        "homepage_url": "http://www.onlinecomponents.com",
+        "uid": "e3fd26f7c3e6303a"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=04d7f09&vpid=66255438",
+      "factory_order_multiple": null,
+      "factory_lead_days": 6,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.01370"
+          ],
+          [
+            25,
+            "0.00690"
+          ],
+          [
+            100,
+            "0.00570"
+          ],
+          [
+            1000,
+            "0.00380"
+          ],
+          [
+            10000,
+            "0.00150"
+          ],
+          [
+            20000,
+            "0.00140"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T08:34:58Z",
+      "order_multiple": null,
+      "in_stock_quantity": 868579,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "Master Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://masterdistributors.com/",
+        "uid": "a89e6d948bdb7b59"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0ad4ca6&vpid=66393795",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.01370"
+          ],
+          [
+            25,
+            "0.00690"
+          ],
+          [
+            100,
+            "0.00570"
+          ],
+          [
+            1000,
+            "0.00380"
+          ],
+          [
+            10000,
+            "0.00150"
+          ],
+          [
+            20000,
+            "0.00140"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "70260855",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T09:32:15Z",
+      "order_multiple": null,
+      "in_stock_quantity": 77215,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Allied Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://alliedelec.com",
+        "uid": "f9e13cebd0892a26"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0a752e2&vpid=66219608",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.05000"
+          ],
+          [
+            50,
+            "0.01700"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": "Tape & Reel",
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T09:53:30Z",
+      "order_multiple": null,
+      "in_stock_quantity": 0,
+      "moq": 10000,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Sager",
+        "__class__": "Seller",
+        "homepage_url": "http://www.sager.com/",
+        "uid": "8ec14bcb9b775d06"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=08959ad&vpid=65756561",
+      "factory_order_multiple": null,
+      "factory_lead_days": 42,
+      "prices": {
+        "USD": [
+          [
+            10000,
+            "0.00250"
+          ],
+          [
+            160000,
+            "0.00220"
+          ],
+          [
+            310000,
+            "0.00220"
+          ],
+          [
+            630000,
+            "0.00210"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "2352863",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T05:29:05Z",
+      "order_multiple": null,
+      "in_stock_quantity": 320000,
+      "moq": 10000,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "CN",
+        "has_ecommerce": true,
+        "name": "element14 APAC",
+        "__class__": "Seller",
+        "homepage_url": "http://www.element14.com/",
+        "uid": "cdc808c2c94e1e0f"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0471954&vpid=92043739",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "SGD": [
+          [
+            10000,
+            "0.00200"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "2352863",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T06:24:23Z",
+      "order_multiple": null,
+      "in_stock_quantity": 320000,
+      "moq": 10000,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "GB",
+        "has_ecommerce": true,
+        "name": "Farnell",
+        "__class__": "Seller",
+        "homepage_url": "http://www.farnell.com/",
+        "uid": "58989d9272cd8b5f"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0deeef5&vpid=99135215",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "EUR": [
+          [
+            10000,
+            "0.00500"
+          ]
+        ],
+        "DKK": [
+          [
+            10000,
+            "0.03500"
+          ]
+        ],
+        "GBP": [
+          [
+            10000,
+            "0.00300"
+          ]
+        ],
+        "NOK": [
+          [
+            10000,
+            "0.03900"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "PANA-0041427",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T08:49:38Z",
+      "order_multiple": null,
+      "in_stock_quantity": 11894,
+      "moq": 200,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "JP",
+        "has_ecommerce": true,
+        "name": "Chip One Stop",
+        "__class__": "Seller",
+        "homepage_url": "http://chip1stop.com/",
+        "uid": "6ffbaaf17255bc3c"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0157048&vpid=93763516",
+      "factory_order_multiple": null,
+      "factory_lead_days": 3,
+      "prices": {
+        "USD": [
+          [
+            200,
+            "0.00990"
+          ],
+          [
+            1000,
+            "0.00924"
+          ],
+          [
+            2000,
+            "0.00792"
+          ],
+          [
+            5000,
+            "0.00390"
+          ],
+          [
+            10000,
+            "0.00200"
+          ]
+        ]
+      },
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T03:34:34Z",
+      "order_multiple": null,
+      "in_stock_quantity": 590000,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": "http://octopart.com/rfq/generate?ppid=1220111&vpid=21571076",
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "PUI",
+        "__class__": "Seller",
+        "homepage_url": "http://www.gopui.com/",
+        "uid": "da1f1f15fad409d8"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=05c8d15&vpid=21571076",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": true
+    },
+    {
+      "sku": "7324851",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-08T08:36:33Z",
+      "order_multiple": null,
+      "in_stock_quantity": 30000,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "GB",
+        "has_ecommerce": true,
+        "name": "RS Components",
+        "__class__": "Seller",
+        "homepage_url": "http://www.rs-components.com",
+        "uid": "322cf7263c6ce1eb"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0d05682&vpid=51463973",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": true
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T21:04:22Z",
+      "order_multiple": null,
+      "in_stock_quantity": 2285941,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Quest",
+        "__class__": "Seller",
+        "homepage_url": "http://www.questcomp.com",
+        "uid": "b29977939293615e"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0f1683e&vpid=5046300",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            1,
+            "0.02250"
+          ],
+          [
+            223,
+            "0.01500"
+          ],
+          [
+            1334,
+            "0.00380"
+          ],
+          [
+            13334,
+            "0.00230"
+          ],
+          [
+            88890,
+            "0.00200"
+          ],
+          [
+            256411,
+            "0.00180"
+          ],
+          [
+            555557,
+            "0.00170"
+          ]
+        ]
+      },
+      "is_authorized": false
+    },
+    {
+      "sku": "1935713",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T18:28:15Z",
+      "order_multiple": null,
+      "in_stock_quantity": 617500,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Jameco",
+        "__class__": "Seller",
+        "homepage_url": "http://www.jameco.com",
+        "uid": "bab57fbf9ab96972"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0441a73&vpid=89034417",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {
+        "USD": [
+          [
+            10000,
+            "0.00500"
+          ],
+          [
+            50000,
+            "0.00400"
+          ],
+          [
+            100000,
+            "0.00300"
+          ]
+        ]
+      },
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-09T17:28:27Z",
+      "order_multiple": null,
+      "in_stock_quantity": -2,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "Chip 1 Exchange",
+        "__class__": "Seller",
+        "homepage_url": "http://www.chip-1.com/",
+        "uid": "9e705b7ae7fb4db7"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=001fd3e&vpid=113608740",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-10T07:19:57Z",
+      "order_multiple": null,
+      "in_stock_quantity": 9711,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "IL",
+        "has_ecommerce": true,
+        "name": "GreenTree Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://www.gtelec.com/",
+        "uid": "7662b368101fa5a5"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=019f93b&vpid=112717477",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "WI-633-26865",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T20:03:23Z",
+      "order_multiple": null,
+      "in_stock_quantity": 3695,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "PriceLynx",
+        "__class__": "Seller",
+        "homepage_url": "http://www.pricelynx.com",
+        "uid": "e8582d52fb533b9f"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0da8ebb&vpid=54787393",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-10T20:15:58Z",
+      "order_multiple": null,
+      "in_stock_quantity": -4,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "Harry Krantz",
+        "__class__": "Seller",
+        "homepage_url": "http://www.harrykrantz.com",
+        "uid": "30cdf5c7272fe30a"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0168cd0&vpid=64688244",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-09T13:57:06Z",
+      "order_multiple": null,
+      "in_stock_quantity": 290000,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "SIE",
+        "__class__": "Seller",
+        "homepage_url": "http://www.sie-usa.com",
+        "uid": "8385468f8ebe5042"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0a47bb7&vpid=34936081",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-09T13:20:41Z",
+      "order_multiple": null,
+      "in_stock_quantity": 4300,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "AED Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://www.aedelectronics.com",
+        "uid": "f0283522f1e123ef"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=055b7ea&vpid=22521143",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-09T22:38:21Z",
+      "order_multiple": null,
+      "in_stock_quantity": 9280,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "NetSource Technology",
+        "__class__": "Seller",
+        "homepage_url": "http://www.nstechnology.com",
+        "uid": "a93a6c30b6097afd"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=092d72e&vpid=51949722",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-01T16:55:48Z",
+      "order_multiple": null,
+      "in_stock_quantity": 450,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "CA",
+        "has_ecommerce": false,
+        "name": "Component Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://www.componentonline.com",
+        "uid": "7c78b9721661afbf"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=05955a9&vpid=74337154",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-07T19:43:33Z",
+      "order_multiple": null,
+      "in_stock_quantity": 95,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "M-Tron",
+        "__class__": "Seller",
+        "homepage_url": "http://www.mtroncomponents.com",
+        "uid": "8c01490ba3b55fc6"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0a93894&vpid=99313257",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T11:25:58Z",
+      "order_multiple": null,
+      "in_stock_quantity": 27413,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "Area51-Recertified",
+        "__class__": "Seller",
+        "homepage_url": "http://www.area51recertified.com",
+        "uid": "fbba3eb0e72f287d"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0810330&vpid=49701830",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-02T09:34:56Z",
+      "order_multiple": null,
+      "in_stock_quantity": -4,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "DE",
+        "has_ecommerce": false,
+        "name": "Karl Kruse",
+        "__class__": "Seller",
+        "homepage_url": "http://www.kruse.de",
+        "uid": "efc62acc85263c01"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0d75ce1&vpid=107612601",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ-2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-10T21:55:45Z",
+      "order_multiple": null,
+      "in_stock_quantity": -4,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Bristol Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://bristolelectronics.com",
+        "uid": "2d58e852264bfe9f"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=033042c&vpid=77922397",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-07T10:13:33Z",
+      "order_multiple": null,
+      "in_stock_quantity": 9442,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": "http://octopart.com/rfq/generate?ppid=1220111&vpid=66621820",
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "GB",
+        "has_ecommerce": false,
+        "name": "Cyclops Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://www.cyclops-electronics.com",
+        "uid": "6bd5aedf7d8db812"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=03ecc06&vpid=66621820",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T15:13:16Z",
+      "order_multiple": null,
+      "in_stock_quantity": -4,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "name": "Freelance Electronics",
+        "__class__": "Seller",
+        "homepage_url": "http://rcfreelance.com/",
+        "uid": "029cc79618fcd15b"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=05b0d9a&vpid=72733058",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T13:23:57Z",
+      "order_multiple": null,
+      "in_stock_quantity": 9800,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": null,
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "EDX",
+        "__class__": "Seller",
+        "homepage_url": "http://www.edxelectronics.com/",
+        "uid": "ee682b62ce783daf"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=06c6f8f&vpid=20289196",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    },
+    {
+      "sku": "ERJ2GE0R00X",
+      "packaging": null,
+      "on_order_eta": null,
+      "last_updated": "2014-04-11T17:06:14Z",
+      "order_multiple": null,
+      "in_stock_quantity": -4,
+      "moq": null,
+      "on_order_quantity": null,
+      "octopart_rfq_url": "http://octopart.com/rfq/generate?ppid=1220111&vpid=45321707",
+      "__class__": "PartOffer",
+      "seller": {
+        "display_flag": "US",
+        "has_ecommerce": false,
+        "name": "Icon Semiconductors",
+        "__class__": "Seller",
+        "homepage_url": "http://www.iconsemiconductors.com",
+        "uid": "94e851e29ad7472f"
+      },
+      "product_url": "http://octopart-clicks.com/click/vptrack?ak=22becbab&sig=0a75ee7&vpid=45321707",
+      "factory_order_multiple": null,
+      "factory_lead_days": null,
+      "prices": {},
+      "is_authorized": false
+    }
+  ],
+  "uid": "3df8f4e08691e23f",
+  "uid_v2": 122011156785,
+  "mpn": "ERJ-2GE0R00X",
+  "specs": {
+    "size_width": {
+      "attribution": {
+        "sources": [],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "0.0005"
+      ],
+      "metadata": {
+        "datatype": "decimal",
+        "unit": {
+          "symbol": "m",
+          "__class__": "UnitOfMeasurement",
+          "name": "m"
+        },
+        "__class__": "SpecMetadata",
+        "key": "size_width",
+        "name": "Size-Width"
+      }
+    },
+    "size_length": {
+      "attribution": {
+        "sources": [],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "0.001"
+      ],
+      "metadata": {
+        "datatype": "decimal",
+        "unit": {
+          "symbol": "m",
+          "__class__": "UnitOfMeasurement",
+          "name": "m"
+        },
+        "__class__": "SpecMetadata",
+        "key": "size_length",
+        "name": "Size-Length"
+      }
+    },
+    "size_height": {
+      "attribution": {
+        "sources": [],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "0.00035"
+      ],
+      "metadata": {
+        "datatype": "decimal",
+        "unit": {
+          "symbol": "m",
+          "__class__": "UnitOfMeasurement",
+          "name": "m"
+        },
+        "__class__": "SpecMetadata",
+        "key": "size_height",
+        "name": "Size-Height"
+      }
+    },
+    "rohs_status": {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Newark",
+            "uid": "d294179ef2900153"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "Compliant"
+      ],
+      "metadata": {
+        "datatype": "string",
+        "unit": null,
+        "__class__": "SpecMetadata",
+        "key": "rohs_status",
+        "name": "RoHS"
+      }
+    },
+    "voltage_rating_dc": {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Newark",
+            "uid": "d294179ef2900153"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "50.0"
+      ],
+      "metadata": {
+        "datatype": "decimal",
+        "unit": {
+          "symbol": "V",
+          "__class__": "UnitOfMeasurement",
+          "name": "V"
+        },
+        "__class__": "SpecMetadata",
+        "key": "voltage_rating_dc",
+        "name": "Voltage Rating (DC)"
+      }
+    },
+    "lead_free_status": {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Future Electronics",
+            "uid": "e4032109c4f337c4"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "Lead Free"
+      ],
+      "metadata": {
+        "datatype": "string",
+        "unit": null,
+        "__class__": "SpecMetadata",
+        "key": "lead_free_status",
+        "name": "Lead-Free Status"
+      }
+    },
+    "resistance": {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Farnell",
+            "uid": "58989d9272cd8b5f"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "0.0"
+      ],
+      "metadata": {
+        "datatype": "decimal",
+        "unit": {
+          "symbol": "Ω",
+          "__class__": "UnitOfMeasurement",
+          "name": "ohms"
+        },
+        "__class__": "SpecMetadata",
+        "key": "resistance",
+        "name": "Resistance"
+      }
+    },
+    "resistance_tolerance": {
+      "attribution": {
+        "sources": [],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "±5%"
+      ],
+      "metadata": {
+        "datatype": "string",
+        "unit": null,
+        "__class__": "SpecMetadata",
+        "key": "resistance_tolerance",
+        "name": "Resistance Tolerance"
+      }
+    },
+    "case_package": {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Farnell",
+            "uid": "58989d9272cd8b5f"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "0402",
+        "0402"
+      ],
+      "metadata": {
+        "datatype": "string",
+        "unit": null,
+        "__class__": "SpecMetadata",
+        "key": "case_package",
+        "name": "Case/Package"
+      }
+    },
+    "lifecycle_status": {
+      "attribution": {
+        "sources": [],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "Not Listed by Manufacturer"
+      ],
+      "metadata": {
+        "datatype": "string",
+        "unit": null,
+        "__class__": "SpecMetadata",
+        "key": "lifecycle_status",
+        "name": "Lifecycle Status"
+      }
+    },
+    "mounting_style": {
+      "attribution": {
+        "sources": [],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "Surface Mount"
+      ],
+      "metadata": {
+        "datatype": "string",
+        "unit": null,
+        "__class__": "SpecMetadata",
+        "key": "mounting_style",
+        "name": "Mounting Style"
+      }
+    },
+    "power_rating": {
+      "attribution": {
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Farnell",
+            "uid": "58989d9272cd8b5f"
+          }
+        ],
+        "__class__": "Attribution",
+        "first_acquired": null
+      },
+      "max_value": null,
+      "min_value": null,
+      "__class__": "SpecValue",
+      "value": [
+        "0.1"
+      ],
+      "metadata": {
+        "datatype": "decimal",
+        "unit": {
+          "symbol": "W",
+          "__class__": "UnitOfMeasurement",
+          "name": "W"
+        },
+        "__class__": "SpecMetadata",
+        "key": "power_rating",
+        "name": "Power Rating"
+      }
+    }
+  },
+  "brand": {
+    "homepage_url": null,
+    "__class__": "Brand",
+    "name": "Panasonic - ECG",
+    "uid": "4c528d5878c09b95"
+  },
+  "octopart_url": "http://octopart.com/erj-2ge0r00x-panasonic+-+ecg-1220111",
+  "__class__": "Part",
+  "manufacturer": {
+    "homepage_url": null,
+    "__class__": "Manufacturer",
+    "name": "Panasonic - ECG",
+    "uid": "c20a0700af7c11cd"
+  }
+}

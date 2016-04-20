@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "mga.dtd">
+
+<project guid="{BE6011BF-CD3F-46C2-A314-DEE751B7D2ED}" cdate="Sat Oct 12 22:20:31 2013" mdate="Sat Oct 12 22:20:31 2013" version="" metaguid="{50D889FD-09E4-4025-B202-03917D00EBBE}" metaversion="0.04t" metaname="CyPhyML">
+	<name>RootFolder</name>
+	<comment></comment>
+	<author></author>
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1" kind="RootFolder" guid="{9e62e915-c986-4085-bbf3-64632b8a83ca}">
+		<name>RootFolder</name>
+		<folder id="id-006a-00000002" relid="0x1" childrelidcntr="0x1" kind="Components" guid="{c8e9fa73-17c0-499c-8ab6-25583f9b1e47}">
+			<name>semicon-smd-ipc</name>
+			<folder id="id-006a-00000003" relid="0x1" childrelidcntr="0x2" kind="Components" guid="{bed66a61-4d88-4af9-b18f-4179dc5d6c1d}">
+				<name>NPN_TRANSISTIOR_2COL</name>
+				<model id="id-0065-00000001" kind="Component" guid="{6736388e-596d-493c-86d5-85766f3a6cbc}" relid="0x1" childrelidcntr="0x3">
+					<name>Comp_SOT143</name>
+					<attribute kind="AVMID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Cardinality" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Classifications" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="InstanceGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="NumAssociatedConfigs" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Revision" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Version" status="meta">
+						<value></value>
+					</attribute>
+					<model id="id-0065-00000002" kind="SchematicModel" role="SchematicModel" guid="{6f3d7811-2315-464d-af5d-cbadb64d4418}" relid="0x1" childrelidcntr="0x4">
+						<name>Sch_SOT143</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Icon" isopaque="yes">
+									<value>None</value>
+								</regnode>
+								<regnode name="Position" isopaque="yes">
+									<value>300,150</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Icon" isopaque="yes">
+									<value>None</value>
+								</regnode>
+								<regnode name="Position" isopaque="yes">
+									<value>300,150</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Author" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Device">
+							<value>SOT143</value>
+						</attribute>
+						<attribute kind="DeviceSet">
+							<value>NPN-TRANSISTIOR-2COL</value>
+						</attribute>
+						<attribute kind="FilePathWithinResource" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Library">
+							<value>semicon-smd-ipc</value>
+						</attribute>
+						<attribute kind="Notes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Package">
+							<value>SOT143</value>
+						</attribute>
+						<atom id="id-0066-00000001" kind="SchematicModelPort" role="SchematicModelPort" guid="{82b530c0-5335-4946-bb95-9dd38da39da5}" relid="0x1">
+							<name>B</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="All" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>0,203</value>
+									</regnode>
+								</regnode>
+								<regnode name="SchematicAspect" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>0,203</value>
+									</regnode>
+								</regnode>
+							</regnode>
+							<attribute kind="Definition" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="DefinitionNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="Gate">
+								<value>G$1</value>
+							</attribute>
+							<attribute kind="ID" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="InstanceNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="SymbolLocationX">
+								<value>-2.54</value>
+							</attribute>
+							<attribute kind="SymbolLocationY">
+								<value>0</value>
+							</attribute>
+							<attribute kind="SymbolRotation">
+								<value>None</value>
+							</attribute>
+						</atom>
+						<atom id="id-0066-00000002" kind="SchematicModelPort" role="SchematicModelPort" guid="{e25c45a5-faea-4550-bdcc-dfe9afa1402f}" relid="0x2">
+							<name>E</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="All" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,0</value>
+									</regnode>
+								</regnode>
+								<regnode name="SchematicAspect" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,0</value>
+									</regnode>
+								</regnode>
+							</regnode>
+							<attribute kind="Definition" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="DefinitionNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="Gate">
+								<value>G$1</value>
+							</attribute>
+							<attribute kind="ID" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="InstanceNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="SymbolLocationX">
+								<value>2.54</value>
+							</attribute>
+							<attribute kind="SymbolLocationY">
+								<value>-5.08</value>
+							</attribute>
+							<attribute kind="SymbolRotation">
+								<value>R90</value>
+							</attribute>
+						</atom>
+						<atom id="id-0066-00000003" kind="SchematicModelPort" role="SchematicModelPort" guid="{e04606de-b247-40f3-8fb1-35f7bfa65746}" relid="0x3">
+							<name>C</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="All" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,406</value>
+									</regnode>
+								</regnode>
+								<regnode name="SchematicAspect" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,406</value>
+									</regnode>
+								</regnode>
+							</regnode>
+							<attribute kind="Definition" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="DefinitionNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="Gate">
+								<value>G$1</value>
+							</attribute>
+							<attribute kind="ID" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="InstanceNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="SymbolLocationX">
+								<value>2.54</value>
+							</attribute>
+							<attribute kind="SymbolLocationY">
+								<value>5.08</value>
+							</attribute>
+							<attribute kind="SymbolRotation">
+								<value>R270</value>
+							</attribute>
+						</atom>
+						<atom id="id-0066-00000004" kind="SchematicModelPort" role="SchematicModelPort" guid="{2ea034cf-42ee-42b2-9522-b0eb86d08cc6}" relid="0x4">
+							<name>C/</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="All" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,304</value>
+									</regnode>
+								</regnode>
+								<regnode name="SchematicAspect" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,304</value>
+									</regnode>
+								</regnode>
+							</regnode>
+							<attribute kind="Definition" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="DefinitionNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="Gate">
+								<value>G$1</value>
+							</attribute>
+							<attribute kind="ID" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="InstanceNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="SymbolLocationX">
+								<value>2.54</value>
+							</attribute>
+							<attribute kind="SymbolLocationY">
+								<value>2.54</value>
+							</attribute>
+							<attribute kind="SymbolRotation">
+								<value>R90</value>
+							</attribute>
+						</atom>
+					</model>
+					<atom id="id-0066-00000005" kind="Resource" role="Resource" guid="{7ffc2f55-db79-4aa0-9255-970d1a6b5d90}" relid="0x2">
+						<name>Res_SOT143</name>
+						<attribute kind="Hash" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Notes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Path">
+							<value>Schematic/ecad.lbr</value>
+						</attribute>
+					</atom>
+					<connection id="id-0068-00000001" kind="UsesResource" role="UsesResource" guid="{9fd651c6-70b8-4249-9489-51cd406171ae}" relid="0x3">
+						<name>Uses_SOT143</name>
+						<connpoint role="dst" target="id-0065-00000002"/>
+						<connpoint role="src" target="id-0066-00000005"/>
+					</connection>
+				</model>
+				<model id="id-0065-00000003" kind="Component" guid="{99bfa215-bbcf-4a87-9df2-a4afc078f85f}" relid="0x2" childrelidcntr="0x3">
+					<name>Comp_SOT89</name>
+					<attribute kind="AVMID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Cardinality" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Classifications" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="InstanceGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="NumAssociatedConfigs" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Revision" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Version" status="meta">
+						<value></value>
+					</attribute>
+					<model id="id-0065-00000004" kind="SchematicModel" role="SchematicModel" guid="{b14d8f97-287c-4c31-a6de-f738d47100c5}" relid="0x1" childrelidcntr="0x4">
+						<name>Sch_SOT89</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Icon" isopaque="yes">
+									<value>None</value>
+								</regnode>
+								<regnode name="Position" isopaque="yes">
+									<value>300,150</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Icon" isopaque="yes">
+									<value>None</value>
+								</regnode>
+								<regnode name="Position" isopaque="yes">
+									<value>300,150</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Author" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Device">
+							<value>SOT89</value>
+						</attribute>
+						<attribute kind="DeviceSet">
+							<value>NPN-TRANSISTIOR-2COL</value>
+						</attribute>
+						<attribute kind="FilePathWithinResource" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Library">
+							<value>semicon-smd-ipc</value>
+						</attribute>
+						<attribute kind="Notes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Package">
+							<value>SOT89</value>
+						</attribute>
+						<atom id="id-0066-00000006" kind="SchematicModelPort" role="SchematicModelPort" guid="{e1257b89-704a-4d9e-bc1b-3f0c1b575f88}" relid="0x1">
+							<name>B</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="All" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>0,203</value>
+									</regnode>
+								</regnode>
+								<regnode name="SchematicAspect" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>0,203</value>
+									</regnode>
+								</regnode>
+							</regnode>
+							<attribute kind="Definition" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="DefinitionNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="Gate">
+								<value>G$1</value>
+							</attribute>
+							<attribute kind="ID" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="InstanceNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="SymbolLocationX">
+								<value>-2.54</value>
+							</attribute>
+							<attribute kind="SymbolLocationY">
+								<value>0</value>
+							</attribute>
+							<attribute kind="SymbolRotation">
+								<value>None</value>
+							</attribute>
+						</atom>
+						<atom id="id-0066-00000007" kind="SchematicModelPort" role="SchematicModelPort" guid="{2a6eae00-68b5-4161-a23e-b7e0259a96b0}" relid="0x2">
+							<name>E</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="All" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,0</value>
+									</regnode>
+								</regnode>
+								<regnode name="SchematicAspect" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,0</value>
+									</regnode>
+								</regnode>
+							</regnode>
+							<attribute kind="Definition" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="DefinitionNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="Gate">
+								<value>G$1</value>
+							</attribute>
+							<attribute kind="ID" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="InstanceNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="SymbolLocationX">
+								<value>2.54</value>
+							</attribute>
+							<attribute kind="SymbolLocationY">
+								<value>-5.08</value>
+							</attribute>
+							<attribute kind="SymbolRotation">
+								<value>R90</value>
+							</attribute>
+						</atom>
+						<atom id="id-0066-00000008" kind="SchematicModelPort" role="SchematicModelPort" guid="{1ad358ad-7fdd-4c4c-bbde-77bc3b84535e}" relid="0x3">
+							<name>C</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="All" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,406</value>
+									</regnode>
+								</regnode>
+								<regnode name="SchematicAspect" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,406</value>
+									</regnode>
+								</regnode>
+							</regnode>
+							<attribute kind="Definition" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="DefinitionNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="Gate">
+								<value>G$1</value>
+							</attribute>
+							<attribute kind="ID" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="InstanceNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="SymbolLocationX">
+								<value>2.54</value>
+							</attribute>
+							<attribute kind="SymbolLocationY">
+								<value>5.08</value>
+							</attribute>
+							<attribute kind="SymbolRotation">
+								<value>R270</value>
+							</attribute>
+						</atom>
+						<atom id="id-0066-00000009" kind="SchematicModelPort" role="SchematicModelPort" guid="{9bcf8393-572e-4bbf-a200-f518b0e9204c}" relid="0x4">
+							<name>C/</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="All" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,304</value>
+									</regnode>
+								</regnode>
+								<regnode name="SchematicAspect" status="undefined">
+									<value></value>
+									<regnode name="Icon" isopaque="yes">
+										<value>None</value>
+									</regnode>
+									<regnode name="Position" isopaque="yes">
+										<value>203,304</value>
+									</regnode>
+								</regnode>
+							</regnode>
+							<attribute kind="Definition" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="DefinitionNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="Gate">
+								<value>G$1</value>
+							</attribute>
+							<attribute kind="ID" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="InstanceNotes" status="meta">
+								<value></value>
+							</attribute>
+							<attribute kind="SymbolLocationX">
+								<value>2.54</value>
+							</attribute>
+							<attribute kind="SymbolLocationY">
+								<value>2.54</value>
+							</attribute>
+							<attribute kind="SymbolRotation">
+								<value>R90</value>
+							</attribute>
+						</atom>
+					</model>
+					<atom id="id-0066-0000000a" kind="Resource" role="Resource" guid="{d9dd1351-3d03-4be6-b4a5-002d7e516eaf}" relid="0x2">
+						<name>Res_SOT89</name>
+						<attribute kind="Hash" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Notes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Path">
+							<value>Schematic/ecad.lbr</value>
+						</attribute>
+					</atom>
+					<connection id="id-0068-00000002" kind="UsesResource" role="UsesResource" guid="{a1c5b66d-ad7a-4893-8b1d-1284252a6b84}" relid="0x3">
+						<name>Uses_SOT89</name>
+						<connpoint role="dst" target="id-0065-00000004"/>
+						<connpoint role="src" target="id-0066-0000000a"/>
+					</connection>
+				</model>
+			</folder>
+		</folder>
+	</folder>
+</project>

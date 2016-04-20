@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Design xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="DesignSpace" DesignID="id-3b9be282-9e79-4762-967f-c81f53a70208" xmlns="avm">
-  <RootContainer xmlns:q1="avm" xsi:type="q1:Compound" Name="DesignSpace" xmlns="">
-    <Container xsi:type="q1:Alternative" YPosition="168" XPosition="406" Name="Alt">
+  <RootContainer xmlns:q1="avm" xsi:type="q1:Compound" ID="1" Name="DesignSpace" xmlns="">
+    <Container xsi:type="q1:Alternative" YPosition="168" XPosition="406" ID="6" Name="Alt">
       <ComponentInstance ComponentID="e2a9027d-6cdc-436b-9557-9f662165900b" ID="{299cff31-af97-4589-9aee-5b26db3b1af9}" Name="CompB" />
       <ComponentInstance ComponentID="7e7502d6-f4bd-4088-94bc-db5523b1be70" ID="{9a2fce54-38e0-4f30-a95c-be518958b0f4}" Name="CompC" />
     </Container>

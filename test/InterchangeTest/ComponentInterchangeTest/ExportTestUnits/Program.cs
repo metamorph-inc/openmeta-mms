@@ -90,9 +90,9 @@ namespace ComponentExporterUnitTests
             {
                 Directory.SetCurrentDirectory(testPath);
                 var arguments = (Path.Combine("components",
-                                             "Imported_Components",
-                                             "Cross_Drive_without_TC",
-                                             "Cross_Drive_without_TC.component.acm")
+                                              "Components",
+                                              "Cross_Drive_without_TC",
+                                              "Cross_Drive_without_TC.component.acm")
                                 + " " +
                                 "InputModel.mga").Split(' ');
 
@@ -120,10 +120,10 @@ namespace ComponentExporterUnitTests
                               }
                           };
 
-            process.StartInfo.Arguments += "\"components/Imported_Components/drawbar/drawbar.component.acm\"";
+            process.StartInfo.Arguments += "\"components/Components/drawbar/drawbar.component.acm\"";
             process.StartInfo.Arguments += " InputModel.mga";
 
-            return Common.processCommon(process);
+            return Common.processCommon(process, true);
         }
 
         private int runCyPhyComponentImporterCLHull(string testName)
@@ -152,7 +152,7 @@ namespace ComponentExporterUnitTests
                               }
                           };
 
-            process.StartInfo.Arguments += testName + "\"" + "/components/Imported_Components/hull/hull.component.acm" + "\"";
+            process.StartInfo.Arguments += testName + "\"" + "/components/Components/hull/hull.component.acm" + "\"";
             process.StartInfo.Arguments += " " + testName + "/InputModel.mga";
 
             return Common.processCommon(process);
@@ -271,7 +271,7 @@ namespace ComponentExporterUnitTests
             unpackXme(xmePath);
             Assert.Equal(0, RunPropertiesWithinConnectorsTest());
         }
-
+        
         [Fact]
         public void FormulaTest()
         {
@@ -318,7 +318,8 @@ namespace ComponentExporterUnitTests
 
             String p_expectedACM = Path.Combine(p_TestFolder, "expected.component.acm");
             String p_generatedACM = Path.Combine(p_TestFolder,
-                                                "Imported_Components",
+                                                "Components",
+                                                "Manikin",
                                                 "testcomp",
                                                 "testcomp.component.acm");
 
@@ -344,7 +345,7 @@ namespace ComponentExporterUnitTests
 
             String p_expectedACM = Path.Combine(p_TestFolder, "expected.component.acm");
             String p_generatedACM = Path.Combine(p_TestFolder,
-                                                "Imported_Components",
+                                                "Components",
                                                 "CompWithCADMetric",
                                                 "CompWithCADMetric.component.acm");
 
@@ -405,10 +406,10 @@ namespace ComponentExporterUnitTests
             unpackXmes(testName);
             Assert.Equal(0, runCyPhyComponentExporterCL(testName));
 
-            var acmFile = @"components\Imported_Components\RevoluteJoint\RevoluteJoint.component.acm";
+            var acmFile = @"components\Components\RevoluteJoint\RevoluteJoint.component.acm";
             RunComponentImporter(testName, acmFile);
 
-            acmFile = @"components\Imported_Components\TranslationalJoint\TranslationalJoint.component.acm";
+            acmFile = @"components\Components\TranslationalJoint\TranslationalJoint.component.acm";
             RunComponentImporter(testName, acmFile);
 
             runCyPhyMLComparator(testName);

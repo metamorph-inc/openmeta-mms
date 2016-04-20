@@ -82,7 +82,7 @@ namespace ComponentInterchangeTest
             );
 
         public static readonly string path_ExportedACM = Path.Combine(testPath,
-                                       "Imported_Components",
+                                       "Components",
                                        "HasGuideDatums",
                                        "HasGuideDatums.component.acm");
         #endregion

@@ -135,6 +135,12 @@ PreferenceVariant GetIcon(CComPtr<IMgaFCO> pFCO, CComPtr<IMgaMetaPart>& pPart, _
 	auto t3 = iconStringParser.parse(L"aspect1=icon1.png;aspect2=icon2.png");
 	auto t4 = iconStringParser.parse(L"Default.png;aspect1=icon1.png;aspect2=icon2.png;");
 	auto t5 = iconStringParser.parse(L"Default.png");
+	auto t6 = iconStringParser.parse(L".\\Default.png");
+	auto t7 = iconStringParser.parse(L".\\Place\\file.png");
+	auto t8 = iconStringParser.parse(L"Place\\file.png");
+	auto t9 = iconStringParser.parse(L"Place/file.png");
+	auto t10 = iconStringParser.parse(L"Place/file.png;");
+	auto t11 = iconStringParser.parse(L".\\Place\\file.png;");
 	*/
 	
 	return PreferenceVariant(CString(static_cast<const TCHAR*>(strIcon)));

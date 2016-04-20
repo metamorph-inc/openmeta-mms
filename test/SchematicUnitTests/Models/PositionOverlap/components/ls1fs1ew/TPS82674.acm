@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="e23f1bf8-b30d-4504-8b46-aa8227efaecf" Name="TPS82674" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-2bccdd28-0cdc-40e6-84b0-ab09a34da1b4" Author="" Notes="" XPosition="280" YPosition="70" Name="EDAModel" Package="MICRO-SIP" Device="" Library="General_Andres" DeviceSet="TPS82674SIPT" xmlns="">
+    <Pin ID="id-74f73c5a-81d5-4e73-8e96-ad81e2e8b0ed" PortMap="" Notes="" XPosition="25" Definition="" YPosition="25" Name="EN" EDAGate="G$1" EDASymbolLocationX="-17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-4acd4d9f-6d5d-4fc8-a5c9-7226501b6e96" PortMap="" Notes="" XPosition="325" Definition="" YPosition="25" Name="VIN" EDAGate="G$1" EDASymbolLocationX="-17.78" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-6e7f3f56-859e-4d28-8700-01828e171da0" PortMap="" Notes="" XPosition="225" Definition="" YPosition="25" Name="MODE" EDAGate="G$1" EDASymbolLocationX="17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-b2a6e4e3-64f2-4459-9fc7-514a624d1b5c" PortMap="" Notes="" XPosition="425" Definition="" YPosition="25" Name="VOUT" EDAGate="G$1" EDASymbolLocationX="17.78" EDASymbolLocationY="5.08" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-328717e7-41ca-4430-8f48-3c06327632ba" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="GND" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-15.24" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </DomainModel>
+  <ResourceDependency XPosition="658" YPosition="70" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-2bccdd28-0cdc-40e6-84b0-ab09a34da1b4" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-267870dc-4752-430a-ae37-7e15a90d5f33" ApplyJoinData="" Notes="" Name="VOUT" Definition="" YPosition="182" XPosition="490" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-edc86224-5768-4539-95d3-5fd39816df7e" PortMap="id-b2a6e4e3-64f2-4459-9fc7-514a624d1b5c" Notes="" XPosition="100" Definition="" YPosition="100" Name="VOUT" EDAGate="G$1" EDASymbolLocationX="17.78" EDASymbolLocationY="5.08" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-725e7b24-ffe1-451a-91b6-1e71071f5c1c" ApplyJoinData="" Notes="" Name="VIN" Definition="" YPosition="308" XPosition="490" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-63344c21-115e-4ecd-aad8-0a02f14b0c60" PortMap="id-4acd4d9f-6d5d-4fc8-a5c9-7226501b6e96" Notes="" XPosition="100" Definition="" YPosition="100" Name="VIN" EDAGate="G$1" EDASymbolLocationX="-17.78" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-c7bc0955-907e-4645-a4e0-977793e67d16" ApplyJoinData="" Notes="" Name="GND" Definition="" YPosition="182" XPosition="105" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-605ec5de-53b8-4814-89ec-56094a45c2d9" PortMap="id-328717e7-41ca-4430-8f48-3c06327632ba" Notes="" XPosition="100" Definition="" YPosition="100" Name="GND" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-15.24" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-aa8f3d2a-65ff-4a21-930d-c1062b0e5488" ApplyJoinData="" Notes="" Name="EN" Definition="" YPosition="301" XPosition="105" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-a40b0e88-eaf5-4b79-a176-cc907c09df78" PortMap="id-74f73c5a-81d5-4e73-8e96-ad81e2e8b0ed" Notes="" XPosition="100" Definition="" YPosition="100" Name="EN" EDAGate="G$1" EDASymbolLocationX="-17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-cd065d69-0a57-408c-8c04-256571475344" ApplyJoinData="" Notes="" Name="MODE" Definition="" YPosition="434" XPosition="490" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-48ec28bd-7873-4540-b646-404eab307bbb" PortMap="id-6e7f3f56-859e-4d28-8700-01828e171da0" Notes="" XPosition="100" Definition="" YPosition="100" Name="MODE" EDAGate="G$1" EDASymbolLocationX="17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">semiconductors_and_actives.power_management.voltage_regulators</Classifications>
+</Component>

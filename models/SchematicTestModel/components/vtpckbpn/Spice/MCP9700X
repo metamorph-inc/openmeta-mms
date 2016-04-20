@@ -1,0 +1,15 @@
+*MCP9700_Sweep Temperature Sensor with sine temperature profile
+*Connections:    VDD
+*                 |  VOUT
+*                 |   |
+*                 |   |  GND
+*                 |   |   |
+.subckt MCP9700X  1   2   3
+.PARAMS max_temp= {100} min_temp= {0} period = {100} m= {.0191}
++ Offset = {(max_temp+min_temp)/2} b= {.4197} Amplitude = {(max_temp-min_temp)/2}
+*
+BV1	 2  3 V = {{m}*{offset +Amplitude*sin(2*pi*(1/period)*time)}+{b}}
+R1   1  3 833E3
+*
+.ENDS
+

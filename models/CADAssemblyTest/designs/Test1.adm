@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<Design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Test1" DesignID="{19f30ac8-8bc8-4717-ab73-2378e86c766a}" xmlns="avm">
+  <RootContainer xmlns:q1="avm" xsi:type="q1:Compound" Name="Test1" xmlns="">
+    <ComponentInstance XPosition="553" YPosition="154" ComponentID="7ab88404-4cfd-4bbf-aa0d-aeeebf00c9b0" ID="{35942f63-a715-4a71-8882-97d54c9d1fcd}" Name="SpicySingleOpAmp">
+      <ConnectorInstance ConnectorComposition="{382a1057-c6f7-46bf-adcd-3fb0552c32c4}-id-be3b9612-91e6-4ca3-a58d-a66412fbdd2f" ID="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-928f3e6a-2b48-411f-89bb-eaf69a4361ae" ApplyJoinData="" IDinComponentModel="id-928f3e6a-2b48-411f-89bb-eaf69a4361ae" />
+      <ConnectorInstance ConnectorComposition="" ID="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-7db592c5-4238-4d14-b10e-4d4817a3e48e" ApplyJoinData="" IDinComponentModel="id-7db592c5-4238-4d14-b10e-4d4817a3e48e" />
+      <ConnectorInstance ConnectorComposition="" ID="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-7e7a6195-0ca2-471c-8c2e-4f961bc6f670" ApplyJoinData="" IDinComponentModel="id-7e7a6195-0ca2-471c-8c2e-4f961bc6f670" />
+      <ConnectorInstance ConnectorComposition="id-905f171d-63ef-4751-8344-13e380448f63" ID="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-e571100e-7917-43b8-accd-0758a9de1203" ApplyJoinData="" IDinComponentModel="id-e571100e-7917-43b8-accd-0758a9de1203" />
+      <ConnectorInstance ConnectorComposition="{ec47d21e-45be-435a-8ba9-284410145306}-id-be3b9612-91e6-4ca3-a58d-a66412fbdd2f {382a1057-c6f7-46bf-adcd-3fb0552c32c4}-id-4cde194d-606e-4bdd-918c-ea63b4229a25" ID="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-4f643b6d-d7b3-4ab0-92a1-a4e63034f8f7" ApplyJoinData="" IDinComponentModel="id-4f643b6d-d7b3-4ab0-92a1-a4e63034f8f7" />
+    </ComponentInstance>
+    <ComponentInstance XPosition="567" YPosition="322" ComponentID="672329de-2203-4d4b-9721-db5428ba573d" ID="{382a1057-c6f7-46bf-adcd-3fb0552c32c4}" Name="Rfb">
+      <PrimitivePropertyInstance IDinComponentModel="id-15cdbad5-6620-42a2-bf0d-3808956c1860">
+        <Value ID="b7d5d0e8-48ea-4a15-aa2b-5ea380c674f4" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <ConnectorInstance ConnectorComposition="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-928f3e6a-2b48-411f-89bb-eaf69a4361ae" ID="{382a1057-c6f7-46bf-adcd-3fb0552c32c4}-id-be3b9612-91e6-4ca3-a58d-a66412fbdd2f" ApplyJoinData="" IDinComponentModel="id-be3b9612-91e6-4ca3-a58d-a66412fbdd2f" />
+      <ConnectorInstance ConnectorComposition="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-4f643b6d-d7b3-4ab0-92a1-a4e63034f8f7" ID="{382a1057-c6f7-46bf-adcd-3fb0552c32c4}-id-4cde194d-606e-4bdd-918c-ea63b4229a25" ApplyJoinData="" IDinComponentModel="id-4cde194d-606e-4bdd-918c-ea63b4229a25" />
+    </ComponentInstance>
+    <ComponentInstance XPosition="329" YPosition="98" ComponentID="672329de-2203-4d4b-9721-db5428ba573d" ID="{ec47d21e-45be-435a-8ba9-284410145306}" Name="Rin">
+      <PrimitivePropertyInstance IDinComponentModel="id-15cdbad5-6620-42a2-bf0d-3808956c1860">
+        <Value ID="b7d5d0e8-48ea-4a15-aa2b-5ea380c674f4" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <ConnectorInstance ConnectorComposition="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-4f643b6d-d7b3-4ab0-92a1-a4e63034f8f7" ID="{ec47d21e-45be-435a-8ba9-284410145306}-id-be3b9612-91e6-4ca3-a58d-a66412fbdd2f" ApplyJoinData="" IDinComponentModel="id-be3b9612-91e6-4ca3-a58d-a66412fbdd2f" />
+      <ConnectorInstance ConnectorComposition="id-4857aa65-41b6-4282-98b5-a6092f40ca59" ID="{ec47d21e-45be-435a-8ba9-284410145306}-id-4cde194d-606e-4bdd-918c-ea63b4229a25" ApplyJoinData="" IDinComponentModel="id-4cde194d-606e-4bdd-918c-ea63b4229a25" />
+    </ComponentInstance>
+    <Connector ConnectorComposition="{35942f63-a715-4a71-8882-97d54c9d1fcd}-id-e571100e-7917-43b8-accd-0758a9de1203" ID="id-905f171d-63ef-4751-8344-13e380448f63" ApplyJoinData="" XPosition="28" YPosition="273" Definition="" Name="n">
+      <Role xmlns:q2="modelica" xsi:type="q2:Connector" ID="id-87201545-e82d-432c-b704-f86b545abfc1" PortMap="" XPosition="126" YPosition="35" Name="n" Locator="n" Class="Modelica.Electrical.Analog.Interfaces.NegativePin" />
+      <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-14e41138-5342-4d37-970b-f5883d2185dd" PortMap="" Notes="" XPosition="147" Definition="" YPosition="154" Name="Sch" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-15.24" EDASymbolRotation="0" SPICEPortNumber="0" />
+    </Connector>
+    <Connector ConnectorComposition="{ec47d21e-45be-435a-8ba9-284410145306}-id-4cde194d-606e-4bdd-918c-ea63b4229a25" ID="id-4857aa65-41b6-4282-98b5-a6092f40ca59" ApplyJoinData="" XPosition="196" YPosition="21" Definition="" Name="p">
+      <Role xmlns:q4="modelica" xsi:type="q4:Connector" ID="id-0efcf0f8-7573-4ba8-a16a-cb8a75a0d4d3" PortMap="" Name="p" Locator="p" Class="Modelica.Electrical.Analog.Interfaces.PositivePin" />
+      <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-23896029-cffe-4d14-8c4a-73e9141e24f4" PortMap="" Notes="" XPosition="49" Definition="" YPosition="119" Name="Sch" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-15.24" EDASymbolRotation="0" SPICEPortNumber="0" />
+    </Connector>
+  </RootContainer>
+</Design>

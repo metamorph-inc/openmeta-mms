@@ -7,5 +7,6 @@ encoding//model/avm.cad.xsd=UTF8
 encoding//model/avm.cyber.xsd=UTF8
 encoding//model/avm.manufacturing.xsd=UTF8
 encoding//model/avm.modelica.xsd=UTF8
+encoding//model/avm.schematic.eda.xsd=UTF8
 encoding//model/avm.xsd=UTF8
 encoding//model/component.xsd=UTF8

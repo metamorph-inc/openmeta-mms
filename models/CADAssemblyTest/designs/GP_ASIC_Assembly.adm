@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<Design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="GP_ASIC_Assembly" DesignID="{5ff6960a-43a8-49fc-a5f0-aae6d2747530}" xmlns="avm">
+  <RootContainer xmlns:q1="avm" xsi:type="q1:Compound" Name="GP_ASIC_Assembly" xmlns="">
+    <ComponentInstance XPosition="798" YPosition="91" ComponentID="1646205f-6dbc-4f33-a260-00de39c5f0e7" ID="{6c848413-0026-45e0-a76e-ac9048627ef7}" Name="Red_LED">
+      <PrimitivePropertyInstance IDinComponentModel="id-d12d40f5-c53c-443e-9152-56cd13644855">
+        <Value ID="1a79ab11-301e-4f96-b81a-610c634f2934" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <ConnectorInstance ConnectorComposition="" ID="{6c848413-0026-45e0-a76e-ac9048627ef7}-id-41e68273-ea15-4572-9cae-d83721a8cc5c" ApplyJoinData="" IDinComponentModel="id-41e68273-ea15-4572-9cae-d83721a8cc5c" />
+      <ConnectorInstance ConnectorComposition="{19a87a8b-33ea-4b28-b769-ccbc0b957a0a}-id-17e0765d-4040-4a5b-b2ed-50db1c5b0b63" ID="{6c848413-0026-45e0-a76e-ac9048627ef7}-id-3a78c52c-9175-47d0-b21c-156e38c2b9ff" ApplyJoinData="" IDinComponentModel="id-3a78c52c-9175-47d0-b21c-156e38c2b9ff" />
+    </ComponentInstance>
+    <ComponentInstance XPosition="420" YPosition="497" ComponentID="0ee9bb38-baeb-4252-9c09-bd5475756cf3" ID="{19a87a8b-33ea-4b28-b769-ccbc0b957a0a}" Name="R_0402_200_0.1W_1%_Thick_Film">
+      <PrimitivePropertyInstance IDinComponentModel="id-e8af007b-ef99-43bb-b074-610dcc9b8762">
+        <Value ID="6141f802-d217-48cd-8270-3c1ab88d7d5a" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-5b532445-5032-4c0a-86c3-d07a69a80ef8">
+        <Value ID="4604753f-0b77-4c46-84d8-ae5f34a4f576" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-c36a6fff-dbce-4757-98af-d065466f33ba">
+        <Value ID="2ca552d1-06fa-4406-a74b-036fe455cd6b" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-520d1642-dd28-4634-8f6d-5c927e58b16d">
+        <Value ID="b88f34af-5ddc-45d6-85c2-a92432fec2d2" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <ConnectorInstance ConnectorComposition="id-bd377e43-7cbc-4dc1-bde6-9ccbe5f6a1bc" ID="{19a87a8b-33ea-4b28-b769-ccbc0b957a0a}-id-7faf8c3a-ecff-4ee8-a0a3-9916915ebfd4" ApplyJoinData="" IDinComponentModel="id-7faf8c3a-ecff-4ee8-a0a3-9916915ebfd4" />
+      <ConnectorInstance ConnectorComposition="{6c848413-0026-45e0-a76e-ac9048627ef7}-id-3a78c52c-9175-47d0-b21c-156e38c2b9ff" ID="{19a87a8b-33ea-4b28-b769-ccbc0b957a0a}-id-17e0765d-4040-4a5b-b2ed-50db1c5b0b63" ApplyJoinData="" IDinComponentModel="id-17e0765d-4040-4a5b-b2ed-50db1c5b0b63" />
+    </ComponentInstance>
+    <ComponentInstance XPosition="819" YPosition="252" ComponentID="3655b29b-c1fe-461b-8f16-b249a1d603d1" ID="{af329a9a-ddcc-4624-8d23-a6a8a2188565}" Name="C_0201_1.0u_6.3V_10%_X5R">
+      <PrimitivePropertyInstance IDinComponentModel="id-5c267a37-395b-44a5-85ef-ae90439a676c">
+        <Value ID="43570b8b-a32f-4618-a63b-506d619c8515" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-67e30942-c3a9-4829-bc62-e9da481821c4">
+        <Value ID="1c16831b-1bd5-4123-8af6-eebc0c526293" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-59f0ff5d-a4e5-4867-a9e9-efca847e5260">
+        <Value ID="faf1dd8b-28b7-4791-9fcd-d30ce3a7ae16" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-6d76a311-f35e-4363-9e72-d7f65829e432">
+        <Value ID="0ff048ea-aea0-46c4-a7bb-ec8f3c4e1c5f" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-b3fa1868-0da9-4dba-b9d5-6dceb6906c2c">
+        <Value ID="60e86341-a772-469d-a10d-58ed36ceb1cb" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <ConnectorInstance ConnectorComposition="{2ddd116b-688c-474f-9b43-82418656724c}-id-7abebd73-a818-4507-babb-9c40415f5cea" ID="{af329a9a-ddcc-4624-8d23-a6a8a2188565}-id-7abebd73-a818-4507-babb-9c40415f5cea" ApplyJoinData="" IDinComponentModel="id-7abebd73-a818-4507-babb-9c40415f5cea" />
+      <ConnectorInstance ConnectorComposition="{2ddd116b-688c-474f-9b43-82418656724c}-id-b972718a-3bf7-471f-bd8a-353755612fb3" ID="{af329a9a-ddcc-4624-8d23-a6a8a2188565}-id-b972718a-3bf7-471f-bd8a-353755612fb3" ApplyJoinData="" IDinComponentModel="id-b972718a-3bf7-471f-bd8a-353755612fb3" />
+    </ComponentInstance>
+    <ComponentInstance XPosition="819" YPosition="371" ComponentID="3655b29b-c1fe-461b-8f16-b249a1d603d1" ID="{2ddd116b-688c-474f-9b43-82418656724c}" Name="C_0201_1.0u_6.3V_10%_X5R">
+      <PrimitivePropertyInstance IDinComponentModel="id-5c267a37-395b-44a5-85ef-ae90439a676c">
+        <Value ID="43570b8b-a32f-4618-a63b-506d619c8515" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-67e30942-c3a9-4829-bc62-e9da481821c4">
+        <Value ID="1c16831b-1bd5-4123-8af6-eebc0c526293" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-59f0ff5d-a4e5-4867-a9e9-efca847e5260">
+        <Value ID="faf1dd8b-28b7-4791-9fcd-d30ce3a7ae16" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-6d76a311-f35e-4363-9e72-d7f65829e432">
+        <Value ID="0ff048ea-aea0-46c4-a7bb-ec8f3c4e1c5f" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <PrimitivePropertyInstance IDinComponentModel="id-b3fa1868-0da9-4dba-b9d5-6dceb6906c2c">
+        <Value ID="60e86341-a772-469d-a10d-58ed36ceb1cb" DimensionType="Scalar" Dimensions="" DataType="String" />
+      </PrimitivePropertyInstance>
+      <ConnectorInstance ConnectorComposition="{af329a9a-ddcc-4624-8d23-a6a8a2188565}-id-7abebd73-a818-4507-babb-9c40415f5cea" ID="{2ddd116b-688c-474f-9b43-82418656724c}-id-7abebd73-a818-4507-babb-9c40415f5cea" ApplyJoinData="" IDinComponentModel="id-7abebd73-a818-4507-babb-9c40415f5cea" />
+      <ConnectorInstance ConnectorComposition="{af329a9a-ddcc-4624-8d23-a6a8a2188565}-id-b972718a-3bf7-471f-bd8a-353755612fb3" ID="{2ddd116b-688c-474f-9b43-82418656724c}-id-b972718a-3bf7-471f-bd8a-353755612fb3" ApplyJoinData="" IDinComponentModel="id-b972718a-3bf7-471f-bd8a-353755612fb3" />
+    </ComponentInstance>
+    <Connector ConnectorComposition="{19a87a8b-33ea-4b28-b769-ccbc0b957a0a}-id-7faf8c3a-ecff-4ee8-a0a3-9916915ebfd4" ID="id-bd377e43-7cbc-4dc1-bde6-9ccbe5f6a1bc" ApplyJoinData="" XPosition="119" YPosition="315" Definition="" Name="GPIO">
+      <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-017c8193-c34d-47bf-a69e-d03cf309120c" PortMap="id-7ca84eee-d0a6-4c46-a27d-cab9eb3b6586" Notes="" XPosition="448" Definition="" YPosition="105" Name="GPIO" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-10.16" EDASymbolRotation="0" SPICEPortNumber="0" />
+    </Connector>
+    <Connector ConnectorComposition="" ID="id-25c535d8-a32e-4eac-9cc9-5075549b8ab0" ApplyJoinData="" XPosition="273" YPosition="182" Definition="" Name="GP_ASIC_GPIO">
+      <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-a1385a07-7f30-4d8d-8f50-dd033383e092" PortMap="" Notes="" XPosition="100" Definition="" YPosition="1625" Name="GPIO5" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-22.86" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-abed1303-e72a-4424-a0d1-f09358cad533" PortMap="" Notes="" XPosition="100" Definition="" YPosition="375" Name="GPIO8" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-30.48" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-51221fd1-b904-40ce-820b-89ca7185f460" PortMap="" Notes="" XPosition="100" Definition="" YPosition="125" Name="SPIB_CS_N/GPIO15" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="40.64" EDASymbolRotation="R180" SPICEPortNumber="0" />
+      <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-7ca84eee-d0a6-4c46-a27d-cab9eb3b6586" PortMap="id-017c8193-c34d-47bf-a69e-d03cf309120c" Notes="" XPosition="100" Definition="" YPosition="1500" Name="GPIO0" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-10.16" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-ab991310-6ba4-4dc6-a2ae-11c951096ad3" PortMap="" Notes="" XPosition="100" Definition="" YPosition="2000" Name="GPIO6" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-25.4" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-6b807d8c-0b55-4eae-ba6b-d9b478b49ed7" PortMap="" Notes="" XPosition="100" Definition="" YPosition="1875" Name="GPIO7" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-27.94" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-9d50cc3b-820a-4ee9-a1a1-5680a9b4dbe4" PortMap="" Notes="" XPosition="100" Definition="" YPosition="1750" Name="GPIO2" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-15.24" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q10="schematic" xsi:type="q10:Pin" ID="id-8b799ce2-fb2e-4457-8650-d48f0f7ed8ad" PortMap="" Notes="" XPosition="100" Definition="" YPosition="1375" Name="DBG_TDO/GPIO10" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-45.72" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q11="schematic" xsi:type="q11:Pin" ID="id-92c0cb3a-f2c3-4dde-9d67-dee6d0726074" PortMap="" Notes="" XPosition="100" Definition="" YPosition="1250" Name="GPIO4" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-20.32" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q12="schematic" xsi:type="q12:Pin" ID="id-8dfa468f-22cc-4a43-b846-61485e1773a6" PortMap="" Notes="" XPosition="100" Definition="" YPosition="1125" Name="GPIO1" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-12.7" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q13="schematic" xsi:type="q13:Pin" ID="id-5cd68a9f-be5a-4ed0-b107-93b9063e9f05" PortMap="" Notes="" XPosition="100" Definition="" YPosition="1000" Name="PWM1/GPIO9" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="-30.48" EDASymbolRotation="R180" SPICEPortNumber="0" />
+      <Role xmlns:q14="schematic" xsi:type="q14:Pin" ID="id-222f27ca-ccf2-42c9-ab6d-39dba0112ba8" PortMap="" Notes="" XPosition="100" Definition="" YPosition="875" Name="SPIB_IO1/GPIO14" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="35.56" EDASymbolRotation="R180" SPICEPortNumber="0" />
+      <Role xmlns:q15="schematic" xsi:type="q15:Pin" ID="id-a23d24d3-0909-4633-9675-7670c2d2c00e" PortMap="" Notes="" XPosition="100" Definition="" YPosition="750" Name="SPIB_IO0/GPIO13" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="33.02" EDASymbolRotation="R180" SPICEPortNumber="0" />
+      <Role xmlns:q16="schematic" xsi:type="q16:Pin" ID="id-833f3c7e-69f8-421d-b297-811cecb9d8ca" PortMap="" Notes="" XPosition="100" Definition="" YPosition="625" Name="GPIO3" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-17.78" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q17="schematic" xsi:type="q17:Pin" ID="id-0bb5a7fe-24d8-4462-83d6-5f66f39198e3" PortMap="" Notes="" XPosition="100" Definition="" YPosition="500" Name="DBG_TDI/GPIO11" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-38.1" EDASymbolRotation="0" SPICEPortNumber="0" />
+      <Role xmlns:q18="schematic" xsi:type="q18:Pin" ID="id-81920519-184e-43e4-8a95-171423cc6518" PortMap="" Notes="" XPosition="100" Definition="" YPosition="250" Name="DBG_TMS/GPIO12" EDAGate="G$1" EDASymbolLocationX="-60.96" EDASymbolLocationY="-40.64" EDASymbolRotation="0" SPICEPortNumber="0" />
+    </Connector>
+  </RootContainer>
+</Design>

@@ -45,6 +45,9 @@
   <Component Directory="INSTALLDIR_META">
     <File Source="../meta/CyPhy_CADResourceLib.mga"/>
   </Component>
+  <Component Directory="INSTALLDIR_META">
+    <File Source="../meta/Testbenches.mga"/>
+  </Component>
 </ComponentGroup>
 </Fragment>
 </Wix>

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ComponentImporterUnitTests
 {
-    public class ImportZipFixture
+    public class ImportZipFixture : IDisposable
     {
         public ImportZipFixture()
         {
@@ -15,6 +15,11 @@ namespace ComponentImporterUnitTests
             File.Delete(ImportZip.mgaPath);
             GME.MGA.MgaUtils.ImportXME(Common.blankInputModelPath, ImportZip.mgaPath);
             Assert.True(File.Exists(ImportZip.mgaPath), "Input model not found; import may have failed.");
+        }
+
+        public void Dispose()
+        {
+            // Nothing to do
         }
     }
 }

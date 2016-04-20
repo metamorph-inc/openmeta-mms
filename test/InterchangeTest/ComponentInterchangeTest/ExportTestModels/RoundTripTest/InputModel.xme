@@ -8,7 +8,7 @@
 	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1c" kind="RootFolder" guid="{c8dc79a0-7254-4e40-8c20-9dfd37b305d3}">
 		<name>RootFolder</name>
 		<folder id="id-006a-00000002" relid="0x2" childrelidcntr="0x8" kind="Components" guid="{dbc249ec-52dd-4eca-bd34-e9f9e799ab03}">
-			<name>Imported_Components</name>
+			<name>Components</name>
 		</folder>
 		<folder id="id-006a-00000003" relid="0x4" childrelidcntr="0x7" kind="ComponentAssemblies" guid="{6fe9c815-277f-4917-8d22-b3ede21a33a9}">
 			<name>NewComponentAssemblies</name>

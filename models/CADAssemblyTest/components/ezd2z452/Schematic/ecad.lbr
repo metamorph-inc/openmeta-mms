@@ -1,0 +1,36 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="FIDUCIAL_1MM" xmlns="eagle">
+          <smd name="1" x="0" y="0" dx="1" dy="1" layer="1" roundness="100" stop="no" cream="no" />
+          <polygon width="0.127" layer="29">
+            <vertex x="-1" y="0" curve="90" />
+            <vertex x="0" y="-1" curve="90" />
+            <vertex x="1" y="0" curve="90" />
+            <vertex x="0" y="1" curve="90" />
+          </polygon>
+          <polygon width="0.127" layer="41">
+            <vertex x="-1" y="0" curve="90" />
+            <vertex x="0" y="-1" curve="90" />
+            <vertex x="1" y="0" curve="90" />
+            <vertex x="0" y="1" curve="90" />
+          </polygon>
+        </package>
+      </packages>
+      <symbols />
+      <devicesets>
+        <deviceset name="FIDUCIAL">
+          <gates />
+          <devices>
+            <device name="1MM" package="FIDUCIAL_1MM" xmlns="eagle">
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

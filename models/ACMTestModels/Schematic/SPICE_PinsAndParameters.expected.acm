@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="cbc9c1a5-2843-46c8-9c61-e655d4ade4af" Name="SPICE_PinsAndParameters" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="spice" xsi:type="q1:SPICEModel" Author="author" Notes="notes" XPosition="343" YPosition="280" Name="SPICEModel" Class="class" xmlns="">
+    <Pin ID="id-38d27d08-7d79-4682-bdbe-3e753985d867" PortMap="" Name="Pin2" Notes="instancenotes" Definition="definition" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="2" />
+    <Pin ID="id-d2e4dedf-adb4-4490-9432-d9a8ab6eb062" PortMap="" Name="Pin1" Notes="instancenotes" Definition="definition" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="1" />
+    <Parameter Locator="Parameter2">
+      <Value ID="id-b218fdf9-7be7-4cf5-b4c6-1d0f34458a99">
+        <ValueExpression xmlns:q2="avm" xsi:type="q2:FixedValue">
+          <Value>0.212</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter Locator="Parameter1">
+      <Value ID="id-4e348d28-4016-4bb9-9422-e0039e389ae1">
+        <ValueExpression xmlns:q3="avm" xsi:type="q3:FixedValue">
+          <Value>1023</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+  </DomainModel>
+  <Classifications xmlns="" />
+</Component>

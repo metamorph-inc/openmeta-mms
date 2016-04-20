@@ -112,7 +112,7 @@ namespace CyPhy2CAD_CSharp
             // TODO: Add your interpreter code
             //GMEConsole.Clear();
             GMEConsole.Out.WriteLine("Running CyPhy2CAD interpreter...");
-
+			
             // TODO: show how to initialize DSML-generated classes
             // Get RootFolder
             //IMgaFolder rootFolder = project.RootFolder;
@@ -165,9 +165,9 @@ namespace CyPhy2CAD_CSharp
         GMEConsole GMEConsole { get; set; }
 
         public void InvokeEx(
-                            MgaProject project,
-                            MgaFCO currentobj,
-                            MgaFCOs selectedobjs,
+                            MgaProject project, 
+                            MgaFCO currentobj, 
+                            MgaFCOs selectedobjs, 
                             int param)
         {
             if (!enabled)
@@ -282,8 +282,8 @@ namespace CyPhy2CAD_CSharp
         {
             string projectDirectory = "";
             if (mainParameters != null)
-                projectDirectory = mainParameters.ProjectDirectory;
-
+                projectDirectory = mainParameters.ProjectDirectory;      
+     
             var config = META.ComComponent.DeserializeConfiguration(projectDirectory, typeof(CyPhy2CADSettings), this.ComponentProgID) as CyPhy2CADSettings;
             settings = config;
 
@@ -344,7 +344,7 @@ namespace CyPhy2CAD_CSharp
                                            )
         {
             try
-            {
+            { 
                 if (currentobj.MetaBase.Name == "BallisticTestBench" || currentobj.MetaBase.Name == "BlastTestBench")
                 {
                     // call component exporter to traverse design and build component index
@@ -566,7 +566,7 @@ namespace CyPhy2CAD_CSharp
 
 
 
-            var resultzip = CyPhy2CAD_CSharp.Properties.Resources.ResultZip;
+            var resultzip = CyPhy2CAD_CSharp.Properties.Resources.ResultZip;            
             result.ZippyServerSideHook = Encoding.UTF8.GetString(resultzip);
             result.LogFileDirectory = Path.Combine(parameters.OutputDirectory, "log");
 

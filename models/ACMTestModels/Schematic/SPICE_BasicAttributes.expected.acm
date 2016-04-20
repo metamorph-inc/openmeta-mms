@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="69ff6257-d964-4472-abe5-e99814dae81f" Name="SPICE_BasicAttributes" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="spice" xsi:type="q1:SPICEModel" Author="author" Notes="notes" XPosition="343" YPosition="147" Name="SPICEModel" Class="class" xmlns="" />
+  <Classifications xmlns="" />
+</Component>

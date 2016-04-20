@@ -1,0 +1,44 @@
+*----------------------------------------------------------------------
+* 1x2_header.cir
+*
+* SPICE Netlist: 2-pin header, 1x2, 2.54mm pitch, 5.08mm row spacing
+*
+* Copyright(C) 2014 MetaMorph Inc.
+* http://metamorphsoftware.com/
+*
+*
+*----------------------------------------------------------------------
+* Provides an easy VCC and Ground for any circuit.
+*
+*----------------------------------------------------------------------
+*
+*
+*
+*
+*
+*      (PIN1)  R1 ___
+*         o------|___|----.
+*                         |
+*      (PIN2)  R2 ___     |
+*         o------|___|----+
+*                         |
+*                         |
+*                      (0)|
+*                        ===
+*                        GND
+*
+*
+*
+* PIN1 - PIN 2: -- External pins
+*
+* R1 - R2: -- 10^12 ohms; Leakage resistance of mounted pin to ground.
+*
+*
+*----------------------------------------------------------------------
+.SUBCKT HEADER_1X2 PIN1 PIN2
+*
+R1  PIN1 0    10E12
+R2  PIN2 0    10E12
+.ENDS 1X2_HEADER
+
+

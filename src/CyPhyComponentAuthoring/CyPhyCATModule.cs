@@ -23,7 +23,14 @@ namespace CyPhyComponentAuthoring
         }
         //        CyPhy.Component CurrentComp { get; set; }
 
-        public MgaProject CurrentProj { get; set; }
+        public MgaProject CurrentProj
+        {
+            get
+            {
+                return CurrentComp.Impl.Project;
+            }
+        }
+
         public MgaFCO CurrentObj { get; set; }
     }
 }

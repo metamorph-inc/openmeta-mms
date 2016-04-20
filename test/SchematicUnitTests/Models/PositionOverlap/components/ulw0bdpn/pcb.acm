@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="4eaa87f0-b9fe-48f4-8c9f-5b4029886c0f" Name="pcb" Version="" xmlns="avm">
+  <ResourceDependency XPosition="84" YPosition="28" Name="BoardTemplate" Path="template.brd" Hash="" ID="id-3fcc15cd-58c3-4f2c-ac98-05619e081901" Notes="" xmlns="" />
+  <Classifications xmlns="">pcb_board</Classifications>
+</Component>

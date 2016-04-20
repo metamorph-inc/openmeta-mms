@@ -23,6 +23,7 @@
 
             // initialize collections
             this.Traceability = new Dictionary<string, string>();
+            this.ComponentGUIDs = new HashSet<string>();
             //this.InnerElaborators = new List<ComponentAssemblyElaborator>();
             this.InnerElaborators = new List<Elaborator>();
             this.ComponentAssemblyReferences = new Queue<MgaFCO>();
@@ -155,6 +156,7 @@
 
                         // use only one map
                         innerElaborator.Traceability = this.Traceability;
+                        innerElaborator.ComponentGUIDs = this.ComponentGUIDs;
 
                         // hold only one queue
                         foreach (var item in this.ComponentAssemblyReferences)
@@ -199,6 +201,7 @@
 
                         // use only one map
                         innerElaborator.Traceability = this.Traceability;
+                        innerElaborator.ComponentGUIDs = this.ComponentGUIDs;
 
                         // hold only one queue
                         foreach (var item in this.DesignSpaceReferences)

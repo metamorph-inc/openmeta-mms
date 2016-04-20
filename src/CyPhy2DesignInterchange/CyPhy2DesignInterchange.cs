@@ -67,6 +67,18 @@ namespace CyPhy2DesignInterchange
         private ISet<string> designEntityIds = new HashSet<string>();
         private String GetOrSetID(CyPhy.DesignEntity de)
         {
+            if (de is CyPhy.ComponentAssembly)
+            {
+                string managedGUID = ((CyPhy.ComponentAssembly)de).Attributes.ManagedGUID;
+                if (managedGUID != "")
+                {
+                    if (designEntityIds.Add(managedGUID.ToString()) == false)
+                    {
+                        throw new ApplicationException(string.Format("ComponentAssembly {0} has duplicate ManagedGUID {1}", de.Path, managedGUID));
+                    }
+                    return managedGUID;
+                }
+            }
             int id = de.Attributes.ID;
             if (id == 0)
             {
@@ -88,13 +100,13 @@ namespace CyPhy2DesignInterchange
             {
                 id = Guid.NewGuid().GetHashCode();
             }
-            
+
             de.Attributes.ID = id;
             return id.ToString();
         }
 
         /// <summary>
-        /// For a given ComponentRef inside a design that is derived from a Design Space, 
+        /// For a given ComponentRef inside a design that is derived from a Design Space,
         /// find the corresponding ComponentRef from the Design Space.
         /// </summary>
         /// <param name="cr">A ComponentRef with a Design that is derived from a Design Space</param>
@@ -157,18 +169,18 @@ namespace CyPhy2DesignInterchange
         }
 
         private Dictionary<string, CyPhy.Port> _PortIdMap = new Dictionary<string, CyPhy.Port>();
-        private String GetOrSetID(CyPhy.Port p, ComponentInstance component=null)
+        private String GetOrSetID(CyPhy.Port p, ComponentInstance component = null)
         {
             return GetOrSetID(p, _PortIdMap, component);
         }
 
-        private Dictionary<string, CyPhy.Connector> _ConnectorIdMap = new Dictionary<string,CyPhy.Connector>();
-        private String GetOrSetID(CyPhy.Connector c, ComponentInstance component=null)
+        private Dictionary<string, CyPhy.Connector> _ConnectorIdMap = new Dictionary<string, CyPhy.Connector>();
+        private String GetOrSetID(CyPhy.Connector c, ComponentInstance component = null)
         {
             return GetOrSetID(c, _ConnectorIdMap, component);
         }
 
-        public String GetOrSetID<T>(T target, Dictionary<string, T> idMap, ComponentInstance component=null) where T : ISIS.GME.Common.Interfaces.Base
+        public String GetOrSetID<T>(T target, Dictionary<string, T> idMap, ComponentInstance component = null) where T : ISIS.GME.Common.Interfaces.Base
         {
             MgaFCO targetFCO = (MgaFCO)target.Impl;
             var attr = targetFCO.get_Attribute(getMgaIDAttribute(targetFCO.Meta));
@@ -280,15 +292,18 @@ namespace CyPhy2DesignInterchange
 
             if (de is CyPhy.ComponentAssembly)
             {
-                var s_ID = (de as CyPhy.ComponentAssembly).Attributes.ConfigurationUniqueID;
+                var ca = de as CyPhy.ComponentAssembly;
+                var s_ID = ca.Attributes.ConfigurationUniqueID;
                 if (string.IsNullOrEmpty(s_ID))
                 {
                     s_ID = de.Guid.ToString("B");
-                    (de as CyPhy.ComponentAssembly).Attributes.ConfigurationUniqueID = s_ID;
+                    ca.Attributes.ConfigurationUniqueID = s_ID;
                 }
                 dm.DesignID = s_ID;
 
                 rootContainerType = new Compound();
+
+                rootContainerType.Classifications = ca.Attributes.Classifications.Split('\n').Where(cls => !string.IsNullOrWhiteSpace(cls)).ToList();
             }
             else if (de is CyPhy.DesignContainer)
             {
@@ -315,8 +330,8 @@ namespace CyPhy2DesignInterchange
             dm.RootContainer = rootContainerType;
             dm.RootContainer.Name = de.Name;
 
-            // Note: do we need for the id? I don't think so...
-            //dm.RootContainer. = GetOrSetID(de);
+            // set the ID, since the design files are in a subdirectory with name=ID
+            dm.RootContainer.ID = GetOrSetID(de);
 
             var componentPortMapping = new Dictionary<CyPhy.Port, ComponentPortInstance>();
             var connectorMapping = new Dictionary<ConnectorRefport, avm.ConnectorCompositionTarget>();
@@ -485,7 +500,26 @@ namespace CyPhy2DesignInterchange
         }
 
 
+        Dictionary<String, avm.schematic.eda.LayerEnum> d_LayerEnumMap = new Dictionary<String, avm.schematic.eda.LayerEnum>()
+        {
+            { "0", avm.schematic.eda.LayerEnum.Top},
+            { "1", avm.schematic.eda.LayerEnum.Bottom}
+        };
 
+        Dictionary<String, avm.schematic.eda.RotationEnum> d_RotationEnumMap = new Dictionary<string, avm.schematic.eda.RotationEnum>()
+        {
+            { "0", avm.schematic.eda.RotationEnum.r0 },
+            { "1", avm.schematic.eda.RotationEnum.r90 },
+            { "2", avm.schematic.eda.RotationEnum.r180 },
+            { "3", avm.schematic.eda.RotationEnum.r270 }
+        };
+
+        Dictionary<CyPhyClasses.RangeLayoutConstraint.AttributesClass.Type_enum, avm.schematic.eda.RangeConstraintTypeEnum> d_RangeTypeMap =
+            new Dictionary<CyPhyClasses.RangeLayoutConstraint.AttributesClass.Type_enum, avm.schematic.eda.RangeConstraintTypeEnum>()
+        {
+            { CyPhyClasses.RangeLayoutConstraint.AttributesClass.Type_enum.Inclusion, avm.schematic.eda.RangeConstraintTypeEnum.Inclusion},
+            { CyPhyClasses.RangeLayoutConstraint.AttributesClass.Type_enum.Exclusion, avm.schematic.eda.RangeConstraintTypeEnum.Exclusion}
+        };
 
         private void UpdateSubContainers(DesignPrimitivesWrapper de, avm.Container rootContainer,
                                                 Dictionary<CyPhy.Port, ComponentPortInstance> componentPortMapping,
@@ -495,6 +529,10 @@ namespace CyPhy2DesignInterchange
                                                 Dictionary<CyPhy.ValueFlowTarget, String> vftIdCache,
                                                 Dictionary<PortRefport, PortMapTarget> portMapping = null)
         {
+            if (string.IsNullOrEmpty(de.Description) == false)
+            {
+                rootContainer.Description = de.Description;
+            }
             if (portMapping == null)
             {
                 portMapping = new Dictionary<PortRefport, PortMapTarget>();
@@ -507,6 +545,10 @@ namespace CyPhy2DesignInterchange
             foreach (var compRef in de.ComponentRefs)
             {
                 CyPhy.Component comp = null;
+                if (compRef.GenericReferred != null && compRef.GenericReferred.Kind != "Component")
+                {
+                    continue;
+                }
                 try
                 {
                     comp = compRef.Referred.Component;
@@ -531,7 +573,7 @@ namespace CyPhy2DesignInterchange
 
                 // moving the old code/implementation to here.
                 String s_SrcDesignSpaceContainerID = GetDesignSpaceSourceObjectID(compRef);
-                if ( ! String.IsNullOrWhiteSpace(s_SrcDesignSpaceContainerID))
+                if (!String.IsNullOrWhiteSpace(s_SrcDesignSpaceContainerID))
                     ci.DesignSpaceSrcComponentID = s_SrcDesignSpaceContainerID;
 
                 childComponents.Add(compRef, ci);
@@ -569,7 +611,7 @@ namespace CyPhy2DesignInterchange
             {
                 var compInst = kvp.Value;
                 CyPhy.Component comp;
-                CyPhy.ComponentRef reference;
+                ISIS.GME.Common.Interfaces.Reference reference;
                 if (kvp.Key is CyPhy.Component)
                 {
                     comp = kvp.Key as CyPhy.Component;
@@ -580,7 +622,7 @@ namespace CyPhy2DesignInterchange
                     reference = (CyPhy.ComponentRef)kvp.Key;
                     comp = (kvp.Key as CyPhy.ComponentRef).Referred.Component;
                 }
-                
+
                 System.Diagnostics.Debug.WriteLine(comp.Path);
                 rootContainer.ComponentInstance.Add(compInst);
 
@@ -627,7 +669,7 @@ namespace CyPhy2DesignInterchange
                 #endregion
 
                 #region Component parameters
-                
+
                 foreach (var param in comp.Children.ParameterCollection)
                 {
                     DataTypeEnum xDataType;
@@ -668,7 +710,7 @@ namespace CyPhy2DesignInterchange
                     }
                     catch (System.ArgumentException e)
                     {
-                        throw new ApplicationException("Component " + comp.Name + " has two or more Connectors with the same ID " + connector.Attributes.ID + 
+                        throw new ApplicationException("Component " + comp.Name + " has two or more Connectors with the same ID " + connector.Attributes.ID +
                             ". To fix this error, run the Component Exporter on " + comp.Name);
                     }
                     //connectorIds[connector] = xConnector.ID;
@@ -685,6 +727,7 @@ namespace CyPhy2DesignInterchange
             ldeDesignEntityChildren.AddRange(de.DesignContainers);
 
             #region Containers
+            var deMap = new Dictionary<String, avm.Container>();
             foreach (CyPhy.DesignEntity subDE in ldeDesignEntityChildren)
             {
                 Container subContainer;
@@ -717,7 +760,9 @@ namespace CyPhy2DesignInterchange
 
                 subContainer.Name = subDE.Name;
                 //subRootContainerType.id = GetOrSetID(subDE);
+                subContainer.ID = GetOrSetID(subDE);
 
+                deMap.Add(subDE.ID, subContainer);
                 rootContainer.Container1.Add(subContainer);
                 containerMapping.Add(subDE, subContainer);
 
@@ -746,6 +791,51 @@ namespace CyPhy2DesignInterchange
                 SetLayoutData(con, mc.Impl);
             }
 
+            foreach (var cyPhyMLPort in de.SchematicModelPort)
+            {
+                var avmPin = new avm.schematic.Pin()
+                {
+                    ID = GetOrSetID(cyPhyMLPort)
+                };
+                CyPhyML2AVM.AVMComponentBuilder.SetAVMSchematicPinAttributes(avmPin, cyPhyMLPort);
+
+                portMapping.Add(new PortRefport(cyPhyMLPort, null), avmPin);
+
+                SetLayoutData(avmPin, cyPhyMLPort.Impl);
+
+                rootContainer.Port.Add(avmPin);
+            }
+
+            foreach (var cyPhyMLPort in de.SystemCPort)
+            {
+                var avmPort = new avm.systemc.SystemCPort()
+                {
+                    ID = GetOrSetID(cyPhyMLPort),
+                };
+                CyPhyML2AVM.AVMComponentBuilder.SetAVMSystemCPortAttributes(avmPort, cyPhyMLPort);
+
+                portMapping.Add(new PortRefport(cyPhyMLPort, null), avmPort);
+
+                SetLayoutData(avmPort, cyPhyMLPort.Impl);
+
+                rootContainer.Port.Add(avmPort);
+            }
+
+            foreach (var cyPhyMLPort in de.RFPort)
+            {
+                var avmPort = new avm.rf.RFPort()
+                {
+                    ID = GetOrSetID(cyPhyMLPort),
+                };
+                CyPhyML2AVM.AVMComponentBuilder.SetAVMRFPortAttributes(avmPort, cyPhyMLPort);
+
+                portMapping.Add(new PortRefport(cyPhyMLPort, null), avmPort);
+
+                SetLayoutData(avmPort, cyPhyMLPort.Impl);
+
+                rootContainer.Port.Add(avmPort);
+            }
+
             foreach (var cad in de.CADData)
             {
                 var datum = CreateAvmCADDatum(cad);
@@ -758,7 +848,7 @@ namespace CyPhy2DesignInterchange
             {
                 // TODO: not yet in AVM spec: new avm.cad.ReferenceCoordinateSystem()
             }
-            
+
             foreach (var ap in de.AbstractPorts)
             {
                 var xAp = new AbstractPort
@@ -772,7 +862,7 @@ namespace CyPhy2DesignInterchange
                 rootContainer.Port.Add(xAp);
 
                 SetLayoutData(xAp, ap.Impl);
-            }           
+            }
 
             #endregion
 
@@ -790,6 +880,7 @@ namespace CyPhy2DesignInterchange
                                 {
                                     ID = "property." + idProp,
                                     Name = prop.Name,
+                                    OnDataSheet = prop.Attributes.IsProminent,
                                     Value = new Value
                                                 {
                                                     ID = idProp,
@@ -801,6 +892,7 @@ namespace CyPhy2DesignInterchange
                                                     Unit = GetUnitAbbr(prop.AllReferred)
                                                 }
                                 };
+                xProp.OnDataSheetSpecified = true;
 
                 var incomingValueFlows = prop.SrcConnections.ValueFlowCollection.Where(c => c.IsRefportConnection() == false);
                 if (incomingValueFlows.Count() > 1)
@@ -844,7 +936,7 @@ namespace CyPhy2DesignInterchange
             #endregion
 
             #region Parameters
-            
+
             foreach (var param in de.Parameters)
             {
                 DataTypeEnum xDataType;
@@ -911,6 +1003,172 @@ namespace CyPhy2DesignInterchange
 
             #endregion
 
+            #region LayoutConstraints
+            foreach (var c in de.LayoutConstraints)
+            {
+                avm.schematic.eda.PcbLayoutConstraint xConstraint = null;
+
+                if (c is CyPhy.ExactLayoutConstraint)
+                {
+                    var exact = (CyPhy.ExactLayoutConstraint)c;
+
+                    var constraint = ConvertExactLayoutConstraint(exact);
+                    xConstraint = constraint;
+
+                    foreach (var apply in exact.DstConnections.ApplyExactLayoutConstraintCollection)
+                    {
+                        if (apply.GenericDstEnd.Kind == "Component")
+                        {
+                            constraint.ConstraintTarget.Add(childComponents[apply.DstEnd].ID);
+                        }
+                        else
+                        {
+                            constraint.ContainerConstraintTarget.Add(deMap[apply.GenericDstEnd.ID].ID);
+                        }
+                    }
+
+                    SetLayoutData(constraint, exact.Impl);
+                }
+                else if (c is CyPhy.RangeLayoutConstraint)
+                {
+                    var range = (CyPhy.RangeLayoutConstraint)c;
+                    var constraint = new avm.schematic.eda.RangeLayoutConstraint();
+                    if (   range.Attributes.LayerRange.IndexOf("0-1") != -1 ||
+                           range.Attributes.LayerRange.IndexOf("0:1") != -1 ||
+                           string.IsNullOrWhiteSpace(range.Attributes.LayerRange))
+                    {
+                        constraint.LayerRange = avm.schematic.eda.LayerRangeEnum.Either;
+                    }
+                    else if (range.Attributes.LayerRange.IndexOf("0-0") != -1 ||
+                             range.Attributes.LayerRange.IndexOf("0:0") != -1 ||
+                             range.Attributes.LayerRange == "0")
+                    {
+                        constraint.LayerRange = avm.schematic.eda.LayerRangeEnum.Top;
+                    }
+                    else
+                    {
+                        constraint.LayerRange = avm.schematic.eda.LayerRangeEnum.Bottom;
+                    }
+
+                    if (false == String.IsNullOrWhiteSpace(range.Attributes.Notes))
+                    {
+                        constraint.Notes = range.Attributes.Notes;
+                    }
+
+                    constraint.TypeSpecified = true;
+                    constraint.Type = d_RangeTypeMap[range.Attributes.Type];
+
+                    var rangeRegex = new Regex("^(-?[.\\d]+)[-:](-?[.\\d]+)$");
+                    var xRangeMatch = rangeRegex.Match(range.Attributes.XRange);
+                    if (xRangeMatch.Success)
+                    {
+                        constraint.XRangeMin = double.Parse(xRangeMatch.Groups[1].Value);
+                        constraint.XRangeMinSpecified = true;
+                        constraint.XRangeMax = double.Parse(xRangeMatch.Groups[2].Value);
+                        constraint.XRangeMaxSpecified = true;
+                    }
+
+                    var yRangeMatch = rangeRegex.Match(range.Attributes.YRange);
+                    if (yRangeMatch.Success)
+                    {
+                        constraint.YRangeMin = double.Parse(yRangeMatch.Groups[1].Value);
+                        constraint.YRangeMinSpecified = true;
+                        constraint.YRangeMax = double.Parse(yRangeMatch.Groups[2].Value);
+                        constraint.YRangeMaxSpecified = true;
+                    }
+
+                    xConstraint = constraint;
+                    var applyCollection = range.DstConnections.ApplyRangeLayoutConstraintCollection;
+                    foreach (var apply in applyCollection)
+                    {
+                        if (apply.GenericDstEnd.Kind == "Component")
+                        {
+                            constraint.ConstraintTarget.Add(childComponents[apply.DstEnd].ID);
+                        }
+                        else
+                        {
+                            constraint.ContainerConstraintTarget.Add(deMap[apply.GenericDstEnd.ID].ID);
+                        }
+                    }
+                    SetLayoutData(constraint, range.Impl);
+                }
+                else if (c is CyPhy.RelativeLayoutConstraint)
+                {
+                    var relative = (CyPhy.RelativeLayoutConstraint)c;
+                    var constraint = ConvertRelativeLayoutConstraint(relative);
+                    xConstraint = constraint;
+                    foreach (var origin in relative.SrcConnections.RelativeLayoutConstraintOriginCollection)
+                    {
+                        if (origin.SrcEnd.Impl.MetaBase.Name != typeof(CyPhy.Component).Name)
+                        {
+                            throw new ApplicationException(String.Format("RelativeLayoutConstraint '{0}' must have a Component origin, but its origin is '{1}'", relative.Name, origin.SrcEnd.Impl.Name));
+                        }
+                        constraint.Origin = childComponents[origin.SrcEnd].ID;
+                    }
+                    foreach (var apply in relative.DstConnections.ApplyRelativeLayoutConstraintCollection)
+                    {
+                        if (apply.GenericDstEnd.Kind == "Component")
+                        {
+                            constraint.ConstraintTarget.Add(childComponents[apply.DstEnd].ID);
+                        }
+                        else
+                        {
+                            constraint.ContainerConstraintTarget.Add(deMap[apply.GenericDstEnd.ID].ID);
+                        }
+                    }
+                    SetLayoutData(constraint, relative.Impl);
+                }
+                else if (c is CyPhy.RelativeRangeConstraint)
+                {
+                    var relativeRange = (CyPhy.RelativeRangeConstraint)c;
+                    var constraint = ConvertRelativeRangeConstraint(relativeRange);
+                    xConstraint = constraint;
+
+                    foreach (var origin in relativeRange.SrcConnections.RelativeRangeLayoutConstraintOriginCollection)
+                    {
+                        constraint.Origin = childComponents[origin.SrcEnd].ID;
+                    }
+
+                    foreach (var apply in relativeRange.DstConnections.ApplyRelativeRangeLayoutConstraintCollection)
+                    {
+                        if (apply.GenericDstEnd.Kind == "Component")
+                        {
+                            constraint.ConstraintTarget.Add(childComponents[apply.DstEnd].ID);
+                        }
+                        else
+                        {
+                            constraint.ContainerConstraintTarget.Add(deMap[apply.GenericDstEnd.ID].ID);
+                        }
+                    }
+
+                    SetLayoutData(constraint, relativeRange.Impl);
+                }
+                else if (c is CyPhy.GlobalLayoutConstraintException)
+                {
+                    var globalConstraintException = (CyPhy.GlobalLayoutConstraintException)c;
+                    var constraint = ConvertGlobalLayoutConstraintException(globalConstraintException);
+                    xConstraint = constraint;
+
+                    foreach (var apply in globalConstraintException.DstConnections
+                                                                   .ApplyGlobalLayoutConstraintExceptionCollection)
+                    {
+                        if (apply.GenericDstEnd.Kind == "Component")
+                        {
+                            constraint.ConstraintTarget.Add(childComponents[apply.DstEnd].ID);
+                        }
+                        else
+                        {
+                            constraint.ContainerConstraintTarget.Add(deMap[apply.GenericDstEnd.ID].ID);
+                        }
+                    }
+
+                    SetLayoutData(constraint, globalConstraintException.Impl);
+                }
+
+                rootContainer.ContainerFeature.Add(xConstraint);
+            }
+            #endregion
+
             #region SimpleFormulas
             foreach (var sf in de.SimpleFormulas)
             {
@@ -965,7 +1223,7 @@ namespace CyPhy2DesignInterchange
                     //      we'll use that as the Symbol.
                     // Otherwise, we'll use the name of the source object.
                     var fvName = vf.Attributes.FormulaVariableName;
-                    Boolean fvNameProvided = !String.IsNullOrWhiteSpace(fvName);                        
+                    Boolean fvNameProvided = !String.IsNullOrWhiteSpace(fvName);
 
                     // Find the ID of the source object
                     var vftSrc = vf.SrcEnds.ValueFlowTarget;
@@ -979,7 +1237,7 @@ namespace CyPhy2DesignInterchange
                     {
                         idVftSrc = GetOrSetID(vftSrc);
                     }
-                    
+
                     var op = new Operand()
                     {
                         ValueSource = idVftSrc,
@@ -1003,6 +1261,7 @@ namespace CyPhy2DesignInterchange
                     ID = GetOrSetID(connector),
                     Definition = connector.Attributes.Definition,
                     Name = connector.Name,
+                    Notes = connector.Attributes.InstanceNotes
                 };
 
                 SetLayoutData(xConnector, connector.Impl);
@@ -1040,9 +1299,53 @@ namespace CyPhy2DesignInterchange
                     portMapping.Add(new PortRefport(cyPhyMLDomainModelPort, null), avmDomainModelPort);
                     xConnector.Role.Add(avmDomainModelPort);
                 }
+
+                foreach (var cyPhyMLPort in connector.Children.SchematicModelPortCollection)
+                {
+                    var avmPin = new avm.schematic.Pin()
+                    {
+                        ID = GetOrSetID(cyPhyMLPort)
+                    };
+                    CyPhyML2AVM.AVMComponentBuilder.SetAVMSchematicPinAttributes(avmPin, cyPhyMLPort);
+
+                    // FIXME: do we need any internals of the port? Parameters/Redeclares?
+                    SetLayoutData(avmPin, cyPhyMLPort.Impl);
+                    portMapping.Add(new PortRefport(cyPhyMLPort, null), avmPin);
+
+                    xConnector.Role.Add(avmPin);
+                }
+
+                foreach (var cyPhyMLPort in connector.Children.SystemCPortCollection)
+                {
+                    var avmPort = new avm.systemc.SystemCPort()
+                    {
+                        ID = GetOrSetID(cyPhyMLPort),
+                    };
+                    CyPhyML2AVM.AVMComponentBuilder.SetAVMSystemCPortAttributes(avmPort, cyPhyMLPort);
+
+                    SetLayoutData(avmPort, cyPhyMLPort.Impl);
+                    portMapping.Add(new PortRefport(cyPhyMLPort, null), avmPort);
+
+                    xConnector.Role.Add(avmPort);
+                }
+
+                foreach (var cyPhyMLPort in connector.Children.RFPortCollection)
+                {
+                    var avmPort = new avm.rf.RFPort()
+                    {
+                        ID = GetOrSetID(cyPhyMLPort),
+                    };
+                    CyPhyML2AVM.AVMComponentBuilder.SetAVMRFPortAttributes(avmPort, cyPhyMLPort);
+
+                    SetLayoutData(avmPort, cyPhyMLPort.Impl);
+                    portMapping.Add(new PortRefport(cyPhyMLPort, null), avmPort);
+
+                    xConnector.Role.Add(avmPort);
+                }
+
             }
             #endregion
-            
+
             #region Connector Composition
             foreach (var connectorComposition in de.ConnectorCompositions)
             {
@@ -1080,7 +1383,7 @@ namespace CyPhy2DesignInterchange
                     dstPort.PortMap.Add(srcPort.ID);
                 }
                 else
-                 {
+                {
                     if (Debugger.IsAttached)
                     {
                         Debugger.Break();
@@ -1104,8 +1407,198 @@ namespace CyPhy2DesignInterchange
                 }
             }
             #endregion
+
+            // Look for ResourceDependencies
+            if (rootContainer.ResourceDependency == null)
+            {
+                rootContainer.ResourceDependency = new List<Resource>();
+            }
+            foreach (var cyphyResource in de.Resources)
+            {
+                var avmRes = new Resource()
+                {
+                    Path = cyphyResource.Attributes.Path,
+                    Notes = cyphyResource.Attributes.Notes,
+                    ID = cyphyResource.Attributes.ID,
+                    Hash = cyphyResource.Attributes.Hash,
+                    Name = cyphyResource.Name
+                };
+
+                SetLayoutData(avmRes, cyphyResource.Impl);
+                rootContainer.ResourceDependency.Add(avmRes);
+            }
+
+            // hack for layoutFile
+            string layoutFile = ((IMgaFCO)de.Primitive.Impl).RegistryValue["layoutFile"];
+            if (String.IsNullOrEmpty(layoutFile) == false)
+            {
+                var avmRes = new Resource()
+                {
+                    Name = "layoutFile",
+                    Path = layoutFile,
+                    ID = "layoutFile-" + rootContainer.ID
+                };
+
+                string layoutBox = ((IMgaFCO)de.Primitive.Impl).RegistryValue["layoutBox"];
+                var avmDM = new avm.schematic.eda.CircuitLayout()
+                {
+                    Name = "circuitLayout",
+                    ID = "circuitLayout-" + rootContainer.ID,
+                    BoundingBoxes = layoutBox,
+                    UsesResource = avmRes.ID
+                };
+
+                rootContainer.DomainModel.Add(avmDM);
+                rootContainer.ResourceDependency.Add(avmRes);
+            }
         }
 
+        private static Dictionary<CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum, avm.schematic.eda.RelativeLayerEnum>
+            d_RelativeLayoutConstraint = new Dictionary<CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum, avm.schematic.eda.RelativeLayerEnum>()
+        {
+            { CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Same, avm.schematic.eda.RelativeLayerEnum.Same },
+            { CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Opposite, avm.schematic.eda.RelativeLayerEnum.Opposite }
+        };
+
+        private static Dictionary<CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum, avm.schematic.eda.RelativeRotationEnum>
+            d_RelativeRotation = new Dictionary<CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum, avm.schematic.eda.RelativeRotationEnum>()
+        {
+            { CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._0, avm.schematic.eda.RelativeRotationEnum.r0 },
+            { CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._90, avm.schematic.eda.RelativeRotationEnum.r90 },
+            { CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._180, avm.schematic.eda.RelativeRotationEnum.r180 },
+            { CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._270, avm.schematic.eda.RelativeRotationEnum.r270 },
+            { CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum.No_Restriction, avm.schematic.eda.RelativeRotationEnum.NoRestriction }
+        };
+
+        private static avm.schematic.eda.RelativeLayoutConstraint ConvertRelativeLayoutConstraint(CyPhy.RelativeLayoutConstraint relative)
+        {
+            var constraint = new avm.schematic.eda.RelativeLayoutConstraint();
+
+            double xOffset;
+            if (double.TryParse(relative.Attributes.XOffset, out xOffset))
+            {
+                constraint.XOffsetSpecified = true;
+                constraint.XOffset = xOffset;
+            }
+
+            double yOffset;
+            if (double.TryParse(relative.Attributes.YOffset, out yOffset))
+            {
+                constraint.YOffsetSpecified = true;
+                constraint.YOffset = yOffset;
+            }
+
+            if (relative.Attributes.RelativeLayer != CyPhyClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.No_Restriction)
+            {
+                constraint.RelativeLayerSpecified = true;
+                constraint.RelativeLayer = d_RelativeLayoutConstraint[relative.Attributes.RelativeLayer];
+            }
+
+            constraint.RelativeRotationSpecified = true;
+            constraint.RelativeRotation = d_RelativeRotation[relative.Attributes.RelativeRotation];
+
+            if (false == String.IsNullOrWhiteSpace(relative.Attributes.Notes))
+            {
+                constraint.Notes = relative.Attributes.Notes;
+            }
+
+            return constraint;
+        }
+
+        private static Dictionary<CyPhyClasses.RelativeRangeConstraint.AttributesClass.RelativeLayer_enum, avm.schematic.eda.RelativeLayerEnum>
+            d_RelativeRangeConstraint = new Dictionary<CyPhyClasses.RelativeRangeConstraint.AttributesClass.RelativeLayer_enum, avm.schematic.eda.RelativeLayerEnum>()
+        {
+            { CyPhyClasses.RelativeRangeConstraint.AttributesClass.RelativeLayer_enum.Same, avm.schematic.eda.RelativeLayerEnum.Same },
+            { CyPhyClasses.RelativeRangeConstraint.AttributesClass.RelativeLayer_enum.Opposite, avm.schematic.eda.RelativeLayerEnum.Opposite }
+        };
+        private static avm.schematic.eda.RelativeRangeLayoutConstraint ConvertRelativeRangeConstraint(CyPhy.RelativeRangeConstraint cyphyConstraint)
+        {
+            var avmConstraint = new avm.schematic.eda.RelativeRangeLayoutConstraint();
+
+            var rangeRegex = new Regex("^(-?[.\\d]+):(-?[.\\d]+)$");
+            var xRangeMatch = rangeRegex.Match(cyphyConstraint.Attributes.XOffsetRange);
+            if (xRangeMatch.Success)
+            {
+                avmConstraint.XRelativeRangeMin = double.Parse(xRangeMatch.Groups[1].Value);
+                avmConstraint.XRelativeRangeMinSpecified = true;
+                avmConstraint.XRelativeRangeMax = double.Parse(xRangeMatch.Groups[2].Value);
+                avmConstraint.XRelativeRangeMaxSpecified = true;
+            }
+
+            var yRangeMatch = rangeRegex.Match(cyphyConstraint.Attributes.YOffsetRange);
+            if (yRangeMatch.Success)
+            {
+                avmConstraint.YRelativeRangeMin = double.Parse(yRangeMatch.Groups[1].Value);
+                avmConstraint.YRelativeRangeMinSpecified = true;
+                avmConstraint.YRelativeRangeMax = double.Parse(yRangeMatch.Groups[2].Value);
+                avmConstraint.YRelativeRangeMaxSpecified = true;
+            }
+
+            if (cyphyConstraint.Attributes.RelativeLayer != CyPhyClasses.RelativeRangeConstraint.AttributesClass.RelativeLayer_enum.No_Restriction)
+            {
+                avmConstraint.RelativeLayerSpecified = true;
+                avmConstraint.RelativeLayer = d_RelativeRangeConstraint[cyphyConstraint.Attributes.RelativeLayer];
+            }
+
+            if (false == String.IsNullOrWhiteSpace(cyphyConstraint.Attributes.Notes))
+            {
+                avmConstraint.Notes = cyphyConstraint.Attributes.Notes;
+            }
+
+            return avmConstraint;
+        }
+
+        private static Dictionary<CyPhyClasses.GlobalLayoutConstraintException.AttributesClass.Constraint_enum, avm.schematic.eda.GlobalConstraintTypeEnum> d_GlobalExceptionConstraintTypeMap =
+            new Dictionary<CyPhyClasses.GlobalLayoutConstraintException.AttributesClass.Constraint_enum, avm.schematic.eda.GlobalConstraintTypeEnum>()
+        {
+            { CyPhyClasses.GlobalLayoutConstraintException.AttributesClass.Constraint_enum.Board_Edge_Spacing, avm.schematic.eda.GlobalConstraintTypeEnum.BoardEdgeSpacing}
+        };
+        private static avm.schematic.eda.GlobalLayoutConstraintException ConvertGlobalLayoutConstraintException(CyPhy.GlobalLayoutConstraintException cyphyConstraint)
+        {
+            return new  avm.schematic.eda.GlobalLayoutConstraintException()
+            {
+                Notes = cyphyConstraint.Attributes.Notes,
+                Constraint = d_GlobalExceptionConstraintTypeMap[cyphyConstraint.Attributes.Constraint]
+            };
+        }
+
+        public avm.schematic.eda.ExactLayoutConstraint ConvertExactLayoutConstraint(CyPhy.ExactLayoutConstraint exact)
+        {
+            var constraint = new avm.schematic.eda.ExactLayoutConstraint();
+
+            double x;
+            if (double.TryParse(exact.Attributes.X, out x))
+            {
+                constraint.XSpecified = true;
+                constraint.X = x;
+            }
+
+            double y;
+            if (double.TryParse(exact.Attributes.Y, out y))
+            {
+                constraint.YSpecified = true;
+                constraint.Y = y;
+            }
+
+            if (false == String.IsNullOrWhiteSpace(exact.Attributes.Layer))
+            {
+                constraint.LayerSpecified = true;
+                constraint.Layer = d_LayerEnumMap[exact.Attributes.Layer];
+            }
+
+            if (false == String.IsNullOrWhiteSpace(exact.Attributes.Rotation))
+            {
+                constraint.RotationSpecified = true;
+                constraint.Rotation = d_RotationEnumMap[exact.Attributes.Rotation];
+            }
+
+            if (false == String.IsNullOrWhiteSpace(exact.Attributes.Notes))
+            {
+                constraint.Notes = exact.Attributes.Notes;
+            }
+
+            return constraint;
+        }
         private ValueFlowMux CreateDSMux(Dictionary<CyPhy.ValueFlowTarget, ComponentPrimitivePropertyInstance> componentValueflowTargetMapping, String idProp, IEnumerable<CyPhy.ValueFlow> incomingValueFlows)
         {
             var mux = new avm.ValueFlowMux()
@@ -1405,7 +1898,7 @@ namespace CyPhy2DesignInterchange
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="port"></param>
         /// <param name="results"></param>

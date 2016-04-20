@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="932640e4-02c3-4d4d-add8-9392ccb56c8a" Name="Unipro_Breakout" Version="" xmlns="avm">
+  <Connector ConnectorComposition="" ID="id-17001b6e-c181-4156-a2fb-f60634b72779" ApplyJoinData="" Notes="" Name="MPHY_RXD0N" Definition="" YPosition="756" XPosition="616" xmlns="">
+    <Role xmlns:q1="schematic" xsi:type="q1:Pin" ID="id-5ff95b30-8d83-46c4-8595-ec44e43f363a" PortMap="id-5b4aacf3-d0ab-4de9-9995-0def555fbd52" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-69605324-380c-43af-bef4-d886d2264037" ApplyJoinData="" Notes="" Name="MPHY_RXD0P" Definition="" YPosition="658" XPosition="616" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-a998e151-9f75-4495-ab46-6cd1010ef1d2" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-84189f1e-5d3e-4954-bb31-e0171f6679f6" ApplyJoinData="" Notes="" Name="MPHY_RXD1P" Definition="" YPosition="462" XPosition="616" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-a6f2c15f-629d-4439-851e-c1fa6d3d6e88" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-418d1b07-d602-416b-b860-e0b6a7b76399" ApplyJoinData="" Notes="" Name="MPHY_TXD1N" Definition="" YPosition="364" XPosition="616" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-f4f0f801-ac5a-41ed-9704-07358f756dc8" PortMap="id-98d15040-90d6-4349-bd41-bd907b3b5d33" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-0ed13a1e-4f20-493b-a5a8-20d91a21cef9" ApplyJoinData="" Notes="" Name="MPHY_TXD0N" Definition="" YPosition="168" XPosition="616" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-e64f07fb-c44b-4710-9226-4b9cb832cbf4" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-6e12144f-9253-4a91-ad70-6d26ac979632" ApplyJoinData="" Notes="" Name="MPHY_TXD0P" Definition="" YPosition="70" XPosition="616" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-3ba5f4bf-185c-4d07-9d4f-4bd63f3d9706" PortMap="id-5822e773-0ddf-414b-a1f6-c5bfb44277b5" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-bb72c84b-0a19-4c0a-ac44-780d688bc75a" ApplyJoinData="" Notes="" Name="MPHY_RXD1N" Definition="" YPosition="560" XPosition="616" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-ff569e57-5523-40fb-9692-f2b8440a1766" PortMap="id-aff145aa-595c-4a0d-a292-fa03674d58bf" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-4d48b644-ca10-4e26-ae0f-78d3d6619761" ApplyJoinData="" Notes="" Name="UNIPRO_PHY-M" Definition="" YPosition="301" XPosition="84" xmlns="">
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-aff145aa-595c-4a0d-a292-fa03674d58bf" PortMap="" Notes="" XPosition="399" Definition="" YPosition="266" Name="RXD1N" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="10.16" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-9cda10da-2af5-419d-9552-a694577292c4" PortMap="id-a6f2c15f-629d-4439-851e-c1fa6d3d6e88" Notes="" XPosition="399" Definition="" YPosition="189" Name="RXD1P" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="12.7" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Role xmlns:q10="schematic" xsi:type="q10:Pin" ID="id-5822e773-0ddf-414b-a1f6-c5bfb44277b5" PortMap="" Notes="" XPosition="98" Definition="" YPosition="21" Name="TXD0P" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="27.94" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Role xmlns:q11="schematic" xsi:type="q11:Pin" ID="id-5b4aacf3-d0ab-4de9-9995-0def555fbd52" PortMap="" Notes="" XPosition="399" Definition="" YPosition="105" Name="RXD0N" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="15.24" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Role xmlns:q12="schematic" xsi:type="q12:Pin" ID="id-98d15040-90d6-4349-bd41-bd907b3b5d33" PortMap="" Notes="" XPosition="98" Definition="" YPosition="252" Name="TXD1N" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="20.32" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Role xmlns:q13="schematic" xsi:type="q13:Pin" ID="id-9a6468db-43aa-433c-a76e-20fa2b0b5ca1" PortMap="id-e64f07fb-c44b-4710-9226-4b9cb832cbf4" Notes="" XPosition="98" Definition="" YPosition="98" Name="TXD0N" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="25.4" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Role xmlns:q14="schematic" xsi:type="q14:Pin" ID="id-1c306807-0de5-4ff9-b00f-d753bf8e718d" PortMap="" Notes="" XPosition="98" Definition="" YPosition="175" Name="TXD1P" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="22.86" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Role xmlns:q15="schematic" xsi:type="q15:Pin" ID="id-18b9e428-31c7-4dbb-89da-43db9982ea0a" PortMap="id-a998e151-9f75-4495-ab46-6cd1010ef1d2" Notes="" XPosition="399" Definition="" YPosition="21" Name="RXD0P" EDAGate="G$1" EDASymbolLocationX="58.42" EDASymbolLocationY="17.78" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-6eb99cb1-bd94-4629-98a6-3af6eb3b0fd0" ApplyJoinData="" Notes="" Name="MPHY_TXD1P" Definition="" YPosition="266" XPosition="616" xmlns="">
+    <Role xmlns:q16="schematic" xsi:type="q16:Pin" ID="id-c58f889a-9d98-49f6-a663-d86358a75e4f" PortMap="id-1c306807-0de5-4ff9-b00f-d753bf8e718d" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">model_utilities.breakout_components</Classifications>
+</Component>

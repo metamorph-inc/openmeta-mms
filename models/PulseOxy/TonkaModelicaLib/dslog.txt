@@ -1,0 +1,16 @@
+ 
+To translate models in Dymola you must select a supported C compiler. 
+You might also have to install the C compiler first. 
+The C compiler is not distributed with Dymola. 
+ 
+Dymola supports Microsoft Visual Studio C++ 2008 and 2010, 
+both the Professional and the Express editions. 
+ 
+To download a free Express edition compiler please visit Microsoft's website. 
+Note that you need administrator rights to install the compiler. 
+ 
+For more information, please visit http://www.dymola.com/compiler 
+ 
+ 
+Error generating Dymosim. 
+ 

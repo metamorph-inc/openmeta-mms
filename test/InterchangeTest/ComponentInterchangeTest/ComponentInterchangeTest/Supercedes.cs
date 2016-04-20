@@ -55,7 +55,7 @@ namespace ComponentInterchangeTest
             // Clear the Components folder
             try
             {
-                Directory.Delete(Path.Combine(testPath, "Imported_Components"), true);
+                Directory.Delete(Path.Combine(testPath, "Components"), true);
             }
             catch (DirectoryNotFoundException)
             {
@@ -79,7 +79,7 @@ namespace ComponentInterchangeTest
             GME.MGA.MgaUtils.ImportXME(xmePath_InputModel, mgaPath_InputModel);
 
             // Import the components to the blank model
-            importerReturnCode = CommonFunctions.runCyPhyComponentImporterCLRecursively(mgaPath_InputModel, Path.Combine(testPath, "Imported_Components"));
+            importerReturnCode = CommonFunctions.runCyPhyComponentImporterCLRecursively(mgaPath_InputModel, Path.Combine(testPath, "Components"));
             
             bInitialized = true;
         }

@@ -74,9 +74,8 @@ namespace CyPhyDesignImporter
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.CheckFileExists = true;
-                ofd.DefaultExt = "design.adm";
                 ofd.Multiselect = true;
-                ofd.Filter = "AVM design files (*.adm)|*.adm|All files (*.*)|*.*";
+                ofd.Filter = "AVM design files and packages (*.adm;*.adp)|*.adm;*.adp|All files (*.*)|*.*";
                 ofd.RestoreDirectory = true;
                 if (project.ProjectConnStr.StartsWith("MGA=", true, System.Globalization.CultureInfo.InvariantCulture))
                 {
@@ -92,6 +91,15 @@ namespace CyPhyDesignImporter
             if (dr == DialogResult.OK)
             {
                 Model[] result = null;
+                var addons = project.AddOnComponents.Cast<IMgaComponentEx>();
+                foreach (var addon in addons)
+                {
+                    if (addon.ComponentName.ToLowerInvariant() == "CyPhyAddOn".ToLowerInvariant())
+                    {
+                        // keep the InstanceGUID on imported Component instances
+                        addon.ComponentParameter["DontAssignGuidsOnNextTransaction".ToLowerInvariant()] = true;
+                    }
+                }
                 MgaGateway.PerformInTransaction(delegate
                 {
                     var importer = new AVMDesignImporter(GMEConsole, project);

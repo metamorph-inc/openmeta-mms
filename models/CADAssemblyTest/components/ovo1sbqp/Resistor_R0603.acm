@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="672329de-2203-4d4b-9721-db5428ba573d" Name="Resistor_R0603" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="modelica" xsi:type="q1:ModelicaModel" Author="" Notes="" XPosition="343" YPosition="343" Class="Modelica.Electrical.Analog.Basic.Resistor" xmlns="">
+    <Parameter XPosition="224" YPosition="21" Locator="R">
+      <Value ID="id-c267e4df-f759-4129-b268-503d0c9c9249" Unit="ohm">
+        <ValueExpression xmlns:q2="avm" xsi:type="q2:DerivedValue" ValueSource="id-15cdbad5-6620-42a2-bf0d-3808956c1860" />
+      </Value>
+    </Parameter>
+    <Connector ID="id-9d06782f-fa27-4191-9451-ec7d7ce6e2fa" PortMap="" Name="n" Notes="" Definition="" XPosition="497" YPosition="42" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+    <Connector ID="id-865fd020-8bdc-4fe4-b16a-0a220d9ada39" PortMap="id-9ccc1c93-46c9-420c-a4fa-c67100aa6845" Name="p" Notes="" Definition="" XPosition="56" YPosition="35" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </DomainModel>
+  <DomainModel xmlns:q3="cad" xsi:type="q3:CADModel" UsesResource="id-cea448f5-0f8c-44ae-99a4-e30a668604a2" Author="" Notes="" XPosition="154" YPosition="469" xmlns="">
+    <Datum xsi:type="q3:CoordinateSystem" ID="cad.48F3D3FB1F15400BA9E16BFF5BE7861" PortMap="" Name="48F3D3FB1F15400BA9E16BFF5BE7861" Notes="" Definition="" XPosition="25" YPosition="25" DatumName="48F3D3FB1F15400BA9E16BFF5BE7861" />
+    <Datum xsi:type="q3:CoordinateSystem" ID="cad.CS" PortMap="" Name="CS" Notes="" Definition="" XPosition="125" YPosition="25" DatumName="CS" />
+  </DomainModel>
+  <DomainModel xmlns:q4="schematic" xsi:type="q4:SchematicModel" UsesResource="id-da410fef-8827-42f7-859a-a61adb839714" Author="" Notes="" XPosition="224" YPosition="217" Device="R0603" Package="R0603" Library="rcl" DeviceSet="R-US_" xmlns="">
+    <Pin ID="id-e6d8f427-e654-414f-9643-0bf66a9a35a1" PortMap="" Name="2" Notes="" Definition="" XPosition="125" YPosition="25" Gate="G$1" SymbolLocationX="5.08" SymbolLocationY="0" SymbolRotation="R180" />
+    <Pin ID="id-47b77c95-418a-4bfe-9ca2-78a33d670154" PortMap="id-6914c75d-fff5-4a99-a86a-d60a80b9021e" Name="1" Notes="" Definition="" XPosition="25" YPosition="25" Gate="G$1" SymbolLocationX="-5.08" SymbolLocationY="0" SymbolRotation="0" />
+    <Parameter XPosition="225" YPosition="25" Locator="value">
+      <Value ID="id-85ceb268-0d94-4767-9dca-bc03dad9b82a">
+        <ValueExpression xmlns:q5="avm" xsi:type="q5:DerivedValue" ValueSource="id-15cdbad5-6620-42a2-bf0d-3808956c1860" />
+      </Value>
+    </Parameter>
+  </DomainModel>
+  <Property xmlns:q6="avm" xsi:type="q6:PrimitiveProperty" Name="R" ID="param.id-15cdbad5-6620-42a2-bf0d-3808956c1860" XPosition="28" YPosition="329" xmlns="">
+    <Value ID="id-15cdbad5-6620-42a2-bf0d-3808956c1860" DimensionType="Scalar" Dimensions="" Unit="ohm" DataType="String">
+      <ValueExpression xsi:type="q6:ParametricValue">
+        <Default xsi:type="q6:FixedValue">
+          <Value>10000</Value>
+        </Default>
+        <Maximum xsi:type="q6:FixedValue">
+          <Value>inf</Value>
+        </Maximum>
+        <Minimum xsi:type="q6:FixedValue">
+          <Value>-inf</Value>
+        </Minimum>
+        <AssignedValue xsi:type="q6:FixedValue">
+          <Value>10000</Value>
+        </AssignedValue>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency Name="pkg_0603.prt" Path="CAD\pkg_0603.prt" Hash="" ID="id-cea448f5-0f8c-44ae-99a4-e30a668604a2" Notes="CAD Model Import tool added this resource object for the imported CAD file" XPosition="497" YPosition="469" xmlns="" />
+  <ResourceDependency Name="Icon" Path="Images/Icon.png" Hash="" ID="id-655d446e-c3bf-48b1-8fea-25b70771b78b" Notes="" XPosition="336" YPosition="98" xmlns="" />
+  <ResourceDependency Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-da410fef-8827-42f7-859a-a61adb839714" Notes="Standalone EAGLE library for this device" XPosition="252" YPosition="84" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-4cde194d-606e-4bdd-918c-ea63b4229a25" ApplyJoinData="" XPosition="28" YPosition="119" Notes="" Definition="" Name="P1" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-6914c75d-fff5-4a99-a86a-d60a80b9021e" PortMap="" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q8="modelica" xsi:type="q8:Connector" ID="id-9ccc1c93-46c9-420c-a4fa-c67100aa6845" PortMap="" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-be3b9612-91e6-4ca3-a58d-a66412fbdd2f" ApplyJoinData="" XPosition="532" YPosition="203" Notes="" Definition="" Name="P2" xmlns="">
+    <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-146085a6-4668-475d-9980-896028817b58" PortMap="id-e6d8f427-e654-414f-9643-0bf66a9a35a1" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q10="modelica" xsi:type="q10:Connector" ID="id-5c3dea08-c1a6-4fc5-bd76-103368e60218" PortMap="id-9d06782f-fa27-4191-9451-ec7d7ce6e2fa" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Classifications xmlns="">passive.resistors</Classifications>
+</Component>

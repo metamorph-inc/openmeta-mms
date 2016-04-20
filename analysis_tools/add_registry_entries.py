@@ -8,10 +8,8 @@ from _winreg import *
 
 def register_tool(tool):
     reg_path = "SOFTWARE\\META\\AnalysisTools\\%s\\" % (tool['name'])
-    reg_key = "InstallLocation"
-    reg_value = "C:\\sadasfa\\afasf"
 
-    with CreateKeyEx(HKEY_LOCAL_MACHINE, reg_path, 0, KEY_ALL_ACCESS) as reg:
+    with CreateKeyEx(HKEY_CURRENT_USER, reg_path, 0, KEY_ALL_ACCESS) as reg:
         SetValueEx(reg, 'InstallLocation', 0, REG_SZ, tool['InstallLocation'])
         SetValueEx(reg, 'Version', 0, REG_SZ, tool['version'])
         SetValueEx(reg, 'OutputDirectory', 0, REG_SZ, tool['outputDirectory'])
@@ -36,16 +34,19 @@ def get_tool(tool_dir):
     return tools
 
 
-def main():
-    # get all analysis tools
-    analysis_tools_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+def main(analysis_tool_manifest=None):
+    if analysis_tool_manifest is None:
+        # get all analysis tools
+        analysis_tools_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
-    print 'Registering analysis tools from {0}'.format(analysis_tools_dir)
+        print 'Registering analysis tools from {0}'.format(analysis_tools_dir)
 
-    directories = [os.path.join(analysis_tools_dir, name) for name in os.listdir(analysis_tools_dir) if os.path.isdir(os.path.join(analysis_tools_dir, name)) and not name in ['.svn', 'images']]
-    tools = []
-    for tool_dir in directories:
-        tools += get_tool(tool_dir)
+        directories = [os.path.join(analysis_tools_dir, name) for name in os.listdir(analysis_tools_dir) if os.path.isdir(os.path.join(analysis_tools_dir, name)) and not name in ['.svn', 'images']]
+        tools = []
+        for tool_dir in directories:
+            tools += get_tool(tool_dir)
+    else:
+        tools = get_tool(os.path.dirname(analysis_tool_manifest))
 
     for tool in tools:
         register_tool(tool)
@@ -53,4 +54,4 @@ def main():
     print 'Analysis tool registration is done.'
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(main(sys.argv[1] if len(sys.argv) == 2 else None))

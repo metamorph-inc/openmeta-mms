@@ -1,0 +1,4 @@
+* not a real opamp
+.SUBCKT LEVEL4ASM1      1   2
+RIN	1	2	43MEG
+.ENDS LEVEL4ASM1

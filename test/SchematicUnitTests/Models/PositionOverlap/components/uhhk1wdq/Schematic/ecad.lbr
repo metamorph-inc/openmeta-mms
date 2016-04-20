@@ -1,0 +1,62 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="6_PIN_DRY" xmlns="eagle">
+          <smd name="3" x="-0.37" y="-0.5" dx="0.3" dy="0.49" layer="1" rot="R270" stop="no" />
+          <smd name="4" x="0.37" y="-0.5" dx="0.3" dy="0.49" layer="1" rot="R270" stop="no" />
+          <smd name="6" x="0.37" y="0.5" dx="0.3" dy="0.49" layer="1" rot="R270" stop="no" />
+          <smd name="2" x="-0.37" y="0" dx="0.3" dy="0.49" layer="1" rot="R270" stop="no" />
+          <smd name="5" x="0.37" y="0" dx="0.3" dy="0.49" layer="1" rot="R270" stop="no" />
+          <smd name="1" x="-0.37" y="0.5" dx="0.3" dy="0.49" layer="1" rot="R270" stop="no" />
+          <rectangle x1="0.18" y1="0.205" x2="0.58" y2="0.795" layer="29" rot="R90" />
+          <rectangle x1="0.18" y1="-0.795" x2="0.58" y2="-0.205" layer="29" rot="R90" />
+          <rectangle x1="0.18" y1="-0.295" x2="0.58" y2="0.295" layer="29" rot="R90" />
+          <rectangle x1="-0.57" y1="-0.795" x2="-0.17" y2="-0.205" layer="29" rot="R90" />
+          <rectangle x1="-0.57" y1="-0.295" x2="-0.17" y2="0.295" layer="29" rot="R90" />
+          <rectangle x1="-0.57" y1="0.205" x2="-0.17" y2="0.795" layer="29" rot="R90" />
+          <circle x="-1" y="0.7" radius="0.0635" width="0.16" layer="21" />
+          
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="6_PIN_VOLTAGE_MONITOR">
+          <wire x1="-15.24" y1="12.7" x2="-15.24" y2="-12.7" width="0.254" layer="94" />
+          <wire x1="-15.24" y1="12.7" x2="15.24" y2="12.7" width="0.254" layer="94" />
+          <wire x1="15.24" y1="12.7" x2="15.24" y2="-12.7" width="0.254" layer="94" />
+          <wire x1="15.24" y1="-12.7" x2="-15.24" y2="-12.7" width="0.254" layer="94" />
+          <pin name="ENABLE" x="-20.32" y="2.54" visible="pin" length="middle" direction="pas" />
+          <pin name="SENSE" x="-20.32" y="-2.54" visible="pin" length="middle" direction="pas" />
+          <pin name="GND" x="0" y="-15.24" visible="pin" length="middle" direction="pas" rot="R90" />
+          <pin name="VCC" x="0" y="17.78" visible="pin" length="middle" direction="pas" rot="R270" />
+          <pin name="SENSE_OUT" x="20.32" y="2.54" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="CT" x="20.32" y="-2.54" visible="pin" length="middle" direction="pas" rot="R180" />
+          
+          
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="TPS3895ADRYR" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="6_PIN_VOLTAGE_MONITOR" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="6_PIN_DRY" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="CT" pad="5" />
+                <connect gate="G$1" pin="ENABLE" pad="1" />
+                <connect gate="G$1" pin="GND" pad="2" />
+                <connect gate="G$1" pin="SENSE" pad="3" />
+                <connect gate="G$1" pin="SENSE_OUT" pad="4" />
+                <connect gate="G$1" pin="VCC" pad="6" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

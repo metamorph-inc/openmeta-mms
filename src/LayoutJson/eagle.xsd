@@ -1,0 +1,1243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:eagle="eagle" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  targetNamespace="eagle">
+
+  <xsd:element name='eagle'>
+  <xsd:complexType>
+    <xsd:sequence>
+    <xsd:element ref='eagle:compatibility' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:drawing'/>
+    <xsd:element ref='eagle:compatibility' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+    <xsd:attribute name='version' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='compatibility'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:note'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='note'>
+  <xsd:complexType mixed='true'>
+   <xsd:attribute name='version' type='xsd:string' use='required'/>
+   <xsd:attribute name='severity' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='info'/>
+      <xsd:enumeration value='warning'/>
+      <xsd:enumeration value='error'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='drawing'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:settings' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:grid' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:layers'/>
+    <xsd:choice>
+     <xsd:element ref='eagle:library'/>
+     <xsd:element ref='eagle:schematic'/>
+     <xsd:element ref='eagle:board'/>
+    </xsd:choice>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='library'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:packages' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:symbols' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:devicesets' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='schematic'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:libraries' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:attributes' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:variantdefs' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:classes' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:parts' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:sheets' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:errors' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+   <xsd:attribute name='xreflabel' type='xsd:string' use='optional'/>
+   <xsd:attribute name='xrefpart' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='board'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:plain' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:libraries' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:attributes' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:variantdefs' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:classes' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:designrules' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:autorouter' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:elements' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:signals' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:errors' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='sheet'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:plain' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:instances' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:busses' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:nets' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='package'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:description' minOccurs='0' maxOccurs='1'/>
+    <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+     <xsd:element ref='eagle:polygon'/>
+     <xsd:element ref='eagle:wire'/>
+     <xsd:element ref='eagle:text'/>
+     <xsd:element ref='eagle:dimension'/>
+     <xsd:element ref='eagle:circle'/>
+     <xsd:element ref='eagle:rectangle'/>
+     <xsd:element ref='eagle:frame'/>
+     <xsd:element ref='eagle:hole'/>
+     <xsd:element ref='eagle:pad'/>
+     <xsd:element ref='eagle:smd'/>
+    </xsd:choice>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='symbol'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:description' minOccurs='0' maxOccurs='1'/>
+    <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+     <xsd:element ref='eagle:polygon'/>
+     <xsd:element ref='eagle:wire'/>
+     <xsd:element ref='eagle:text'/>
+     <xsd:element ref='eagle:dimension'/>
+     <xsd:element ref='eagle:pin'/>
+     <xsd:element ref='eagle:circle'/>
+     <xsd:element ref='eagle:rectangle'/>
+     <xsd:element ref='eagle:frame'/>
+    </xsd:choice>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='deviceset'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:gates'/>
+    <xsd:element ref='eagle:devices'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='prefix' type='xsd:string' use='optional'/>
+   <xsd:attribute name='uservalue' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='device'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:connects' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='eagle:technologies' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' default=''/>
+   <xsd:attribute name='package' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='bus'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:segment'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='net'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:segment'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='class' type='xsd:string' default='0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='segment'>
+  <xsd:complexType>
+   <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:pinref'/>
+    <xsd:element ref='eagle:wire'/>
+    <xsd:element ref='eagle:junction'/>
+    <xsd:element ref='eagle:label'/>
+   </xsd:choice>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='signal'>
+  <xsd:complexType>
+   <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:contactref'/>
+    <xsd:element ref='eagle:polygon'/>
+    <xsd:element ref='eagle:wire'/>
+    <xsd:element ref='eagle:via'/>
+   </xsd:choice>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='class' type='xsd:string' default='0'/>
+   <xsd:attribute name='airwireshidden' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='variantdef'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='current' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='variant'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='populate' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='value' type='xsd:string' use='optional'/>
+   <xsd:attribute name='technology' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='gate'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='symbol' type='xsd:string' use='required'/>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='addlevel' default='next'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='must'/>
+      <xsd:enumeration value='can'/>
+      <xsd:enumeration value='next'/>
+      <xsd:enumeration value='request'/>
+      <xsd:enumeration value='always'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='swaplevel' type='xsd:string' default='0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='wire'>
+  <xsd:complexType>
+   <xsd:attribute name='x1' type='xsd:string' use='required'/>
+   <xsd:attribute name='y1' type='xsd:string' use='required'/>
+   <xsd:attribute name='x2' type='xsd:string' use='required'/>
+   <xsd:attribute name='y2' type='xsd:string' use='required'/>
+   <xsd:attribute name='width' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+   <xsd:attribute name='extent' type='xsd:string' use='optional'/>
+   <xsd:attribute name='style' default='continuous'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='continuous'/>
+      <xsd:enumeration value='longdash'/>
+      <xsd:enumeration value='shortdash'/>
+      <xsd:enumeration value='dashdot'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='curve' type='xsd:string' default='0'/>
+   <xsd:attribute name='cap' default='round'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='flat'/>
+      <xsd:enumeration value='round'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='dimension'>
+  <xsd:complexType>
+   <xsd:attribute name='x1' type='xsd:string' use='required'/>
+   <xsd:attribute name='y1' type='xsd:string' use='required'/>
+   <xsd:attribute name='x2' type='xsd:string' use='required'/>
+   <xsd:attribute name='y2' type='xsd:string' use='required'/>
+   <xsd:attribute name='x3' type='xsd:string' use='required'/>
+   <xsd:attribute name='y3' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+   <xsd:attribute name='dtype' default='parallel'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='parallel'/>
+      <xsd:enumeration value='horizontal'/>
+      <xsd:enumeration value='vertical'/>
+      <xsd:enumeration value='radius'/>
+      <xsd:enumeration value='diameter'/>
+      <xsd:enumeration value='leader'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='width' type='xsd:string' use='required'/>
+   <xsd:attribute name='extwidth' type='xsd:string' default='0'/>
+   <xsd:attribute name='extlength' type='xsd:string' default='0'/>
+   <xsd:attribute name='extoffset' type='xsd:string' default='0'/>
+   <xsd:attribute name='textsize' type='xsd:string' use='required'/>
+   <xsd:attribute name='textratio' type='xsd:string' default='8'/>
+   <xsd:attribute name='unit' default='mm'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='mic'/>
+      <xsd:enumeration value='mm'/>
+      <xsd:enumeration value='mil'/>
+      <xsd:enumeration value='inch'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='precision' type='xsd:string' default='2'/>
+   <xsd:attribute name='visible' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='text'>
+  <xsd:complexType mixed='true'>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='size' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+   <xsd:attribute name='font' default='proportional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='vector'/>
+      <xsd:enumeration value='proportional'/>
+      <xsd:enumeration value='fixed'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='ratio' type='xsd:string' default='8'/>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+   <xsd:attribute name='align' default='bottom-left'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='bottom-left'/>
+      <xsd:enumeration value='bottom-center'/>
+      <xsd:enumeration value='bottom-right'/>
+      <xsd:enumeration value='center-left'/>
+      <xsd:enumeration value='center'/>
+      <xsd:enumeration value='center-right'/>
+      <xsd:enumeration value='top-left'/>
+      <xsd:enumeration value='top-center'/>
+      <xsd:enumeration value='top-right'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='distance' type='xsd:string' default='50'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='circle'>
+  <xsd:complexType>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='radius' type='xsd:string' use='required'/>
+   <xsd:attribute name='width' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='rectangle'>
+  <xsd:complexType>
+   <xsd:attribute name='x1' type='xsd:string' use='required'/>
+   <xsd:attribute name='y1' type='xsd:string' use='required'/>
+   <xsd:attribute name='x2' type='xsd:string' use='required'/>
+   <xsd:attribute name='y2' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='frame'>
+  <xsd:complexType>
+   <xsd:attribute name='x1' type='xsd:string' use='required'/>
+   <xsd:attribute name='y1' type='xsd:string' use='required'/>
+   <xsd:attribute name='x2' type='xsd:string' use='required'/>
+   <xsd:attribute name='y2' type='xsd:string' use='required'/>
+   <xsd:attribute name='columns' type='xsd:string' use='required'/>
+   <xsd:attribute name='rows' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+   <xsd:attribute name='border-left' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='border-top' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='border-right' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='border-bottom' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='hole'>
+  <xsd:complexType>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='drill' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='pad'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='drill' type='xsd:string' use='required'/>
+   <xsd:attribute name='diameter' type='xsd:string' default='0'/>
+   <xsd:attribute name='shape' default='round'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='square'/>
+      <xsd:enumeration value='round'/>
+      <xsd:enumeration value='octagon'/>
+      <xsd:enumeration value='long'/>
+      <xsd:enumeration value='offset'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+   <xsd:attribute name='stop' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='thermals' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='first' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='smd'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='dx' type='xsd:string' use='required'/>
+   <xsd:attribute name='dy' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+   <xsd:attribute name='roundness' type='xsd:string' default='0'/>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+   <xsd:attribute name='stop' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='thermals' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='cream' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='element'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:attribute' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='eagle:variant' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='library' type='xsd:string' use='required'/>
+   <xsd:attribute name='package' type='xsd:string' use='required'/>
+   <xsd:attribute name='value' type='xsd:string' use='required'/>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='locked' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='smashed' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='via'>
+  <xsd:complexType>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='extent' type='xsd:string' use='required'/>
+   <xsd:attribute name='drill' type='xsd:string' use='required'/>
+   <xsd:attribute name='diameter' type='xsd:string' default='0'/>
+   <xsd:attribute name='shape' default='round'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='square'/>
+      <xsd:enumeration value='round'/>
+      <xsd:enumeration value='octagon'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='alwaysstop' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='polygon'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:vertex'/>
+   </xsd:sequence>
+   <xsd:attribute name='width' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+   <xsd:attribute name='spacing' type='xsd:string' use='optional'/>
+   <xsd:attribute name='pour' default='solid'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='solid'/>
+      <xsd:enumeration value='hatch'/>
+      <xsd:enumeration value='cutout'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='isolate' type='xsd:string' use='optional'/>
+   <xsd:attribute name='orphans' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='thermals' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='rank' type='xsd:string' default='0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='vertex'>
+  <xsd:complexType>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='curve' type='xsd:string' default='0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='pin'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='visible' default='both'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='off'/>
+      <xsd:enumeration value='pad'/>
+      <xsd:enumeration value='pin'/>
+      <xsd:enumeration value='both'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='length' default='long'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='point'/>
+      <xsd:enumeration value='short'/>
+      <xsd:enumeration value='middle'/>
+      <xsd:enumeration value='long'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='direction' default='io'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='nc'/>
+      <xsd:enumeration value='in'/>
+      <xsd:enumeration value='out'/>
+      <xsd:enumeration value='io'/>
+      <xsd:enumeration value='oc'/>
+      <xsd:enumeration value='pwr'/>
+      <xsd:enumeration value='pas'/>
+      <xsd:enumeration value='hiz'/>
+      <xsd:enumeration value='sup'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='function' default='none'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='none'/>
+      <xsd:enumeration value='dot'/>
+      <xsd:enumeration value='clk'/>
+      <xsd:enumeration value='dotclk'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='swaplevel' type='xsd:string' default='0'/>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='part'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:attribute' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='eagle:variant' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='library' type='xsd:string' use='required'/>
+   <xsd:attribute name='deviceset' type='xsd:string' use='required'/>
+   <xsd:attribute name='device' type='xsd:string' use='required'/>
+   <xsd:attribute name='technology' type='xsd:string' default=''/>
+   <xsd:attribute name='value' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='instance'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:attribute'/>
+   </xsd:sequence>
+   <xsd:attribute name='part' type='xsd:string' use='required'/>
+   <xsd:attribute name='gate' type='xsd:string' use='required'/>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='smashed' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='label'>
+  <xsd:complexType>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+   <xsd:attribute name='size' type='xsd:string' use='required'/>
+   <xsd:attribute name='layer' type='xsd:string' use='required'/>
+   <xsd:attribute name='font' default='proportional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='vector'/>
+      <xsd:enumeration value='proportional'/>
+      <xsd:enumeration value='fixed'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='ratio' type='xsd:string' default='8'/>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+   <xsd:attribute name='xref' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='junction'>
+  <xsd:complexType>
+   <xsd:attribute name='x' type='xsd:string' use='required'/>
+   <xsd:attribute name='y' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='connect'>
+  <xsd:complexType>
+   <xsd:attribute name='gate' type='xsd:string' use='required'/>
+   <xsd:attribute name='pin' type='xsd:string' use='required'/>
+   <xsd:attribute name='pad' type='xsd:string' use='required'/>
+   <xsd:attribute name='route' default='all'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='all'/>
+      <xsd:enumeration value='any'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='technology'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:attribute'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='attribute'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='value' type='xsd:string' use='optional'/>
+   <xsd:attribute name='x' type='xsd:string' use='optional'/>
+   <xsd:attribute name='y' type='xsd:string' use='optional'/>
+   <xsd:attribute name='size' type='xsd:string' use='optional'/>
+   <xsd:attribute name='layer' type='xsd:string' use='optional'/>
+   <xsd:attribute name='font' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='vector'/>
+      <xsd:enumeration value='proportional'/>
+      <xsd:enumeration value='fixed'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='ratio' type='xsd:string' use='optional'/>
+   <xsd:attribute name='rot' type='xsd:string' default='R0'/>
+   <xsd:attribute name='display' default='value'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='off'/>
+      <xsd:enumeration value='value'/>
+      <xsd:enumeration value='name'/>
+      <xsd:enumeration value='both'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='constant' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='pinref'>
+  <xsd:complexType>
+   <xsd:attribute name='part' type='xsd:string' use='required'/>
+   <xsd:attribute name='gate' type='xsd:string' use='required'/>
+   <xsd:attribute name='pin' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='contactref'>
+  <xsd:complexType>
+   <xsd:attribute name='element' type='xsd:string' use='required'/>
+   <xsd:attribute name='pad' type='xsd:string' use='required'/>
+   <xsd:attribute name='route' default='all'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='all'/>
+      <xsd:enumeration value='any'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='routetag' type='xsd:string' default=''/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='variantdefs'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:variantdef'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='settings'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:setting'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='sheets'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:sheet'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='layers'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:layer'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='packages'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:package'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='symbols'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:symbol'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='devicesets'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:deviceset'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='gates'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:gate'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='devices'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:device'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='libraries'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:library'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='connects'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:connect'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='technologies'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:technology'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='attributes'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:attribute'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='classes'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:class'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='parts'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:part'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='instances'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:instance'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='errors'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:approved'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='plain'>
+  <xsd:complexType>
+   <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:polygon'/>
+    <xsd:element ref='eagle:wire'/>
+    <xsd:element ref='eagle:text'/>
+    <xsd:element ref='eagle:dimension'/>
+    <xsd:element ref='eagle:circle'/>
+    <xsd:element ref='eagle:rectangle'/>
+    <xsd:element ref='eagle:frame'/>
+    <xsd:element ref='eagle:hole'/>
+   </xsd:choice>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='autorouter'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:pass'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='elements'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:element'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='signals'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:signal'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='busses'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:bus'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='nets'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:net'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='setting'>
+  <xsd:complexType>
+   <xsd:attribute name='alwaysvectorfont' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='verticaltext' default='up'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='up'/>
+      <xsd:enumeration value='down'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='designrules'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eagle:description' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='eagle:param' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='grid'>
+  <xsd:complexType>
+   <xsd:attribute name='distance' type='xsd:string' use='optional'/>
+   <xsd:attribute name='unitdist' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='mic'/>
+      <xsd:enumeration value='mm'/>
+      <xsd:enumeration value='mil'/>
+      <xsd:enumeration value='inch'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='unit' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='mic'/>
+      <xsd:enumeration value='mm'/>
+      <xsd:enumeration value='mil'/>
+      <xsd:enumeration value='inch'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='style' default='lines'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='lines'/>
+      <xsd:enumeration value='dots'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='multiple' type='xsd:string' default='1'/>
+   <xsd:attribute name='display' default='no'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='altdistance' type='xsd:string' use='optional'/>
+   <xsd:attribute name='altunitdist' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='mic'/>
+      <xsd:enumeration value='mm'/>
+      <xsd:enumeration value='mil'/>
+      <xsd:enumeration value='inch'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='altunit' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='mic'/>
+      <xsd:enumeration value='mm'/>
+      <xsd:enumeration value='mil'/>
+      <xsd:enumeration value='inch'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='layer'>
+  <xsd:complexType>
+   <xsd:attribute name='number' type='xsd:string' use='required'/>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='color' type='xsd:string' use='required'/>
+   <xsd:attribute name='fill' type='xsd:string' use='required'/>
+   <xsd:attribute name='visible' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='active' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='class'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:clearance'/>
+   </xsd:sequence>
+   <xsd:attribute name='number' type='xsd:string' use='required'/>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='width' type='xsd:string' default='0'/>
+   <xsd:attribute name='drill' type='xsd:string' default='0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='clearance'>
+  <xsd:complexType>
+   <xsd:attribute name='class' type='xsd:string' use='required'/>
+   <xsd:attribute name='value' type='xsd:string' default='0'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='description'>
+  <xsd:complexType mixed='true'>
+   <xsd:attribute name='language' type='xsd:string' default='en'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='param'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='value' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='pass'>
+  <xsd:complexType>
+   <xsd:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='eagle:param'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='refer' type='xsd:string' use='optional'/>
+   <xsd:attribute name='active' default='yes'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='no'/>
+      <xsd:enumeration value='yes'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='approved'>
+  <xsd:complexType>
+   <xsd:attribute name='hash' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>

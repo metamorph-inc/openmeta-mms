@@ -15,6 +15,8 @@ using System.Linq;
 using CyPhyGUIs;
 using System.Reflection;
 using System.Xml;
+using META;
+using Ionic.Zip;
 
 namespace CyPhyDesignExporter
 {
@@ -49,7 +51,7 @@ namespace CyPhyDesignExporter
         /// <param name="project">The handle of the project opened in GME, for which the interpreter was called.</param>
         public void Initialize(MgaProject project)
         {
-            // TODO: Add your initialization code here...            
+            // TODO: Add your initialization code here...
         }
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace CyPhyDesignExporter
                 MgaGateway = new MgaGateway(mainParameters.Project);
                 parameters.Project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
-                var result = new InterpreterResult() { Success = true, RunCommand = "" };
+                var result = new InterpreterResult() { Success = true, RunCommand = "cmd.exe /c \"\"" };
 
                 MgaGateway.PerformInTransaction(delegate
                 {
@@ -142,10 +144,18 @@ namespace CyPhyDesignExporter
 
         public void MainInTransaction(InterpreterMainParameters parameters)
         {
+            MainInTransaction(parameters, false);
+        }
+
+        public void MainInTransaction(InterpreterMainParameters parameters, bool exportPackage=false)
+        {
             this.mainParameters = (InterpreterMainParameters)parameters;
-            if (GMEConsole == null)
+
+            Boolean disposeLogger = false;
+            if (Logger == null)
             {
-                GMEConsole = GMEConsole.CreateFromProject(mainParameters.Project);
+                Logger = new GMELogger(mainParameters.Project, "CyPhyDesignExporter");
+                disposeLogger = true;
             }
 
             var currentObject = mainParameters.CurrentFCO;
@@ -153,24 +163,41 @@ namespace CyPhyDesignExporter
             string artifactName = string.Empty;
             string metaBaseName = currentObject.MetaBase.Name;
 
-            if (metaBaseName == typeof(CyPhyClasses.DesignContainer).Name)
+            try
             {
-                artifactName = ExportToFile(CyPhyClasses.DesignContainer.Cast(currentObject), currentOutputDirectory);
-            }
-            else if (metaBaseName == typeof(CyPhyClasses.ComponentAssembly).Name)
-            {
-                artifactName = ExportToFile(CyPhyClasses.ComponentAssembly.Cast(currentObject), currentOutputDirectory);
-            }
-            else if (IsTestBenchType(metaBaseName))
-            {
-                artifactName = ExportToFile(CyPhyClasses.TestBenchType.Cast(currentObject), currentOutputDirectory);
-            }
+                if (metaBaseName == typeof(CyPhyClasses.DesignContainer).Name)
+                {
+                    artifactName = ExportToFile(CyPhyClasses.DesignContainer.Cast(currentObject), currentOutputDirectory);
+                }
+                else if (metaBaseName == typeof(CyPhyClasses.ComponentAssembly).Name)
+                {
+                    if (exportPackage)
+                    {
+                        artifactName = ExportToPackage(CyPhyClasses.ComponentAssembly.Cast(currentObject), currentOutputDirectory);
+                    }
+                    else
+                    {
+                        artifactName = ExportToFile(CyPhyClasses.ComponentAssembly.Cast(currentObject), currentOutputDirectory);
+                    }
+                }
+                else if (IsTestBenchType(metaBaseName))
+                {
+                    artifactName = ExportToFile(CyPhyClasses.TestBenchType.Cast(currentObject), currentOutputDirectory);
+                }
 
-            if (!string.IsNullOrWhiteSpace(artifactName))
+                if (!string.IsNullOrWhiteSpace(artifactName))
+                {
+                    var manifest = AVM.DDP.MetaTBManifest.OpenForUpdate(currentOutputDirectory);
+                    manifest.AddArtifact(Path.GetFileName(artifactName), "Design Model");
+                    manifest.Serialize(currentOutputDirectory);
+                }
+            }
+            finally
             {
-                var manifest = AVM.DDP.MetaTBManifest.OpenForUpdate(currentOutputDirectory);
-                manifest.AddArtifact(Path.GetFileName(artifactName), "Design Model");
-                manifest.Serialize(currentOutputDirectory);
+                if (disposeLogger)
+                {
+                    DisposeLogger();
+                }
             }
 
         }
@@ -222,11 +249,10 @@ namespace CyPhyDesignExporter
             }
             else
             {
-                var tlsut = ((MgaObject)testBench).ChildObjects.
-                                    Cast<MgaObject>().
-                                    OfType<MgaFCO>().
-                                    Where(x => x.MetaBase.Name == "TopLevelSystemUnderTest")
-                                    .Cast<CyPhyClasses.DesignEntity>().FirstOrDefault();
+                var tlsut = (CyPhy.DesignEntity)testBench.AllChildren
+                                    .Where(x => ((IMgaFCO)x.Impl).MetaRole.Name == "TopLevelSystemUnderTest"
+                                        || ((IMgaFCO)x.Impl).MetaRole.Name == x.Impl.MetaBase.Name + "TopLevelSystemUnderTest")
+                                    .FirstOrDefault();
                 if (tlsut != null)
                     return ExportToFile(tlsut, outputDirectory);
             }
@@ -256,9 +282,69 @@ namespace CyPhyDesignExporter
             return s_outFilePath;   
         }
 
+        public string ExportToPackage(CyPhy.ComponentAssembly ca, String s_outFolder)
+        {
+            // Create a temp folder
+            var pathTemp = Path.Combine(System.IO.Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(pathTemp);
+
+            // Export an ADM file to that temp folder
+            var pathADM = ExportToFile(ca, pathTemp);
+
+            // Generate zip file
+            String pathADP = Path.Combine(s_outFolder,
+                                          Path.GetFileNameWithoutExtension(pathADM) + ".adp");
+            File.Delete(pathADP);
+            using (ZipFile zip = new ZipFile(pathADP)
+                                 {
+                                    CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression
+                                 })
+            {
+                Queue<CyPhy.ComponentAssembly> cas = new Queue<CyPhy.ComponentAssembly>();
+                cas.Enqueue(ca);
+                while (cas.Count != 0)
+                {
+                    var componentAssembly = cas.Dequeue();
+                    var pathCA = componentAssembly.GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
+                    if (false == (pathCA.EndsWith("//") ||
+                                  pathCA.EndsWith("\\\\")))
+                    {
+                        pathCA += "//";
+                    }
+
+                    foreach (var file in Directory.EnumerateFiles(pathCA, "*.*", SearchOption.AllDirectories))
+                    {
+                        var relpath = Path.GetDirectoryName(ComponentLibraryManager.MakeRelativePath(pathCA, file));
+                        string dirName = componentAssembly.Attributes.ID.ToString();
+                        string managedGUID = componentAssembly.Attributes.ManagedGUID;
+                        if (string.IsNullOrEmpty(managedGUID) == false)
+                        {
+                            dirName = managedGUID;
+                        }
+                        zip.AddFile(file, dirName + "/" + relpath);
+                    }
+
+                    foreach (var subCA in componentAssembly.Children.ComponentAssemblyCollection)
+                    {
+                        cas.Enqueue(subCA);
+                    }
+                }
+
+                // Add the ADM file
+                zip.AddFile(pathADM, "");
+
+                zip.Save();
+            }
+
+            // Delete temporary directory
+            Directory.Delete(pathTemp, true);            
+
+            return pathADP;
+        }
+
         public bool CheckForDuplicateIDs(avm.Design d)
         {
-            //String str = d.Serialize();
+            //String str = d.Serialize();  
             String str = XSD2CSharp.AvmXmlSerializer.Serialize(d);
 
             XmlDocument doc = new XmlDocument();
@@ -283,8 +369,8 @@ namespace CyPhyDesignExporter
                 foreach (var dupe in duplicates)
                     msg += String.Format("{0}\"{1}\", ", Environment.NewLine, dupe);
 
-                if (GMEConsole != null)
-                    GMEConsole.Error.WriteLine(msg);
+                if (Logger != null)
+                    Logger.WriteError(msg);
                 return true;
             }
             
@@ -301,18 +387,21 @@ namespace CyPhyDesignExporter
             bool result = false;
             try
             {
-                GMEConsole.Info.WriteLine("Elaborating model...");
+                if (Logger != null)
+                    Logger.WriteInfo("Elaborating model...");
                 var elaborator = new CyPhyElaborateCS.CyPhyElaborateCSInterpreter();
                 elaborator.Initialize(project);
                 int verbosity = 128;
-                //elaborator.UnrollConnectors = false;
+                elaborator.UnrollConnectors = false;
                 result = elaborator.RunInTransaction(project, currentobj, selectedobjs, verbosity);
 
-                GMEConsole.Info.WriteLine("Elaboration is done.");
+                if (Logger != null)
+                    Logger.WriteInfo("Elaboration is done.");
             }
             catch (Exception ex)
             {
-                GMEConsole.Error.WriteLine("Exception occurred in Elaborator : {0}", ex.ToString());
+                if (Logger != null)
+                    Logger.WriteError("Exception occurred in Elaborator : {0}", ex.ToString());
                 result = false;
             }
 
@@ -337,8 +426,15 @@ namespace CyPhyDesignExporter
         [ComVisible(false)]
         public void Main(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, ComponentStartMode startMode)
         {
+            Boolean disposeLogger = false;
+            if (Logger == null)
+            {
+                Logger = new CyPhyGUIs.GMELogger(project, "CyPhyDesignExporter");
+                disposeLogger = true;
+            }
+
             // TODO: Add your interpreter code
-            GMEConsole.Out.WriteLine("Running Design Exporter...");
+            Logger.WriteInfo("Running Design Exporter...");
 
             #region Prompt for Output Path
             // Get an output path from the user.
@@ -359,14 +455,14 @@ namespace CyPhyDesignExporter
                     }
                     else
                     {
-                        GMEConsole.Warning.WriteLine("Design Exporter cancelled");
+                        Logger.WriteWarning("Design Exporter cancelled");
                         return;
                     }
                 }
             }
             #endregion
 
-            GMEConsole.Info.WriteLine("Beginning Export...");
+            Logger.WriteInfo("Beginning Export...");
             List<CyPhy.DesignEntity> lde_allCAandDC = new List<CyPhy.DesignEntity>();
             List<CyPhy.TestBenchType> ltbt_allTB = new List<CyPhy.TestBenchType>();
             
@@ -382,7 +478,6 @@ namespace CyPhyDesignExporter
             }
             else if (currentobj != null &&
                 IsTestBenchType(currentobj.MetaBase.Name))
-                //CyPhyClasses.TestBenchType.Cast(currentobj) != null)
             {
                 ltbt_allTB.Add(CyPhyClasses.TestBenchType.Cast(currentobj));
             }
@@ -395,7 +490,6 @@ namespace CyPhyDesignExporter
                         lde_allCAandDC.Add(CyPhyClasses.ComponentAssembly.Cast(mf));
                     }
                     else if (mf.Meta.Name == "DesignContainer")
-                    
                     {
                         lde_allCAandDC.Add(CyPhyClasses.DesignContainer.Cast(mf));
                     }
@@ -445,13 +539,20 @@ namespace CyPhyDesignExporter
                 System.Windows.Forms.Application.DoEvents();
                 try
                 {
-                    ExportToFile(de, OutputDir);
+                    if (de is CyPhy.ComponentAssembly)
+                    {
+                        ExportToPackage(de as CyPhy.ComponentAssembly, OutputDir);
+                    }
+                    else
+                    {
+                        ExportToFile(de, OutputDir);
+                    }
                 } 
                 catch (Exception ex) 
                 {
-                    GMEConsole.Error.WriteLine("{0}: Exception encountered ({1})",de.Name,ex.Message);
+                    Logger.WriteError("{0}: Exception encountered ({1})",de.Name,ex.Message);
                 }
-                GMEConsole.Info.WriteLine("{0}: {1}", de.Name, OutputDir);
+                Logger.WriteInfo("{0}: {1}", de.Name, OutputDir);
             }
 
             foreach (CyPhy.TestBenchType tbt in ltbt_allTB)
@@ -463,19 +564,33 @@ namespace CyPhyDesignExporter
                 }
                 catch (Exception ex)
                 {
-                    GMEConsole.Error.WriteLine("{0}: Exception encountered ({1})", tbt.Name, ex.Message);
+                    Logger.WriteError("{0}: Exception encountered ({1})", tbt.Name, ex.Message);
                 }
-                GMEConsole.Info.WriteLine("{0}: {1}", tbt.Name, OutputDir);
+                Logger.WriteInfo("{0}: {1}", tbt.Name, OutputDir);
             }
 
-            GMEConsole.Info.WriteLine(String.Format("{0} model(s) exported", lde_allCAandDC.Count + ltbt_allTB.Count));
-            GMEConsole.Info.WriteLine("Design Exporter finished");			
+            Logger.WriteInfo(String.Format("{0} model(s) exported", lde_allCAandDC.Count + ltbt_allTB.Count));
+            Logger.WriteInfo("Design Exporter finished");
+
+            if (disposeLogger)
+            {
+                DisposeLogger();
+            }
         }
 
         #region IMgaComponentEx Members
 
         MgaGateway MgaGateway { get; set; }
-        GMEConsole GMEConsole { get; set; }
+        GMELogger Logger { get; set; }
+
+        public void DisposeLogger()
+        {
+            if (Logger != null)
+            {
+                Logger.Dispose();
+                Logger = null;
+            }
+        }
 
         public void InvokeEx(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, int param)
         {
@@ -486,7 +601,6 @@ namespace CyPhyDesignExporter
 
             try
             {
-                GMEConsole = GMEConsole.CreateFromProject(project);
                 MgaGateway = new MgaGateway(project);
                 project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
@@ -504,7 +618,6 @@ namespace CyPhyDesignExporter
                 project = null;
                 currentobj = null;
                 selectedobjs = null;
-                GMEConsole = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }

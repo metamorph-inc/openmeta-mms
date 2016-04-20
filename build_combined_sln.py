@@ -46,16 +46,19 @@ def get_projs(rel_sln, platform="Win32", configuration="Release"):
     for solutionConfiguration2 in sln.SolutionBuild.SolutionConfigurations:
         if solutionConfiguration2.Name == configuration and solutionConfiguration2.PlatformName == platform:
             for solutionContext in solutionConfiguration2.SolutionContexts:
-                desert_configs[os.path.relpath(os.path.dirname(rel_sln) + "\\" + solutionContext.ProjectName, "src")] = solutionContext.ConfigurationName + "|" + solutionContext.PlatformName
+                relpath = os.path.relpath(os.path.dirname(os.path.abspath(rel_sln)) + "\\" + solutionContext.ProjectName, "src")
+                desert_configs[relpath] = solutionContext.ConfigurationName + "|" + solutionContext.PlatformName
+                print relpath + ' ' + solutionContext.ProjectName + ' ' +solutionContext.ConfigurationName
     sln.Close()
     return (desert_projects, desert_configs)
 
 desert_projects, desert_configs = get_projs(r"externals\desert\desertVS2010.sln", configuration="ReleaseUnicode")
 #cyber_projects, cyber_configs = get_projs(r"src\Cyber2Code.sln")
 #cybertools_projects, cybertools_configs = get_projs(r"src\Cyber-Tools.sln")
+tonka_projects, tonka_configs = get_projs(r"tonka.sln", platform="Mixed Platforms")
 
-dep_projects = set(desert_projects)
-dep_configs = dict(desert_configs.items())
+dep_projects = set(desert_projects + tonka_projects)
+dep_configs = dict(desert_configs.items() + tonka_configs.items())
 
 sln = win32com.client.DispatchEx("VisualStudio.Solution.%s" % _vs_version)
 # print win32com.client.DispatchEx("InterfaceEnum").Enum(sln)
@@ -68,6 +71,7 @@ for proj in dep_projects:
     if proj not in cyphy_projects:
         dep_projects2.append(sln.AddFromFile(proj, False))
 for vcxproj in (r"3rdParty\ctemplate-1.0\vsprojects\libctemplate\libctemplate.vcxproj", r"src\MetaLink\MetaLink_maven.vcxproj"):
+    print vcxproj
     dep_projects2.append(sln.AddFromFile(os.path.join(meta_path, vcxproj), False))
     dep_configs[os.path.relpath(vcxproj, "src")] = "Release|Win32"
 dep_projects = dep_projects2
@@ -96,6 +100,19 @@ add_dep('CyPhyMetaLinkBridgeClient.csproj', 'MetaLink_maven.vcxproj')
 #for vcxproj in map(os.path.basename, cyber_projects):
 #    if vcxproj not in ('UpdateCyber2SLC_udm.vcxproj', 'Cyber.vcxproj'):
 #        add_dep(vcxproj, 'UpdateCyber2SLC_udm.vcxproj')
+for vcxproj in map(os.path.basename, tonka_projects):
+    add_dep(vcxproj, 'CyPhyElaborateCS.csproj')
+    add_dep(vcxproj, 'CyPhyMLCS.csproj')
+    add_dep(vcxproj, 'CyPhyGUIs.csproj')
+
+# repr(open('tmp.sh').read())
+import subprocess
+import re
+for line in (l for l in subprocess.check_output('git grep HintPath.*META.src **/*.csproj').split('\n') if l):
+    proj, dep = re.match(r'([^:]*):.*?HintPath.*\\(.*)(?:.dll|.exe)..HintPath.*', line).groups()
+    proj = os.path.basename(proj)
+    if dep not in 'MgaMeta CyPhyElaborateCS CyPhyML CyPhyGUIs ISIS.GME.Common'.split():
+        add_dep(proj, dep + '.csproj')
 
 # TODO: copy solution dependencies from dependent slns
 

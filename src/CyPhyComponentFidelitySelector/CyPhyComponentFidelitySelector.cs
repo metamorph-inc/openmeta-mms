@@ -8,6 +8,9 @@ using GME.CSharp;
 using GME;
 using GME.MGA;
 using GME.MGA.Core;
+using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
+using Newtonsoft.Json;
+using System.Xml.Linq;
 
 namespace CyPhyComponentFidelitySelector
 {
@@ -42,7 +45,7 @@ namespace CyPhyComponentFidelitySelector
         /// <param name="project">The handle of the project opened in GME, for which the interpreter was called.</param>
         public void Initialize(MgaProject project)
         {
-            // TODO: Add your initialization code here...            
+            // TODO: Add your initialization code here...
         }
 
         /// <summary>
@@ -56,7 +59,7 @@ namespace CyPhyComponentFidelitySelector
         /// A collection for the selected model elements. It is never null.
         /// If the interpreter is invoked by the context menu of the GME Tree Browser, then the selected items in the tree browser. Folders
         /// are never passed (they are not FCOs).
-        /// If the interpreter is invoked by clicking on the toolbar icon or the context menu of the modeling window, then the selected items 
+        /// If the interpreter is invoked by clicking on the toolbar icon or the context menu of the modeling window, then the selected items
         /// in the active GME modeling window. If nothing is selected, the collection is empty (contains zero elements).
         /// </param>
         /// <param name="startMode">Contains information about the GUI event that initiated the invocation.</param>
@@ -78,7 +81,27 @@ namespace CyPhyComponentFidelitySelector
 
             // get root folder
             IMgaFolder rootFolder = project.RootFolder;
-            
+            this.currentobj = ISIS.GME.Dsml.CyPhyML.Classes.TestBench.Cast(currentobj);
+            this.sut = this.currentobj.Children.TopLevelSystemUnderTestCollection.First();
+
+            MgaReference workflowRef = ((MgaModel)currentobj).ChildFCOs.Cast<MgaFCO>().Where(fco => fco.Meta.Name == "WorkflowRef").FirstOrDefault() as MgaReference;
+            MgaFCO spiceTask = null;
+            if (workflowRef != null && workflowRef.Referred != null)
+            {
+                foreach (var task in ((MgaModel)workflowRef.Referred).ChildFCOs.Cast<MgaFCO>().Where(fco => fco.Meta.Name == "Task"))
+                {
+                    if (task.GetStrAttrByNameDisp("COMName").Equals("MGA.Interpreter.CyPhy2Schematic", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        spiceTask = task;
+                    }
+                }
+            }
+            if (spiceTask != null)
+            {
+                DoSpiceFidelitySelection(currentobj);
+                return;
+            }
+
             // create a filter for components
             MgaFilter filter = project.CreateFilter();
             filter.Kind = "Component";
@@ -145,7 +168,7 @@ namespace CyPhyComponentFidelitySelector
                     {
                         testbench.RegistryValue["FidelitySettings"] = fsf.FidelitySettings;
 
-                        GMEConsole.Info.WriteLine("=> {0}", testbench.Name); 
+                        GMEConsole.Info.WriteLine("=> {0}", testbench.Name);
                     }
                 }
                 else if (fsf.rbThisProject.Checked)
@@ -165,13 +188,35 @@ namespace CyPhyComponentFidelitySelector
                     {
                         testbench.RegistryValue["FidelitySettings"] = fsf.FidelitySettings;
 
-                        GMEConsole.Info.WriteLine("=> {0}", testbench.Name); 
+                        GMEConsole.Info.WriteLine("=> {0}", testbench.Name);
                     }
                 }
             }
 
 
             GMEConsole.Info.WriteLine("{0} finished.", ComponentName);
+        }
+
+        private void DoSpiceFidelitySelection(MgaFCO currentobj)
+        {
+            FidelitySelectionRules xpaths = FidelitySelectionRules.DeserializeSpiceFidelitySelection(currentobj);
+            if (xpaths == null)
+            {
+                xpaths = new FidelitySelectionRules();
+            }
+
+            var system = sut.Referred.DesignElement;
+            XElement root = FidelitySelectionRules.CreateForAssembly(system);
+            var sp = new SpiceSelector(root, xpaths);
+            using (sp)
+            {
+                sp.ShowDialog();
+                if (sp.DialogResult == System.Windows.Forms.DialogResult.OK)
+                {
+                    FidelitySelectionRules.SerializeInRegistry(currentobj, xpaths);
+                }
+                return;
+            }
         }
 
         #region IMgaComponentEx Members
@@ -206,6 +251,8 @@ namespace CyPhyComponentFidelitySelector
                 MgaGateway = null;
                 project = null;
                 currentobj = null;
+                this.currentobj = null;
+                this.sut = null;
                 selectedobjs = null;
                 GMEConsole = null;
                 GC.Collect();
@@ -292,6 +339,8 @@ namespace CyPhyComponentFidelitySelector
 
         #region Custom Parameters
         SortedDictionary<string, object> componentParameters = null;
+        private CyPhy.TestBench currentobj;
+        private CyPhy.TopLevelSystemUnderTest sut;
 
         public object get_ComponentParameter(string Name)
         {

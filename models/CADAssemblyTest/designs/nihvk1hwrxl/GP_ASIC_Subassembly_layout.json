@@ -1,0 +1,744 @@
+{
+  "boardWidth": 20.0,
+  "boardHeight": 25.0,
+  "numLayers": 2,
+  "boardTemplate": "template20x25_4layer.brd",
+  "designRules": "PCBUniverse-4layer.dru",
+  "packages": [
+    {
+      "name": "GP_ASIC",
+      "package": "BGA107",
+      "pkg_idx": 0,
+      "ComponentID": "{86538834-a0ba-403e-83b8-1ecf225c127f}",
+      "RelComponentID": null,
+      "width": 5.0942,
+      "height": 4.6942,
+      "originX": -0.5,
+      "originY": 0.2,
+      "x": 1.0,
+      "y": 1.9,
+      "rotation": 0,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    }
+  ],
+  "signals": [
+    {
+      "name": "N$0",
+      "length": 8.8000000000000025,
+      "bends": 40,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "VSS28",
+          "gate": "G$1",
+          "pad": "J10",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS2",
+          "gate": "G$1",
+          "pad": "A8",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS1",
+          "gate": "G$1",
+          "pad": "A1",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDDIO1",
+          "gate": "G$1",
+          "pad": "G9",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS31",
+          "gate": "G$1",
+          "pad": "L11",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS30",
+          "gate": "G$1",
+          "pad": "L9",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS29",
+          "gate": "G$1",
+          "pad": "L7",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS3",
+          "gate": "G$1",
+          "pad": "A11",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS4",
+          "gate": "G$1",
+          "pad": "B8",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS5",
+          "gate": "G$1",
+          "pad": "B9",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS6",
+          "gate": "G$1",
+          "pad": "C3",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS7",
+          "gate": "G$1",
+          "pad": "C4",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS8",
+          "gate": "G$1",
+          "pad": "C5",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS9",
+          "gate": "G$1",
+          "pad": "C6",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS10",
+          "gate": "G$1",
+          "pad": "C7",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS11",
+          "gate": "G$1",
+          "pad": "C9",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS12",
+          "gate": "G$1",
+          "pad": "D3",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS13",
+          "gate": "G$1",
+          "pad": "E3",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS14",
+          "gate": "G$1",
+          "pad": "E6",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS15",
+          "gate": "G$1",
+          "pad": "E7",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS16",
+          "gate": "G$1",
+          "pad": "F3",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS17",
+          "gate": "G$1",
+          "pad": "F5",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS18",
+          "gate": "G$1",
+          "pad": "F6",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS19",
+          "gate": "G$1",
+          "pad": "F7",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS20",
+          "gate": "G$1",
+          "pad": "G3",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS21",
+          "gate": "G$1",
+          "pad": "G6",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS22",
+          "gate": "G$1",
+          "pad": "G8",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS23",
+          "gate": "G$1",
+          "pad": "G10",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS24",
+          "gate": "G$1",
+          "pad": "H2",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS25",
+          "gate": "G$1",
+          "pad": "H6",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS26",
+          "gate": "G$1",
+          "pad": "H8",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VSS27",
+          "gate": "G$1",
+          "pad": "H10",
+          "package": "GP_ASIC"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 5.6,
+          "y1": 3.2,
+          "x2": 5.6,
+          "y2": 2.8,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.8,
+          "y1": 3.6,
+          "x2": 4.8,
+          "y2": 3.2,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.8,
+          "y1": 3.6,
+          "x2": 5.2,
+          "y2": 3.6,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 5.2,
+          "y1": 3.6,
+          "x2": 5.6,
+          "y2": 3.6,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 5.6,
+          "y1": 3.6,
+          "x2": 5.6,
+          "y2": 3.2,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.4,
+          "y1": 4.4,
+          "x2": 4.0,
+          "y2": 4.4,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.0,
+          "y1": 3.6,
+          "x2": 4.0,
+          "y2": 3.2,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.0,
+          "y1": 4.0,
+          "x2": 3.6,
+          "y2": 4.0,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.0,
+          "y1": 4.0,
+          "x2": 4.4,
+          "y2": 4.0,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.0,
+          "y1": 4.0,
+          "x2": 4.0,
+          "y2": 3.6,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.0,
+          "y1": 4.0,
+          "x2": 4.0,
+          "y2": 4.4,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 2.8,
+          "y1": 4.4,
+          "x2": 2.8,
+          "y2": 4.0,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 2.8,
+          "y1": 3.6,
+          "x2": 2.8,
+          "y2": 4.0,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 2.8,
+          "y1": 5.2,
+          "x2": 2.8,
+          "y2": 4.8,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 2.8,
+          "y1": 5.2,
+          "x2": 3.2,
+          "y2": 5.2,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 3.2,
+          "y1": 5.2,
+          "x2": 3.6,
+          "y2": 5.2,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 3.6,
+          "y1": 5.2,
+          "x2": 4.0,
+          "y2": 5.2,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.0,
+          "y1": 5.2,
+          "x2": 4.4,
+          "y2": 5.2,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 2.8,
+          "y1": 4.8,
+          "x2": 2.8,
+          "y2": 4.4,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 5.2,
+          "y1": 5.6,
+          "x2": 5.2,
+          "y2": 5.2,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.8,
+          "y1": 6.0,
+          "x2": 4.8,
+          "y2": 5.6,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 4.8,
+          "y1": 5.6,
+          "x2": 5.2,
+          "y2": 5.6,
+          "width": 0.0762,
+          "layer": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": 4.0,
+          "y": 4.0,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 2.0,
+          "y": 6.0,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 6.0,
+          "y": 6.0,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.8,
+          "y": 6.0,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 6.0,
+          "y": 2.0,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.4,
+          "y": 2.0,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 5.2,
+          "y": 2.0,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 5.6,
+          "y": 2.8,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.8,
+          "y": 3.6,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 2.4,
+          "y": 3.2,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 2.8,
+          "y": 5.2,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.4,
+          "y": 5.2,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 2.8,
+          "y": 4.4,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 5.6,
+          "y": 3.6,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.0,
+          "y": 3.2,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 3.6,
+          "y": 5.2,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 2.8,
+          "y": 3.6,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.4,
+          "y": 4.4,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 5.2,
+          "y": 5.6,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        }
+      ]
+    },
+    {
+      "name": "N$1",
+      "length": 1.0414213562373087,
+      "bends": 15,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "VDD_CORE1",
+          "gate": "G$1",
+          "pad": "G7",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDDIO",
+          "gate": "G$1",
+          "pad": "G5",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_UNIPRO3",
+          "gate": "G$1",
+          "pad": "K9",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_UNIPRO2",
+          "gate": "G$1",
+          "pad": "K7",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_UNIPRO1",
+          "gate": "G$1",
+          "pad": "J8",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_UNIPRO",
+          "gate": "G$1",
+          "pad": "J6",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_SDIO1",
+          "gate": "G$1",
+          "pad": "E9",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_SDIO",
+          "gate": "G$1",
+          "pad": "D9",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_PLL2",
+          "gate": "G$1",
+          "pad": "K5",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_PLL1",
+          "gate": "G$1",
+          "pad": "L5",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_HSIC",
+          "gate": "G$1",
+          "pad": "G2",
+          "package": "GP_ASIC"
+        },
+        {
+          "name": "VDD_CORE",
+          "gate": "G$1",
+          "pad": "E5",
+          "package": "GP_ASIC"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 5.2,
+          "y1": 4.8,
+          "x2": 5.2,
+          "y2": 4.4,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 3.6,
+          "y1": 2.4,
+          "x2": 3.6,
+          "y2": 2.0,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 3.7,
+          "y1": 3.5,
+          "x2": 3.6,
+          "y2": 3.6,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 3.95,
+          "y1": 2.8,
+          "x2": 3.95,
+          "y2": 2.75,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 3.95,
+          "y1": 2.8,
+          "x2": 4.0,
+          "y2": 2.8,
+          "width": 0.0762,
+          "layer": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": 2.4,
+          "y": 3.6,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.4,
+          "y": 3.6,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 3.6,
+          "y": 3.6,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 5.2,
+          "y": 4.4,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 3.6,
+          "y": 2.0,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 5.2,
+          "y": 2.4,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.0,
+          "y": 2.8,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 3.6,
+          "y": 4.4,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.8,
+          "y": 2.8,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 4.4,
+          "y": 2.4,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        },
+        {
+          "x": 3.6,
+          "y": 2.4,
+          "drill": 0.08,
+          "layerBegin": 1,
+          "layerEnd": 16
+        }
+      ]
+    }
+  ],
+  "constraints": null
+}

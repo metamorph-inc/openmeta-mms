@@ -1,0 +1,7 @@
+Some files have been removed:
+find -iname i386 -type d | xargs recycle
+find -iname help -type d | xargs recycle
+find -iname doc -type d | xargs recycle
+find -iname tests -type d | xargs recycle
+find -iname examples -type d | xargs recycle
+recycle Tcl library/grid library/Matrix library/mgcv library/nlme library/survival

@@ -1,0 +1,92 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="STP08DP05TTR" xmlns="eagle">
+          <circle x="-3.45" y="2.9" radius="0.13" width="0" layer="21" />
+          <circle x="-1.75" y="1.95" radius="0.2" width="0" layer="21" />
+          <wire x1="-2.2" y1="-2.5" x2="-2.2" y2="2.5" width="0.1524" layer="21" />
+          <wire x1="-2.2" y1="2.5" x2="2.2" y2="2.5" width="0.1524" layer="21" />
+          <wire x1="2.2" y1="2.5" x2="2.2" y2="-2.5" width="0.127" layer="21" />
+          <wire x1="2.2" y1="-2.5" x2="-2.2" y2="-2.5" width="0.1524" layer="21" />
+          <rectangle x1="-1.5" y1="-1.5" x2="1.5" y2="1.5" layer="51" />
+          <smd name="P$1" x="-2.9" y="2.275" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$2" x="-2.9" y="1.625" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$3" x="-2.9" y="0.975" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$4" x="-2.9" y="0.325" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$5" x="-2.9" y="-0.325" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$6" x="-2.9" y="-0.975" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$7" x="-2.9" y="-1.625" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$8" x="-2.9" y="-2.275" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$9" x="2.9" y="-2.275" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$10" x="2.9" y="-1.625" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$11" x="2.9" y="-0.975" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$12" x="2.9" y="-0.325" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$13" x="2.9" y="0.325" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$14" x="2.9" y="0.975" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$15" x="2.9" y="1.625" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <smd name="P$16" x="2.9" y="2.275" dx="0.25" dy="0.6" layer="1" rot="R270" />
+          <text x="-2.125" y="3.57" size="1" layer="25" font="vector" ratio="15">&gt;NAME</text>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="STP08DP05">
+          <pin name="!OE/DM2" x="-17.78" y="7.62" length="middle" direction="pas" />
+          <pin name="CLK" x="-17.78" y="2.54" length="middle" direction="pas" />
+          <pin name="GND" x="2.54" y="-22.86" length="middle" direction="pas" rot="R90" />
+          <pin name="LE/DMI" x="-17.78" y="-2.54" length="middle" direction="pas" />
+          <pin name="OUT0" x="17.78" y="10.16" length="middle" direction="pas" rot="R180" />
+          <pin name="OUT1" x="17.78" y="7.62" length="middle" direction="pas" rot="R180" />
+          <pin name="OUT2" x="17.78" y="5.08" length="middle" direction="pas" rot="R180" />
+          <pin name="OUT3" x="17.78" y="2.54" length="middle" direction="pas" rot="R180" />
+          <pin name="OUT4" x="17.78" y="0" length="middle" direction="pas" rot="R180" />
+          <pin name="OUT5" x="17.78" y="-2.54" length="middle" direction="pas" rot="R180" />
+          <pin name="OUT6" x="17.78" y="-5.08" length="middle" direction="pas" rot="R180" />
+          <pin name="OUT7" x="17.78" y="-7.62" length="middle" direction="pas" rot="R180" />
+          <pin name="R-EXT" x="-2.54" y="-22.86" length="middle" direction="pas" rot="R90" />
+          <pin name="SDI" x="-17.78" y="-7.62" length="middle" direction="pas" />
+          <pin name="SDO" x="17.78" y="-12.7" length="middle" direction="pas" rot="R180" />
+          <pin name="VDD" x="0" y="17.78" length="middle" direction="pas" rot="R270" />
+          <text x="-12.7" y="25.4" size="1.778" layer="95">&gt;NAME</text>
+          <text x="-12.7" y="22.86" size="1.778" layer="96">&gt;VALUE</text>
+          <wire x1="-12.7" y1="12.7" x2="-12.7" y2="-17.78" width="0.254" layer="94" />
+          <wire x1="-12.7" y1="-17.78" x2="12.7" y2="-17.78" width="0.254" layer="94" />
+          <wire x1="12.7" y1="-17.78" x2="12.7" y2="12.7" width="0.254" layer="94" />
+          <wire x1="12.7" y1="12.7" x2="-12.7" y2="12.7" width="0.254" layer="94" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="STP08DP05TTR" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="STP08DP05" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="STP08DP05TTR" package="STP08DP05TTR" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="!OE/DM2" pad="P$13" />
+                <connect gate="G$1" pin="CLK" pad="P$3" />
+                <connect gate="G$1" pin="GND" pad="P$1" />
+                <connect gate="G$1" pin="LE/DMI" pad="P$4" />
+                <connect gate="G$1" pin="OUT0" pad="P$5" />
+                <connect gate="G$1" pin="OUT1" pad="P$6" />
+                <connect gate="G$1" pin="OUT2" pad="P$7" />
+                <connect gate="G$1" pin="OUT3" pad="P$8" />
+                <connect gate="G$1" pin="OUT4" pad="P$9" />
+                <connect gate="G$1" pin="OUT5" pad="P$10" />
+                <connect gate="G$1" pin="OUT6" pad="P$11" />
+                <connect gate="G$1" pin="OUT7" pad="P$12" />
+                <connect gate="G$1" pin="R-EXT" pad="P$15" />
+                <connect gate="G$1" pin="SDI" pad="P$2" />
+                <connect gate="G$1" pin="SDO" pad="P$14" />
+                <connect gate="G$1" pin="VDD" pad="P$16" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

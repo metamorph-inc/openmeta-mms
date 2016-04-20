@@ -42,6 +42,9 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\3rdParty\Ionic.Zip\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="ISIS.GME.Common">
       <HintPath>..\..\externals\common-scripts\ISIS.GME.Common.dll</HintPath>
     </Reference>
@@ -96,6 +99,10 @@
     <ProjectReference Include="..\AvmDdp\AvmDdp.csproj">
       <Project>{8880FD8F-C7DA-4491-908D-778B67057DA0}</Project>
       <Name>AvmDdp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ComponentLibraryManager\ComponentLibraryManager.csproj">
+      <Project>{0B1EAA2B-5B37-4D27-868E-60CF820B3273}</Project>
+      <Name>ComponentLibraryManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\CyPhy2DesignInterchange\CyPhy2DesignInterchange.csproj">
       <Project>{931606C8-6178-4F8C-8E02-9D28C6D79FEA}</Project>

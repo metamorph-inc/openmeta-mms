@@ -50,12 +50,11 @@ namespace ComponentImporterUnitTests
             var importer = new CyPhyComponentImporter.CyPhyComponentImporterInterpreter();
             importer.Initialize(project);
 
-            project.BeginTransactionInNewTerr();
-            try
+            project.PerformInTransaction(delegate
             {
                 var fco = importer.ImportFile(project, testPath, acmPath);
                 ISIS.GME.Dsml.CyPhyML.Interfaces.Component comp = ISIS.GME.Dsml.CyPhyML.Classes.Component.Cast(fco);
-
+                
                 var millimeter = comp.Children.PropertyCollection
                                               .First(p => p.Name.Equals("mm"))
                                               .Referred.unit;
@@ -73,11 +72,7 @@ namespace ComponentImporterUnitTests
                                         .Referred.unit;
                 Assert.NotNull(acre);
                 Assert.Equal("Acre", acre.Name);
-            }
-            finally
-            {
-                project.CommitTransaction();
-            }
+            });
 
             project.Save();
             project.Close();

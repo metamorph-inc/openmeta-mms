@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:avm="avm" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:schematic="schematic" xmlns:spice="spice" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="spice" ecore:package="avm.schematic.spice" targetNamespace="spice">
+  <xsd:import namespace="avm" schemaLocation="avm.xsd"/>
+  <xsd:import namespace="schematic" schemaLocation="avm.schematic.xsd"/>
+  <xsd:element ecore:ignore="true" name="SPICEModel" type="spice:SPICEModel"/>
+  <xsd:element ecore:ignore="true" name="Parameter" type="spice:Parameter"/>
+  <xsd:complexType name="SPICEModel">
+    <xsd:complexContent>
+      <xsd:extension base="schematic:SchematicModel">
+        <xsd:sequence>
+          <xsd:element ecore:name="Parameter" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="Parameter" type="spice:Parameter"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:name="Class" name="Class" type="xsd:string" use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Parameter">
+    <xsd:complexContent>
+      <xsd:extension base="avm:DomainModelParameter">
+        <xsd:sequence>
+          <xsd:element ecore:name="Value" ecore:resolveProxies="true" minOccurs="0" name="Value" type="avm:Value"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:name="Locator" name="Locator" type="xsd:string" use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

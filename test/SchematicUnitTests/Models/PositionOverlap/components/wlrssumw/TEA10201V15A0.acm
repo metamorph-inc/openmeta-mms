@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="cc49c67a-5d04-49ac-aeeb-908a09cda2e5" Name="TEA10201V15A0" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-03159615-f035-4c22-8328-416cf1a81209" Author="" Notes="" XPosition="270" YPosition="200" Name="EDAModel" Package="2_PIN_EIA0201" Device="" Library="General_Andres" DeviceSet="TEA10201V15A0" xmlns="">
+    <Pin ID="id-66cc3691-8adc-4c6f-8ce6-4fd1ef55d1df" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="C2" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-7.62" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-8c9d2216-c0fb-4248-a860-742c7294d0a0" PortMap="id-822ab014-8079-41d3-b542-1e5840163d58" Notes="" XPosition="25" Definition="" YPosition="25" Name="C1" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="2.54" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </DomainModel>
+  <ResourceDependency XPosition="650" YPosition="200" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-03159615-f035-4c22-8328-416cf1a81209" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-43a89370-9228-4e3c-9e86-6a51d0fc9202" ApplyJoinData="" Notes="" Name="1" Definition="" YPosition="441" XPosition="126" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-822ab014-8079-41d3-b542-1e5840163d58" PortMap="" Notes="" XPosition="25" Definition="" YPosition="340" Name="C1" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="2.54" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-00fa05c9-c94f-4f4d-811d-d394f13a1e0d" ApplyJoinData="" Notes="" Name="2" Definition="" YPosition="448" XPosition="497" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-dfe4ae6b-7a8d-4550-804e-9684c257cfae" PortMap="id-66cc3691-8adc-4c6f-8ce6-4fd1ef55d1df" Notes="" XPosition="125" Definition="" YPosition="340" Name="C2" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-7.62" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">ara_components</Classifications>
+</Component>

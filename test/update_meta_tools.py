@@ -69,7 +69,7 @@ def main():
     installer_name = 'META_x64'
     
     # TODO: take the build number as parameter if empty use last successful build
-    url = "{0}/{1}/artifact/deploy/{2}.msi".format(installer, build_number, installer_name)
+    url = "{0}/{1}/artifact/META/deploy/{2}.msi".format(installer, build_number, installer_name)
     
     print " == Arguments =="
     print installer
@@ -93,9 +93,9 @@ def main():
     
     if 'UninstallString' in META_install:
         print 'Installed version: ' + msiVersion
-        if META_install['DisplayVersion'] == msiVersion:
-            print 'Skipping uninstall and reinstall while versions are matching.'
-            return 0
+        #if META_install['DisplayVersion'] == msiVersion:
+        #    print 'Skipping uninstall and reinstall while versions are matching.'
+        #    return 0
 
         # uninstall first
         print META_install['DisplayVersion']

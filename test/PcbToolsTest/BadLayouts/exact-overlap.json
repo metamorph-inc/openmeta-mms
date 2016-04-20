@@ -1,0 +1,48 @@
+{
+  "boardWidth": 18.0,
+  "boardHeight": 40.5,
+  "numLayers": 2,
+  "packages": [
+    {
+      "name": "R1",
+      "package": "R_01005",
+      "pkg_idx": 0,
+      "ComponentID": "{0e374ef8-b109-47f4-8af4-bd23b0e8cbd3}",
+      "width": 0.5,
+      "height": 0.5,
+      "koWidth": 0.5,
+      "koHeight": 0.5,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": [
+        {
+          "x": 9.8,
+          "y": 9.8,
+          "layer": 0,
+          "type": "exact"
+        }
+      ]
+    },
+    {
+      "name": "R2",
+      "package": "R_01005",
+      "pkg_idx": 1,
+      "ComponentID": "{c0d67846-cc40-4c10-9f23-80f81eb7e4ca}",
+      "width": 0.5,
+      "height": 0.5,
+      "koWidth": 0.5,
+      "koHeight": 0.5,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": [
+        {
+          "x": 9.8,
+          "y": 9.8,
+          "layer": 0,
+          "type": "exact"
+        }
+      ]
+    }
+  ],
+  "signals": []
+}

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <Design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="All_5_JoinTypes_TopAsm_DS" DesignID="id-30cc63a1-9689-4a3f-9f11-ffeb936bf72e" xmlns="avm">
-  <RootContainer xmlns:q1="avm" xsi:type="q1:Compound" Name="All_5_JoinTypes_TopAsm_DS" xmlns="">
-    <Container xsi:type="q1:Compound" YPosition="77" XPosition="511" Name="subAsm_5">
-      <Container xsi:type="q1:Compound" YPosition="273" XPosition="616" Name="subAsm_2">
+  <RootContainer xmlns:q1="avm" xsi:type="q1:Compound" ID="2" Name="All_5_JoinTypes_TopAsm_DS" xmlns="">
+    <Container xsi:type="q1:Compound" YPosition="77" XPosition="511" ID="23" Name="subAsm_5">
+      <Container xsi:type="q1:Compound" YPosition="273" XPosition="616" ID="27" Name="subAsm_2">
         <ComponentInstance XPosition="672" YPosition="287" ComponentID="9676c708-d3ac-4bcf-a702-9f374c28b17d" ID="{bfe15182-a6d3-4454-8066-283ac0b8392d}" Name="Comp4">
           <ConnectorInstance ConnectorComposition="{d6559925-4042-4e40-b322-1a09d0ed64b9}-id-7c0ef6ef-7ae1-4322-827e-78a547ea9c7c" ID="{bfe15182-a6d3-4454-8066-283ac0b8392d}-id-35ef7fbb-2afc-4b5c-88ba-1abeaeb05de2" ApplyJoinData="" IDinComponentModel="id-62194b30-cafa-495a-8c15-ec770ca78355" />
         </ComponentInstance>
@@ -22,7 +22,7 @@
           </brazed>
         </JoinData>
       </Container>
-      <Container xsi:type="q1:Compound" YPosition="112" XPosition="602" Name="subAsm_1">
+      <Container xsi:type="q1:Compound" YPosition="112" XPosition="602" ID="24" Name="subAsm_1">
         <ComponentInstance XPosition="630" YPosition="238" ComponentID="853a9634-241c-403e-b097-733673d47203" ID="{0826a059-6ba7-4cc1-91a3-f89a41f3404d}" Name="Comp6">
           <ConnectorInstance ConnectorComposition="{2e341f6a-da23-4ff7-a518-579c9cc6d0d2}-id-6eb3fa7b-75ee-40a9-b976-bcb2239554f9" ID="{0826a059-6ba7-4cc1-91a3-f89a41f3404d}-id-dbd72c38-9605-47ce-a400-56b5a3591494" ApplyJoinData="" IDinComponentModel="id-052703be-d1f0-40fd-b49b-49de3538517e" />
         </ComponentInstance>
@@ -55,7 +55,7 @@
         </soldered>
       </JoinData>
     </Container>
-    <Container xsi:type="q1:Compound" YPosition="210" XPosition="518" Name="subAsm_3">
+    <Container xsi:type="q1:Compound" YPosition="210" XPosition="518" ID="20" Name="subAsm_3">
       <ComponentInstance XPosition="616" YPosition="273" ComponentID="4020c4b1-f33e-4955-a8a2-25fb07a825a4" ID="{52fd8266-9c72-4287-913f-062f913f0ba9}" Name="Comp2">
         <ConnectorInstance ConnectorComposition="{f6707a42-8a69-40dd-a392-20d28526fc41}-id-5c390448-9c9d-454e-b690-b631a1a837a5" ID="{52fd8266-9c72-4287-913f-062f913f0ba9}-id-98d9c66d-5966-4a40-956d-d8a209d07229" ApplyJoinData="" IDinComponentModel="id-3baa3a37-c0d9-443d-9b54-46647742d288" />
       </ComponentInstance>
@@ -82,7 +82,7 @@
         </welded>
       </JoinData>
     </Container>
-    <Container xsi:type="q1:Alternative" YPosition="357" XPosition="406" Name="subAsm_4">
+    <Container xsi:type="q1:Alternative" YPosition="357" XPosition="406" ID="17" Name="subAsm_4">
       <ComponentInstance XPosition="693" YPosition="287" ComponentID="b211fc08-dbd9-4374-96c4-699a728b5803" ID="{06059b2f-3db4-402c-9f9f-2221c612eb8d}" Name="Comp8">
         <ConnectorInstance ConnectorComposition="{10ed4f68-deb2-41a1-804e-35b759a4a303}-id-5ef5b48a-f492-4b7b-b2f7-a484cd78dfb1" ID="{06059b2f-3db4-402c-9f9f-2221c612eb8d}-id-40c78038-d76f-45b3-9597-6ba1996bcb3f" ApplyJoinData="" IDinComponentModel="id-40c78038-d76f-45b3-9597-6ba1996bcb3f" />
       </ComponentInstance>

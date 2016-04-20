@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='ASCII'?>
+<eagle xmlns="eagle" version="6.5.0">
+  <drawing>
+    <library>
+      <packages><package name="EU43-14">
+<description>&lt;b&gt;BIPOLAR ELECTROLYTIC CAPACITOR&lt;/b&gt;&lt;p&gt;
+grid 43 mm, diameter 14 mm</description>
+<wire x1="-16.51" y1="6.985" x2="18.669" y2="6.985" width="0.1524" layer="21"/>
+<wire x1="-19.05" y1="6.604" x2="-19.05" y2="-6.604" width="0.1524" layer="21"/>
+<wire x1="-19.05" y1="6.604" x2="-18.669" y2="6.985" width="0.1524" layer="21"/>
+<wire x1="-18.669" y1="6.985" x2="-18.161" y2="6.985" width="0.1524" layer="21"/>
+<wire x1="-17.78" y1="6.604" x2="-18.161" y2="6.985" width="0.1524" layer="21"/>
+<wire x1="-17.78" y1="6.604" x2="-16.891" y2="6.604" width="0.1524" layer="21"/>
+<wire x1="-16.51" y1="6.985" x2="-16.891" y2="6.604" width="0.1524" layer="21"/>
+<wire x1="-17.78" y1="6.604" x2="-17.78" y2="6.223" width="0.1524" layer="21"/>
+<wire x1="-16.891" y1="6.604" x2="-16.891" y2="6.223" width="0.1524" layer="21"/>
+<wire x1="-19.05" y1="6.604" x2="-17.78" y2="6.604" width="0.1524" layer="21"/>
+<wire x1="-17.78" y1="6.223" x2="-16.891" y2="6.223" width="0.1524" layer="21"/>
+<wire x1="-16.891" y1="6.604" x2="19.05" y2="6.604" width="0.1524" layer="21"/>
+<wire x1="-16.51" y1="6.858" x2="18.669" y2="6.858" width="0.3048" layer="21"/>
+<wire x1="-16.637" y1="6.731" x2="18.796" y2="6.731" width="0.3048" layer="21"/>
+<wire x1="-18.669" y1="6.858" x2="-18.161" y2="6.858" width="0.3048" layer="21"/>
+<wire x1="-18.796" y1="6.731" x2="-18.034" y2="6.731" width="0.3048" layer="21"/>
+<wire x1="-17.653" y1="6.477" x2="-17.018" y2="6.477" width="0.3048" layer="21"/>
+<wire x1="-17.653" y1="6.35" x2="-17.018" y2="6.35" width="0.3048" layer="21"/>
+<wire x1="-19.05" y1="-6.604" x2="-18.923" y2="-6.731" width="0.1524" layer="21"/>
+<wire x1="-18.669" y1="-6.985" x2="-18.161" y2="-6.985" width="0.1524" layer="21"/>
+<wire x1="-17.78" y1="-6.604" x2="-17.907" y2="-6.731" width="0.1524" layer="21"/>
+<wire x1="-17.78" y1="-6.604" x2="-17.78" y2="-6.35" width="0.1524" layer="21"/>
+<wire x1="-17.78" y1="-6.604" x2="-16.891" y2="-6.604" width="0.1524" layer="21"/>
+<wire x1="-16.51" y1="-6.985" x2="-16.764" y2="-6.731" width="0.1524" layer="21"/>
+<wire x1="-16.51" y1="-6.985" x2="18.669" y2="-6.985" width="0.1524" layer="21"/>
+<wire x1="-16.891" y1="6.223" x2="-16.891" y2="-6.35" width="0.1524" layer="21"/>
+<wire x1="-18.923" y1="-6.731" x2="-17.907" y2="-6.731" width="0.1524" layer="21"/>
+<wire x1="-18.923" y1="-6.731" x2="-18.669" y2="-6.985" width="0.1524" layer="21"/>
+<wire x1="-17.907" y1="-6.731" x2="-18.161" y2="-6.985" width="0.1524" layer="21"/>
+<wire x1="-16.764" y1="-6.731" x2="18.923" y2="-6.731" width="0.1524" layer="21"/>
+<wire x1="-16.764" y1="-6.731" x2="-16.891" y2="-6.604" width="0.1524" layer="21"/>
+<wire x1="-18.669" y1="-6.858" x2="-18.161" y2="-6.858" width="0.254" layer="21"/>
+<wire x1="-17.653" y1="-6.477" x2="-17.018" y2="-6.477" width="0.254" layer="21"/>
+<wire x1="-16.51" y1="-6.858" x2="18.669" y2="-6.858" width="0.254" layer="21"/>
+<wire x1="-17.78" y1="-6.35" x2="-16.891" y2="-6.35" width="0.1524" layer="21"/>
+<wire x1="-17.78" y1="-6.35" x2="-17.78" y2="6.223" width="0.1524" layer="21"/>
+<wire x1="-16.891" y1="-6.35" x2="-16.891" y2="-6.604" width="0.1524" layer="21"/>
+<wire x1="18.669" y1="-6.985" x2="18.923" y2="-6.731" width="0.1524" layer="21"/>
+<wire x1="18.923" y1="-6.731" x2="19.05" y2="-6.604" width="0.1524" layer="21"/>
+<wire x1="18.669" y1="6.985" x2="19.05" y2="6.604" width="0.1524" layer="21"/>
+<wire x1="19.05" y1="6.604" x2="19.05" y2="-6.604" width="0.1524" layer="21"/>
+<wire x1="-10.668" y1="0" x2="18.542" y2="0" width="0.1524" layer="21"/>
+<wire x1="-16.383" y1="0" x2="-12.065" y2="0" width="0.1524" layer="21"/>
+<wire x1="21.59" y1="0" x2="19.939" y2="0" width="0.762" layer="51"/>
+<wire x1="-21.59" y1="0" x2="-19.939" y2="0" width="0.762" layer="51"/>
+<pad name="1" x="-21.59" y="0" drill="1.1176" diameter="3.1496" shape="octagon"/>
+<pad name="2" x="21.59" y="0" drill="1.1176" diameter="3.1496" shape="octagon"/>
+<text x="-18.415" y="7.366" size="1.778" layer="25" ratio="10">&gt;NAME</text>
+<text x="-9.7536" y="-2.3622" size="1.778" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-16.51" y="-6.35" size="0.9906" layer="21" ratio="12">14x37</text>
+<rectangle x1="-11.049" y1="-1.524" x2="-10.541" y2="1.524" layer="21"/>
+<rectangle x1="-12.319" y1="-1.524" x2="-11.811" y2="1.524" layer="21"/>
+<rectangle x1="19.05" y1="-0.381" x2="19.939" y2="0.381" layer="21"/>
+<rectangle x1="-19.939" y1="-0.381" x2="-19.05" y2="0.381" layer="21"/>
+</package>
+</packages>
+      <symbols><symbol name="ELKO-BP">
+<text x="1.524" y="0.381" size="1.778" layer="95">&gt;NAME</text>
+<text x="1.524" y="-4.699" size="1.778" layer="96">&gt;VALUE</text>
+<rectangle x1="-1.778" y1="-0.762" x2="1.778" y2="0" layer="94"/>
+<rectangle x1="-1.778" y1="-2.54" x2="1.778" y2="-1.778" layer="94"/>
+<pin name="1" x="0" y="2.54" visible="off" length="short" direction="pas" rot="R270"/>
+<pin name="2" x="0" y="-5.08" visible="off" length="short" direction="pas" rot="R90"/>
+</symbol>
+</symbols>
+      <devicesets>
+        <deviceset name="EL-" prefix="C" uservalue="yes">
+          <gates><gate name="G$1" symbol="ELKO-BP" x="0" y="0"/>
+</gates>
+          <devices><device name="BI43-14AXIAL" package="EU43-14">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

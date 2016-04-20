@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="5ffa3703-1236-49d7-bc3b-6cebb2228dd7" Name="Mappings" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="systemc" xsi:type="q1:SystemCModel" Author="author" Notes="notes" XPosition="231" YPosition="126" xmlns="" ModuleName="modulename">
+    <SystemCPort ID="id-3a52c2a5-26a2-43ff-8fbe-b0b92cf202c5" PortMap="id-c2cb4cba-7d0f-4692-ae54-0715d726cb14 id-002a6d4e-6be7-4728-8d2d-3ebbf16b8fef" Name="Port1" Notes="instancenotes" Definition="definition" DataType="bool" DataTypeDimension="2" Directionality="not_applicable" Function="normal" />
+    <SystemCPort ID="id-39c660d4-7a19-4026-ab6b-1146c0962ce7" PortMap="id-893130ef-0440-4c84-8484-8a9de9f8c626 id-a3398f5f-0165-407f-bfd3-fa2742bb7ee3" Name="Port2" Notes="instancenotes" Definition="definition" DataType="sc_int" DataTypeDimension="3" Directionality="inout" Function="clock" />
+    <SystemCPort ID="id-5502fdd7-9601-4cd9-a0c3-492ca10b60d3" PortMap="id-33e0622d-4974-4de5-8b15-3fe12b84cc83" Name="Port3" Notes="instancenotes" Definition="definition" DataType="sc_logic" DataTypeDimension="4" Directionality="in" Function="reset_async" />
+    <Parameter ParamPosition="2" ParamName="parametername2">
+      <Value ID="id-b088e1be-8e21-46f8-8c7c-7c88169dfa11">
+        <ValueExpression xmlns:q2="avm" xsi:type="q2:DerivedValue" ValueSource="id-ce6bc58b-01fd-4044-955f-4418f19a8410" />
+      </Value>
+    </Parameter>
+    <Parameter ParamPosition="1" ParamName="parametername1">
+      <Value ID="id-ba007f13-f4a6-47af-a81b-c04d97d0e061">
+        <ValueExpression xmlns:q3="avm" xsi:type="q3:FixedValue">
+          <Value>102</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+  </DomainModel>
+  <Property xmlns:q4="avm" xsi:type="q4:PrimitiveProperty" Name="Property" ID="property.id-ce6bc58b-01fd-4044-955f-4418f19a8410" XPosition="259" YPosition="350" xmlns="">
+    <Value ID="id-ce6bc58b-01fd-4044-955f-4418f19a8410" DimensionType="Scalar" Dimensions="" Unit="mm" DataType="String">
+      <ValueExpression xsi:type="q4:FixedValue">
+        <Value>2</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Connector ConnectorComposition="" ID="id-d5598ed6-604b-466b-802e-034742d22a00" ApplyJoinData="" XPosition="70" YPosition="7" Notes="" Definition="" Name="Connector" xmlns="">
+    <Role xmlns:q5="systemc" xsi:type="q5:SystemCPort" ID="id-4edccef5-2388-4f98-b162-c7c94ae9e0d4" PortMap="id-5502fdd7-9601-4cd9-a0c3-492ca10b60d3" Name="Port3" Notes="instancenotes" Definition="definition" XPosition="427" YPosition="315" DataType="sc_logic" DataTypeDimension="4" Directionality="in" Function="reset_async" />
+    <Role xmlns:q6="systemc" xsi:type="q6:SystemCPort" ID="id-a3398f5f-0165-407f-bfd3-fa2742bb7ee3" PortMap="" Name="Port2" Notes="instancenotes" Definition="definition" XPosition="392" YPosition="196" DataType="sc_int" DataTypeDimension="3" Directionality="inout" Function="clock" />
+    <Role xmlns:q7="systemc" xsi:type="q7:SystemCPort" ID="id-002a6d4e-6be7-4728-8d2d-3ebbf16b8fef" PortMap="" Name="Port1" Notes="instancenotes" Definition="definition" XPosition="490" YPosition="322" DataType="bool" DataTypeDimension="2" Directionality="not_applicable" Function="normal" />
+  </Connector>
+  <Port xmlns:q8="systemc" xsi:type="q8:SystemCPort" ID="id-893130ef-0440-4c84-8484-8a9de9f8c626" PortMap="" Name="Port2" Notes="instancenotes" Definition="definition" XPosition="56" YPosition="217" DataType="sc_int" DataTypeDimension="3" Directionality="inout" Function="clock" xmlns="" />
+  <Port xmlns:q9="systemc" xsi:type="q9:SystemCPort" ID="id-33e0622d-4974-4de5-8b15-3fe12b84cc83" PortMap="" Name="Port3" Notes="instancenotes" Definition="definition" XPosition="91" YPosition="336" DataType="sc_logic" DataTypeDimension="4" Directionality="in" Function="reset_async" xmlns="" />
+  <Port xmlns:q10="systemc" xsi:type="q10:SystemCPort" ID="id-c2cb4cba-7d0f-4692-ae54-0715d726cb14" PortMap="" Name="Port1" Notes="instancenotes" Definition="definition" XPosition="154" YPosition="343" DataType="bool" DataTypeDimension="2" Directionality="not_applicable" Function="normal" xmlns="" />
+  <Classifications xmlns="" />
+</Component>

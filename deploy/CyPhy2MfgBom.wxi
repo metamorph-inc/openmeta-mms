@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <DirectoryRef Id="INSTALLDIR_BIN" />
+</Fragment>
+<Fragment>
+<ComponentGroup Id="CyPhy2MfgBom">
+  <Component Id="CyPhy2MfgBom.dll" Directory="INSTALLDIR_BIN">
+    <File Id="CyPhy2MfgBom.dll" Name="CyPhy2MfgBom.dll" KeyPath="yes" Source="..\src\CyPhy2MfgBom\bin\Release\CyPhy2MfgBom.dll" />
+    <Class Id="{B2DCC547-ECAF-42AD-88DF-BBC880B0331F}" Context="InprocServer32" Description="MGA.Interpreter.CyPhy2MfgBom" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="MGA.Interpreter.CyPhy2MfgBom" Description="MGA.Interpreter.CyPhy2MfgBom" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{B2DCC547-ECAF-42AD-88DF-BBC880B0331F}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{B2DCC547-ECAF-42AD-88DF-BBC880B0331F}\InprocServer32" Name="Class" Value="CyPhy2MfgBom.CyPhy2MfgBomInterpreter" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{B2DCC547-ECAF-42AD-88DF-BBC880B0331F}\InprocServer32" Name="Assembly" Value="CyPhy2MfgBom, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{B2DCC547-ECAF-42AD-88DF-BBC880B0331F}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{B2DCC547-ECAF-42AD-88DF-BBC880B0331F}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2MfgBom.dll]" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
+    <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.CyPhy2MfgBom'>
+      <RegistryValue Name='Description' Type='string' Value='CyPhy2MfgBom'/>
+      <RegistryValue Name='Icon' Type='string' Value='[#CyPhy2MfgBom.ico]'/>
+      <RegistryValue Name='Paradigm' Type='string' Value='CyPhyML'/>
+      <RegistryValue Name='Tooltip' Type='string' Value='Generate a Bill-of-Materials (BOM) from a Design'/>
+      <RegistryValue Name='Type' Type='integer' Value='1'/>
+
+      <!-- not Associated -->
+
+    </RegistryKey>
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2MfgBom/CyPhy2MfgBom.ico" />
+  </Component>
+</ComponentGroup>
+</Fragment>
+</Wix>

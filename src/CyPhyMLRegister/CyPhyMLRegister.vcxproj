@@ -83,13 +83,11 @@
     <CustomBuild Include="..\..\generated\CyPhyML\models\CyPhyML.mta">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cd $(META_PATH)\meta\CyPhyML
-set PYTHONPATH=$(META_PATH)\meta\CyPhyML
-&quot;$(META_PATH)\externals\common-scripts\gmepy.exe&quot; run_module add_folder_treeIcons &quot;%(FullPath)&quot; &amp;&amp; echo treeIconsAdded &gt; &quot;$(IntDir)\treeIconsMarker&quot;</Command>
+"$(META_PATH)\bin\Python27\Scripts\Python.exe" add_folder_treeIcons.py "%(FullPath)" &amp;&amp; echo treeIconsAdded &gt; "$(IntDir)\treeIconsMarker"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Adding treeIcon registry nodes to CyPhyML</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\treeIconsMarker</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cd $(META_PATH)\meta\CyPhyML
-set PYTHONPATH=$(META_PATH)\meta\CyPhyML
-&quot;$(META_PATH)\externals\common-scripts\gmepy.exe&quot; run_module add_folder_treeIcons &quot;%(FullPath)&quot; &amp;&amp; echo treeIconsAdded &gt; &quot;$(IntDir)\treeIconsMarker&quot;</Command>
+"$(META_PATH)\bin\Python27\Scripts\Python.exe" add_folder_treeIcons.py "%(FullPath)" &amp;&amp; echo treeIconsAdded &gt; "$(IntDir)\treeIconsMarker"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Adding treeIcon registry nodes to CyPhyML</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\treeIconsMarker</Outputs>
     </CustomBuild>

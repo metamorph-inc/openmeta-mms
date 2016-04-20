@@ -206,9 +206,10 @@ namespace DesignExporterUnitTests
             var exportedADMs = Directory.GetFiles(fullTestPath, "*expected.adm");
             foreach (var p_expected in exportedADMs)
             {
+                Console.WriteLine(p_expected);
                 var p_output = p_expected.Replace(".expected", "");
                 Assert.True(File.Exists(p_output), "Output file missing: " + p_output);
-                Assert.True(RunXmlComparator(p_expected, p_output) == 0, "Output did not match expected for " + p_expected);
+                Assert.True(RunXmlComparator(p_output, p_expected) == 0, "Output did not match expected for " + p_expected);
             }
         }
 

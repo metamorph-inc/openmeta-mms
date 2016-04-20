@@ -1,0 +1,105 @@
+
+===============================================
+The FT232R chip uses the following descriptors:
+
+------------------------------------------
+0    bLength            = 18 (size od device desc)
+1    bDescriptorType    = 0x1 (device desc)
+2    bcdUSB             = 0x0200 (usb version)
+4    bDeviceClass       = 0x0 (interface driven)
+5    bDeviceSubClass    = 0x0
+6    bDeviceProtocol    = 0x0
+7    bMaxPacketSize     = 0x8 (max packet size for ep0)
+8    idVendor           = 0x0403 (Future Technology Devices International Limited)
+10   idProduct          = 0x6001 (FT232)
+12   bcdDevice          = 0x0600 (release or version number)
+14   iManufacturer      = 0x1 ("FTDI")
+15   iProduct           = 0x2 ("FT232R USB UART")  
+16   iSerialNumber      = 0x3 ("A7005chz")
+17   bNumConfigurations = 0x1
+
+------------------------------------------
+0    bLength            = 9 (size of conf desc)
+1    bDescriptorType    = 0x2 (conf desc)
+2    wTotalLength       = 0x0020 
+4    bNumInterfaces     = 0x1
+5    bConfigurationValue= 0x1 (the id/index of this confiuguration)
+6    iConfiguration     = 0x0 (no config. string)
+7    bmAttributes       = 0xA0 (bus powered, remote wakeup)
+8    bMaxPower          = 0x2D (90mA)
+
+0    bLength            = 9 (size of interface desc)
+1    bDescriptorType    = 0x4 (interface desc)
+2    bInterfaceNumber   = 0x0
+3    bAlternateSetting  = 0x0
+4    bNumEndpoints      = 0x2
+5    bInterfaceClass    = 0xFF (vendor specific) 
+6    bInterfaceSubClass = 0xFF (vendor specific)
+7    bInterfaceProtocol = 0xFF (vendor specific)
+8    iInterface         = 0x02 ("FT232R USB UART")  
+
+
+0    bLength            = 0x7 (size of EP desc)
+1    bDescriptorType    = 0x5 (EP desc)
+2    bEndpointAddress   = 0x81 (IN)
+3    bmAttributes       = 0x2 (bulk)
+4    wMaxPacketSize     = 0x0040 (64 bytes)
+6    bInterval          = 0x0
+
+
+0    bLength            = 0x7 (size of EP desc)
+1    bDescriptorType    = 0x5 (EP desc)
+2    bEndpointAddress   = 0x02 (OUT)
+3    bmAttributes       = 0x2 (bulk)
+4    wMaxPacketSize     = 0x0040 (64 bytes)
+6    bInterval          = 0x0
+
+------------------------------------------
+0    bLength            = 4 (size of string desc 0)
+1    bDescriptorType    = 0x3 (string desc)
+2    wLANGID[0]         = 0x0409 (English - United States)
+
+0    bLength            = N (size of string desc 2+2*number_of_chars)
+1    bDescriptorType    = 0x3 (string desc)
+2+   Unicode Encoded String, like "FTDI", "FT232R USB UART","MetaMorph"
+
+
+===============================================
+The FT232R chip handles the following requests:
+
+bmRequestType           bRequest                    wValue                  wIndex
+-------------------------------------------------------------------------------------------
+Vendor, Device, Out     0 (SIO_RESET_REQUEST)       0 (SIO_RESET_SIO)       1 (A interface)
+                                                    1 (SIO_RESET_PURGE_RX)
+                                                    2 (SIO_RESET_PURGE_TX)
+
+Vendor, Device, Out     1 (SIO_SET_BAUDRATE_REQUEST)<divisor low>           <divisor high>
+
+Vendor, Device, Out     2 (SIO_SET_DATA_REQUEST)    <parity,stop bit,break> 1 (A interface)
+    
+Vendor, Device, Out     3 (SIO_SET_FLOW_CTRL_REQUEST) 0                     <xon/xoff,rts/cst/off> | 1 (A interface)
+
+Vendor, Device, Out     4 (SIO_SET_MODEM_CTRL_REQUEST)<DTR,RTS low/high>    1 (A interface)
+
+Vendor, Device, In      5 (SIO_POLL_MODEM_STATUS_REQUEST) 0                 1 (A interface) -> returns 16bit status
+
+Vendor, Device, Out     6 (SIO_SET_EVENT_CHAR_REQUEST) en | <char>          1 (A interface)
+
+Vendor, Device, Out     7 (SIO_SET_ERROR_CHAR_REQUEST) en | <char>          1 (A interface)
+
+Vendor, Device, Out     9 (SIO_SET_LATENCY_TIMER_REQUEST) <time>            1 (A interface)
+
+Vendor, Device, In     10 (SIO_GET_LATENCY_TIMER_REQUEST) 0                 1 (A interface) -> returns 8 bit time
+
+Vendor, Device, Out    11 (SIO_SET_BITMODE_REQUEST) <mode | bitmask>        1 (A interface)
+
+Vendor, Device, In     12 (SIO_READ_PINS_REQUEST)   0                       1 (A interface) -> returns 8 bit pin state
+
+Vendor, Device, In   0x90 (SIO_READ_EEPROM_REQUEST) 0                       <addr>          -> returns 8 bit data
+
+Vendor, Device, Out  0x91 (SIO_READ_EEPROM_REQUEST) <value>                 <addr>
+
+Vendor, Device, Out  0x92 (SIO_ERASE_EEPROM_REQUEST)0                       0
+
+
+

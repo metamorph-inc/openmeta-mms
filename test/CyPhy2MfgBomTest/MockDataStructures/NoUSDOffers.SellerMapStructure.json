@@ -1,0 +1,54 @@
+{
+  "sellerMap": {
+    "Digi-Key": {
+      "skuMap": {
+        "220-1319-ND": {
+          "currencyMap": {
+            "EUR": [
+              {
+                "quantity": 1,
+                "price": 30.4
+              },
+              {
+                "quantity": 25,
+                "price": 26.45
+              },
+              {
+                "quantity": 100,
+                "price": 24.3875
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Arrow": {
+      "skuMap": {
+        "LFE3-17EA-6MG328C": {
+          "currencyMap": {
+            "RBL": [
+              {
+                "quantity": 1,
+                "price": 32.43
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Future Electronics": {
+      "skuMap": {
+        "LFE3-17EA-6MG328C": {
+          "currencyMap": {
+            "TBD": [
+              {
+                "quantity": 168,
+                "price": 25.01
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -276,9 +276,11 @@ namespace META
             {
                 PathCollision = false;
 
-                string myFullPath = Path.GetFullPath(component.Attributes.Path);
+                var projectRoot = Path.GetFullPath(project.GetRootDirectoryPath());
+
+                string myFullPath = Path.GetFullPath(Path.Combine(projectRoot, component.Attributes.Path));
                 foreach (var cFullPath in otherComponents.Where(c => !String.IsNullOrWhiteSpace(c.Attributes.Path))
-                                                         .Select(c => Path.GetFullPath(c.Attributes.Path)))
+                                                         .Select(c => Path.GetFullPath(Path.Combine(projectRoot, c.Attributes.Path))))
                 {
                     if (myFullPath == cFullPath)
                         PathCollision = true;
@@ -287,7 +289,7 @@ namespace META
 
             //bool PathCollision = HasPath && otherComponents.Where(c => Path.GetFullPath(c.Attributes.Path) == Path.GetFullPath(component.Attributes.Path)).Any();
 
-            var projectPath_Absolute = component.Impl.Project.GetRootDirectoryPath();
+            var projectPath_Absolute = Path.GetFullPath(component.Impl.Project.GetRootDirectoryPath());
             var lastChar = projectPath_Absolute.Last();
             if (lastChar != '\\' && lastChar != '/')
                 projectPath_Absolute += '\\';
@@ -299,7 +301,7 @@ namespace META
 
                 if (PathCollision || !folderExists)
                 {
-                    var newCompPath_Absolute = ComponentLibraryManager.CreateComponentFolder(component.Impl.Project);                 
+                    var newCompPath_Absolute = ComponentLibraryManager.CreateComponentFolder(component.Impl.Project);
                     var newCompPath_Relative = ComponentLibraryManager.MakeRelativePath(projectPath_Absolute, newCompPath_Absolute);
 
                     newCompPath_Relative = newCompPath_Relative.Replace('\\', '/') + '/';

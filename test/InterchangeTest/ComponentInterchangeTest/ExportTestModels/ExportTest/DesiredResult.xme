@@ -8,7 +8,7 @@
 	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x2b" kind="RootFolder" guid="{5cb4ef3c-7909-4eeb-aa36-ed83e67515f7}">
 		<name>RootFolder</name>
 		<folder id="id-006a-00000002" relid="0x1" childrelidcntr="0x4" kind="Components" guid="{b2358ab5-a27f-4bd7-b481-9e91880a4ac9}">
-			<name>Imported_Components</name>
+			<name>Components</name>
 			<model id="id-0065-00000001" kind="Component" guid="{edb45b88-b3db-4e39-b419-e50c13ef6d24}" relid="0x4" childrelidcntr="0x69">
 				<name>Cross_Drive_without_TC</name>
 				<regnode name="description" isopaque="yes">

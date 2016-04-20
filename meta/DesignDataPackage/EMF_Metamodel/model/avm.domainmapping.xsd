@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:avm="avm" xmlns:cad="cad" xmlns:domainmapping="domainmapping" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:eda="eda" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="domainmapping" ecore:package="avm.domainmapping" targetNamespace="domainmapping">
+  <xsd:import namespace="cad" schemaLocation="avm.cad.xsd"/>
+  <xsd:import namespace="eda" schemaLocation="avm.schematic.eda.xsd"/>
+  <xsd:import namespace="avm" schemaLocation="avm.xsd"/>
+  <xsd:element ecore:ignore="true" name="CAD2EDATransform" type="domainmapping:CAD2EDATransform"/>
+  <xsd:complexType name="CAD2EDATransform">
+    <xsd:complexContent>
+      <xsd:extension base="avm:DomainMapping">
+        <xsd:attribute ecore:default="0.0" ecore:name="RotationX" ecore:unsettable="false" name="RotationX" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:default="0.0" ecore:name="RotationY" ecore:unsettable="false" name="RotationY" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:default="0.0" ecore:name="RotationZ" ecore:unsettable="false" name="RotationZ" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:default="0.0" ecore:name="TranslationX" ecore:unsettable="false" name="TranslationX" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:default="0.0" ecore:name="TranslationY" ecore:unsettable="false" name="TranslationY" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:default="0.0" ecore:name="TranslationZ" ecore:unsettable="false" name="TranslationZ" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:default="1.0" ecore:name="ScaleX" ecore:unsettable="false" name="ScaleX" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:default="1.0" ecore:name="ScaleY" ecore:unsettable="false" name="ScaleY" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:default="1.0" ecore:name="ScaleZ" ecore:unsettable="false" name="ScaleZ" type="xsd:decimal" use="required"/>
+        <xsd:attribute ecore:keys="ID" ecore:name="EDAModel" ecore:reference="eda:EDAModel" name="EDAModel" type="xsd:anyURI" use="required"/>
+        <xsd:attribute ecore:keys="ID" ecore:name="CADModel" ecore:reference="cad:CADModel" name="CADModel" type="xsd:anyURI" use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

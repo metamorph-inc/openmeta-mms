@@ -67,21 +67,11 @@ namespace ComponentInterchangeTest
         }
     }
 
-    public class FormulasModelImport
-    {
-        [Fact]
-        [Trait("ProjectImport/Open", "Formulas")]
-        public void ProjectXmeImport()
-        {
-            Assert.DoesNotThrow(() => { new FormulasFixture(); });
-        }
-    }
-
-    public class FormulasFixture
+    public class FormulasFixture : IDisposable
     {
         public FormulasFixture()
         {
-            var compDir = Path.Combine(Formulas.testPath, "Imported_Components");
+            var compDir = Path.Combine(Formulas.testPath, "Components");
 
             // Clear the Components folder
             try
@@ -111,6 +101,11 @@ namespace ComponentInterchangeTest
 
             // Import the components to the blank model
             Assert.True(0 == CommonFunctions.runCyPhyComponentImporterCLRecursively(Formulas.mgaPath_InputModel, compDir), "Component Importer had non-zero return code.");            
+        }
+
+        public void Dispose()
+        {
+            // No state, so nothing to do here
         }
     }
 }

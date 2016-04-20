@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="Validation">
+            <Directory Id="dir_models_Validation_CFD" Name="CFD">
+                <Directory Id="dir_models_Validation_CFD_Wigley_Hull" Name="Wigley Hull">
+                    <Directory Id="dir_models_Validation_CFD_Wigley_Hull_CAD" Name="CAD" />
+                    <Directory Id="dir_models_Validation_CFD_Wigley_Hull_Documentation" Name="Documentation" />
+                    <Directory Id="dir_models_Validation_CFD_Wigley_Hull_components" Name="components">
+                        <Directory Id="dir_models_Validation_CFD_Wigley_Hull_components_jnujuaux" Name="jnujuaux" />
+                    </Directory>
+                </Directory>
+            </Directory>
+            <Directory Id="dir_models_Validation_FEA" Name="FEA">
+                <Directory Id="dir_models_Validation_FEA_Beam" Name="Beam">
+                    <Directory Id="dir_models_Validation_FEA_Beam_components" Name="components">
+                        <Directory Id="dir_models_Validation_FEA_Beam_components_sy2wykf1" Name="sy2wykf1">
+                            <Directory Id="dir_models_Validation_FEA_Beam_components_sy2wykf1_CAD" Name="CAD" />
+                        </Directory>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir_models_Validation_FEA_Plate_with_Hole" Name="Plate with Hole">
+                    <Directory Id="dir_models_Validation_FEA_Plate_with_Hole_Documentation" Name="Documentation" />
+                    <Directory Id="dir_models_Validation_FEA_Plate_with_Hole_components" Name="components">
+                        <Directory Id="dir_models_Validation_FEA_Plate_with_Hole_components_mttbdsvs" Name="mttbdsvs" />
+                    </Directory>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+        <ComponentGroup Id="Validation">
+            <Component Directory="dir_models_Validation_CFD_Wigley_Hull_CAD" Id="cmp_33012f0a969b81a7bdafd83c1a6f16dd">
+                <File Id="fil_33012f0a969b81a7bdafd83c1a6f16dd" Source="..\models\Validation\CFD\Wigley Hull\CAD\wigleyhull_closed_full.prt" />
+            </Component>
+            <Component Directory="dir_models_Validation_CFD_Wigley_Hull_Documentation" Id="cmp_dae07e0a946a78a3fcbbab2e14d25e28">
+                <File Id="fil_dae07e0a946a78a3fcbbab2e14d25e28" Source="..\models\Validation\CFD\Wigley Hull\Documentation\Wigley hull.pdf" />
+            </Component>
+            <Component Directory="dir_models_Validation_CFD_Wigley_Hull" Id="cmp_9a30279909d6fe013d6f1700bb5cee38">
+                <File Id="fil_9a30279909d6fe013d6f1700bb5cee38" Source="..\models\Validation\CFD\Wigley Hull\Wigley_hull.xme" />
+            </Component>
+            <Component Directory="dir_models_Validation_CFD_Wigley_Hull_components_jnujuaux" Id="cmp_22a4995ce95a5454ef91af37b9f5748d">
+                <File Id="fil_22a4995ce95a5454ef91af37b9f5748d" Source="..\models\Validation\CFD\Wigley Hull\components\jnujuaux\wigleyhull_closed_full.prt" />
+            </Component>
+            <Component Directory="dir_models_Validation_FEA_Beam" Id="cmp_45f20f2aa0c69356a5996902c2f0137c">
+                <File Id="fil_45f20f2aa0c69356a5996902c2f0137c" Source="..\models\Validation\FEA\Beam\Beam.xme" />
+            </Component>
+            <Component Directory="dir_models_Validation_FEA_Beam_components_sy2wykf1_CAD" Id="cmp_01c8b7b61d98ee1a39a13793d011556a">
+                <File Id="fil_01c8b7b61d98ee1a39a13793d011556a" Source="..\models\Validation\FEA\Beam\components\sy2wykf1\CAD\beam.prt.1" />
+            </Component>
+            <Component Directory="dir_models_Validation_FEA_Beam_components_sy2wykf1_CAD" Id="cmp_ba919572246ef28481114aa29e3e9397">
+                <File Id="fil_ba919572246ef28481114aa29e3e9397" Source="..\models\Validation\FEA\Beam\components\sy2wykf1\CAD\beam.prt.6" />
+            </Component>
+            <Component Directory="dir_models_Validation_FEA_Plate_with_Hole_Documentation" Id="cmp_fb0f4bd3f7c3f942a36dd2968fe376ac">
+                <File Id="fil_fb0f4bd3f7c3f942a36dd2968fe376ac" Source="..\models\Validation\FEA\Plate with Hole\Documentation\META Plate with Hole.pdf" />
+            </Component>
+            <Component Directory="dir_models_Validation_FEA_Plate_with_Hole" Id="cmp_645e3a91a78f334eddae2e0fad53ddca">
+                <File Id="fil_645e3a91a78f334eddae2e0fad53ddca" Source="..\models\Validation\FEA\Plate with Hole\PlateWithHoleModel.xme" />
+            </Component>
+            <Component Directory="dir_models_Validation_FEA_Plate_with_Hole_components_mttbdsvs" Id="cmp_0a50fc27079e2231eba35783712dc7f0">
+                <File Id="fil_0a50fc27079e2231eba35783712dc7f0" Source="..\models\Validation\FEA\Plate with Hole\components\mttbdsvs\plate_with_hole.prt" />
+            </Component>
+            <Component Directory="dir_models_Validation_FEA_Plate_with_Hole" Id="cmp_7400718dac4186bc08c47d8271db4f8d">
+                <File Id="fil_7400718dac4186bc08c47d8271db4f8d" Source="..\models\Validation\FEA\Plate with Hole\manifest.project.json" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

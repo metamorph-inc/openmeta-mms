@@ -1,0 +1,140 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="yes" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="yes" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="yes" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="yes" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="50" name="dxf" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="53" name="tGND_GNDA" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="54" name="bGND_GNDA" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="56" name="wert" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="57" name="tCAD" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="99" name="SpiceOrder" color="7" fill="1" visible="yes" active="yes"/>
+</layers>
+    <library>
+      <packages>
+        <package name="BUZZER-12MM-KIT" xmlns="eagle">
+          <circle x="0" y="0" radius="5.9" width="0.2032" layer="21" />
+          <circle x="0" y="0" radius="1.27" width="0.2032" layer="51" />
+          <pad name="-" x="-3.25" y="0" drill="0.9" diameter="1.8796" stop="no" />
+          <pad name="+" x="3.25" y="0" drill="0.9" diameter="1.8796" stop="no" />
+          <text x="-2.54" y="2.54" size="1.016" layer="25" ratio="15" font="vector">&gt;NAME</text>
+          <text x="2.667" y="1.143" size="1.016" layer="51" ratio="15" font="vector">+</text>
+          <polygon width="0.127" layer="30">
+            <vertex x="3.2537" y="-0.9525" curve="-90" />
+            <vertex x="2.2988" y="-0.0228" curve="-90.011749" />
+            <vertex x="3.2512" y="0.9526" curve="-90" />
+            <vertex x="4.2012" y="-0.0254" curve="-90.024193" />
+          </polygon>
+          <polygon width="0.127" layer="29">
+            <vertex x="3.2512" y="-0.4445" curve="-90.012891" />
+            <vertex x="2.8067" y="-0.0203" curve="-90" />
+            <vertex x="3.2512" y="0.447" curve="-90" />
+            <vertex x="3.6931" y="-0.0101" curve="-90.012967" />
+          </polygon>
+          <polygon width="0.127" layer="30">
+            <vertex x="-3.2487" y="-0.9525" curve="-90" />
+            <vertex x="-4.2036" y="-0.0228" curve="-90.011749" />
+            <vertex x="-3.2512" y="0.9526" curve="-90" />
+            <vertex x="-2.3012" y="-0.0254" curve="-90.024193" />
+          </polygon>
+          <polygon width="0.127" layer="29">
+            <vertex x="-3.2512" y="-0.4445" curve="-90.012891" />
+            <vertex x="-3.6957" y="-0.0203" curve="-90" />
+            <vertex x="-3.2512" y="0.447" curve="-90" />
+            <vertex x="-2.8093" y="-0.0101" curve="-90.012967" />
+          </polygon>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="BUZZER">
+          <wire x1="-1.27" y1="1.905" x2="0" y2="1.905" width="0.1524" layer="94" />
+          <wire x1="0" y1="1.905" x2="0" y2="2.54" width="0.1524" layer="94" />
+          <wire x1="0" y1="1.905" x2="0" y2="1.27" width="0.1524" layer="94" />
+          <wire x1="0.635" y1="3.175" x2="0.635" y2="0.635" width="0.1524" layer="94" />
+          <wire x1="0.635" y1="0.635" x2="1.905" y2="0.635" width="0.1524" layer="94" />
+          <wire x1="1.905" y1="0.635" x2="1.905" y2="3.175" width="0.1524" layer="94" />
+          <wire x1="1.905" y1="3.175" x2="0.635" y2="3.175" width="0.1524" layer="94" />
+          <wire x1="2.54" y1="2.54" x2="2.54" y2="1.905" width="0.1524" layer="94" />
+          <wire x1="2.54" y1="1.905" x2="3.81" y2="1.905" width="0.1524" layer="94" />
+          <wire x1="2.54" y1="1.905" x2="2.54" y2="1.27" width="0.1524" layer="94" />
+          <wire x1="5.08" y1="0" x2="5.08" y2="3.81" width="0.254" layer="94" />
+          <wire x1="5.08" y1="3.81" x2="5.715" y2="3.81" width="0.254" layer="94" />
+          <wire x1="5.715" y1="3.81" x2="5.715" y2="4.445" width="0.254" layer="94" />
+          <wire x1="5.715" y1="4.445" x2="-3.175" y2="4.445" width="0.254" layer="94" />
+          <wire x1="-3.175" y1="4.445" x2="-3.175" y2="3.81" width="0.254" layer="94" />
+          <wire x1="-3.175" y1="3.81" x2="-2.54" y2="3.81" width="0.254" layer="94" />
+          <wire x1="-2.54" y1="3.81" x2="-2.54" y2="0" width="0.254" layer="94" />
+          <wire x1="-2.54" y1="3.81" x2="5.08" y2="3.81" width="0.254" layer="94" />
+          <wire x1="-2.54" y1="0" x2="5.08" y2="0" width="0.254" layer="94" />
+          <text x="-2.54" y="5.08" size="1.778" layer="95">&gt;NAME</text>
+          <text x="6.35" y="0" size="1.778" layer="96">&gt;VALUE</text>
+          <pin name="2" x="2.54" y="-2.54" visible="off" length="short" direction="pas" rot="R90" />
+          <pin name="1" x="0" y="-2.54" visible="off" length="short" direction="pas" rot="R90" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="BUZZER" prefix="SG">
+          <gates>
+            <gate name="G$1" symbol="BUZZER" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="PTH-KIT" package="BUZZER-12MM-KIT" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="1" pad="+" />
+                <connect gate="G$1" pin="2" pad="-" />
+              </connects>
+              <technologies>
+                <technology name="">
+                  <attribute name="PROD_ID" value="COMP-08253" constant="no" />
+                </technology>
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

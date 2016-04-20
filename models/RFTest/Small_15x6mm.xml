@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--Test XML file for CyPhy generated openEMS simulations-->
+<openEMS>
+  <FDTD NumberOfTimesteps="1000000000" endCriteria="1E-05" f_max="2950000000">
+    <Excitation Type="0" f0="2450000000" fc="500000000"></Excitation>
+    <BoundaryCond xmin="PML_8" xmax="PML_8" ymin="PML_8" ymax="PML_8" zmin="PML_8" zmax="PML_8"></BoundaryCond>
+  </FDTD>
+  <ContinuousStructure CoordSystem="0">
+    <Properties>
+      <Metal Name="copper">
+        <FillColor R="235" G="148" B="7" a="255"></FillColor>
+        <EdgeColor R="235" G="148" B="7" a="255"></EdgeColor>
+        <Primitives>
+          <LinPoly Priority="100" Elevation="0" Length="0.01" NormDir="2">
+            <Vertex X1="-2.55" X2="-0.25"></Vertex>
+            <Vertex X1="-1.65" X2="-0.25"></Vertex>
+            <Vertex X1="-1.65" X2="4.65"></Vertex>
+            <Vertex X1="-0.25" X2="4.65"></Vertex>
+            <Vertex X1="-0.25" X2="-0.25"></Vertex>
+            <Vertex X1="0.25" X2="-0.25"></Vertex>
+            <Vertex X1="0.25" X2="4.65"></Vertex>
+            <Vertex X1="1.9500000000000002" X2="4.65"></Vertex>
+            <Vertex X1="1.9500000000000002" X2="2.0100000000000002"></Vertex>
+            <Vertex X1="4.95" X2="2.0100000000000002"></Vertex>
+            <Vertex X1="4.95" X2="4.65"></Vertex>
+            <Vertex X1="6.6499999999999995" X2="4.65"></Vertex>
+            <Vertex X1="6.6499999999999995" X2="2.0100000000000002"></Vertex>
+            <Vertex X1="9.6499999999999986" X2="2.0100000000000002"></Vertex>
+            <Vertex X1="9.6499999999999986" X2="4.65"></Vertex>
+            <Vertex X1="11.349999999999998" X2="4.65"></Vertex>
+            <Vertex X1="11.349999999999998" X2="0.71000000000000041"></Vertex>
+            <Vertex X1="11.849999999999998" X2="0.71000000000000041"></Vertex>
+            <Vertex X1="11.849999999999998" X2="5.15"></Vertex>
+            <Vertex X1="9.1499999999999986" X2="5.15"></Vertex>
+            <Vertex X1="9.1499999999999986" X2="2.5100000000000002"></Vertex>
+            <Vertex X1="7.1499999999999995" X2="2.5100000000000002"></Vertex>
+            <Vertex X1="7.1499999999999995" X2="5.15"></Vertex>
+            <Vertex X1="4.45" X2="5.15"></Vertex>
+            <Vertex X1="4.45" X2="2.5100000000000002"></Vertex>
+            <Vertex X1="2.45" X2="2.5100000000000002"></Vertex>
+            <Vertex X1="2.45" X2="5.15"></Vertex>
+            <Vertex X1="-2.55" X2="5.15"></Vertex>
+          </LinPoly>
+        </Primitives>
+      </Metal>
+      <Metal Name="bottom-ground">
+        <FillColor R="235" G="148" B="7" a="255"></FillColor>
+        <EdgeColor R="235" G="148" B="7" a="255"></EdgeColor>
+        <Primitives>
+          <Box Priority="100">
+            <P1 X="-3.05" Y="0.25" Z="-0.56"></P1>
+            <P2 X="12.15" Y="-5" Z="-0.57"></P2>
+          </Box>
+        </Primitives>
+      </Metal>
+      <Metal Name="top-ground">
+        <FillColor R="235" G="148" B="7" a="255"></FillColor>
+        <EdgeColor R="235" G="148" B="7" a="255"></EdgeColor>
+        <Primitives>
+          <Box Priority="100">
+            <P1 X="-3.05" Y="-0.25" Z="0"></P1>
+            <P2 X="12.15" Y="-5" Z="0.01"></P2>
+          </Box>
+        </Primitives>
+      </Metal>
+      <Metal Name="via">
+        <FillColor R="235" G="148" B="7" a="255"></FillColor>
+        <EdgeColor R="235" G="148" B="7" a="255"></EdgeColor>
+        <Primitives>
+          <Cylinder Priority="100" Radius="0.25">
+            <P1 X="-2.10" Y="0.00" Z="-0.56"></P1>
+            <P2 X="-2.10" Y="0.00" Z="0.00"></P2>
+          </Cylinder>
+        </Primitives>
+      </Metal>
+    </Properties>
+    <RectilinearGrid DeltaUnit="0.001" CoordSystem="0">
+      <XLines>-49.55,-44.55,-39.55,-34.55,-29.55,-24.55,-19.55,-14.55,-9.55,-4.55,-4.095,-3.64,-3.185,-2.73,-2.275,-1.82,-1.365,-0.91,-0.455,0,0.494642857142857,0.989285714285714,1.48392857142857,1.97857142857143,2.47321428571429,2.96785714285714,3.4625,3.95714285714286,4.45178571428571,4.94642857142857,5.44107142857143,5.93571428571429,6.43035714285714,6.925,7.41964285714286,7.91428571428571,8.40892857142857,8.90357142857143,9.39821428571429,9.89285714285714,10.3875,10.8821428571429,11.3767857142857,11.8714285714286,12.3660714285714,12.8607142857143,13.3553571428571,13.85,18.85,23.85,28.85,33.85,38.85,43.85,48.85,53.85,58.85</XLines>
+      <YLines>-52,-47,-42,-37,-32,-27,-22,-17,-12,-7,-6.5,-6,-5.5,-5,-4.5,-4,-3.5,-3,-2.5,-2,-1.5,-1,-0.5,0,0.476666666666667,0.953333333333333,1.43,1.90666666666667,2.38333333333333,2.86,3.33666666666667,3.81333333333333,4.29,4.76666666666667,5.24333333333333,5.72,6.19666666666667,6.67333333333333,7.15,12.15,17.15,22.15,27.15,32.15,37.15,42.15,47.15,52.15</YLines>
+      <ZLines>-46.5,-41.5,-36.5,-31.5,-26.5,-21.5,-16.5,-11.5,-6.5,-1.5,-1,-0.5,0,5,10,15,20,25,30,35,40,45</ZLines>
+    </RectilinearGrid>
+  </ContinuousStructure>
+</openEMS>

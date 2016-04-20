@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:avm="avm" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:systemc="systemc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="systemc" ecore:package="avm.systemc" targetNamespace="systemc">
+  <xsd:import namespace="avm" schemaLocation="avm.xsd"/>
+  <xsd:element ecore:ignore="true" name="SystemCModel" type="systemc:SystemCModel"/>
+  <xsd:element ecore:ignore="true" name="Parameter" type="systemc:Parameter"/>
+  <xsd:element ecore:ignore="true" name="SystemCPort" type="systemc:SystemCPort"/>
+  <xsd:complexType name="SystemCModel">
+    <xsd:complexContent>
+      <xsd:extension base="avm:DomainModel">
+        <xsd:sequence>
+          <xsd:element ecore:name="SystemCPort" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="SystemCPort" type="systemc:SystemCPort"/>
+          <xsd:element ecore:name="Parameter" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="Parameter" type="systemc:Parameter"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:name="ModuleName" name="ModuleName" type="xsd:string" use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Parameter">
+    <xsd:complexContent>
+      <xsd:extension base="avm:DomainModelParameter">
+        <xsd:sequence>
+          <xsd:element ecore:name="Value" ecore:resolveProxies="true" minOccurs="0" name="Value" type="avm:Value"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:name="ParamName" name="ParamName" type="xsd:string"/>
+        <xsd:attribute ecore:name="ParamPosition" name="ParamPosition" type="xsd:int"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SystemCPort">
+    <xsd:complexContent>
+      <xsd:extension base="avm:DomainModelPort">
+        <xsd:attribute ecore:name="DataType" ecore:unsettable="false" name="DataType" type="systemc:SystemCDataTypeEnum"/>
+        <xsd:attribute ecore:name="DataTypeDimension" name="DataTypeDimension" type="xsd:int"/>
+        <xsd:attribute ecore:name="Directionality" ecore:unsettable="false" name="Directionality" type="systemc:DirectionalityEnum"/>
+        <xsd:attribute ecore:name="Function" ecore:unsettable="false" name="Function" type="systemc:FunctionEnum"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:simpleType name="SystemCDataTypeEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="bool"/>
+      <xsd:enumeration value="sc_int"/>
+      <xsd:enumeration value="sc_uint"/>
+      <xsd:enumeration value="sc_logic"/>
+      <xsd:enumeration value="sc_bit"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DirectionalityEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="in"/>
+      <xsd:enumeration value="out"/>
+      <xsd:enumeration value="inout"/>
+      <xsd:enumeration value="not_applicable"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="FunctionEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="normal"/>
+      <xsd:enumeration value="clock"/>
+      <xsd:enumeration value="reset_async"/>
+      <xsd:enumeration value="reset_sync"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

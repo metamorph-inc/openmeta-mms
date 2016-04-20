@@ -38,11 +38,12 @@ namespace CyPhySignalBlocksAddOn
         private LibraryInfo PortLibraryInfo;
         private LibraryInfo MaterialLibraryInfo;
         private LibraryInfo CADResourceLibraryInfo;
+        private LibraryInfo TestbenchesInfo;
         private LibraryInfo[] libInfos
         {
             get
             {
-                return new LibraryInfo[] { this.QudtLibraryInfo, this.PortLibraryInfo, this.MaterialLibraryInfo, this.CADResourceLibraryInfo };
+                return new LibraryInfo[] { this.QudtLibraryInfo, this.PortLibraryInfo, this.MaterialLibraryInfo, this.CADResourceLibraryInfo, this.TestbenchesInfo };
             }
         }
 
@@ -385,6 +386,7 @@ namespace CyPhySignalBlocksAddOn
                 PortLibraryInfo.Go(); // portLibTimer.go();
                 MaterialLibraryInfo.Go();
                 CADResourceLibraryInfo.Go();
+                TestbenchesInfo.Go();
 
                 firstTime = true;
             }
@@ -449,13 +451,14 @@ namespace CyPhySignalBlocksAddOn
                         long loldModTime;
                         if (long.TryParse(oldLibFolder.RegistryValue["modtime"], out loldModTime))
                         {
-                            oldModTime = DateTime.FromFileTimeUtc(loldModTime);
+                            // round DateTimes to seconds, since that is the resolution Windows Installer has
+                            oldModTime = RoundDateTimeToSeconds(DateTime.FromFileTimeUtc(loldModTime));
                         }
                         else
                         {
                             oldModTime = DateTime.MinValue;
                         }
-                        needAttach = File.GetLastWriteTimeUtc(mgaPath).CompareTo(oldModTime) > 0;
+                        needAttach = RoundDateTimeToSeconds(File.GetLastWriteTimeUtc(mgaPath)).CompareTo(oldModTime) > 0;
                         if (!needAttach)
                         {
                             GMEConsole.Info.WriteLine("Library is up-to-date: embedded library modified " + oldModTime.ToString() +
@@ -485,7 +488,7 @@ namespace CyPhySignalBlocksAddOn
 
                         GMEConsole.Info.WriteLine("Attaching library " + mgaPath);
                         RootFolder newLibFolder = Common.Classes.RootFolder.GetRootFolder(project).AttachLibrary("MGA=" + mgaPath);
-                        DateTime modtime = File.GetLastWriteTimeUtc(mgaPath);
+                        DateTime modtime = RoundDateTimeToSeconds(File.GetLastWriteTimeUtc(mgaPath));
                         ((newLibFolder as ISIS.GME.Common.Classes.RootFolder).Impl as GME.MGA.IMgaFolder).RegistryValue["modtime"] =
                              modtime.ToFileTimeUtc().ToString();
 
@@ -511,6 +514,11 @@ namespace CyPhySignalBlocksAddOn
 
                 libraryInfo.attachedLibrary = true;
             }
+        }
+
+        private DateTime RoundDateTimeToSeconds(DateTime dateTime)
+        {
+            return new DateTime(dateTime.Ticks - (dateTime.Ticks % TimeSpan.TicksPerSecond), dateTime.Kind);
         }
 
         private static Guid ConvertToGUID(object guidObj)
@@ -553,6 +561,7 @@ namespace CyPhySignalBlocksAddOn
             PortLibraryInfo = new LibraryInfo("CyPhy_PortLib", "PortLibrary CyPhy_PortLib", new Action(PortLibTimerHandler), project, control);
             MaterialLibraryInfo = new LibraryInfo("CyPhy_MaterialLib", "MaterialLibrary CyPhy_MaterialLib", new Action(MaterialLibTimerHandler), project, control);
             CADResourceLibraryInfo = new LibraryInfo("CyPhy_CADResourceLib", "CADResourceLibrary", new Action(CADResourceLibTimerHandler), project, control);
+            TestbenchesInfo = new LibraryInfo("Testbenches", "TestBenchLibrary", new Action(() => AttachLibrary(TestbenchesInfo)), project, control);
         }
 
         public void InvokeEx(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, int param)

@@ -44,6 +44,8 @@ namespace avm {
         
         private List<Formula> formulaField;
         
+        private List<DomainMapping> domainMappingField;
+        
         private string nameField;
         
         private string versionField;
@@ -55,6 +57,7 @@ namespace avm {
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Component() {
+            this.domainMappingField = new List<DomainMapping>();
             this.formulaField = new List<Formula>();
             this.supercedesField = new List<string>();
             this.analysisConstructField = new List<AnalysisConstruct>();
@@ -164,6 +167,16 @@ namespace avm {
             }
             set {
                 this.formulaField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("DomainMapping", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public List<DomainMapping> DomainMapping {
+            get {
+                return this.domainMappingField;
+            }
+            set {
+                this.domainMappingField = value;
             }
         }
         
@@ -384,6 +397,8 @@ namespace avm {
         
         private string nameField;
         
+        private string idField;
+        
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         [System.Xml.Serialization.XmlAttributeAttribute(DataType="IDREFS")]
@@ -463,6 +478,16 @@ namespace avm {
             }
             set {
                 this.nameField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="ID")]
+        public string ID {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
             }
         }
         
@@ -598,6 +623,169 @@ namespace avm {
         }
         
         public static DomainModel LoadFromFile(string fileName) {
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
+            try {
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
+                string xmlString = sr.ReadToEnd();
+                sr.Close();
+                file.Close();
+                return Deserialize(xmlString);
+            }
+            finally {
+                if ((file != null)) {
+                    file.Dispose();
+                }
+                if ((sr != null)) {
+                    sr.Dispose();
+                }
+            }
+        }
+        #endregion
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.38968")]
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="avm")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="avm", IsNullable=false)]
+    public abstract partial class DomainMapping {
+        
+        private static System.Xml.Serialization.XmlSerializer serializer;
+        
+        private static System.Xml.Serialization.XmlSerializer Serializer {
+            get {
+                if ((serializer == null)) {
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(DomainMapping));
+                }
+                return serializer;
+            }
+        }
+        
+        #region Serialize/Deserialize
+        /// <summary>
+        /// Serializes current DomainMapping object into an XML document
+        /// </summary>
+        /// <returns>string XML value</returns>
+        public virtual string Serialize() {
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
+            try {
+                memoryStream = new System.IO.MemoryStream();
+                Serializer.Serialize(memoryStream, this);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
+                return streamReader.ReadToEnd();
+            }
+            finally {
+                if ((streamReader != null)) {
+                    streamReader.Dispose();
+                }
+                if ((memoryStream != null)) {
+                    memoryStream.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes workflow markup into an DomainMapping object
+        /// </summary>
+        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="obj">Output DomainMapping object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool Deserialize(string xml, out DomainMapping obj, out System.Exception exception) {
+            exception = null;
+            obj = default(DomainMapping);
+            try {
+                obj = Deserialize(xml);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool Deserialize(string xml, out DomainMapping obj) {
+            System.Exception exception = null;
+            return Deserialize(xml, out obj, out exception);
+        }
+        
+        public static DomainMapping Deserialize(string xml) {
+            System.IO.StringReader stringReader = null;
+            try {
+                stringReader = new System.IO.StringReader(xml);
+                return ((DomainMapping)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+            }
+            finally {
+                if ((stringReader != null)) {
+                    stringReader.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Serializes current DomainMapping object into file
+        /// </summary>
+        /// <param name="fileName">full path of outupt xml file</param>
+        /// <param name="exception">output Exception value if failed</param>
+        /// <returns>true if can serialize and save into file; otherwise, false</returns>
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
+            exception = null;
+            try {
+                SaveToFile(fileName);
+                return true;
+            }
+            catch (System.Exception e) {
+                exception = e;
+                return false;
+            }
+        }
+        
+        public virtual void SaveToFile(string fileName) {
+            System.IO.StreamWriter streamWriter = null;
+            try {
+                string xmlString = Serialize();
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
+                streamWriter = xmlFile.CreateText();
+                streamWriter.WriteLine(xmlString);
+                streamWriter.Close();
+            }
+            finally {
+                if ((streamWriter != null)) {
+                    streamWriter.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes xml markup from file into an DomainMapping object
+        /// </summary>
+        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="obj">Output DomainMapping object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool LoadFromFile(string fileName, out DomainMapping obj, out System.Exception exception) {
+            exception = null;
+            obj = default(DomainMapping);
+            try {
+                obj = LoadFromFile(fileName);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool LoadFromFile(string fileName, out DomainMapping obj) {
+            System.Exception exception = null;
+            return LoadFromFile(fileName, out obj, out exception);
+        }
+        
+        public static DomainMapping LoadFromFile(string fileName) {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
             try {
@@ -8226,6 +8414,8 @@ namespace avm {
         
         private List<DesignDomainFeature> domainFeatureField;
         
+        private List<Resource> resourceDependencyField;
+        
         private string schemaVersionField;
         
         private string designIDField;
@@ -8237,6 +8427,7 @@ namespace avm {
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Design() {
+            this.resourceDependencyField = new List<Resource>();
             this.domainFeatureField = new List<DesignDomainFeature>();
         }
         
@@ -8257,6 +8448,16 @@ namespace avm {
             }
             set {
                 this.domainFeatureField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("ResourceDependency", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public List<Resource> ResourceDependency {
+            get {
+                return this.resourceDependencyField;
+            }
+            set {
+                this.resourceDependencyField = value;
             }
         }
         
@@ -8479,19 +8680,38 @@ namespace avm {
         
         private List<Formula> formulaField;
         
-        private string nameField;
+        private List<ContainerFeature> containerFeatureField;
+        
+        private List<Resource> resourceDependencyField;
+        
+        private List<DomainModel> domainModelField;
+        
+        private List<Resource> resourceField;
+        
+        private List<string> classificationsField;
         
         private uint xPositionField;
         
         private bool xPositionFieldSpecified;
         
+        private string nameField;
+        
         private uint yPositionField;
         
         private bool yPositionFieldSpecified;
         
+        private string idField;
+        
+        private string descriptionField;
+        
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Container() {
+            this.classificationsField = new List<string>();
+            this.resourceField = new List<Resource>();
+            this.domainModelField = new List<DomainModel>();
+            this.resourceDependencyField = new List<Resource>();
+            this.containerFeatureField = new List<ContainerFeature>();
             this.formulaField = new List<Formula>();
             this.joinDataField = new List<assemblyDetail>();
             this.connectorField = new List<Connector>();
@@ -8571,13 +8791,53 @@ namespace avm {
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name {
+        [System.Xml.Serialization.XmlElementAttribute("ContainerFeature", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public List<ContainerFeature> ContainerFeature {
             get {
-                return this.nameField;
+                return this.containerFeatureField;
             }
             set {
-                this.nameField = value;
+                this.containerFeatureField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("ResourceDependency", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        public List<Resource> ResourceDependency {
+            get {
+                return this.resourceDependencyField;
+            }
+            set {
+                this.resourceDependencyField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("DomainModel", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        public List<DomainModel> DomainModel {
+            get {
+                return this.domainModelField;
+            }
+            set {
+                this.domainModelField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("Resource", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public List<Resource> Resource {
+            get {
+                return this.resourceField;
+            }
+            set {
+                this.resourceField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("Classifications", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="anyURI", IsNullable=true, Order=11)]
+        public List<string> Classifications {
+            get {
+                return this.classificationsField;
+            }
+            set {
+                this.classificationsField = value;
             }
         }
         
@@ -8602,6 +8862,16 @@ namespace avm {
         }
         
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public uint YPosition {
             get {
                 return this.yPositionField;
@@ -8618,6 +8888,26 @@ namespace avm {
             }
             set {
                 this.yPositionFieldSpecified = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="ID")]
+        public string ID {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
             }
         }
         
@@ -9245,6 +9535,169 @@ namespace avm {
         }
         
         public static ComponentPrimitivePropertyInstance LoadFromFile(string fileName) {
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
+            try {
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
+                string xmlString = sr.ReadToEnd();
+                sr.Close();
+                file.Close();
+                return Deserialize(xmlString);
+            }
+            finally {
+                if ((file != null)) {
+                    file.Dispose();
+                }
+                if ((sr != null)) {
+                    sr.Dispose();
+                }
+            }
+        }
+        #endregion
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.38968")]
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="avm")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="avm", IsNullable=false)]
+    public abstract partial class ContainerFeature {
+        
+        private static System.Xml.Serialization.XmlSerializer serializer;
+        
+        private static System.Xml.Serialization.XmlSerializer Serializer {
+            get {
+                if ((serializer == null)) {
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(ContainerFeature));
+                }
+                return serializer;
+            }
+        }
+        
+        #region Serialize/Deserialize
+        /// <summary>
+        /// Serializes current ContainerFeature object into an XML document
+        /// </summary>
+        /// <returns>string XML value</returns>
+        public virtual string Serialize() {
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
+            try {
+                memoryStream = new System.IO.MemoryStream();
+                Serializer.Serialize(memoryStream, this);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
+                return streamReader.ReadToEnd();
+            }
+            finally {
+                if ((streamReader != null)) {
+                    streamReader.Dispose();
+                }
+                if ((memoryStream != null)) {
+                    memoryStream.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes workflow markup into an ContainerFeature object
+        /// </summary>
+        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="obj">Output ContainerFeature object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool Deserialize(string xml, out ContainerFeature obj, out System.Exception exception) {
+            exception = null;
+            obj = default(ContainerFeature);
+            try {
+                obj = Deserialize(xml);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool Deserialize(string xml, out ContainerFeature obj) {
+            System.Exception exception = null;
+            return Deserialize(xml, out obj, out exception);
+        }
+        
+        public static ContainerFeature Deserialize(string xml) {
+            System.IO.StringReader stringReader = null;
+            try {
+                stringReader = new System.IO.StringReader(xml);
+                return ((ContainerFeature)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+            }
+            finally {
+                if ((stringReader != null)) {
+                    stringReader.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Serializes current ContainerFeature object into file
+        /// </summary>
+        /// <param name="fileName">full path of outupt xml file</param>
+        /// <param name="exception">output Exception value if failed</param>
+        /// <returns>true if can serialize and save into file; otherwise, false</returns>
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
+            exception = null;
+            try {
+                SaveToFile(fileName);
+                return true;
+            }
+            catch (System.Exception e) {
+                exception = e;
+                return false;
+            }
+        }
+        
+        public virtual void SaveToFile(string fileName) {
+            System.IO.StreamWriter streamWriter = null;
+            try {
+                string xmlString = Serialize();
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
+                streamWriter = xmlFile.CreateText();
+                streamWriter.WriteLine(xmlString);
+                streamWriter.Close();
+            }
+            finally {
+                if ((streamWriter != null)) {
+                    streamWriter.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes xml markup from file into an ContainerFeature object
+        /// </summary>
+        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="obj">Output ContainerFeature object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool LoadFromFile(string fileName, out ContainerFeature obj, out System.Exception exception) {
+            exception = null;
+            obj = default(ContainerFeature);
+            try {
+                obj = LoadFromFile(fileName);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool LoadFromFile(string fileName, out ContainerFeature obj) {
+            System.Exception exception = null;
+            return LoadFromFile(fileName, out obj, out exception);
+        }
+        
+        public static ContainerFeature LoadFromFile(string fileName) {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
             try {

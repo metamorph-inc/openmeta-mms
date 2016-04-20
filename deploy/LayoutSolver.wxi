@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <DirectoryRef Id="INSTALLDIR_BIN" />
+</Fragment>
+<Fragment>
+<ComponentGroup Id="LayoutSolver">
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\LayoutSolver.exe" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeDriver-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeFlatZinc-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeFloat-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeGist-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeInt-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeKernel-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeMinimodel-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeSearch-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeSet-4-2-1-r-x86.dll" />
+    </Component>
+    <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\GecodeSupport-4-2-1-r-x86.dll" />
+    </Component>
+</ComponentGroup>
+</Fragment>
+</Wix>

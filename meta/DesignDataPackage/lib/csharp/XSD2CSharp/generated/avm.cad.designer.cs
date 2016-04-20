@@ -29,6 +29,10 @@ namespace avm.cad {
         
         private List<Metric> modelMetricField;
         
+        private FileFormat formatField;
+        
+        private bool formatFieldSpecified;
+        
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public CADModel() {
@@ -64,6 +68,26 @@ namespace avm.cad {
             }
             set {
                 this.modelMetricField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public FileFormat Format {
+            get {
+                return this.formatField;
+            }
+            set {
+                this.formatField = value;
+            }
+        }
+        
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool FormatSpecified {
+            get {
+                return this.formatFieldSpecified;
+            }
+            set {
+                this.formatFieldSpecified = value;
             }
         }
         
@@ -1460,6 +1484,24 @@ namespace avm.cad {
             }
         }
         #endregion
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.38968")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="cad")]
+    public enum FileFormat {
+        
+        /// <remarks/>
+        Creo,
+        
+        /// <remarks/>
+        AP_203,
+        
+        /// <remarks/>
+        AP_214,
+        
+        /// <remarks/>
+        STL,
     }
     
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CustomGeometry))]

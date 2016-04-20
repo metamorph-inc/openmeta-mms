@@ -1,0 +1,54 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="C0402" xmlns="eagle">
+          <description>&lt;B&gt; 0402&lt;/B&gt; (1005 Metric) MLCC Capacitor &lt;P&gt;</description>
+          <smd name="1" x="-0.5" y="0" dx="0.5" dy="0.55" layer="1" />
+          <smd name="2" x="0.5" y="0" dx="0.5" dy="0.55" layer="1" />
+          <wire x1="-0.44" y1="0.18" x2="0.44" y2="0.18" width="0.127" layer="49" />
+          <wire x1="0.44" y1="0.18" x2="0.44" y2="-0.18" width="0.127" layer="49" />
+          <wire x1="0.44" y1="-0.18" x2="-0.44" y2="-0.18" width="0.127" layer="49" />
+          <wire x1="-0.44" y1="-0.18" x2="-0.44" y2="0.18" width="0.127" layer="49" />
+          
+          <wire x1="-0.0635" y1="0.254" x2="0.0635" y2="0.254" width="0.127" layer="21" />
+          <wire x1="-0.0635" y1="-0.254" x2="0.0635" y2="-0.254" width="0.127" layer="21" />
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="CAP_NP">
+          <description>&lt;B&gt;Capacitor&lt;/B&gt; -- non-polarized</description>
+          <pin name="P$1" x="0" y="0" visible="off" length="short" direction="pas" rot="R270" />
+          <pin name="P$2" x="0" y="-7.62" visible="off" length="short" direction="pas" rot="R90" />
+          <wire x1="-1.905" y1="-3.175" x2="0" y2="-3.175" width="0.6096" layer="94" />
+          <wire x1="0" y1="-3.175" x2="1.905" y2="-3.175" width="0.6096" layer="94" />
+          <wire x1="-1.905" y1="-4.445" x2="0" y2="-4.445" width="0.6096" layer="94" />
+          <wire x1="0" y1="-4.445" x2="1.905" y2="-4.445" width="0.6096" layer="94" />
+          <wire x1="0" y1="-2.54" x2="0" y2="-3.175" width="0.254" layer="94" />
+          <wire x1="0" y1="-5.08" x2="0" y2="-4.445" width="0.254" layer="94" />
+          
+          
+          <text x="0.508" y="-2.286" size="1.27" layer="95">1</text>
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="C0402" prefix="C">
+          <gates>
+            <gate name="A" symbol="CAP_NP" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="C0402" xmlns="eagle">
+              <connects>
+                <connect gate="A" pin="P$1" pad="1" />
+                <connect gate="A" pin="P$2" pad="2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

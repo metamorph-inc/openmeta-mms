@@ -203,6 +203,7 @@ CSize CompositePart::GetPreferredSize(void) const
 {
 	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
+		HRESULT retVal = E_DECORATOR_NOT_IMPLEMENTED;
 		try {
 			CSize preferredSize = (*ii)->GetPreferredSize();
 			if (preferredSize != CSize(0, 0))
@@ -215,11 +216,8 @@ CSize CompositePart::GetPreferredSize(void) const
 			retVal = e.GetHResult();
 		}
 		if (retVal != E_DECORATOR_NOT_IMPLEMENTED)
-			break;
+			throw DecoratorException((DecoratorExceptionCode)retVal);
 	}
-
-	if (retVal != S_OK)
-		throw DecoratorException((DecoratorExceptionCode)retVal);
 
 	return CSize(0, 0);
 }
@@ -234,8 +232,8 @@ void CompositePart::SetLocation(const CRect& location)
 
 CRect CompositePart::GetLocation(void) const
 {
-	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
+		HRESULT retVal = E_DECORATOR_NOT_IMPLEMENTED;
 		try {
 			CRect location = (*ii)->GetLocation();
 			if (!location.IsRectEmpty())
@@ -248,19 +246,16 @@ CRect CompositePart::GetLocation(void) const
 			retVal = e.GetHResult();
 		}
 		if (retVal != E_DECORATOR_NOT_IMPLEMENTED)
-			break;
+			throw DecoratorException((DecoratorExceptionCode)retVal);
 	}
-
-	if (retVal != S_OK)
-		throw DecoratorException((DecoratorExceptionCode)retVal);
 
 	return CRect(0,0,0,0);
 }
 
 CRect CompositePart::GetLabelLocation(void) const
 {
-	HRESULT retVal = S_OK;
 	for (std::vector<PartBase*>::const_iterator ii = m_compositeParts.begin(); ii != m_compositeParts.end(); ++ii) {
+		HRESULT retVal = E_DECORATOR_NOT_IMPLEMENTED;
 		try {
 			CRect labelLocation = (*ii)->GetLabelLocation();
 			if (!labelLocation.IsRectEmpty())
@@ -273,11 +268,8 @@ CRect CompositePart::GetLabelLocation(void) const
 			retVal = e.GetHResult();
 		}
 		if (retVal != E_DECORATOR_NOT_IMPLEMENTED)
-			break;
+			throw DecoratorException((DecoratorExceptionCode)retVal);
 	}
-
-	if (retVal != S_OK)
-		throw DecoratorException((DecoratorExceptionCode)retVal);
 
 	return CRect(0,0,0,0);
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="55c556b3-cfc0-4aa5-b3b0-6b4501fbed76" Name="BS6I" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-78337fd4-7474-4fe0-bdaf-c259048887a6" Author="" Notes="" XPosition="270" YPosition="200" Name="EDAModel" ID="id-065da193-08ce-4ffa-b8d2-006407987d38" Package="1X2VIA" Device="" Library="General_Will" DeviceSet="BS6I" xmlns="">
+    <Pin ID="id-a679773e-d7dc-474d-ab65-147617a32303" PortMap="id-dc95b985-323e-41d1-a04f-64b3d4d36dab" Notes="" XPosition="25" Definition="" YPosition="25" Name="NEG" EDAGate="G$1" EDASymbolLocationX="2.54" EDASymbolLocationY="5.08" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-f6c8956e-8237-48be-95c1-137b7491f062" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="POS" EDAGate="G$1" EDASymbolLocationX="-2.54" EDASymbolLocationY="5.08" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </DomainModel>
+  <Property xmlns:q2="avm" xsi:type="q2:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-4b6781ed-01cc-4190-84e7-9e3f9c510ecf" XPosition="749" YPosition="42" xmlns="">
+    <Value ID="id-4b6781ed-01cc-4190-84e7-9e3f9c510ecf" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q2:FixedValue">
+        <Value>BS6I</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency XPosition="42" YPosition="7" Name="MPD-BS6I-datasheet.pdf" Path="doc\MPD-BS6I-datasheet.pdf" Hash="" ID="id-c0f2ce72-96ea-4674-8b85-a55963623061" Notes="" xmlns="" />
+  <ResourceDependency XPosition="650" YPosition="200" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-78337fd4-7474-4fe0-bdaf-c259048887a6" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency Name="Icon.png" Path="Icon.png" Hash="" ID="id-43369c61-9c5b-4d82-b437-7d456a208c67" Notes="Custom icon for this component" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-4a3262a2-569d-4355-887d-e3054bdcf0bf" ApplyJoinData="" Notes="" Name="NEG" Definition="AnalogSignal" YPosition="287" XPosition="476" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-dc95b985-323e-41d1-a04f-64b3d4d36dab" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="NEG" EDAGate="G$1" EDASymbolLocationX="12.7" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-24ddfcc5-c055-41ef-868d-cb6f884d7627" ApplyJoinData="" Notes="" Name="POS" Definition="AnalogSignal" YPosition="77" XPosition="476" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-cbf93602-b776-40e1-9a87-7b4e307b8435" PortMap="id-f6c8956e-8237-48be-95c1-137b7491f062" Notes="" XPosition="100" Definition="" YPosition="100" Name="POS" EDAGate="G$1" EDASymbolLocationX="12.7" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">power_products.batteries_and_accessories.accessories.battery_clips_contacts</Classifications>
+</Component>

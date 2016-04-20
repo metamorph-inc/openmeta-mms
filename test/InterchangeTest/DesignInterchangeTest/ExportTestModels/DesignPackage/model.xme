@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "mga.dtd">
+
+<project guid="{BE4DBC5B-E0F6-42F9-8650-8C93A7405BFF}" cdate="Tue Oct 28 15:14:45 2014" mdate="Tue Oct 28 15:14:45 2014" version="" metaguid="{D7D803FD-AB30-45C3-8202-B468091FEF72}" metaversion="14.10-t1" metaname="CyPhyML">
+	<name>RootFolder</name>
+	<comment></comment>
+	<author></author>
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x6" kind="RootFolder" guid="{e5db2bab-1503-49ae-a787-43fb1e67bbae}">
+		<name>RootFolder</name>
+		<folder id="id-006a-00000017" relid="0x6" childrelidcntr="0x3" kind="ComponentAssemblies" guid="{7785f311-49a6-47d7-9d9b-8b592f3524b6}">
+			<name>ComponentAssemblies</name>
+			<model id="id-0065-00000255" kind="ComponentAssembly" guid="{7e44eb8f-32d0-4fd8-8767-c055d32bfae3}" relid="0x1" childrelidcntr="0x0">
+				<name>NoArtifacts</name>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ConfigurationUniqueID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>1</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>designs\p4yjspfqnlp</value>
+				</attribute>
+			</model>
+			<model id="id-0065-00000256" kind="ComponentAssembly" guid="{a4c4e45b-363e-4ffe-b1a5-ec572f682786}" relid="0x2" childrelidcntr="0x0">
+				<name>OneArtifact</name>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ConfigurationUniqueID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>2</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>designs\iy5rmi5xnwu</value>
+				</attribute>
+			</model>
+			<model id="id-0065-00000257" kind="ComponentAssembly" guid="{a36e181d-3b58-4d15-b2dc-dea62ed14fdd}" relid="0x3" childrelidcntr="0x0">
+				<name>NestedFolders</name>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ConfigurationUniqueID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>3</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>designs\wkhw0qa41sz</value>
+				</attribute>
+			</model>
+		</folder>
+	</folder>
+</project>

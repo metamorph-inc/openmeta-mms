@@ -1,0 +1,613 @@
+{
+  "boardWidth": 36.0,
+  "boardHeight": 40.5,
+  "numLayers": 2,
+  "packages": [
+    {
+      "name": "Q1p",
+      "pkg_idx": 0,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{c887c78e-209c-4cb0-a776-d28028bd9b2a}{e09278f3-9444-4c2a-a1ed-b77558a7eabd}",
+      "width": 1.6,
+      "height": 1.2999999999999998,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Q2_N",
+      "pkg_idx": 1,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{c887c78e-209c-4cb0-a776-d28028bd9b2a}{f003b582-0497-418f-84b4-471ece198239}",
+      "width": 1.2,
+      "height": 1.5,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "q3_N",
+      "pkg_idx": 2,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{c887c78e-209c-4cb0-a776-d28028bd9b2a}{0cab7109-18d6-43e9-88bb-8e0d2fe7f68b}",
+      "width": 1.2,
+      "height": 1.5,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "R11",
+      "pkg_idx": 3,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{c887c78e-209c-4cb0-a776-d28028bd9b2a}{4bf5d4cf-1df2-406e-a120-5a3a11c4af56}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "R12",
+      "pkg_idx": 4,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{c887c78e-209c-4cb0-a776-d28028bd9b2a}{b3898d1e-e97e-416d-97c0-47ada2e17a89}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Q1p$1",
+      "pkg_idx": 5,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{e58da5e8-c6b7-4e08-98df-2990458a7e1f}{e09278f3-9444-4c2a-a1ed-b77558a7eabd}",
+      "width": 1.6,
+      "height": 1.2999999999999998,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Q2_N$1",
+      "pkg_idx": 6,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{e58da5e8-c6b7-4e08-98df-2990458a7e1f}{f003b582-0497-418f-84b4-471ece198239}",
+      "width": 1.2,
+      "height": 1.5,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "q3_N$1",
+      "pkg_idx": 7,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{e58da5e8-c6b7-4e08-98df-2990458a7e1f}{0cab7109-18d6-43e9-88bb-8e0d2fe7f68b}",
+      "width": 1.2,
+      "height": 1.5,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "R11$1",
+      "pkg_idx": 8,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{e58da5e8-c6b7-4e08-98df-2990458a7e1f}{4bf5d4cf-1df2-406e-a120-5a3a11c4af56}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "R12$1",
+      "pkg_idx": 9,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{e58da5e8-c6b7-4e08-98df-2990458a7e1f}{b3898d1e-e97e-416d-97c0-47ada2e17a89}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Q1p$2",
+      "pkg_idx": 10,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{25d0f91a-0f79-4165-a837-af9db88e0744}{e09278f3-9444-4c2a-a1ed-b77558a7eabd}",
+      "width": 1.6,
+      "height": 1.2999999999999998,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Q2_N$2",
+      "pkg_idx": 11,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{25d0f91a-0f79-4165-a837-af9db88e0744}{f003b582-0497-418f-84b4-471ece198239}",
+      "width": 1.2,
+      "height": 1.5,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "q3_N$2",
+      "pkg_idx": 12,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{25d0f91a-0f79-4165-a837-af9db88e0744}{0cab7109-18d6-43e9-88bb-8e0d2fe7f68b}",
+      "width": 1.2,
+      "height": 1.5,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "R11$2",
+      "pkg_idx": 13,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{25d0f91a-0f79-4165-a837-af9db88e0744}{4bf5d4cf-1df2-406e-a120-5a3a11c4af56}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "R12$2",
+      "pkg_idx": 14,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{25d0f91a-0f79-4165-a837-af9db88e0744}{b3898d1e-e97e-416d-97c0-47ada2e17a89}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Q1p$3",
+      "pkg_idx": 15,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{fc8f5248-b165-413a-b83d-f436af65fb62}{e09278f3-9444-4c2a-a1ed-b77558a7eabd}",
+      "width": 1.6,
+      "height": 1.2999999999999998,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Q2_N$3",
+      "pkg_idx": 16,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{fc8f5248-b165-413a-b83d-f436af65fb62}{f003b582-0497-418f-84b4-471ece198239}",
+      "width": 1.2,
+      "height": 1.5,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "q3_N$3",
+      "pkg_idx": 17,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{fc8f5248-b165-413a-b83d-f436af65fb62}{0cab7109-18d6-43e9-88bb-8e0d2fe7f68b}",
+      "width": 1.2,
+      "height": 1.5,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "R11$3",
+      "pkg_idx": 18,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{fc8f5248-b165-413a-b83d-f436af65fb62}{4bf5d4cf-1df2-406e-a120-5a3a11c4af56}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "R12$3",
+      "pkg_idx": 19,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{fc8f5248-b165-413a-b83d-f436af65fb62}{b3898d1e-e97e-416d-97c0-47ada2e17a89}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "26.0:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Capacitor_C0805",
+      "pkg_idx": 20,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{651d968d-9262-4ab7-9ed8-146d835533b3}{bce9e389-24e4-4914-a5c8-d20761d6333c}",
+      "width": 4.3,
+      "height": 2.16
+    },
+    {
+      "name": "GenericDCDCConv",
+      "pkg_idx": 21,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{651d968d-9262-4ab7-9ed8-146d835533b3}{d9e5de47-9ecd-48fc-95df-9e153970d26c}",
+      "width": 2.52,
+      "height": 3.2625
+    },
+    {
+      "name": "EPM_J1",
+      "pkg_idx": 22,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{a2af08d8-7c44-4d77-83d3-85705f38f153}",
+      "width": 2.0,
+      "height": 8.0,
+      "constraints": [
+        {
+          "x": 6.0,
+          "y": 36.0,
+          "layer": 0,
+          "rotation": 1,
+          "type": "exact"
+        }
+      ]
+    },
+    {
+      "name": "EPM_J2",
+      "pkg_idx": 23,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{66b7ef28-9d6b-4a2d-ba4f-59e9d64ae3ac}{8b6b9224-4e57-42f0-9e9b-72164fdf7f9b}",
+      "width": 2.0,
+      "height": 8.0,
+      "constraints": [
+        {
+          "x": 3.0,
+          "y": 25.8,
+          "layer": 0,
+          "rotation": 2,
+          "type": "exact"
+        }
+      ]
+    },
+    {
+      "name": "C8",
+      "pkg_idx": 24,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{c65e5b9c-eecd-4c97-9d95-f16838d494f7}{598c2153-a3ef-40c1-a62b-8f2d4f010f61}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Capacitor_C0805$1",
+      "pkg_idx": 25,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{c65e5b9c-eecd-4c97-9d95-f16838d494f7}{29431d12-5a00-4a03-83b6-f3b032da9c83}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "DCDC_Conv",
+      "pkg_idx": 26,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{c65e5b9c-eecd-4c97-9d95-f16838d494f7}{7e54f188-470a-49db-8a06-0c6cba890050}",
+      "width": 2.0,
+      "height": 2.0,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Inductor",
+      "pkg_idx": 27,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{c65e5b9c-eecd-4c97-9d95-f16838d494f7}{bd9cecfd-ce1c-4918-a576-6e30e76bb129}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "C8$1",
+      "pkg_idx": 28,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{5b50d1c7-8916-442e-9a85-bb44a11c588a}{8b5d6f10-45e3-420e-813e-a2948fedecbe}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Capacitor_C0805$2",
+      "pkg_idx": 29,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{5b50d1c7-8916-442e-9a85-bb44a11c588a}{ea1e030e-f841-4a61-8bc4-0eae6c25363d}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "DCDC_Conv$1",
+      "pkg_idx": 30,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{5b50d1c7-8916-442e-9a85-bb44a11c588a}{3e461ca9-0743-4040-a5a3-20f3e859fa20}",
+      "width": 2.0,
+      "height": 2.0,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Inductor$1",
+      "pkg_idx": 31,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{5b50d1c7-8916-442e-9a85-bb44a11c588a}{9b1fb3d4-949e-4920-89ca-08c57679ba0e}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "C8$2",
+      "pkg_idx": 32,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{82d1d042-dc15-4dd4-b28a-4ba8f2b61986}{bb917186-bb25-449b-a8e8-50e9481c19e9}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Capacitor_C0805$3",
+      "pkg_idx": 33,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{82d1d042-dc15-4dd4-b28a-4ba8f2b61986}{9047ea92-0ada-4f50-b89a-18f01f9cc472}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "DCDC_Conv$2",
+      "pkg_idx": 34,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{82d1d042-dc15-4dd4-b28a-4ba8f2b61986}{1ca3399f-f882-477c-8ea3-f53d2428131a}",
+      "width": 2.0,
+      "height": 2.0,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Inductor$2",
+      "pkg_idx": 35,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{82d1d042-dc15-4dd4-b28a-4ba8f2b61986}{5ba9280d-ef23-461b-9ded-67ea0b9df51c}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "C8$3",
+      "pkg_idx": 36,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{a38067a2-7642-4884-892b-9ca4b3fa87fa}{c1cbe4b7-1de8-455d-b55d-e869f9dffd7d}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Capacitor_C0805$4",
+      "pkg_idx": 37,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{a38067a2-7642-4884-892b-9ca4b3fa87fa}{8e08132d-2bab-4ede-932d-c0a1a2d7176c}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "DCDC_Conv$3",
+      "pkg_idx": 38,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{a38067a2-7642-4884-892b-9ca4b3fa87fa}{6d10c747-5737-46fb-aee2-bddb37ea3471}",
+      "width": 2.0,
+      "height": 2.0,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Inductor$3",
+      "pkg_idx": 39,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{a38067a2-7642-4884-892b-9ca4b3fa87fa}{2468455d-22d2-4eb9-8d4e-32c433efc220}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "5.2:17.8",
+          "y": "0.2:34.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "MIPI_FPGA_Gateway",
+      "pkg_idx": 40,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{e44dec29-9c32-467f-8953-14c76f21cb9f}",
+      "width": 13.23,
+      "height": 13.23
+    },
+    {
+      "name": "Resistor_R0603",
+      "pkg_idx": 41,
+      "ComponentID": "{01d6483f-f42f-482e-95ae-ea6bb51babfd}{1547d119-ec0e-4d2d-9352-c9a34440a0da}",
+      "width": 3.7,
+      "height": 1.456
+    },
+    {
+      "name": "AtMEGA_U1",
+      "pkg_idx": 42,
+      "ComponentID": "{55c53e47-4b12-407a-99b4-c2355f80aa0f}{619b43ad-4d24-46c3-8cb2-c643d004b87c}",
+      "width": 11.1252,
+      "height": 11.1252,
+      "constraints": [
+        {
+          "x": "0.2:17.8",
+          "y": "0.2:24.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "Cbp",
+      "pkg_idx": 43,
+      "ComponentID": "{55c53e47-4b12-407a-99b4-c2355f80aa0f}{bf724be5-3a49-438c-903d-63d8b369ac73}",
+      "width": 4.3,
+      "height": 2.16,
+      "constraints": [
+        {
+          "x": "0.2:17.8",
+          "y": "0.2:24.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "RPullUp",
+      "pkg_idx": 44,
+      "ComponentID": "{55c53e47-4b12-407a-99b4-c2355f80aa0f}{98f4ffc4-35b1-4e9e-ab54-c7b0bbf44819}",
+      "width": 3.7,
+      "height": 1.456,
+      "constraints": [
+        {
+          "x": "0.2:17.8",
+          "y": "0.2:24.0",
+          "type": "range"
+        }
+      ]
+    }
+  ]
+}

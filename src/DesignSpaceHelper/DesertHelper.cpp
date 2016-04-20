@@ -18,6 +18,8 @@
 #include "time.h"
 #include "DesertThread.h"
 
+using namespace DesertIface;
+
 //typedef map<DesertIfaceBack::Configuration, set<CyPhyML::DesignEntity>*> MorphMatrix;
 //MorphMatrix morphMatrix;
 //set<CyPhyML::DesignEntity> allEntities;
@@ -28,14 +30,14 @@
 std::string capitalizeFirstLetter(const std::string& str)
 {
 	std::string ret=str;
-	
-	if (isalpha(str[0])) 
+
+	if (isalpha(str[0]))
 		ret[0] = toupper(str[0]);
-	
+
 	int i=1;
 	while (str[i])
 	{
-		if (isalpha(str[i])) 
+		if (isalpha(str[i]))
 			ret[i] = tolower(str[i]);
 		i++;
 	}
@@ -76,17 +78,11 @@ std::string getPath( const std::string& filepath, bool deleteTerminatingBackSlas
 }
 
 void DesertHelper::morphMatrixInitialize1() {
-	if(morphMatrixInitialized1)
+	if(morphMatrixInitialized1) {
 		return;
+	}
 
 	// MorphMatrix initialize
-	if(morphMatrix.size() > 0) {
-		for(MorphMatrix::iterator mmPos = morphMatrix.begin(); mmPos != morphMatrix.end(); ++mmPos) {
-			MorphMatrix::value_type mmRow = *mmPos;
-			set<CyPhyML::DesignEntity>* selectedEntities = mmRow.second;
-			delete selectedEntities;
-		}
-	}
 	morphMatrix.clear();
 	allEntities.clear();
 	stringstream newMMFilenameSS;
@@ -102,8 +98,9 @@ void DesertHelper::morphMatrixInitialize1() {
 }
 
 void DesertHelper::morphMatrixFinalize1() {
-	if(!morphMatrixInitialized1)
+	if(!morphMatrixInitialized1) {
 		return;
+	}
 
 	morphMatrixInitialized1 = false;
 
@@ -122,9 +119,9 @@ void DesertHelper::morphMatrixFinalize1() {
 	}
 	fprintf(mmfd, "\n");
 	for(MorphMatrix::iterator mmPos = morphMatrix.begin(); mmPos != morphMatrix.end(); ++mmPos) {
-		MorphMatrix::value_type mmRow = *mmPos;
+		MorphMatrix::value_type& mmRow = *mmPos;
 		Configuration cfg = mmRow.first;
-		set<CyPhyML::DesignEntity>* selectedEntities = mmRow.second;
+		auto& selectedEntities = mmRow.second;
 		long cfgID = cfg.uniqueId();
 		string cfgName = cfg.name();
 		cfgName = "cfg" + cfgName.substr(10);
@@ -137,16 +134,16 @@ void DesertHelper::morphMatrixFinalize1() {
 			if(sePos != selectedEntities->end()) {
 				// Selected
 				fprintf(mmfd, "\t1");
-				
+
 			} else {
 				// Not selected
 				fprintf(mmfd, "\t0");
 			}
-			
+
 //////////////////////////////////////////////////////////////////////////////////
 // Himanshu: Commenting out the new format
 //////////////////////////////////////////////////////////////////////////////////
-// 
+//
 //			std::string info;
 //			map<int, CyPhyML::DesignEntity>::iterator mopos = moptionMap.find(e.ID());
 //			if(mopos!=moptionMap.end())
@@ -155,9 +152,9 @@ void DesertHelper::morphMatrixFinalize1() {
 //			map<int, CyPhyML::DesignEntity>::iterator mgpos = mgroupMap.find(e.ID());
 //			if(mgpos!=mgroupMap.end())
 //				info = info + "`@`" + (std::string)(*mgpos).second.name();
-//							
+//
 //			if(!info.empty())
-//				fprintf(mmfd,"%s",info.c_str());			
+//				fprintf(mmfd,"%s",info.c_str());
 //////////////////////////////////////////////////////////////////////////////////
 
 			++aePos;
@@ -167,13 +164,6 @@ void DesertHelper::morphMatrixFinalize1() {
 	fflush(mmfd);
 	fclose(mmfd);
 	mmfd = 0;
-	if(morphMatrix.size() > 0) {
-		for(MorphMatrix::iterator mmPos = morphMatrix.begin(); mmPos != morphMatrix.end(); ++mmPos) {
-			MorphMatrix::value_type mmRow = *mmPos;
-			set<CyPhyML::DesignEntity>* selectedEntities = mmRow.second;
-			delete selectedEntities;
-		}
-	}
 	morphMatrix.clear();
 	allEntities.clear();
 }
@@ -181,14 +171,14 @@ void DesertHelper::morphMatrixFinalize1() {
 DesertHelper::DesertHelper(const std::string &mgaFile, Udm::DataNetwork& cyphyDN, Udm::Object focusObject)
 	: cyphy_dn(cyphyDN), currObj(focusObject),desertFinit_2_fail(false), showGui(true)
 {
-	std::string currPath = getPath(mgaFile, false);	
+	std::string currPath = getPath(mgaFile, false);
 	std::string logPath = currPath + "log\\";
 	CreateDirectoryA(logPath.c_str(), NULL);
 	currPath += "tmp\\";
 	CreateDirectoryA(currPath.c_str(), NULL);
 
 	std::string fileBase = dropExtension(dropPath(mgaFile));
-	
+
 #ifdef IFACE_FILE_FORMAT_XML
 	desertIfaceFile = currPath + fileBase + "_Desert_tmp.xml";
 	desertIfaceBackFile = currPath + fileBase +"_Desert_back_tmp.xml";
@@ -211,7 +201,7 @@ DesertHelper::~DesertHelper()
 }
 
 void DesertHelper::close()
-{	
+{
 	//reverse the DesignEntity ID
 	for(auto it=CyPhy2Desert::originalIDs.begin();it!=CyPhy2Desert::originalIDs.end();++it)
 	{
@@ -221,7 +211,7 @@ void DesertHelper::close()
 	if(cfg_models!=Udm::null)
 	{
 		set<CyPhyML::CWC> cwcs = cfg_models.CWC_kind_children();
-		if(cwcs.empty()) 
+		if(cwcs.empty())
 			cfg_models.DeleteObject();
 	}
 
@@ -285,7 +275,7 @@ bool DesertHelper::runCyPhy2Desert()
 
 		s_dlg.SetStatus(_T("Initializing"),0);
 	}
-	
+
 	CyPhyML::RootFolder cyphy_rf = CyPhyML::RootFolder::Cast(cyphy_dn.GetRootObject());
 
 	ds_dn = unique_ptr<Udm::SmartDataNetwork>(new Udm::SmartDataNetwork(DesertIface::diagram));
@@ -365,7 +355,7 @@ bool DesertHelper::runCyPhy2Desert()
 			return false;
 		}
 	}
-	
+
 	if(!CyPhy2Desert::nullComponentRefs.empty())
 	{
 		GMEConsole::Console::Error::writeLine("The following ComponentRef are null:");
@@ -394,7 +384,7 @@ bool DesertHelper::runCyPhy2Desert()
 	{
 		s_dlg.SetStatus(_T("Write out Desert XML file"), 80);
 	}
-	
+
 	//build up the oldconstraintMap
 	set<std::string> groupConstraints = c2d.getGroupConstraits();
 	int tmpCnt = 0;
@@ -403,13 +393,13 @@ bool DesertHelper::runCyPhy2Desert()
 		defaultConstraints.append(*string_it);
 		tmpCnt++;
 		if(tmpCnt != groupConstraints.size())
-			defaultConstraints.append(":");		
+			defaultConstraints.append(":");
 	}
 
 	constraintCount = 0;
 	set<DesertIface::ConstraintSet> csets = desert_top.ConstraintSet_kind_children();
 	for(set<DesertIface::ConstraintSet>::iterator i=csets.begin();i!=csets.end();++i)
-	{		
+	{
 		set<DesertIface::Constraint> cons = (*i).Constraint_kind_children();
 		for(set<DesertIface::Constraint>::iterator j=cons.begin();j!=cons.end();++j)
 		{
@@ -431,22 +421,22 @@ bool DesertHelper::runCyPhy2Desert()
 	desertIfaceElemMap.clear();
 	set<DesertIface::Space> spaces = desert_top.Space_kind_children();
 	//DesertIface::Space space;
-	
+
 	if(s_dlg.m_cancel || spaces.empty()) return false;
-	
+
 	if(!csets.empty())
 		dconstraintSet = *(csets.begin());
 
 	DesertIface::Space space = *(spaces.begin());
 	set<DesertIface::Element> elems = space.Element_kind_children();
-	makeDesertIfaceElemMap(elems);   //Null can exist in Desert, but not in Cyphy 
+	makeDesertIfaceElemMap(elems);   //Null can exist in Desert, but not in Cyphy
 
 	for(map<CyPhyML::DesignEntity, DesertIface::Element>::iterator mit=com2elemMap.begin();mit!=com2elemMap.end();++mit)
 	{
 		CyPhyML::DesignEntity cd = (*mit).first;
 		cyPhyDesignElemMap[cd.ID()] = cd;
 	}
-	
+
 	return (!s_dlg.m_cancel);
 	//return true;
 }
@@ -456,7 +446,7 @@ void DesertHelper::makeDesertIfaceElemMap(const set<DesertIface::Element> &elems
 	for(set<DesertIface::Element>::const_iterator it_elem=elems.begin();it_elem!=elems.end();++it_elem)
 	{
 		DesertIface::Element elem = *it_elem;
-		desertIfaceElemMap[elem.externalID()] = elem;	
+		desertIfaceElemMap[elem.externalID()] = elem;
 		set<DesertIface::Element> c_elems = elem.Element_kind_children();
 		makeDesertIfaceElemMap(c_elems);
 	}
@@ -467,7 +457,7 @@ void DesertHelper::addConstraint(int listIndex, int cyphyObjId, const std::strin
 	Udm::Object obj = cyphy_dn.ObjectById(cyphyObjId);
 	if(obj == Udm::null) return;
 	if(!Uml::IsDerivedFrom(obj.type(), CyPhyML::DesignEntity::meta)) return;
-	
+
 	CyPhyML::DesignEntity scom = CyPhyML::DesignEntity::Cast(obj);
 	map<CyPhyML::DesignEntity, DesertIface::Element>::iterator pos = com2elemMap.find(CyPhyML::DesignEntity::Cast(scom));
 	if(pos == com2elemMap.end()) return;
@@ -555,7 +545,7 @@ void DesertHelper::updateCyPhy()
 	{
 		DesertIface::Constraint dcon = (*pos).second;
 		map<DesertIface::Constraint, CyPhyML::ConstraintBase>::iterator mit = dcon2CyphyConMap.find(dcon);
-	
+
 		if(mit==dcon2CyphyConMap.end()) continue;
 		CyPhyML::ConstraintBase conObj = (*mit).second;
 		if(conObj.type()==CyPhyML::Constraint::meta)
@@ -649,7 +639,7 @@ void DesertHelper::applyConstraints(set<int> constraints_list, bool dsRefresh)
 		}
 		DesertIface::Constraint con = (*pos).second;
 
-		if(conslist.empty()) 
+		if(conslist.empty())
 			conslist = con.name();
 		else
 			conslist.append(":"+(std::string)con.name());
@@ -695,50 +685,51 @@ void DesertHelper::runDesertFinit_1(const std::string &constraints, bool refresh
 		set<Space> spaces = ds.Space_kind_children();
 		set<Space>::iterator sp_iterator;
 
-		ASSERT(spaces.begin() != spaces.end());	
+		ASSERT(spaces.begin() != spaces.end());
 		BackIfaceFunctions::ClearMap();
 
 		UdmElementSet elements;
 		UdmMemberSet custom_members;
-				
+		std::function<void(short)> noop = [](short) {};
+
 		//Build spaces
 		if (!spaces.empty())
 		{
 			Space sp;
 			DesertIface::Element dummy;
-		
+
 			for (sp_iterator = spaces.begin(); sp_iterator != spaces.end(); sp_iterator ++)
 			{
 				Space sp = *(sp_iterator);
 				//TRACE("Creating space: %s\n", ((string)sp.name()).c_str());
-				CreateDesertSpace(sp, dummy, des_map, inv_des_map, elements, true);
+				CreateDesertSpace(sp, dummy, des_map, inv_des_map, elements, true, noop);
 			}//eo for (sp_iterator)
 		}//if (!spaces.empty())
-	
-		//create relations			
-		CreateElementRelations(ds, des_map, inv_des_map);
+
+		//create relations
+		CreateElementRelations(ds, des_map, inv_des_map, noop);
 
 		//create constrains
 		CreateConstraints(ds, des_map, inv_des_map);
 
 		//create natural domains
-		CreateNaturalDomains(ds, des_map, inv_des_map);
+		CreateNaturalDomains(ds, des_map, inv_des_map, noop);
 
 		//create custom domains
-		CreateCustomDomains(ds, des_map, inv_des_map, custom_members);
+		CreateCustomDomains(ds, des_map, inv_des_map, custom_members, noop);
 
 		//create custom domain relations
-		CreateMemberRelations(ds, des_map, inv_des_map);
+		CreateMemberRelations(ds, des_map, inv_des_map, noop);
 
 		//create variable properties
-		CreateVariableProperties(des_map, inv_des_map, elements);
+		CreateVariableProperties(des_map, inv_des_map, elements, noop);
 
 		//create constant properties
-		CreateConstantProperties(des_map, inv_des_map, elements, custom_members);
-		
+		CreateConstantProperties(des_map, inv_des_map, elements, custom_members, noop);
+
 		CreateSimpleFormulas(ds,des_map,inv_des_map);
 		//create assignments for VariableProperties
-		CreateAssignments(des_map, inv_des_map, elements, custom_members);
+		CreateAssignments(des_map, inv_des_map, elements, custom_members, noop);
 
 		if(!defaultConstraints.empty())
 		{
@@ -784,7 +775,7 @@ int DesertHelper::runDesertFinit_2()
 	dbs_dn = std::unique_ptr<Udm::SmartDataNetwork>(new Udm::SmartDataNetwork(DesertIfaceBack::diagram));
 	dbs_dn->CreateNew(desertIfaceBackFile,"DesertIfaceBack",DesertIfaceBack::DesertBackSystem::meta, Udm::CHANGES_LOST_DEFAULT);
 	DesertIfaceBack::DesertBackSystem dbs = DesertIfaceBack::DesertBackSystem::Cast(dbs_dn->GetRootObject());
-	
+
 	DesertSystem ds = DesertSystem::Cast(ds_dn->GetRootObject());
 	dbs.SystemName() = ds.SystemName();
 	long localConfigCount = -1;
@@ -803,7 +794,7 @@ int DesertHelper::runDesertFinit_2()
 		cancel = notify.m_cancel;
 	}
 	m_realConfigCount = localConfigCount;
-	
+
 	cfgCount = 0;
 	configMap.clear();
 	configElemMap.clear();
@@ -829,7 +820,7 @@ int DesertHelper::runDesertFinit_2()
 			desertIfaceBackElemMap[elem.externalID()] = elem;
 		}
 		desertFinit_2_fail = false;
-		
+
 		char cnt_buff[10];
 		_itoa(cfgCount, cnt_buff, 10);
 		std::string cfgSizeStr = (std::string)cnt_buff;
@@ -877,7 +868,7 @@ int DesertHelper::runDesert(const std::string &constraints)
 	//CDesertStatusDlg s_dlg(0, false);
 	//s_dlg.Create(IDD_DESERTSTATUSDLG);
 	//GetStatusDlg(&s_dlg);
-	
+
 	//using namespace DesertIface;
 
 	///*s_dlg.SetStatus(SD_INIT);
@@ -962,7 +953,7 @@ void DesertHelper::exportModel_ex(set<int> cfgIds)
 {
 	if(cfg_models==Udm::null) return;
 
-	//if(cfg_models==Udm::null) 
+	//if(cfg_models==Udm::null)
 	//{
 	//	if(rootDC!=Udm::null)
 	//		cfg_models = CyPhyML::Configurations::Create(rootDC);
@@ -985,7 +976,7 @@ void DesertHelper::exportModel_ex(set<int> cfgIds)
 
 		int idCnt = cfgIds.size();
 		//std::string fnbase;
-		prgDlg.SetRange(25*idCnt);
+		prgDlg.SetRange((1 + idCnt)*10); // processPos += 10;
 
 		prgDlg.SetProgress("Preparing to export models...");
 	}
@@ -1002,7 +993,7 @@ void DesertHelper::exportModel_ex(set<int> cfgIds)
 			continue;
 
 		createdCfgIds.insert(*i);
-		
+
 		if (showGui)
 		{
 			DOEVENTS();
@@ -1056,7 +1047,7 @@ void DesertHelper::exportModel_ex(set<int> cfgIds)
 
 void DesertHelper::exportModel_ForMorphMatrix(set<int> cfgIds)
 {
-	if(cfg_models==Udm::null) 
+	if(cfg_models==Udm::null)
 	{
 		if(rootDC!=Udm::null)
 			cfg_models = CyPhyML::Configurations::Create(rootDC);
@@ -1184,7 +1175,7 @@ void DesertHelper::getDesertIfaceSpace(DesertIface::Space &space)
 {
 	DesertIface::DesertSystem desert_top = DesertIface::DesertSystem::Cast(ds_dn->GetRootObject());
 	set<DesertIface::Space> spaces = desert_top.Space_kind_children();
-	if(!spaces.empty()) 
+	if(!spaces.empty())
 		space = *(spaces.begin());
 }
 
@@ -1218,12 +1209,12 @@ bool DesertHelper::isElementExist(int elemId)
 			else return true;
 		}
 	}
-	
+
 	else return true;
 }
 
 bool DesertHelper::isElementSelected(int cfgId, int elemId, bool forNull)
-{	
+{
 	//only consider the Component
 	map<int, DesertIface::Element>::iterator diPos = desertIfaceElemMap.find(elemId);
 	if(diPos==desertIfaceElemMap.end()) return false;
@@ -1242,7 +1233,7 @@ bool DesertHelper::isElementSelected(int cfgId, int elemId, bool forNull)
 	if(elemPos==configElemMap.end()) return false;
 
 	set<int> ids = (*elemPos).second;
-	if(ids.find(elemId)!=ids.end()) 
+	if(ids.find(elemId)!=ids.end())
 	{
 		return true;
 	}
@@ -1251,7 +1242,7 @@ bool DesertHelper::isElementSelected(int cfgId, int elemId, bool forNull)
 	Udm::Object parentObj = diElem.parent();
 	if(parentObj.type()==DesertIface::Element::meta)
 	{
-		DesertIface::Element parentElem = DesertIface::Element::Cast(parentObj);		
+		DesertIface::Element parentElem = DesertIface::Element::Cast(parentObj);
 		if(!parentElem.decomposition())
 		{
 			return false;
@@ -1313,13 +1304,13 @@ bool DesertHelper::checkConstraints()
 	//dbs_dn->CreateNew(desertIfaceBackFile,"DesertIfaceBack",DesertIfaceBack::DesertBackSystem::meta, Udm::CHANGES_LOST_DEFAULT);
 	//DesertIfaceBack::DesertBackSystem dbs = DesertIfaceBack::DesertBackSystem::Cast(dbs_dn->GetRootObject());
 	//
-	
+
 	DesertInit(utf82cstring(desertlogFile), true);
 	set<Space> spaces = ds.Space_kind_children();
 	set<Space>::iterator sp_iterator;
 
-	ASSERT(spaces.begin() != spaces.end());	
-	
+	ASSERT(spaces.begin() != spaces.end());
+
 	UdmDesertMap des_map;
 	DesertUdmMap inv_des_map;
 
@@ -1327,44 +1318,45 @@ bool DesertHelper::checkConstraints()
 
 	UdmElementSet elements;
 	UdmMemberSet custom_members;
-				
+	std::function<void(short)> noop = [](short) {};
+
 	//Build spaces
 	if (!spaces.empty())
 	{
 		Space sp;
 		DesertIface::Element dummy;
-		
+
 		for (sp_iterator = spaces.begin(); sp_iterator != spaces.end(); sp_iterator ++)
 		{
 			Space sp = *(sp_iterator);
 			//TRACE("Creating space: %s\n", ((string)sp.name()).c_str());
-			CreateDesertSpace(sp, dummy, des_map, inv_des_map, elements, true);
+			CreateDesertSpace(sp, dummy, des_map, inv_des_map, elements, true, noop);
 		}//eo for (sp_iterator)
 	}//if (!spaces.empty())
-	
+
 	//create relations
-	CreateElementRelations(ds, des_map, inv_des_map);
+	CreateElementRelations(ds, des_map, inv_des_map, noop);
 
 	//create constrains
 	bool ret = CreateConstraints(ds, des_map, inv_des_map);
 
 	//create natural domains
-	CreateNaturalDomains(ds, des_map, inv_des_map);
+	CreateNaturalDomains(ds, des_map, inv_des_map, noop);
 
 	//create custom domains
-	CreateCustomDomains(ds, des_map, inv_des_map, custom_members);
+	CreateCustomDomains(ds, des_map, inv_des_map, custom_members, noop);
 
 	//create custom domain relations
-	CreateMemberRelations(ds, des_map, inv_des_map);
+	CreateMemberRelations(ds, des_map, inv_des_map, noop);
 
 	//create variable properties
-	CreateVariableProperties(des_map, inv_des_map, elements);
+	CreateVariableProperties(des_map, inv_des_map, elements, noop);
 
 	//create constant properties
-	CreateConstantProperties(des_map, inv_des_map, elements, custom_members);
+	CreateConstantProperties(des_map, inv_des_map, elements, custom_members, noop);
 
 	//create assignments for VariableProperties
-	CreateAssignments(des_map, inv_des_map, elements, custom_members);
+	CreateAssignments(des_map, inv_des_map, elements, custom_members, noop);
 
 	bool valid = VerifyConstraints(_T("applyAll"));
 	ds_dn_copy.CloseNoUpdate();
@@ -1482,10 +1474,11 @@ void DesertHelper::executeAll(bool applyConstraints)
 	if(allRootDCs.empty())
 	{
 		runCyPhy2Desert();
-		if (applyConstraints)
+		if (applyConstraints) {
 			applyAllConstraints(true);
-		else
+		} else {
 			this->applyConstraints(std::set<int>(), true);
+		}
 		cfgs = runDesertFinit_2();
 		if (cfgs)
 		{
@@ -1514,7 +1507,7 @@ void DesertHelper::executeAll(bool applyConstraints)
 }
 
 void DesertHelper::checkConfigurationsModel(set<int> &constraintId_list, bool applyAll)
-{	
+{
 	set<CyPhyML::Configurations> cfgs;
 	if(rootDC!=Udm::null)
 		cfgs = rootDC.Configurations_kind_children();
@@ -1524,12 +1517,12 @@ void DesertHelper::checkConfigurationsModel(set<int> &constraintId_list, bool ap
 		return;
 
 	CyPhyML::Configurations cfg;
-	
+
 	for(set<CyPhyML::Configurations>::iterator it=cfgs.begin();it!=cfgs.end();++it)
 	{
 		CyPhyML::Configurations currcfg = *it;
 		if(currcfg.isArchived()) continue;
-		if(applyAll) 
+		if(applyAll)
 		{
 			if(currcfg.applyAll())
 			{
@@ -1549,7 +1542,7 @@ void DesertHelper::checkConfigurationsModel(set<int> &constraintId_list, bool ap
 			if(conIdlist == constraintId_list)
 			{
 				cfg = currcfg;
-		//		old_cfgs_model = cfg;				
+		//		old_cfgs_model = cfg;
 				break;
 			}
 		}
@@ -1594,7 +1587,7 @@ void DesertHelper::removeCfgsIfEmpty()
 	if(cfg_models!=Udm::null)
 	{
 		set<CyPhyML::CWC> cwcs = cfg_models.CWC_kind_children();
-		if(cwcs.empty()) 
+		if(cwcs.empty())
 		{
 			cfg_models.DeleteObject();
 			cfg_models = 0;
@@ -1604,7 +1597,7 @@ void DesertHelper::removeCfgsIfEmpty()
 
 bool DesertHelper::isBackNavigable()
 {
-	return isDesertBackNavigable();	
+	return isDesertBackNavigable();
 }
 
 bool DesertHelper::isForwardNavigable()
@@ -1657,11 +1650,11 @@ int DesertHelper::getElementInConfigsCount(int elemId)
 			alts = elem.alternative();
 		return alts.size();
 	}
-	
+
 	map<int, DesertIface::Element>::iterator ipos = desertIfaceElemMap.find(elemId);
 	if(ipos==desertIfaceElemMap.end())  //for the root designspace
 		return cfgCount;
-		
+
 	DesertIface::Element ielem = (*ipos).second;
 
 	Udm::Object parent_obj = ielem.parent();
@@ -1680,11 +1673,11 @@ int DesertHelper::getElementInConfigsCount(int elemId)
 			//	set<DesertIfaceBack::AlternativeAssignment> alts = ((*apos).second).alternative();
 			//	return alts.size();
 			//}
-			//else 
+			//else
 				return 0;
 		}
-	}	
-	
+	}
+
 	return cfgCount;
 }
 
@@ -1708,17 +1701,17 @@ void DesertHelper::removeCfgs()
 	{
 		cfg_models.DeleteObject();
 		cfg_models = 0;
-	}	
+	}
 }
 
 std::string DesertHelper::getElementType(int externalId)
-{	
+{
 	map<int, DesertIface::Element>::iterator dit = desertIfaceElemMap.find(externalId);
 	if(dit==desertIfaceElemMap.end())
 		return "";
 	else
 	{
-		DesertIface::Element elem = (*dit).second;	
+		DesertIface::Element elem = (*dit).second;
 		if(elem.decomposition())
 			return "Compound";
 		else
@@ -1744,7 +1737,7 @@ set<int> DesertHelper::getConfigurationsfromElement(int externalId)
 	if(pos!=desertIfaceBackElemMap.end())
 	{
 		DesertIfaceBack::Element delem = (*pos).second;
-		
+
 		set<DesertIfaceBack::AlternativeAssignment> alts = delem.alternative_of();
 		set<DesertIfaceBack::AlternativeAssignment> alt_of_ends = delem.alternative();
 		alts.insert(alt_of_ends.begin(), alt_of_ends.end());
@@ -1768,11 +1761,11 @@ set<int> DesertHelper::getConfigurationsfromElement(int externalId)
 	{
 		DesertIface::Element elem_parent = DesertIface::Element::Cast(parent_obj);
 		return getConfigurationsfromElement(elem_parent.externalID());
-	}	
-	
+	}
+
 	for(int i=0;i<cfgCount;++i)
 		ret.insert(i);
-	
+
 	return ret;
 }
 
@@ -1792,7 +1785,7 @@ void DesertHelper::clearCfgId2NameMap()
 {
 	cfgId2NameMap.clear();
 }
-	
+
 void DesertHelper::updateCfgId2NameMap(int id, const std::string &name)
 {
 	cfgId2NameMap[id] = name;
@@ -1810,7 +1803,7 @@ CyPhyML::Or_operator DesertHelper::getOrFromDesignContainer(CyPhyML::DesignConta
 		char buffer [80];
 		_ltoa ((long) newvc.uniqueId(),buffer,10);
 		newvc.name() = (std::string)dc.name()+"_selective_VC_"+buffer;
-			
+
 		or = CyPhyML::Or_operator::Create(newvc);
 		or.name() = "Or";
 		dc2orMap[dc] = or;
@@ -1826,7 +1819,7 @@ void DesertHelper::generateSelectionConstraints(set<int> &selectElemIds)
 		set<int>::iterator set_it = existedElemId_in_VC.find(*i);
 		if(set_it!=existedElemId_in_VC.end())
 			continue;
-		
+
 		existedElemId_in_VC.insert(*i);
 
 		map<int, CyPhyML::DesignEntity>::iterator pos = cyPhyDesignElemMap.find(*i);
@@ -1899,17 +1892,17 @@ void DesertHelper::generateSelectionConstraints(set<int> &selectElemIds)
 
 		map<CyPhyML::Or_operator, DesertIface::Constraint>::iterator o2c_it = or2ConstraintMap.find(*or_it);
 		if(o2c_it==or2ConstraintMap.end())
-		{		
+		{
 			//create the constraint in desert
 			dsConstraint = DesertIface::Constraint::Create(dconstraintSet);
 			dsConstraint.name() = vcon.name();
-			dsConstraint.id() = dsConstraint.externalID() = vcon.ID();		
+			dsConstraint.id() = dsConstraint.externalID() = vcon.ID();
 			dsConstraint.context() = (*c2d_it).second;
 			newConstraintMap[constraintCount] = dsConstraint;
 			dcon2CyphyConMap[dsConstraint]=vcon;
 			or2ConstraintMap[*or_it]=dsConstraint;
 			makeConstraintDomainMap(constraintCount, dsConstraint, "Visual Constraints");
-			constraintCount++;		
+			constraintCount++;
 		}
 		else
 			dsConstraint = (*o2c_it).second;
@@ -1952,10 +1945,10 @@ void DesertHelper::makeConstraintDomainMap(int idx, DesertIface::Constraint &con
 	{
 		set<std::string> domains;
 		std::string delimiter = ";";
-		
+
 		size_t dpos = 0;
 		std::string token;
-		while ((dpos = cdomain.find(delimiter)) != std::string::npos) 
+		while ((dpos = cdomain.find(delimiter)) != std::string::npos)
 		{
 			token = capitalizeFirstLetter(cdomain.substr(0, dpos));
 			domains.insert(token);
@@ -1963,7 +1956,7 @@ void DesertHelper::makeConstraintDomainMap(int idx, DesertIface::Constraint &con
 		}
 		if(!cdomain.empty())
 			domains.insert(capitalizeFirstLetter(cdomain));
-		
+
 		if(cbase!=Udm::null)
 		{
 			std::string sort_domains;
@@ -1975,7 +1968,7 @@ void DesertHelper::makeConstraintDomainMap(int idx, DesertIface::Constraint &con
 			}
 			cbase.Domain() = sort_domains;
 		}
-		
+
 		for(set<std::string>::iterator it=domains.begin();it!=domains.end();++it)
 		{
 			pos = constraintDomainMap.find(*it);

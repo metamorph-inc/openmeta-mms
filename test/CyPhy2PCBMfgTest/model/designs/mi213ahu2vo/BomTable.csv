@@ -1,0 +1,13 @@
+,,Design Name:,AstableMultivibrator
+,,Pricing Timestamp:,"Wednesday, October 8, 2014 10:32 AM"
+,,Cost per Unit (based on 100 units):,$0.91
+
+"Item #",Qty,"Reference Designator",Manufacturer,"Manufacturer Part #",Description,Package,"Supplier 1","Supplier 1 SKU","Supplier 1 Price/Unit","Supplier 1 Extended Price",Notes
+1,2,"NewCA/R_, 
+R",Rohm,MCR50JZHJ470,"RES 2010 47 OHM 1/2W 5% SMD",,"Future Electronics",MCR50JZHJ470,0.025,0.05,"Lead Free, RoHS Compliant"
+2,2,"NewCA/C2, 
+C1",TDK-EPC,C1005X5R0G106M050BB,"CAP CER 10UF 4V 20% X5R 0402",'1005,Newark,65T7771,0.126,0.252,"Lead Free, RoHS Compliant"
+3,2,"NewCA/R2, 
+R1","Samsung Electro-Mechanics",RC0603F753CS,"RES 75K OHM 1/20W 1% 0201",,Arrow,RC0603F753CS,0.0082,0.0164,
+4,2,"Q1, 
+Q2","Diodes Inc.",ZXTN25012EFLTA,"TRANS NPN HI GAIN LP 12V SOT23-3",,Digi-Key,ZXTN25012EFLDKR-ND,0.2936,0.5872,"Lead Free, RoHS Compliant, Lifecycle Status Active"

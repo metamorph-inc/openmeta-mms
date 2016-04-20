@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{B705CB51-6106-4843-8232-840DDD597E8A}" cdate="Fri Sep 06 17:59:21 2013" mdate="Fri Sep 06 17:59:21 2013" version="" metaguid="{1405FB14-8516-494D-9B63-C22104422F7D}" metaversion="12.1.$Rev: 17952 $" metaname="CyPhyML">
+<project guid="{449A8293-8C6B-4AEF-BF41-9FEBE9AD3817}" cdate="Mon Aug 25 13:34:53 2014" mdate="Mon Aug 25 13:34:53 2014" version="" metaguid="{AFBF7809-AF33-4565-B525-37B152F8A357}" metaversion="14.08-t1" metaname="CyPhyML">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
-	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0xc" kind="RootFolder" guid="{e30db627-2b68-46a7-ad9b-fff19a95efda}">
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x14" kind="RootFolder" guid="{e30db627-2b68-46a7-ad9b-fff19a95efda}">
 		<name>RootFolder</name>
 		<folder id="id-006a-00000002" relid="0x2" childrelidcntr="0x2" kind="Connectors" guid="{bded3721-5142-4910-9b2f-b137b12f08ea}">
 			<name>Interface and Port Definitions</name>
@@ -93,7 +93,7 @@
 						<attribute kind="Locator" status="meta">
 							<value></value>
 						</attribute>
-						<reference id="id-0066-00000001" kind="ModelicaParameter" role="ModelicaParameter" guid="{ad371f79-2bfe-4078-a7ea-d00a5efc90bc}" relid="0x2">
+						<reference id="id-0067-00000001" kind="ModelicaParameter" role="ModelicaParameter" guid="{ad371f79-2bfe-4078-a7ea-d00a5efc90bc}" relid="0x2">
 							<name>includeBearingConnector</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -360,7 +360,7 @@
 						<attribute kind="Locator" status="meta">
 							<value></value>
 						</attribute>
-						<atom id="id-0066-00000002" kind="ModelicaRedeclare" role="ModelicaRedeclare" guid="{cfa8260c-ca75-4ce2-9baf-497956aafe6a}" relid="0x2">
+						<atom id="id-0066-00000001" kind="ModelicaRedeclare" role="ModelicaRedeclare" guid="{cfa8260c-ca75-4ce2-9baf-497956aafe6a}" relid="0x2">
 							<name>Medium</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -702,7 +702,7 @@
 						<attribute kind="Locator" status="meta">
 							<value></value>
 						</attribute>
-						<reference id="id-0066-00000003" kind="ModelicaParameter" role="ModelicaParameter" guid="{c0fc029f-2a47-4088-9385-d233e775cf0a}" relid="0x1">
+						<reference id="id-0067-00000002" kind="ModelicaParameter" role="ModelicaParameter" guid="{c0fc029f-2a47-4088-9385-d233e775cf0a}" relid="0x1">
 							<name>medium</name>
 							<attribute kind="DefaultValue" status="meta">
 								<value></value>
@@ -718,7 +718,7 @@
 				</folder>
 				<folder id="id-006a-00000005" relid="0x7" childrelidcntr="0x6" kind="Ports" guid="{13ba5590-7ffd-4507-88a8-e032f22a6214}">
 					<name>Abstract Ports</name>
-					<atom id="id-0066-00000004" kind="AbstractPort" guid="{0ebfb901-0ca1-4ed0-a0a9-0fc03ade6455}" relid="0x1">
+					<atom id="id-0066-00000002" kind="AbstractPort" guid="{0ebfb901-0ca1-4ed0-a0a9-0fc03ade6455}" relid="0x1">
 						<name>ElectricalPower</name>
 						<attribute kind="Definition" status="meta">
 							<value></value>
@@ -733,7 +733,7 @@
 							<value></value>
 						</attribute>
 					</atom>
-					<atom id="id-0066-00000005" kind="AbstractPort" guid="{21022279-949a-4dba-9b5d-c18bdf79c690}" relid="0x2">
+					<atom id="id-0066-00000003" kind="AbstractPort" guid="{21022279-949a-4dba-9b5d-c18bdf79c690}" relid="0x2">
 						<name>RotationalPower</name>
 						<attribute kind="Definition" status="meta">
 							<value></value>
@@ -748,7 +748,7 @@
 							<value></value>
 						</attribute>
 					</atom>
-					<atom id="id-0066-00000006" kind="AbstractPort" guid="{a33f1164-05f3-4bc7-b863-1833ab2e8068}" relid="0x3">
+					<atom id="id-0066-00000004" kind="AbstractPort" guid="{a33f1164-05f3-4bc7-b863-1833ab2e8068}" relid="0x3">
 						<name>Signal</name>
 						<attribute kind="Definition" status="meta">
 							<value></value>
@@ -763,7 +763,7 @@
 							<value></value>
 						</attribute>
 					</atom>
-					<atom id="id-0066-00000007" kind="AbstractPort" guid="{d783cbdd-9d17-4702-9951-f5f21a3728ee}" relid="0x4">
+					<atom id="id-0066-00000005" kind="AbstractPort" guid="{d783cbdd-9d17-4702-9951-f5f21a3728ee}" relid="0x4">
 						<name>OutputSignal</name>
 						<attribute kind="Definition" status="meta">
 							<value></value>
@@ -778,7 +778,7 @@
 							<value></value>
 						</attribute>
 					</atom>
-					<atom id="id-0066-00000008" kind="AbstractPort" guid="{0658454a-9591-40d6-8cf5-3a117bacdecc}" relid="0x5">
+					<atom id="id-0066-00000006" kind="AbstractPort" guid="{0658454a-9591-40d6-8cf5-3a117bacdecc}" relid="0x5">
 						<name>InputSignal</name>
 						<attribute kind="Definition" status="meta">
 							<value></value>
@@ -793,7 +793,7 @@
 							<value></value>
 						</attribute>
 					</atom>
-					<atom id="id-0066-00000009" kind="AbstractPort" guid="{a8650e97-3904-46a5-8e6a-46dcfd53b07e}" relid="0x6">
+					<atom id="id-0066-00000007" kind="AbstractPort" guid="{a8650e97-3904-46a5-8e6a-46dcfd53b07e}" relid="0x6">
 						<name>Bus</name>
 						<attribute kind="Definition" status="meta">
 							<value></value>
@@ -811,7 +811,7 @@
 				</folder>
 				<model id="id-0065-00000019" kind="TaxonomySheet" guid="{35cf821a-d8ca-4df1-b681-be01422f55e3}" relid="0x6" childrelidcntr="0x15">
 					<name>Taxonomy</name>
-					<reference id="id-0067-00000001" kind="PortReference" role="PortReference" guid="{27293166-6e07-4ad5-8fc4-025907ac30e8}" relid="0x1" referred="id-0066-00000004">
+					<reference id="id-0067-00000003" kind="PortReference" role="PortReference" guid="{27293166-6e07-4ad5-8fc4-025907ac30e8}" relid="0x1" referred="id-0066-00000002">
 						<name>ElectricalPower</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -826,7 +826,7 @@
 							<value>0</value>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000002" kind="PortReference" role="PortReference" guid="{32af8c2a-e49e-43c0-8307-58f0a06b0abb}" relid="0x2" referred="id-0065-00000005">
+					<reference id="id-0067-00000004" kind="PortReference" role="PortReference" guid="{32af8c2a-e49e-43c0-8307-58f0a06b0abb}" relid="0x2" referred="id-0065-00000005">
 						<name>ElectricalPin</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -838,7 +838,7 @@
 							</regnode>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000003" kind="PortReference" role="PortReference" guid="{640fc63b-a59a-4e62-8dd6-46f237a7622d}" relid="0x4" referred="id-0066-00000008">
+					<reference id="id-0067-00000005" kind="PortReference" role="PortReference" guid="{640fc63b-a59a-4e62-8dd6-46f237a7622d}" relid="0x4" referred="id-0066-00000006">
 						<name>InputSignal</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -853,7 +853,7 @@
 							<value>0</value>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000004" kind="PortReference" role="PortReference" guid="{5d57edca-cc92-466f-aa5b-6dd4b8575201}" relid="0x5" referred="id-0065-0000000e">
+					<reference id="id-0067-00000006" kind="PortReference" role="PortReference" guid="{5d57edca-cc92-466f-aa5b-6dd4b8575201}" relid="0x5" referred="id-0065-0000000e">
 						<name>IntegerInput</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -865,7 +865,7 @@
 							</regnode>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000005" kind="PortReference" role="PortReference" guid="{c6cfab0c-cc41-4f4f-ae06-f97935d21b7e}" relid="0x6" referred="id-0065-0000000a">
+					<reference id="id-0067-00000007" kind="PortReference" role="PortReference" guid="{c6cfab0c-cc41-4f4f-ae06-f97935d21b7e}" relid="0x6" referred="id-0065-0000000a">
 						<name>RealInput</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -877,7 +877,7 @@
 							</regnode>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000006" kind="PortReference" role="PortReference" guid="{d0e57c53-15c6-42db-a19f-ae6508eea99e}" relid="0x9" referred="id-0065-00000009">
+					<reference id="id-0067-00000008" kind="PortReference" role="PortReference" guid="{d0e57c53-15c6-42db-a19f-ae6508eea99e}" relid="0x9" referred="id-0065-00000009">
 						<name>BooleanInput</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -889,7 +889,7 @@
 							</regnode>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000007" kind="PortReference" role="PortReference" guid="{a0f76c16-e98a-41b3-a900-2bd821fdb415}" relid="0xb" referred="id-0066-00000007">
+					<reference id="id-0067-00000009" kind="PortReference" role="PortReference" guid="{a0f76c16-e98a-41b3-a900-2bd821fdb415}" relid="0xb" referred="id-0066-00000005">
 						<name>OutputSignal</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -904,7 +904,7 @@
 							<value>0</value>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000008" kind="PortReference" role="PortReference" guid="{403e51fd-e4b2-4982-a35e-0a264aaae5f6}" relid="0xc" referred="id-0065-0000000b">
+					<reference id="id-0067-0000000a" kind="PortReference" role="PortReference" guid="{403e51fd-e4b2-4982-a35e-0a264aaae5f6}" relid="0xc" referred="id-0065-0000000b">
 						<name>BooleanOutput</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -916,7 +916,7 @@
 							</regnode>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000009" kind="PortReference" role="PortReference" guid="{f4e39b64-a1fb-49d8-8d0a-bd09a55bb723}" relid="0xd" referred="id-0065-0000000d">
+					<reference id="id-0067-0000000b" kind="PortReference" role="PortReference" guid="{f4e39b64-a1fb-49d8-8d0a-bd09a55bb723}" relid="0xd" referred="id-0065-0000000d">
 						<name>IntegerOutput</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -928,7 +928,7 @@
 							</regnode>
 						</regnode>
 					</reference>
-					<reference id="id-0067-0000000a" kind="PortReference" role="PortReference" guid="{091ee7e3-63ec-4855-87cb-6b0e213bc470}" relid="0xe" referred="id-0065-00000007">
+					<reference id="id-0067-0000000c" kind="PortReference" role="PortReference" guid="{091ee7e3-63ec-4855-87cb-6b0e213bc470}" relid="0xe" referred="id-0065-00000007">
 						<name>RealOutput</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -940,7 +940,7 @@
 							</regnode>
 						</regnode>
 					</reference>
-					<reference id="id-0067-0000000b" kind="PortReference" role="PortReference" guid="{e340a072-8d95-4da0-8e0c-a2f20630d6aa}" relid="0x12" referred="id-0066-00000006">
+					<reference id="id-0067-0000000d" kind="PortReference" role="PortReference" guid="{e340a072-8d95-4da0-8e0c-a2f20630d6aa}" relid="0x12" referred="id-0066-00000004">
 						<name>Signal</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -957,54 +957,54 @@
 					</reference>
 					<connection id="id-0068-00000001" kind="SubtypeOf" role="SubtypeOf" guid="{8fa1e85e-b67e-4871-a59f-67d6a03f1806}" relid="0x3">
 						<name>SubtypeOf</name>
-						<connpoint role="dst" target="id-0067-00000001"/>
-						<connpoint role="src" target="id-0067-00000002"/>
-					</connection>
-					<connection id="id-0068-00000002" kind="SubtypeOf" role="SubtypeOf" guid="{0a05b5f5-6f9f-4d1b-941f-1903f446b501}" relid="0x7">
-						<name>SubtypeOf</name>
-						<connpoint role="dst" target="id-0067-00000003"/>
-						<connpoint role="src" target="id-0067-00000005"/>
-					</connection>
-					<connection id="id-0068-00000003" kind="SubtypeOf" role="SubtypeOf" guid="{458bcbaf-6af6-4b94-966e-06c4fb87f888}" relid="0x8">
-						<name>SubtypeOf</name>
 						<connpoint role="dst" target="id-0067-00000003"/>
 						<connpoint role="src" target="id-0067-00000004"/>
 					</connection>
+					<connection id="id-0068-00000002" kind="SubtypeOf" role="SubtypeOf" guid="{0a05b5f5-6f9f-4d1b-941f-1903f446b501}" relid="0x7">
+						<name>SubtypeOf</name>
+						<connpoint role="dst" target="id-0067-00000005"/>
+						<connpoint role="src" target="id-0067-00000007"/>
+					</connection>
+					<connection id="id-0068-00000003" kind="SubtypeOf" role="SubtypeOf" guid="{458bcbaf-6af6-4b94-966e-06c4fb87f888}" relid="0x8">
+						<name>SubtypeOf</name>
+						<connpoint role="dst" target="id-0067-00000005"/>
+						<connpoint role="src" target="id-0067-00000006"/>
+					</connection>
 					<connection id="id-0068-00000004" kind="SubtypeOf" role="SubtypeOf" guid="{3dd23067-f6ce-45c8-aae1-0ea3a332b17c}" relid="0xa">
 						<name>SubtypeOf</name>
-						<connpoint role="dst" target="id-0067-00000003"/>
-						<connpoint role="src" target="id-0067-00000006"/>
+						<connpoint role="dst" target="id-0067-00000005"/>
+						<connpoint role="src" target="id-0067-00000008"/>
 					</connection>
 					<connection id="id-0068-00000005" kind="SubtypeOf" role="SubtypeOf" guid="{e44840c5-b6c1-4841-a45d-c6ddb0e12e96}" relid="0xf">
 						<name>SubtypeOf</name>
-						<connpoint role="dst" target="id-0067-00000007"/>
-						<connpoint role="src" target="id-0067-00000009"/>
+						<connpoint role="dst" target="id-0067-00000009"/>
+						<connpoint role="src" target="id-0067-0000000b"/>
 					</connection>
 					<connection id="id-0068-00000006" kind="SubtypeOf" role="SubtypeOf" guid="{963e48ab-de24-4bcd-bbe4-c42dae8e70bc}" relid="0x10">
 						<name>SubtypeOf</name>
-						<connpoint role="dst" target="id-0067-00000007"/>
-						<connpoint role="src" target="id-0067-0000000a"/>
+						<connpoint role="dst" target="id-0067-00000009"/>
+						<connpoint role="src" target="id-0067-0000000c"/>
 					</connection>
 					<connection id="id-0068-00000007" kind="SubtypeOf" role="SubtypeOf" guid="{203e950e-627b-4605-9aa5-5f0f23156930}" relid="0x11">
 						<name>SubtypeOf</name>
-						<connpoint role="dst" target="id-0067-00000007"/>
-						<connpoint role="src" target="id-0067-00000008"/>
+						<connpoint role="dst" target="id-0067-00000009"/>
+						<connpoint role="src" target="id-0067-0000000a"/>
 					</connection>
 					<connection id="id-0068-00000008" kind="SubtypeOf" role="SubtypeOf" guid="{db268751-a591-4572-9cc0-ddf62d6f17b3}" relid="0x14">
 						<name>SubtypeOf</name>
 						<regnode name="autorouterPref" isopaque="yes">
 							<value>sE</value>
 						</regnode>
-						<connpoint role="src" target="id-0067-00000003"/>
-						<connpoint role="dst" target="id-0067-0000000b"/>
+						<connpoint role="src" target="id-0067-00000005"/>
+						<connpoint role="dst" target="id-0067-0000000d"/>
 					</connection>
 					<connection id="id-0068-00000009" kind="SubtypeOf" role="SubtypeOf" guid="{bc55c6e0-cfb8-4057-8a59-6d13d845451d}" relid="0x15">
 						<name>SubtypeOf</name>
 						<regnode name="autorouterPref" isopaque="yes">
 							<value>sW</value>
 						</regnode>
-						<connpoint role="src" target="id-0067-00000007"/>
-						<connpoint role="dst" target="id-0067-0000000b"/>
+						<connpoint role="src" target="id-0067-00000009"/>
+						<connpoint role="dst" target="id-0067-0000000d"/>
 					</connection>
 				</model>
 			</folder>

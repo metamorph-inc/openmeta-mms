@@ -8,7 +8,7 @@
 	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x34" kind="RootFolder" guid="{968369df-6526-4aff-b422-5b38ee90e894}">
 		<name>ImportExportTest</name>
 		<folder id="id-006a-00000002" relid="0x14" childrelidcntr="0x11" kind="Components" guid="{309c446c-66f7-463a-b40d-b6ec97085142}">
-			<name>Imported_Components</name>
+			<name>Components</name>
 			<folder id="id-006a-00000003" relid="0xe" childrelidcntr="0x2" kind="Components" guid="{e57ce8d1-5289-4039-a853-cd8851dc2bd1}">
 				<name>No_IDs_atall</name>
 				<folder id="id-006a-00000004" relid="0x2" childrelidcntr="0x3" kind="Components" guid="{877fee35-21ed-4891-8d34-2e54d272d42e}">

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="5f4d5403-a3a1-4159-8c2f-275ebde413a4" Name="BasicAttributes" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="systemc" xsi:type="q1:SystemCModel" Author="author" Notes="notes" XPosition="147" YPosition="84" xmlns=""  ModuleName="modulename"/>
+  <Classifications xmlns="" />
+</Component>

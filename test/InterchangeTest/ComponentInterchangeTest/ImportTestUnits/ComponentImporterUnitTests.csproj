@@ -119,6 +119,7 @@
     <Compile Include="ImportZipFixture.cs" />
     <Compile Include="MgaGateway.cs" />
     <Compile Include="ModelicaStructures.cs" />
+    <Compile Include="OrganizeByCategory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUnit.cs" />
@@ -127,6 +128,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\meta\DesignDataPackage\lib\csharp\XSD2CSharp\XSD2CSharp.csproj">
+      <Project>{B4B9DC90-2857-4C8E-9BDE-47EC4649122B}</Project>
+      <Name>XSD2CSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\src\AvmDdp\AvmDdp.csproj">
       <Project>{8880FD8F-C7DA-4491-908D-778B67057DA0}</Project>
       <Name>AvmDdp</Name>

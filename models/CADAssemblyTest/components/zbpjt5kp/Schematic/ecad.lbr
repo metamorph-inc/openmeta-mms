@@ -1,0 +1,59 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="R_0201" xmlns="eagle">
+          <description>&lt;B&gt;
+0201
+&lt;/B&gt; SMT inch-code chip resistor package&lt;P&gt;
+Derived from dimensions and tolerances
+from page 8 of the &lt;B&gt; &lt;A HREF="http://www.samsungsem.com/servlet/FileDownload?filename=productcatalog/pdf/Chip_Resistor.pdf"&gt;Samsung Thick Film Chip Resistor Catalog&lt;/A&gt;&lt;/B&gt;,
+for
+RC0603
+ general-purpose chip resistors.</description>
+          <smd name="P$1" x="-0.24" y="0" dx="0.28" dy="0.33" layer="1" />
+          <smd name="P$2" x="0.24" y="0" dx="0.28" dy="0.33" layer="1" />
+          <wire x1="-0.3" y1="0.35" x2="0.3" y2="0.35" width="0.127" layer="21" />
+          <wire x1="-0.3" y1="-0.35" x2="0.3" y2="-0.35" width="0.127" layer="21" />
+          <text x="-1.3" y="0.5" size="1.27" layer="25" font="vector" ratio="15">&gt;NAME</text>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="R">
+          <description xmlns="eagle">&lt;B&gt;Resistor&lt;/B&gt;</description>
+          <wire x1="-2.54" y1="0" x2="-2.159" y2="1.016" width="0.2032" layer="94" xmlns="eagle" />
+          <wire x1="-2.159" y1="1.016" x2="-1.524" y2="-1.016" width="0.2032" layer="94" xmlns="eagle" />
+          <wire x1="-1.524" y1="-1.016" x2="-0.889" y2="1.016" width="0.2032" layer="94" xmlns="eagle" />
+          <wire x1="-0.889" y1="1.016" x2="-0.254" y2="-1.016" width="0.2032" layer="94" xmlns="eagle" />
+          <wire x1="-0.254" y1="-1.016" x2="0.381" y2="1.016" width="0.2032" layer="94" xmlns="eagle" />
+          <wire x1="0.381" y1="1.016" x2="1.016" y2="-1.016" width="0.2032" layer="94" xmlns="eagle" />
+          <wire x1="1.016" y1="-1.016" x2="1.651" y2="1.016" width="0.2032" layer="94" xmlns="eagle" />
+          <wire x1="1.651" y1="1.016" x2="2.286" y2="-1.016" width="0.2032" layer="94" xmlns="eagle" />
+          <wire x1="2.286" y1="-1.016" x2="2.54" y2="0" width="0.2032" layer="94" xmlns="eagle" />
+          <text x="-3.81" y="1.4986" size="1.778" layer="95" xmlns="eagle">&gt;NAME</text>
+          <text x="-3.81" y="-3.302" size="1.778" layer="96" xmlns="eagle">&gt;VALUE</text>
+          <pin name="2" x="5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" rot="R180" xmlns="eagle" />
+          <pin name="1" x="-5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" xmlns="eagle" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="RESISTOR_0201" prefix="R">
+          <gates>
+            <gate name="G$1" symbol="R" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="R_0201" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="1" pad="P$1" />
+                <connect gate="G$1" pin="2" pad="P$2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

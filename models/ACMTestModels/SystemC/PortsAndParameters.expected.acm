@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="cbba316c-8c77-44e2-9ff0-4cf49f3fe6e2" Name="PortsAndParameters" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="systemc" xsi:type="q1:SystemCModel" Author="author" Notes="notes" XPosition="147" YPosition="84" xmlns="" ModuleName="modulename">
+    <SystemCPort ID="id-2312e6da-5a95-41de-86f7-2e9c2ae9299c" PortMap="" Name="Port3" Notes="instancenotes" Definition="definition" DataType="sc_logic" DataTypeDimension="4" Directionality="in" Function="reset_async" />
+    <SystemCPort ID="id-6b1f8c94-6810-4e4b-9ef9-7581e31189fe" PortMap="" Name="Port1" Notes="instancenotes" Definition="definition" DataType="bool" DataTypeDimension="2" Directionality="not_applicable" Function="normal" />
+    <SystemCPort ID="id-a0070f77-8e9f-44a6-a8a7-51310f10addf" PortMap="" Name="Port2" Notes="instancenotes" Definition="definition" DataType="sc_int" DataTypeDimension="3" Directionality="inout" Function="clock" />
+    <Parameter ParamPosition="2" ParamName="parametername2">
+      <Value ID="id-87510f51-7843-4825-a772-662e3a288cb5">
+        <ValueExpression xmlns:q2="avm" xsi:type="q2:FixedValue">
+          <Value>202</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+    <Parameter ParamPosition="1" ParamName="parametername1">
+      <Value ID="id-c90d6af4-84ec-4fc7-b7ef-23d2a487778c">
+        <ValueExpression xmlns:q3="avm" xsi:type="q3:FixedValue">
+          <Value>102</Value>
+        </ValueExpression>
+      </Value>
+    </Parameter>
+  </DomainModel>
+  <Classifications xmlns="" />
+</Component>

@@ -23,7 +23,7 @@ namespace ComponentImporterUnitTests
                 StartInfo =
                 {
                     FileName = path_PyExe,
-                    Arguments = path_PythonTestScript + " " + filePath,
+                    Arguments = "\"" + path_PythonTestScript + "\" " + filePath,
                     UseShellExecute = false,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
@@ -47,7 +47,7 @@ namespace ComponentImporterUnitTests
                 {
                     break;
                 }
-                procErrorOutput += buffer.ToString();
+                procErrorOutput += new string(buffer, 0, read);
             }
             process.WaitForExit();
 

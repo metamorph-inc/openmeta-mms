@@ -68,6 +68,9 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GME, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="GME.MGA, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -107,6 +110,7 @@
     <Compile Include="..\..\src\CommonFiles\MgaUtils.cs">
       <Link>MgaUtils.cs</Link>
     </Compile>
+    <Compile Include="CheckGMEVersion.cs" />
     <Compile Include="FormulaEvaluateRunner.cs" />
     <Compile Include="RollingWheelWithLib.cs" />
     <Compile Include="ElaboratorRunner.cs" />
@@ -117,6 +121,10 @@
     <ProjectReference Include="..\..\src\CyPhyElaborateCS\CyPhyElaborateCS.csproj">
       <Project>{ABDA448D-4C24-4E96-93D8-B6E64DBB2F51}</Project>
       <Name>CyPhyElaborateCS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\CyPhyGUIs\CyPhyGUIs.csproj">
+      <Project>{ab27ee78-6819-4b8c-b678-68bc4fbc99d2}</Project>
+      <Name>CyPhyGUIs</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

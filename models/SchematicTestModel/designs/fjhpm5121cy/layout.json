@@ -1,0 +1,343 @@
+﻿{
+  "boardWidth": 11.0,
+  "boardHeight": 11.0,
+  "numLayers": 2,
+  "boardTemplate": null,
+  "designRules": null,
+  "omitBoundary": null,
+  "packages": [
+    {
+      "name": "LED3",
+      "package": "LED",
+      "pkg_idx": 0,
+      "ComponentID": "{f7147e80-7571-47ae-a267-ee4bea38f2a3}",
+      "RelComponentID": null,
+      "width": 3.0,
+      "height": 2.0,
+      "koWidth": 3.0,
+      "koHeight": 2.0,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 4.0,
+      "y": 4.5,
+      "rotation": 0,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    },
+    {
+      "name": "LED4",
+      "package": "LED",
+      "pkg_idx": 1,
+      "ComponentID": "{366504b0-e49c-414e-ba99-2053d4cedcd7}",
+      "RelComponentID": null,
+      "width": 3.0,
+      "height": 2.0,
+      "koWidth": 3.0,
+      "koHeight": 2.0,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 0.5,
+      "y": 4.5,
+      "rotation": 0,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    },
+    {
+      "name": "LED1",
+      "package": "LED",
+      "pkg_idx": 2,
+      "ComponentID": "{1eedd3c5-9664-46e9-808a-4bd251d63139}",
+      "RelComponentID": null,
+      "width": 3.0,
+      "height": 2.0,
+      "koWidth": 3.0,
+      "koHeight": 2.0,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 7.6,
+      "y": 2.8,
+      "rotation": 0,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    },
+    {
+      "name": "LED2",
+      "package": "LED",
+      "pkg_idx": 3,
+      "ComponentID": "{d970f66d-cb20-43a6-9768-8c9429c3220e}",
+      "RelComponentID": null,
+      "width": 3.0,
+      "height": 2.0,
+      "koWidth": 3.0,
+      "koHeight": 2.0,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 4.0,
+      "y": 1.2,
+      "rotation": 0,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    }
+  ],
+  "signals": [
+    {
+      "name": "N$0",
+      "length": 12.093576013395049,
+      "bends": 11,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "ANODE",
+          "gate": "G$1",
+          "pad": "ANODE",
+          "package": "LED3"
+        },
+        {
+          "name": "ANODE",
+          "gate": "G$1",
+          "pad": "ANODE",
+          "package": "LED4"
+        },
+        {
+          "name": "ANODE",
+          "gate": "G$1",
+          "pad": "ANODE",
+          "package": "LED1"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 1.8288,
+          "y1": 5.5626,
+          "x2": 1.2954,
+          "y2": 5.5626,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 2.286,
+          "y1": 6.0198,
+          "x2": 1.8288,
+          "y2": 5.5626,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.2672,
+          "y1": 6.0198,
+          "x2": 2.286,
+          "y2": 6.0198,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.7244,
+          "y1": 5.5626,
+          "x2": 4.2672,
+          "y2": 6.0198,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 1.2954,
+          "y1": 5.5626,
+          "x2": 1.25,
+          "y2": 5.5,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.7244,
+          "y1": 5.5626,
+          "x2": 4.75,
+          "y2": 5.5,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 7.1628,
+          "y1": 5.5626,
+          "x2": 9.5296,
+          "y2": 6.3626,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.7056,
+          "y1": 6.0198,
+          "x2": 7.1628,
+          "y2": 5.5626,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 5.2578,
+          "y1": 6.0198,
+          "x2": 6.7056,
+          "y2": 6.0198,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.8006,
+          "y1": 5.5626,
+          "x2": 5.2578,
+          "y2": 6.0198,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 9.5296,
+          "y1": 6.3626,
+          "x2": 8.35,
+          "y2": 3.8,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.8006,
+          "y1": 5.5626,
+          "x2": 4.75,
+          "y2": 5.5,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        }
+      ],
+      "vias": [],
+      "polygons": []
+    },
+    {
+      "name": "N$1",
+      "length": 6.9293681013063866,
+      "bends": 8,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "CATHODE",
+          "gate": "G$1",
+          "pad": "CATHODE",
+          "package": "LED3"
+        },
+        {
+          "name": "CATHODE",
+          "gate": "G$1",
+          "pad": "CATHODE",
+          "package": "LED4"
+        },
+        {
+          "name": "CATHODE",
+          "gate": "G$1",
+          "pad": "CATHODE",
+          "package": "LED2"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 3.7338,
+          "y1": 5.4864,
+          "x2": 2.8194,
+          "y2": 5.4864,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.2672,
+          "y1": 4.953,
+          "x2": 3.7338,
+          "y2": 5.4864,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 5.715,
+          "y1": 4.953,
+          "x2": 4.2672,
+          "y2": 4.953,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.2484,
+          "y1": 5.4864,
+          "x2": 5.715,
+          "y2": 4.953,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 2.8194,
+          "y1": 5.4864,
+          "x2": 2.75,
+          "y2": 5.5,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.2484,
+          "y1": 5.4864,
+          "x2": 6.25,
+          "y2": 5.5,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.2484,
+          "y1": 4.4196,
+          "x2": 6.2484,
+          "y2": 2.2098,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 5.715,
+          "y1": 4.953,
+          "x2": 6.2484,
+          "y2": 4.4196,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.2484,
+          "y1": 2.2098,
+          "x2": 6.25,
+          "y2": 2.2,
+          "width": 0.0762,
+          "layer": 1,
+          "curve": 0.0
+        }
+      ],
+      "vias": [],
+      "polygons": []
+    }
+  ],
+  "constraints": null,
+  "border": null
+}

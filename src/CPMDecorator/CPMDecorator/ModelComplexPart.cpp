@@ -15,7 +15,7 @@
 #include <new>
 #include <io.h>
 
-#define MAXIMUM_ICON_SIZE_NONOVERLAPPING_WITH_PORT_LABELS 115
+#define MAXIMUM_ICON_SIZE_NONOVERLAPPING_WITH_PORT_LABELS 250
 static const int cornerRadius = 15;
 
 namespace Decor{
@@ -62,6 +62,11 @@ ModelComplexPart::ModelComplexPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorE
 	m_iLongestPortTextLength	(0),
 	m_bStretch(false)
 {
+	m_prominentAttrsCY = 0;
+	m_prominentAttrsNamesCX = 0;
+	m_prominentAttrsValuesCX = 0;
+	m_LeftPortsMaxLabelLength = 0;
+	m_RightPortsMaxLabelLength = 0;
 }
 
 ModelComplexPart::~ModelComplexPart()
@@ -144,7 +149,7 @@ feature_code ModelComplexPart::GetFeatures(void) const
 void ModelComplexPart::SetParam(const CString& strName, VARIANT vValue)
 {
 	CString pName(DEC_CONNECTED_PORTS_ONLY_PARAM);
-	if(pName == strName && vValue.boolVal == VARIANT_TRUE) 
+	if(pName == strName && vValue.boolVal == VARIANT_TRUE)
 		ReOrderConnectedOnlyPorts();
 	else
 	{
@@ -206,6 +211,10 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 		}
 	}
 
+	const_cast<ModelComplexPart*>(this)->m_prominentAttrsCY = 0;
+	const_cast<ModelComplexPart*>(this)->m_prominentAttrsNamesCX = 0;
+	const_cast<ModelComplexPart*>(this)->m_prominentAttrsValuesCX = 0;
+
 	int LeftPortsMaxLabelLength = 0;
 	int RightPortsMaxLabelLength = 0;
 	LOGFONT logFont;
@@ -230,13 +239,25 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 		RightPortsMaxLabelLength = max(cornerRadius, RightPortsMaxLabelLength);
 		const_cast<ModelComplexPart*>(this)->m_LeftPortsMaxLabelLength = LeftPortsMaxLabelLength;
 		const_cast<ModelComplexPart*>(this)->m_RightPortsMaxLabelLength = RightPortsMaxLabelLength;
+
+		for (auto prominentIt = prominentAttrs.begin(); prominentIt != prominentAttrs.end(); ++prominentIt)
+		{
+			Gdiplus::RectF prominentNameSize;
+			g.MeasureString(static_cast<const wchar_t*>(prominentIt->name + L": "), -1, &f, zero, &prominentNameSize);
+			Gdiplus::RectF prominentValueSize;
+			g.MeasureString(static_cast<const wchar_t*>(prominentIt->value), -1, &f, zero, &prominentValueSize);
+
+			const_cast<ModelComplexPart*>(this)->m_prominentAttrsCY += max(prominentNameSize.Height, prominentValueSize.Height);
+			const_cast<ModelComplexPart*>(this)->m_prominentAttrsNamesCX = max(m_prominentAttrsNamesCX, prominentNameSize.Width);
+			const_cast<ModelComplexPart*>(this)->m_prominentAttrsValuesCX = max(m_prominentAttrsValuesCX, prominentValueSize.Width);
+		}
 	}
 
 	long lWidth = 0;
 	if (m_bPortLabelInside) {
 		ASSERT(m_iLongestPortTextLength >= 0 && m_iLongestPortTextLength <= 1000);
 		ASSERT(m_iMaxPortTextLength >= 0 && m_iMaxPortTextLength <= 1000);
-		lWidth = LeftPortsMaxLabelLength + RightPortsMaxLabelLength + min(TypeableBitmapPart::GetPreferredSize().cx, MAXIMUM_ICON_SIZE_NONOVERLAPPING_WITH_PORT_LABELS);
+		lWidth = LeftPortsMaxLabelLength + RightPortsMaxLabelLength + max(m_prominentAttrsSize.cx, min(TypeableBitmapPart::GetPreferredSize().cx, MAXIMUM_ICON_SIZE_NONOVERLAPPING_WITH_PORT_LABELS));
 	} else {
 		lWidth = (8 * 3 + GAP_LABEL + WIDTH_PORT + GAP_XMODELPORT) * 2 + GAP_PORTLABEL;
 	}
@@ -251,8 +272,8 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 	}
 
 	CSize bitmapSize = TypeableBitmapPart::GetPreferredSize();
-	lWidth = max(lWidth, bitmapSize.cx);
-	lHeight = max(lHeight, bitmapSize.cy);
+	lWidth = max(lWidth, max(bitmapSize.cx, m_prominentAttrsSize.cx));
+	lHeight = max(lHeight, bitmapSize.cy + m_prominentAttrsSize.cy);
 	const_cast<Decor::ModelComplexPart*>(this)->resizeLogic.SetMinimumSize(CSize(lWidth, lHeight));
 	return CSize(max((long) WIDTH_MODEL, lWidth), max((long) HEIGHT_MODEL, lHeight));
 }
@@ -428,6 +449,37 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 		TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 
 		LoadPorts();
+
+		IMgaReferencePtr ref = pFCO.p;
+		if (ref && ref->Referred && wcscmp(static_cast<const wchar_t*>(ref->Referred->Meta->Name), L"Component") == 0)
+		{
+			IMgaModelPtr component = ref->Referred;
+			auto children = component->ChildFCOs;
+			for (int i = 1; i <= children->Count; i++)
+			{
+				IMgaFCOPtr child = children->Item[i];
+				if ((wcscmp(static_cast<const wchar_t*>(child->Meta->Name), L"Property") == 0 && child->GetBoolAttrByName(L"IsProminent") != VARIANT_FALSE)
+					|| wcscmp(static_cast<const wchar_t*>(child->Meta->Name), L"Parameter") == 0)
+				{
+					_bstr_t dispValue = child->GetStrAttrByName(L"Value");
+					dispValue += L" ";
+					IMgaReferencePtr childRef = child;
+					if (childRef && childRef->Referred)
+					{
+						if (wcscmp(childRef->Referred->Meta->Name, L"si_unit") == 0 || wcscmp(childRef->Referred->Meta->Name, L"conversion_based_unit") == 0
+							|| wcscmp(childRef->Referred->Meta->Name, L"derived_unit") == 0) {
+							//dispValue += childRef->Referred->Name;
+							dispValue += childRef->Referred->GetStrAttrByName(L"Symbol");
+						}
+					}
+					ProminentAttr prominentAttr;
+					prominentAttr.name = child->GetName();
+					prominentAttr.value = dispValue;
+					prominentAttrs.emplace_back(std::move(prominentAttr));
+				}
+			}
+			std::sort(prominentAttrs.begin(), prominentAttrs.end(), [](const ProminentAttr& l, const ProminentAttr& r) { return l.name < r.name; });
+		}
 	} else {
 		TypeableBitmapPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	}
@@ -656,10 +708,10 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& poi
 {
 	CComBSTR kind;
 	CComPtr<IMgaProject> proj;
-	if (m_spFCO && m_spMetaFCO && SUCCEEDED(m_spFCO->get_Project(&proj))) 
+	if (m_spFCO && m_spMetaFCO && SUCCEEDED(m_spFCO->get_Project(&proj)))
 	{
 		CComPtr<IMgaTerritory> terr;
-		proj->BeginTransactionInNewTerr(TRANSACTION_READ_ONLY, &terr);
+		proj->BeginTransactionInNewTerr(TRANSACTION_NON_NESTED, &terr);
 		if (SUCCEEDED(m_spFCO->get_Name(&kind)) && kind && kind == L"Data Sheet")
 		{
 			CComBSTR path;
@@ -681,10 +733,22 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& poi
 					docpath += path;
 
 					ShellExecuteW(0, L"open", docpath.c_str(), NULL, NULL, SW_SHOW);
-					
+
 					proj->CommitTransaction();
 					return true;
 				}
+			}
+		}
+
+		kind.Empty();
+		if (SUCCEEDED(m_spMetaFCO->get_Name(&kind)) && kind && (kind == L"ExcelWrapper" || kind == L"MATLABWrapper" || kind == L"PythonWrapper"))
+		{
+			CComDispatchDriver dd;
+			CComVariant variantFCO = (IDispatch*) m_spFCO.p;
+			if (SUCCEEDED(dd.CoCreateInstance(L"MGA.Interpreter.CyPhyPET", nullptr, CLSCTX_INPROC))) {
+				dd.Invoke1(L"DecoratorDoubleClick", &variantFCO);
+				proj->CommitTransaction();
+				return true;
 			}
 		}
 		// n.b. don't abort, it will Reset the view and destruct this
@@ -1379,6 +1443,8 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	CSize cExtentD = pDC->GetViewportExt();
 	CSize cExtentL = pDC->GetWindowExt();
+	int prominent_x = m_bmp.get() ? 0 : m_LeftPortsMaxLabelLength;
+
 	if (m_bStretch && m_bmp.get())
 	{
 		CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
@@ -1401,9 +1467,9 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 				Gdiplus::LinearGradientModeVertical);
 
 			Gdiplus::SolidBrush solidBrush(Gdiplus::Color(GetRValue(m_crBrush), GetGValue(m_crBrush), GetBValue(m_crBrush)));
-		
+
 			Gdiplus::Brush& brush = m_bGradientFill ? (Gdiplus::Brush&)linearGradientBrush : (Gdiplus::Brush&)solidBrush;
-		
+
 			Gdiplus::GraphicsPath path;
 			path.AddArc(location.left, location.top, cornerRadius, cornerRadius, 180, 90);
 			path.AddArc(location.right - cornerRadius, location.top, cornerRadius, cornerRadius, 270, 90);
@@ -1432,10 +1498,12 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 			{
 				x = x_margin;
 			}
+			x += max(0, m_prominentAttrsSize.cx - (int)m_bmp->GetWidth()) / 2;
+			prominent_x = x;
 
-			Gdiplus::Rect grect((int)cRect.left + x, (int)cRect.top + cRect.Height() / 2 - (int)m_bmp->GetHeight() / 2,
- 				width, height);
- 			gdip->DrawImage(m_bmp.get(), grect, 0, 0, (int)m_bmp->GetWidth(), (int)m_bmp->GetHeight(), Gdiplus::UnitPixel);
+			Gdiplus::Rect grect((int)cRect.left + x, (int)cRect.top + (cRect.Height() - m_prominentAttrsSize.cy) / 2 - (int)m_bmp->GetHeight() / 2,
+				width, height);
+			gdip->DrawImage(m_bmp.get(), grect, 0, 0, (int)m_bmp->GetWidth(), (int)m_bmp->GetHeight(), Gdiplus::UnitPixel);
 		}
 	}
 
@@ -1444,6 +1512,34 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 	}
 	for (std::vector<Decor::PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->Draw(pDC, gdip);
+	}
+	LOGFONTA logFont;
+	getFacilities().GetFont(FONT_PORT)->gdipFont->GetLogFontA(getFacilities().getGraphics(), &logFont);
+	HDC hdc = gdip->GetHDC();
+	Gdiplus::Font f(hdc, &logFont);
+	gdip->ReleaseHDC(hdc);
+	{
+		CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
+		cRect.BottomRight() -= CPoint(1, 1);
+		Gdiplus::PointF p;
+		p.X = (int)cRect.left + cRect.Width() / 2 - prominent_x / 2;
+		p.X = (int)cRect.left + prominent_x + m_prominentAttrsNamesCX;
+		p.X = (int)cRect.left + (cRect.Width() - m_LeftPortsMaxLabelLength - m_RightPortsMaxLabelLength) / 2 + m_LeftPortsMaxLabelLength + (m_prominentAttrsNamesCX - m_prominentAttrsValuesCX) / 2;
+		p.Y = (int)cRect.top + (cRect.Height() - m_prominentAttrsSize.cy) / 2 + (m_bmp.get() ? (int)m_bmp->GetHeight() : 0) / 2;
+		for (auto prominentIt = prominentAttrs.begin(); prominentIt != prominentAttrs.end(); ++prominentIt)
+		{
+			Gdiplus::SolidBrush blackBrush(Gdiplus::Color::Black);
+			Gdiplus::RectF prominentBox;
+			Gdiplus::StringFormat format;
+			format.SetAlignment(Gdiplus::StringAlignmentFar);
+			format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+			gdip->DrawString(static_cast<const wchar_t*>(prominentIt->name), -1, &f, p, &format, &blackBrush);
+
+			format.SetAlignment(Gdiplus::StringAlignmentNear);
+			format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+			gdip->DrawString(static_cast<const wchar_t*>(prominentIt->value), -1, &f, p, &format, &blackBrush);
+			p.Y += 11; // FIXME depends on font
+		}
 	}
 }
 
@@ -1459,7 +1555,7 @@ void ModelComplexPart::LoadPorts()
 	if(dispPortTxt.Length())
 	{
 		if(dispPortTxt == "false")
-			return;						// do not need ports for this reference: see Meta paradigm ReferTo connection showPorts attribute 
+			return;						// do not need ports for this reference: see Meta paradigm ReferTo connection showPorts attribute
 	}
 
 
@@ -1489,16 +1585,16 @@ void ModelComplexPart::LoadPorts()
 		bstrAspect.Empty();
 		COMTHROW( spParentAspect->get_Name(&bstrAspect));
 	}
-	
+
 	CComPtr<IMgaMetaAspect> spAspect;
 	HRESULT hr = spMetaModel->get_AspectByName(bstrAspect, &spAspect);
-	
+
 	if (hr == E_NOTFOUND) {
 	//	hr = spMetaModel->get_AspectByName(CComBSTR(L"All"), &spAspect);
 	}
 	if (hr == E_NOTFOUND) {
 		try {
-			// PETER: If the proper aspect cannot be found, use the first one			
+			// PETER: If the proper aspect cannot be found, use the first one
 			spAspect = NULL;
 			CComPtr<IMgaMetaAspects> spAspects;
 			COMTHROW(spMetaModel->get_Aspects(&spAspects));
@@ -1531,7 +1627,7 @@ void ModelComplexPart::LoadPorts()
 					CComBSTR child_kind_name;
 					COMTHROW(child_meta->get_Name(&child_kind_name));
 					// Only display Propertys and Parameters in ValueFlow, TBValueFlowAspect, All, TestBenchCompositionAspect, and DesignSpace aspects
-					bool display_port = 
+					bool display_port =
 						(child_kind_name != L"Property"
 						  && child_kind_name != L"Parameter"
 						  && child_kind_name != L"CADProperty"
@@ -1554,7 +1650,7 @@ void ModelComplexPart::LoadPorts()
 						&& child_kind_name == L"AggregatePort";
 
 					// In dynamics aspect, Components have only power ports
-					display_port &= 
+					display_port &=
 						( bstrParentAspect != L"Dynamics" || bstrParentAspect != L"All")
 						|| (   child_kind_name == L"HydraulicPowerPort"
 							|| child_kind_name == L"ThermalPowerPort"
@@ -1577,7 +1673,7 @@ void ModelComplexPart::LoadPorts()
 					{
 						display_port = false;
 					}
-					
+
 					if (display_port && m_spFCO->ParentModel && m_spFCO->ParentModel->Meta->Name == _bstr_t(L"Configurations"))
 					{
 						display_port = false;
@@ -1594,7 +1690,7 @@ void ModelComplexPart::LoadPorts()
 						// zolmol, in case regnodes are not present or invalid will throw otherwise
 						if(spPart->GetGmeAttrs(0, &lX, &lY) != S_OK)
 							ASSERT(0);
-						
+
 						//new code
 						CComBSTR bstr;
 						COMTHROW(spMetaPart->get_Name(&bstr));
@@ -1740,7 +1836,7 @@ void ModelComplexPart::ReOrderConnectedOnlyPorts()
 					CComPtr<IMgaFCO> parent = m_parentPart->GetFCO();
 					CComPtr<IMgaModel> grandparent;
 					COMTHROW(parent->get_ParentModel(&grandparent));
-	
+
 					if(l == 0)
 					{
 						needThisPort = (parent == m_spFCO && container == grandparent);
@@ -1757,7 +1853,7 @@ void ModelComplexPart::ReOrderConnectedOnlyPorts()
 			} MGACOLL_ITERATE_END;
 		}
 
-		if(needThisPort) 
+		if(needThisPort)
 		{
 			if ((*ii)->portPart->GetInnerPosition().x <= WIDTH_MODELSIDE ||
 				(*ii)->portPart->GetInnerPosition().x < lMax / 2)

@@ -66,6 +66,12 @@ def make():
             call_xsd2code(abspath_Xsd2Code, 'avm.manufacturing.xsd')
             call_xsd2code(abspath_Xsd2Code, 'avm.modelica.xsd')
             call_xsd2code(abspath_Xsd2Code, 'avm.cyber.xsd')
+            call_xsd2code(abspath_Xsd2Code, 'avm.schematic.xsd')
+            call_xsd2code(abspath_Xsd2Code, 'avm.schematic.eda.xsd')
+            call_xsd2code(abspath_Xsd2Code, 'avm.schematic.spice.xsd')
+            call_xsd2code(abspath_Xsd2Code, 'avm.systemc.xsd')
+            call_xsd2code(abspath_Xsd2Code, 'avm.rf.xsd')
+            call_xsd2code(abspath_Xsd2Code, 'avm.domainmapping.xsd')
             call_xsd2code(abspath_Xsd2Code, 'avm.adamsCar.xsd')
 
             for cs in glob.glob('*.cs'):
@@ -75,8 +81,7 @@ def make():
 
     print ""
     print "== Generate Python library =="
-    relpath_pyxbgen = os.path.join('..', '..', 'bin', 'Python27', 'Lib', 'site-packages', 'pyxb-1.2.3-py2.7.egg',
-                                   'EGG-INFO', 'scripts', 'pyxbgen')
+    relpath_pyxbgen = os.path.join('..', '..', 'bin', 'Python27', 'scripts', 'pyxbgen')
     abspath_pyxbgen = os.path.abspath(relpath_pyxbgen)
     abspath_python_interpreter = sys.executable
     with pushd('schema'):
@@ -92,23 +97,29 @@ def make():
     rmdir(os.path.abspath(os.path.join(path_pylib, 'avm')))
     rmdir(os.path.abspath(os.path.join(path_pylib, 'iFAB')))
 
-    os.makedirs(os.path.join(path_pylib, 'avm'))
-    os.makedirs(os.path.join(path_pylib, 'avm', 'modelica'))
-    os.makedirs(os.path.join(path_pylib, 'avm', 'cad'))
-    os.makedirs(os.path.join(path_pylib, 'avm', 'manufacturing'))
-    os.makedirs(os.path.join(path_pylib, 'avm', 'cyber'))
-    os.makedirs(os.path.join(path_pylib, 'avm', 'adamsCar'))
-    os.makedirs(os.path.join(path_pylib, 'iFAB'))
+    dict_pyfiles = {
+        '_avm.py': os.path.join(path_pylib, 'avm', '__init__.py'),
+        '_modelica.py': os.path.join(path_pylib, 'avm', 'modelica', '__init__.py'),
+        '_cad.py': os.path.join(path_pylib, 'avm', 'cad', '__init__.py'),
+        '_manufacturing.py': os.path.join(path_pylib, 'avm', 'manufacturing', '__init__.py'),
+        '_cyber.py': os.path.join(path_pylib, 'avm', 'cyber', '__init__.py'),
+        '_schematic.py': os.path.join(path_pylib, 'avm', 'schematic', '__init__.py'),
+        '_eda.py': os.path.join(path_pylib, 'avm', 'schematic', 'eda', '__init__.py'),
+        '_spice.py': os.path.join(path_pylib, 'avm', 'schematic', 'spice', '__init__.py'),
+        '_systemc.py': os.path.join(path_pylib, 'avm', 'systemc', '__init__.py'),
+        '_rf.py': os.path.join(path_pylib, 'avm', 'rf', '__init__.py'),
+        '_domainmapping.py': os.path.join(path_pylib, 'avm', 'domainmapping', '__init__.py'),
+        '_iFAB.py': os.path.join(path_pylib, 'iFAB', '__init__.py'),
+        '_adamsCar.py': os.path.join(path_pylib, 'avm', 'adamsCar', '__init__.py')
+    }
 
-    # Copy files to library structure
-    shutil.copy2(os.path.join(path_schema, '_avm.py'), os.path.join(path_pylib, 'avm', '__init__.py'))
-    shutil.copy2(os.path.join(path_schema, '_modelica.py'), os.path.join(path_pylib, 'avm', 'modelica', '__init__.py'))
-    shutil.copy2(os.path.join(path_schema, '_adamsCar.py'), os.path.join(path_pylib, 'avm', 'adamsCar', '__init__.py'))
-    shutil.copy2(os.path.join(path_schema, '_cad.py'), os.path.join(path_pylib, 'avm', 'cad', '__init__.py'))
-    shutil.copy2(os.path.join(path_schema, '_manufacturing.py'),
-                 os.path.join(path_pylib, 'avm', 'manufacturing', '__init__.py'))
-    shutil.copy2(os.path.join(path_schema, '_cyber.py'), os.path.join(path_pylib, 'avm', 'cyber', '__init__.py'))
-    shutil.copy2(os.path.join(path_schema, '_iFAB.py'), os.path.join(path_pylib, 'iFAB', '__init__.py'))
+    for k, v in dict_pyfiles.iteritems():
+        path = os.path.dirname(v)
+        if os.path.isdir(path) == False:
+            os.makedirs(path)
+
+        path_original = os.path.join(path_schema, k)
+        shutil.copy2(path_original, v)
 
     # Do find-and-replace to make names nicer
     abspath_schema = os.path.abspath(path_schema)
@@ -117,8 +128,9 @@ def make():
             py_path = os.path.join(root, filename)
             for line in fileinput.input(py_path, inplace=1):
                 newline = line.replace('import _avm', 'import avm') \
-                    .replace('import _modelica', 'import modelica') \
+                    .replace('import _modelica', 'import avm.modelica') \
                     .replace('import _iFAB', 'import iFAB') \
+                    .replace('import _schematic', 'import avm.schematic') \
                     .replace(abspath_schema.replace('\\', '\\\\') + '\\\\', '')
                 sys.stdout.write(newline)
 
@@ -127,7 +139,7 @@ def make():
     path_release = 'release'
     rmdir(os.path.abspath(path_release))
     os.makedirs(path_release)
-    os.chmod(path_release, 493)
+    os.chmod(path_release, 755)
 
     shutil.copytree(path_schema, os.path.join(path_release, 'schema'))
     for f in glob.glob(os.path.join(path_release, 'schema', '*.*')):

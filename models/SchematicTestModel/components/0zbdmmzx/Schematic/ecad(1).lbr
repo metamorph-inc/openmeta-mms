@@ -1,0 +1,74 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="INMP401" xmlns="eagle">
+          <description>Footprint of ADMP401 Microphone</description>
+          <circle x="0.915" y="0" radius="0.74" width="0.38" layer="1" />
+          <circle x="-1.705" y="0" radius="0.425" width="0" layer="31" />
+          <circle x="-1.705" y="1.2" radius="0.425" width="0" layer="31" />
+          <circle x="-1.705" y="-1.2" radius="0.425" width="0" layer="31" />
+          <circle x="1.705" y="1.27" radius="0.3245" width="0" layer="31" />
+          <circle x="1.705" y="-1.27" radius="0.3245" width="0" layer="31" />
+          <circle x="-1.72" y="-2.4146" radius="0.2032" width="0" layer="21" />
+          <wire x1="0.19" y1="0.05115" x2="0.86385" y2="0.725" width="0.2023" layer="31" curve="-90" cap="flat" />
+          <wire x1="-2.46" y1="1.96" x2="-2.48" y2="1.96" width="0.127" layer="21" />
+          <wire x1="-2.48" y1="1.96" x2="-2.48" y2="-1.99" width="0.1524" layer="21" />
+          <wire x1="-2.48" y1="-1.99" x2="2.46" y2="-1.99" width="0.1524" layer="21" />
+          <wire x1="2.46" y1="-1.99" x2="2.46" y2="-1.95" width="0.127" layer="21" />
+          <wire x1="2.46" y1="-1.95" x2="2.47" y2="-1.95" width="0.127" layer="21" />
+          <wire x1="2.47" y1="-1.95" x2="2.47" y2="1.97" width="0.1524" layer="21" />
+          <wire x1="2.47" y1="1.97" x2="-2.48" y2="1.97" width="0.1524" layer="21" />
+          <wire x1="-2.48" y1="1.97" x2="-2.48" y2="1.96" width="0.127" layer="21" />
+          <wire x1="0.86385" y1="-0.725" x2="0.19" y2="-0.05115" width="0.2023" layer="31" curve="-90" cap="flat" />
+          <wire x1="0.96615" y1="0.725" x2="1.64" y2="0.05115" width="0.2023" layer="31" curve="-90" cap="flat" />
+          <wire x1="1.64" y1="-0.05115" x2="0.96615" y2="-0.725" width="0.2023" layer="31" curve="-90" cap="flat" />
+          <smd name="1" x="-1.705" y="-1.2" dx="0.9" dy="0.9" layer="1" roundness="100" cream="no" />
+          <smd name="2" x="1.705" y="-1.27" dx="0.7" dy="0.7" layer="1" roundness="100" cream="no" />
+          <smd name="3" x="0.18" y="0" dx="0.1" dy="0.07" layer="1" roundness="100" rot="R180" stop="no" thermals="no" cream="no" />
+          <smd name="4" x="1.705" y="1.27" dx="0.7" dy="0.7" layer="1" roundness="100" cream="no" />
+          <smd name="5" x="-1.705" y="1.2" dx="0.9" dy="0.9" layer="1" roundness="100" cream="no" />
+          <smd name="6" x="-1.705" y="0" dx="0.9" dy="0.9" layer="1" roundness="100" cream="no" />
+          <text x="-2.895" y="2.845" size="1.27" layer="25" font="vector" ratio="15">&gt;NAME</text>
+          <hole x="0.915" y="0" drill="0.6" />
+          <circle x="0.915" y="0" radius="0.995" width="0" layer="29" />
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="INMP401">
+          <wire x1="-7.62" y1="-5.08" x2="-7.62" y2="5.08" width="0.254" layer="94" />
+          <wire x1="-7.62" y1="5.08" x2="7.62" y2="5.08" width="0.254" layer="94" />
+          <wire x1="7.62" y1="5.08" x2="7.62" y2="-5.08" width="0.254" layer="94" />
+          <wire x1="7.62" y1="-5.08" x2="-7.62" y2="-5.08" width="0.254" layer="94" />
+          <pin name="GND" x="0" y="-7.62" visible="off" length="short" direction="pas" rot="R90" />
+          <pin name="OUT" x="10.16" y="0" visible="off" length="short" direction="pas" rot="R180" />
+          <pin name="VDD" x="0" y="7.62" visible="off" length="short" direction="pas" rot="R270" />
+          <text x="-7.62" y="10.16" size="1.778" layer="96">&gt;VALUE</text>
+          <text x="-7.62" y="12.7" size="1.778" layer="95">&gt;NAME</text>
+          <text x="-2.032" y="3.556" size="1.27" layer="94">VDD\</text>
+          <text x="2.032" y="-3.302" size="1.27" layer="94" rot="R180">GND</text>
+          <text x="3.302" y="0" size="1.27" layer="94">OUT</text>
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="INMP401" prefix="MIC">
+          <gates>
+            <gate name="G$1" symbol="INMP401" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="INMP401" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="GND" pad="2 3 4 6" />
+                <connect gate="G$1" pin="OUT" pad="1" />
+                <connect gate="G$1" pin="VDD" pad="5" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

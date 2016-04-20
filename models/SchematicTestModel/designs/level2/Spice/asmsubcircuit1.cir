@@ -1,0 +1,4 @@
+* not a real opamp
+.SUBCKT OPAMPASM1      1   2
+RIN	1	2	41MEG
+.ENDS OPAMPASM1

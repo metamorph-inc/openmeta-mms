@@ -48,6 +48,8 @@
   <xsd:element ecore:ignore="true" name="Operand" type="avm:Operand"/>
   <xsd:element ecore:ignore="true" name="DoDDistributionStatement" type="avm:DoDDistributionStatement"/>
   <xsd:element ecore:ignore="true" name="ConnectorFeature" type="avm:ConnectorFeature"/>
+  <xsd:element ecore:ignore="true" name="ContainerFeature" type="avm:ContainerFeature"/>
+  <xsd:element ecore:ignore="true" name="DomainMapping" type="avm:DomainMapping"/>
   <xsd:element ecore:ignore="true" name="TestBench" type="avm:TestBench"/>
   <xsd:element ecore:ignore="true" name="TopLevelSystemUnderTest" type="avm:TopLevelSystemUnderTest"/>
   <xsd:element ecore:ignore="true" name="Parameter" type="avm:Parameter"/>
@@ -77,6 +79,7 @@
       <xsd:element ecore:name="AnalysisConstruct" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="AnalysisConstruct" type="avm:AnalysisConstruct"/>
       <xsd:element ecore:name="Supercedes" ecore:unique="true" maxOccurs="unbounded" minOccurs="0" name="Supercedes" nillable="true" type="xsd:string"/>
       <xsd:element ecore:name="Formula" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="Formula" type="avm:Formula"/>
+      <xsd:element ecore:name="DomainMapping" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="DomainMapping" type="avm:DomainMapping"/>
     </xsd:sequence>
     <xsd:attribute ecore:name="Name" name="Name" type="xsd:string"/>
     <xsd:attribute ecore:name="Version" name="Version" type="xsd:string"/>
@@ -90,6 +93,7 @@
     <xsd:attribute ecore:name="XPosition" name="XPosition" type="xsd:unsignedInt"/>
     <xsd:attribute ecore:name="YPosition" name="YPosition" type="xsd:unsignedInt"/>
     <xsd:attribute ecore:name="Name" name="Name" type="xsd:string"/>
+    <xsd:attribute ecore:name="ID" name="ID" type="xsd:ID"/>
   </xsd:complexType>
   <xsd:complexType abstract="true" name="Property">
     <xsd:attribute ecore:name="Name" name="Name" type="xsd:string"/>
@@ -321,6 +325,7 @@
     <xsd:sequence>
       <xsd:element ecore:name="RootContainer" ecore:resolveProxies="true" minOccurs="0" name="RootContainer" type="avm:Container"/>
       <xsd:element ecore:name="DomainFeature" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="DomainFeature" type="avm:DesignDomainFeature"/>
+      <xsd:element ecore:name="ResourceDependency" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="ResourceDependency" type="avm:Resource"/>
     </xsd:sequence>
     <xsd:attribute ecore:name="SchemaVersion" name="SchemaVersion" type="xsd:string"/>
     <xsd:attribute ecore:id="true" ecore:name="DesignID" name="DesignID" type="xsd:string"/>
@@ -336,10 +341,17 @@
       <xsd:element ecore:name="Connector" ecore:ordered="false" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="Connector" type="avm:Connector"/>
       <xsd:element ecore:name="JoinData" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="JoinData" type="iFAB:assemblyDetail"/>
       <xsd:element ecore:name="Formula" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="Formula" type="avm:Formula"/>
+      <xsd:element ecore:name="ContainerFeature" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="ContainerFeature" type="avm:ContainerFeature"/>
+      <xsd:element ecore:name="ResourceDependency" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="ResourceDependency" type="avm:Resource"/>
+      <xsd:element ecore:name="DomainModel" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="DomainModel" type="avm:DomainModel"/>
+      <xsd:element ecore:name="Resource" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="Resource" type="avm:Resource"/>
+      <xsd:element ecore:name="Classifications" ecore:unique="true" maxOccurs="unbounded" minOccurs="0" name="Classifications" nillable="true" type="xsd:anyURI"/>
     </xsd:sequence>
-    <xsd:attribute ecore:name="Name" name="Name" type="xsd:string"/>
     <xsd:attribute ecore:name="XPosition" name="XPosition" type="xsd:unsignedInt"/>
+    <xsd:attribute ecore:name="Name" name="Name" type="xsd:string"/>
     <xsd:attribute ecore:name="YPosition" name="YPosition" type="xsd:unsignedInt"/>
+    <xsd:attribute ecore:name="ID" name="ID" type="xsd:ID"/>
+    <xsd:attribute ecore:name="Description" name="Description" type="xsd:string"/>
   </xsd:complexType>
   <xsd:complexType name="Compound">
     <xsd:complexContent>
@@ -484,6 +496,8 @@
     </xsd:restriction>
   </xsd:simpleType>
   <xsd:complexType abstract="true" name="ConnectorFeature"/>
+  <xsd:complexType abstract="true" name="ContainerFeature"/>
+  <xsd:complexType abstract="true" name="DomainMapping"/>
   <xsd:complexType name="TestBench">
     <xsd:sequence>
       <xsd:element ecore:name="TopLevelSystemUnderTest" ecore:resolveProxies="true" minOccurs="0" name="TopLevelSystemUnderTest" type="avm:TopLevelSystemUnderTest"/>

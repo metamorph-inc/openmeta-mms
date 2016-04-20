@@ -634,6 +634,7 @@ except Exception as msg:
             InitializeComponent();
 
             this.toolStripStatusLabel = new SpringLabel();
+            this.toolStripStatusLabel.Text = "Loading";
             this.statusStrip1.Items.Add(this.toolStripStatusLabel);
 
             this.remoteServiceStatusForm = new RemoteServiceStatusForm();
@@ -779,6 +780,10 @@ except Exception as msg:
 
             if (settings.ContainsKey("-i"))
             {
+                this.toolStripStatusLabel.Text = "Configured for local execution.";
+                this.remoteStatusToolStripMenuItem.Enabled = false;
+                this.remoteStatusToolStripMenuItem.Visible = false;
+                this.configured.Set();
                 return;
             }
             Shown += new EventHandler(delegate(object o, EventArgs args)
@@ -1451,6 +1456,12 @@ finally:
 
         private DialogResult Configure(string password = null)
         {
+            // MOT-281 skip configuration dialog
+            server.JenkinsUrl = Properties.Settings.Default.VehicleForgeUri = "";
+            server.UserName = Properties.Settings.Default.UserID = "";
+            server.IsRemote = Properties.Settings.Default.RemoteExecution = false;
+            return DialogResult.OK;
+
             using (Configuration cfgRemote = new Configuration(Jenkins, password))
             {
                 this.toolStripStatusLabel.Text = "Configuring";
@@ -1560,7 +1571,6 @@ finally:
 
         private void JobManager_Load(object sender, EventArgs e)
         {
-            this.toolStripStatusLabel.Text = "Loading";
             ListViewHelper.EnableDoubleBuffer(this.lvJobQueue);
             ListViewHelper.EnableDoubleBuffer(this.remoteServiceStatusForm.lvRemoteNodes);
         }

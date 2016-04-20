@@ -1,0 +1,71 @@
+*----------------------------------------------------------------------
+* db9.cir
+*
+* SPICE Netlist: DB-9 connector
+*
+* Copyright(C) 2014 MetaMorph Inc.
+* http://metamorphsoftware.com/
+*
+*
+*----------------------------------------------------------------------
+* Assmann ADF09A-KG-TAXB3-R; Digikey AE10924-ND
+*----------------------------------------------------------------------
+*
+*
+*
+*
+*
+*      (PIN1)  R1 ___
+*         o------|___|----.
+*                         |
+*      (PIN2)  R2 ___     |
+*         o------|___|----+
+*                         |
+*      (PIN3)  R3 ___     |
+*         o------|___|----+
+*                         |
+*      (PIN4)  R4 ___     |
+*         o------|___|----+
+*                         |
+*      (PIN5)  R5 ___     |
+*         o------|___|----+
+*                         |
+*      (PIN6)  R6 ___     |
+*         o------|___|----+
+*                         |
+*      (PIN7)  R7 ___     |
+*         o------|___|----+
+*                         |
+*      (PIN8)  R8 ___     |
+*         o------|___|----+
+*                         |
+*      (PIN9)  R9 ___     |
+*         o------|___|----+
+*                         |
+*                         |
+*                      (0)|
+*                        ===
+*                        GND
+*
+*
+*
+* PIN1 - PIN 9: -- External pins
+*
+* R1 - R9: -- 10^12 ohms; Leakage resistance of mounted pin to ground.
+*
+*
+*----------------------------------------------------------------------
+.SUBCKT DB9 PIN1 PIN2 PIN3 PIN4 PIN5 PIN6 PIN7
++ PIN8 PIN9
+*
+R1  PIN1 0    10E12 ;R1 is the first resistor
+R2  PIN2 0    10E12 $ R2 is the second resistor
+R3  PIN3 0    10E12 // R3 is the third resistor
+R4  PIN4 0    10E12 ; R4 is the fourthg resistor
+R5  PIN5 0    10E12
+R6  PIN6 0    10E12
+R7  PIN7 0    10E12
+R8  PIN8 0    10E12
+R9  PIN9 0    10E12
+.ENDS DB9
+

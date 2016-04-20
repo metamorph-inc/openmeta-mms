@@ -1,0 +1,37 @@
+* C_MLCC
+* Simple generic SPICE model of a multi-layer ceramic chip (MLCC) capacitor.
+*
+*
+*----------------------------------------------
+*  External Pins:
+*
+*   1 ---||---- 2
+*
+*----------------------------------------------
+* 
+*  Equivalent circuit:
+*
+*                  ___
+*     .-----------|___|--------.
+*     |            R2          |
+*     |                        |
+*  (1)|   ___  (3) || (4) ___  |(2)
+*   o-o--|___|--o--||--o--UUU--o-o
+*         R1       ||     L1
+*                  C1
+* 
+* 
+*
+* C1 = "Capacitance"
+* R1 = "Rs" (Equivalent series resistance)
+* R2 = "Rp" (Parallel / leakage resistance)
+* L1 = "Ls" (Series / lead inductance)
+* 
+*----------------------------------------------
+*
+.SUBCKT C_MLCC 1 2 PARAMS: Rs=0.01 Ls=1.0n Rp=5e9 Capacitance=0.1u
+C1 3 4 {Capacitance}
+R1 1 3 {Rs}
+L1 4 2 {Ls}
+R2 1 2 {Rp}
+.ENDS C_MLCC

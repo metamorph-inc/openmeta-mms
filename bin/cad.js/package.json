@@ -1,0 +1,24 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "async": "~0.2.10",
+    "express": "3.4.0",
+    "gulp": "~3.5.2",
+    "jade": "*",
+    "libxmljs": "~0.8.1",
+    "mkdirp": "~0.3.5",
+    "optimist": "^0.6.1",
+    "request": "~2.33.0",
+    "underscore": "~1.5.2",
+    "xml2js": "~0.4.1"
+  },
+  "devDependencies": {
+    "gulp-requirejs": "~0.1.3",
+    "gulp-uglify": "~0.2.1"
+  }
+}

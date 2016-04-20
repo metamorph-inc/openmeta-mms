@@ -148,7 +148,7 @@ namespace ComponentInterchangeTest
         }
 
 
-        public static int runCyPhyComponentExporterCL(string mgaPath)
+        public static int runCyPhyComponentExporterCL(string mgaPath, string subfolder = null)
         {
             var testPath = Path.GetDirectoryName(mgaPath);
             var process = new Process
@@ -162,6 +162,10 @@ namespace ComponentInterchangeTest
 
             process.StartInfo.Arguments += " " + mgaPath;
             process.StartInfo.Arguments += " " + testPath;
+            if (!String.IsNullOrWhiteSpace(subfolder))
+            {
+                process.StartInfo.Arguments += " -f " + subfolder;
+            }
 
             return CommonFunctions.processCommon(process, true);
         }

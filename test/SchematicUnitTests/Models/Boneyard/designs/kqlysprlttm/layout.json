@@ -1,0 +1,486 @@
+{
+  "boardWidth": 6.0,
+  "boardHeight": 6.0,
+  "boardEdgeSpace": 0.1,
+  "interChipSpace": 0.2,
+  "numLayers": 2,
+  "boardTemplate": null,
+  "designRules": "MacroFab_2_Layer.dru",
+  "omitBoundary": null,
+  "packages": [
+    {
+      "name": "CT",
+      "package": "C_0805",
+      "pkg_idx": 0,
+      "ComponentID": "{ab5c831e-1542-4625-b9e0-8ec132a81350}",
+      "RelComponentID": null,
+      "width": 3.35,
+      "height": 1.55,
+      "koWidth": 3.35,
+      "koHeight": 1.55,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 1.325,
+      "y": 4.125,
+      "rotation": 2,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    },
+    {
+      "name": "LM555D",
+      "package": "S-PDSO-G8",
+      "pkg_idx": 1,
+      "ComponentID": "{67ecd984-a2c6-491b-8868-54199ce8c3f1}",
+      "RelComponentID": null,
+      "width": 5.3774,
+      "height": 3.4024,
+      "koWidth": 5.3774,
+      "koHeight": 3.4024,
+      "originX": -0.2,
+      "originY": 0.1,
+      "x": 0.1113,
+      "y": 0.3988,
+      "rotation": 0,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    },
+    {
+      "name": "RA",
+      "package": "R_0603",
+      "pkg_idx": 2,
+      "ComponentID": "{8e810c50-1b4a-4509-b8cb-0a629b751157}",
+      "RelComponentID": null,
+      "width": 2.4,
+      "height": 0.8,
+      "koWidth": 2.4,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 6.3,
+      "y": 0.3,
+      "rotation": 1,
+      "layer": 1,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    },
+    {
+      "name": "RB",
+      "package": "R_0603",
+      "pkg_idx": 3,
+      "ComponentID": "{e402ef37-e17e-4a11-89a8-f114a46edc53}",
+      "RelComponentID": null,
+      "width": 2.4,
+      "height": 0.8,
+      "koWidth": 2.4,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 6.3,
+      "y": 3.1,
+      "rotation": 1,
+      "layer": 1,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    }
+  ],
+  "signals": [
+    {
+      "name": "N$0",
+      "length": 9.5809684037912479,
+      "bends": 8,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "CT"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "RB"
+        },
+        {
+          "name": "THRESHOLD",
+          "gate": "G$1",
+          "pad": "P$6",
+          "package": "LM555D"
+        },
+        {
+          "name": "TRIGGER",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "LM555D"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 4.064,
+          "y1": 5.08,
+          "x2": 6.604,
+          "y2": 5.08,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.604,
+          "y1": 5.08,
+          "x2": 6.7,
+          "y2": 5.1,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.064,
+          "y1": 5.08,
+          "x2": 4.0,
+          "y2": 4.9,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.826,
+          "y1": 2.286,
+          "x2": 4.064,
+          "y2": 2.286,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.064,
+          "y1": 2.286,
+          "x2": 1.016,
+          "y2": 2.286,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 1.016,
+          "y1": 2.286,
+          "x2": 0.95,
+          "y2": 2.325,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.826,
+          "y1": 2.286,
+          "x2": 5.05,
+          "y2": 2.325,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.064,
+          "y1": 2.286,
+          "x2": 4.064,
+          "y2": 4.826,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.064,
+          "y1": 4.826,
+          "x2": 4.0,
+          "y2": 4.9,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        }
+      ],
+      "vias": [],
+      "polygons": []
+    },
+    {
+      "name": "N$1",
+      "length": 2.727562200847887,
+      "bends": 5,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "CT"
+        },
+        {
+          "name": "GND",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "LM555D"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 1.016,
+          "y1": 4.564,
+          "x2": 1.016,
+          "y2": 3.048,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 1.778,
+          "y1": 4.826,
+          "x2": 1.6,
+          "y2": 4.8,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 1.6,
+          "y1": 4.8,
+          "x2": 1.2,
+          "y2": 4.8,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 1.2,
+          "y1": 4.8,
+          "x2": 1.016,
+          "y2": 4.564,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 1.016,
+          "y1": 3.048,
+          "x2": 0.95,
+          "y2": 2.975,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 1.778,
+          "y1": 4.826,
+          "x2": 2.0,
+          "y2": 4.9,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        }
+      ],
+      "vias": [],
+      "polygons": []
+    },
+    {
+      "name": "N$2",
+      "length": 3.1089572074208296,
+      "bends": 6,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "DISCHARGE",
+          "gate": "G$1",
+          "pad": "P$7",
+          "package": "LM555D"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "RB"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "RA"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 6.704,
+          "y1": 3.302,
+          "x2": 6.704,
+          "y2": 2.54,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.704,
+          "y1": 2.54,
+          "x2": 6.7,
+          "y2": 2.3,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.704,
+          "y1": 3.302,
+          "x2": 6.7,
+          "y2": 3.5,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 5.05,
+          "y1": 1.675,
+          "x2": 5.675,
+          "y2": 1.675,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 5.675,
+          "y1": 1.675,
+          "x2": 6.1,
+          "y2": 2.1,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.1,
+          "y1": 2.1,
+          "x2": 6.5,
+          "y2": 2.1,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.5,
+          "y1": 2.1,
+          "x2": 6.7,
+          "y2": 2.3,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        }
+      ],
+      "vias": [],
+      "polygons": []
+    },
+    {
+      "name": "N$3",
+      "length": 5.8466925060627366,
+      "bends": 7,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "RESET",
+          "gate": "G$1",
+          "pad": "P$4",
+          "package": "LM555D"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "RA"
+        },
+        {
+          "name": "VCC",
+          "gate": "G$1",
+          "pad": "P$8",
+          "package": "LM555D"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 6.134,
+          "y1": 0.762,
+          "x2": 6.604,
+          "y2": 0.762,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 5.08,
+          "y1": 1.016,
+          "x2": 5.8,
+          "y2": 1.0,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 5.8,
+          "y1": 1.0,
+          "x2": 6.134,
+          "y2": 0.762,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 6.604,
+          "y1": 0.762,
+          "x2": 6.7,
+          "y2": 0.7,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 5.08,
+          "y1": 1.016,
+          "x2": 5.05,
+          "y2": 1.025,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.826,
+          "y1": 1.016,
+          "x2": 1.016,
+          "y2": 1.016,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 1.016,
+          "y1": 1.016,
+          "x2": 0.95,
+          "y2": 1.025,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        },
+        {
+          "x1": 4.826,
+          "y1": 1.016,
+          "x2": 5.05,
+          "y2": 1.025,
+          "width": 0.254,
+          "layer": 1,
+          "curve": 0.0
+        }
+      ],
+      "vias": [],
+      "polygons": []
+    }
+  ],
+  "constraints": null,
+  "border": null
+}

@@ -807,7 +807,7 @@ namespace CyPhy2Modelica_v2.Rules
             IEnumerable<CyPhy.ModelicaConnector> endPoints;
             visited.Add(startPoint);
             var parent = mmConnector.ParentContainer as CyPhy.Connector;
-            
+
             endPoints =
                 mmConnector
                 .DstConnections
@@ -1840,9 +1840,9 @@ namespace CyPhy2Modelica_v2.Rules
                     {
                         var feedback = new GenericRuleFeedback()
                         {
-                            FeedbackType = FeedbackTypes.Error,
+                            FeedbackType = FeedbackTypes.Warning,
                             Message = string.Format(
-                            "ModelicaConnector must have at least 1 connection! {0}.",
+                            "ModelicaConnector should have at least 1 connection! This ModelicaConnector will not be generated. {0}.",
                             modelicaConnector.Name)
                         };
 

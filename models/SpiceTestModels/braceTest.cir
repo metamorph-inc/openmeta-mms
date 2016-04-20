@@ -1,0 +1,4 @@
+* This component uses a brace expression parameter
+.SUBCKT brace_test 1 2	sum={1+2}
+R1 1  2 sum
+.ENDS brace_test

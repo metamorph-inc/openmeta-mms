@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="7ab88404-4cfd-4bbf-aa0d-aeeebf00c9b0" Name="OpAmp_1458D" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="modelica" xsi:type="q1:ModelicaModel" Author="Bapty" Notes="" Class="tonka.DualOpAmp" xmlns="">
+    <Connector ID="id-3863d68b-60b6-4eab-ba5a-49c78141463c" PortMap="" Name="aOut" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+    <Connector ID="id-03008f39-df88-4950-adb2-84fb48722778" PortMap="" Name="bOut" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+    <Connector ID="id-de621c34-52f7-43cf-a12d-d02a1dd3edcd" PortMap="" Name="VMax" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+    <Connector ID="id-5fe8e7e4-ec6f-4529-964a-d8035c5a99c0" PortMap="id-24a722d9-ff54-4cc8-b83a-6a79843af957" Name="VMin" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+    <Connector ID="id-1d76fe9a-11f9-4bb6-8dbb-5baa5ea76a41" PortMap="id-50a61b44-6c73-432a-a3c7-23f06e9eb92e" Name="bPos" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+    <Connector ID="id-df177d1b-4db3-49df-a5c7-54ac3a0f1733" PortMap="id-dbe2d7d1-359c-4a0d-b7c8-3d41bc3f8feb" Name="bNeg" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+    <Connector ID="id-a2262c6b-4758-414f-93ff-3a8ae94a6203" PortMap="id-f75c86b9-fb22-4ddf-8a59-345cc56d257f" Name="aPos" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+    <Connector ID="id-63877ce8-de8e-401b-a3eb-48c0a3a273fe" PortMap="id-f969807c-d7a5-4bfd-b609-e350b0cb34cd" Name="aNeg" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </DomainModel>
+  <DomainModel xmlns:q2="schematic" xsi:type="q2:SchematicModel" UsesResource="id-c5594c42-83c3-444f-a8de-51f089b7fbf0" Author="" Notes="" Device="D" Package="SO08" Library="linear" DeviceSet="*1458" xmlns="">
+    <Pin ID="id-e5068428-fcdf-4c33-a047-6749d00d8648" PortMap="" Name="OUT" Notes="" Definition="" Gate="B" SymbolLocationX="7.62" SymbolLocationY="0" SymbolRotation="R180" />
+    <Pin ID="id-b85766ec-62d4-439e-ae91-bbfe9a452295" PortMap="id-f58fcdb7-43cc-40b9-819c-b21fa515cb62" Name="V-" Notes="" Definition="" Gate="P" SymbolLocationX="0" SymbolLocationY="-7.62" SymbolRotation="R90" />
+    <Pin ID="id-2ad9f9a8-3aff-42d8-8aac-c154c10c6ffe" PortMap="id-30e7a06c-be41-4ad3-ac60-0526ca21912a" Name="+IN" Notes="" Definition="" Gate="B" SymbolLocationX="-7.62" SymbolLocationY="2.54" SymbolRotation="None" />
+    <Pin ID="id-a01c896e-deed-4ad6-a561-1ba50269f408" PortMap="id-79986bd4-7fac-4ae8-ae10-452204cda70c" Name="OUT" Notes="" Definition="" Gate="A" SymbolLocationX="7.62" SymbolLocationY="0" SymbolRotation="R180" />
+    <Pin ID="id-269e83c5-57ed-4bdd-aac1-3f403d57f638" PortMap="id-502b89dd-44ab-4fe0-9241-78f4cde7a7f3" Name="+IN" Notes="" Definition="" Gate="A" SymbolLocationX="-7.62" SymbolLocationY="2.54" SymbolRotation="None" />
+    <Pin ID="id-50c896d2-3679-413d-9d03-31f76c2a755f" PortMap="id-8c5633f4-9f1e-432d-844b-1b7e41db07c5" Name="V+" Notes="" Definition="" Gate="P" SymbolLocationX="0" SymbolLocationY="7.62" SymbolRotation="R270" />
+    <Pin ID="id-d1bea6ad-778f-41d0-abba-cd830ef936f8" PortMap="id-320140e3-6d1c-4324-846f-1e5b8af07443" Name="-IN" Notes="" Definition="" Gate="B" SymbolLocationX="-7.62" SymbolLocationY="-2.54" SymbolRotation="None" />
+    <Pin ID="id-5dd62bd4-0178-4ea3-8538-c54d5959e749" PortMap="id-60706146-8bc7-4fe7-82a3-8f010b4108a0" Name="-IN" Notes="" Definition="" Gate="A" SymbolLocationX="-7.62" SymbolLocationY="-2.54" SymbolRotation="None" />
+  </DomainModel>
+  <ResourceDependency Name="Res_D" Path="Schematic/ecad.lbr" Hash="" ID="id-c5594c42-83c3-444f-a8de-51f089b7fbf0" Notes="" xmlns="" />
+  <ResourceDependency Name="Res_Icon" Path="Images/Icon.png" Hash="" ID="id-c5594c42-83c3-444f-a8de-51f089b7fbf1" Notes="" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-7db592c5-4238-4d14-b10e-4d4817a3e48e" ApplyJoinData="" Notes="" Name="Vneg" Definition="" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-f58fcdb7-43cc-40b9-819c-b21fa515cb62" PortMap="" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q4="modelica" xsi:type="q4:Connector" ID="id-24a722d9-ff54-4cc8-b83a-6a79843af957" PortMap="" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-7e7a6195-0ca2-471c-8c2e-4f961bc6f670" ApplyJoinData="" Notes="" Name="Vpos" Definition="" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-8c5633f4-9f1e-432d-844b-1b7e41db07c5" PortMap="" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q6="modelica" xsi:type="q6:Connector" ID="id-3a1f06fd-1c2c-478c-bf21-86e19d0983f6" PortMap="id-de621c34-52f7-43cf-a12d-d02a1dd3edcd" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-37f88d5d-f6a0-4726-9c30-2191cc3b7374" ApplyJoinData="" Notes="" Name="BOut" Definition="" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-02171276-cce2-4301-92e8-4d7db12d9be9" PortMap="id-e5068428-fcdf-4c33-a047-6749d00d8648" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q8="modelica" xsi:type="q8:Connector" ID="id-51fe04cc-3e2e-4797-826a-fb028e64f4a5" PortMap="id-03008f39-df88-4950-adb2-84fb48722778" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-928f3e6a-2b48-411f-89bb-eaf69a4361ae" ApplyJoinData="" Notes="" Name="AOut" Definition="" xmlns="">
+    <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-79986bd4-7fac-4ae8-ae10-452204cda70c" PortMap="" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q10="modelica" xsi:type="q10:Connector" ID="id-d3b0511b-15e5-46c0-af1c-f99eba5b308f" PortMap="id-3863d68b-60b6-4eab-ba5a-49c78141463c" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-ba930468-c4da-41fb-b941-71baa810a661" ApplyJoinData="" Notes="" Name="BPos" Definition="" xmlns="">
+    <Role xmlns:q11="schematic" xsi:type="q11:Pin" ID="id-30e7a06c-be41-4ad3-ac60-0526ca21912a" PortMap="" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q12="modelica" xsi:type="q12:Connector" ID="id-50a61b44-6c73-432a-a3c7-23f06e9eb92e" PortMap="" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-e571100e-7917-43b8-accd-0758a9de1203" ApplyJoinData="" Notes="" Name="APos" Definition="" xmlns="">
+    <Role xmlns:q13="schematic" xsi:type="q13:Pin" ID="id-502b89dd-44ab-4fe0-9241-78f4cde7a7f3" PortMap="" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q14="modelica" xsi:type="q14:Connector" ID="id-f75c86b9-fb22-4ddf-8a59-345cc56d257f" PortMap="" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-964f6f91-52b7-4369-8a48-d95ede76d640" ApplyJoinData="" Notes="" Name="BNeg" Definition="" xmlns="">
+    <Role xmlns:q15="schematic" xsi:type="q15:Pin" ID="id-320140e3-6d1c-4324-846f-1e5b8af07443" PortMap="" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q16="modelica" xsi:type="q16:Connector" ID="id-dbe2d7d1-359c-4a0d-b7c8-3d41bc3f8feb" PortMap="" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-4f643b6d-d7b3-4ab0-92a1-a4e63034f8f7" ApplyJoinData="" Notes="" Name="ANeg" Definition="" xmlns="">
+    <Role xmlns:q17="schematic" xsi:type="q17:Pin" ID="id-60706146-8bc7-4fe7-82a3-8f010b4108a0" PortMap="" Name="Sch" Notes="" Definition="" Gate="" SymbolLocationX="" SymbolLocationY="" SymbolRotation="" />
+    <Role xmlns:q18="modelica" xsi:type="q18:Connector" ID="id-f969807c-d7a5-4bfd-b609-e350b0cb34cd" PortMap="" Name="pwr" Notes="" Definition="" Locator="" Class="Modelica.Electrical.Analog.Interfaces.Pin" />
+  </Connector>
+  <Classifications xmlns="">active.amplifiers</Classifications>
+</Component>

@@ -48,7 +48,7 @@ namespace DynamicsTeamTest.Projects
             Assert.True(File.Exists(mgaReference.Substring("MGA=".Length)));
         }
 
-        [Fact]
+        [Fact(Skip="this analysis_tool was removed")]
         [Trait("Model", "MSDVerification")]
         [Trait("CyPhy2Modelica", "MSDVerification")]
         public void HybridSal_MSD()
@@ -62,7 +62,7 @@ namespace DynamicsTeamTest.Projects
             Assert.True(result, "CyPhy2Modelica_v2 failed during interpretation with verification workflow.");
         }
 
-        [Fact]
+        [Fact(Skip="this analysis_tool was removed")]
         [Trait("Model", "MSDVerification")]
         [Trait("CyPhy2Modelica", "MSDVerification")]
         public void QR_MSD()

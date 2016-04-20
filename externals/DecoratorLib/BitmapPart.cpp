@@ -170,7 +170,7 @@ void BitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPa
 	m_bRoundCornerRadius = 9;
 	it = preferences.find(PREF_ROUNDCORNERRADIUS);
 	if (it != preferences.end()) {
-		m_bRoundCornerRadius = it->second.uValue.bValue;
+		m_bRoundCornerRadius = it->second.uValue.lValue;
 	} else {
 		getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRADIUS, m_bRoundCornerRadius, false);
 	}

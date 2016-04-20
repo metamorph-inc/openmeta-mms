@@ -90,6 +90,10 @@
       <Project>{B4B9DC90-2857-4C8E-9BDE-47EC4649122B}</Project>
       <Name>XSD2CSharp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ComponentLibraryManager\ComponentLibraryManager.csproj">
+      <Project>{0B1EAA2B-5B37-4D27-868E-60CF820B3273}</Project>
+      <Name>ComponentLibraryManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CyPhy2ComponentModel\CyPhy2ComponentModel.csproj">
       <Project>{E6267D3D-FDAA-4173-A5E7-87B23B46F883}</Project>
       <Name>CyPhy2ComponentModel</Name>

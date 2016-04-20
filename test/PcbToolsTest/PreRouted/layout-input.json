@@ -1,0 +1,266 @@
+{
+  "boardWidth": 18,
+  "boardHeight": 40.5,
+  "numLayers": 2,
+  "packages": [
+    {
+      "name": "LedDriver",
+      "package": "__spaceClaim__",
+      "pkg_idx": 0,
+      "ComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}",
+      "width": 8.0,
+      "height": 4.5,
+      "x": 0.0,
+      "y": 0.0
+    },
+    {
+      "name": "LedDriver",
+      "package": "__spaceClaim__",
+      "pkg_idx": 1,
+      "ComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}.1",
+      "width": 4.0,
+      "height": 2.0,
+      "x": 0.0,
+      "y": 4.8,
+      "constraints": [
+        {
+          "x": 0.0,
+          "y": 4.8,
+          "pkg_idx": 0,
+          "type": "relative-pkg",
+          "x1": 1.0,
+          "x2": 0.0,
+          "x3": 1.0,
+          "y1": 3.8,
+          "y2": 4.8,
+          "y3": 3.8
+        }
+      ]
+    },
+    {
+      "name": "LD11",
+      "package": "0603-LED",
+      "pkg_idx": 2,
+      "ComponentID": "{f138b56d-c39b-4124-8433-cf9e4a3b81d5}{c329dd4b-9008-44be-b1e6-e358272ff7be}",
+      "width": 3.2,
+      "height": 2.0
+    },
+    {
+      "name": "RdvC",
+      "package": "R0603",
+      "pkg_idx": 3,
+      "ComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}{c36c666e-1acb-4ce9-a0c0-145c93532886}",
+      "RelComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}",
+      "width": 2.7,
+      "height": 1.1,
+      "x": 4.4499999999999993,
+      "y": 0.44999999999999996,
+      "rotation": 2,
+      "constraints": [
+        {
+          "x": "0.2:17.8",
+          "y": "0.2:24.0",
+          "type": "range"
+        }
+      ],
+      "doNotPlace": true
+    },
+    {
+      "name": "RlimC",
+      "package": "R0603",
+      "pkg_idx": 4,
+      "ComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}{03679486-0dd2-4453-9985-66e0a29593eb}",
+      "RelComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}",
+      "width": 2.7,
+      "height": 1.1,
+      "x": 4.4499999999999993,
+      "y": 2.45,
+      "rotation": 0,
+      "constraints": [
+        {
+          "x": "0.2:17.8",
+          "y": "0.2:24.0",
+          "type": "range"
+        }
+      ],
+      "doNotPlace": true
+    },
+    {
+      "name": "TC",
+      "package": "SOT143",
+      "pkg_idx": 5,
+      "ComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}{71c245c1-6b6a-4db0-a33a-9dd4076be7a3}",
+      "RelComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}",
+      "width": 2.9,
+      "height": 3.64,
+      "x": 0.17999999999999994,
+      "y": 0.35000000000000009,
+      "rotation": 1,
+      "constraints": [
+        {
+          "x": "0.2:17.8",
+          "y": "0.2:24.0",
+          "type": "range"
+        }
+      ],
+      "doNotPlace": true
+    },
+    {
+      "name": "RdrvR",
+      "package": "R0603",
+      "pkg_idx": 6,
+      "ComponentID": "{c02f20f3-256c-499f-9ed9-377f94f5499f}{ef442f66-8a40-4f0e-9346-5a4524e869fd}",
+      "width": 2.7,
+      "height": 1.1,
+      "constraints": [
+        {
+          "x": "0.2:17.8",
+          "y": "0.2:24.0",
+          "type": "range"
+        }
+      ]
+    },
+    {
+      "name": "TR",
+      "package": "SOT143",
+      "pkg_idx": 7,
+      "ComponentID": "{c02f20f3-256c-499f-9ed9-377f94f5499f}{61b4549a-9b3c-47b2-9fc5-7e488c16649e}",
+      "width": 2.9,
+      "height": 3.64,
+      "constraints": [
+        {
+          "x": "0.2:17.8",
+          "y": "0.2:24.0",
+          "type": "range"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "N$0",
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "LD11"
+        },
+        {
+          "name": "C",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "TR"
+        }
+      ]
+    },
+    {
+      "name": "N$1",
+      "pins": [
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "LD11"
+        },
+        {
+          "name": "E",
+          "gate": "G$1",
+          "pad": "3",
+          "package": "TC"
+        }
+      ]
+    },
+    {
+      "name": "N$2",
+      "RelComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}",
+      "pins": [
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "RDVC"
+        },
+        {
+          "name": "B",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "TC"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 4.9,
+          "y1": 1.05,
+          "x2": 4.95,
+          "y2": 1.0,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 3.1,
+          "y1": 1.05,
+          "x2": 4.9,
+          "y2": 1.05,
+          "width": 0.0762,
+          "layer": 1
+        }
+      ],
+      "vias": []
+    },
+    {
+      "name": "N$3",
+      "RelComponentID": "{9f64788b-cd5a-4ced-88bd-64cffe87387c}",
+      "pins": [
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "RLIMC"
+        },
+        {
+          "name": "C",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "TC"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 4.7,
+          "y1": 2.75,
+          "x2": 4.95,
+          "y2": 3.0,
+          "width": 0.0762,
+          "layer": 1
+        },
+        {
+          "x1": 3.1,
+          "y1": 2.75,
+          "x2": 4.7,
+          "y2": 2.75,
+          "width": 0.0762,
+          "layer": 1
+        }
+      ],
+      "vias": []
+    },
+    {
+      "name": "N$4",
+      "pins": [
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "RDRVR"
+        },
+        {
+          "name": "B",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "TR"
+        }
+      ]
+    }
+  ]
+}

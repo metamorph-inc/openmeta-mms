@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="e5a26a82-dd18-4346-9ac3-f8635eeab9af" Name="SDIO_Breakout" Version="" xmlns="avm">
+  <Connector ConnectorComposition="" ID="id-4640d37d-66d9-4d6f-8144-7e13cee010e6" ApplyJoinData="" Notes="" Name="SD_Data3" Definition="" YPosition="357" XPosition="147" xmlns="">
+    <Role xmlns:q1="schematic" xsi:type="q1:Pin" ID="id-9a3994da-3c1a-4a82-92c7-35c8c71394da" PortMap="id-912fb187-3169-454f-b4ea-884e4fb65f79" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-07ec04ec-1df7-4099-a328-0ed04d98b76f" ApplyJoinData="" Notes="" Name="SD_Clk" Definition="" YPosition="469" XPosition="147" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-607022d0-5d42-4a9f-b98d-984e0e8ba7df" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-15c2426c-4c91-4ee0-9cd3-6ca2034ee519" ApplyJoinData="" Notes="" Name="SDIO" Definition="" YPosition="322" XPosition="840" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-b95d26a1-91c4-4cf2-bc3d-582cf2cb9f92" PortMap="id-f5fdb7a2-f878-4abe-89e5-30ac647dfa09" Notes="" Definition="" Name="Data0" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-fce8fe08-78ea-41fa-b201-7003b889cd5f" PortMap="" Notes="" Definition="" Name="Cmd" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-45d28fb3-1e67-4db4-8e43-c2e680e86f78" PortMap="id-9b3210d9-4a57-481b-ad29-de7657ca6813" Notes="" Definition="" Name="Data2" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-912fb187-3169-454f-b4ea-884e4fb65f79" PortMap="" Notes="" Definition="" Name="Data3" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-ad38dd95-ba07-4331-9a46-0ec7946dd8c7" PortMap="id-607022d0-5d42-4a9f-b98d-984e0e8ba7df" Notes="" Definition="" Name="Clk" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-a8ec2099-cc17-4cd1-88f6-fb1f70d1ab23" PortMap="" Notes="" Definition="" Name="Data1" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-0b3ee682-fb18-4bf2-9362-fea798314aaa" ApplyJoinData="" Notes="" Name="SD_Cmd" Definition="" YPosition="574" XPosition="147" xmlns="">
+    <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-d3b40d47-7ece-43f7-84be-19512300c7a0" PortMap="id-fce8fe08-78ea-41fa-b201-7003b889cd5f" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-5ac19cdc-d57e-4608-beac-3e19dc1f86b7" ApplyJoinData="" Notes="" Name="SD_Data1" Definition="" YPosition="147" XPosition="147" xmlns="">
+    <Role xmlns:q10="schematic" xsi:type="q10:Pin" ID="id-f48e406b-4be6-4558-aefc-6acf69cd7a19" PortMap="id-a8ec2099-cc17-4cd1-88f6-fb1f70d1ab23" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-107a0da5-d795-4a0b-aeed-719b12112932" ApplyJoinData="" Notes="" Name="SD_Data0" Definition="" YPosition="42" XPosition="147" xmlns="">
+    <Role xmlns:q11="schematic" xsi:type="q11:Pin" ID="id-f5fdb7a2-f878-4abe-89e5-30ac647dfa09" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-33a88d7b-2de2-4a75-a9c4-d58e88960e20" ApplyJoinData="" Notes="" Name="SD_Data2" Definition="" YPosition="252" XPosition="147" xmlns="">
+    <Role xmlns:q12="schematic" xsi:type="q12:Pin" ID="id-9b3210d9-4a57-481b-ad29-de7657ca6813" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">model_utilities.breakout_components</Classifications>
+</Component>

@@ -1,0 +1,48 @@
+{
+   "Artifacts" : [],
+   "CopyTestResults" : false,
+   "Created" : "2014-04-24T19:49:06.4225819Z",
+   "DesignID" : "{2ff3c614-a8b3-43d3-a011-32358da5eb3e}",
+   "DesignName" : "DevConModuleDesign",
+   "Metrics" : [],
+   "Parameters" : [
+      {
+         "Description" : "",
+         "DisplayedName" : null,
+         "GMEID" : "id-0067-00000362",
+         "ID" : "cedc588f-5343-4053-919c-ab983f1e2e5d",
+         "Name" : "boardHeight",
+         "Range" : "-inf..inf",
+         "Unit" : "",
+         "Value" : "40.5"
+      },
+      {
+         "Description" : "",
+         "DisplayedName" : null,
+         "GMEID" : "id-0067-00000361",
+         "ID" : "feae7176-a866-4090-9d45-522d41578446",
+         "Name" : "boardWidth",
+         "Range" : "-inf..inf",
+         "Unit" : "",
+         "Value" : "36"
+      }
+   ],
+   "Status" : "OK",
+   "Steps" : [
+      {
+         "Description" : null,
+         "ExecutionCompletionTimestamp" : "2014-04-24T14:49:23.404000",
+         "ExecutionStartTimestamp" : "2014-04-24T14:49:17.695000",
+         "Invocation" : "chipFit.bat",
+         "LogFile" : "log/log2014-04-24T144917.695000.log",
+         "Parameters" : [],
+         "PostProcess" : null,
+         "PreProcess" : null,
+         "Status" : "OK",
+         "Type" : null
+      }
+   ],
+   "TestBench" : "AA1_ChipFit_TestBench",
+   "TierLevel" : 0,
+   "VisualizationArtifacts" : []
+}

@@ -92,8 +92,8 @@ namespace DynamicsTeamTest.Projects
 
         [Fact]
         [Trait("Model", "MSD_FailChecker")]
-        [Trait("CheckerShouldFail", "MSD_FailChecker")]
-        public void Fail_ModelicaConnector_Testbench_FloatingModelicaConnector_damper()
+        [Trait("CheckerShouldPass", "MSD_FailChecker")]
+        public void Pass_ModelicaConnector_Testbench_FloatingModelicaConnector_damper()
         {
             string outputDir = "ModelicaConnector_Testbench_FloatingModelicaConnector_damper";
             string testBenchPath = "/@Test Benches|kind=Testing|relpos=0/@RulesFailures|kind=Testing|relpos=0/@ModelicaConnector|kind=Testing|relpos=0/@Testbench_FloatingModelicaConnector_damper|kind=TestBench|relpos=0";
@@ -101,13 +101,13 @@ namespace DynamicsTeamTest.Projects
             Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
             bool result = CyPhy2ModelicaRunner.Run(outputDir, mgaFile, testBenchPath);
 
-            Assert.False(result, "CyPhy2Modelica_v2 should have failed, but did not.");
+            Assert.True(result, "CyPhy2Modelica_v2 should have succeeded, but did not.");
         }
 
         [Fact]
         [Trait("Model", "MSD_FailChecker")]
-        [Trait("CheckerShouldFail", "MSD_FailChecker")]
-        public void Fail_ModelicaConnector_Testbench_FloatingModelicaConnector_CA()
+        [Trait("CheckerShouldPass", "MSD_FailChecker")]
+        public void Pass_ModelicaConnector_Testbench_FloatingModelicaConnector_CA()
         {
             string outputDir = "ModelicaConnector_Testbench_FloatingModelicaConnector_CA";
             string testBenchPath = "/@Test Benches|kind=Testing|relpos=0/@RulesFailures|kind=Testing|relpos=0/@ModelicaConnector|kind=Testing|relpos=0/@Testbench_FloatingModelicaConnector_CA|kind=TestBench|relpos=0";
@@ -115,13 +115,13 @@ namespace DynamicsTeamTest.Projects
             Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
             bool result = CyPhy2ModelicaRunner.Run(outputDir, mgaFile, testBenchPath);
 
-            Assert.False(result, "CyPhy2Modelica_v2 should have failed, but did not.");
+            Assert.True(result, "CyPhy2Modelica_v2 should have succeeded, but did not.");
         }
 
         [Fact]
         [Trait("Model", "MSD_FailChecker")]
-        [Trait("CheckerShouldFail", "MSD_FailChecker")]
-        public void Fail_ModelicaConnector_Testbench_FloatingModelicaConnector_TestComponent()
+        [Trait("CheckerShouldPass", "MSD_FailChecker")]
+        public void Pass_ModelicaConnector_Testbench_FloatingModelicaConnector_TestComponent()
         {
             string outputDir = "ModelicaConnector_Testbench_FloatingModelicaConnector_TestComponent";
             string testBenchPath = "/@Test Benches|kind=Testing|relpos=0/@RulesFailures|kind=Testing|relpos=0/@ModelicaConnector|kind=Testing|relpos=0/@Testbench_FloatingModelicaConnector_TestComponent|kind=TestBench|relpos=0";
@@ -129,7 +129,7 @@ namespace DynamicsTeamTest.Projects
             Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
             bool result = CyPhy2ModelicaRunner.Run(outputDir, mgaFile, testBenchPath);
 
-            Assert.False(result, "CyPhy2Modelica_v2 should have failed, but did not.");
+            Assert.True(result, "CyPhy2Modelica_v2 should have succeeded, but did not.");
         }
 
         [Fact]

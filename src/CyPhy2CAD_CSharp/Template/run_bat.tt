@@ -6,6 +6,8 @@ REM	    PROE_ISIS_EXTENSIONS	// typically set to C:\Program Files\META\Proe ISIS
 REM
 REM	See "C:\Program Files\META\Proe ISIS Extensions\0Readme - CreateAssembly.txt" for the complete setup instructions.
 
+setlocal EnableDelayedExpansion
+
 set WORKING_DIR="."
 set ERROR_CODE=0
 
@@ -17,7 +19,7 @@ set CADPython=%MetaPath%\bin\CAD
 if exist "%MetaPath%\src\CADAssembler\Python" set CADPython=%MetaPath%\src\CADAssembler\Python
 
 if exist TestBench_PreProcess.cmd (
-cmd /c TestBench_PreProcess.cmd
+cmd /c TestBench_PreProcess.cmd || exit /b !ERRORLEVEL!
 )
 
 set ERROR_CODE=%ERRORLEVEL%
@@ -26,7 +28,7 @@ set ERROR_MSG="Error from runCADJob.bat: Encountered error during execution of T
 goto :ERROR_SECTION
 )
 
-"%MetaPath%\bin\Python27\Scripts\Python.exe" "%MetaPath%\bin\CAD\CADJobDriver.py" -assembler <#=Assembler#> -mesher <#=Mesher#> -analyzer <#=Analyzer#> <# if (Mode!=null) { #>-mode <#=Mode#> <#}#>
+"%MetaPath%\bin\Python27\Scripts\Python.exe" "%MetaPath%\bin\CAD\CADJobDriver.py" -assembler <#=Assembler#> -mesher <#=Mesher#> -analyzer <#=Analyzer#> <# if (Mode!=null) { #>-mode <#=Mode#> <#}#> || exit /b !ERRORLEVEL!
 
 <# if (CallDomainTool!=null) { #>
 
@@ -68,7 +70,7 @@ goto :ERROR_SECTION
 )
 
 if exist TestBench_PostProcess.cmd (
-cmd /c TestBench_PostProcess.cmd
+cmd /c TestBench_PostProcess.cmd || exit /b !ERRORLEVEL!
 )
 
 set ERROR_CODE=%ERRORLEVEL%

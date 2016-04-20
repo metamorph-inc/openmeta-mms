@@ -1,0 +1,38 @@
+<!-- to add a package: add a gen_dir_wxi.gen_dir_from_vc call in build_msi.py, add 2x below -->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="dir_bin_Python27_Lib_site_packages" />
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir_bin_Python27_Lib_site_packages">
+            <Directory Id="chipfit_display" Name="chipfit_display" />
+            <Directory Id="layout_json" Name="layout_json" />
+            <Directory Id="testbenchexecutor" Name="testbenchexecutor" />
+            <Directory Id="run_mdao" Name="run_mdao" />
+            <Directory Id="SpiceVisualizer" Name="SpiceVisualizer" />
+          <Directory Id="spice_viewer" Name="spice_viewer" />
+          <Directory Id="cam2gerber" Name="cam2gerber" />
+          <Directory Id="get_bom_with_eagle_xref" Name="get_bom_with_eagle_xref" />
+          <Directory Id="runCentroidUlp" Name="runCentroidUlp" />
+          <Directory Id="runEagleUlp" Name="runEagleUlp" />
+          <Directory Id="runDrc" Name="runDrc" />
+		  <Directory Id="CADVisualizer" Name="CADVisualizer" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="tonka_python">
+            <ComponentGroupRef Id="chipfit_display" />
+            <ComponentGroupRef Id="layout_json" />
+            <ComponentGroupRef Id="testbenchexecutor" />
+            <ComponentGroupRef Id="run_mdao" />
+          <ComponentGroupRef Id="spice_viewer" />
+          <ComponentGroupRef Id="cam2gerber" />
+          <ComponentGroupRef Id="get_bom_with_eagle_xref" />
+          <ComponentGroupRef Id="runCentroidUlp" />
+          <ComponentGroupRef Id="runEagleUlp" />
+          <ComponentGroupRef Id="runDrc" />
+		  <ComponentGroupRef Id="CADVisualizer" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

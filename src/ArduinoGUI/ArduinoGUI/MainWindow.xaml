@@ -1,0 +1,22 @@
+﻿<Window x:Class="ArduinoGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Arduino GUI" xmlns:my="clr-namespace:ArduinoControls;assembly=ArduinoControls" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" ResizeMode="CanResizeWithGrip" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Width="900" Height="290" MaxWidth="900" MinWidth="900" HorizontalContentAlignment="Stretch" MinHeight="290">
+    <Grid>
+        <TextBox HorizontalAlignment="Stretch" Margin="0,90,0,10" Name="logBox" VerticalAlignment="Stretch" Width="865" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap" Text="" FontWeight="Bold" FontSize="14" FontFamily="Consolas" Background="#DE000000" Foreground="Lime" BorderThickness="3" VerticalScrollBarVisibility="Auto" TextChanged="logBoxChangedEventHandler" VerticalContentAlignment="Stretch" />
+        <my:LED HorizontalAlignment="Left" Margin="8,12,0,0" Name="LED0" VerticalAlignment="Top" Height="56" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="69,12,0,0" Name="LED1" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="130,12,0,0" Name="LED2" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="191,12,0,0" Name="LED3" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="252,12,0,0" Name="LED4" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="313,12,0,0" Name="LED5" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="374,12,0,0" Name="LED6" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="435,12,0,0" Name="LED7" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="496,12,0,0" Name="LED8" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="557,12,0,0" Name="LED9" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="618,12,0,0" Name="LED10" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="679,12,0,0" Name="LED11" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="740,12,0,0" Name="LED12" VerticalAlignment="Top" Width="55" ColorOff="Gray" ColorOn="Red" />
+        <my:LED Height="56" HorizontalAlignment="Left" Margin="801,12,0,0" Name="LED13" VerticalAlignment="Top" Width="55"  ColorOff="Gray" ColorOn="Red"/>
+    </Grid>
+</Window>

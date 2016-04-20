@@ -34,9 +34,7 @@
       <!-- RegistryValue Name='Tooltip' Type='string' Value='TOOLTIP_TEXT'/ -->
       <RegistryValue Name='Type' Type='integer' Value='1'/>
 
-      <RegistryKey Key='Associated'>
-        <RegistryValue Name='CyPhyML' Type='string' Value=''/>
-      </RegistryKey>
+      <!-- not Associated -->
 
     </RegistryKey>
   </Component>

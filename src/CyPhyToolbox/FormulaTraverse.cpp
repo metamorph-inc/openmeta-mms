@@ -135,6 +135,9 @@ void NewTraverser::Traverse(const Udm::Object &udmObject)
 		EvaluateCADParameters();
 		EvaluateManufactureParameters();
 		EvaluateModelicaParameters();
+		EvaluateEDAParameters();
+		EvaluateSPICEParameters();
+		EvaluateSystemCParameters();
 		EvaluateCarParameters();
 	}
 
@@ -181,6 +184,30 @@ void NewTraverser::FindRootNodes(const CyPhyML::Component &component, set<CyPhyM
 		set<CyPhyML::ManufacturingModelParameter> param = ci->ManufacturingModelParameter_kind_children();
 		for (set<CyPhyML::ManufacturingModelParameter>::const_iterator di = param.begin(); di != param.end(); di++)
 			m_manufactureParameters.insert(*di);
+	}
+
+	set<CyPhyML::EDAModel> edaModel_set = component.EDAModel_kind_children();
+	for (set<CyPhyML::EDAModel>::const_iterator ci = edaModel_set.begin(); ci != edaModel_set.end(); ci++)
+	{
+		set<CyPhyML::EDAModelParameter> param = ci->EDAModelParameter_kind_children();
+		for (set<CyPhyML::EDAModelParameter>::const_iterator di = param.begin(); di != param.end(); di++)
+			m_edaModelParameters.insert(*di);
+	}
+
+	set<CyPhyML::SPICEModel> spiceModel_set = component.SPICEModel_kind_children();
+	for (set<CyPhyML::SPICEModel>::const_iterator ci = spiceModel_set.begin(); ci != spiceModel_set.end(); ci++)
+	{
+		set<CyPhyML::SPICEModelParameter> param = ci->SPICEModelParameter_kind_children();
+		for (set<CyPhyML::SPICEModelParameter>::const_iterator di = param.begin(); di != param.end(); di++)
+			m_spiceModelParameters.insert(*di);
+	}
+
+	set<CyPhyML::SystemCModel> systemcModel_set = component.SystemCModel_kind_children();
+	for (set<CyPhyML::SystemCModel>::const_iterator ci = systemcModel_set.begin(); ci != systemcModel_set.end(); ci++)
+	{
+		set<CyPhyML::SystemCParameter> param = ci->SystemCParameter_kind_children();
+		for (set<CyPhyML::SystemCParameter>::const_iterator di = param.begin(); di != param.end(); di++)
+			m_systemcParameters.insert(*di);
 	}
 
 	// ZL 11/20/2013 support modelica parameters as value flow targets
@@ -231,6 +258,30 @@ void NewTraverser::FindRootNodes(const CyPhyML::TestComponent &component, set<Cy
 		set<CyPhyML::ManufacturingModelParameter> param = ci->ManufacturingModelParameter_kind_children();
 		for (set<CyPhyML::ManufacturingModelParameter>::const_iterator di = param.begin(); di != param.end(); di++)
 			m_manufactureParameters.insert(*di);
+	}
+
+	set<CyPhyML::EDAModel> edaModel_set = component.EDAModel_kind_children();
+	for (set<CyPhyML::EDAModel>::const_iterator ci = edaModel_set.begin(); ci != edaModel_set.end(); ci++)
+	{
+		set<CyPhyML::EDAModelParameter> param = ci->EDAModelParameter_kind_children();
+		for (set<CyPhyML::EDAModelParameter>::const_iterator di = param.begin(); di != param.end(); di++)
+			m_edaModelParameters.insert(*di);
+	}
+
+	set<CyPhyML::SPICEModel> spiceModel_set = component.SPICEModel_kind_children();
+	for (set<CyPhyML::SPICEModel>::const_iterator ci = spiceModel_set.begin(); ci != spiceModel_set.end(); ci++)
+	{
+		set<CyPhyML::SPICEModelParameter> param = ci->SPICEModelParameter_kind_children();
+		for (set<CyPhyML::SPICEModelParameter>::const_iterator di = param.begin(); di != param.end(); di++)
+			m_spiceModelParameters.insert(*di);
+	}
+
+	set<CyPhyML::SystemCModel> systemcModel_set = component.SystemCModel_kind_children();
+	for (set<CyPhyML::SystemCModel>::const_iterator ci = systemcModel_set.begin(); ci != systemcModel_set.end(); ci++)
+	{
+		set<CyPhyML::SystemCParameter> param = ci->SystemCParameter_kind_children();
+		for (set<CyPhyML::SystemCParameter>::const_iterator di = param.begin(); di != param.end(); di++)
+			m_systemcParameters.insert(*di);
 	}
 
 	set<CyPhyML::ModelicaModelType> modelicaModel_set = component.ModelicaModelType_kind_children();
@@ -1128,12 +1179,14 @@ bool NewTraverser::EvaluatePPC(CyPhyML::ValueFlowTarget &vf, UnitUtil::ValueUnit
 			else if (myVURep.unitRep == incomingVURep.unitRep)				// units are compatible
 			{
 				// convert
+				myVURep.type = UnitUtil::ValueUnitRep::DOUBLE;
 				myVURep.siValue = incomingVURep.siValue;
 				myVURep.actualValue = unitUtil.ConvertFromSIEquivalent(myUnit, incomingVURep.siValue);
 				UpdateNamedElementValue(vf, myVURep.actualValue);
 			}
 			else														// units not compatible
 			{
+				myVURep.type = UnitUtil::ValueUnitRep::DOUBLE;
 				if (nullUnitRef)		// TODO: 12/20/11 Auto-assigning unit
 				{
 					myVURep.siValue = incomingVURep.siValue;
@@ -1158,6 +1211,7 @@ bool NewTraverser::EvaluatePPC(CyPhyML::ValueFlowTarget &vf, UnitUtil::ValueUnit
 		else if (IsDerivedFrom(src_vfTarget.type(), CyPhyML::ValueFormula::meta))
 		{
 			EvaluateFormula(CyPhyML::ValueFormula::Cast(src_vfTarget), incomingVURep);
+			myVURep.type = UnitUtil::ValueUnitRep::DOUBLE;
 
 			if (src_vfTarget.type() == CyPhyML::SimpleFormula::meta)			// simple formula
 			{
@@ -1250,7 +1304,7 @@ bool NewTraverser::EvaluatePPC(CyPhyML::ValueFlowTarget &vf, UnitUtil::ValueUnit
 		{
 			myVURep.type = UnitUtil::ValueUnitRep::STRING;
 			myVURep.strValue = val;
-			myVURep.actualValue = 0;			
+			myVURep.actualValue = 0;
 			myVURep.siValue = 0;
 			
 			// This call will set myVURep.unitRep
@@ -1691,6 +1745,7 @@ void NewTraverser::EvaluateManufactureParameters()
 			double value = 0;
 			CyPhyML::ValueFlowTarget vft = portMap_Set.begin()->srcManufacturingParameterPortMap_end();
 			map<long, UnitUtil::ValueUnitRep>::iterator di = m_convertedValueFlowTargets_SIMap.find(vft.uniqueId());
+			
 			if (di != m_convertedValueFlowTargets_SIMap.end())
 			{
 				incomingVURep = di->second;
@@ -1743,6 +1798,237 @@ void NewTraverser::EvaluateManufactureParameters()
 					throw udm_exception(message);
 				}
 			}
+		}
+	}
+}
+
+void NewTraverser::EvaluateEDAParameters()
+{
+	for (set<CyPhyML::EDAModelParameter>::const_iterator ci = m_edaModelParameters.begin(); ci != m_edaModelParameters.end(); ci++)
+	{
+		set<CyPhyML::EDAModelParameterMap> portMap_Set = ci->srcEDAModelParameterMap();
+		if (!portMap_Set.empty())
+		{
+			UnitUtil::ValueUnitRep myVURep, incomingVURep;
+			CyPhyML::ParamPropTarget unitRef = ci->ref();
+
+			bool nullUnitRef = (unitRef == Udm::null);
+
+			if (!nullUnitRef && IsDerivedFrom(unitRef.type(), CyPhyML::unit::meta))		// TODO: 12/20/11 Auto-assigning unit	//if (IsDerivedFrom(unitRef.type(), CyPhyML::unit::meta))
+			{
+				// only CyPhyML::unit is supported right now
+				myVURep.cyphyRef = CyPhyML::unit::Cast(unitRef);
+				unitUtil.ConvertToSIEquivalent(CyPhyML::unit::Cast(unitRef), 1, myVURep.unitRep);
+			}
+
+			// Check for too many incoming connections (cnotradictory)
+			if (portMap_Set.size() > 1)
+			{
+				string message = "FormulaEvaluator - EDAParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
+				GMEConsole::Console::writeLine(message, MSG_ERROR);
+				throw udm_exception(message);
+			}
+
+			CyPhyML::ValueFlowTarget vft = portMap_Set.begin()->srcEDAModelParameterMap_end();
+			map<long, UnitUtil::ValueUnitRep>::iterator di = m_convertedValueFlowTargets_SIMap.find(vft.uniqueId());
+
+			std::string sourceName = vft.name();
+
+			if (di != m_convertedValueFlowTargets_SIMap.end())
+			{
+				incomingVURep = di->second;
+			}
+			else		// incoming vft did not have another vft (vft --> cad parameter)
+			{
+				if (IsDerivedFrom(vft.type(), CyPhyML::ValueFormula::meta))
+				{
+					EvaluateFormula(CyPhyML::ValueFormula::Cast(vft), incomingVURep);
+					double tmpval = incomingVURep.siValue;
+				}
+				else if (IsDerivedFrom(vft.type(), CyPhyML::HasDescriptionAndGUID::meta)
+					|| IsDerivedFrom(vft.type(), CyPhyML::Constant::meta))
+				{
+					EvaluatePPC(vft, incomingVURep);
+				}
+			}
+			
+			if (nullUnitRef)
+			{
+				// The unit ref of the ModelicaParameter is null.
+				// What we will do is find the unit of the source ValueFlowTarget,
+				// and set the unit ref to that, and also use the "actual value" as a value to match.
+				if (incomingVURep.cyphyRef != Udm::null)
+				{
+					if (CyPhyML::EDAModelParameter::Cast(ci->Archetype()) != Udm::null)
+						CyPhyML::EDAModelParameter::Cast(ci->Archetype()).ref() = incomingVURep.cyphyRef;
+					else
+						ci->ref() = incomingVURep.cyphyRef;
+				}
+
+				string tmp;
+				to_string(tmp, incomingVURep.actualValue);
+
+				ci->Value() = NonRealValueFixture(vft, tmp);
+			}
+			else
+			{
+				if (incomingVURep.cyphyRef == Udm::null)
+				{
+					string message = "FormulaEvaluator - SPICEParameter that references a unit must be connected to a value flow target that references a unit [" + ci->getPath2("/", false) + "]";
+					GMEConsole::Console::writeLine(message, MSG_ERROR);
+					throw udm_exception(message);
+				}
+
+				if (myVURep.unitRep == incomingVURep.unitRep)
+				{
+					string tmp;
+					to_string(tmp, unitUtil.ConvertFromSIEquivalent(myVURep.cyphyRef, incomingVURep.siValue));
+
+					ci->Value() = NonRealValueFixture(vft, tmp);
+				}
+				else
+				{
+					string message = "FormulaEvaluator - SPICEParameter's unit is incompatible with incoming value flow target's unit [" + ci->getPath2("/", false) + "]";
+					GMEConsole::Console::writeLine(message, MSG_ERROR);
+					throw udm_exception(message);
+				}
+			}
+		}
+	}
+}
+
+void NewTraverser::EvaluateSPICEParameters()
+{
+	for (set<CyPhyML::SPICEModelParameter>::const_iterator ci = m_spiceModelParameters.begin(); ci != m_spiceModelParameters.end(); ci++)
+	{
+		set<CyPhyML::SPICEModelParameterMap> portMap_Set = ci->srcSPICEModelParameterMap();
+		if (!portMap_Set.empty())
+		{
+			UnitUtil::ValueUnitRep myVURep, incomingVURep;
+			CyPhyML::ParamPropTarget unitRef = ci->ref();
+
+			bool nullUnitRef = (unitRef == Udm::null);
+
+			if (!nullUnitRef && IsDerivedFrom(unitRef.type(), CyPhyML::unit::meta))		// TODO: 12/20/11 Auto-assigning unit	//if (IsDerivedFrom(unitRef.type(), CyPhyML::unit::meta))
+			{
+				// only CyPhyML::unit is supported right now
+				myVURep.cyphyRef = CyPhyML::unit::Cast(unitRef);
+				unitUtil.ConvertToSIEquivalent(CyPhyML::unit::Cast(unitRef), 1, myVURep.unitRep);
+			}
+
+			// Check for too many incoming connections (cnotradictory)
+			if (portMap_Set.size() > 1)
+			{
+				string message = "FormulaEvaluator - SPICEParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
+				GMEConsole::Console::writeLine(message, MSG_ERROR);
+				throw udm_exception(message);
+			}
+
+			CyPhyML::ValueFlowTarget vft = portMap_Set.begin()->srcSPICEModelParameterMap_end();
+			map<long, UnitUtil::ValueUnitRep>::iterator di = m_convertedValueFlowTargets_SIMap.find(vft.uniqueId());
+
+			std::string sourceName = vft.name();
+
+			if (di != m_convertedValueFlowTargets_SIMap.end())
+			{
+				incomingVURep = di->second;
+			}
+			else		// incoming vft did not have another vft (vft --> cad parameter)
+			{
+				if (IsDerivedFrom(vft.type(), CyPhyML::ValueFormula::meta))
+				{
+					EvaluateFormula(CyPhyML::ValueFormula::Cast(vft), incomingVURep);
+					double tmpval = incomingVURep.siValue;
+				}
+				else if (IsDerivedFrom(vft.type(), CyPhyML::HasDescriptionAndGUID::meta)
+					|| IsDerivedFrom(vft.type(), CyPhyML::Constant::meta))
+				{
+					EvaluatePPC(vft, incomingVURep);
+				}
+			}
+
+
+			if (nullUnitRef)
+			{
+				// The unit ref of the ModelicaParameter is null.
+				// What we will do is find the unit of the source ValueFlowTarget,
+				// and set the unit ref to that, and also use the "actual value" as a value to match.
+				if (incomingVURep.cyphyRef != Udm::null)
+				{
+					if (CyPhyML::SPICEModelParameter::Cast(ci->Archetype()) != Udm::null)
+						CyPhyML::SPICEModelParameter::Cast(ci->Archetype()).ref() = incomingVURep.cyphyRef;
+					else
+						ci->ref() = incomingVURep.cyphyRef;
+				}
+
+				string tmp;
+				to_string(tmp, incomingVURep.actualValue);
+
+				ci->Value() = NonRealValueFixture(vft, tmp);
+			}
+			else
+			{
+				if (incomingVURep.cyphyRef == Udm::null)
+				{
+					string message = "FormulaEvaluator - SPICEParameter that references a unit must be connected to a value flow target that references a unit [" + ci->getPath2("/", false) + "]";
+					GMEConsole::Console::writeLine(message, MSG_ERROR);
+					throw udm_exception(message);
+				}
+
+				if (myVURep.unitRep == incomingVURep.unitRep)
+				{
+					string tmp;
+					to_string(tmp, unitUtil.ConvertFromSIEquivalent(myVURep.cyphyRef, incomingVURep.siValue));
+
+					ci->Value() = NonRealValueFixture(vft, tmp);
+				}
+				else
+				{
+					string message = "FormulaEvaluator - SPICEParameter's unit is incompatible with incoming value flow target's unit [" + ci->getPath2("/", false) + "]";
+					GMEConsole::Console::writeLine(message, MSG_ERROR);
+					throw udm_exception(message);
+				}
+			}
+		}
+	}
+}
+
+void NewTraverser::EvaluateSystemCParameters()
+{
+	for (set<CyPhyML::SystemCParameter>::const_iterator ci = m_systemcParameters.begin(); ci != m_systemcParameters.end(); ci++)
+	{
+		set<CyPhyML::SystemCParameterPortMap> portMap_Set = ci->srcSystemCParameterPortMap();
+		if (!portMap_Set.empty())
+		{
+			UnitUtil::ValueUnitRep myVURep, incomingVURep;
+			
+			// Check for too many incoming connections (cnotradictory)
+			if (portMap_Set.size() > 1)
+			{
+				string message = "FormulaEvaluator - SPICEParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
+				GMEConsole::Console::writeLine(message, MSG_ERROR);
+				throw udm_exception(message);
+			}
+
+			CyPhyML::ValueFlowTarget vft = portMap_Set.begin()->srcSystemCParameterPortMap_end();
+
+			std::string sourceName = vft.name();
+
+			if (IsDerivedFrom(vft.type(), CyPhyML::ValueFormula::meta))
+			{
+				EvaluateFormula(CyPhyML::ValueFormula::Cast(vft), incomingVURep);
+				double tmpval = incomingVURep.siValue;
+			}
+			else if (IsDerivedFrom(vft.type(), CyPhyML::HasDescriptionAndGUID::meta)
+				|| IsDerivedFrom(vft.type(), CyPhyML::Constant::meta))
+			{
+				EvaluatePPC(vft, incomingVURep);
+			}
+
+			string tmp;
+			to_string(tmp, incomingVURep.actualValue);
+
+			ci->Value() = NonRealValueFixture(vft, tmp);
 		}
 	}
 }

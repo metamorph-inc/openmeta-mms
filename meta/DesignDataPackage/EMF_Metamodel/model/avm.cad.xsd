@@ -34,6 +34,7 @@
           <xsd:element ecore:name="Parameter" ecore:ordered="false" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="Parameter" type="cad:Parameter"/>
           <xsd:element ecore:name="ModelMetric" ecore:ordered="false" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="ModelMetric" type="cad:Metric"/>
         </xsd:sequence>
+        <xsd:attribute ecore:name="Format" ecore:unsettable="false" name="Format" type="cad:FileFormat"/>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -217,6 +218,14 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:simpleType name="FileFormat">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Creo"/>
+      <xsd:enumeration value="AP_203"/>
+      <xsd:enumeration value="AP_214"/>
+      <xsd:enumeration value="STL"/>
+    </xsd:restriction>
+  </xsd:simpleType>
   <xsd:complexType name="AssemblyRoot">
     <xsd:complexContent>
       <xsd:extension base="avm:DesignDomainFeature">

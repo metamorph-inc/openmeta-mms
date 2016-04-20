@@ -1,0 +1,79 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="10_DSBGA" xmlns="eagle">
+          <smd name="C3" x="0.5" y="-0.25" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="D2" x="0" y="-0.75" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="D3" x="0.5" y="-0.75" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="B1" x="-0.5" y="0.25" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="C1" x="-0.5" y="-0.25" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="A1" x="-0.5" y="0.75" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="A2" x="0" y="0.75" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="A3" x="0.5" y="0.75" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="B3" x="0.5" y="0.25" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <smd name="D1" x="-0.5" y="-0.75" dx="0.3" dy="0.3" layer="1" roundness="100" stop="no" />
+          <circle x="-0.5" y="0.75" radius="0.125" width="0" layer="29" />
+          <circle x="0" y="0.75" radius="0.125" width="0" layer="29" />
+          <circle x="0.5" y="0.75" radius="0.125" width="0" layer="29" />
+          <circle x="-0.5" y="0.25" radius="0.125" width="0" layer="29" />
+          <circle x="-0.5" y="-0.25" radius="0.125" width="0" layer="29" />
+          <circle x="-0.5" y="-0.75" radius="0.125" width="0" layer="29" />
+          <circle x="0.5" y="0.25" radius="0.125" width="0" layer="29" />
+          <circle x="0.5" y="-0.25" radius="0.125" width="0" layer="29" />
+          <circle x="0.5" y="-0.75" radius="0.125" width="0" layer="29" />
+          <circle x="0" y="-0.75" radius="0.125" width="0" layer="29" />
+          <circle x="-1" y="1" radius="0.0635" width="0.16" layer="21" />
+          
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="10_PIN_SWITCH">
+          <wire x1="-10.16" y1="10.16" x2="-10.16" y2="-10.16" width="0.254" layer="94" />
+          <wire x1="-10.16" y1="-10.16" x2="10.16" y2="-10.16" width="0.254" layer="94" />
+          <wire x1="10.16" y1="-10.16" x2="10.16" y2="10.16" width="0.254" layer="94" />
+          <wire x1="10.16" y1="10.16" x2="-10.16" y2="10.16" width="0.254" layer="94" />
+          <pin name="NC1" x="-15.24" y="7.62" visible="pin" length="middle" direction="pas" />
+          <pin name="NO1" x="-15.24" y="2.54" visible="pin" length="middle" direction="pas" />
+          <pin name="NC2" x="-15.24" y="-2.54" visible="pin" length="middle" direction="pas" />
+          <pin name="NO2" x="-15.24" y="-7.62" visible="pin" length="middle" direction="pas" />
+          <pin name="COM1" x="15.24" y="7.62" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="IN1" x="15.24" y="2.54" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="IN2" x="15.24" y="-2.54" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="COM2" x="15.24" y="-7.62" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="V+" x="0" y="15.24" visible="pin" length="middle" direction="pas" rot="R270" />
+          <pin name="GND" x="0" y="-15.24" visible="pin" length="middle" direction="pas" rot="R90" />
+          <text x="-10.668" y="9.144" size="1.27" layer="95">&gt;NAME
+</text>
+          
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="TS5A22362YZPR" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="10_PIN_SWITCH" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="10_DSBGA" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="COM1" pad="B1" />
+                <connect gate="G$1" pin="COM2" pad="B3" />
+                <connect gate="G$1" pin="GND" pad="D2" />
+                <connect gate="G$1" pin="IN1" pad="D1" />
+                <connect gate="G$1" pin="IN2" pad="D3" />
+                <connect gate="G$1" pin="NC1" pad="C1" />
+                <connect gate="G$1" pin="NC2" pad="C3" />
+                <connect gate="G$1" pin="NO1" pad="A3" />
+                <connect gate="G$1" pin="NO2" pad="A1" />
+                <connect gate="G$1" pin="V+" pad="A2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

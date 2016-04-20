@@ -84,6 +84,16 @@ namespace CyPhyUtil
 			portPair.dst.port_ref_parent = pcb.dstPropertyConstraintBinding_refport_parent();
 			return portPair;
 		}
+		else if (Uml::IsDerivedFrom(type, CyPhyML::UsesResource::meta))
+		{
+			CyPhyML::UsesResource pcb = CyPhyML::UsesResource::Cast(conn);
+			ComponentPortPair portPair;
+			portPair.srcRoleName = "dstUsesResource";
+			portPair.src.port = pcb.srcUsesResource_end();
+			portPair.dstRoleName = "dstUsesResource";
+			portPair.dst.port = pcb.dstUsesResource_end();
+			return portPair;
+		}
 		else
 			throw udm_exception(std::string("Unknown connection type ") + static_cast<std::string>(type.name()));
 	};
@@ -217,13 +227,20 @@ namespace CyPhyUtil
 			newconn.dstSphere2Forwarder_end() = CyPhyML::SphereGeometryType::Cast(end2);
 			return newconn;
 		}
-		else if(Uml::IsDerivedFrom(type, CyPhyML::PropertyConstraintBinding::meta))
+		else if (Uml::IsDerivedFrom(type, CyPhyML::PropertyConstraintBinding::meta))
 		{
 			CyPhyML::PropertyConstraintBinding newconn = CyPhyML::PropertyConstraintBinding::Create(parent);
 			if (end2_comref)
 				newconn.dstPropertyConstraintBinding_refport_parent() = CyPhyML::PropertyConstraintBinding_dstPropertyConstraintBinding_RPContainer_Base::Cast(end2_comref);
 			newconn.srcPropertyConstraintBinding_end() = CyPhyML::PropertyConstraint::Cast(end1);
 			newconn.dstPropertyConstraintBinding_end() = CyPhyML::Property::Cast(end2);
+			return newconn;
+		}
+		else if (Uml::IsDerivedFrom(type, CyPhyML::UsesResource::meta))
+		{
+			CyPhyML::UsesResource newconn = CyPhyML::UsesResource::Create(parent);
+			newconn.srcUsesResource_end() = CyPhyML::UsesResource_Members_Base::Cast(end1);
+			newconn.srcUsesResource_end() = CyPhyML::UsesResource_Members_Base::Cast(end2);
 			return newconn;
 		}
 		else

@@ -1,0 +1,78 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="0603-LED" xmlns="eagle">
+          <description>&lt;B&gt;LED 0603&lt;/B&gt;&lt;P&gt;
+Blue LED 0603, designed for the Osram LB Q39G-L2N2-35-1.&lt;br&gt;Digikey part 475-2816-1-ND.</description>
+          <circle x="-0.8" y="-1.1" radius="0.1" width="0.127" layer="21" />
+          <wire x1="-1.6" y1="0.8" x2="1.6" y2="0.8" width="0.127" layer="21" />
+          <wire x1="-1.6" y1="-0.8" x2="1.6" y2="-0.8" width="0.127" layer="21" />
+          <wire x1="-1.6" y1="0.8" x2="-1.6" y2="-0.8" width="0.127" layer="21" />
+          <wire x1="1.6" y1="0.8" x2="1.6" y2="-0.8" width="0.127" layer="21" />
+          <smd name="P$1" x="-0.8" y="0" dx="0.8" dy="0.8" layer="1" />
+          <smd name="P$2" x="0.8" y="0" dx="0.8" dy="0.8" layer="1" />
+          <polygon width="0.127" layer="21">
+            <vertex x="-1.6" y="-0.8" />
+            <vertex x="-1.6" y="-0.4" />
+            <vertex x="-1.2" y="-0.8" />
+          </polygon>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="LED_WITH_PIN1_CATHODE">
+          <description>&lt;B&gt;LED with pin 1 cathode&lt;/B&gt;&lt;P&gt;
+Designed for the Osram LB Q39G-L2N2-35-1
+blue led, in an 0603 package.&lt;P&gt;
+Digikey 475-2816-1-ND</description>
+          <wire x1="-1.27" y1="2.54" x2="1.27" y2="2.54" width="0.254" layer="94" />
+          <wire x1="1.778" y1="5.08" x2="2.54" y2="5.842" width="0.254" layer="94" />
+          <wire x1="2.54" y1="5.842" x2="2.54" y2="5.334" width="0.254" layer="94" />
+          <wire x1="2.54" y1="5.334" x2="3.048" y2="5.842" width="0.254" layer="94" />
+          <wire x1="1.524" y1="3.81" x2="2.286" y2="4.572" width="0.254" layer="94" />
+          <wire x1="2.286" y1="4.572" x2="2.286" y2="4.064" width="0.254" layer="94" />
+          <wire x1="2.286" y1="4.064" x2="2.794" y2="4.572" width="0.254" layer="94" />
+          <pin name="P$1" x="0" y="0" visible="off" length="short" direction="pas" rot="R90" />
+          <pin name="P$2" x="0" y="7.62" visible="off" length="short" direction="pas" rot="R270" />
+          <text x="-2.032" y="1.778" size="1.778" layer="95" rot="MR180">1</text>
+          <text x="-2.032" y="7.62" size="1.778" layer="95" rot="MR180">2</text>
+          <text x="-5.08" y="0" size="1.778" layer="95" rot="R90">&gt;NAME</text>
+          <text x="-2.54" y="0" size="1.778" layer="95" rot="R90">&gt;VALUE</text>
+          <polygon width="0.254" layer="94">
+            <vertex x="0" y="2.54" />
+            <vertex x="-1.27" y="5.08" />
+            <vertex x="1.27" y="5.08" />
+          </polygon>
+          <polygon width="0.254" layer="94">
+            <vertex x="3.556" y="6.35" />
+            <vertex x="3.048" y="6.096" />
+            <vertex x="3.302" y="5.842" />
+          </polygon>
+          <polygon width="0.254" layer="94">
+            <vertex x="3.302" y="5.08" />
+            <vertex x="2.794" y="4.826" />
+            <vertex x="3.048" y="4.572" />
+          </polygon>
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="LED-BLUE-0603" prefix="DS" uservalue="yes">
+          <gates>
+            <gate name="G$1" symbol="LED_WITH_PIN1_CATHODE" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="0603-LED" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="P$1" pad="P$1" />
+                <connect gate="G$1" pin="P$2" pad="P$2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

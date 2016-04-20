@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="37f89cab-4cc4-48e9-9fed-6db30f6d74c1" Name="BAT54" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-b8d2b959-5ef6-4030-be8f-43f293bb1541" Author="" Notes="" XPosition="420" YPosition="224" Name="EDAModel" ID="id-b5c6dd8d-e3aa-464b-b5be-08af50a94d6e" Package="BAT54" Device="" Library="magic_man" DeviceSet="BAT54" xmlns="">
+    <Pin ID="id-a4548230-e151-4b52-93e5-be20bd0e6eba" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="C" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="0" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-3d65391a-8dce-4770-93fc-7669124c315e" PortMap="id-4b7a21d2-f6cd-4633-ab49-875c0c804c6f" Notes="" XPosition="25" Definition="" YPosition="25" Name="A" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="7.62" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </DomainModel>
+  <Property xmlns:q2="avm" xsi:type="q2:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-fb6b239f-212d-444b-8a56-df7775dc9e44" XPosition="1000" YPosition="40" xmlns="">
+    <Value ID="id-fb6b239f-212d-444b-8a56-df7775dc9e44" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q2:FixedValue">
+        <Value>BAT54</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency XPosition="650" YPosition="200" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-b8d2b959-5ef6-4030-be8f-43f293bb1541" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency XPosition="42" YPosition="7" Name="bat54v.pdf" Path="doc\bat54v.pdf" Hash="" ID="id-c77d024e-3983-4475-a37b-e13e8f8c1bf5" Notes="" xmlns="" />
+  <ResourceDependency Name="Icon.png" Path="Icon.png" Hash="" ID="id-61269437-6b36-46a1-bb5c-02d768465598" Notes="Custom icon for this component" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-04672876-ea7a-417c-b302-c525945f04bf" ApplyJoinData="" Notes="" Name="A" Definition="AnalogSignal" YPosition="238" XPosition="175" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-4b7a21d2-f6cd-4633-ab49-875c0c804c6f" PortMap="" Notes="" XPosition="42" Definition="" YPosition="42" Name="P" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-2220828e-c4e7-456b-b0e4-560ee99d815f" ApplyJoinData="" Notes="" Name="C" Definition="AnalogSignal" YPosition="224" XPosition="987" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-f1331432-efd0-48b7-970f-48b4272eb4cf" PortMap="id-a4548230-e151-4b52-93e5-be20bd0e6eba" Notes="" XPosition="42" Definition="" YPosition="42" Name="P" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">semiconductors_and_actives.discretes.diodes.schottky_diodes</Classifications>
+</Component>

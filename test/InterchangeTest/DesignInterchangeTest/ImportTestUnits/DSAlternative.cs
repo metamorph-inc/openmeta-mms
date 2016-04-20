@@ -17,9 +17,9 @@ namespace DesignImporterTests
         }
     }
 
-    public class DSAlternative : DSRoundTripBase, IUseFixture<DSAlternativeFixture>
+    public class DSAlternative : PortsRoundTripBase<DSAlternativeFixture>, IUseFixture<DSAlternativeFixture>
     {
-        [Fact]
+        //[Fact]
         public void WheelParameter()
         {
             string asmName = "WheelParameter";
@@ -34,12 +34,6 @@ namespace DesignImporterTests
         }
 
         public override string AdmPath { get { return fixture.AdmPath; } }
-        public override MgaProject proj { get { return fixture.proj; } }
         public override string FolderName { get { return "DesignSpaces"; } }
-        DSAlternativeFixture fixture;
-        public void SetFixture(DSAlternativeFixture data)
-        {
-            fixture = data;
-        }
     }
 }

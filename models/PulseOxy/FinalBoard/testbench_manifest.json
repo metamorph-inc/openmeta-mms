@@ -1,0 +1,17 @@
+{
+  "Status": "UNEXECUTED",
+  "Artifacts": [
+    {
+      "Location": "schema.sch",
+      "Tag": ""
+    }
+  ],
+  "Created": null,
+  "DesignID": null,
+  "DesignName": null,
+  "Metrics": [],
+  "Parameters": [],
+  "Steps": [],
+  "TestBench": null,
+  "TierLevel": 0
+}

@@ -7,16 +7,6 @@ using Xunit;
 
 namespace ComponentInterchangeTest
 {
-    public class ValueFlowModelImport
-    {
-        [Fact]
-        [Trait("ProjectImport/Open", "ValueFlow")]
-        public void ProjectXmeImport()
-        {
-            Assert.DoesNotThrow(() => { new ValueFlowFixture(); });
-        }
-    }
-
     public class ValueFlow : IUseFixture<ValueFlowFixture>
     {
         #region Path Variables
@@ -52,7 +42,7 @@ namespace ComponentInterchangeTest
         [Trait("Interchange","Component Export")]
         public void AllComponentsExported()
         {
-            var exportedACMRoot = Path.Combine(testPath, "Imported_Components");
+            var exportedACMRoot = Path.Combine(testPath, "Exported");
             var acmFiles = Directory.GetFiles(exportedACMRoot, "*.acm", SearchOption.AllDirectories);
             Assert.Equal(5, acmFiles.Length);
         }
@@ -63,8 +53,8 @@ namespace ComponentInterchangeTest
             var importXmePath = Path.Combine(testPath,"InputModel.xme");
             var importMgaPath = CommonFunctions.unpackXme(importXmePath);
             Assert.True(File.Exists(importMgaPath),"MGA file not found. Model import may have failed.");
-            
-            var compFolderRoot = Path.Combine(testPath,"Imported_Components");
+
+            var compFolderRoot = Path.Combine(testPath, "Exported");
             int rtnCode = CommonFunctions.runCyPhyComponentImporterCLRecursively(importMgaPath, compFolderRoot);
             Assert.True(rtnCode == 0, String.Format("Importer failed on one or more components"));
 

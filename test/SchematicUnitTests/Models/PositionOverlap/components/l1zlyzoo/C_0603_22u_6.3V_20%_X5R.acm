@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="f50a4854-bc10-4b34-87b2-8137fa70243a" Name="C_0603_22u_6.3V_20%_X5R" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-89d1ada9-bfa4-4b60-8bb4-1533139554c7" Author="" Notes="" XPosition="259" YPosition="98" Name="EDAModel" Package="C0603" Device="" Library="chipCapacitors" DeviceSet="C0603" xmlns="">
+    <Pin ID="id-c5bc6ecf-ab24-472d-9e3a-ca8045244a96" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="P$2" EDAGate="A" EDASymbolLocationX="0" EDASymbolLocationY="-7.62" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-3a8295e2-9624-4394-b344-1fac17320c83" PortMap="id-1564fca8-119f-4a41-aded-9f90d90ad725" Notes="" XPosition="25" Definition="" YPosition="25" Name="P$1" EDAGate="A" EDASymbolLocationX="0" EDASymbolLocationY="0" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </DomainModel>
+  <DomainModel xmlns:q2="spice" xsi:type="q2:SPICEModel" UsesResource="id-8055c261-9797-4d36-9c65-706ed24a25b9" Author="" Notes="Created using SPICE Model CAT Module" XPosition="245" YPosition="301" Name="SPICEModel" Class="X:C_MLCC" xmlns="">
+    <Pin ID="id-6a9c7d0a-f2da-49d7-b7c4-0523c205ca5d" PortMap="id-1564fca8-119f-4a41-aded-9f90d90ad725" Notes="" XPosition="50" Definition="" YPosition="50" Name="1" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Pin ID="id-e016046e-dfce-4f6f-9d0b-c8f53ab7a9a4" PortMap="" Notes="" XPosition="50" Definition="" YPosition="150" Name="2" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="1" />
+    <Parameter XPosition="50" YPosition="450" Locator="Rs">
+      <Value ID="id-e60f92d8-e00a-4d77-8280-4f4bae368f7e" Unit="ohm">
+        <ValueExpression xmlns:q3="avm" xsi:type="q3:DerivedValue" ValueSource="id-b7bddcb3-605d-4f5f-9c3c-f76497b80176" />
+      </Value>
+    </Parameter>
+    <Parameter XPosition="50" YPosition="650" Locator="Rp">
+      <Value ID="id-e909410c-2aea-4fcf-950b-b9350266f644" Unit="ohm">
+        <ValueExpression xmlns:q4="avm" xsi:type="q4:DerivedValue" ValueSource="id-9d297215-e9be-4593-892b-a74ad6fae76c" />
+      </Value>
+    </Parameter>
+    <Parameter XPosition="49" YPosition="357" Locator="Capacitance">
+      <Value ID="id-3c806f18-e5d5-4181-9eb6-5a20d2c2996c" Unit="F">
+        <ValueExpression xmlns:q5="avm" xsi:type="q5:DerivedValue" ValueSource="id-b47fea8c-afc3-4adf-98a9-cd5fc4c268a3" />
+      </Value>
+    </Parameter>
+    <Parameter XPosition="50" YPosition="550" Locator="Ls">
+      <Value ID="id-7fac4768-36ad-48ba-9b1e-15ff073a3a8c" Unit="H">
+        <ValueExpression xmlns:q6="avm" xsi:type="q6:DerivedValue" ValueSource="id-6f98038c-8bdb-4f6a-b6ae-ce6869a77aa8" />
+      </Value>
+    </Parameter>
+  </DomainModel>
+  <Property xmlns:q7="avm" xsi:type="q7:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-4f38f0c5-496b-4952-9a61-3d0f422707d9" XPosition="224" YPosition="21" xmlns="">
+    <Value ID="id-4f38f0c5-496b-4952-9a61-3d0f422707d9" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q7:FixedValue">
+        <Value>CL10A226MQ8NRNC</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q8="avm" xsi:type="q8:PrimitiveProperty" Name="Rs" OnDataSheet="false" ID="property.id-b7bddcb3-605d-4f5f-9c3c-f76497b80176" XPosition="56" YPosition="392" xmlns="">
+    <Value ID="id-b7bddcb3-605d-4f5f-9c3c-f76497b80176" DimensionType="Scalar" Dimensions="" Unit="ohm" DataType="String">
+      <ValueExpression xsi:type="q8:FixedValue">
+        <Value>0.01</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q9="avm" xsi:type="q9:PrimitiveProperty" Name="C" OnDataSheet="true" ID="property.id-b47fea8c-afc3-4adf-98a9-cd5fc4c268a3" XPosition="42" YPosition="329" xmlns="">
+    <Value ID="id-b47fea8c-afc3-4adf-98a9-cd5fc4c268a3" DimensionType="Scalar" Dimensions="" Unit="F" DataType="String">
+      <ValueExpression xsi:type="q9:FixedValue">
+        <Value>2.2e-05</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q10="avm" xsi:type="q10:PrimitiveProperty" Name="Rp" OnDataSheet="false" ID="property.id-9d297215-e9be-4593-892b-a74ad6fae76c" XPosition="63" YPosition="532" xmlns="">
+    <Value ID="id-9d297215-e9be-4593-892b-a74ad6fae76c" DimensionType="Scalar" Dimensions="" Unit="ohm" DataType="String">
+      <ValueExpression xsi:type="q10:FixedValue">
+        <Value>5e9</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q11="avm" xsi:type="q11:PrimitiveProperty" Name="Ls" OnDataSheet="false" ID="property.id-6f98038c-8bdb-4f6a-b6ae-ce6869a77aa8" XPosition="63" YPosition="462" xmlns="">
+    <Value ID="id-6f98038c-8bdb-4f6a-b6ae-ce6869a77aa8" DimensionType="Scalar" Dimensions="" Unit="H" DataType="String">
+      <ValueExpression xsi:type="q11:FixedValue">
+        <Value>930e-12</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency XPosition="168" YPosition="77" Name="Icon.png" Path="Icon.png" Hash="" ID="id-d9f385ac-3d67-4e7d-8320-d7e61f538d8d" Notes="Custom icon for this component" xmlns="" />
+  <ResourceDependency XPosition="518" YPosition="70" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-89d1ada9-bfa4-4b60-8bb4-1533139554c7" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency XPosition="413" YPosition="245" Name="SPICEModelFile" Path="Spice\C_MLCC.cir" Hash="" ID="id-8055c261-9797-4d36-9c65-706ed24a25b9" Notes="Derived from 'C:\Users\Henry\repos\tonka\tonka\C_MLCC.cir'.&#xA;" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-ea339804-4fc2-40f0-84e4-05a46ee16db0" ApplyJoinData="" Notes="" Name="P1" Definition="" YPosition="189" XPosition="35" xmlns="">
+    <Role xmlns:q12="schematic" xsi:type="q12:Pin" ID="id-1564fca8-119f-4a41-aded-9f90d90ad725" PortMap="" Notes="" XPosition="350" Definition="" YPosition="203" Name="Sch" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-9f05f41f-cf31-45eb-a485-3ed3cf42e356" ApplyJoinData="" Notes="" Name="P2" Definition="" YPosition="189" XPosition="462" xmlns="">
+    <Role xmlns:q13="schematic" xsi:type="q13:Pin" ID="id-41164639-07a4-4d91-a67d-7c9d75fa2d39" PortMap="id-e016046e-dfce-4f6f-9d0b-c8f53ab7a9a4 id-c5bc6ecf-ab24-472d-9e3a-ca8045244a96" Notes="" XPosition="77" Definition="" YPosition="63" Name="Sch" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">passive_components.capacitors.single_components</Classifications>
+</Component>

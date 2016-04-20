@@ -2,13 +2,15 @@
 
   <Target Name="change_to_hintpath">
     <Message Text="Reverting all changes in this directory" Importance="High"/>
-    <Exec Command="svn revert -R *Test"/>
+    <Exec Command="git checkout -- **csproj"/>
 	<Message Text="Replacing referenced projects and dlls" Importance="High"/>
 	<Exec Command="&quot;$(ProgramFiles)\META\bin\Python27\Scripts\python.exe&quot; change_to_hintpath.py"/>	
+	<Exec Command="&quot;$(ProgramFiles)\META\bin\Python27\Scripts\python.exe&quot; change_to_hintpath.py ..\tonka-FunctionalTests.sln"/>
   </Target>
 
   <Target Name="CyPhy-FunctionalTests" DependsOnTargets="change_to_hintpath">
     <MSBuild Projects="CyPhy-FunctionalTests.sln" Properties="Configuration=Release;CreateHardLinksForCopyLocalIfPossible=true" Targets="Build"/>
+    <MSBuild Projects="..\tonka-FunctionalTests.sln" Properties="Configuration=Release;CreateHardLinksForCopyLocalIfPossible=true" Targets="Build"/>
   </Target>
 
   <Target Name="DynamicsTeamSimulations">
@@ -17,10 +19,10 @@
   </Target>
 
   <Target Name="CADCreoTest" DependsOnTargets="CyPhy-FunctionalTests">
-    <Exec Command="..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml.py tests_cadcreo.xunit" />
-  </Target> 
+    <!-- TODO Exec Command="..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml.py tests_cadcreo.xunit" / -->
+  </Target>
   
   <Target Name="All" DependsOnTargets="CyPhy-FunctionalTests">
-      <Exec Command="..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml.py functionaltests.xunit tests_cadcreo.xunit" />
+      <Exec Command="..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml_parallel.py functionaltests.xunit tests_cadcreo.xunit functionaltests.xunit" IgnoreStandardErrorWarningFormat="True"/>
   </Target>
 </Project>

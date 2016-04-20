@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="c471c89e-d18e-48b1-96da-f81f77c607c3" Name="Debug_Breakout" Version="" xmlns="avm">
+  <Connector ConnectorComposition="" ID="id-bd46e6d9-cbab-4e9b-9e6b-2baa2ce81f07" ApplyJoinData="" Notes="" Name="SPIBOOT_N" Definition="" YPosition="49" XPosition="427" xmlns="">
+    <Role xmlns:q1="schematic" xsi:type="q1:Pin" ID="id-80cd9b0f-64b9-46fb-96fd-fc7d11e7d156" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-cec0b777-666e-4680-b28d-e8f281d79df6" ApplyJoinData="" Notes="" Name="DBG_TCK" Definition="" YPosition="539" XPosition="427" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-b76f0b73-e5b5-4927-9d15-7f523939425f" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-c6b8c439-708e-4a02-8de8-75b666bfee27" ApplyJoinData="" Notes="" Name="DBG_TDO" Definition="" YPosition="637" XPosition="427" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-efa390de-e065-48b9-97f9-25f35a81a8b9" PortMap="id-bad3c6b5-d107-440d-ba33-c4f3944c793a" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-8c5e57cd-a336-4990-a80d-1b85236c05db" ApplyJoinData="" Notes="" Name="DBG_TRST_N" Definition="" YPosition="931" XPosition="427" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-1d036e90-3cfb-4145-a48a-877cb1523dfe" PortMap="id-c895fa22-cead-47e4-8574-72595ad189d6" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-75411e86-6c49-43fa-b328-805bb508cc0e" ApplyJoinData="" Notes="" Name="DBG_TDI" Definition="" YPosition="735" XPosition="427" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-e3fe5165-fb9f-425a-90ae-71439b37bc8e" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-04f79ae0-edb0-4e4e-b2d9-8037174041c2" ApplyJoinData="" Notes="" Name="DBG_TMS" Definition="" YPosition="833" XPosition="427" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-a924b44c-3e96-457d-ad95-8399c18cebca" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-cb765f1b-f00e-4b72-81cb-d4dd6df8c676" ApplyJoinData="" Notes="" Name="SPI_CS#" Definition="" YPosition="441" XPosition="427" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-fab29c57-8a09-4aca-aec5-6e7a523e9a33" PortMap="id-fbbcb645-923c-46ce-8a9a-443c97eae218" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-2184306b-26e3-4e8c-b649-2456c03a12c2" ApplyJoinData="" Notes="" Name="SPI_DQ1" Definition="" YPosition="343" XPosition="427" xmlns="">
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-945e3825-10b7-491e-b01d-dd7818cc3e24" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-c180bbed-11a5-44cb-b5cc-f12930a5a3e4" ApplyJoinData="" Notes="" Name="SPI_CLK" Definition="" YPosition="147" XPosition="427" xmlns="">
+    <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-16a238c5-4cd9-4f85-b529-eea28c70b199" PortMap="id-0e0a47b4-a215-48f4-a7ea-8ec30aa572bd" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-bec8eaf9-6a77-43f4-96e6-561037d5d492" ApplyJoinData="" Notes="" Name="RST_40us" Definition="" YPosition="1029" XPosition="427" xmlns="">
+    <Role xmlns:q10="schematic" xsi:type="q10:Pin" ID="id-6e069136-de52-4798-824b-c5050f7d4824" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-889d0ebf-6fd3-4e78-89f6-21fb91547c00" ApplyJoinData="" Notes="" Name="SPI_DQ0" Definition="" YPosition="245" XPosition="427" xmlns="">
+    <Role xmlns:q11="schematic" xsi:type="q11:Pin" ID="id-fb5ed303-9e8c-47b5-ab40-878b83eb3128" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-0f526249-c268-46f1-a18c-44bac86eea67" ApplyJoinData="" Notes="" Name="DebugBus" Definition="" YPosition="175" XPosition="63" xmlns="">
+    <Role xmlns:q12="schematic" xsi:type="q12:Pin" ID="id-d84452b7-687f-4cfa-a147-fefc84d95f4f" PortMap="id-e3fe5165-fb9f-425a-90ae-71439b37bc8e" Notes="" XPosition="49" Definition="" YPosition="217" Name="DBG_TDI" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q13="schematic" xsi:type="q13:Pin" ID="id-a817a0e9-7c8c-4928-bc54-41d914bf60fb" PortMap="id-6e069136-de52-4798-824b-c5050f7d4824" Notes="" XPosition="56" Definition="" YPosition="385" Name="RST_40us" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q14="schematic" xsi:type="q14:Pin" ID="id-8012ca35-dd86-45c0-a1da-7789614cff00" PortMap="id-80cd9b0f-64b9-46fb-96fd-fc7d11e7d156" Notes="" XPosition="315" Definition="" YPosition="329" Name="SPIBOOT_N" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q15="schematic" xsi:type="q15:Pin" ID="id-18c50316-df66-49af-813b-dbf38b7b6da6" PortMap="id-945e3825-10b7-491e-b01d-dd7818cc3e24" Notes="" XPosition="315" Definition="" YPosition="189" Name="SPI_DQ1" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q16="schematic" xsi:type="q16:Pin" ID="id-0e0a47b4-a215-48f4-a7ea-8ec30aa572bd" PortMap="" Notes="" XPosition="315" Definition="" YPosition="112" Name="SPI_CLK" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q17="schematic" xsi:type="q17:Pin" ID="id-d5ab17e7-959f-4390-a0fb-192be7f65669" PortMap="id-a924b44c-3e96-457d-ad95-8399c18cebca" Notes="" XPosition="49" Definition="" YPosition="21" Name="DBG_TMS" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q18="schematic" xsi:type="q18:Pin" ID="id-bad3c6b5-d107-440d-ba33-c4f3944c793a" PortMap="" Notes="" XPosition="56" Definition="" YPosition="91" Name="DBG_TDO" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q19="schematic" xsi:type="q19:Pin" ID="id-f1f9464c-36ff-4373-b7c3-4d88a18db2db" PortMap="id-b76f0b73-e5b5-4927-9d15-7f523939425f" Notes="" XPosition="49" Definition="" YPosition="154" Name="DBG_TCK" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q20="schematic" xsi:type="q20:Pin" ID="id-c895fa22-cead-47e4-8574-72595ad189d6" PortMap="" Notes="" XPosition="49" Definition="" YPosition="287" Name="DBG_TRST_N" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q21="schematic" xsi:type="q21:Pin" ID="id-dd2da61d-7666-45c3-a082-870186512a39" PortMap="id-fb5ed303-9e8c-47b5-ab40-878b83eb3128" Notes="" XPosition="315" Definition="" YPosition="35" Name="SPI_DQ0" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q22="schematic" xsi:type="q22:Pin" ID="id-fbbcb645-923c-46ce-8a9a-443c97eae218" PortMap="" Notes="" XPosition="315" Definition="" YPosition="259" Name="SPI_CS#" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">model_utilities.breakout_components</Classifications>
+</Component>

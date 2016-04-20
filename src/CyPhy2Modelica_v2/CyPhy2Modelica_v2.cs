@@ -1187,7 +1187,7 @@ namespace CyPhy2Modelica_v2
             {
                 controlWasHeld = false;
             }
-            if ((this.mainParameters.StartModeParam | 128) == 128)
+            if ((this.mainParameters.StartModeParam & 128) == 128)
             {
                 controlWasHeld = false;
             }

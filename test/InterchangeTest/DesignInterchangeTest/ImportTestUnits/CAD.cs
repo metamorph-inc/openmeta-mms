@@ -17,7 +17,7 @@ namespace DesignImporterTests
         }
     }
 
-    public class CAD : DSRoundTripBase, IUseFixture<CADFixture>
+    public class CAD : PortsRoundTripBase<CADFixture>, IUseFixture<CADFixture>
     {
         [Fact]
         public void WheelParameter()
@@ -26,11 +26,5 @@ namespace DesignImporterTests
         }
 
         public override string AdmPath { get { return fixture.AdmPath; } }
-        public override MgaProject proj { get { return fixture.proj; } }
-        CADFixture fixture;
-        public void SetFixture(CADFixture data)
-        {
-            fixture = data;
-        }
     }
 }

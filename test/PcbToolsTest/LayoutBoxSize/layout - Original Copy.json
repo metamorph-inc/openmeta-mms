@@ -1,0 +1,75 @@
+
+{
+	"boardEdgeSpace" : 0.50,
+	"boardHeight" : 10.0,
+	"boardWidth" : 10.0,
+	"constraints" : null,
+	"designRules" : "MacroFab_2_Layer.dru",
+	"interChipSpace" : 0.20,
+	"numLayers" : 2,
+	"packages" : 
+	[
+		
+		{
+			"ComponentID" : "5884061e-c889-48a9-8479-1d120058d100",
+			"constraints" : null,
+			"doNotPlace" : null,
+			"height" : 1.90420,
+			"koHeight" : 1.90420,
+			"koWidth" : 3.0,
+			"layer" : 0,
+			"name" : "D1",
+			"originX" : 0.0,
+			"originY" : -0.30,
+			"package" : "LED",
+			"pkg_idx" : 0,
+			"rotation" : 0,
+			"width" : 3.0,
+			"x" : 3.50,
+			"y" : 4.0
+		},
+		
+		{
+			"ComponentID" : "8e7a583b-02ed-4aaf-8c90-83a1ffcd0f09",
+			"constraints" : null,
+			"doNotPlace" : null,
+			"height" : 0.80,
+			"koHeight" : 0.80,
+			"koWidth" : 2.40,
+			"layer" : 0,
+			"name" : "R1",
+			"originX" : 0.0,
+			"originY" : 0.0,
+			"package" : "R_0603",
+			"pkg_idx" : 1,
+			"rotation" : 0,
+			"width" : 2.40,
+			"x" : 0.60,
+			"y" : 4.60
+		}
+	],
+	"signals" : 
+	[
+		
+		{
+			"name" : "N$0",
+			"pins" : 
+			[
+				
+				{
+					"gate" : "G$1",
+					"name" : "ANODE",
+					"package" : "D1",
+					"pad" : "ANODE"
+				},
+				
+				{
+					"gate" : "G$1",
+					"name" : "2",
+					"package" : "R1",
+					"pad" : "P$2"
+				}
+			]
+		}
+	]
+}

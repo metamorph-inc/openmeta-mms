@@ -6,8 +6,14 @@ import xml
 import avm
 import avm.modelica
 import avm.cad
+import avm.domainmapping
 import avm.manufacturing
 import avm.cyber
+import avm.schematic
+import avm.schematic.eda
+import avm.schematic.spice
+import avm.systemc
+import avm.rf
 
 if __name__ == "__main__":
     import_file_path = sys.argv[1]

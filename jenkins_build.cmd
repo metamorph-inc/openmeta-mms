@@ -1,19 +1,17 @@
-rem set JAVA_HOME=C:\Program Files (x86)\Java\jdk1.7.0_07\
+Setlocal EnableDelayedExpansion
 
-pushd %~dp0
+@rem BUILD SOLUTIONS
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make.msbuild /t:All /m /nodeReuse:false || exit /b !ERRORLEVEL!
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make_tonka.msbuild /t:All /m /nodeReuse:false || exit /b !ERRORLEVEL!
 
-where UdmDll_3_2_VS10.dll
+@rem RUN TESTS
+pushd test
+del *_result.xml *_results.xml
+del results\*_result.xml
+..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml_parallel.py tests.xunit tests_cadcreo.xunit tests_tonka.xunit || exit /b !ERRORLEVEL!
+popd
 
-c:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make.msbuild /t:Installer /fl /flp:Verbosity=diag;PerformanceSummary /m /nodeReuse:false
-IF %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
-c:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make.msbuild /t:source_code_analysis /fl /flp:Verbosity=diag;PerformanceSummary;LogFile=source_code_analysis.log /m /nodeReuse:false
-IF %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
-
-echo %TIME%
-.\bin\Python27\Scripts\python.exe copy_pdbs.py
-IF %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
-echo %TIME%
-
-.\bin\Python27\Scripts\python.exe run_in_job_object.py c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe test\run.msbuild
-IF %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
-echo %TIME%
+@rem BUILD INSTALLER
+pushd deploy
+..\bin\Python27\Scripts\python.exe build_msi.py || (popd & exit /b !ERRORLEVEL!)
+popd

@@ -173,7 +173,6 @@ namespace META
                             UseShellExecute = false,
                             WorkingDirectory = MetaPath,
                         };
-
                         try
                         {
                             Process p = Process.Start(psi);

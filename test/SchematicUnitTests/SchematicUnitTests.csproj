@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F446635B-63B9-4C30-B286-8095B43EF06A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SchematicUnitTests</RootNamespace>
+    <AssemblyName>SchematicUnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AvmDdp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\AvmDdp\bin\Release\AvmDdp.dll</HintPath>
+    </Reference>
+    <Reference Include="ComponentLibraryManager, Version=1.0.0.0, Culture=neutral, PublicKeyToken=337c23b846022778, processorArchitecture=MSIL">
+      <HintPath>..\..\src\ComponentLibraryManager\bin\Release\ComponentLibraryManager.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyComponentAuthoring">
+      <HintPath>..\..\src\CyPhyComponentAuthoring\bin\Release\CyPhyComponentAuthoring.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyComponentFidelitySelector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7fd6b6cb7be043b1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\CyPhyComponentFidelitySelector\bin\Release\CyPhyComponentFidelitySelector.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyElaborateCS, Version=2.0.0.0, Culture=neutral, PublicKeyToken=114783b3781a56df, processorArchitecture=MSIL">
+      <HintPath>..\..\src\CyPhyElaborateCS\bin\Release\CyPhyElaborateCS.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyGUIs">
+      <HintPath>..\..\src\CyPhyGUIs\bin\Release\CyPhyGUIs.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyMasterInterpreter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=552171988599f6ff, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\CyPhyMasterInterpreter\bin\Release\CyPhyMasterInterpreter.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyML, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+      <HintPath>..\..\src\CyPhyMLCS\bin\Release\CyPhyML.dll</HintPath>
+    </Reference>
+    <Reference Include="GME, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.MGA, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.MGA.Core, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.MGA.Meta, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.MGA.Parser, Version=1.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.Util, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ISIS.GME.Common, Version=1.0.4.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+      <HintPath>..\..\src\CyPhyMLCS\ISIS.GME.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="MasterInterpreterTest">
+      <HintPath>..\..\test\MasterInterpreterTest\bin\Release\MasterInterpreterTest.exe</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\3rdParty\Json.NET\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="XSD2CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3af12afa0e5a8bb2, processorArchitecture=MSIL">
+      <HintPath>..\..\meta\DesignDataPackage\lib\csharp\XSD2CSharp\bin\Release\XSD2CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit">
+      <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.console.clr4.x86">
+      <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.console.clr4.x86.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\CommonFiles\MgaUtils.cs">
+      <Link>MgaUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CyPhy2Modelica_v2\MgaGateway.cs">
+      <Link>MgaGateway.cs</Link>
+    </Compile>
+    <Compile Include="BoneyardTest.cs" />
+    <Compile Include="ImporterTest.cs" />
+    <Compile Include="InterpreterFixtureBaseClass.cs" />
+    <Compile Include="InterpreterTest.cs" />
+    <Compile Include="InterpreterTestBaseClass.cs" />
+    <Compile Include="PostitionOverlap.cs" />
+    <Compile Include="PwrGndPlane.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Xref2HtmlTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CyPhy2Schematic\CyPhy2Schematic.csproj">
+      <Project>{8D5BA6AB-6D10-4BAE-B310-4DB8A3D9E87A}</Project>
+      <Name>CyPhy2Schematic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\LayoutJson\LayoutJson.csproj">
+      <Project>{3118B8E0-0EC3-480F-94B6-3ECAF9C68248}</Project>
+      <Name>LayoutJson</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

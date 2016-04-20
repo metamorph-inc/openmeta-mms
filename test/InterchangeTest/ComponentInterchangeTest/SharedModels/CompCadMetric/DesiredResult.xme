@@ -8,7 +8,7 @@
 	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x1d" kind="RootFolder" guid="{00c11866-00a3-488d-ba06-6a5e6faf4f7a}">
 		<name>RootFolder</name>
 		<folder id="id-006a-00000002" relid="0x2" childrelidcntr="0xd" kind="Components" guid="{1d289b1a-d012-4db8-af41-cd06da0b3555}">
-			<name>Imported_Components</name>
+			<name>Components</name>
 			<model id="id-0065-00000001" kind="Component" guid="{41fc36b4-46b1-470d-99fe-8e7b58fb5b8a}" relid="0xd" childrelidcntr="0xf">
 				<name>CompWithCADMetric</name>
 				<attribute kind="AVMID" status="meta">

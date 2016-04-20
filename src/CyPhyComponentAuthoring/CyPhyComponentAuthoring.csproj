@@ -33,7 +33,7 @@
     <RegisterForComInterop>true</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>AssemblySignature.snk</AssemblyOriginatorKeyFile>
@@ -76,8 +76,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modules\CADModelImport.cs" />
+    <Compile Include="SchematicModelImport.cs">
+      <Link>Modules\SchematicModelImport.cs</Link>
+    </Compile>
+    <Compile Include="GUIs\EagleDevicePicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\EagleDevicePicker.Designer.cs">
+      <DependentUpon>EagleDevicePicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Modules\AddCustomIcon.cs" />
+    <Compile Include="Modules\AddDocumentation.cs" />
+    <Compile Include="Modules\CADModelImport.cs" />
     <Compile Include="Modules\MfgModelImport.cs" />
     <Compile Include="Modules\ComponentExport.cs" />
     <Compile Include="CyPhyCATModule.cs" />
@@ -90,8 +100,11 @@
       <DependentUpon>CyPhyComponentAuthoringToolGUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Modules\ModelicaImport.cs" />
+    <Compile Include="Modules\OctoPartDataImport.cs" />
     <Compile Include="Modules\OpenComponentFolder.cs" />
+    <Compile Include="Modules\SPICEModelImport.cs" />
     <Compile Include="Modules\RenameCADFile.cs" />
+    <Compile Include="Modules\SystemCModelImport.cs" />
     <Compile Include="Registrar.cs" />
     <Compile Include="MgaGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,6 +114,22 @@
     <None Include="AssemblySignature.snk" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MfgBom\MfgBom.csproj">
+      <Project>{03c1c834-8dc1-4629-8cd9-5c082978a816}</Project>
+      <Name>MfgBom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PinMatcher\PinMatcher.csproj">
+      <Project>{A21431BF-BE0A-4FE8-A922-35F9D748FC1F}</Project>
+      <Name>PinMatcher</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpiceParser\SpiceLib.csproj">
+      <Project>{ED904468-F0B3-4364-8FF7-96117616B163}</Project>
+      <Name>SpiceLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemCParser\SystemCParser.csproj">
+      <Project>{85272108-3661-4026-B59A-71F719EB1D6A}</Project>
+      <Name>SystemCParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\meta\DesignDataPackage\lib\csharp\XSD2CSharp\XSD2CSharp.csproj">
       <Project>{B4B9DC90-2857-4C8E-9BDE-47EC4649122B}</Project>
       <Name>XSD2CSharp</Name>
@@ -141,10 +170,17 @@
       <Project>{93FCCA2C-34B2-4855-A8DE-0A5A7F3FDECF}</Project>
       <Name>DesignConsistencyChecker</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UnitsManager\UnitsManager.csproj">
+      <Project>{76B49481-D515-437E-9DD6-34B28968EEDB}</Project>
+      <Name>UnitsManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CyPhyComponentAuthoringToolGUI.resx">
       <DependentUpon>CyPhyComponentAuthoringToolGUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\EagleDevicePicker.resx">
+      <DependentUpon>EagleDevicePicker.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

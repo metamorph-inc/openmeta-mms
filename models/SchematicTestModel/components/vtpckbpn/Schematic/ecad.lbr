@@ -1,0 +1,55 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="3-PIN_SOT_23" xmlns="eagle">
+          <smd name="GND" x="1.15061875" y="0" dx="1.04901875" dy="0.650240625" layer="1" />
+          <smd name="VOUT" x="-1.15061875" y="-0.949959375" dx="1.04901875" dy="0.650240625" layer="1" rot="R180" />
+          <smd name="VDD" x="-1.15061875" y="0.949959375" dx="1.04901875" dy="0.650240625" layer="1" rot="R180" />
+          <wire x1="1.016" y1="-0.9525" x2="-0.15" y2="-0.9525" width="0.1524" layer="21" />
+          <wire x1="1.016" y1="-0.9525" x2="1.016" y2="-0.635" width="0.1524" layer="21" />
+          <wire x1="1.016" y1="0.635" x2="1.016" y2="0.9525" width="0.1524" layer="21" />
+          <wire x1="1.016" y1="0.9525" x2="-0.15" y2="0.9525" width="0.1524" layer="21" />
+          <wire x1="-1.27" y1="-0.25" x2="-1.27" y2="0.25" width="0.1524" layer="21" />
+          <circle x="-1.65" y="1.75" radius="0.0635" width="0.1524" layer="21" />
+          <text x="-3.22" y="2.12" size="1.016" layer="25" font="vector" ratio="15">&gt;NAME</text>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="TEMPERATURE_SENSOR">
+          <wire x1="10.16" y1="-5.08" x2="-10.16" y2="-5.08" width="0.254" layer="94" />
+          <wire x1="-10.16" y1="-5.08" x2="-10.16" y2="5.08" width="0.254" layer="94" />
+          <wire x1="10.16" y1="5.08" x2="10.16" y2="-5.08" width="0.254" layer="94" />
+          <pin name="GND" x="0" y="-10.16" visible="pad" length="middle" direction="pas" rot="R90" />
+          <wire x1="10.16" y1="5.08" x2="-10.16" y2="5.08" width="0.254" layer="94" />
+          <pin name="VOUT" x="15.24" y="0" visible="off" length="middle" direction="pas" rot="R180" />
+          <pin name="VDD" x="0" y="10.16" visible="pad" length="middle" direction="pas" rot="R270" />
+          <text x="-12.7" y="5.588" size="1.778" layer="95"> &gt;NAME</text>
+          <text x="-12.7" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
+          <text x="-2.032" y="-4.318" size="1.27" layer="94">GND</text>
+          <text x="-1.778" y="3.048" size="1.27" layer="94">VDD</text>
+          <text x="4.318" y="-0.762" size="1.27" layer="94">VOUT</text>
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="MCP9700_TEMP_SENSOR" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="TEMPERATURE_SENSOR" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="3-PIN_SOT_23" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="GND" pad="GND" />
+                <connect gate="G$1" pin="VDD" pad="VDD" />
+                <connect gate="G$1" pin="VOUT" pad="VOUT" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

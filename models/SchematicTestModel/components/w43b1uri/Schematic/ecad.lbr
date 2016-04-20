@@ -1,0 +1,54 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="C_0805" xmlns="eagle">
+          <description>&lt;B&gt; 0805&lt;/B&gt; (2012 Metric) MLCC Capacitor &lt;P&gt;</description>
+          <wire x1="-1" y1="0.625" x2="1" y2="0.625" width="0.0762" layer="51" />
+          <wire x1="1" y1="0.625" x2="1" y2="-0.625" width="0.0762" layer="51" />
+          <wire x1="1" y1="-0.625" x2="-1" y2="-0.625" width="0.0762" layer="51" />
+          <wire x1="-1" y1="-0.625" x2="-1" y2="0.625" width="0.0762" layer="51" />
+          <wire x1="-0.1016" y1="0.7112" x2="0.1016" y2="0.7112" width="0.1524" layer="21" />
+          <wire x1="-0.1016" y1="-0.7112" x2="0.1016" y2="-0.7112" width="0.1524" layer="21" />
+          <smd name="1" x="-1" y="0" dx="1.35" dy="1.55" layer="1" />
+          <smd name="2" x="1" y="0" dx="1.35" dy="1.55" layer="1" />
+          <text x="-1.8" y="1" size="1.016" layer="25" font="vector" ratio="15">&gt;NAME</text>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="CAP_NP">
+          <description>&lt;B&gt;Capacitor&lt;/B&gt; -- non-polarized</description>
+          <wire x1="-1.905" y1="-3.175" x2="0" y2="-3.175" width="0.6096" layer="94" />
+          <wire x1="0" y1="-3.175" x2="1.905" y2="-3.175" width="0.6096" layer="94" />
+          <wire x1="-1.905" y1="-4.445" x2="0" y2="-4.445" width="0.6096" layer="94" />
+          <wire x1="0" y1="-4.445" x2="1.905" y2="-4.445" width="0.6096" layer="94" />
+          <wire x1="0" y1="-2.54" x2="0" y2="-3.175" width="0.254" layer="94" />
+          <wire x1="0" y1="-5.08" x2="0" y2="-4.445" width="0.254" layer="94" />
+          <pin name="P$1" x="0" y="0" visible="off" length="short" direction="pas" rot="R270" />
+          <pin name="P$2" x="0" y="-7.62" visible="off" length="short" direction="pas" rot="R90" />
+          <text x="-2.54" y="-7.62" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
+          <text x="-5.08" y="-7.62" size="1.778" layer="95" rot="R90">&gt;NAME</text>
+          <text x="0.508" y="-2.286" size="1.778" layer="95">1</text>
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="C_0805" prefix="C">
+          <gates>
+            <gate name="G$1" symbol="CAP_NP" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="C_0805" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="P$1" pad="1" />
+                <connect gate="G$1" pin="P$2" pad="2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

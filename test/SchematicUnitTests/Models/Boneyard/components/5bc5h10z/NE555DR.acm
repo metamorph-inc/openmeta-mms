@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="9366bdbb-778e-4840-8c8e-d2520f9066a6" Name="NE555DR" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-a47f8bfd-92ba-4836-9b4a-047642e50afc" Author="" Notes="" XPosition="672" YPosition="336" Name="EDAModel" ID="id-78da05fa-a1a3-4756-ba9b-419791ecbf44" Package="SO08" Device="" Library="NE555DR-697523" DeviceSet="NE555DR" xmlns="">
+    <Pin ID="id-b265f0ac-0c8e-4a41-964f-bfb36a6c8347" PortMap="id-7e88fdf1-9d5b-4492-b59a-f223f04d1f7c" Notes="" XPosition="125" Definition="" YPosition="25" Name="DISCH" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-03f9d8ee-91ea-48ae-bf1e-7f2a696a46fb" PortMap="id-827acf2e-bcec-498c-ae34-7803ae631c5e" Notes="" XPosition="525" Definition="" YPosition="25" Name="THRES" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-2a5119a7-aebd-4e94-b94d-ea1c87ebbe96" PortMap="id-c40daade-fcbf-4cf1-b6dd-57299beee794 id-3485f2f0-3321-4893-9cc5-7d9678ee942c id-0a210f78-cfc5-4428-852a-8b69f6cfe41b id-eff2eeda-f986-4dd4-bf5f-ab8f1cdf9750 id-8d112d6f-5c55-49c1-b994-15864f8ff5ea id-581b8d44-9666-4af8-a728-b865f423335e id-3b0171e5-3249-4f06-9a7e-c8be2069ddbb" Notes="" XPosition="225" Definition="" YPosition="25" Name="GND" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-5b0c22d3-7a93-4ada-9d12-b991ecb62c65" PortMap="id-7c6cb93f-bcba-4f0f-aa53-40e1e63c48f7" Notes="" XPosition="625" Definition="" YPosition="25" Name="TRIG" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-59470d69-711d-4013-9068-a93fbb0e0ccf" PortMap="" Notes="" XPosition="25" Definition="" YPosition="25" Name="CONT" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="-7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-63525d9d-d72e-43fa-80bc-ec0b101fd22c" PortMap="id-27270c14-b265-4187-9e25-9c883dabcb83" Notes="" XPosition="425" Definition="" YPosition="25" Name="RESET" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="-7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-dd9573d7-394b-43de-b84f-8053e90476de" PortMap="id-00b9703d-a027-481c-a1c3-dc3d2e603e4f" Notes="" XPosition="725" Definition="" YPosition="25" Name="VCC" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-e21559b6-2f80-4a0e-bb89-5b21c641a522" PortMap="id-63e631f5-77ce-47bd-b265-4922b38c13da" Notes="" XPosition="325" Definition="" YPosition="25" Name="OUT" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </DomainModel>
+  <Property xmlns:q2="avm" xsi:type="q2:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-b6db67c2-9662-4453-8982-c96db2231a80" XPosition="560" YPosition="21" xmlns="">
+    <Value ID="id-b6db67c2-9662-4453-8982-c96db2231a80" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q2:FixedValue">
+        <Value>NE555DR</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency Name="NE555DR.md" Path="doc\NE555DR.md" Hash="" ID="id-655e0632-f809-4593-a42f-bd425abe8753" Notes="" xmlns="" />
+  <ResourceDependency XPosition="735" YPosition="252" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-a47f8bfd-92ba-4836-9b4a-047642e50afc" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency XPosition="210" YPosition="7" Name="NE555DR_datasheet.pdf" Path="doc\NE555DR_datasheet.pdf" Hash="" ID="id-3b17a465-ff8c-4532-82d2-8169a4b80608" Notes="" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-3d668d44-55d4-4e56-841d-318a8eba85a8" ApplyJoinData="" Notes="" Name="DISCH" Definition="AnalogSignal" YPosition="434" XPosition="1064" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-7e88fdf1-9d5b-4492-b59a-f223f04d1f7c" PortMap="" Notes="" XPosition="42" Definition="" YPosition="42" Name="S" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-c40daade-fcbf-4cf1-b6dd-57299beee794" PortMap="" Notes="" XPosition="42" Definition="" YPosition="119" Name="GND" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-05abea6e-6b97-419f-9a4a-63e0546b34ec" ApplyJoinData="" Notes="" Name="RESET" Definition="DigitalSignal" YPosition="154" XPosition="812" xmlns="">
+    <Role xmlns:q5="systemc" xsi:type="q5:SystemCPort" ID="id-725b018d-83fd-436f-9d36-a5868fc39e0c" PortMap="" Notes="" XPosition="133" Definition="" YPosition="21" Name="P0" DataType="bool" DataTypeDimension="1" Directionality="not_applicable" Function="normal" />
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-3485f2f0-3321-4893-9cc5-7d9678ee942c" PortMap="" Notes="" XPosition="35" Definition="" YPosition="98" Name="GND" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-27270c14-b265-4187-9e25-9c883dabcb83" PortMap="" Notes="" XPosition="35" Definition="" YPosition="28" Name="P0" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-596de585-4214-4927-8adb-2e074996b883" ApplyJoinData="" Notes="" Name="OUT" Definition="AnalogSignal" YPosition="322" XPosition="1064" xmlns="">
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-0a210f78-cfc5-4428-852a-8b69f6cfe41b" PortMap="" Notes="" XPosition="42" Definition="" YPosition="119" Name="GND" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-63e631f5-77ce-47bd-b265-4922b38c13da" PortMap="" Notes="" XPosition="42" Definition="" YPosition="42" Name="S" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-8eb474ce-6c45-4cd3-895b-7bce18049fcc" ApplyJoinData="" Notes="" Name="VCC" Definition="PwrGnd_TwoPort" YPosition="301" XPosition="252" xmlns="">
+    <Role xmlns:q10="schematic" xsi:type="q10:Pin" ID="id-00b9703d-a027-481c-a1c3-dc3d2e603e4f" PortMap="" Notes="" XPosition="224" Definition="" YPosition="49" Name="VCC" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q11="schematic" xsi:type="q11:Pin" ID="id-8d112d6f-5c55-49c1-b994-15864f8ff5ea" PortMap="" Notes="" XPosition="224" Definition="" YPosition="126" Name="GND" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-c172b744-c524-4b4b-b496-5d79c3f086b7" ApplyJoinData="" Notes="" Name="CONT" Definition="AnalogSignal" YPosition="154" XPosition="532" xmlns="">
+    <Role xmlns:q12="schematic" xsi:type="q12:Pin" ID="id-eff2eeda-f986-4dd4-bf5f-ab8f1cdf9750" PortMap="" Notes="" XPosition="42" Definition="" YPosition="119" Name="GND" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q13="schematic" xsi:type="q13:Pin" ID="id-b3ee920e-1f64-444b-93d8-8f4694e4681c" PortMap="id-59470d69-711d-4013-9068-a93fbb0e0ccf" Notes="" XPosition="42" Definition="" YPosition="42" Name="S" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-5e12e24c-8859-4af7-94f7-d9728337c7a8" ApplyJoinData="" Notes="" Name="THRES" Definition="AnalogSignal" YPosition="462" XPosition="336" xmlns="">
+    <Role xmlns:q14="schematic" xsi:type="q14:Pin" ID="id-827acf2e-bcec-498c-ae34-7803ae631c5e" PortMap="" Notes="" XPosition="42" Definition="" YPosition="42" Name="S" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q15="schematic" xsi:type="q15:Pin" ID="id-3b0171e5-3249-4f06-9a7e-c8be2069ddbb" PortMap="" Notes="" XPosition="42" Definition="" YPosition="119" Name="GND" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-511f342e-8b0a-437f-809b-37628528671b" ApplyJoinData="" Notes="" Name="TRIG" Definition="AnalogSignal" YPosition="567" XPosition="336" xmlns="">
+    <Role xmlns:q16="schematic" xsi:type="q16:Pin" ID="id-7c6cb93f-bcba-4f0f-aa53-40e1e63c48f7" PortMap="" Notes="" XPosition="42" Definition="" YPosition="42" Name="S" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q17="schematic" xsi:type="q17:Pin" ID="id-581b8d44-9666-4af8-a728-b865f423335e" PortMap="" Notes="" XPosition="42" Definition="" YPosition="119" Name="GND" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">semiconductors_and_actives.clock_timing.timers</Classifications>
+</Component>

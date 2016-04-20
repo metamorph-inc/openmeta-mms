@@ -62,7 +62,7 @@ namespace DynamicsTeamTest.Projects
             Assert.True(result, "CyPhy2Modelica_v2 failed.");
         }
 
-        [Fact]
+        [Fact(Skip="this analysis_tool was removed")]
         [Trait("Model", "RICircuitVerification")]
         [Trait("CyPhy2Modelica", "RICircuitVerification")]
         public void HybridSal_RICircuit()
@@ -74,7 +74,7 @@ namespace DynamicsTeamTest.Projects
             Assert.True(result, "CyPhy2Modelica_v2 failed during interpretation with verification workflow.");
         }
 
-        [Fact]
+        [Fact(Skip="this analysis_tool was removed")]
         [Trait("Model", "RICircuitVerification")]
         [Trait("CyPhy2Modelica", "RICircuitVerification")]
         public void QR_RICircuit()

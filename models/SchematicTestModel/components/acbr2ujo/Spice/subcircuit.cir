@@ -1,0 +1,16 @@
+* OPAMP MACRO MODEL, SINGLE-POLE 
+* connections:      non-inverting input
+*                   |   inverting input
+*                   |   |   output
+*                   |   |   |
+.SUBCKT OPAMP1      1   2   6
+* INPUT IMPEDANCE
+RIN	1	2	10MEG
+* DC GAIN (100K) AND POLE 1 (10HZ)
+EGAIN	3 0	1 2	100K
+RP1	3	4	1K
+CP1	4	0	15.915UF
+* OUTPUT BUFFER AND RESISTANCE
+EBUFFER	5 0	4 0	1
+ROUT	5	6	10
+.ENDS OPAMP1

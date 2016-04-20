@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="example_models">
+        <Directory Id="Android" Name="SystemC_Android"/>
+    </DirectoryRef>
+    <ComponentGroup Id="tonka">
+      <ComponentGroupRef Id="AddConnector"/>
+      <ComponentGroupRef Id="CyPhy2MfgBom"/>
+      <ComponentGroupRef Id="CyPhy2Schematic"/>
+      <ComponentGroupRef Id="LayoutSolver"/>
+      <ComponentGroupRef Id="CyPhy2SystemC"/>
+      <ComponentGroupRef Id="CyPhy2CADPCB"/>
+      <ComponentGroupRef Id="SpiceVisualizer"/>
+      <ComponentGroupRef Id='tonka_python'/>
+      <ComponentGroupRef Id='ShowNet'/>
+      <ComponentGroupRef Id='PinMatcher'/>
+      <ComponentGroupRef Id='SpiceLib'/>
+      <ComponentGroupRef Id='CyPhy2RF'/>
+      <ComponentGroupRef Id='CyPhy2PCBMfg'/>
+      <ComponentGroupRef Id='AcmEditor'/>
+      <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\src\ComponentCreator\bin\Release\ComponentCreator.exe" />
+      </Component>
+      <Component Id="BoardSynthesis" Directory="INSTALLDIR_BIN">
+        <File Id="BoardSynthesis.exe" Name="BoardSynthesis.exe" KeyPath="yes" Source="..\src\BoardSynthesis\bin\Release\BoardSynthesis.exe" />
+      </Component>
+      <Component Directory="INSTALLDIR_BIN">
+        <File Source="..\bin\MaxRectsBinPack.exe"/>
+      </Component>
+      <Component Id="RectangleBinPackLib" Directory="INSTALLDIR_BIN">
+        <File Id="RectangleBinPackLib.lib" Name="RectangleBinPackLib.lib" KeyPath="yes" Source="..\Release\RectangleBinPackLib.lib" />
+     </Component>
+     <Component Id="BomCostAnalysis" Directory="INSTALLDIR_BIN">
+        <File Id="BomCostAnalysis.exe" Name="BomCostAnalysis.exe" KeyPath="yes" Source="..\src\BomCostAnalysis\bin\Release\BomCostAnalysis.exe" />
+     </Component>
+     <Component Id="RestSharp" Directory="INSTALLDIR_BIN">
+        <File Id="RestSharp.dll" Name="RestSharp.dll" KeyPath="yes" Source="..\3rdParty\restsharp\RestSharp.dll" />
+     </Component>
+      <Component Id="MfgBom" Directory="INSTALLDIR_BIN">
+        <File Id="MfgBom.dll" Name="MfgBom.dll" KeyPath="yes" Source="..\src\MfgBom\bin\Release\MfgBom.dll" />
+      </Component>
+      <Component Id="SystemCParser" Directory="INSTALLDIR_BIN">
+        <File Id="SystemCParser.dll" Name="SystemCParser.dll" KeyPath="yes" Source="..\src\SystemCParser\bin\Release\SystemCParser.dll" />
+      </Component>
+      <Component Id="LayoutJson" Directory="INSTALLDIR_BIN">
+     	<File Id="LayoutJson.dll" Name="LayoutJson.dll" KeyPath="yes" Source="..\src\LayoutJson\bin\Release\LayoutJson.dll" />
+     </Component>
+     <Component Id="AraRFAnalysis" Directory="INSTALLDIR_BIN">
+      <File Source="..\src\AraRFAnalysis\bin\Release\AraRFAnalysis.exe"/>
+     </Component>
+     <Component Id="CommandLine" Directory="INSTALLDIR_BIN">
+      <File Source="..\src\AraRFAnalysis\bin\Release\CommandLine.dll"/>
+     </Component>
+     <ComponentGroupRef Id="Android"/>
+     <ComponentGroupRef Id="Android_artifacts"/>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

@@ -110,6 +110,12 @@ namespace ComponentLibraryManagerTest
         }
 
         [Fact]
+        public void FixtureSuccess()
+        {
+
+        }
+
+        [Fact]
         public void ComponentArchetype_HasFilePath()
         {
             RunTestsOn("RootFolder/Components/HasFilePath");

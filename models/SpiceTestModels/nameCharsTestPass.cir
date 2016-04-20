@@ -1,0 +1,5 @@
+* This component uses all valid special characters in the name
+.SUBCKT AaBbCXxYyZz!#$%[0189]_ 1 2	// fancy subcircuit name
+L1  1 11 LVAL
+R1 11  2 RVAL
+.ENDS AaBbCXxYyZz!#$%[0189]_

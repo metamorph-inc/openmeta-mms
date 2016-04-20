@@ -1,0 +1,233 @@
+* OPA2344
+*****************************************************************************
+* (C) Copyright 2011 Texas Instruments Incorporated. All rights reserved.                                            
+*****************************************************************************
+** This model is designed as an aid for customers of Texas Instruments.
+** TI and its licensors and suppliers make no warranties, either expressed
+** or implied, with respect to this model, including the warranties of 
+** merchantability or fitness for a particular purpose.  The model is
+** provided solely on an "as is" basis.  The entire risk as to its quality
+** and performance is with the customer.
+*****************************************************************************
+*
+* This model is subject to change without notice. Texas Instruments
+* Incorporated is not responsible for updating this model.
+*
+*****************************************************************************
+*
+** Released by: Analog eLab Design Center, Texas Instruments Inc.
+* Part: OPA2344
+* Date: 31MAY2011
+* Model Type: ALL IN ONE
+* Simulator: PSPICE
+* Simulator Version: 16.0.0.p001
+* EVM Order Number: N/A
+* EVM Users Guide: N/A
+* Datasheet: SBOS107A – APRIL 2000 – REVISED AUGUST 2008
+*
+* Model Version: 1.0
+*
+*****************************************************************************
+*
+* Updates:
+*
+* Version 1.0 : 
+* Release to Web
+*
+*****************************************************************************
+* This model is applicable to OPA344, OPA2344, OPA4344
+* BEGIN MODEL OPA2344
+* PINOUT        3   2   7  4  6
+* PINOUT ORDER +IN -IN +V -V OUT
+*
+.SUBCKT OPA2344 3 2 7 4 6
+*
+*
+* BEGIN NOTES
+* FOR MORE ACCURATE VOLTAGES YOU MAY WANT TO USE VNTOL=1E-7 AND / OR RELTOL=0.0001
+*
+* MODEL TEMPERATURE RANGE IS -40 C TO +125 C, NOT ALL PARAMETERS ACCURATELY TRACK THOSE OF AN ACTUAL OPA2344 
+* OVER THE FULL TEMPERATURE RANGE BUT ARE AS CLOSE AS PRACTICAL
+*
+* SET GMIN=1E-13 FOR MORE ACCURATE INPUT BIAS CURRENT RESULTS
+*
+* END NOTES
+*
+*
+* BEGIN OPA2344 MODELED FEATURES
+*
+* FEATURES MODELED ARE
+* OPEN LOOP GAIN AND PHASE
+* INPUT VOLTAGE NOISE W 1/F
+* INPUT CURRENT NOISE W F^2
+* OFFSET CHANGE AT TRANSITION
+* WHEN CMV NEAR POSITIVE RAIL
+* INPUT BIAS CURRENT
+* INPUT CAPACITANCE
+* INPUT COMMON MODE VOLT RANGE
+* INPUT CLAMPS TO RAILS
+* CMRR WITH FREQUENCY EFFECTS
+* PSRR WITH FREQUENCY EFFECTS
+* SLEW RATE
+* QUIESCENT CURRENT
+* QUIESCENT CURRENT VS TEMP
+* QUIESCENT CURRENT VS VOLTAGE
+* RAIL TO RAIL OUTPUT STAGE
+* HIGH CLOAD EFFECTS
+* CLASS AB BIAS IN OUTPUT STAGE
+* OUTPUT CURRENT THROUGH SUPPLIES
+* OUTPUT CURRENT LIMITING
+* OUTPUT CLAMPS TO RAILS
+* OUTPUT SWING VS OUTPUT CURRENT
+*
+* END OF FEATURES
+*
+*
+R3 11 12 2
+R4 13 12 2
+R10 9 14 100
+R11 15 16 100
+R12 17 7 20
+R13 4 18 20
+R16 19 20 1.5E3
+R17 21 22 20
+R18 10 23 20
+D5 6 7 DD
+D6 4 6 DD
+D7 24 0 DIN
+D8 25 0 DIN
+I8 0 24 0.1E-3
+I9 0 25 0.1E-3
+E2 10 0 4 0 1
+E3 22 0 7 0 1
+D9 26 0 DVN
+D10 27 0 DVN
+I10 0 26 0.2E-6
+I11 0 27 0.2E-6
+E4 28 2 26 27 0.3
+G2 29 2 24 25 2.5E-7
+R22 4 7 1E6
+E5 30 0 22 0 1
+E6 31 0 10 0 1
+E7 32 0 33 0 1
+R30 30 34 1E6
+R31 31 35 1E9
+R32 32 36 1E6
+R33 0 34 100
+R34 0 35 1E5
+R35 0 36 100
+E10 37 3 36 0 0.15
+R36 38 33 1E3
+R37 33 39 1E3
+C6 30 34 0.2E-12
+C7 31 35 5E-12
+C8 32 36 1E-12
+E11 40 37 35 0 0.3
+E12 29 40 34 0 0.3
+E14 41 10 22 10 0.5
+D11 19 22 DD
+D12 10 19 DD
+R43 51 45 100
+R44 52 43 100
+G3 19 41 53 41 0.2E-3
+R45 41 19 90E6
+C12 20 6 21.8E-12
+R46 10 47 2E3
+R47 10 49 2E3
+C13 47 49 18E-12
+C14 29 0 2.7E-12
+C15 28 0 2.7E-12
+I21 29 0 0.2E-12
+I22 28 0 0.2E-12
+C16 6 0 1E-12
+D13 43 8 DD
+D14 54 45 DD
+V18 29 48 0
+R53 58 57 2
+R54 58 60 2
+R55 55 22 2K
+R56 59 22 2K
+C20 55 59 18P
+V19 48 56 -200U
+V20 22 62 1.3
+G6 19 41 65 41 0.2M
+I14 46 50 40E-6
+E17 39 0 29 0 1
+E18 38 0 2 0 1
+I15 64 10 45E-6
+R59 6 44 25
+R60 42 6 25
+C21 29 28 5.4E-12
+E19 66 41 59 55 1
+R61 66 65 10E3
+C22 65 41 5E-12
+E20 67 41 49 47 1
+R62 67 53 10E3
+C23 53 41 5E-12
+G7 68 41 19 41 -1E-3
+G8 41 69 19 41 1E-3
+G9 41 70 50 10 1E-3
+G10 71 41 22 46 1E-3
+D17 71 68 DD
+D18 69 70 DD
+R66 68 71 100E6
+R67 70 69 100E6
+R68 71 22 1E3
+R69 10 70 1E3
+E23 22 51 22 71 1
+E24 52 10 70 10 1
+R70 69 41 1E6
+R71 70 41 1E6
+R72 41 71 1E6
+R73 41 68 1E6
+G11 7 4 72 0 -190E-6
+I19 0 73 1E-3
+D19 73 0 DD
+V23 73 72 0.71
+R74 0 72 1E6
+R75 40 29 1E9
+R76 37 40 1E9
+R77 3 37 1E9
+R78 2 28 1E9
+R79 41 53 1E9
+R80 41 65 1E9
+R81 51 22 1E9
+R82 10 52 1E9
+R83 33 0 1E9
+R85 63 12 3E3
+E25 16 22 7 17 -3.1
+E26 14 10 18 4 3.1
+I20 7 4 88E-6
+Q20 8 9 10 QN
+Q15 54 15 22 QP
+J1 22 29 22 JX
+J2 22 28 22 JX
+J3 28 10 28 JX
+J4 29 10 29 JX
+M1 42 43 18 18 NOUT L=3U W=800U
+M2 44 45 17 17 POUT L=3U W=800U
+M3 46 46 21 21 POUT L=3U W=800U
+M4 47 48 11 11 PIN L=3U W=60U
+M5 49 28 13 13 PIN L=3U W=60U
+M8 50 50 23 23 NOUT L=3U W=800U
+M16 55 56 57 57 NIN L=3U W=60U
+M17 59 28 60 60 NIN L=3U W=60U
+M18 61 62 63 63 PIN L=6U W=500U
+M19 12 64 22 22 PIN L=6U W=500U
+M21 58 61 10 10 NIN L=6U W=500U
+M22 61 61 10 10 NIN L=6U W=500U
+M23 64 64 22 22 PIN L=6U W=500U
+.MODEL DD D
+.MODEL QN NPN
+.MODEL QP PNP
+.MODEL JX NJF IS=1E-17
+.MODEL DVN D KF=6.5E-16 IS=1E-16
+.MODEL DIN D
+.MODEL POUT PMOS KP=200U VTO=-0.7
++ LAMBDA=0.01
+.MODEL NOUT NMOS KP=200U VTO=0.7
++ LAMBDA=0.01
+.MODEL PIN PMOS KP=200U VTO=-0.7
+.MODEL NIN NMOS KP=200U VTO=0.7
+.ENDS
+* END MODEL OPA2344

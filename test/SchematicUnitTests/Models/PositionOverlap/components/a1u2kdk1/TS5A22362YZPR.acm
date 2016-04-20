@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="ae3abf61-488d-476f-ac23-cbc1f9af3783" Name="TS5A22362YZPR" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-558d6909-c426-49a4-b169-e33d4bab1dd9" Author="" Notes="" XPosition="270" YPosition="200" Name="EDAModel" Package="10_DSBGA" Device="" Library="General_Andres" DeviceSet="TS5A22362YZPR" xmlns="">
+    <Pin ID="id-96ec7535-1afc-462e-bf48-e1e79b554e3d" PortMap="" Notes="" XPosition="225" Definition="" YPosition="25" Name="GND" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-15.24" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-e70043cb-9c1d-47df-adf8-40c90efe1e1e" PortMap="" Notes="" XPosition="825" Definition="" YPosition="25" Name="NO2" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="-7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-4d52ba0b-3125-47eb-85ba-efbc9e8b0b25" PortMap="" Notes="" XPosition="525" Definition="" YPosition="25" Name="NC1" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-84a4ed05-f7a0-4f0c-b34c-df9e104499b7" PortMap="" Notes="" XPosition="925" Definition="" YPosition="25" Name="V+" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="15.24" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-d572da93-1b00-41c7-82c6-d162dda5c61f" PortMap="" Notes="" XPosition="425" Definition="" YPosition="25" Name="IN2" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-d0f08145-4fbc-4f23-82d6-0c1886f91559" PortMap="" Notes="" XPosition="725" Definition="" YPosition="25" Name="NO1" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-31b885ca-b496-4e54-b108-8bb3e5cc1a7e" PortMap="" Notes="" XPosition="625" Definition="" YPosition="25" Name="NC2" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-1ec17b0e-1236-4500-b137-8671c7f986a3" PortMap="" Notes="" XPosition="25" Definition="" YPosition="25" Name="COM1" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-8450ffcf-6eed-4330-8138-e0ad2289eb26" PortMap="" Notes="" XPosition="325" Definition="" YPosition="25" Name="IN1" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-b3b710a6-bcc5-45a9-8c31-b6bfe9779bd7" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="COM2" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="-7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </DomainModel>
+  <ResourceDependency XPosition="650" YPosition="200" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-558d6909-c426-49a4-b169-e33d4bab1dd9" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-6f80a318-11c8-4b1a-9475-cdd25e8cf831" ApplyJoinData="" Notes="" Name="NO2" Definition="" YPosition="637" XPosition="546" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-39dc6d99-2328-4bc0-a50a-c39367a86fa1" PortMap="id-e70043cb-9c1d-47df-adf8-40c90efe1e1e" Notes="" XPosition="100" Definition="" YPosition="100" Name="NO2" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="-7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-1efe6620-738d-4355-9e41-c06973385c34" ApplyJoinData="" Notes="" Name="GND" Definition="" YPosition="763" XPosition="546" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-89550112-2a79-4674-92a6-d1a79d9c1840" PortMap="id-96ec7535-1afc-462e-bf48-e1e79b554e3d" Notes="" XPosition="100" Definition="" YPosition="100" Name="GND" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-15.24" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-01daa1b4-467d-41d7-8f8f-6a3218569d21" ApplyJoinData="" Notes="" Name="NC2" Definition="" YPosition="532" XPosition="546" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-5b435010-8dfc-43fc-97f4-f75c51202d05" PortMap="id-31b885ca-b496-4e54-b108-8bb3e5cc1a7e" Notes="" XPosition="100" Definition="" YPosition="100" Name="NC2" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-3e991382-8b47-4dd2-a9a0-69581409bd2c" ApplyJoinData="" Notes="" Name="NC1" Definition="" YPosition="294" XPosition="546" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-f1c0f998-cd06-421b-a933-2712119f6752" PortMap="id-4d52ba0b-3125-47eb-85ba-efbc9e8b0b25" Notes="" XPosition="100" Definition="" YPosition="100" Name="NC1" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-98731b0b-7c59-4b42-97d9-176e314b02be" ApplyJoinData="" Notes="" Name="IN1" Definition="" YPosition="462" XPosition="98" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-9ce29e7a-df69-46db-a980-a8223ecdc463" PortMap="id-8450ffcf-6eed-4330-8138-e0ad2289eb26" Notes="" XPosition="100" Definition="" YPosition="100" Name="IN1" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-40e8e48b-19a6-4fb3-b33c-937a85b1c2b6" ApplyJoinData="" Notes="" Name="NO1" Definition="" YPosition="406" XPosition="546" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-8d1d9625-8b56-4f42-a411-2cae76469d28" PortMap="id-d0f08145-4fbc-4f23-82d6-0c1886f91559" Notes="" XPosition="100" Definition="" YPosition="100" Name="NO1" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-d4149830-f7b7-4395-b97a-a39705f077da" ApplyJoinData="" Notes="" Name="IN2" Definition="" YPosition="721" XPosition="98" xmlns="">
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-cb082ad8-5a69-45f1-82ab-ad86cf1d1ff9" PortMap="id-d572da93-1b00-41c7-82c6-d162dda5c61f" Notes="" XPosition="100" Definition="" YPosition="100" Name="IN2" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-26a4bf82-77b7-4675-8147-5056bb26a11f" ApplyJoinData="" Notes="" Name="V_" Definition="" YPosition="329" XPosition="98" xmlns="">
+    <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-58f09797-82a1-4407-8274-802df0940126" PortMap="id-84a4ed05-f7a0-4f0c-b34c-df9e104499b7" Notes="" XPosition="525" Definition="" YPosition="98" Name="V+" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="15.24" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-09ac3090-6967-4c4f-ac17-9fcdb66932fd" ApplyJoinData="" Notes="" Name="COM1" Definition="" YPosition="567" XPosition="98" xmlns="">
+    <Role xmlns:q10="schematic" xsi:type="q10:Pin" ID="id-c0587d24-9a39-4e0c-8775-aa06c1b630c5" PortMap="id-1ec17b0e-1236-4500-b137-8671c7f986a3" Notes="" XPosition="100" Definition="" YPosition="100" Name="COM1" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-d5fd0e50-4a40-421f-8510-4589a3872a88" ApplyJoinData="" Notes="" Name="COM2" Definition="" YPosition="833" XPosition="98" xmlns="">
+    <Role xmlns:q11="schematic" xsi:type="q11:Pin" ID="id-2e07ff63-e35e-4f2b-83d4-a5642533b74e" PortMap="id-b3b710a6-bcc5-45a9-8c31-b6bfe9779bd7" Notes="" XPosition="100" Definition="" YPosition="100" Name="COM2" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="-7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">semiconductors_and_actives.logic_standard.switches</Classifications>
+</Component>

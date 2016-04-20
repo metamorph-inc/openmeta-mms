@@ -1,7 +1,7 @@
 # .\_cyber.py
 # -*- coding: utf-8 -*-
 # PyXB bindings for NM:9017347a610d1436c1aaf52764e6578e8fc1a083
-# Generated 2015-02-24 12:11:08.849000 by PyXB version 1.2.3
+# Generated 2016-02-15 11:24:52.072000 by PyXB version 1.2.3
 # Namespace cyber [xmlns:cyber]
 
 import pyxb
@@ -13,7 +13,7 @@ import pyxb.utils.domutils
 import sys
 
 # Unique identifier for bindings created at the same time
-_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:8174f98f-bc50-11e4-b7a1-001b2181d248')
+_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:057f9670-d409-11e5-9520-7429af7917c0')
 
 # Version of PyXB used to generate the bindings
 _PyXBVersion = '1.2.3'
@@ -22,8 +22,8 @@ if pyxb.__version__ != _PyXBVersion:
     raise pyxb.PyXBVersionError(_PyXBVersion)
 
 # Import bindings for namespaces imported into schema
-import avm as _ImportedBinding__avm
 import pyxb.binding.datatypes
+import avm as _ImportedBinding__avm
 import avm.modelica as _ImportedBinding__modelica
 
 # NOTE: All namespace declarations are reserved within the binding
@@ -125,6 +125,8 @@ class CyberModel_ (_ImportedBinding__avm.DomainModel_):
     # Attribute YPosition inherited from {avm}DomainModel
     
     # Attribute Name inherited from {avm}DomainModel
+    
+    # Attribute ID inherited from {avm}DomainModel
     
     # Attribute Type uses Python identifier Type
     __Type = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, u'Type'), 'Type', '__cyber_CyberModel__Type', ModelType, required=True)

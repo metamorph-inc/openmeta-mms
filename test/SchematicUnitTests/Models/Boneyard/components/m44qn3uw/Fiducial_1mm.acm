@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="177b19ae-4ec7-4a6f-8dea-79e8ff0c7fde" Name="Fiducial_1mm" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-f817ecc6-41a4-4ae1-ae20-61e82554e631" Author="" Notes="" XPosition="270" YPosition="200" Name="EDAModel" Package="FIDUCIAL_1MM" Device="1MM" Library="adafruit" DeviceSet="FIDUCIAL" xmlns="" />
+  <ResourceDependency XPosition="650" YPosition="200" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-f817ecc6-41a4-4ae1-ae20-61e82554e631" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency XPosition="21" YPosition="7" Name="Icon.png" Path="Icon.png" Hash="" ID="id-5d958bb3-fcd1-4ff5-b3f7-93e24dc5b201" Notes="Custom icon for this component" xmlns="" />
+  <Classifications xmlns="">hardware.Fiducials</Classifications>
+</Component>

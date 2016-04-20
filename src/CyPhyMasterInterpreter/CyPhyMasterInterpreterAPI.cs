@@ -1061,6 +1061,8 @@
             }
         }
 
+        DateTime MasterInterpreterStartTime = DateTime.Now;
+
         private MasterInterpreterResult RunAnalysisModelProcessors(
             IMgaModel context,
             IMgaFCO configuration,
@@ -1188,7 +1190,7 @@
                     }
 
                     this.Logger.WriteDebug("Saving test bench manifest");
-                    bool successTestBenchManifest = analysisModelProcessor.SaveTestBenchManifest(this.ProjectManifest);
+                    bool successTestBenchManifest = analysisModelProcessor.SaveTestBenchManifest(this.ProjectManifest, MasterInterpreterStartTime);
                     result.Success = result.Success && successTestBenchManifest;
 
                     if (successTestBenchManifest)

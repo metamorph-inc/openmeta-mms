@@ -47,9 +47,16 @@ namespace ComponentImporterUnitTests
                 var importer = new CyPhyComponentImporter.CyPhyComponentImporterInterpreter();
                 importer.Initialize(mgaProject);
 
-                var result = importer.ImportFile(mgaProject, testPath, zipPath);
-                if (result == null)
-                    resultIsNull = true;
+                try
+                {
+                    var result = importer.ImportFile(mgaProject, testPath, zipPath);
+                    if (result == null)
+                        resultIsNull = true;
+                }
+                finally
+                {
+                    importer.DisposeLogger();
+                }
 
             });
             Assert.False(resultIsNull, "Exception occurred during import.");
@@ -71,10 +78,14 @@ namespace ComponentImporterUnitTests
                 var importer = new CyPhyComponentImporter.CyPhyComponentImporterInterpreter();
                 importer.Initialize(mgaProject);
 
-                Assert.DoesNotThrow(delegate
+                try
                 {
-                    var result = importer.ImportFile(mgaProject, testPath, zipPath);
-                });
+                    importer.ImportFile(mgaProject, testPath, zipPath);
+                }
+                finally
+                {
+                    importer.DisposeLogger();
+                }
             });
         }
 
@@ -93,10 +104,15 @@ namespace ComponentImporterUnitTests
                 var importer = new CyPhyComponentImporter.CyPhyComponentImporterInterpreter();
                 importer.Initialize(mgaProject);
 
-                Assert.DoesNotThrow(delegate
+                try
                 {
+
                     var result = importer.ImportFile(mgaProject, testPath, zipPath);
-                });
+                }
+                finally
+                {
+                    importer.DisposeLogger();
+                }
             });
         }
 
@@ -124,9 +140,16 @@ namespace ComponentImporterUnitTests
                 var importer = new CyPhyComponentImporter.CyPhyComponentImporterInterpreter();
                 importer.Initialize(mgaProject);
 
-                var result = importer.ImportFile(mgaProject, testPath, zipPath);
-                var tungsten = result.ChildObjects.Cast<IMgaFCO>().Where(x => x.Meta.Name == "Resource" && x.Name == "TUNGSTEN_SPRING.PRT").FirstOrDefault();
-                Assert.Equal("CAD\\TUNGSTEN_SPRING.PRT", tungsten.StrAttrByName["Path"]);
+                try
+                {
+                    var result = importer.ImportFile(mgaProject, testPath, zipPath);
+                    var tungsten = result.ChildObjects.Cast<IMgaFCO>().Where(x => x.Meta.Name == "Resource" && x.Name == "TUNGSTEN_SPRING.PRT").FirstOrDefault();
+                    Assert.Equal("CAD\\TUNGSTEN_SPRING.PRT", tungsten.StrAttrByName["Path"]);
+                }
+                finally
+                {
+                    importer.DisposeLogger();
+                }
             });
         }
 

@@ -1,0 +1,12 @@
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+   <Fragment>
+        <DirectoryRef Id="INSTALLDIR_BIN" />
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="PinMatcher">
+            <Component Directory="INSTALLDIR_BIN">
+                <File KeyPath="yes" Source="..\src\PinMatcher\bin\Release\PinMatcher.dll" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

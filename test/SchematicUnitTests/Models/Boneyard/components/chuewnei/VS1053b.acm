@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="ebb3836d-3454-4c6d-a7f4-fb085ecaf5e9" Name="VS1053b" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-82f2aadc-a407-41c4-80cc-bdd0221c5032" Author="" Notes="" XPosition="1001" YPosition="476" Name="EDAModel" ID="id-47359d17-8112-4411-8d11-515010800c5d" Package="LQFP-48" Device="SMD" Library="SparkFun-DigitalIC" DeviceSet="VS1033/1053" xmlns="">
+    <Pin ID="id-8853b1c0-f6cd-4b6f-ad9b-fe761d902ec4" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="AGND2" EDAGate="G$1" EDASymbolLocationX="10.16" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-424812ff-5584-4ba8-9f7e-34531e8ce4fb" PortMap="" Notes="" XPosition="25" Definition="" YPosition="150" Name="CVDD4" EDAGate="G$1" EDASymbolLocationX="5.08" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-c2ca5219-783e-4172-be65-88553ebe5dc9" PortMap="" Notes="" XPosition="625" Definition="" YPosition="400" Name="RX" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="20.32" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-e2080ff6-a39f-4b2e-8729-9e67e57fa62b" PortMap="" Notes="" XPosition="25" Definition="" YPosition="275" Name="GPIO1/I2S_SDATA" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="-10.16" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-e0da1922-10e7-4602-a96c-78c7fcd317ea" PortMap="" Notes="" XPosition="225" Definition="" YPosition="25" Name="AGND3" EDAGate="G$1" EDASymbolLocationX="12.7" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-e165be9f-7e2a-49ad-a469-6ad02ecc2d67" PortMap="" Notes="" XPosition="325" Definition="" YPosition="25" Name="AGND4" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-a2a51316-16fd-49de-a2c3-5d658044380d" PortMap="" Notes="" XPosition="825" Definition="" YPosition="25" Name="CVDD2" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-aefc964d-f557-4b73-ab53-bb8833800b6f" PortMap="" Notes="" XPosition="925" Definition="" YPosition="25" Name="CVDD3" EDAGate="G$1" EDASymbolLocationX="2.54" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-2a45abb2-62d1-4da4-bce4-8d42b95398b3" PortMap="" Notes="" XPosition="725" Definition="" YPosition="275" Name="IOVDD1" EDAGate="G$1" EDASymbolLocationX="-12.7" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-3e3d96de-be89-4646-89d7-f70da1427aee" PortMap="" Notes="" XPosition="425" Definition="" YPosition="25" Name="AVDD1" EDAGate="G$1" EDASymbolLocationX="10.16" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-07912d4f-5500-47d9-9a0d-91050072185a" PortMap="" Notes="" XPosition="525" Definition="" YPosition="25" Name="AVDD2" EDAGate="G$1" EDASymbolLocationX="12.7" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-44182688-1cf7-434a-b7eb-438e6b97bd58" PortMap="" Notes="" XPosition="125" Definition="" YPosition="275" Name="GPIO2/DCLK" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-117b1323-5825-43ae-ad32-21cd56c1b171" PortMap="" Notes="" XPosition="25" Definition="" YPosition="25" Name="AGND1" EDAGate="G$1" EDASymbolLocationX="7.62" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-db4afcc1-7573-404b-9129-ba202dc42da6" PortMap="" Notes="" XPosition="625" Definition="" YPosition="25" Name="AVDD3" EDAGate="G$1" EDASymbolLocationX="15.24" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-3f1fa0df-59b7-4135-af3a-4b556cbfaabb" PortMap="" Notes="" XPosition="925" Definition="" YPosition="275" Name="IOVDD3" EDAGate="G$1" EDASymbolLocationX="-7.62" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-967ad7cc-df11-4e54-ba86-ed015c571cdc" PortMap="" Notes="" XPosition="725" Definition="" YPosition="25" Name="CVDD1" EDAGate="G$1" EDASymbolLocationX="-2.54" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-29b3b77e-8281-4def-ace3-34b734aef402" PortMap="" Notes="" XPosition="625" Definition="" YPosition="275" Name="GPIO7" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-15.24" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-a76bd03f-3e28-4ce2-9e05-5d981c6f1ab3" PortMap="" Notes="" XPosition="825" Definition="" YPosition="275" Name="IOVDD2" EDAGate="G$1" EDASymbolLocationX="-10.16" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-fb7fff49-fffc-48ef-ad63-8efd08913103" PortMap="id-1d03ca0b-ca6e-4115-ad41-d1c38cbfe70d" Notes="" XPosition="425" Definition="" YPosition="275" Name="GPIO5/I2C_MCLK" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="-15.24" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-9e40002e-b021-4f70-b674-16f15ba138c1" PortMap="" Notes="" XPosition="325" Definition="" YPosition="275" Name="GPIO4/I2S_LROUT" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="-12.7" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-af7e0a2b-7d61-43b8-860c-3fc2bfa52053" PortMap="" Notes="" XPosition="525" Definition="" YPosition="275" Name="GPIO6" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-12.7" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-278b628f-83c7-4998-b9ce-0fe288fcd21c" PortMap="" Notes="" XPosition="925" Definition="" YPosition="400" Name="SI" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="17.78" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-1c370c71-3b6b-49b5-914b-d7a66e660004" PortMap="" Notes="" XPosition="825" Definition="" YPosition="400" Name="SCLK" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="15.24" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-97853696-c1c6-49f8-8009-ac872ac7133c" PortMap="" Notes="" XPosition="225" Definition="" YPosition="525" Name="VCO" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-e0cbb979-e7c8-4de7-ae66-f461e6c30801" PortMap="" Notes="" XPosition="25" Definition="" YPosition="525" Name="TEST" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-26d4b142-a1d5-4875-bd37-4a4343e11f20" PortMap="" Notes="" XPosition="225" Definition="" YPosition="275" Name="GPIO3/SDATA" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-10.16" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-4a2e23a2-5805-461c-bb7c-4749de1a5434" PortMap="" Notes="" XPosition="425" Definition="" YPosition="150" Name="DGND4" EDAGate="G$1" EDASymbolLocationX="-7.62" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-9b255ce1-3cd4-4f6d-8262-503f5c13c7aa" PortMap="" Notes="" XPosition="725" Definition="" YPosition="525" Name="XTAL2" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-657b3676-51df-4e8b-b4d0-bebeac99cd68" PortMap="" Notes="" XPosition="925" Definition="" YPosition="150" Name="GPIO0/I2S_SCLK" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="-7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-4294ae29-98c7-4a8b-b51e-71412e9a3e4e" PortMap="" Notes="" XPosition="725" Definition="" YPosition="150" Name="DREQ" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-a0325d10-8fd7-4252-b3ba-0e8a4c7a6885" PortMap="" Notes="" XPosition="425" Definition="" YPosition="525" Name="XDCS/BSYNC" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="10.16" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-a288bd7e-c512-4038-988b-aaff5cf408d7" PortMap="" Notes="" XPosition="325" Definition="" YPosition="150" Name="DGND3" EDAGate="G$1" EDASymbolLocationX="-10.16" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-891bff57-faa6-4fde-82a1-e0b0c8de2e3a" PortMap="" Notes="" XPosition="325" Definition="" YPosition="525" Name="XCS" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="12.7" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-288b6a74-a1bf-4661-a4c7-a14b493dd980" PortMap="" Notes="" XPosition="525" Definition="" YPosition="150" Name="DGND5" EDAGate="G$1" EDASymbolLocationX="-5.08" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-128a4aa0-a95f-4011-a69c-1992fd778c4e" PortMap="" Notes="" XPosition="325" Definition="" YPosition="400" Name="MICP" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-319705fc-84b0-4b9f-8219-afa4d7dc6628" PortMap="" Notes="" XPosition="525" Definition="" YPosition="525" Name="XRESET" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-99e566c2-a2b7-4e20-bebb-160c0e7330e0" PortMap="" Notes="" XPosition="625" Definition="" YPosition="525" Name="XTAL1/MCLK" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="0" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-5976190d-bd4f-4aaa-913f-151f2f49fbe4" PortMap="" Notes="" XPosition="625" Definition="" YPosition="150" Name="DGND6" EDAGate="G$1" EDASymbolLocationX="-2.54" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-9c3d156b-5a0a-4384-96f3-369269d330b0" PortMap="" Notes="" XPosition="125" Definition="" YPosition="150" Name="DGND1" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-667a58b8-41f1-44ee-9a35-a3e60d19a307" PortMap="" Notes="" XPosition="125" Definition="" YPosition="400" Name="LINEIN" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-b2d44ae6-778b-489e-9225-5c717d5f6210" PortMap="" Notes="" XPosition="25" Definition="" YPosition="400" Name="LEFT" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="15.24" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-a3c00d4e-2fb7-4902-adb3-26b457dadf78" PortMap="" Notes="" XPosition="125" Definition="" YPosition="525" Name="TX" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="17.78" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-7f68b7e4-5908-40c9-8b3a-9be1d43a672b" PortMap="" Notes="" XPosition="225" Definition="" YPosition="400" Name="MICN" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="5.08" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-f9e32cd7-71d6-4f8d-b32a-ad2b238eab24" PortMap="" Notes="" XPosition="825" Definition="" YPosition="150" Name="GBUF" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="10.16" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-87440e27-f4c2-40ea-9dd2-60ad4db52413" PortMap="" Notes="" XPosition="425" Definition="" YPosition="400" Name="RCAP" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="0" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-8f5d1c26-008e-4f06-a6f5-6de3bf6573c8" PortMap="" Notes="" XPosition="225" Definition="" YPosition="150" Name="DGND2" EDAGate="G$1" EDASymbolLocationX="-12.7" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-5d8854b1-1cf2-484e-ada3-1fea92885d0a" PortMap="" Notes="" XPosition="525" Definition="" YPosition="400" Name="RIGHT" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="12.7" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-2e403d25-ecf6-459b-9cb9-5f5f7becae57" PortMap="" Notes="" XPosition="725" Definition="" YPosition="400" Name="S0" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="20.32" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </DomainModel>
+  <Property xmlns:q2="avm" xsi:type="q2:PrimitiveProperty" Name="mounting_style" OnDataSheet="false" ID="property.id-bef5a10d-e621-4afd-aabd-01e788cb105b" XPosition="1834" YPosition="80" xmlns="">
+    <Value ID="id-bef5a10d-e621-4afd-aabd-01e788cb105b" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q2:FixedValue">
+        <Value>Surface Mount</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q3="avm" xsi:type="q3:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-e492d592-2fbd-4c30-88ac-355505b360d7" XPosition="1834" YPosition="40" xmlns="">
+    <Value ID="id-e492d592-2fbd-4c30-88ac-355505b360d7" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q3:FixedValue">
+        <Value>VS1053B-L</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency Name="Icon.png" Path="Icon.png" Hash="" ID="id-68593ca1-7e8f-4019-aec6-87e333b003e8" Notes="Custom icon for this component" XPosition="900" YPosition="40" xmlns="" />
+  <ResourceDependency Name="Datasheet.pdf" Path="doc\Datasheet.pdf" Hash="" ID="id-e5461ba9-807c-45f5-82bc-6b9677395cbd" Notes="" XPosition="900" YPosition="140" xmlns="" />
+  <ResourceDependency Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-82f2aadc-a407-41c4-80cc-bdd0221c5032" Notes="Standalone EAGLE library for this device" XPosition="1302" YPosition="266" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-b539a0be-9400-4006-ba68-69e65b3368ed" ApplyJoinData="" XPosition="1827" YPosition="434" Notes="" Definition="DigitalSignal" Name="TX" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-fb8b3552-fec8-4c81-b6f2-76f85d5a48ec" PortMap="id-a3c00d4e-2fb7-4902-adb3-26b457dadf78" Notes="" XPosition="100" Definition="" YPosition="100" Name="TX" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="17.78" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-5ba188bc-0f0b-4e2a-83f9-f767920fb7a2" ApplyJoinData="" XPosition="1827" YPosition="308" Notes="" Definition="DigitalSignal" Name="RX" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-8d7c9a04-8208-4400-bb6f-98eeeef5400c" PortMap="id-c2ca5219-783e-4172-be65-88553ebe5dc9" Notes="" XPosition="100" Definition="" YPosition="100" Name="RX" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="20.32" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-de258e25-72ac-46bb-a196-fcf71bae413e" ApplyJoinData="" XPosition="1827" YPosition="980" Notes="" Definition="AnalogSignal" Name="MICP" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-037814d0-714b-48f0-a219-ab5ec59e69e8" PortMap="id-128a4aa0-a95f-4011-a69c-1992fd778c4e" Notes="" XPosition="100" Definition="" YPosition="100" Name="MICP" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-2cd7d2ea-88b6-435a-8a2a-6973a28da457" ApplyJoinData="" XPosition="1820" YPosition="567" Notes="" Definition="AnalogSignal" Name="LEFT" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-7fb01e3e-46f7-4ff1-bd2f-d319fabdf837" PortMap="id-b2d44ae6-778b-489e-9225-5c717d5f6210" Notes="" XPosition="100" Definition="" YPosition="100" Name="LEFT" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="15.24" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-2e2f4b89-902d-4291-830c-4c0fbf7e2140" ApplyJoinData="" XPosition="462" YPosition="2023" Notes="" Definition="GND" Name="AGND" xmlns="">
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-1192ebf2-92fb-4616-b137-cb187bf21446" PortMap="id-e165be9f-7e2a-49ad-a469-6ad02ecc2d67 id-8853b1c0-f6cd-4b6f-ad9b-fe761d902ec4 id-e0da1922-10e7-4602-a96c-78c7fcd317ea id-117b1323-5825-43ae-ad32-21cd56c1b171" Notes="" XPosition="100" Definition="" YPosition="100" Name="AGND1" EDAGate="G$1" EDASymbolLocationX="7.62" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-136c71e0-db44-467b-853b-f5d1b678a3b8" ApplyJoinData="" XPosition="441" YPosition="616" Notes="" Definition="DigitalClock" Name="SCLK" xmlns="">
+    <Role xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-c24b89a6-1890-485f-a793-2596c853b68b" PortMap="id-1c370c71-3b6b-49b5-914b-d7a66e660004" Notes="" XPosition="100" Definition="" YPosition="100" Name="SCLK" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="15.24" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-a17ea1a1-34a6-4176-a245-ca069513515a" ApplyJoinData="" XPosition="441" YPosition="315" Notes="" Definition="AnalogSignal" Name="IOVDD" xmlns="">
+    <Role xmlns:q10="schematic" xsi:type="q10:Pin" ID="id-e832e0b6-684c-4a55-bfde-520b229f079c" PortMap="id-2a45abb2-62d1-4da4-bce4-8d42b95398b3 id-3f1fa0df-59b7-4135-af3a-4b556cbfaabb id-a76bd03f-3e28-4ce2-9e05-5d981c6f1ab3" Notes="" XPosition="100" Definition="" YPosition="100" Name="IOVDD1" EDAGate="G$1" EDASymbolLocationX="-12.7" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-833b3210-d96b-4bec-8035-f876e0deb38d" ApplyJoinData="" XPosition="455" YPosition="1792" Notes="" Definition="DigitalSignal" Name="GPIO7" xmlns="">
+    <Role xmlns:q11="schematic" xsi:type="q11:Pin" ID="id-719dc583-fea9-48b2-9c95-b2c008543f21" PortMap="id-29b3b77e-8281-4def-ace3-34b734aef402" Notes="" XPosition="100" Definition="" YPosition="100" Name="GPIO7" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-15.24" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-c6d62226-f051-42ed-9a2d-c58cd7674291" ApplyJoinData="" XPosition="448" YPosition="133" Notes="" Definition="AnalogSignal" Name="AVDD" xmlns="">
+    <Role xmlns:q12="schematic" xsi:type="q12:Pin" ID="id-e967307c-2534-409b-ba05-16c84128f7dd" PortMap="id-db4afcc1-7573-404b-9129-ba202dc42da6 id-07912d4f-5500-47d9-9a0d-91050072185a id-3e3d96de-be89-4646-89d7-f70da1427aee" Notes="" XPosition="100" Definition="" YPosition="100" Name="AVDD1" EDAGate="G$1" EDASymbolLocationX="10.16" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-4b23e21c-4ba4-4023-92ad-9d9b268b0a3c" ApplyJoinData="" XPosition="448" YPosition="1687" Notes="" Definition="DigitalSignal" Name="GPIO6" xmlns="">
+    <Role xmlns:q13="schematic" xsi:type="q13:Pin" ID="id-6c515545-282d-44b3-9c9e-31a5fe7ac22d" PortMap="id-af7e0a2b-7d61-43b8-860c-3fc2bfa52053" Notes="" XPosition="100" Definition="" YPosition="100" Name="GPIO6" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-12.7" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-84973901-3289-4bd0-bd08-b9951f2694a7" ApplyJoinData="" XPosition="448" YPosition="224" Notes="" Definition="AnalogSignal" Name="CVDD" xmlns="">
+    <Role xmlns:q14="schematic" xsi:type="q14:Pin" ID="id-5bde5839-51f2-4b82-ade2-2e27ff6212c7" PortMap="id-aefc964d-f557-4b73-ab53-bb8833800b6f id-a2a51316-16fd-49de-a2c3-5d658044380d id-967ad7cc-df11-4e54-ba86-ed015c571cdc id-424812ff-5584-4ba8-9f7e-34531e8ce4fb" Notes="" XPosition="100" Definition="" YPosition="100" Name="CVDD1" EDAGate="G$1" EDASymbolLocationX="-2.54" EDASymbolLocationY="35.56" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-cca7f72a-6e8e-4b7a-95b3-6efb001ccf88" ApplyJoinData="" XPosition="1820" YPosition="840" Notes="" Definition="AnalogSignal" Name="GBUF" xmlns="">
+    <Role xmlns:q15="schematic" xsi:type="q15:Pin" ID="id-e48e4d7c-cd6b-42ee-8068-542aeb267390" PortMap="id-f9e32cd7-71d6-4f8d-b32a-ad2b238eab24" Notes="" XPosition="100" Definition="" YPosition="100" Name="GBUF" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="10.16" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-9d15d6e4-6a4c-4c0d-8d05-9cec59b19a96" ApplyJoinData="" XPosition="1820" YPosition="1092" Notes="" Definition="AnalogSignal" Name="MICN" xmlns="">
+    <Role xmlns:q16="schematic" xsi:type="q16:Pin" ID="id-cc2062a6-4072-4e50-9fb8-2ddc5d7b2dc8" PortMap="id-7f68b7e4-5908-40c9-8b3a-9be1d43a672b" Notes="" XPosition="100" Definition="" YPosition="100" Name="MICN" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="5.08" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-05267c93-c5f5-4fc7-99b1-33a826961fe6" ApplyJoinData="" XPosition="1820" YPosition="1218" Notes="" Definition="AnalogSignal" Name="LINE2" xmlns="">
+    <Role xmlns:q17="schematic" xsi:type="q17:Pin" ID="id-f9c9a97d-72d6-4606-ac9f-f2caec0e64c0" PortMap="id-667a58b8-41f1-44ee-9a35-a3e60d19a307" Notes="" XPosition="100" Definition="" YPosition="100" Name="LINEIN" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-25dce3a2-6c60-4948-a811-856de33848bb" ApplyJoinData="" XPosition="1834" YPosition="714" Notes="" Definition="AnalogSignal" Name="RIGHT" xmlns="">
+    <Role xmlns:q18="schematic" xsi:type="q18:Pin" ID="id-b568ccfc-6708-4bab-ac4d-2be2f18f2955" PortMap="id-5d8854b1-1cf2-484e-ada3-1fea92885d0a" Notes="" XPosition="100" Definition="" YPosition="100" Name="RIGHT" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="12.7" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-7d737f74-49f9-4e2d-b8d2-55b2230c68c5" ApplyJoinData="" XPosition="1834" YPosition="1764" Notes="" Definition="DigitalClock" Name="GPIO5/I2C_MCLK" xmlns="">
+    <Role xmlns:q19="schematic" xsi:type="q19:Pin" ID="id-1d03ca0b-ca6e-4115-ad41-d1c38cbfe70d" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="GPIO5/I2C_MCLK" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="-15.24" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-03e7d5a3-0c0a-45a4-a089-89c94b526af0" ApplyJoinData="" XPosition="434" YPosition="812" Notes="" Definition="DigitalSignal" Name="XDCS/BSYNC" xmlns="">
+    <Role xmlns:q20="schematic" xsi:type="q20:Pin" ID="id-19d107db-5c10-4b5a-9d09-9604369abf50" PortMap="id-a0325d10-8fd7-4252-b3ba-0e8a4c7a6885" Notes="" XPosition="100" Definition="" YPosition="100" Name="XDCS/BSYNC" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="10.16" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-e0b3963a-ff04-48ae-a390-98966ebf6afd" ApplyJoinData="" XPosition="434" YPosition="714" Notes="" Definition="DigitalSignal" Name="XCS" xmlns="">
+    <Role xmlns:q21="schematic" xsi:type="q21:Pin" ID="id-347e409d-2a76-4e44-b5d2-00ace3bec8ad" PortMap="id-891bff57-faa6-4fde-82a1-e0b0c8de2e3a" Notes="" XPosition="100" Definition="" YPosition="100" Name="XCS" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="12.7" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-1bb3dafd-17fa-4160-8e87-286918adaf01" ApplyJoinData="" XPosition="1827" YPosition="1344" Notes="" Definition="AnalogSignal" Name="RCAP" xmlns="">
+    <Role xmlns:q22="schematic" xsi:type="q22:Pin" ID="id-f3baa1ee-9ada-4b70-8f36-31d6e14c78b1" PortMap="id-87440e27-f4c2-40ea-9dd2-60ad4db52413" Notes="" XPosition="100" Definition="" YPosition="100" Name="RCAP" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="0" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-0724171c-a466-4d25-a126-e85ef3fc18d0" ApplyJoinData="" XPosition="434" YPosition="420" Notes="" Definition="DigitalSignal" Name="S0" xmlns="">
+    <Role xmlns:q23="schematic" xsi:type="q23:Pin" ID="id-bb196a04-de4d-4b47-ab74-eb815decff72" PortMap="id-2e403d25-ecf6-459b-9cb9-5f5f7becae57" Notes="" XPosition="100" Definition="" YPosition="100" Name="S0" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="20.32" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-9455f6fa-6005-4169-8894-4b09e878e2ed" ApplyJoinData="" XPosition="441" YPosition="525" Notes="" Definition="DigitalSignal" Name="SI" xmlns="">
+    <Role xmlns:q24="schematic" xsi:type="q24:Pin" ID="id-43b6e3c9-9c34-4168-9689-80ab6ec8316b" PortMap="id-278b628f-83c7-4998-b9ce-0fe288fcd21c" Notes="" XPosition="100" Definition="" YPosition="100" Name="SI" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="17.78" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-bc9d6a06-72fa-4e30-a43d-9bc19afa63b6" ApplyJoinData="" XPosition="462" YPosition="1904" Notes="" Definition="GND" Name="DGND" xmlns="">
+    <Role xmlns:q25="schematic" xsi:type="q25:Pin" ID="id-ca4efa64-f6ef-4f2c-9d24-84dd10c43b00" PortMap="id-5976190d-bd4f-4aaa-913f-151f2f49fbe4 id-288b6a74-a1bf-4661-a4c7-a14b493dd980 id-8f5d1c26-008e-4f06-a6f5-6de3bf6573c8 id-9c3d156b-5a0a-4384-96f3-369269d330b0 id-4a2e23a2-5805-461c-bb7c-4749de1a5434 id-a288bd7e-c512-4038-988b-aaff5cf408d7" Notes="" XPosition="100" Definition="" YPosition="100" Name="DGND1" EDAGate="G$1" EDASymbolLocationX="-15.24" EDASymbolLocationY="-35.56" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-9f2ac59f-6852-43a8-9aa9-1eac4546b9ba" ApplyJoinData="" XPosition="1834" YPosition="1673" Notes="" Definition="DigitalSignal" Name="GPIO4/I2S_LROUT" xmlns="">
+    <Role xmlns:q26="schematic" xsi:type="q26:Pin" ID="id-e6a69a52-b3c2-47c3-b3a7-d953a648bb81" PortMap="id-9e40002e-b021-4f70-b674-16f15ba138c1" Notes="" XPosition="100" Definition="" YPosition="100" Name="GPIO4/I2S_LROUT" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="-12.7" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-da1a7056-fc03-4ac0-a9cc-54d797c97f7f" ApplyJoinData="" XPosition="448" YPosition="1491" Notes="" Definition="DigitalClock" Name="GPIO2/DCLK" xmlns="">
+    <Role xmlns:q27="schematic" xsi:type="q27:Pin" ID="id-a7aaac5d-1426-4f87-904d-2d8f35b03161" PortMap="id-44182688-1cf7-434a-b7eb-438e6b97bd58" Notes="" XPosition="100" Definition="" YPosition="100" Name="GPIO2/DCLK" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-083c0f0f-1b43-491e-897b-225a4460f11f" ApplyJoinData="" XPosition="448" YPosition="1589" Notes="" Definition="DigitalSignal" Name="GPIO3/SDATA" xmlns="">
+    <Role xmlns:q28="schematic" xsi:type="q28:Pin" ID="id-2533203d-57c9-40f3-8640-c7084784adc0" PortMap="id-26d4b142-a1d5-4875-bd37-4a4343e11f20" Notes="" XPosition="100" Definition="" YPosition="100" Name="GPIO3/SDATA" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-10.16" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-19c50bef-7763-4a3f-9f52-08f903dda3f8" ApplyJoinData="" XPosition="1820" YPosition="1463" Notes="" Definition="DigitalClock" Name="GPIO0/I2S_SCLK" xmlns="">
+    <Role xmlns:q29="schematic" xsi:type="q29:Pin" ID="id-fa3a1a78-329e-4ddc-b9c6-ab9499b91aa9" PortMap="id-657b3676-51df-4e8b-b4d0-bebeac99cd68" Notes="" XPosition="100" Definition="" YPosition="100" Name="GPIO0/I2S_SCLK" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="-7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-bb30429f-9a1c-406a-98fb-9855ba033a1a" ApplyJoinData="" XPosition="434" YPosition="1008" Notes="" Definition="DigitalSignal" Name="XRESET" xmlns="">
+    <Role xmlns:q30="schematic" xsi:type="q30:Pin" ID="id-6acad1ae-8b18-436e-86ae-3480c9612285" PortMap="id-319705fc-84b0-4b9f-8219-afa4d7dc6628" Notes="" XPosition="100" Definition="" YPosition="100" Name="XRESET" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-db28a7f1-5127-4ab2-bfe3-3f5bbaf4d4c5" ApplyJoinData="" XPosition="441" YPosition="1393" Notes="" Definition="DigitalSignal" Name="VCO" xmlns="">
+    <Role xmlns:q31="schematic" xsi:type="q31:Pin" ID="id-0e92cbeb-1017-4970-ba65-5c8ef6a483ec" PortMap="id-97853696-c1c6-49f8-8009-ac872ac7133c" Notes="" XPosition="100" Definition="" YPosition="100" Name="VCO" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-8217fecc-9252-4b1c-8630-def5a5a6ff50" ApplyJoinData="" XPosition="434" YPosition="1106" Notes="" Definition="DigitalSignal" Name="TEST" xmlns="">
+    <Role xmlns:q32="schematic" xsi:type="q32:Pin" ID="id-ea39944f-9e3a-49fc-8e53-90165e9ae225" PortMap="id-e0cbb979-e7c8-4de7-ae66-f461e6c30801" Notes="" XPosition="100" Definition="" YPosition="100" Name="TEST" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-252be094-7059-4220-a75e-c505769bc959" ApplyJoinData="" XPosition="434" YPosition="917" Notes="" Definition="DigitalSignal" Name="DREQ" xmlns="">
+    <Role xmlns:q33="schematic" xsi:type="q33:Pin" ID="id-ed4f70ab-f279-498b-82aa-50199c105caa" PortMap="id-4294ae29-98c7-4a8b-b51e-71412e9a3e4e" Notes="" XPosition="100" Definition="" YPosition="100" Name="DREQ" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-5ba893e9-be49-4a5a-b8c1-2937759d91f7" ApplyJoinData="" XPosition="1806" YPosition="1568" Notes="" Definition="DigitalSignal" Name="GPIO1/I2S_SDATA" xmlns="">
+    <Role xmlns:q34="schematic" xsi:type="q34:Pin" ID="id-7765c8d0-c2f0-453c-be42-ecf484b3d190" PortMap="id-e2080ff6-a39f-4b2e-8729-9e67e57fa62b" Notes="" XPosition="100" Definition="" YPosition="100" Name="GPIO1/I2S_SDATA" EDAGate="G$1" EDASymbolLocationX="27.94" EDASymbolLocationY="-10.16" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-73c435fa-11d8-43f6-a83b-95cf8db77acf" ApplyJoinData="" XPosition="434" YPosition="1197" Notes="" Definition="DigitalClock" Name="XTAL1/MCLK" xmlns="">
+    <Role xmlns:q35="schematic" xsi:type="q35:Pin" ID="id-f9f274ec-89d6-402a-ade5-cae2bb483523" PortMap="id-99e566c2-a2b7-4e20-bebb-160c0e7330e0" Notes="" XPosition="100" Definition="" YPosition="100" Name="XTAL1/MCLK" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="0" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-da8597d2-3a0f-4c72-94b6-0da07d46d073" ApplyJoinData="" XPosition="441" YPosition="1302" Notes="" Definition="DigitalClock" Name="XTAL2" xmlns="">
+    <Role xmlns:q36="schematic" xsi:type="q36:Pin" ID="id-7688f484-7755-4349-b3a5-e1e900fdfcbc" PortMap="id-9b255ce1-3cd4-4f6d-8262-503f5c13c7aa" Notes="" XPosition="100" Definition="" YPosition="100" Name="XTAL2" EDAGate="G$1" EDASymbolLocationX="-25.4" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">semiconductors_and_actives.specialty_application_ics.digital_audio.codecs</Classifications>
+</Component>

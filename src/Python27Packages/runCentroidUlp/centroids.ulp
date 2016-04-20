@@ -1,0 +1,65 @@
+/*************************************************************************
+	ULP to generate a pick and place CSV (spreadsheet) file from a board file,
+	to help automate PCB assembly.
+
+	23 September 2014, Metamorph Software Inc.
+*************************************************************************/
+
+#usage "Generate a pick and place centroid file from a board.\n"
+       "Usage: RUN centroids.ulp"
+
+/*
+From Eagle's "Help/User Language/Builtins/Builtin Statements/board()":
+
+"By using the board statement without an argument, you can check if the
+current editor window contains a board drawing. In that case, board
+behaves like an integer constant, returning 1 if there is a board
+drawing in the current editor window, and 0 otherwise."
+*/
+
+if (board)	// Check if Eagle is running from a "board" drawing.
+{
+	board(B) // Open the board context in the UL_BOARD instance "B".
+	{
+		// Get an output CSV file name.
+		string csvFileName = filesetext(B.name, "_centroids.csv");
+		if( argc > 1 )
+		{
+		    csvFileName = argv[ 1 ];
+		}
+
+		// Redirect printf() output to the CSV file in the following block.
+		output( csvFileName )
+		{
+			printf( "**********************************************************\n"
+					" Centroid data generated for the PCB '%s'\n"
+					" at %s.\n\n"
+					" (X and Y are in inches.)\n"
+					"**********************************************************\n"
+					"\n\n",
+				filename(B.name),
+				t2string(time()) );
+
+			printf( "REF,PACKAGE,VALUE,X,Y,ROTATION,SIDE\n" );
+
+			// For each UL_ELEMENT E in UL_BOARD B:
+			B.elements(E)
+			{
+				printf("%s,%s,%s,%.4f,%.4f,%.1f,%s\n",
+					E.name,
+					E.package.name,
+					E.value, 
+					u2inch(E.x),
+					u2inch(E.y),
+					E.angle,
+					E.mirror ? "BOTTOM" : "TOP" );
+			}
+		}
+	}
+}
+else
+{
+	dlgMessageBox(":Please run from a board file.");
+	exit( EXIT_FAILURE );
+}
+

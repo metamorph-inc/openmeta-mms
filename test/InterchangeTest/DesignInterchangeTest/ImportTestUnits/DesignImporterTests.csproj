@@ -27,7 +27,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -48,6 +48,9 @@
     </Reference>
     <Reference Include="GME.Util, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\3rdParty\Ionic.Zip\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="ISIS.GME.Common, Version=1.0.4.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -71,6 +74,13 @@
     <Compile Include="..\..\..\..\src\CommonFiles\MgaUtils.cs">
       <Link>MgaUtils.cs</Link>
     </Compile>
+    <Compile Include="..\..\ComponentInterchangeTest\ImportTestUnits\MgaGateway.cs">
+      <Link>MgaGateway.cs</Link>
+    </Compile>
+    <Compile Include="LayoutJson.cs" />
+    <Compile Include="DesignWithFiles.cs" />
+    <Compile Include="Description.cs" />
+    <Compile Include="DesignPackage.cs" />
     <Compile Include="CAD.cs" />
     <Compile Include="DesignImporterTests.cs" />
     <Compile Include="DSAlternative.cs" />
@@ -82,6 +92,10 @@
     <ProjectReference Include="..\..\..\..\meta\DesignDataPackage\lib\csharp\XSD2CSharp\XSD2CSharp.csproj">
       <Project>{B4B9DC90-2857-4C8E-9BDE-47EC4649122B}</Project>
       <Name>XSD2CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\src\ComponentLibraryManager\ComponentLibraryManager.csproj">
+      <Project>{0B1EAA2B-5B37-4D27-868E-60CF820B3273}</Project>
+      <Name>ComponentLibraryManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\src\CyPhy2ComponentModel\CyPhy2ComponentModel.csproj">
       <Project>{E6267D3D-FDAA-4173-A5E7-87B23B46F883}</Project>

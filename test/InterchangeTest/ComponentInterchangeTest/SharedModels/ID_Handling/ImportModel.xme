@@ -8,7 +8,7 @@
 	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x31" kind="RootFolder" guid="{968369df-6526-4aff-b422-5b38ee90e894}">
 		<name>ImportExportTest</name>
 		<folder id="id-006a-00000002" relid="0x14" childrelidcntr="0x11" kind="Components" guid="{309c446c-66f7-463a-b40d-b6ec97085142}">
-			<name>Imported_Components</name>
+			<name>Components</name>
 		</folder>
 		<folder id="id-006a-00000003" relid="0x2e" childrelidcntr="0x8" libref="CADResourceLibrary" kind="RootFolder" guid="{13b19e07-ff61-4a7f-82c6-58dea72fb96f}">
 			<name>CADResourceLibrary</name>

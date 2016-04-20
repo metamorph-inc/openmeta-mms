@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSXCADLib", "CSXCAD\CSXCADLib.csproj", "{F8FDFE2F-C2AF-490C-8FA9-039487D90E56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCEMCAD", "TestCEMCAD\TestCEMCAD.csproj", "{1367A642-0988-4FCC-A557-68769A115D37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyPhy2RF", "CyPhy2RF\CyPhy2RF.csproj", "{01054157-AE03-456C-892D-351D82492151}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53EFD5B3-2B30-4FA5-B91A-F3EAE3A9A401} = {53EFD5B3-2B30-4FA5-B91A-F3EAE3A9A401}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FDTDPostprocess", "FDTDPostprocess\FDTDPostprocess.csproj", "{53EFD5B3-2B30-4FA5-B91A-F3EAE3A9A401}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyPhy2RFTest", "..\..\test\CyPhy2RFTest\CyPhy2RFTest.csproj", "{E5E6F059-F84C-4831-9E5F-A675DD935767}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8FDFE2F-C2AF-490C-8FA9-039487D90E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8FDFE2F-C2AF-490C-8FA9-039487D90E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8FDFE2F-C2AF-490C-8FA9-039487D90E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8FDFE2F-C2AF-490C-8FA9-039487D90E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1367A642-0988-4FCC-A557-68769A115D37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1367A642-0988-4FCC-A557-68769A115D37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1367A642-0988-4FCC-A557-68769A115D37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1367A642-0988-4FCC-A557-68769A115D37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01054157-AE03-456C-892D-351D82492151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01054157-AE03-456C-892D-351D82492151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01054157-AE03-456C-892D-351D82492151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01054157-AE03-456C-892D-351D82492151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53EFD5B3-2B30-4FA5-B91A-F3EAE3A9A401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53EFD5B3-2B30-4FA5-B91A-F3EAE3A9A401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53EFD5B3-2B30-4FA5-B91A-F3EAE3A9A401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5E6F059-F84C-4831-9E5F-A675DD935767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5E6F059-F84C-4831-9E5F-A675DD935767}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5E6F059-F84C-4831-9E5F-A675DD935767}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5E6F059-F84C-4831-9E5F-A675DD935767}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

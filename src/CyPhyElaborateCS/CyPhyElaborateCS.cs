@@ -4,6 +4,7 @@ namespace CyPhyElaborateCS
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using CyPhyGUIs;
     using GME.CSharp;
     using GME.MGA;
     using GME.MGA.Core;
@@ -15,7 +16,7 @@ namespace CyPhyElaborateCS
     ProgId(ComponentConfig.ProgID),
     ClassInterface(ClassInterfaceType.AutoDual)]
     [ComVisible(true)]
-    public class CyPhyElaborateCSInterpreter : IMgaComponentEx, IGMEVersionInfo
+    public class CyPhyElaborateCSInterpreter : IMgaComponentEx, IGMEVersionInfo, CyPhyGUIs.ICyPhyInterpreter
     {
         /// <summary>
         /// Contains information about the GUI event that initiated the invocation.
@@ -51,7 +52,7 @@ namespace CyPhyElaborateCS
             /// Using the context menu by right clicking the background of the GME modeling window
             /// </summary>
             GME_BGCONTEXT_START = 18,
-            
+
             /// <summary>
             /// Not used by GME
             /// </summary>
@@ -79,6 +80,9 @@ namespace CyPhyElaborateCS
                 this.componentParameters = new SortedDictionary<string, object>();
             }
         }
+
+        public Boolean UnrollConnectors = true;
+
 
         /// <summary>
         /// The main entry point of the interpreter. A transaction is already open,
@@ -152,13 +156,13 @@ namespace CyPhyElaborateCS
 
                 // initialize formula evauator
                 formulaEval.Initialize(project);
-                
+
                 // automation means no UI element shall be shown by the interpreter
                 formulaEval.ComponentParameter["automation"] = "true";
-                
+
                 // do not write to the console
                 formulaEval.ComponentParameter["console_messages"] = "off";
-                
+
                 // do not expand nor collapse the model
                 formulaEval.ComponentParameter["expanded"] = "true";
 
@@ -187,6 +191,41 @@ namespace CyPhyElaborateCS
 
             sw.Stop();
             this.Logger.WriteDebug("Formula evaluator runtime: {0}", sw.Elapsed.ToString("c"));
+
+
+            if (UnrollConnectors)
+            {
+                sw.Restart();
+                this.Logger.WriteInfo("ConnectorUnroller started");
+                try
+                {
+                    var kindCurrentObj = currentobj.MetaBase.Name;
+                    if (kindCurrentObj == "ComponentAssembly")
+                    {
+                        using (Unroller unroller = new Unroller(currentobj.Project, Traceability, Logger))
+                        {
+                            unroller.UnrollComponentAssembly(currentobj as MgaModel);
+                        }
+                    }
+                    else if (kindCurrentObj == "TestBench")
+                    {
+                        using (Unroller unroller = new Unroller(currentobj.Project, Traceability, Logger))
+                        {
+                            unroller.UnrollTestBench(currentobj as MgaModel);
+                        }
+                    }
+
+                    this.Logger.WriteInfo("ConnectorUnroller finished");
+                }
+                catch (Exception ex)
+                {
+                    this.Logger.WriteError("ConnectorUnroller failed. Check log for details.");
+                    this.Logger.WriteDebug(ex.ToString());
+                    success = false;
+                }
+                sw.Stop();
+                this.Logger.WriteDebug("ConnectorUnroller runtime: {0}", sw.Elapsed.ToString("c"));
+            }
 
             this.Logger.WriteInfo("CyPhyElaborate 2.0 finished.");
             System.Windows.Forms.Application.DoEvents();
@@ -324,7 +363,7 @@ namespace CyPhyElaborateCS
             // TODO: is subtype
 
             //// check everything else on demand
-            
+
             return true;
         }
 
@@ -347,7 +386,7 @@ namespace CyPhyElaborateCS
 
             // get an elaborator for the current context
             var elaborator = Elaborator.GetElaborator(currentobj as MgaModel, this.Logger);
-            
+
             // elaborate the entire model starting from the current object
             elaborator.Elaborate();
 
@@ -460,6 +499,23 @@ namespace CyPhyElaborateCS
                     MgaGateway.PerformInTransaction(delegate
                     {
                         success = this.Main(project, currentobj, selectedobjs, this.Convert(param));
+
+                        if (parameters!= null)
+                        {
+                            var tbManifest = AVM.DDP.MetaTBManifest.OpenForUpdate(parameters.OutputDirectory);
+                            Dictionary<string, AVM.DDP.MetaTBManifest.Metric> metrics = tbManifest.Metrics.ToDictionary(metric => metric.Name);
+                            foreach (MgaFCO metricFco in ((MgaModel)parameters.CurrentFCO).ChildFCOs.Cast<MgaFCO>()
+                                .Where(fco => fco.Meta.Name == "Metric"))
+                            {
+                                AVM.DDP.MetaTBManifest.Metric metric;
+                                if (metrics.TryGetValue(metricFco.Name, out metric))
+                                {
+                                    metric.Value = metricFco.GetStrAttrByNameDisp("Value");
+                                }
+                            }
+
+                            tbManifest.Serialize(parameters.OutputDirectory);
+                        }
                     },
                     transactiontype_enum.TRANSACTION_NON_NESTED);
 
@@ -625,6 +681,7 @@ namespace CyPhyElaborateCS
 
         #region Custom Parameters
         private SortedDictionary<string, object> componentParameters = null;
+        private IInterpreterMainParameters parameters;
 
         /// <summary>
         /// Gets a parameter by name.
@@ -724,6 +781,14 @@ namespace CyPhyElaborateCS
             get { return GMEInterfaceVersion_enum.GMEInterfaceVersion_Current; }
         }
 
+        public string InterpreterConfigurationProgId
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         #endregion
 
         #region Registration Helpers
@@ -738,6 +803,26 @@ namespace CyPhyElaborateCS
         public static void GMEUnRegister(Type t)
         {
             Registrar.UnregisterComponentsInGMERegistry();
+        }
+
+        public IInterpreterPreConfiguration PreConfig(IPreConfigParameters parameters)
+        {
+            return null;
+        }
+
+        public IInterpreterConfiguration DoGUIConfiguration(IInterpreterPreConfiguration preConfig, IInterpreterConfiguration previousConfig)
+        {
+            return null;
+        }
+
+        public IInterpreterResult Main(IInterpreterMainParameters parameters)
+        {
+            var result = new InterpreterResult();
+            this.parameters = parameters;
+            result.Success = this.RunInTransaction(parameters.CurrentFCO.Project, parameters.CurrentFCO, parameters.SelectedFCOs, 128);
+            result.RunCommand = "cmd.exe /c \"\"";
+
+            return result;
         }
 
         #endregion

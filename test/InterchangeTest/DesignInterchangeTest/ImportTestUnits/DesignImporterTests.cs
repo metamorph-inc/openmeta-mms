@@ -104,4 +104,16 @@ namespace DesignImporterTests
         }
     }
 
+
+    public class GenCodeTest
+    {
+        [Fact]
+        void PortShouldHaveModelicaConnectorAttribute()
+        {
+            Xunit.Assert.Equal(typeof(avm.Port).GetCustomAttributes(typeof(System.Xml.Serialization.XmlIncludeAttribute), false)
+                .Cast<System.Xml.Serialization.XmlIncludeAttribute>()
+                .Where(xmlIncludeAttribute => xmlIncludeAttribute.Type == (typeof(avm.modelica.Connector)))
+                .Count(), 1);
+        }
+    }
 }

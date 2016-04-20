@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="6f067ed7-d43e-4797-88d2-9e52b52be3cb" Name="WakeBus_Breakout" Version="" xmlns="avm">
+  <Connector ConnectorComposition="" ID="id-1100481b-d72b-4eb5-a618-ed975d1e4985" ApplyJoinData="" Notes="" Name="WAKE_OUT" Definition="" YPosition="203" XPosition="35" xmlns="">
+    <Role xmlns:q1="schematic" xsi:type="q1:Pin" ID="id-ffc2d68c-43b7-4aef-b26a-4c9a1f5a1f2e" PortMap="id-903f6832-0752-4ed9-9362-a3eb1fd4fb6c" Notes="" XPosition="70" Definition="" YPosition="56" Name="WAKE_OUT" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-f864699a-a536-41e7-b56b-edb0e30d1d73" ApplyJoinData="" Notes="" Name="PS_HOLD" Definition="" YPosition="287" XPosition="35" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-bfb585f8-df9a-476e-8dcd-69892aaed1c3" PortMap="id-901b8235-51a3-4983-ab4f-175c47988767" Notes="" XPosition="84" Definition="" YPosition="84" Name="PS_HOLD" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-83933b1d-92f7-4ea1-a17f-e19e8003510d" ApplyJoinData="" Notes="" Name="WakeBus" Definition="" YPosition="168" XPosition="343" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-901b8235-51a3-4983-ab4f-175c47988767" PortMap="" Notes="" XPosition="56" Definition="" YPosition="238" Name="PS_HOLD" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-79db854b-d9f3-4b63-bea1-3f7dc0e7afc9" PortMap="id-4c15bc52-0695-4323-880d-c1d962aa3487" Notes="" XPosition="56" Definition="" YPosition="98" Name="DETECT_IN" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-0bca4b3c-6c8f-4fe0-bfe9-cfb88c64d016" PortMap="" Notes="" XPosition="56" Definition="" YPosition="28" Name="WAKE_IN" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-903f6832-0752-4ed9-9362-a3eb1fd4fb6c" PortMap="" Notes="" XPosition="56" Definition="" YPosition="168" Name="WAKE_OUT" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-172dcffe-3ac1-4c04-b893-0dc4d59e917a" ApplyJoinData="" Notes="" Name="WAKE_IN" Definition="" YPosition="35" XPosition="35" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-e3e120f6-f09d-4219-8b54-c1a91a6eb561" PortMap="id-0bca4b3c-6c8f-4fe0-bfe9-cfb88c64d016" Notes="" XPosition="56" Definition="" YPosition="42" Name="WAKE_IN" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-506a2813-6f76-4454-8130-4f9872168017" ApplyJoinData="" Notes="" Name="DETECT_IN" Definition="" YPosition="119" XPosition="35" xmlns="">
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-4c15bc52-0695-4323-880d-c1d962aa3487" PortMap="" Notes="" XPosition="84" Definition="" YPosition="56" Name="DETECT_IN" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">model_utilities.breakout_components</Classifications>
+</Component>

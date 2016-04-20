@@ -1,0 +1,62 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="6_BUMP_UCSP" xmlns="eagle">
+          <smd name="A1" x="-0.25" y="0.5" dx="0.35" dy="0.35" layer="1" roundness="100" stop="no" />
+          <smd name="A2" x="-0.25" y="0" dx="0.35" dy="0.35" layer="1" roundness="100" stop="no" />
+          <smd name="A3" x="-0.25" y="-0.5" dx="0.35" dy="0.35" layer="1" roundness="100" stop="no" />
+          <smd name="B1" x="0.25" y="0.5" dx="0.35" dy="0.35" layer="1" roundness="100" stop="no" />
+          <smd name="B2" x="0.25" y="0" dx="0.35" dy="0.35" layer="1" roundness="100" stop="no" />
+          <smd name="B3" x="0.25" y="-0.5" dx="0.35" dy="0.35" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="0.8" radius="0.0635" width="0.16" layer="21" />
+          
+          <circle x="-0.25" y="0.5" radius="0.125" width="0" layer="29" />
+          <circle x="-0.25" y="0" radius="0.125" width="0" layer="29" />
+          <circle x="0.25" y="-0.5" radius="0.125" width="0" layer="29" />
+          <circle x="0.25" y="0" radius="0.125" width="0" layer="29" />
+          <circle x="0.25" y="0.5" radius="0.125" width="0" layer="29" />
+          <circle x="-0.25" y="-0.5" radius="0.125" width="0" layer="29" />
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="6_PIN_COMPARATOR">
+          <wire x1="-10.16" y1="10.16" x2="-10.16" y2="-10.16" width="0.254" layer="94" />
+          <wire x1="-10.16" y1="-10.16" x2="10.16" y2="-10.16" width="0.254" layer="94" />
+          <wire x1="10.16" y1="-10.16" x2="10.16" y2="10.16" width="0.254" layer="94" />
+          <wire x1="10.16" y1="10.16" x2="-10.16" y2="10.16" width="0.254" layer="94" />
+          <pin name="IN+" x="-15.24" y="5.08" length="middle" direction="pas" />
+          <pin name="IN-" x="-15.24" y="-5.08" length="middle" direction="pas" />
+          <pin name="OUT" x="15.24" y="5.08" length="middle" direction="pas" rot="R180" />
+          <pin name="REF" x="15.24" y="-5.08" length="middle" direction="pas" rot="R180" />
+          <pin name="VCC" x="0" y="15.24" length="middle" direction="pas" rot="R270" />
+          <pin name="VEE" x="0" y="-15.24" length="middle" direction="pas" rot="R90" />
+          
+          
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="MAX9025EBT" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="6_PIN_COMPARATOR" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="6_BUMP_UCSP" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="IN+" pad="B1" />
+                <connect gate="G$1" pin="IN-" pad="B3" />
+                <connect gate="G$1" pin="OUT" pad="A2" />
+                <connect gate="G$1" pin="REF" pad="B2" />
+                <connect gate="G$1" pin="VCC" pad="A1" />
+                <connect gate="G$1" pin="VEE" pad="A3" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

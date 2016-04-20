@@ -31,6 +31,8 @@
         eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="Formula" upperBound="-1"
         eType="#//Formula" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DomainMapping" upperBound="-1"
+        eType="#//DomainMapping" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DomainModel" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="UsesResource" ordered="false"
@@ -40,6 +42,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="XPosition" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//UnsignedIntObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="YPosition" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//UnsignedIntObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ID" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//ID"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Property" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
@@ -217,8 +220,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="DesignSpaceSrcID" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="DomainFeature" upperBound="-1"
         eType="#//DesignDomainFeature" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ResourceDependency" upperBound="-1"
+        eType="#//Resource" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Container" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XPosition" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//UnsignedIntObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="Container" upperBound="-1"
         eType="#//Container" containment="true"/>
@@ -232,10 +238,21 @@
         upperBound="-1" eType="#//Connector" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="JoinData" upperBound="-1"
         eType="ecore:EClass iFAB.ecore#//assemblyDetail" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XPosition" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//UnsignedIntObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="YPosition" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//UnsignedIntObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="Formula" upperBound="-1"
         eType="#//Formula" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ContainerFeature" upperBound="-1"
+        eType="#//ContainerFeature" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ID" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//ID"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Description" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ResourceDependency" upperBound="-1"
+        eType="#//Resource" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DomainModel" upperBound="-1"
+        eType="#//DomainModel" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Resource" upperBound="-1"
+        eType="#//Resource" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Classifications" upperBound="-1"
+        eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//AnyURI"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Compound" eSuperTypes="#//Container"/>
   <eClassifiers xsi:type="ecore:EClass" name="Optional" eSuperTypes="#//DesignSpaceContainer"/>
@@ -334,6 +351,8 @@
     <eLiterals name="StatementE" value="4"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConnectorFeature" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ContainerFeature" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DomainMapping" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="TestBench">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="TopLevelSystemUnderTest"
@@ -501,6 +520,7 @@
           upperBound="-1" eType="#//cad/Parameter" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="ModelMetric" ordered="false"
           upperBound="-1" eType="#//cad/Metric" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="Format" eType="#//cad/FileFormat"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="Datum" abstract="true" eSuperTypes="#//DomainModelPort">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="DatumName" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
@@ -598,6 +618,12 @@
       <eStructuralFeatures xsi:type="ecore:EReference" name="Datum" lowerBound="1"
           eType="#//cad/Datum" eKeys="#//PortMapTarget/ID"/>
     </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="FileFormat">
+      <eLiterals name="Creo"/>
+      <eLiterals name="AP_203" value="1" literal="AP_203"/>
+      <eLiterals name="AP_214" value="2"/>
+      <eLiterals name="STL" value="3"/>
+    </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AssemblyRoot" eSuperTypes="#//DesignDomainFeature">
       <eStructuralFeatures xsi:type="ecore:EReference" name="AssemblyRootComponentInstance"
           lowerBound="1" eType="#//ComponentInstance" eKeys="#//ComponentInstance/ID"/>
@@ -668,6 +694,254 @@
       <eLiterals name="SignalFlow"/>
       <eLiterals name="Simulink" value="1"/>
       <eLiterals name="ESMoL" value="2"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="schematic" nsURI="schematic" nsPrefix="schematic">
+    <eClassifiers xsi:type="ecore:EClass" name="SchematicModel" abstract="true" eSuperTypes="#//DomainModel">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Pin" upperBound="-1"
+          eType="#//schematic/Pin" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Pin" eSuperTypes="#//DomainModelPort">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="EDAGate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="EDASymbolLocationX" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="EDASymbolLocationY" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="EDASymbolRotation" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="SPICEPortNumber" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//UnsignedIntObject"/>
+    </eClassifiers>
+    <eSubpackages name="eda" nsURI="eda" nsPrefix="eda">
+      <eClassifiers xsi:type="ecore:EClass" name="EDAModel" eSuperTypes="#//schematic/SchematicModel">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Library" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="DeviceSet" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Device" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Package" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Parameter" upperBound="-1"
+            eType="#//schematic/eda/Parameter" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="HasMultiLayerFootprint"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//BooleanObject"
+            defaultValueLiteral="false"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//DomainModelParameter">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Locator" lowerBound="1"
+            eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Value" eType="#//Value"
+            containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="PcbLayoutConstraint" abstract="true"
+          eSuperTypes="#//ContainerFeature">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="XPosition" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//UnsignedIntObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="YPosition" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//UnsignedIntObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Notes" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ExactLayoutConstraint" eSuperTypes="#//schematic/eda/PcbLayoutConstraint">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="X" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Y" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Layer" eType="#//schematic/eda/LayerEnum"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Rotation" eType="#//schematic/eda/RotationEnum"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintTarget" upperBound="-1"
+            eType="#//ComponentInstance" eKeys="#//ComponentInstance/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ContainerConstraintTarget"
+            upperBound="-1" eType="#//Container" eKeys="#//Container/ID"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="RangeLayoutConstraint" eSuperTypes="#//schematic/eda/PcbLayoutConstraint">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="XRangeMin" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="XRangeMax" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="YRangeMin" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="YRangeMax" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="LayerRange" eType="#//schematic/eda/LayerRangeEnum"
+            defaultValueLiteral="Either"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintTarget" upperBound="-1"
+            eType="#//ComponentInstance" eKeys="#//ComponentInstance/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ContainerConstraintTarget"
+            upperBound="-1" eType="#//Container" eKeys="#//Container/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Type" eType="#//schematic/eda/RangeConstraintTypeEnum"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="RelativeLayoutConstraint" eSuperTypes="#//schematic/eda/PcbLayoutConstraint">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="XOffset" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="YOffset" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintTarget" upperBound="-1"
+            eType="#//ComponentInstance" eKeys="#//ComponentInstance/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Origin" lowerBound="1"
+            eType="#//ComponentInstance" eKeys="#//ComponentInstance/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ContainerConstraintTarget"
+            upperBound="-1" eType="#//Container" eKeys="#//Container/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="RelativeLayer" eType="#//schematic/eda/RelativeLayerEnum"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="RelativeRotation" eType="#//schematic/eda/RelativeRotationEnum"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="RotationEnum">
+        <eLiterals name="r0"/>
+        <eLiterals name="r90" value="1"/>
+        <eLiterals name="r180" value="2"/>
+        <eLiterals name="r270" value="3"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="LayerEnum">
+        <eLiterals name="Top"/>
+        <eLiterals name="Bottom" value="1"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="LayerRangeEnum">
+        <eLiterals name="Either" value="2"/>
+        <eLiterals name="Top"/>
+        <eLiterals name="Bottom" value="1"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="RelativeLayerEnum">
+        <eLiterals name="Same"/>
+        <eLiterals name="Opposite" value="1"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="RangeConstraintTypeEnum">
+        <eLiterals name="Inclusion"/>
+        <eLiterals name="Exclusion" value="1"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="RelativeRangeLayoutConstraint" eSuperTypes="#//schematic/eda/PcbLayoutConstraint">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="XRelativeRangeMin"
+            eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="XRelativeRangeMax"
+            eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="YRelativeRangeMin"
+            eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="YRelativeRangeMax"
+            eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//DoubleObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="RelativeLayer" eType="#//schematic/eda/RelativeLayerEnum"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ContainerConstraintTarget"
+            upperBound="-1" eType="#//Container" eKeys="#//Container/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Origin" lowerBound="1"
+            eType="#//ComponentInstance" eKeys="#//ComponentInstance/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintTarget" upperBound="-1"
+            eType="#//ComponentInstance" eKeys="#//ComponentInstance/ID"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="GlobalLayoutConstraintException"
+          eSuperTypes="#//schematic/eda/PcbLayoutConstraint">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintTarget" upperBound="-1"
+            eType="#//ComponentInstance" eKeys="#//ComponentInstance/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ContainerConstraintTarget"
+            upperBound="-1" eType="#//Container" eKeys="#//Container/ID"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Constraint" lowerBound="1"
+            eType="#//schematic/eda/GlobalConstraintTypeEnum"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="GlobalConstraintTypeEnum">
+        <eLiterals name="BoardEdgeSpacing" value="1"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="RelativeRotationEnum">
+        <eLiterals name="r0" literal="r0"/>
+        <eLiterals name="r90" value="1"/>
+        <eLiterals name="r180" value="2"/>
+        <eLiterals name="r270" value="3"/>
+        <eLiterals name="NoRestriction" value="4"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="CircuitLayout" eSuperTypes="#//DomainModel">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="BoundingBoxes" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="spice" nsURI="spice" nsPrefix="spice">
+      <eClassifiers xsi:type="ecore:EClass" name="SPICEModel" eSuperTypes="#//schematic/SchematicModel">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Class" lowerBound="1"
+            eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Parameter" upperBound="-1"
+            eType="#//schematic/spice/Parameter" containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//DomainModelParameter">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Locator" lowerBound="1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Value" eType="#//Value"
+            containment="true"/>
+      </eClassifiers>
+    </eSubpackages>
+  </eSubpackages>
+  <eSubpackages name="systemc" nsURI="systemc" nsPrefix="systemc">
+    <eClassifiers xsi:type="ecore:EClass" name="SystemCModel" eSuperTypes="#//DomainModel">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="SystemCPort" upperBound="-1"
+          eType="#//systemc/SystemCPort" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Parameter" upperBound="-1"
+          eType="#//systemc/Parameter" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ModuleName" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//DomainModelParameter">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ParamName" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ParamPosition" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//IntObject"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Value" eType="#//Value"
+          containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemCPort" eSuperTypes="#//DomainModelPort">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="DataType" eType="#//systemc/SystemCDataTypeEnum"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="DataTypeDimension" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//IntObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="Directionality" eType="#//systemc/DirectionalityEnum"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="Function" eType="#//systemc/FunctionEnum"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="SystemCDataTypeEnum">
+      <eLiterals name="bool"/>
+      <eLiterals name="sc_int" value="1"/>
+      <eLiterals name="sc_uint" value="2"/>
+      <eLiterals name="sc_logic" value="3"/>
+      <eLiterals name="sc_bit" value="4"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="DirectionalityEnum">
+      <eLiterals name="in"/>
+      <eLiterals name="out" value="1"/>
+      <eLiterals name="inout" value="2"/>
+      <eLiterals name="not_applicable" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="FunctionEnum">
+      <eLiterals name="normal"/>
+      <eLiterals name="clock" value="1"/>
+      <eLiterals name="reset_async" value="2"/>
+      <eLiterals name="reset_sync" value="3"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="rf" nsURI="rf" nsPrefix="rf">
+    <eClassifiers xsi:type="ecore:EClass" name="RFModel" eSuperTypes="#//DomainModel">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="RFPort" upperBound="-1"
+          eType="#//rf/RFPort" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="Rotation" eType="#//rf/RotationEnum"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="X" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//FloatObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="Y" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//FloatObject"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RFPort" eSuperTypes="#//DomainModelPort">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="Directionality" eType="#//rf/PortDirectionality"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="NominalImpedance" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//FloatObject"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="RotationEnum">
+      <eLiterals name="r0"/>
+      <eLiterals name="r90" value="1" literal="90"/>
+      <eLiterals name="r180" value="2"/>
+      <eLiterals name="r270" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="PortDirectionality">
+      <eLiterals name="in"/>
+      <eLiterals name="out" value="1"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="domainmapping" nsURI="domainmapping" nsPrefix="domainmapping">
+    <eClassifiers xsi:type="ecore:EClass" name="CAD2EDATransform" eSuperTypes="#//DomainMapping">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="RotationX" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="0.0"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="RotationY" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="0.0"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="RotationZ" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="0.0"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="TranslationX" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="0.0"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="TranslationY" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="0.0"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="TranslationZ" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="0.0"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ScaleX" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="1.0"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ScaleY" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="1.0"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ScaleZ" lowerBound="1"
+          eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/XMLType.ecore#//Decimal"
+          defaultValueLiteral="1.0"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="EDAModel" lowerBound="1"
+          eType="#//schematic/eda/EDAModel" eKeys="#//DomainModel/ID"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="CADModel" lowerBound="1"
+          eType="#//cad/CADModel" eKeys="#//DomainModel/ID"/>
     </eClassifiers>
   </eSubpackages>
   <eSubpackages name="adamsCar" nsURI="adamsCar" nsPrefix="adamsCar">

@@ -1,0 +1,71 @@
+{
+  "boardWidth": 20.0,
+  "boardHeight": 25.0,
+  "numLayers": 2,
+  "packages": [
+    {
+      "name": "Comp_5_5_offset",
+      "package": "R0603",
+      "pkg_idx": 0,
+      "ComponentID": "{2f21897c-7503-4b26-8f91-201bd4618533}",
+      "width": 2.946,
+      "height": 1.966,
+      "koWidth": 2.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": [
+        {
+          "x": "0:5",
+          "y": "0:5",
+          "pkg_idx": 2,
+          "layer": 0,
+          "type": "relative-region"
+        }
+      ]
+    },
+    {
+      "name": "Comp_minus_5_5_offset",
+      "package": "R0603",
+      "pkg_idx": 1,
+      "ComponentID": "{c77191ac-ac7c-46f0-95c1-3f42f32f00ce}",
+      "width": 2.946,
+      "height": 1.966,
+      "koWidth": 2.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": [
+        {
+          "x": "0:-5",
+          "y": "0:-5",
+          "pkg_idx": 2,
+          "layer": 1,
+          "type": "relative-region"
+        }
+      ]
+    },
+    {
+      "name": "Comp1",
+      "package": "R0603",
+      "pkg_idx": 2,
+      "ComponentID": "{82a83ae1-8255-418b-9ced-25cd0924047b}",
+      "width": 2.946,
+      "height": 1.966,
+      "koWidth": 2.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": [
+        {
+          "x": 10.0,
+          "y": 10.0,
+          "layer": 0,
+          "rotation": 0,
+          "type": "exact"
+        }
+      ]
+    }
+  ],
+  "signals": []
+}

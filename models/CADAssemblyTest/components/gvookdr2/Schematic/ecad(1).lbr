@@ -1,0 +1,49 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="1X2-HEADER" xmlns="eagle">
+          <circle x="-2.54" y="2.54" radius="0.37" width="0" layer="21" />
+          <wire x1="-1.27" y1="2.54" x2="1.27" y2="2.54" width="0.2032" layer="21" />
+          <wire x1="1.27" y1="2.54" x2="1.27" y2="-2.54" width="0.2032" layer="21" />
+          <wire x1="1.27" y1="-2.54" x2="-1.27" y2="-2.54" width="0.2032" layer="21" />
+          <wire x1="-1.27" y1="-2.54" x2="-1.27" y2="2.54" width="0.2032" layer="21" />
+          <pad name="1" x="0" y="1.27" drill="1" />
+          <pad name="2" x="0" y="-1.27" drill="1" />
+          <text x="-1.27" y="3.01" size="1.27" layer="25" font="vector" ratio="15">&gt;NAME</text>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="1X2-HEADER">
+          <wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94" />
+          <wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94" />
+          <wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94" />
+          <wire x1="-5.08" y1="-5.08" x2="-5.08" y2="5.08" width="0.254" layer="94" />
+          <pin name="1" x="0" y="0" visible="pad" length="short" direction="pas" />
+          <pin name="2" x="0" y="-2.54" visible="pad" length="short" direction="pas" />
+          <text x="-1.778" y="2.794" size="1.778" layer="94">1</text>
+          <text x="-5.08" y="5.842" size="1.778" layer="94">&gt;NAME</text>
+          <text x="-5.334" y="-7.366" size="1.778" layer="94">&gt;VALUE</text>
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="1X2-HEADER" prefix="J" uservalue="yes">
+          <gates>
+            <gate name="G$1" symbol="1X2-HEADER" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="1X2-HEADER" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="1" pad="1" />
+                <connect gate="G$1" pin="2" pad="2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

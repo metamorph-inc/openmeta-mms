@@ -1,0 +1,60 @@
+*74VHC HEX SCHMITT INVERTER
+* CONNECTIONS 1A
+*	          | 1Y
+*             | | 2A
+*             | | | 2Y
+*             | | | | 3A
+*	          | | | | | 3Y
+*	          | | | | | | GND
+*             | | | | | | | 4Y
+*	          | | | | | | | | 4A
+*             | | | | | | | | |  5Y
+*	          | | | | | | | | |  |  5A
+*	          | | | | | | | | |  |  |  6Y
+*	          | | | | | | | | |  |  |  |  6A
+*	          | | | | | | | | |  |  |  |  |  VCC
+*	          | | | | | | | | |  |  |  |  |  |
+.SUBCKT VHC74 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+*
+X1  1  2 7 14 VHC
+X2  3  4 7 14 VHC
+X3  5  6 7 14 VHC
+X4  9  8 7 14 VHC
+X5 11 10 7 14 VHC
+X6 13 12 7 14 VHC
+*
+.subckt VHC  1  2  3  4  
+.PARAM TRIGGER_VOLTAGE = 1
+*
+V1 5 0 {TRIGGER_VOLTAGE}
+* 
+X1 5 1 4 3 2 LM139_SINGLE
+*
+.SUBCKT LM139_SINGLE 1 2 3 4 5
+*
+  F1    9  3 V1 1
+  IEE   3  7 DC 100.0E-6
+  VI1  21  1 DC .75
+  VI2  22  2 DC .75
+  Q1    9 21  7 QIN
+  Q2    8 22  7 QIN
+  Q3    9  8  4 QMO
+  Q4    8  8  4 QMI
+.MODEL QIN PNP(IS=800.0E-18 BF=2.000E3)
+.MODEL QMI NPN(IS=800.0E-18 BF=1002)
+.MODEL QMO NPN(IS=800.0E-18 BF=1000 CJC=1E-15 TR=807.4E-9)
+  E1   10  4  9  4  1
+  V1   10 11 DC 0
+  Q5    5 11  4 QOC
+.MODEL QOC NPN(IS=800.0E-18 BF=20.29E3 CJC=1E-15 TF=942.6E-12 TR=543.8E-9)
+  DP    4  3 DX
+  RP 3  4 46.3E3
+.MODEL DX  D(IS=800.0E-18)
+*
+.ends LM139_SINGLE
+*
+R1 2 4 100
+*
+.END
+
+.ENDS

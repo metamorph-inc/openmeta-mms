@@ -1,0 +1,5 @@
+.SUBCKT RES_1stLineComment 1 2	// The first line should always be a comment.
+.SUBCKT RES_2ndLineComponent 1 2	// So, this second line should be accepted as the component.
+L1  1 11 LVAL
+R1 11  2 RVAL
+.ENDS RES_2ndLineComponent

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
+using System.Collections.Concurrent;
 
 namespace JobManager
 {
@@ -22,31 +23,9 @@ namespace JobManager
         public int NumCADThread { get; private set; }
 
         /// <summary>
-        /// Task - Job pairs.
-        /// </summary>
-        Dictionary<Task, Job> tasks =
-            new Dictionary<Task, Job>();
-
-        /// <summary>
         /// Task factory.
         /// </summary>
         TaskFactory tf { get; set; }
-
-        /// <summary>
-        /// Global semaphore limits the maximum number of processes.
-        /// </summary>
-        Semaphore SemAll { get; set; }
-
-        /// <summary>
-        /// Semaphores for different type of jobs.
-        /// </summary>
-        Dictionary<Job.TypeEnum, Semaphore> SemJob { get; set; }
-
-        /// <summary>
-        /// Hold a reference to the currently running/finished user processes.
-        /// </summary>
-        Dictionary<Job, System.Diagnostics.Process> processes =
-            new Dictionary<Job, System.Diagnostics.Process>();
 
         /// <summary>
         /// Set when shutdown is requested
@@ -56,12 +35,24 @@ namespace JobManager
         CancellationTokenSource ts { get; set; }
         CancellationToken ct { get; set; }
 
-
-        public LocalPool(
-            int numCommandThread = 4,
-            int numMatLabThread = 4,
-            int numCADThread = 2)
+        private static int GetNumberOfPhysicalCores()
         {
+            int coreCount = 0;
+            // n.b. requires Vista or later
+            foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get())
+            {
+                coreCount += int.Parse(item["NumberOfCores"].ToString());
+            }
+            return coreCount;
+        }
+
+        public LocalPool()
+        {
+            int numPhysicalCores = GetNumberOfPhysicalCores();
+            int numCommandThread = numPhysicalCores;
+            int numMatLabThread = numPhysicalCores;
+            int numCADThread = 2;
+
             ts = new CancellationTokenSource();
             ct = ts.Token;
 
@@ -74,21 +65,25 @@ namespace JobManager
             int numAllThread = numCommandThread + numMatLabThread + numCADThread;
 
             // do not use more threads than cores
-            numAllThread = numAllThread < Environment.ProcessorCount ?
-                numAllThread :
-                Environment.ProcessorCount;
+            numAllThread = Math.Min(numAllThread, numPhysicalCores);
 
             NumAllThread = numAllThread;
             NumCommandThread = numCommandThread;
             NumMatLabThread = numMatLabThread;
             NumCADThread = numCADThread;
 
-            SemAll = new Semaphore(numAllThread, numAllThread);
-            SemJob = new Dictionary<Job.TypeEnum, Semaphore>();
-            SemJob.Add(Job.TypeEnum.Command, new Semaphore(numCommandThread, numCommandThread));
-            SemJob.Add(Job.TypeEnum.Matlab, new Semaphore(numMatLabThread, numMatLabThread));
-            SemJob.Add(Job.TypeEnum.CAD, new Semaphore(numCADThread, numCADThread));
+            lock (QueuedJobs)
+            {
+                JobCapacities.Add(Job.TypeEnum.Command, numCommandThread);
+                JobCapacities.Add(Job.TypeEnum.Matlab, numMatLabThread);
+                JobCapacities.Add(Job.TypeEnum.CAD, numCADThread);
+            }
+            for (int i = 0; i < numAllThread; i++)
+            {
+                Task t = tf.StartNew(JobRunner);
+            }
         }
+        Dictionary<Job.TypeEnum, int> JobCapacities = new Dictionary<Job.TypeEnum, int>();
 
         ~LocalPool()
         {
@@ -108,8 +103,19 @@ namespace JobManager
                 {
                     disposed = true;
                     ShutdownPool.Set();
+                    ts.Cancel();
                     // n.b. should not timeout, but you can't be too careful.
-                    Task.WaitAll(tasks.Keys.ToArray(), 30 * 1000);
+                    lock (RunningJobs)
+                    {
+                        Thread t = new Thread(() =>
+                        {
+                            // n.b. cannot WaitAll on STA thread
+                            WaitHandle.WaitAll(RunningJobs.ToArray(), 30 * 1000);
+                        });
+                        t.SetApartmentState(ApartmentState.MTA);
+                        t.Start();
+                        t.Join();
+                    }
                     ShutdownPool.Dispose();
                 }
             }
@@ -119,58 +125,70 @@ namespace JobManager
         {
             Trace.TraceInformation(string.Format("JobEnqueued in local pool: {0} {1}", j.Id, j.Title));
 
-            Task t = tf.StartNew(() => RunJob(j), ct).
-                ContinueWith(job => Done(job));
-
-
-            tasks.Add(t, j);
-
-            //Task t = new Task<Job>(() => RunJob(j)).ContinueWith(job => Done(job));
-
+            QueuedJobs.AddLast(j);
+            JobAdded.Set();
         }
 
-        private Job RunJob(Job job)
+        LinkedList<Job> QueuedJobs = new LinkedList<Job>();
+        AutoResetEvent JobAdded = new AutoResetEvent(false);
+        List<ManualResetEvent> RunningJobs = new List<ManualResetEvent>();
+
+        private void JobRunner()
+        {
+            ManualResetEvent jobIsRunning = new ManualResetEvent(true);
+            lock (RunningJobs)
+            {
+                RunningJobs.Add(jobIsRunning);
+            }
+            while (ShutdownPool.WaitOne(0) == false)
+            {
+                Job job;
+                job = GetNextJob();
+                if (job == null)
+                {
+                    JobAdded.WaitOne();
+                }
+                else
+                {
+                    jobIsRunning.Reset();
+                    RunJob(job);
+                    jobIsRunning.Set();
+                }
+            }
+        }
+
+        private void RunJob(Job job)
         {
             try
             {
-                job.Status = Job.StatusEnum.QueuedLocal;
-                SemJob[job.Type].WaitOne();
-                SemAll.WaitOne();
                 // n.b. this could race, but don't even start the job if shutdown is requested
-                bool shutdownRequested = this.ShutdownPool.WaitOne(1);
+                bool shutdownRequested = this.ShutdownPool.WaitOne(0);
                 if (shutdownRequested)
                 {
                     job.Status = Job.StatusEnum.FailedExecution;
-                    return job;
+                    return;
                 }
 
                 System.Diagnostics.Process proc0 = new System.Diagnostics.Process();
-                lock (processes)
-                {
-                    if (processes.ContainsKey(job))
-                    {
-                        processes.Remove(job);
-                    }
-
-                    processes.Add(job, proc0);
-                }
-                proc0.Exited += new EventHandler((o, args) =>
-                {
-                    lock (processes)
-                    {
-                        processes.Remove(job);
-                    }
-                });
 
                 System.Diagnostics.ProcessStartInfo psi =
                     new System.Diagnostics.ProcessStartInfo();
 
-                psi.Arguments = "/S /C \"" + job.RunCommand + "\"";
-                psi.CreateNoWindow = true;
-                psi.FileName = "cmd";
+                if (File.Exists(Path.Combine(job.WorkingDirectory, "testbench_manifest.json")))
+                {
+                    psi.FileName = META.VersionInfo.PythonVEnvExe;
+                    psi.Arguments = "-m testbenchexecutor testbench_manifest.json";
+                }
+                else
+                {
+                    psi.Arguments = "/S /C \"" + job.RunCommand + "\"";
+                    psi.FileName = "cmd";
+                }
                 psi.UseShellExecute = false; // true
+                psi.CreateNoWindow = true;
                 psi.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
                 psi.WorkingDirectory = Path.Combine(job.WorkingDirectory);
+                //psi.EnvironmentVariables["PATH"] = META.VersionInfo.PythonVEnvPath + "\\Scripts;" + System.Environment.GetEnvironmentVariable("PATH");
 
                 psi.RedirectStandardOutput = true;
                 psi.RedirectStandardError = true;
@@ -237,6 +255,16 @@ namespace JobManager
                         }
                         //JobStatusChanged.Invoke(job);
 
+                        String commandToShowToUser;
+                        if (psi.FileName == META.VersionInfo.PythonVEnvExe)
+                        {
+                            commandToShowToUser = META.VersionInfo.PythonVEnvExe;
+                        }
+                        else
+                        {
+                            commandToShowToUser = Path.Combine(job.WorkingDirectory, job.RunCommand);
+                        }
+
                         int iWaitHandle = WaitHandle.WaitAny(new WaitHandle[] { processExited, this.ShutdownPool });
                         if (iWaitHandle == 1)
                         {
@@ -260,25 +288,19 @@ namespace JobManager
                             job.Status = Job.StatusEnum.Failed;
                             //JobStatusChanged.Invoke(job);
                         }
-                        else if (proc0.ExitCode == 1)
-                        {
-                            // command not found
-                            using (StreamWriter writer = new StreamWriter(failedLog))
-                            {
-                                writer.WriteLine("Specified command was not found: {0}",
-                                    Path.Combine(job.WorkingDirectory, job.RunCommand));
-                            }
-                            job.Status = Job.StatusEnum.FailedExecution;
-                            //JobStatusChanged.Invoke(job);
-                        }
                         else if (proc0.ExitCode != 0)
                         {
                             using (StreamWriter writer = new StreamWriter(failedLog))
                             {
-                                writer.WriteLine(String.Format("\"{0}\" exited with non-zero code {1}", job.RunCommand, proc0.ExitCode));
+                                writer.WriteLine(String.Format("\"{0}\" exited with non-zero code {1}", commandToShowToUser, proc0.ExitCode));
                             }
                             job.Status = Job.StatusEnum.FailedExecution;
                         }
+                        else
+                        {
+                            job.Status = Job.StatusEnum.Succeeded;
+                        }
+
                     }
                     catch (Exception ex)
                     {
@@ -294,42 +316,40 @@ namespace JobManager
             }
             finally
             {
-                SemAll.Release();
-                SemJob[job.Type].Release();
-            }
-            return job;
-        }
-
-
-        private void Done(Task<Job> job)
-        {
-            if (job.Status == TaskStatus.Faulted)
-            {
-                tasks[job].Status = Job.StatusEnum.FailedExecution;
-                //JobStatusChanged.Invoke(job.Result);
-            }
-            else
-            {
-                if (job.Result.Status == Job.StatusEnum.RunningLocal)
+                lock (QueuedJobs)
                 {
-                    if (job.IsCompleted)
-                    {
-                        job.Result.Status = Job.StatusEnum.Succeeded;
-                    }
-                    else if (job.IsFaulted ||
-                        job.IsCanceled)
-                    {
-                        job.Result.Status = Job.StatusEnum.FailedExecution;
-                    }
-                    //JobStatusChanged.Invoke(job.Result);
+                    JobCapacities[job.Type]++;
                 }
             }
         }
 
+        private Job GetNextJob()
+        {
+            Job job = null;
+            lock (QueuedJobs)
+            {
+                for (LinkedListNode<Job> node = QueuedJobs.First; node != null; node = node.Next)
+                {
+                    if (JobCapacities[node.Value.Type] > 0)
+                    {
+                        JobCapacities[node.Value.Type]--;
+                        job = node.Value;
+                        QueuedJobs.Remove(node);
+                        break;
+                    }
+                }
+            }
+
+            return job;
+        }
 
         internal int GetNumberOfUnfinishedJobs()
         {
-            return tasks.Keys.Where(task => task.IsCompleted == false).Count();
+            lock (QueuedJobs)
+            lock (RunningJobs)
+            {
+                return QueuedJobs.Count + RunningJobs.Where(e => e.WaitOne(0) == false).Count();
+            }
         }
     }
 }

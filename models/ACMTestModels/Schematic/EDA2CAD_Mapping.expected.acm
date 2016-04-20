@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0893f898-8d7b-4957-88b3-1322e7b57b98" Name="EDA2CAD_Mapping" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="cad" xsi:type="q1:CADModel" Author="" Notes="" XPosition="546" YPosition="105" Name="CADModel" ID="id-170de4d6-bf33-40be-bdde-1c5706008533" Format="Creo" xmlns="" />
+  <DomainModel xmlns:q2="eda" xsi:type="q2:EDAModel" Author="" Notes="" XPosition="133" YPosition="105" Name="EDAModel" ID="id-dd7fda28-bdcd-452d-ae74-172e185c8d15" Package="" Device="" Library="" DeviceSet="" xmlns="" />
+  <Classifications xmlns="" />
+  <DomainMapping xmlns:q3="domainmapping" xsi:type="q3:CAD2EDATransform" RotationX="1.1" RotationY="2.2" RotationZ="-3.3" TranslationX="-1.1" TranslationY="2.2" TranslationZ="3.3" ScaleX="0" ScaleY="0.5" ScaleZ="-1" EDAModel="id-dd7fda28-bdcd-452d-ae74-172e185c8d15" CADModel="id-170de4d6-bf33-40be-bdde-1c5706008533" xmlns="" />
+</Component>

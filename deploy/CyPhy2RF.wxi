@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <DirectoryRef Id="INSTALLDIR_BIN" />
+</Fragment>
+<Fragment>
+<ComponentGroup Id="CyPhy2RF">
+  <Component Id="CyPhy2RF.dll" Directory="INSTALLDIR_BIN">
+    <File Id="CyPhy2RF.dll" Name="CyPhy2RF.dll" KeyPath="yes" Source="../src/CyPhy2RF/CyPhy2RF\bin\Release\CyPhy2RF.dll" />
+    <Class Id="{73A484D4-1ED2-42FC-996F-8EFEACBA98A7}" Context="InprocServer32" Description="MGA.Interpreter.CyPhy2RF" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="MGA.Interpreter.CyPhy2RF" Description="MGA.Interpreter.CyPhy2RF" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{73A484D4-1ED2-42FC-996F-8EFEACBA98A7}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{73A484D4-1ED2-42FC-996F-8EFEACBA98A7}\InprocServer32" Name="Class" Value="CyPhy2RF.CyPhy2RFInterpreter" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{73A484D4-1ED2-42FC-996F-8EFEACBA98A7}\InprocServer32" Name="Assembly" Value="CyPhy2RF, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{73A484D4-1ED2-42FC-996F-8EFEACBA98A7}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{73A484D4-1ED2-42FC-996F-8EFEACBA98A7}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2RF.dll]" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
+    <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.CyPhy2RF'>
+      <RegistryValue Name='Description' Type='string' Value='CyPhy2RF'/>
+      <RegistryValue Name='Icon' Type='string' Value='[#CyPhy2RF.ico]'/>
+      <RegistryValue Name='Paradigm' Type='string' Value='CyPhyML'/>
+      <RegistryValue Name='Tooltip' Type='string' Value='CyPhy2RF Interpreter' />
+      <RegistryValue Name='Type' Type='integer' Value='1'/>
+      <!-- not Associated -->
+    </RegistryKey>
+
+    <Class Id="{C51EAB54-7164-4F3C-8A7C-8D2900A9A7EE}" Context="InprocServer32" Description="ISIS.META.CyPhy2RF_Settings" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="ISIS.META.CyPhy2RF_Settings" Description="ISIS.META.CyPhy2RF_Settings" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{C51EAB54-7164-4F3C-8A7C-8D2900A9A7EE}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{C51EAB54-7164-4F3C-8A7C-8D2900A9A7EE}\InprocServer32" Name="Class" Value="CyPhy2RF.CyPhy2RF_Settings" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{C51EAB54-7164-4F3C-8A7C-8D2900A9A7EE}\InprocServer32" Name="Assembly" Value="CyPhy2RF, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{C51EAB54-7164-4F3C-8A7C-8D2900A9A7EE}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{C51EAB54-7164-4F3C-8A7C-8D2900A9A7EE}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2RF.dll]" Type="string" Action="write" />
+  </Component>
+  
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="../src/CyPhy2RF/CyPhy2RF/CyPhy2RF.ico" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2RF\FDTDPostprocess\hdf5_hldll.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2RF\FDTDPostprocess\hdf5dll.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2RF\FDTDPostprocess\HDF5DotNet.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2RF\FDTDPostprocess\szip.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2RF\FDTDPostprocess\zlib.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2RF\FDTDPostprocess\bin\Release\FDTDPostprocess.exe" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2RF\CSXCAD\bin\Release\CSXCAD.dll" />
+  </Component>
+</ComponentGroup>
+</Fragment>
+</Wix>

@@ -1,0 +1,70 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="8_BUMP_XFCSP" xmlns="eagle">
+          <smd name="B1" x="-0.25" y="0.25" dx="0.35" dy="0.35" layer="1" roundness="100" rot="R270" stop="no" />
+          <smd name="C1" x="-0.25" y="-0.25" dx="0.35" dy="0.35" layer="1" roundness="100" rot="R270" stop="no" />
+          <smd name="C2" x="0.25" y="-0.25" dx="0.35" dy="0.35" layer="1" roundness="100" rot="R270" stop="no" />
+          <smd name="D2" x="0.25" y="-0.75" dx="0.35" dy="0.35" layer="1" roundness="100" rot="R270" stop="no" />
+          <smd name="B2" x="0.25" y="0.25" dx="0.35" dy="0.35" layer="1" roundness="100" rot="R270" stop="no" />
+          <smd name="A2" x="0.25" y="0.75" dx="0.35" dy="0.35" layer="1" roundness="100" rot="R270" stop="no" />
+          <smd name="D1" x="-0.25" y="-0.75" dx="0.35" dy="0.35" layer="1" roundness="100" rot="R270" stop="no" />
+          <smd name="A1" x="-0.25" y="0.75" dx="0.35" dy="0.35" layer="1" roundness="100" rot="R270" stop="no" />
+          <circle x="-0.25" y="-0.75" radius="0.125" width="0" layer="29" />
+          <circle x="0.25" y="-0.75" radius="0.125" width="0" layer="29" />
+          <circle x="-0.25" y="0.75" radius="0.125" width="0" layer="29" />
+          <circle x="0.25" y="0.75" radius="0.125" width="0" layer="29" />
+          <circle x="-0.25" y="0.25" radius="0.125" width="0" layer="29" />
+          <circle x="0.25" y="0.25" radius="0.125" width="0" layer="29" />
+          <circle x="-0.25" y="-0.25" radius="0.125" width="0" layer="29" />
+          <circle x="0.25" y="-0.25" radius="0.125" width="0" layer="29" />
+          <circle x="-0.8" y="1" radius="0.0635" width="0.16" layer="21" />
+          
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="8_PIN_FLASH_MEMORY">
+          <wire x1="-12.7" y1="15.24" x2="12.7" y2="15.24" width="0.254" layer="94" />
+          <wire x1="12.7" y1="15.24" x2="12.7" y2="-15.24" width="0.254" layer="94" />
+          <wire x1="12.7" y1="-15.24" x2="-12.7" y2="-15.24" width="0.254" layer="94" />
+          <wire x1="-12.7" y1="-15.24" x2="-12.7" y2="15.24" width="0.254" layer="94" />
+          <pin name="DQ0" x="-17.78" y="5.08" length="middle" direction="pas" />
+          <pin name="C" x="-17.78" y="2.54" length="middle" direction="pas" />
+          <pin name="S#" x="-17.78" y="0" length="middle" direction="pas" />
+          <pin name="VPP/W#/DQ2" x="-17.78" y="-2.54" length="middle" direction="pas" />
+          <pin name="HOLD#/DQ3" x="-17.78" y="-5.08" length="middle" direction="pas" />
+          <pin name="DQ1" x="17.78" y="0" length="middle" direction="pas" rot="R180" />
+          <pin name="VCC" x="0" y="20.32" length="middle" direction="pas" rot="R270" />
+          <pin name="VSS" x="0" y="-20.32" length="middle" direction="pas" rot="R90" />
+          
+          
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="N25Q016A11" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="8_PIN_FLASH_MEMORY" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="8_BUMP_XFCSP" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="C" pad="C1" />
+                <connect gate="G$1" pin="DQ0" pad="D1" />
+                <connect gate="G$1" pin="DQ1" pad="B2" />
+                <connect gate="G$1" pin="HOLD#/DQ3" pad="B1" />
+                <connect gate="G$1" pin="S#" pad="A2" />
+                <connect gate="G$1" pin="VCC" pad="A1" />
+                <connect gate="G$1" pin="VPP/W#/DQ2" pad="C2" />
+                <connect gate="G$1" pin="VSS" pad="D2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

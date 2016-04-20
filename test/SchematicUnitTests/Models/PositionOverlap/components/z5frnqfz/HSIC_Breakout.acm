@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="06e8aadd-19e7-4a9b-a48d-7cfa1dcb8025" Name="HSIC_Breakout" Version="" xmlns="avm">
+  <Connector ConnectorComposition="" ID="id-5c0c7ce4-9e23-4054-ab05-3aa17c17d0c3" ApplyJoinData="" Notes="" Name="HSIC" Definition="" YPosition="112" XPosition="455" xmlns="">
+    <Role xmlns:q1="schematic" xsi:type="q1:Pin" ID="id-679c1216-04a6-47fb-9e12-9e5784a72dd1" PortMap="id-080293d7-24a4-40e2-bea4-06867722a1bb" Notes="" Definition="" Name="Strobe" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-7231db3c-d054-459f-9c3c-c9e6fe2cbd58" PortMap="" Notes="" Definition="" Name="Data" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-4806dd17-2769-4fb2-a481-351dd949f87e" ApplyJoinData="" Notes="" Name="HSIC_DATA" Definition="" YPosition="189" XPosition="56" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-50ef6408-8099-481d-971e-676fdde54152" PortMap="id-7231db3c-d054-459f-9c3c-c9e6fe2cbd58" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-f1a62521-1e0b-4638-b2f5-5f0db636a201" ApplyJoinData="" Notes="" Name="HSIC_STROBE" Definition="" YPosition="63" XPosition="56" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-080293d7-24a4-40e2-bea4-06867722a1bb" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">model_utilities.breakout_components</Classifications>
+</Component>

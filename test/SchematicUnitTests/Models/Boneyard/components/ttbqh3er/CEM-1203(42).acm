@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="7a18fac7-679c-40c3-97ea-24535bb1a2ef" Name="CEM-1203(42)" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-969f0b4e-2e2c-41fb-a87d-bd6d7aa10513" Author="" Notes="" XPosition="270" YPosition="249" Name="EDAModel" Package="BUZZER-12MM-KIT" Device="PTH-KIT" Library="SparkFun-Electromechanical" DeviceSet="BUZZER" xmlns="">
+    <Pin ID="id-55199ba8-3631-4223-9d5f-85cffc1d23f6" PortMap="id-d9c7c058-abf0-4590-aab7-f5f1da213a9a" Notes="" XPosition="125" Definition="" YPosition="25" Name="2" EDAGate="G$1" EDASymbolLocationX="2.54" EDASymbolLocationY="-2.54" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-8bc2ef54-d5ab-4d93-854c-38b02438334d" PortMap="id-75f12bf3-b842-42c1-b664-786b7665712e" Notes="" XPosition="25" Definition="" YPosition="25" Name="1" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-2.54" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </DomainModel>
+  <Property xmlns:q2="avm" xsi:type="q2:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-c04d50d8-b736-4902-ab35-4235a5ef55af" XPosition="14" YPosition="21" xmlns="">
+    <Value ID="id-c04d50d8-b736-4902-ab35-4235a5ef55af" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q2:FixedValue">
+        <Value>CEM-1203(42)</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency XPosition="469" YPosition="140" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-969f0b4e-2e2c-41fb-a87d-bd6d7aa10513" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency XPosition="175" YPosition="63" Name="CUI-CEM-1203(42)-datasheet.pdf" Path="doc\CUI-CEM-1203(42)-datasheet.pdf" Hash="" ID="id-c8545384-20ff-455e-8fe1-9d0ade702db9" Notes="" xmlns="" />
+  <ResourceDependency XPosition="315" YPosition="56" Name="Icon.png" Path="Icon.png" Hash="" ID="id-0e975db4-0ed0-492f-959b-32fa46934a41" Notes="Custom icon for this component" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-c98714a6-1218-413a-9f65-9fc7c1ddd63b" ApplyJoinData="" Notes="" Name="VCC" Definition="StdPin" YPosition="231" XPosition="28" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-75f12bf3-b842-42c1-b664-786b7665712e" PortMap="" Notes="" XPosition="35" Definition="" YPosition="147" Name="Pin" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-e23622bb-0f59-422a-85e5-e92216683bd5" ApplyJoinData="" Notes="" Name="Sound" Definition="StdPin" YPosition="245" XPosition="462" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-d9c7c058-abf0-4590-aab7-f5f1da213a9a" PortMap="" Notes="" XPosition="35" Definition="" YPosition="147" Name="Pin" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">sound_input-output.speakers.buzzers</Classifications>
+</Component>

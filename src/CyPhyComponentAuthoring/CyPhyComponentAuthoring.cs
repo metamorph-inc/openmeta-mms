@@ -9,6 +9,7 @@ using GME.MGA;
 using GME.MGA.Core;
 using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
 using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
+using META;
 using System.Drawing;
 using System.IO;
 
@@ -77,6 +78,37 @@ namespace CyPhyComponentAuthoring
         {
             this.Logger.WriteInfo("Running Component Authoring interpreter.");
 
+            if (currentobj != null &&
+                currentobj.Meta.Name == typeof(CyPhy.ComponentAssembly).Name)
+            {
+                CyPhy.ComponentAssembly ca = CyPhyClasses.ComponentAssembly.Cast(currentobj);
+                string fileName = null;
+                DialogResult dr;
+                using (OpenFileDialog ofd = new OpenFileDialog())
+                {
+                    ofd.CheckFileExists = true;
+                    ofd.Multiselect = false;
+                    ofd.Filter = "SVG files (*.svg)|*.svg*|All files (*.*)|*.*";
+                    ofd.AutoUpgradeEnabled = true;
+                    dr = ofd.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        fileName = ofd.FileName;
+                    }
+                }
+                if (fileName == null)
+                {
+                    this.Logger.WriteError("No file was selected.  Add Custom Icon will not complete.");
+                    return;
+                }
+
+                string IconFileDestPath = META.ComponentLibraryManager.EnsureComponentAssemblyFolder(ca);
+                IconFileDestPath = ca.GetDirectoryPath(META.ComponentLibraryManager.PathConvention.ABSOLUTE);
+
+                System.IO.File.Copy(fileName, System.IO.Path.Combine(IconFileDestPath, "icon.svg"), true);
+                this.Logger.WriteInfo("Successfully added icon.svg to " + currentobj.Name);
+                return;
+            }
             // verify we are running in a component and that it is not an instance or library
             string return_msg;
             if (!CheckPreConditions(currentobj, out return_msg))
@@ -136,7 +168,7 @@ namespace CyPhyComponentAuthoring
             Tuple<Type, MethodInfo> method;
             if (dictofCATDnDMethods.TryGetValue(Path.GetExtension(filename), out method))
             {
-                CATModule newinst = CreateCATModule(method.Item1);
+                CATModule newinst = CreateCATModuleLogged(method.Item1);
 
                 method.Item2.Invoke(newinst, new object[] { filename });
 
@@ -264,7 +296,7 @@ namespace CyPhyComponentAuthoring
             }
             else
             {
-                CATModule newinst = CreateCATModule(classtype);
+                CATModule newinst = CreateCATModuleLogged(classtype);
                 if (newinst == null)
                 {
                     return;
@@ -303,10 +335,10 @@ namespace CyPhyComponentAuthoring
             CATgut.tableLayoutPanel0.Controls.Add(new_mini_table, 1, ++CATgut.tableLayoutPanel0.RowCount);
         }
 
-        private CATModule CreateCATModule(Type classtype)
+        public CATModule CreateCATModuleLogged(Type classtype)
         {
             // create a new CATModule class instance 
-            CATModule newinst = Activator.CreateInstance(classtype) as CATModule;
+            CATModule newinst = Activator.CreateInstance(classtype) as CATModule; 
             if (newinst == null)
             {
                 // problem
@@ -316,7 +348,6 @@ namespace CyPhyComponentAuthoring
 
             // set the current component for use by the new class instance
             newinst.SetCurrentComp(StashCurrentComponent);
-            newinst.CurrentProj = StashProject;
             newinst.CurrentObj = StashCurrentObj;
 
             return newinst;

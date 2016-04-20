@@ -18,7 +18,7 @@ os.chdir(this_dir)
 
 os.environ['PATH'] = os.environ['PATH'].replace('"', '')
 
-       
+
 def system(args, dirname=None):
     """
     Executes a system command (throws an exception on error)
@@ -47,12 +47,13 @@ def get_nuget_packages():
         if os.path.isfile(filename):
             os.unlink(filename)
     for package in cad_packages.findall('package'):
-        svnversion = { "META.CadCreoParametricCreateAssembly": vc_info.last_cad_rev,
-            "META.ExtractACM-XMLfromCreoModels": vc_info.last_cad_rev,
-            "META.MDL2MGACyber": vc_info.last_mdl2mga_rev,
-            "META.CADCreoParametricMetaLink": vc_info.last_cad_rev, }[package.get('id')]()
         version = package.get('version')
-        version = vc_info.update_version(version, svnversion)
+        # svnversion = { "META.CadCreoParametricCreateAssembly": vc_info.last_cad_rev,
+        #     "META.ExtractACM-XMLfromCreoModels": vc_info.last_cad_rev,
+        #     "META.MDL2MGACyber": vc_info.last_mdl2mga_rev,
+        #     "META.CADCreoParametricMetaLink": vc_info.last_cad_rev, }[package.get('id')]()
+        # version = package.get('version')
+        # version = vc_info.update_version(version, svnversion)
         print "NuGet install " + package.get('id') + " " + version
         # n.b. don't specify -ConfigFile, as it makes nuget.exe ignore %APPDATA%\NuGet\NuGet.config
         system([r'..\src\.nuget\nuget.exe', 'install', '-PreRelease', '-Version', version, package.get('id')], os.path.join(this_dir, 'CAD_Installs'))
@@ -101,6 +102,20 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\models\MassSpringDamper",)
     gen_dir_wxi.gen_dir_from_vc(r"..\models\Validation",)
     gen_dir_wxi.gen_dir_from_vc(r"..\bin", diskId='3')
+    gen_dir_wxi.gen_dir_from_vc(r"..\ModelicaWrapperTemplates",)
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\chipfit_display",)
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\layout_json",)
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\testbenchexecutor",)
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\run_mdao",)
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\SpiceVisualizer")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\spice_viewer")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\cam2gerber")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\get_bom_with_eagle_xref")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\runCentroidUlp")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\runEagleUlp")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\runDrc")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\Android")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\CADVisualizer")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\PCC\PCC",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\isis_meta\isis_meta",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\meta_nrmm\meta_nrmm",)
@@ -112,7 +127,7 @@ def build_msi():
     def get_svnversion():
         p = subprocess.Popen("git rev-list HEAD --count".split(), stdout=subprocess.PIPE)
         out, err = p.communicate()
-        return out.strip() or '5'
+        return out.strip() or '22950'
         #import subprocess
         #p = subprocess.Popen(['svnversion', '-n', adjacent_file('..')], stdout=subprocess.PIPE)
         #out, err = p.communicate()
@@ -182,7 +197,8 @@ def build_msi():
                 include_wxis.append(node.attrib['Id'].rsplit( ".", 1 )[ 0 ] + '.wxi')
                 include_wxis.append(node.attrib['Id'].rsplit( ".", 1 )[ 0 ] + '_x64.wxi')
 
-    sources = [source for source in sources_all if (os.path.basename(source) in include_wxis)]
+    include_wxis = set((wxi.lower() for wxi in include_wxis))
+    sources = [source for source in sources_all if (os.path.basename(source).lower() in include_wxis)]
     sources.append(source_wxs)
 
     if len(sources) == 0:
@@ -238,7 +254,7 @@ def build_msi():
     if source_wxs.startswith("META"):
         import datetime
         starttime = datetime.datetime.now()
-        system(['light', '-sw1055', '-sice:ICE82', '-sice:ICE57', '-sice:ICE60', '-sice:ICE69', '-ext', 'WixNetFxExtension', '-ext', 'WixUIExtension', '-ext', 'WixUtilExtension', 
+        system(['light', '-sw1055', '-sice:ICE82', '-sice:ICE57', '-sice:ICE60', '-sice:ICE69', '-ext', 'WixNetFxExtension', '-ext', 'WixUIExtension', '-ext', 'WixUtilExtension',
             # '-cc', os.path.join(this_dir, 'cab_cache'), '-reusecab', # we were getting errors during installation relating to corrupted cab files => disable cab cache
             '-o', os.path.splitext(source_wxs)[0] + ".msi"] + [ get_wixobj(file) for file in sources ])
         print "elapsed time: %d seconds" % (datetime.datetime.now() - starttime).seconds

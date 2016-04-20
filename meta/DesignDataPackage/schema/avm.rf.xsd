@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:avm="avm" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:rf="rf" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="rf" ecore:package="avm.rf" targetNamespace="rf">
+  <xsd:import namespace="avm" schemaLocation="avm.xsd"/>
+  <xsd:element ecore:ignore="true" name="RFModel" type="rf:RFModel"/>
+  <xsd:element ecore:ignore="true" name="RFPort" type="rf:RFPort"/>
+  <xsd:complexType name="RFModel">
+    <xsd:complexContent>
+      <xsd:extension base="avm:DomainModel">
+        <xsd:sequence>
+          <xsd:element ecore:name="RFPort" ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="RFPort" type="rf:RFPort"/>
+        </xsd:sequence>
+        <xsd:attribute ecore:name="Rotation" ecore:unsettable="false" name="Rotation" type="rf:RotationEnum"/>
+        <xsd:attribute ecore:name="X" name="X" type="xsd:float"/>
+        <xsd:attribute ecore:name="Y" name="Y" type="xsd:float"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RFPort">
+    <xsd:complexContent>
+      <xsd:extension base="avm:DomainModelPort">
+        <xsd:attribute ecore:name="Directionality" ecore:unsettable="false" name="Directionality" type="rf:PortDirectionality"/>
+        <xsd:attribute ecore:name="NominalImpedance" name="NominalImpedance" type="xsd:float"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:simpleType name="RotationEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="r0"/>
+      <xsd:enumeration ecore:name="r90" value="90"/>
+      <xsd:enumeration value="r180"/>
+      <xsd:enumeration value="r270"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="PortDirectionality">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="in"/>
+      <xsd:enumeration value="out"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

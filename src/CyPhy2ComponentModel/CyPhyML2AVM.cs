@@ -78,15 +78,18 @@ namespace CyPhyML2AVM {
         
 
         public static Dictionary<string, CreatorBase> _avmNameCreateMethodMap = new Dictionary<String, CreatorBase>() {
-            { typeof(CyPhyMLClasses.Axis).ToString(),                       Creator<avm.cad.Axis>.get_singleton()                   },
-            { typeof(CyPhyMLClasses.CoordinateSystem).ToString(),           Creator<avm.cad.CoordinateSystem>.get_singleton()       },
-            { typeof(CyPhyMLClasses.Surface).ToString(),                    Creator<avm.cad.Plane>.get_singleton()                  },
-            { typeof(CyPhyMLClasses.Point).ToString(),                      Creator<avm.cad.Point>.get_singleton()                  },
-            { typeof(CyPhyMLClasses.AbstractPort).ToString(),               Creator<avm.AbstractPort>.get_singleton()               },
-            { typeof(CyPhyMLClasses.ModelicaConnector).ToString(),          Creator<avm.modelica.Connector>.get_singleton()         },
-            { typeof(CyPhyMLClasses.SecurityClassification).ToString(),     Creator<avm.SecurityClassification>.get_singleton()     },
-            { typeof(CyPhyMLClasses.Proprietary).ToString(),                Creator<avm.Proprietary>.get_singleton()                },
-            { typeof(CyPhyMLClasses.ITAR).ToString(),                       Creator<avm.ITAR>.get_singleton()                       },
+            { typeof(CyPhyMLClasses.Axis).ToString(),                   Creator<avm.cad.Axis>.get_singleton()               },
+            { typeof(CyPhyMLClasses.CoordinateSystem).ToString(),       Creator<avm.cad.CoordinateSystem>.get_singleton()   },
+            { typeof(CyPhyMLClasses.Surface).ToString(),                Creator<avm.cad.Plane>.get_singleton()              },
+            { typeof(CyPhyMLClasses.Point).ToString(),                  Creator<avm.cad.Point>.get_singleton()              },
+            { typeof(CyPhyMLClasses.AbstractPort).ToString(),           Creator<avm.AbstractPort>.get_singleton()           },
+            { typeof(CyPhyMLClasses.ModelicaConnector).ToString(),      Creator<avm.modelica.Connector>.get_singleton()     },
+            { typeof(CyPhyMLClasses.SecurityClassification).ToString(), Creator<avm.SecurityClassification>.get_singleton() },
+            { typeof(CyPhyMLClasses.Proprietary).ToString(),            Creator<avm.Proprietary>.get_singleton()            },
+            { typeof(CyPhyMLClasses.ITAR).ToString(),                   Creator<avm.ITAR>.get_singleton()                   },
+            { typeof(CyPhyMLClasses.SchematicModelPort).ToString(),     Creator<avm.schematic.Pin>.get_singleton()          },
+            { typeof(CyPhyMLClasses.SystemCPort).ToString(),            Creator<avm.systemc.SystemCPort>.get_singleton()    },
+            { typeof(CyPhyMLClasses.RFPort).ToString(),                 Creator<avm.rf.RFPort>.get_singleton()              },
             { typeof(CyPhyMLClasses.DoDDistributionStatement).ToString(),   Creator<avm.DoDDistributionStatement>.get_singleton()   }
         };
 
@@ -99,7 +102,7 @@ namespace CyPhyML2AVM {
             { CyPhyMLClasses.DoDDistributionStatement.AttributesClass.DoDDistributionStatementEnum_enum.StatementD,     avm.DoDDistributionStatementEnum.StatementD },
             { CyPhyMLClasses.DoDDistributionStatement.AttributesClass.DoDDistributionStatementEnum_enum.StatementE,     avm.DoDDistributionStatementEnum.StatementE }
         };
-                
+
         private Dictionary<CyPhyMLClasses.ModelicaRedeclare.AttributesClass.ModelicaRedeclareType_enum, avm.modelica.RedeclareTypeEnum> _modelicaRedeclareTypeEnumMap =
          new Dictionary<CyPhyMLClasses.ModelicaRedeclare.AttributesClass.ModelicaRedeclareType_enum, avm.modelica.RedeclareTypeEnum>() {
             { CyPhyMLClasses.ModelicaRedeclare.AttributesClass.ModelicaRedeclareType_enum.Block,     avm.modelica.RedeclareTypeEnum.Block     },
@@ -426,7 +429,7 @@ namespace CyPhyML2AVM {
 
             _cyPhyMLAVMObjectMap.Add(cyPhyMLParameter, avmPrimitiveProperty);
             return avmPrimitiveProperty;
-        }        
+        }
 
         public void createAVMPort(List<avm.Port> avmPortList, CyPhyML.DomainModelPort cyPhyMLDomainModelPort, List<avm.ConnectorFeature> connectorFeatures = null) {
 
@@ -445,6 +448,27 @@ namespace CyPhyML2AVM {
                 avm.modelica.Connector avmModelicaConnector;
                 createAVMModelicaConnector(out avmModelicaConnector, cyPhyMLDomainModelPort as CyPhyML.ModelicaConnector);
                 avmDomainModelPort = avmModelicaConnector;
+                hasBeenPortMapped = true;
+            }
+            else if (cyPhyMLDomainModelPort is CyPhyML.SchematicModelPort)
+            {
+                avm.schematic.Pin avmSchematicPin;
+                createAVMSchematicPin(out avmSchematicPin, cyPhyMLDomainModelPort as CyPhyML.SchematicModelPort);
+                avmDomainModelPort = avmSchematicPin;
+                hasBeenPortMapped = true;
+            }
+            else if (cyPhyMLDomainModelPort is CyPhyML.SystemCPort)
+            {
+                avm.systemc.SystemCPort avmSystemCPort;
+                createAVMSystemCPort(out avmSystemCPort, cyPhyMLDomainModelPort as CyPhyML.SystemCPort);
+                avmDomainModelPort = avmSystemCPort;
+                hasBeenPortMapped = true;
+            }
+            else if (cyPhyMLDomainModelPort is CyPhyML.RFPort)
+            {
+                avm.rf.RFPort avmRFPort;
+                createAVMRFPort(out avmRFPort, cyPhyMLDomainModelPort as CyPhyML.RFPort);
+                avmDomainModelPort = avmRFPort;
                 hasBeenPortMapped = true;
             }
             else
@@ -532,7 +556,7 @@ namespace CyPhyML2AVM {
                     {
                         avmPlane.PortMap.Add(targetSurfaceID);
                     }
-
+                    
                     // Find targets of FeatureMap connections, where the other end is a SurfaceGeometry, andwhere the ID value is not empty.
                     foreach (var targetSurfaceID in surface.SrcConnections.FeatureMapCollection
                                                                             .Where(c => c.IsRefportConnection() == false)
@@ -988,6 +1012,409 @@ namespace CyPhyML2AVM {
                 avmModelicaConnector.PortMap.Add(id);
             }
         }
+        
+        private void createAvmEdaModel(CyPhyML.EDAModel cyPhyMLEdaModel)
+        {
+            var avmEdaModel = new avm.schematic.eda.EDAModel()
+            {
+                Name = cyPhyMLEdaModel.Name,
+                Author = cyPhyMLEdaModel.Attributes.Author,
+                Device = cyPhyMLEdaModel.Attributes.Device,
+                DeviceSet = cyPhyMLEdaModel.Attributes.DeviceSet,
+                Library = cyPhyMLEdaModel.Attributes.Library,
+                Notes = cyPhyMLEdaModel.Attributes.Notes,
+                Package = cyPhyMLEdaModel.Attributes.Package,
+                HasMultiLayerFootprint = cyPhyMLEdaModel.Attributes.HasMultiLayerFootprint,
+                ID = "id-" + cyPhyMLEdaModel.Guid.ToString("D")
+            };
+            _avmComponent.DomainModel.Add(avmEdaModel);
+            _cyPhyMLAVMObjectMap.Add(cyPhyMLEdaModel, avmEdaModel);
+
+            SetLayoutData(avmEdaModel, cyPhyMLEdaModel.Impl);
+
+            foreach (var cyPhyMLPort in cyPhyMLEdaModel.Children.SchematicModelPortCollection)
+            {
+                avm.schematic.Pin avmPin;
+                createAVMSchematicPin(out avmPin, cyPhyMLPort);
+                avmEdaModel.Pin.Add(avmPin);
+            }
+
+            foreach (var cyPhyMLParameter in cyPhyMLEdaModel.Children.EDAModelParameterCollection)
+            {
+                var avmParameter = new avm.schematic.eda.Parameter()
+                {
+                    Locator = cyPhyMLParameter.Name,
+                    Value = new avm.Value()
+                };
+                avmEdaModel.Parameter.Add(avmParameter);
+                _cyPhyMLAVMObjectMap.Add(cyPhyMLParameter, avmParameter);
+
+                SetLayoutData(avmParameter, cyPhyMLParameter.Impl);
+
+                var paramMap = cyPhyMLParameter.SrcConnections.EDAModelParameterMapCollection;
+                if (paramMap.Any())
+                {
+                    avmParameter.Value.ID = ensureIDAttribute(cyPhyMLParameter);
+
+                    // Get the ID of the ValueFlow Source, and use that as the ValueSource.
+                    var cyPhyMLValueFlowTarget = paramMap.First()
+                                                         .SrcEnds
+                                                         .ValueFlowTarget;
+                    var id = ensureIDAttribute(cyPhyMLValueFlowTarget);
+                    var avmDerivedValue = new avm.DerivedValue()
+                    {
+                        ValueSource = id
+                    };
+                    avmParameter.Value.ValueExpression = avmDerivedValue;
+                }
+                else
+                {
+                    var avmFixedValue = new avm.FixedValue()
+                    {
+                        Value = cyPhyMLParameter.Attributes.Value
+                    };
+                    avmParameter.Value.ValueExpression = avmFixedValue;
+                }
+                if (cyPhyMLParameter.Referred.unit != null)
+                    avmParameter.Value.Unit = cyPhyMLParameter.Referred.unit.Attributes.Symbol;
+
+                avmParameter.Value.ID = ensureIDAttribute(cyPhyMLParameter);
+            }
+        }
+
+        private void createAvmCad2EdaTransform(CyPhyML.CAD2EDATransform cyPhyMLCad2EdaTransform)
+        {
+            var avmCad2EdaTransform = new avm.domainmapping.CAD2EDATransform()
+            {
+                CADModel = (_cyPhyMLAVMObjectMap[cyPhyMLCad2EdaTransform.SrcEnds.CADModel] as avm.cad.CADModel).ID,
+                EDAModel = (_cyPhyMLAVMObjectMap[cyPhyMLCad2EdaTransform.DstEnds.EDAModel] as avm.schematic.eda.EDAModel).ID,
+                RotationX = (decimal)cyPhyMLCad2EdaTransform.Attributes.RotationX,
+                RotationY = (decimal)cyPhyMLCad2EdaTransform.Attributes.RotationY,
+                RotationZ = (decimal)cyPhyMLCad2EdaTransform.Attributes.RotationZ,
+                ScaleX = (decimal)cyPhyMLCad2EdaTransform.Attributes.ScaleX,
+                ScaleY = (decimal)cyPhyMLCad2EdaTransform.Attributes.ScaleY,
+                ScaleZ = (decimal)cyPhyMLCad2EdaTransform.Attributes.ScaleZ,
+                TranslationX = (decimal)cyPhyMLCad2EdaTransform.Attributes.TranslationX,
+                TranslationY = (decimal)cyPhyMLCad2EdaTransform.Attributes.TranslationY,
+                TranslationZ = (decimal)cyPhyMLCad2EdaTransform.Attributes.TranslationZ
+            };
+            _cyPhyMLAVMObjectMap.Add(cyPhyMLCad2EdaTransform, avmCad2EdaTransform);
+
+            _avmComponent.DomainMapping.Add(avmCad2EdaTransform);
+        }
+
+        private void createAvmSpiceModel(CyPhyML.SPICEModel cyPhyMLSpiceModel)
+        {
+            var avmSpiceModel = new avm.schematic.spice.SPICEModel()
+            {
+                Name = cyPhyMLSpiceModel.Name,
+                Author = cyPhyMLSpiceModel.Attributes.Author,
+                Notes = cyPhyMLSpiceModel.Attributes.Notes,
+                Class = cyPhyMLSpiceModel.Attributes.Class
+            };
+            _avmComponent.DomainModel.Add(avmSpiceModel);
+            _cyPhyMLAVMObjectMap.Add(cyPhyMLSpiceModel, avmSpiceModel);
+
+            SetLayoutData(avmSpiceModel, cyPhyMLSpiceModel.Impl);
+
+            foreach (var cyPhyMLPort in cyPhyMLSpiceModel.Children.SchematicModelPortCollection)
+            {
+                avm.schematic.Pin avmPin;
+                createAVMSchematicPin(out avmPin, cyPhyMLPort);
+                avmSpiceModel.Pin.Add(avmPin);
+            }
+
+            foreach (var cyPhyMLParameter in cyPhyMLSpiceModel.Children.SPICEModelParameterCollection)
+            {
+                var avmParameter = new avm.schematic.spice.Parameter()
+                {
+                    Locator = cyPhyMLParameter.Name,
+                    Value = new avm.Value()
+                };
+                avmSpiceModel.Parameter.Add(avmParameter);
+                _cyPhyMLAVMObjectMap.Add(cyPhyMLParameter, avmParameter);
+
+                SetLayoutData(avmParameter, cyPhyMLParameter.Impl);
+
+                var paramMap = cyPhyMLParameter.SrcConnections.SPICEModelParameterMapCollection;
+                if (paramMap.Any())
+                {
+                    avmParameter.Value.ID = ensureIDAttribute(cyPhyMLParameter);
+
+                    // Get the ID of the ValueFlow Source, and use that as the ValueSource.
+                    var cyPhyMLValueFlowTarget = paramMap.First()
+                                                         .SrcEnds
+                                                         .ValueFlowTarget;
+                    var id = ensureIDAttribute(cyPhyMLValueFlowTarget);
+                    var avmDerivedValue = new avm.DerivedValue()
+                    {
+                        ValueSource = id
+                    };
+                    avmParameter.Value.ValueExpression = avmDerivedValue;
+                }
+                else
+                {
+                    var avmFixedValue = new avm.FixedValue()
+                    {
+                        Value = cyPhyMLParameter.Attributes.Value
+                    };
+                    avmParameter.Value.ValueExpression = avmFixedValue;
+                }
+                if (cyPhyMLParameter.Referred.unit != null)
+                    avmParameter.Value.Unit = cyPhyMLParameter.Referred.unit.Attributes.Symbol;
+
+                avmParameter.Value.ID = ensureIDAttribute(cyPhyMLParameter);
+            }
+        }
+
+        public static void SetAVMSchematicPinAttributes(avm.schematic.Pin avmPin, CyPhyML.SchematicModelPort cyPhyMLPort)
+        {
+            avmPin.Definition = cyPhyMLPort.Attributes.Definition;
+            avmPin.EDAGate = cyPhyMLPort.Attributes.EDAGate;
+            avmPin.Name = cyPhyMLPort.Name;
+            avmPin.EDASymbolLocationX = cyPhyMLPort.Attributes.EDASymbolLocationX;
+            avmPin.EDASymbolLocationY = cyPhyMLPort.Attributes.EDASymbolLocationY;
+            avmPin.EDASymbolRotation = cyPhyMLPort.Attributes.EDASymbolRotation;
+            avmPin.SPICEPortNumber = System.Convert.ToUInt32(cyPhyMLPort.Attributes.SPICEPortNumber);
+            avmPin.SPICEPortNumberSpecified = true;
+            avmPin.Notes = cyPhyMLPort.Attributes.InstanceNotes;
+        }
+
+        private void createAVMSchematicPin(out avm.schematic.Pin avmPin, CyPhyML.SchematicModelPort cyPhyMLPort)
+        {
+            avmPin = new avm.schematic.Pin()
+            {
+                ID = ensureIDAttribute(cyPhyMLPort)
+            };
+            SetAVMSchematicPinAttributes(avmPin, cyPhyMLPort);
+
+            SetLayoutData(avmPin, cyPhyMLPort.Impl);
+
+            foreach (CyPhyML.PortComposition cyPhyMLPortComposition in cyPhyMLPort.SrcConnections.PortCompositionCollection)
+            {
+                CyPhyML.DomainModelPort cyPhyMLDomainModelPort = cyPhyMLPortComposition.SrcEnds.DomainModelPort;
+                string id = ensureIDAttribute(cyPhyMLDomainModelPort);
+                avmPin.PortMap.Add(id);
+            }
+        }
+
+        private void createAVMSystemCModel(CyPhyML.SystemCModel cyPhyMLSystemCModel)
+        {
+            var avmSystemCModel = new avm.systemc.SystemCModel()
+            {
+                Name = cyPhyMLSystemCModel.Name,
+                Author = cyPhyMLSystemCModel.Attributes.Author,
+                Notes = cyPhyMLSystemCModel.Attributes.Notes,
+                ModuleName = cyPhyMLSystemCModel.Attributes.ModuleName
+            };
+
+            /* The ModuleName value should come from the CyPhy object's ModuleName attribute,
+             * but in older models this may not be set. In those cases, use the
+             * name of the SystemCModel object instead. 
+             */
+            if (String.IsNullOrWhiteSpace(avmSystemCModel.ModuleName))
+                avmSystemCModel.ModuleName = cyPhyMLSystemCModel.Name;
+
+            _avmComponent.DomainModel.Add(avmSystemCModel);
+            _cyPhyMLAVMObjectMap.Add(cyPhyMLSystemCModel, avmSystemCModel);
+
+            SetLayoutData(avmSystemCModel, cyPhyMLSystemCModel.Impl);
+
+            foreach (var cyPhyMLPort in cyPhyMLSystemCModel.Children.SystemCPortCollection)
+            {
+                avm.systemc.SystemCPort avmPort;
+                createAVMSystemCPort(out avmPort, cyPhyMLPort);
+                avmSystemCModel.SystemCPort.Add(avmPort);
+            }
+
+            foreach (var cyPhyMLParameter in cyPhyMLSystemCModel.Children.SystemCParameterCollection)
+            {
+                var avmParameter = new avm.systemc.Parameter()
+                {
+                    ParamName = cyPhyMLParameter.Attributes.ParameterName,
+                    ParamPosition = cyPhyMLParameter.Attributes.ParameterPosition,
+                    ParamPositionSpecified = true,
+                    Value = new avm.Value()
+                };
+                avmSystemCModel.Parameter.Add(avmParameter);
+                _cyPhyMLAVMObjectMap.Add(cyPhyMLParameter, avmParameter);
+
+                SetLayoutData(avmParameter, cyPhyMLParameter.Impl);
+
+                var paramMap = cyPhyMLParameter.SrcConnections.SystemCParameterPortMapCollection;
+                if (paramMap.Any())
+                {
+                    avmParameter.Value.ID = ensureIDAttribute(cyPhyMLParameter);
+
+                    // Get the ID of the ValueFlow Source, and use that as the ValueSource.
+                    var cyPhyMLValueFlowTarget = paramMap.First()
+                                                         .SrcEnds
+                                                         .ValueFlowTarget;
+                    var id = ensureIDAttribute(cyPhyMLValueFlowTarget);
+                    var avmDerivedValue = new avm.DerivedValue()
+                    {
+                        ValueSource = id
+                    };
+                    avmParameter.Value.ValueExpression = avmDerivedValue;
+                }
+                else
+                {
+                    var avmFixedValue = new avm.FixedValue()
+                    {
+                        Value = cyPhyMLParameter.Attributes.Value
+                    };
+                    avmParameter.Value.ValueExpression = avmFixedValue;
+                }
+
+                avmParameter.Value.ID = ensureIDAttribute(cyPhyMLParameter);
+            }
+        }
+
+        #region SystemC Enum Maps
+        private static Dictionary<CyPhyMLClasses.SystemCPort.AttributesClass.DataType_enum, avm.systemc.SystemCDataTypeEnum> d_SystemCPort_DataType
+            = new Dictionary<CyPhyMLClasses.SystemCPort.AttributesClass.DataType_enum, avm.systemc.SystemCDataTypeEnum>()
+        {
+            { CyPhyMLClasses.SystemCPort.AttributesClass.DataType_enum.@bool, avm.systemc.SystemCDataTypeEnum.@bool },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.DataType_enum.sc_bit, avm.systemc.SystemCDataTypeEnum.sc_bit },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.DataType_enum.sc_int, avm.systemc.SystemCDataTypeEnum.sc_int },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.DataType_enum.sc_logic, avm.systemc.SystemCDataTypeEnum.sc_logic },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.DataType_enum.sc_uint, avm.systemc.SystemCDataTypeEnum.sc_uint }
+        };
+
+        private static Dictionary<CyPhyMLClasses.SystemCPort.AttributesClass.Directionality_enum, avm.systemc.DirectionalityEnum> d_SystemCPort_Directionality
+            = new Dictionary<CyPhyMLClasses.SystemCPort.AttributesClass.Directionality_enum, avm.systemc.DirectionalityEnum>()
+        {
+            { CyPhyMLClasses.SystemCPort.AttributesClass.Directionality_enum.@in, avm.systemc.DirectionalityEnum.@in },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.Directionality_enum.inout, avm.systemc.DirectionalityEnum.inout },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.Directionality_enum.not_applicable, avm.systemc.DirectionalityEnum.not_applicable },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.Directionality_enum.@out, avm.systemc.DirectionalityEnum.@out }
+        };
+
+        private static Dictionary<CyPhyMLClasses.SystemCPort.AttributesClass.Function_enum, avm.systemc.FunctionEnum> d_SystemCPort_Function
+            = new Dictionary<CyPhyMLClasses.SystemCPort.AttributesClass.Function_enum, avm.systemc.FunctionEnum>()
+        {
+            { CyPhyMLClasses.SystemCPort.AttributesClass.Function_enum.clock, avm.systemc.FunctionEnum.clock },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.Function_enum.normal, avm.systemc.FunctionEnum.normal },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.Function_enum.reset_async, avm.systemc.FunctionEnum.reset_async },
+            { CyPhyMLClasses.SystemCPort.AttributesClass.Function_enum.reset_sync, avm.systemc.FunctionEnum.reset_sync }
+        };
+        #endregion
+
+        public static void SetAVMSystemCPortAttributes(avm.systemc.SystemCPort avmPort, CyPhyML.SystemCPort cyPhyMLPort)
+        {
+            avmPort.DataType = d_SystemCPort_DataType[cyPhyMLPort.Attributes.DataType];
+            avmPort.DataTypeDimension = cyPhyMLPort.Attributes.DataTypeDimension;
+            avmPort.Definition = cyPhyMLPort.Attributes.Definition;
+            avmPort.Directionality = d_SystemCPort_Directionality[cyPhyMLPort.Attributes.Directionality];
+            avmPort.Function = d_SystemCPort_Function[cyPhyMLPort.Attributes.Function];
+            avmPort.Name = cyPhyMLPort.Name;
+            avmPort.Notes = cyPhyMLPort.Attributes.InstanceNotes;
+            avmPort.DataTypeSpecified = true;
+            avmPort.DataTypeDimensionSpecified = true;
+            avmPort.DirectionalitySpecified = true;
+            avmPort.FunctionSpecified = true;
+        }
+
+        private void createAVMSystemCPort(out avm.systemc.SystemCPort avmPort, CyPhyML.SystemCPort cyPhyMLPort)
+        {
+            avmPort = new avm.systemc.SystemCPort()
+            {
+                ID = ensureIDAttribute(cyPhyMLPort),
+            };
+            SetAVMSystemCPortAttributes(avmPort, cyPhyMLPort);
+
+            SetLayoutData(avmPort, cyPhyMLPort.Impl);
+
+            foreach (var cyPhyMLPortComposition in cyPhyMLPort.SrcConnections.PortCompositionCollection)
+            {
+                var cyPhyMLDomainModelPort = cyPhyMLPortComposition.SrcEnds.DomainModelPort;
+                string id = ensureIDAttribute(cyPhyMLDomainModelPort);
+                avmPort.PortMap.Add(id);
+            }
+        }
+
+        private Dictionary<CyPhyMLClasses.RFModel.AttributesClass.Rotation_enum, avm.rf.RotationEnum> d_RFRotation
+            = new Dictionary<CyPhyMLClasses.RFModel.AttributesClass.Rotation_enum, avm.rf.RotationEnum>()
+            {
+                { CyPhyMLClasses.RFModel.AttributesClass.Rotation_enum._0, avm.rf.RotationEnum.r0 },
+                { CyPhyMLClasses.RFModel.AttributesClass.Rotation_enum._90, avm.rf.RotationEnum.Item90 },
+                { CyPhyMLClasses.RFModel.AttributesClass.Rotation_enum._180, avm.rf.RotationEnum.r180 },
+                { CyPhyMLClasses.RFModel.AttributesClass.Rotation_enum._270, avm.rf.RotationEnum.r270 }
+            };
+
+        private void createAVMRFModel(CyPhyML.RFModel cyPhyMLRFModel)
+        {
+            var avmRFModel = new avm.rf.RFModel()
+            {
+                Author = cyPhyMLRFModel.Attributes.Author,
+                Name = cyPhyMLRFModel.Name,
+                Notes = cyPhyMLRFModel.Attributes.Notes,
+                Rotation = d_RFRotation[cyPhyMLRFModel.Attributes.Rotation],
+                RotationSpecified = true,
+                X = (float)cyPhyMLRFModel.Attributes.X,
+                XSpecified = true,
+                Y = (float)cyPhyMLRFModel.Attributes.Y,
+                YSpecified = true
+            };
+
+            _avmComponent.DomainModel.Add(avmRFModel);
+            _cyPhyMLAVMObjectMap.Add(cyPhyMLRFModel, avmRFModel);
+
+            SetLayoutData(avmRFModel, cyPhyMLRFModel.Impl);
+
+            foreach (var cyPhyMLPort in cyPhyMLRFModel.Children.RFPortCollection)
+            {
+                avm.rf.RFPort avmPort;
+                createAVMRFPort(out avmPort, cyPhyMLPort);
+                avmRFModel.RFPort.Add(avmPort);
+            }
+        }
+
+        private static Dictionary<CyPhyMLClasses.RFPort.AttributesClass.Directionality_enum, avm.rf.PortDirectionality> d_RFDirectionality
+            = new Dictionary<CyPhyMLClasses.RFPort.AttributesClass.Directionality_enum, avm.rf.PortDirectionality>()
+            {
+                {CyPhyMLClasses.RFPort.AttributesClass.Directionality_enum.@in, avm.rf.PortDirectionality.@in},
+                {CyPhyMLClasses.RFPort.AttributesClass.Directionality_enum.@out, avm.rf.PortDirectionality.@out}
+            };
+        
+        public static void SetAVMRFPortAttributes(avm.rf.RFPort avmPort, CyPhyML.RFPort cyPhyMLPort)
+        {
+            avmPort.Definition = cyPhyMLPort.Attributes.Definition;
+            avmPort.DirectionalitySpecified = true;
+            avmPort.Directionality = d_RFDirectionality[cyPhyMLPort.Attributes.Directionality];
+            avmPort.Name = cyPhyMLPort.Name;
+            avmPort.NominalImpedanceSpecified = true;
+            avmPort.NominalImpedance = (float)cyPhyMLPort.Attributes.NominalImpedance;
+            avmPort.Notes = cyPhyMLPort.Attributes.InstanceNotes;
+        }
+
+        private void createAVMRFPort(out avm.rf.RFPort avmPort, CyPhyML.RFPort cyPhyMLPort)
+        {
+            avmPort = new avm.rf.RFPort()
+            {
+                ID = ensureIDAttribute(cyPhyMLPort)
+            };
+
+            SetAVMRFPortAttributes(avmPort, cyPhyMLPort);
+            
+            SetLayoutData(avmPort, cyPhyMLPort.Impl);
+            
+            foreach (var cyPhyMLPortComposition in cyPhyMLPort.SrcConnections.PortCompositionCollection)
+            {
+                var cyPhyMLDomainModelPort = cyPhyMLPortComposition.SrcEnds.DomainModelPort;
+                string id = ensureIDAttribute(cyPhyMLDomainModelPort);
+                avmPort.PortMap.Add(id);
+            }
+        }
+
+        private Dictionary<CyPhyMLClasses.CADModel.AttributesClass.FileFormat_enum, avm.cad.FileFormat> d_CADFileFormatMap
+            = new Dictionary<CyPhyMLClasses.CADModel.AttributesClass.FileFormat_enum, avm.cad.FileFormat>()
+            {
+                {CyPhyMLClasses.CADModel.AttributesClass.FileFormat_enum.AP_203, avm.cad.FileFormat.AP_203},
+                {CyPhyMLClasses.CADModel.AttributesClass.FileFormat_enum.AP_214, avm.cad.FileFormat.AP_214},
+                {CyPhyMLClasses.CADModel.AttributesClass.FileFormat_enum.Creo, avm.cad.FileFormat.Creo},
+                {CyPhyMLClasses.CADModel.AttributesClass.FileFormat_enum.STL, avm.cad.FileFormat.STL}
+            };
 
         private void createAVMCarModel(CyPhyML.CarModel cyPhyMLCarModel)
         {
@@ -1062,13 +1489,25 @@ namespace CyPhyML2AVM {
             {
                 Name = cyPhyMLCADModel.Name,
                 Author = cyPhyMLCADModel.Attributes.Author,
-                Notes = cyPhyMLCADModel.Attributes.Notes
+                Notes = cyPhyMLCADModel.Attributes.Notes,
+                ID = "id-" + cyPhyMLCADModel.Guid.ToString("D")
             };
 
+            if (d_CADFileFormatMap.ContainsKey(cyPhyMLCADModel.Attributes.FileFormat))
+            {
+                avmCADModel.FormatSpecified = true;
+                avmCADModel.Format = d_CADFileFormatMap[cyPhyMLCADModel.Attributes.FileFormat];
+            }
+            else
+            {
+                // Not supported
+                avmCADModel.FormatSpecified = false;
+            }
+            
             _avmComponent.DomainModel.Add(avmCADModel);
             SetLayoutData(avmCADModel, cyPhyMLCADModel.Impl);
             _cyPhyMLAVMObjectMap.Add(cyPhyMLCADModel, avmCADModel);
-            
+
             foreach (CyPhyML.CADMetric cyPhyMLCADMetric in cyPhyMLCADModel.Children.CADMetricCollection) {
 
                 avm.cad.Metric avmCADMetric = new avm.cad.Metric()
@@ -1192,7 +1631,7 @@ namespace CyPhyML2AVM {
                     {
                         avmPlane.PortMap.Add(targetSurfaceID);
                     }
-
+                    
                     // Find targets of SurfaceReverseMap connections, where the other end is a Surface, and where the ID value is not empty.
                     foreach (var targetSurfaceID in cyPhyMLSurface.SrcConnections
                                                                     .SurfaceReverseMapCollection
@@ -1349,6 +1788,35 @@ namespace CyPhyML2AVM {
             {
                 _cyPhyMLDomainModelSet.Add(cyPhyMLManufacturingModel);
                 createAVMManufacturingModel(cyPhyMLManufacturingModel);
+            }
+            
+            foreach (CyPhyML.EDAModel cyPhyMLEdaModel in cyPhyMLComponent.Children.EDAModelCollection)
+            {
+                _cyPhyMLDomainModelSet.Add(cyPhyMLEdaModel);
+                createAvmEdaModel(cyPhyMLEdaModel);
+            }
+
+            foreach (CyPhyML.CAD2EDATransform cyPhyMLCAD2EDATransform in cyPhyMLComponent.Children.CAD2EDATransformCollection)
+            {
+                createAvmCad2EdaTransform(cyPhyMLCAD2EDATransform);
+            }
+
+            foreach (CyPhyML.SPICEModel cyPhyMLSpiceModel in cyPhyMLComponent.Children.SPICEModelCollection)
+            {
+                _cyPhyMLDomainModelSet.Add(cyPhyMLSpiceModel);
+                createAvmSpiceModel(cyPhyMLSpiceModel);
+            }
+
+            foreach (CyPhyML.SystemCModel cyPhyMLSystemCModel in cyPhyMLComponent.Children.SystemCModelCollection)
+            {
+                _cyPhyMLDomainModelSet.Add(cyPhyMLSystemCModel);
+                createAVMSystemCModel(cyPhyMLSystemCModel);
+            }
+
+            foreach (CyPhyML.RFModel rfModel in cyPhyMLComponent.Children.RFModelCollection)
+            {
+                _cyPhyMLDomainModelSet.Add(rfModel);
+                createAVMRFModel(rfModel);
             }
 
             foreach (CyPhyML.SimpleFormula cyPhyMLSimpleFormula in cyPhyMLComponent.Children.SimpleFormulaCollection)

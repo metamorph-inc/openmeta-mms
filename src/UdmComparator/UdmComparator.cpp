@@ -1,6 +1,8 @@
 #include "UdmComparator.hpp"
 #include <boost/lexical_cast.hpp>
 #include "UmlExt.h"
+#include "UdmUtil.h"
+#include "UdmGme.h"
 
 UdmComparator::NameUmlAttributeMap UdmComparator::getNameUmlAttributeMap( Uml::Class umlClass ) {
 
@@ -35,26 +37,68 @@ UdmComparator::UmlAttributeSet UdmComparator::getAllUmlAttributes( Uml::Class um
 	return umlAttributeSet;
 }
 
-UdmComparator::UmlAssociationRoleSet UdmComparator::getAllUmlAssociationRoles( Uml::Class umlClass ) {
+UdmComparator::UmlAssociationRoleSet getUnpairedUmlAssociationRoles(Uml::Class umlClass) {
 
-	UmlAssociationRoleSet umlAssociationRoleSet;
+	UdmComparator::UmlAssociationRoleSet umlAssociationRoleSet;
 
-	if ( umlClass.stereotype() == "Connection" ) {
+	if (umlClass.stereotype() == "Connection") {
 		Uml::Association umlAssociation = umlClass.association();
-		if ( umlAssociation != Udm::null ) {
+		if (umlAssociation != Udm::null) {
 			umlAssociationRoleSet = umlAssociation.AssociationRole_kind_children();
 		}
-	} else {
+	}
+	else {
 		umlAssociationRoleSet = umlClass.associationRoles();
 	}
-
-	UmlClassSet umlBaseClassSet = umlClass.baseTypes();
-	for( UmlClassSet::iterator ucsItr = umlBaseClassSet.begin() ; ucsItr != umlBaseClassSet.end() ; ++ucsItr ) {
-		UmlAssociationRoleSet baseClassUmlAssociationRoleSet = getAllUmlAssociationRoles( *ucsItr );
-		umlAssociationRoleSet.insert( baseClassUmlAssociationRoleSet.begin(), baseClassUmlAssociationRoleSet.end() );
+	UdmComparator::UmlClassSet umlBaseClassSet = umlClass.baseTypes();
+	for (UdmComparator::UmlClassSet::iterator ucsItr = umlBaseClassSet.begin(); ucsItr != umlBaseClassSet.end(); ++ucsItr) {
+		UdmComparator::UmlAssociationRoleSet baseClassUmlAssociationRoleSet = getUnpairedUmlAssociationRoles(*ucsItr);
+		umlAssociationRoleSet.insert(baseClassUmlAssociationRoleSet.begin(), baseClassUmlAssociationRoleSet.end());
 	}
 
 	return umlAssociationRoleSet;
+
+}
+
+std::set<std::pair<Uml::AssociationRole, Uml::AssociationRole> > UdmComparator::getAllUmlAssociationRoles(Uml::Class umlClass) {
+
+	UmlAssociationRoleSet umlAssociationRoleSet = getUnpairedUmlAssociationRoles(umlClass);
+
+	std::map<std::string, Uml::AssociationRole> rolesByName;
+	std::for_each(umlAssociationRoleSet.begin(), umlAssociationRoleSet.end(), [&](const Uml::AssociationRole& role) {
+		rolesByName[std::string(role.name())] = role;
+	});
+	std::set<std::pair<Uml::AssociationRole, Uml::AssociationRole> > pairedRoles;
+	for (auto it = rolesByName.begin(); it != rolesByName.end(); ++it) {
+		if (it->first.find("src") == 0 && _bidirRolenameFilter.find(it->first) != _bidirRolenameFilter.end()) {
+			auto dst = rolesByName.find(std::string("dst") + it->first.substr(3));
+			if (dst != rolesByName.end()) {
+				pairedRoles.insert(std::make_pair(it->second, dst->second));
+			}
+			else {
+				if (it->first.find("srcValueFlow_refport_parent") == 0) {
+					//__debugbreak();
+				}
+
+				pairedRoles.insert(std::make_pair(it->second, Uml::AssociationRole()));
+			}
+		}
+		else if (it->first.find("dst") == 0) {
+			auto srcRole = std::string("src") + it->first.substr(3);
+			auto src = rolesByName.find(srcRole);
+			if (_bidirRolenameFilter.find(srcRole) != _bidirRolenameFilter.end() && src != rolesByName.end()) {
+				// noop
+			}
+			else {
+				pairedRoles.insert(std::make_pair(it->second, Uml::AssociationRole()));
+			}
+		}
+		else {
+			pairedRoles.insert(std::make_pair(it->second, Uml::AssociationRole()));
+		}
+	}
+
+	return pairedRoles;
 }
 
 std::string UdmComparator::ObjectName::operator()( Udm::Object udmObject ) {
@@ -112,7 +156,7 @@ std::string UdmComparator::ObjectName::operator()( Udm::Object udmObject ) {
 
 	if ( udmObjectName == "" && umlClass.stereotype() == "Connection" ) {
 
-		UmlAssociationRoleSet umlAssociationRoleSet = getAllUmlAssociationRoles( umlClass );
+		UmlAssociationRoleSet umlAssociationRoleSet = getUnpairedUmlAssociationRoles(umlClass);
 
 		for( UmlAssociationRoleSet::iterator arsItr = umlAssociationRoleSet.begin() ; arsItr != umlAssociationRoleSet.end() ; ++arsItr ) {
 			
@@ -425,24 +469,37 @@ bool UdmComparator::compareNodeAux( Udm::Object udmObject1, Udm::Object udmObjec
 //	if ( !retval ) return false;
 
 
-	UmlAssociationRoleSet umlAssociationRoleSet = getAllUmlAssociationRoles( umlClass1 );
-	for( UmlAssociationRoleSet::iterator arsItr = umlAssociationRoleSet.begin() ; arsItr != umlAssociationRoleSet.end() ; ++arsItr ) {
+	std::set<std::pair<Uml::AssociationRole, Uml::AssociationRole> > umlAssociationRoleSet = getAllUmlAssociationRoles(umlClass1);
+	for( auto arsItr = umlAssociationRoleSet.begin() ; arsItr != umlAssociationRoleSet.end() ; ++arsItr ) {
 
-		Uml::AssociationRole umlAssociationRole = *arsItr;
-		UdmObjectSet udmObjectSet1 = _classNameFilter.filterUdmObjectSet(   udmObject1.getAssociation(  Uml::theOther( umlAssociationRole )  )   );
-		UdmObjectSet udmObjectSet2 = _classNameFilter.filterUdmObjectSet(   udmObject2.getAssociation(  Uml::theOther( umlAssociationRole )  )   );
+		//Uml::AssociationRole umlAssociationRole = *arsItr;
+		UdmObjectSet udmObjectSet1 = _classNameFilter.filterUdmObjectSet(udmObject1.getAssociation(Uml::theOther(arsItr->first)));
+		UdmObjectSet udmObjectSet2 = _classNameFilter.filterUdmObjectSet(udmObject2.getAssociation(Uml::theOther(arsItr->first)));
+		if (arsItr->second) {
+			auto set1 = _classNameFilter.filterUdmObjectSet(udmObject1.getAssociation(Uml::theOther(arsItr->second)));
+			std::copy(set1.begin(), set1.end(), std::inserter(udmObjectSet1, udmObjectSet1.begin()));
+			auto set2 = _classNameFilter.filterUdmObjectSet(udmObject2.getAssociation(Uml::theOther(arsItr->second)));
+			std::copy(set2.begin(), set2.end(), std::inserter(udmObjectSet2, udmObjectSet2.begin()));
+		}
 
 		if ( udmObjectSet1.size() != udmObjectSet2.size() ) {
 			std::cerr << "Objects \"" << udmObject1.getPath( "/" ) << "\" and \"" << udmObject2.getPath( "/" ) << "\"" << std::endl;
-			std::cerr << "have a different number of \"" << umlAssociationRole.name() << "\" associations: " << udmObjectSet1.size() << " vs. " << udmObjectSet2.size() << std::endl << std::endl;
-			retval = false;
+			for (auto it = udmObjectSet1.begin(); it != udmObjectSet1.end(); ++it) {
+				std::cout << UdmUtil::ExtractName(*it) << std::endl;
+			}
+			for (auto it = udmObjectSet2.begin(); it != udmObjectSet2.end(); ++it) {
+				std::cout << " " << it->getPath("/") << UdmGme::UdmId2GmeId(it->uniqueId()) << std::endl;
+			}
+			std::cerr << "have a different number of \"" << arsItr->first.name() << "\" associations: " << udmObjectSet1.size() << " vs. " << udmObjectSet2.size() << std::endl << std::endl;
+			udmObject2.getAssociation(Uml::theOther(arsItr->first));
+			//retval = false;
 		}
 
 		UdmAssociationObjectSet udmAssociationObjectSet1;
 		udmAssociationObjectSet1.rehash(udmObjectSet1.size());
 		std::copy(udmObjectSet1.begin(), udmObjectSet1.end(), std::inserter(udmAssociationObjectSet1, udmAssociationObjectSet1.begin()));
 		if ( udmAssociationObjectSet1.size() != udmObjectSet1.size() ) {
-			std::cerr << "Object \"" << udmObject1.getPath( "/" ) << "\" has \"" << umlAssociationRole.name() << "\" associated objects that cannot be distinguished (probably due to duplicate name)." << std::endl << std::endl;
+			std::cerr << "Object \"" << udmObject1.getPath( "/" ) << "\" has \"" << arsItr->first.name() << "\" associated objects that cannot be distinguished (probably due to duplicate name)." << std::endl << std::endl;
 			retval = false;
 		}
 
@@ -450,7 +507,7 @@ bool UdmComparator::compareNodeAux( Udm::Object udmObject1, Udm::Object udmObjec
 		udmAssociationObjectSet2.rehash(udmObjectSet2.size());
 		std::copy(udmObjectSet2.begin(), udmObjectSet2.end(), std::inserter(udmAssociationObjectSet2, udmAssociationObjectSet2.begin()));
 		if ( udmAssociationObjectSet2.size() != udmObjectSet2.size() ) {
-			std::cerr << "Object \"" << udmObject2.getPath( "/" ) << "\" has \"" << umlAssociationRole.name() << "\" associated objects that cannot be distinguished (probably due to duplicate name)." << std::endl << std::endl;
+			std::cerr << "Object \"" << udmObject2.getPath( "/" ) << "\" has \"" << arsItr->first.name() << "\" associated objects that cannot be distinguished (probably due to duplicate name)." << std::endl << std::endl;
 			retval = false;
 		}
 
@@ -461,7 +518,7 @@ bool UdmComparator::compareNodeAux( Udm::Object udmObject1, Udm::Object udmObjec
 			UdmAssociationObjectSet::iterator ucsItr2 = udmAssociationObjectSet2.find(*ucsItr1);
 
 			if ( ucsItr2 == udmAssociationObjectSet2.end()) {
-				std::cerr << "In first model, \"" << udmObject1.getPath( "/" ) << "\" has a \"" << umlAssociationRole.name() << "\" association object \"" << ucsItr1->object.getPath( "/" ) << "\", but not in the second model." << std::endl;
+				std::cerr << "In first model, \"" << udmObject1.getPath( "/" ) << "\" has a \"" << arsItr->first.name() << "\" association object \"" << ucsItr1->object.getPath( "/" ) << "\", but not in the second model." << std::endl;
 				Report::get_singleton().incrementDifferences( udmObject1 );
 				retval = false;
 				continue;
@@ -476,15 +533,15 @@ bool UdmComparator::compareNodeAux( Udm::Object udmObject1, Udm::Object udmObjec
 				if ( udmAssociationObject2 != Udm::null ) {
 					Report::get_singleton().incrementDifferences( udmObject1 );
 					std::cerr << "Association Error:" << std::endl;
-					std::cerr << "In first model, object \"" << udmObject1.getPath( "/" ) << "is \"" << umlAssociationRole.name() << "\" associated with Udm::null" << std::endl;
-					std::cerr << "However, in the second model, \"" << udmObject2.getPath( "/" ) << "\" is \"" << umlAssociationRole.name() << "\" associated with \"" << udmAssociationObject2.getPath( "/" ) << "\"" << std::endl << std::endl;
+					std::cerr << "In first model, object \"" << udmObject1.getPath( "/" ) << "is \"" << arsItr->first.name() << "\" associated with Udm::null" << std::endl;
+					std::cerr << "However, in the second model, \"" << udmObject2.getPath("/") << "\" is \"" << arsItr->first.name() << "\" associated with \"" << udmAssociationObject2.getPath("/") << "\"" << std::endl << std::endl;
 					retval = false;
 				}
 			} else if ( udmAssociationObject2 == Udm::null ) {
 				Report::get_singleton().incrementDifferences( udmObject1 );
 				std::cerr << "Association Error:" << std::endl;
-				std::cerr << "In second model, object \"" << udmObject2.getPath( "/" ) << "is \"" << umlAssociationRole.name() << "\" associated with Udm::null" << std::endl;
-				std::cerr << "However, in the first model, \"" << udmObject1.getPath( "/" ) << "\" is \"" << umlAssociationRole.name() << "\" associated with \"" << udmAssociationObject1.getPath( "/" ) << "\"" << std::endl << std::endl;
+				std::cerr << "In second model, object \"" << udmObject2.getPath( "/" ) << "is \"" << arsItr->first.name() << "\" associated with Udm::null" << std::endl;
+				std::cerr << "However, in the first model, \"" << udmObject1.getPath("/") << "\" is \"" << arsItr->first.name() << "\" associated with \"" << udmAssociationObject1.getPath("/") << "\"" << std::endl << std::endl;
 				retval = false;
 			} else {
 
@@ -495,8 +552,8 @@ bool UdmComparator::compareNodeAux( Udm::Object udmObject1, Udm::Object udmObjec
 					if ( udmMappedObject != udmAssociationObject2 ) {
 						Report::get_singleton().incrementDifferences( udmObject1 );
 						std::cerr << "Association Error:" << std::endl;
-						std::cerr << "In first  model, \"" << udmObject1.getPath( "/" ) << "\" is \"" << umlAssociationRole.name() << "\" associated with \"" << udmAssociationObject1.getPath( "/" ) << "\"." << std::endl;
-						std::cerr << "In second model, \"" << udmObject2.getPath( "/" ) << "\" is \"" << umlAssociationRole.name() << "\" associated with \"" << udmAssociationObject2.getPath( "/" ) << "\"." << std::endl;
+						std::cerr << "In first  model, \"" << udmObject1.getPath("/") << "\" is \"" << arsItr->first.name() << "\" associated with \"" << udmAssociationObject1.getPath("/") << "\"." << std::endl;
+						std::cerr << "In second model, \"" << udmObject2.getPath("/") << "\" is \"" << arsItr->first.name() << "\" associated with \"" << udmAssociationObject2.getPath("/") << "\"." << std::endl;
 						std::cerr << "However, \"" << udmAssociationObject1.getPath( "/" ) << "\" of the first model corresponds to \"" << udmMappedObject.getPath( "/" ) << "\"" << std::endl;
 						std::cerr << "instead of \"" << udmAssociationObject2.getPath( "/" ) << "\" as it should." << std::endl << std::endl;
 						retval = false;
@@ -508,7 +565,7 @@ bool UdmComparator::compareNodeAux( Udm::Object udmObject1, Udm::Object udmObjec
 
 		UdmAssociationObjectSet::iterator ucsItr2 = udmAssociationObjectSet2.begin();
 		for( ; ucsItr2 != udmAssociationObjectSet2.end(); ++ucsItr2 ) {
-			std::cerr << "In second model, \"" << udmObject2.getPath( "/" ) << "\" has a \"" << umlAssociationRole.name() << "\" association object \"" << ucsItr2->object.getPath( "/" ) << "\", but not in the first model." << std::endl;
+			std::cerr << "In second model, \"" << udmObject2.getPath("/") << "\" has a \"" << arsItr->first.name() << "\" association object \"" << ucsItr2->object.getPath("/") << "\", but not in the first model." << std::endl;
 			Report::get_singleton().incrementDifferences( udmObject2 );
 			retval = false;
 			continue;

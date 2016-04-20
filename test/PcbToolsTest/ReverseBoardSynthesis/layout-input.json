@@ -1,0 +1,972 @@
+{
+  "boardWidth": 24.0,
+  "boardHeight": 30.0,
+  "boardEdgeSpace": 0.5,
+  "interChipSpace": 1.0,
+  "numLayers": 2,
+  "designRules": "MacroFab_2_Layer.dru",
+  "packages": [
+    {
+      "name": "C1",
+      "package": "C_0603",
+      "pkg_idx": 0,
+      "ComponentID": "2924e638-f253-4047-bb83-4531ab99cae1",
+      "width": 2.95,
+      "height": 1.1,
+      "koWidth": 2.95,
+      "koHeight": 1.1,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "C10",
+      "package": "C_0603",
+      "pkg_idx": 1,
+      "ComponentID": "43a22ff4-f481-49a0-bb20-9c3c33793c58",
+      "width": 2.95,
+      "height": 1.1,
+      "koWidth": 2.95,
+      "koHeight": 1.1,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "C14",
+      "package": "C_0402",
+      "pkg_idx": 2,
+      "ComponentID": "0e525227-2af1-43a8-b47f-43d3db186ebd",
+      "width": 1.72,
+      "height": 0.72,
+      "koWidth": 1.72,
+      "koHeight": 0.72,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "C2",
+      "package": "C_0603",
+      "pkg_idx": 3,
+      "ComponentID": "ba7ba68c-5fb7-4d91-b7e4-ea3273ec7071",
+      "width": 2.95,
+      "height": 1.1,
+      "koWidth": 2.95,
+      "koHeight": 1.1,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "C3",
+      "package": "C_0603",
+      "pkg_idx": 4,
+      "ComponentID": "71d6276d-83a4-464c-842a-98c84de7328e",
+      "width": 2.95,
+      "height": 1.1,
+      "koWidth": 2.95,
+      "koHeight": 1.1,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "C4",
+      "package": "C_0603",
+      "pkg_idx": 5,
+      "ComponentID": "afc7844f-a0a7-495f-b454-360a78548a76",
+      "width": 2.95,
+      "height": 1.1,
+      "koWidth": 2.95,
+      "koHeight": 1.1,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "C6",
+      "package": "C_0603",
+      "pkg_idx": 6,
+      "ComponentID": "1452a829-1e32-4b7d-85d8-816dec6b0499",
+      "width": 2.95,
+      "height": 1.1,
+      "koWidth": 2.95,
+      "koHeight": 1.1,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "C8",
+      "package": "C_0603",
+      "pkg_idx": 7,
+      "ComponentID": "1c7908f1-67ea-4653-b9c3-a779eb51c5fd",
+      "width": 2.95,
+      "height": 1.1,
+      "koWidth": 2.95,
+      "koHeight": 1.1,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "C9",
+      "package": "C_0402",
+      "pkg_idx": 8,
+      "ComponentID": "8f66525f-4938-4d9d-9585-8a9a0b9ddbbc",
+      "width": 1.72,
+      "height": 0.72,
+      "koWidth": 1.72,
+      "koHeight": 0.72,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Q1",
+      "package": "SOT23-3",
+      "pkg_idx": 9,
+      "ComponentID": "09c709e0-42fb-453a-93bc-69e5bc3b9ab4",
+      "width": 3.8024000000000004,
+      "height": 3.2524,
+      "koWidth": 3.8024000000000004,
+      "koHeight": 3.2524,
+      "originX": -0.7,
+      "originY": 0.1,
+      "constraints": []
+    },
+    {
+      "name": "R1",
+      "package": "R_0603",
+      "pkg_idx": 10,
+      "ComponentID": "d01a5c3e-5e54-4832-afa9-10f7b0697f42",
+      "width": 2.4000000000000004,
+      "height": 0.8,
+      "koWidth": 2.4000000000000004,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R10",
+      "package": "R_0603",
+      "pkg_idx": 11,
+      "ComponentID": "e1c91a9d-5ef1-4640-9242-98d31169f54d",
+      "width": 2.4000000000000004,
+      "height": 0.8,
+      "koWidth": 2.4000000000000004,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R12",
+      "package": "R_0402",
+      "pkg_idx": 12,
+      "ComponentID": "f201e1c4-2274-4ec8-aaf8-77f958783f6b",
+      "width": 1.7000000000000002,
+      "height": 0.5,
+      "koWidth": 1.7000000000000002,
+      "koHeight": 0.5,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R2",
+      "package": "R_0402",
+      "pkg_idx": 13,
+      "ComponentID": "b6490cea-1d25-4081-9dab-fb4f77eeb1e6",
+      "width": 1.7000000000000002,
+      "height": 0.5,
+      "koWidth": 1.7000000000000002,
+      "koHeight": 0.5,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R3",
+      "package": "R_0603",
+      "pkg_idx": 14,
+      "ComponentID": "69a4e04e-1e40-421c-ae3d-f72c6d1f7390",
+      "width": 2.4000000000000004,
+      "height": 0.8,
+      "koWidth": 2.4000000000000004,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R4",
+      "package": "R_0603",
+      "pkg_idx": 15,
+      "ComponentID": "ff37db01-64aa-4ce8-97da-5e0d24d45235",
+      "width": 2.4000000000000004,
+      "height": 0.8,
+      "koWidth": 2.4000000000000004,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R5",
+      "package": "R_0603",
+      "pkg_idx": 16,
+      "ComponentID": "78faf262-bf03-49fe-8cf8-5e4736042e88",
+      "width": 2.4000000000000004,
+      "height": 0.8,
+      "koWidth": 2.4000000000000004,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R6",
+      "package": "R_0603",
+      "pkg_idx": 17,
+      "ComponentID": "22a07a1e-5946-4499-8e08-c82bb381ae7a",
+      "width": 2.4000000000000004,
+      "height": 0.8,
+      "koWidth": 2.4000000000000004,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R8",
+      "package": "R_0402",
+      "pkg_idx": 18,
+      "ComponentID": "a90b2bab-a68b-4cf2-8c8f-954679adfdf1",
+      "width": 1.7000000000000002,
+      "height": 0.5,
+      "koWidth": 1.7000000000000002,
+      "koHeight": 0.5,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "R9",
+      "package": "R_0603",
+      "pkg_idx": 19,
+      "ComponentID": "e652e1d4-5536-491f-9924-8d565dc52fa3",
+      "width": 2.4000000000000004,
+      "height": 0.8,
+      "koWidth": 2.4000000000000004,
+      "koHeight": 0.8,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "U1",
+      "package": "CO-AX",
+      "pkg_idx": 20,
+      "ComponentID": "758f52f0-3e42-4b87-9078-1bfb6bdc0edc",
+      "width": 20.3,
+      "height": 20.3,
+      "koWidth": 20.3,
+      "koHeight": 20.3,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": [],
+      "multiLayer": true
+    },
+    {
+      "name": "U2-A",
+      "package": "MSOP-8",
+      "pkg_idx": 21,
+      "ComponentID": "e968da51-8876-43b5-97b1-269ce7bc6ed6",
+      "width": 5.69141875,
+      "height": 3.34141875,
+      "koWidth": 5.69141875,
+      "koHeight": 3.4414187499999995,
+      "originX": -0.2,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "U2-B",
+      "package": "MSOP-8",
+      "pkg_idx": 22,
+      "ComponentID": "8d66a87b-5c9d-4fbd-980e-6836aa7f6d9b",
+      "width": 5.69141875,
+      "height": 3.34141875,
+      "koWidth": 5.69141875,
+      "koHeight": 3.4414187499999995,
+      "originX": -0.2,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "U3",
+      "package": "MSOP-10",
+      "pkg_idx": 23,
+      "ComponentID": "f03df24e-0baf-485f-b70a-765a1a78cf28",
+      "width": 5.7,
+      "height": 3.25,
+      "koWidth": 5.7,
+      "koHeight": 3.46,
+      "originX": -0.2,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "U4",
+      "package": "SOT-23",
+      "pkg_idx": 24,
+      "ComponentID": "9567974c-e902-4dec-8402-86045f7dd683",
+      "width": 3.9414187500000004,
+      "height": 3.0,
+      "koWidth": 3.9414187500000004,
+      "koHeight": 3.0,
+      "originX": -0.4,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "U5",
+      "package": "SC-70",
+      "pkg_idx": 25,
+      "ComponentID": "e0c4d5f1-0f1c-4f13-82c2-b22e1985d092",
+      "width": 3.325,
+      "height": 2.3000000000000003,
+      "koWidth": 3.325,
+      "koHeight": 2.3000000000000003,
+      "originX": -0.3,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "U8",
+      "package": "MSOP-10",
+      "pkg_idx": 26,
+      "ComponentID": "7c115d0c-97c3-4023-8b74-3e6af508d302",
+      "width": 5.7,
+      "height": 3.25,
+      "koWidth": 5.7,
+      "koHeight": 3.46,
+      "originX": -0.2,
+      "originY": 0.0,
+      "constraints": []
+    }
+  ],
+  "signals": [
+    {
+      "name": "N$0",
+      "pins": [
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C1"
+        },
+        {
+          "name": "VSS",
+          "gate": "G$1",
+          "pad": "P$4",
+          "package": "U3"
+        },
+        {
+          "name": "V-",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "U5"
+        },
+        {
+          "name": "GND",
+          "gate": "G$1",
+          "pad": "P$7",
+          "package": "U8"
+        },
+        {
+          "name": "REF(-)",
+          "gate": "G$1",
+          "pad": "P$6",
+          "package": "U8"
+        },
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C14"
+        },
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C9"
+        },
+        {
+          "name": "V-",
+          "gate": "G$1",
+          "pad": "P$4",
+          "package": "U2-B"
+        },
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C10"
+        },
+        {
+          "name": "GND_FORCE",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "U4"
+        },
+        {
+          "name": "GND_SENSE",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "U4"
+        },
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C8"
+        },
+        {
+          "name": "V-",
+          "gate": "G$1",
+          "pad": "P$4",
+          "package": "U2-A"
+        },
+        {
+          "name": "GND",
+          "gate": "G$1",
+          "pad": "P$6",
+          "package": "U3"
+        },
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C6"
+        }
+      ]
+    },
+    {
+      "name": "N$1",
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C1"
+        },
+        {
+          "name": "EXT_CAP",
+          "gate": "G$1",
+          "pad": "P$5",
+          "package": "U3"
+        }
+      ]
+    },
+    {
+      "name": "N$2",
+      "pins": [
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C10"
+        },
+        {
+          "name": "ENABLE",
+          "gate": "G$1",
+          "pad": "P$3",
+          "package": "U4"
+        },
+        {
+          "name": "VIN",
+          "gate": "G$1",
+          "pad": "P$4",
+          "package": "U4"
+        },
+        {
+          "name": "V+",
+          "gate": "G$1",
+          "pad": "P$7",
+          "package": "U2-B"
+        },
+        {
+          "name": "V+",
+          "gate": "G$1",
+          "pad": "P$5",
+          "package": "U5"
+        },
+        {
+          "name": "VDD",
+          "gate": "G$1",
+          "pad": "P$8",
+          "package": "U8"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R1"
+        },
+        {
+          "name": "V+",
+          "gate": "G$1",
+          "pad": "P$7",
+          "package": "U2-A"
+        },
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C6"
+        },
+        {
+          "name": "VDD",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "U3"
+        }
+      ]
+    },
+    {
+      "name": "N$3",
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C14"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R12"
+        },
+        {
+          "name": "AIN(+)",
+          "gate": "G$1",
+          "pad": "P$3",
+          "package": "U8"
+        }
+      ]
+    },
+    {
+      "name": "N$4",
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C2"
+        },
+        {
+          "name": "OUT",
+          "gate": "G$1",
+          "pad": "P$6",
+          "package": "U2-B"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R8"
+        },
+        {
+          "name": "A",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "U3"
+        }
+      ]
+    },
+    {
+      "name": "N$5",
+      "pins": [
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C2"
+        },
+        {
+          "name": "W",
+          "gate": "G$1",
+          "pad": "P$3",
+          "package": "U3"
+        },
+        {
+          "name": "-IN",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "U2-B"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R2"
+        }
+      ]
+    },
+    {
+      "name": "N$6",
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C3"
+        },
+        {
+          "name": "OUT",
+          "gate": "G$1",
+          "pad": "P$6",
+          "package": "U2-A"
+        },
+        {
+          "name": "CE",
+          "gate": "G$1",
+          "pad": "COUNTER",
+          "package": "U1"
+        },
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C4"
+        }
+      ]
+    },
+    {
+      "name": "N$7",
+      "pins": [
+        {
+          "name": "P$1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "C3"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R5"
+        },
+        {
+          "name": "-IN",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "U2-A"
+        }
+      ]
+    },
+    {
+      "name": "N$8",
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C4"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R5"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R6"
+        }
+      ]
+    },
+    {
+      "name": "N$9",
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C8"
+        },
+        {
+          "name": "VOUT_FORCE",
+          "gate": "G$1",
+          "pad": "P$6",
+          "package": "U4"
+        },
+        {
+          "name": "VOUT_SENSE",
+          "gate": "G$1",
+          "pad": "P$5",
+          "package": "U4"
+        },
+        {
+          "name": "REF(+)",
+          "gate": "G$1",
+          "pad": "P$5",
+          "package": "U8"
+        },
+        {
+          "name": "AIN(-)",
+          "gate": "G$1",
+          "pad": "P$4",
+          "package": "U8"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R3"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R4"
+        }
+      ]
+    },
+    {
+      "name": "N$10",
+      "pins": [
+        {
+          "name": "P$2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "C9"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R8"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R10"
+        }
+      ]
+    },
+    {
+      "name": "N$11",
+      "pins": [
+        {
+          "name": "D",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "Q1"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R6"
+        },
+        {
+          "name": "RE",
+          "gate": "G$1",
+          "pad": "REFERENCE",
+          "package": "U1"
+        }
+      ]
+    },
+    {
+      "name": "N$12",
+      "pins": [
+        {
+          "name": "S",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "Q1"
+        },
+        {
+          "name": "WE",
+          "gate": "G$1",
+          "pad": "WORKER",
+          "package": "U1"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R2"
+        }
+      ]
+    },
+    {
+      "name": "N$13",
+      "pins": [
+        {
+          "name": "G",
+          "gate": "G$1",
+          "pad": "3",
+          "package": "Q1"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R1"
+        }
+      ]
+    },
+    {
+      "name": "N$14",
+      "pins": [
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R10"
+        },
+        {
+          "name": "+IN",
+          "gate": "G$1",
+          "pad": "P$3",
+          "package": "U5"
+        }
+      ]
+    },
+    {
+      "name": "N$15",
+      "pins": [
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R12"
+        },
+        {
+          "name": "OUT_A",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "U5"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R9"
+        }
+      ]
+    },
+    {
+      "name": "N$16",
+      "pins": [
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R3"
+        },
+        {
+          "name": "+IN",
+          "gate": "G$1",
+          "pad": "P$3",
+          "package": "U2-B"
+        }
+      ]
+    },
+    {
+      "name": "N$17",
+      "pins": [
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "P$2",
+          "package": "R4"
+        },
+        {
+          "name": "+IN",
+          "gate": "G$1",
+          "pad": "P$3",
+          "package": "U2-A"
+        }
+      ]
+    },
+    {
+      "name": "N$18",
+      "pins": [
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "R9"
+        },
+        {
+          "name": "-IN",
+          "gate": "G$1",
+          "pad": "P$4",
+          "package": "U5"
+        }
+      ]
+    },
+    {
+      "name": "N$19",
+      "pins": [
+        {
+          "name": "SCLK",
+          "gate": "G$1",
+          "pad": "P$9",
+          "package": "U3"
+        },
+        {
+          "name": "SCLK",
+          "gate": "G$1",
+          "pad": "P$1",
+          "package": "U8"
+        }
+      ]
+    },
+    {
+      "name": "N$20",
+      "pins": [
+        {
+          "name": "DIN",
+          "gate": "G$1",
+          "pad": "P$8",
+          "package": "U3"
+        },
+        {
+          "name": "DIN",
+          "gate": "G$1",
+          "pad": "P$10",
+          "package": "U8"
+        }
+      ]
+    },
+    {
+      "name": "N$21",
+      "pins": [
+        {
+          "name": "SDO",
+          "gate": "G$1",
+          "pad": "P$7",
+          "package": "U3"
+        },
+        {
+          "name": "DOUT/RDY",
+          "gate": "G$1",
+          "pad": "P$9",
+          "package": "U8"
+        }
+      ]
+    }
+  ]
+}

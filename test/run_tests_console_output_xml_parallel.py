@@ -27,6 +27,7 @@ def main(*xunitfile_and_result_dirs):
 
 if __name__ == '__main__':
     _this_dir = os.path.dirname(os.path.abspath(__file__))
-    xml_files = main((os.path.join(_this_dir, 'tests.xunit'), os.path.join(_this_dir, 'results')))
+    xunit_files = sys.argv[1:] if len(sys.argv) >= 2 else ['tests.xunit']
+    xml_files = main(*[(xunit_file, os.path.abspath(os.path.join(os.path.dirname(xunit_file), 'results'))) for xunit_file in xunit_files])
     run_tests_console_output_xml.amalgamate_nunit_xmls([xml_file for xml_file in xml_files if xml_file is not None], os.path.join(_this_dir, 'nunit_results.xml'))
 

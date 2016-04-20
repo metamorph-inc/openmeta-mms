@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="413113df-7b1c-4a9a-8e02-f96c52a5c9d7" Name="Led_0603_BLUE_withCAD" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="cad" xsi:type="q1:CADModel" UsesResource="id-b1e1e1e9-de81-4a6e-9fc5-c869138af037" Author="" Notes="" XPosition="147" YPosition="427" Name="led0603blue.prt" xmlns="">
+    <Datum xsi:type="q1:CoordinateSystem" ID="id-743387d4-95cb-46d6-9a41-5683d329616d" PortMap="" Name="CS" Notes="" Definition="" XPosition="25" YPosition="25" DatumName="CS" />
+    <Datum xsi:type="q1:CoordinateSystem" ID="cad.D3D9F5B568964CF3AD15252F1732B23" PortMap="" Name="D3D9F5B568964CF3AD15252F1732B23" Notes="" Definition="" XPosition="125" YPosition="25" DatumName="D3D9F5B568964CF3AD15252F1732B23" />
+  </DomainModel>
+  <DomainModel xmlns:q2="eda" xsi:type="q2:EDAModel" UsesResource="id-26e88deb-1887-4940-9f82-6e1a7abbe730" Author="" Notes="" XPosition="133" YPosition="266" Package="0603-LED" Device="" Library="partsFromSpreadsheet" DeviceSet="LED-BLUE-0603" xmlns="">
+    <Pin ID="id-86b470b8-b894-431a-b741-3efab54d9a96" PortMap="" Name="P$2" Notes="" Definition="" XPosition="125" YPosition="25" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="7.62" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-e9f09219-475f-4663-a0ca-0f7246999d3e" PortMap="" Name="P$1" Notes="" Definition="" XPosition="25" YPosition="25" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="0" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Parameter XPosition="225" YPosition="25" Locator="value">
+      <Value ID="id-9b1b5791-d5ff-49d2-b713-10425336c8fe">
+        <ValueExpression xmlns:q3="avm" xsi:type="q3:FixedValue">
+          <Value />
+        </ValueExpression>
+      </Value>
+    </Parameter>
+  </DomainModel>
+  <DomainModel xmlns:q4="spice" xsi:type="q4:SPICEModel" UsesResource="id-4189a4a2-9046-4d5f-ab6d-cfcad6865267" Author="" Notes="" XPosition="371" YPosition="294" Class="X:simpleLED" xmlns="">
+    <Pin ID="id-0de0e09e-c832-4cc8-8638-1ee8a42e55ac" PortMap="" Name="Anode" Notes="" Definition="" XPosition="49" YPosition="49" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="1" />
+    <Pin ID="id-279c3957-1ecc-42ce-8855-9e04b83ccbc0" PortMap="" Name="Cathode" Notes="" Definition="" XPosition="301" YPosition="49" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="2" />
+  </DomainModel>
+  <Property xmlns:q5="avm" xsi:type="q5:PrimitiveProperty" Name="octopart_mpn" ID="property.id-e61b1e36-a6d1-4126-9655-0a4fc1dadf2a" XPosition="35" YPosition="574" xmlns="">
+    <Value ID="id-e61b1e36-a6d1-4126-9655-0a4fc1dadf2a" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q5:FixedValue">
+        <Value>LB Q39G-L2N2-35-1</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency XPosition="490" YPosition="154" Name="Icon" Path="Images/Icon.png" Hash="" ID="id-b70992b3-3580-4d2b-ac2a-75b0958b133b" Notes="" xmlns="" />
+  <ResourceDependency XPosition="140" YPosition="175" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-26e88deb-1887-4940-9f82-6e1a7abbe730" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency XPosition="399" YPosition="196" Name="spice" Path="Spice\subcircuit.cir" Hash="" ID="id-4189a4a2-9046-4d5f-ab6d-cfcad6865267" Notes="" xmlns="" />
+  <ResourceDependency XPosition="525" YPosition="427" Name="led0603blue.prt.1" Path="CAD\led0603blue.prt.1" Hash="" ID="id-b1e1e1e9-de81-4a6e-9fc5-c869138af037" Notes="CAD Model Import tool added this resource object for the imported CAD file" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-660da9cb-29e2-4be1-8e35-98f44dd3434f" ApplyJoinData="" Notes="" Name="Cath" Definition="" YPosition="28" XPosition="420" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-eef4fde5-8858-4fac-8cc0-b8cd9998d64b" PortMap="id-279c3957-1ecc-42ce-8855-9e04b83ccbc0 id-86b470b8-b894-431a-b741-3efab54d9a96" Name="Sch" Notes="" Definition="" XPosition="126" YPosition="21" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-6e8866a0-7ece-4a59-97b7-5b462f8ae70a" ApplyJoinData="" Notes="" Name="Anode" Definition="" YPosition="14" XPosition="35" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-320abcfd-7936-4ea6-bb17-e560e346a1fe" PortMap="id-0de0e09e-c832-4cc8-8638-1ee8a42e55ac id-e9f09219-475f-4663-a0ca-0f7246999d3e" Name="Sch" Notes="" Definition="" XPosition="126" YPosition="21" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">optoelectronics.light_sources_and_emitters.leds.leds_(discrete)</Classifications>
+</Component>

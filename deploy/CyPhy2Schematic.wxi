@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <DirectoryRef Id="INSTALLDIR_BIN" />
+</Fragment>
+<Fragment>
+<ComponentGroup Id="CyPhy2Schematic">
+  <Component Id="CyPhy2Schematic.dll" Directory="INSTALLDIR_BIN">
+    <File Id="CyPhy2Schematic.dll" Name="CyPhy2Schematic.dll" KeyPath="yes" Source="..\src\CyPhy2Schematic\bin\Release\CyPhy2Schematic.dll" />
+    <Class Id="{C2A20DC0-AB68-4F71-8EF5-0107F6627A16}" Context="InprocServer32" Description="MGA.Interpreter.CyPhy2Schematic" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="MGA.Interpreter.CyPhy2Schematic" Description="MGA.Interpreter.CyPhy2Schematic" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{C2A20DC0-AB68-4F71-8EF5-0107F6627A16}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{C2A20DC0-AB68-4F71-8EF5-0107F6627A16}\InprocServer32" Name="Class" Value="CyPhy2Schematic.CyPhy2SchematicInterpreter" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{C2A20DC0-AB68-4F71-8EF5-0107F6627A16}\InprocServer32" Name="Assembly" Value="CyPhy2Schematic, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{C2A20DC0-AB68-4F71-8EF5-0107F6627A16}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{C2A20DC0-AB68-4F71-8EF5-0107F6627A16}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2Schematic.dll]" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
+    <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.CyPhy2Schematic'>
+      <RegistryValue Name='Description' Type='string' Value='CyPhy2Schematic'/>
+      <RegistryValue Name='Icon' Type='string' Value='[#CyPhy2Schematic.ico]'/>
+      <RegistryValue Name='Paradigm' Type='string' Value='CyPhyML'/>
+      <RegistryValue Name='Tooltip' Type='string' Value='CyPhy2Schematic'/>
+      <RegistryValue Name='Type' Type='integer' Value='1'/>
+
+      <!-- not Associated -->
+
+    </RegistryKey>
+    <Class Id="{91D39BEB-0026-431D-8315-E600F0D84FAA}" Context="InprocServer32" Description="ISIS.META.CyPhy2Schematic_Settings" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="ISIS.META.CyPhy2Schematic_Settings" Description="ISIS.META.CyPhy2Schematic_Settings" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{91D39BEB-0026-431D-8315-E600F0D84FAA}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{91D39BEB-0026-431D-8315-E600F0D84FAA}\InprocServer32" Name="Class" Value="CyPhy2Schematic.CyPhy2Schematic_Settings" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{91D39BEB-0026-431D-8315-E600F0D84FAA}\InprocServer32" Name="Assembly" Value="CyPhy2Schematic, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{91D39BEB-0026-431D-8315-E600F0D84FAA}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{91D39BEB-0026-431D-8315-E600F0D84FAA}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2Schematic.dll]" Type="string" Action="write" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\CyPhy2Schematic/CyPhy2Schematic.ico" />
+  </Component>
+</ComponentGroup>
+</Fragment>
+</Wix>

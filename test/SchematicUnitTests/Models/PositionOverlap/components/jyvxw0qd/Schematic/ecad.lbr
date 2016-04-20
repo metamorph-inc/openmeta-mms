@@ -1,0 +1,68 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="MICRO-SIP" xmlns="eagle">
+          <description>&lt;B&gt;8-WFBGA&lt;/B&gt;&lt;P&gt;
+Also known as 8-uSIP, micro SIP, R-uSIP-N8&lt;br&gt;
+Designed for the Texas Instruments TPS82671SIPT 600-mA, HIGH-EFFICIENCY MicroSiP? STEP-DOWN CONVERTER&lt;br&gt;
+Digi-Key Part Number 296-27939-1-ND</description>
+          <circle x="-1.1" y="1.7" radius="0.1" width="0.127" layer="21" />
+          <wire x1="-1.7" y1="1.4" x2="1.7" y2="1.4" width="0.127" layer="21" />
+          <wire x1="1.7" y1="1.4" x2="1.7" y2="-1.4" width="0.127" layer="21" />
+          <wire x1="1.7" y1="-1.4" x2="-1.7" y2="-1.4" width="0.127" layer="21" />
+          <wire x1="-1.7" y1="-1.4" x2="-1.7" y2="1.4" width="0.127" layer="21" />
+          <smd name="A1" x="-1" y="0.8" dx="0.3" dy="0.3" layer="1" roundness="100" />
+          <smd name="A2" x="0" y="0.8" dx="0.3" dy="0.3" layer="1" roundness="100" rot="R90" />
+          <smd name="A3" x="1" y="0.8" dx="0.3" dy="0.3" layer="1" roundness="100" />
+          <smd name="B1" x="-1" y="0" dx="0.3" dy="0.3" layer="1" roundness="100" />
+          <smd name="B2" x="0" y="0" dx="0.3" dy="0.3" layer="1" roundness="100" />
+          <smd name="C1" x="-1" y="-0.8" dx="0.3" dy="0.3" layer="1" roundness="100" />
+          <smd name="C2" x="0" y="-0.8" dx="0.3" dy="0.3" layer="1" roundness="100" />
+          <smd name="C3" x="1" y="-0.8" dx="0.3" dy="0.3" layer="1" roundness="100" />
+          
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="TPS8267XSIP">
+          <description>&lt;B&gt;TPS8267XSIP&lt;/B&gt;&lt;P&gt;
+600-mA, HIGH-EFFICIENCY MicroSiP? STEP-DOWN DC/DC Converter family&lt;P&gt;
+Texas Instruments TPS82670, TPS82671, TPS82672, TPS82673, TPS82674
+TPS82675, TPS82676, TPS82677, TPS826711, TPS826745, TPS826765</description>
+          <wire x1="-12.7" y1="10.16" x2="12.7" y2="10.16" width="0.254" layer="94" />
+          <wire x1="12.7" y1="10.16" x2="12.7" y2="-10.16" width="0.254" layer="94" />
+          <wire x1="12.7" y1="-10.16" x2="-12.7" y2="-10.16" width="0.254" layer="94" />
+          <wire x1="-12.7" y1="-10.16" x2="-12.7" y2="10.16" width="0.254" layer="94" />
+          <pin name="EN" x="-17.78" y="-2.54" length="middle" direction="pas" />
+          <pin name="GND" x="0" y="-15.24" length="middle" direction="pas" rot="R90" />
+          <pin name="MODE" x="17.78" y="-2.54" length="middle" direction="pas" rot="R180" />
+          <pin name="VIN" x="-17.78" y="5.08" length="middle" direction="pas" />
+          <pin name="VOUT" x="17.78" y="5.08" length="middle" direction="pas" rot="R180" />
+          
+          
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="TPS82676SIPT" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="TPS8267XSIP" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="MICRO-SIP" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="EN" pad="B2" />
+                <connect gate="G$1" pin="GND" pad="C1 C2 C3" />
+                <connect gate="G$1" pin="MODE" pad="B1" />
+                <connect gate="G$1" pin="VIN" pad="A2 A3" />
+                <connect gate="G$1" pin="VOUT" pad="A1" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

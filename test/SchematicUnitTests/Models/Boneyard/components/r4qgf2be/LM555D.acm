@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="4dd6fe5e-af6c-4988-8dd3-5f4aa09a6a7c" Name="LM555D" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-5b627f7c-b5af-4104-8f2c-29aa8bc71cdf" Author="" Notes="" XPosition="287" YPosition="266" Name="EDAModel" ID="id-66da78ad-c720-4ada-9260-0d605c208a20" Package="S-PDSO-G8" Device="" Library="ecad" DeviceSet="LM555CMM/NOPB" xmlns="">
+    <Pin ID="id-0affc755-8de5-4e61-a08c-bd714a261cef" PortMap="id-afc6df7d-be7a-44cb-9362-d36c19df2693" Notes="" XPosition="325" Definition="" YPosition="25" Name="OUTPUT" EDAGate="G$1" EDASymbolLocationX="-22.86" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-11b8b108-7e61-4f4e-9865-293bdb04ed48" PortMap="" Notes="" XPosition="725" Definition="" YPosition="25" Name="VCC" EDAGate="G$1" EDASymbolLocationX="22.86" EDASymbolLocationY="7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-ee3e9dcb-da45-47b2-9a25-93b7d825251e" PortMap="" Notes="" XPosition="425" Definition="" YPosition="25" Name="RESET" EDAGate="G$1" EDASymbolLocationX="-22.86" EDASymbolLocationY="-7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-5d7db08c-a9e0-45de-882d-4aa3db946e8b" PortMap="" Notes="" XPosition="525" Definition="" YPosition="25" Name="THRESHOLD" EDAGate="G$1" EDASymbolLocationX="22.86" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-f9969006-b697-459f-8ed6-f8e628d64b8f" PortMap="id-d805dc79-0044-4bae-aae6-72f6dbb08098" Notes="" XPosition="625" Definition="" YPosition="25" Name="TRIGGER" EDAGate="G$1" EDASymbolLocationX="-22.86" EDASymbolLocationY="2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-b78c65db-bf26-48ec-bfd0-890d6acdc245" PortMap="id-5cfee6a4-53c3-4dd5-b682-e0a6e4b20e88" Notes="" XPosition="125" Definition="" YPosition="25" Name="DISCHARGE" EDAGate="G$1" EDASymbolLocationX="22.86" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-d7932c0c-d16b-4b6a-9f07-a6ca9c3263f9" PortMap="id-4d53159e-b38e-4665-b41b-334323143884" Notes="" XPosition="25" Definition="" YPosition="25" Name="CONTROL_VOLTAGE" EDAGate="G$1" EDASymbolLocationX="22.86" EDASymbolLocationY="-7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-3c2e244c-f882-438d-9ca3-6c2da2978ae9" PortMap="" Notes="" XPosition="225" Definition="" YPosition="25" Name="GND" EDAGate="G$1" EDASymbolLocationX="-22.86" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </DomainModel>
+  <Property xmlns:q2="avm" xsi:type="q2:PrimitiveProperty" Name="quiescent_current" OnDataSheet="false" ID="property.id-015ac899-92ce-48b9-8e75-b38b7c5390e9" XPosition="1000" YPosition="40" xmlns="">
+    <Value ID="id-015ac899-92ce-48b9-8e75-b38b7c5390e9" DimensionType="Scalar" Dimensions="" DataType="Real">
+      <ValueExpression xsi:type="q2:FixedValue">
+        <Value>0.003</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q3="avm" xsi:type="q3:PrimitiveProperty" Name="lead_free_status" OnDataSheet="false" ID="property.id-04eb1531-65db-4126-bae2-51aa3379ef6b" XPosition="1000" YPosition="80" xmlns="">
+    <Value ID="id-04eb1531-65db-4126-bae2-51aa3379ef6b" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q3:FixedValue">
+        <Value>Lead Free</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q4="avm" xsi:type="q4:PrimitiveProperty" Name="mounting_style" OnDataSheet="false" ID="property.id-1b3d2587-4851-4a8a-a85d-604736ec54b1" XPosition="1000" YPosition="120" xmlns="">
+    <Value ID="id-1b3d2587-4851-4a8a-a85d-604736ec54b1" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q4:FixedValue">
+        <Value>Surface Mount</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q5="avm" xsi:type="q5:PrimitiveProperty" Name="packaging" OnDataSheet="false" ID="property.id-81543959-f382-4676-96ef-1980fec78ec6" XPosition="1000" YPosition="160" xmlns="">
+    <Value ID="id-81543959-f382-4676-96ef-1980fec78ec6" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q5:FixedValue">
+        <Value>Cut Tape (CT)</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q6="avm" xsi:type="q6:PrimitiveProperty" Name="lifecycle_status" OnDataSheet="false" ID="property.id-09303872-5ebf-4933-b7a4-c1d390db71a0" XPosition="1000" YPosition="200" xmlns="">
+    <Value ID="id-09303872-5ebf-4933-b7a4-c1d390db71a0" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q6:FixedValue">
+        <Value>Active</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q7="avm" xsi:type="q7:PrimitiveProperty" Name="supply_current" OnDataSheet="false" ID="property.id-1519c66b-e433-45db-98e9-6b5508ddc5d6" XPosition="1000" YPosition="240" xmlns="">
+    <Value ID="id-1519c66b-e433-45db-98e9-6b5508ddc5d6" DimensionType="Scalar" Dimensions="" DataType="Real">
+      <ValueExpression xsi:type="q7:FixedValue">
+        <Value>0.015</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q8="avm" xsi:type="q8:PrimitiveProperty" Name="current_rating" OnDataSheet="false" ID="property.id-0d388acf-f317-4b87-8fa6-f0e93e6e7edd" XPosition="1000" YPosition="280" xmlns="">
+    <Value ID="id-0d388acf-f317-4b87-8fa6-f0e93e6e7edd" DimensionType="Scalar" Dimensions="" DataType="Real">
+      <ValueExpression xsi:type="q8:FixedValue">
+        <Value>200.0</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q9="avm" xsi:type="q9:PrimitiveProperty" Name="pin_count" OnDataSheet="false" ID="property.id-71656831-cabd-437b-a2fd-4d3236b8b85c" XPosition="1000" YPosition="320" xmlns="">
+    <Value ID="id-71656831-cabd-437b-a2fd-4d3236b8b85c" DimensionType="Scalar" Dimensions="" DataType="Integer">
+      <ValueExpression xsi:type="q9:FixedValue">
+        <Value>8</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q10="avm" xsi:type="q10:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-8a9541b6-9355-42a6-836c-addc529a4312" XPosition="1000" YPosition="360" xmlns="">
+    <Value ID="id-8a9541b6-9355-42a6-836c-addc529a4312" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q10:FixedValue">
+        <Value>LM555CMM/NOPB</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q11="avm" xsi:type="q11:PrimitiveProperty" Name="reach_svhc_compliance" OnDataSheet="false" ID="property.id-458413f6-7941-4368-b493-6e603e285490" XPosition="1000" YPosition="400" xmlns="">
+    <Value ID="id-458413f6-7941-4368-b493-6e603e285490" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q11:FixedValue">
+        <Value>No SVHC</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q12="avm" xsi:type="q12:PrimitiveProperty" Name="rohs_status" OnDataSheet="false" ID="property.id-daba4d9e-3392-4476-860e-d520a622564a" XPosition="1000" YPosition="440" xmlns="">
+    <Value ID="id-daba4d9e-3392-4476-860e-d520a622564a" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q12:FixedValue">
+        <Value>Compliant</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q13="avm" xsi:type="q13:PrimitiveProperty" Name="supply_voltage_dc" OnDataSheet="false" ID="property.id-37410372-048e-4507-8a71-2c474fb1d588" XPosition="1000" YPosition="480" xmlns="">
+    <Value ID="id-37410372-048e-4507-8a71-2c474fb1d588" DimensionType="Scalar" Dimensions="" DataType="Real">
+      <ValueExpression xsi:type="q13:FixedValue">
+        <Value>18.0</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q14="avm" xsi:type="q14:PrimitiveProperty" Name="case_package" OnDataSheet="false" ID="property.id-45e90bbb-d950-4c70-861a-654a6681ae3b" XPosition="1000" YPosition="520" xmlns="">
+    <Value ID="id-45e90bbb-d950-4c70-861a-654a6681ae3b" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q14:FixedValue">
+        <Value>MSOP</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-5b627f7c-b5af-4104-8f2c-29aa8bc71cdf" Notes="Standalone EAGLE library for this device" XPosition="378" YPosition="119" xmlns="" />
+  <ResourceDependency Name="Icon.png" Path="Icon.png" Hash="" ID="id-4d7b1bb2-f0dc-4577-8423-c2d3452c02e5" Notes="Custom icon for this component" XPosition="900" YPosition="40" xmlns="" />
+  <ResourceDependency Name="Datasheet.pdf" Path="doc\Datasheet.pdf" Hash="" ID="id-ec65809e-4dd1-4d9c-9104-71dc2bcba49f" Notes="" XPosition="900" YPosition="140" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-30c7497b-9a80-4738-8e12-9e7179050956" ApplyJoinData="" XPosition="637" YPosition="175" Notes="" Definition="AnalogSignal" Name="DISCHARGE" xmlns="">
+    <Role xmlns:q15="schematic" xsi:type="q15:Pin" ID="id-5cfee6a4-53c3-4dd5-b682-e0a6e4b20e88" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="DISCHARGE" EDAGate="G$1" EDASymbolLocationX="22.86" EDASymbolLocationY="2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-c60f9fa0-2276-4dbc-8419-264e71c6943d" ApplyJoinData="" XPosition="98" YPosition="427" Notes="" Definition="GND" Name="GND" xmlns="">
+    <Role xmlns:q16="schematic" xsi:type="q16:Pin" ID="id-905402a5-d825-4548-b508-947578751f45" PortMap="id-3c2e244c-f882-438d-9ca3-6c2da2978ae9" Notes="" XPosition="100" Definition="" YPosition="100" Name="GND" EDAGate="G$1" EDASymbolLocationX="-22.86" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-2c647d7d-9a01-4403-aadc-7bac84b31c0b" ApplyJoinData="" XPosition="637" YPosition="294" Notes="" Definition="AnalogSignal" Name="THRESHOLD" xmlns="">
+    <Role xmlns:q17="schematic" xsi:type="q17:Pin" ID="id-8d147e91-63f4-4269-88c5-83701465fbef" PortMap="id-5d7db08c-a9e0-45de-882d-4aa3db946e8b" Notes="" XPosition="100" Definition="" YPosition="100" Name="THRESHOLD" EDAGate="G$1" EDASymbolLocationX="22.86" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-c7225f38-4ceb-42ad-9453-6b986b24beee" ApplyJoinData="" XPosition="637" YPosition="49" Notes="" Definition="AnalogSignal" Name="OUTPUT" xmlns="">
+    <Role xmlns:q18="schematic" xsi:type="q18:Pin" ID="id-afc6df7d-be7a-44cb-9362-d36c19df2693" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="OUTPUT" EDAGate="G$1" EDASymbolLocationX="-22.86" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-9f5221e7-97e1-4ebf-8cbb-300b25d5d2b8" ApplyJoinData="" XPosition="637" YPosition="420" Notes="" Definition="AnalogSignal" Name="VCC" xmlns="">
+    <Role xmlns:q19="schematic" xsi:type="q19:Pin" ID="id-0bc81c21-6c44-4461-a792-36c8e7c9ca6c" PortMap="id-11b8b108-7e61-4f4e-9865-293bdb04ed48" Notes="" XPosition="100" Definition="" YPosition="100" Name="VCC" EDAGate="G$1" EDASymbolLocationX="22.86" EDASymbolLocationY="7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-7eac8341-c4e1-4c73-b5f9-7ecf98732666" ApplyJoinData="" XPosition="98" YPosition="56" Notes="" Definition="DigitalSignal" Name="TRIGGER" xmlns="">
+    <Role xmlns:q20="schematic" xsi:type="q20:Pin" ID="id-d805dc79-0044-4bae-aae6-72f6dbb08098" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="TRIGGER" EDAGate="G$1" EDASymbolLocationX="-22.86" EDASymbolLocationY="2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-c5e759b6-48ee-41cd-93c1-d44acee6edfd" ApplyJoinData="" XPosition="98" YPosition="308" Notes="" Definition="AnalogSignal" Name="CONTROL_VOLTAGE" xmlns="">
+    <Role xmlns:q21="schematic" xsi:type="q21:Pin" ID="id-4d53159e-b38e-4665-b41b-334323143884" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="CONTROL_VOLTAGE" EDAGate="G$1" EDASymbolLocationX="22.86" EDASymbolLocationY="-7.62" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-05d02c78-a7d9-4524-8eab-3f09a3144ebc" ApplyJoinData="" XPosition="98" YPosition="182" Notes="" Definition="DigitalSignal" Name="RESET" xmlns="">
+    <Role xmlns:q22="schematic" xsi:type="q22:Pin" ID="id-f9a50cb7-d1f7-4baa-ab1c-9b81b038f5a8" PortMap="id-ee3e9dcb-da45-47b2-9a25-93b7d825251e" Notes="" XPosition="100" Definition="" YPosition="100" Name="RESET" EDAGate="G$1" EDASymbolLocationX="-22.86" EDASymbolLocationY="-7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">semiconductors_and_actives.clock_timing.timers</Classifications>
+</Component>

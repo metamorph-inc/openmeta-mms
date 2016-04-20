@@ -7,6 +7,7 @@ using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
 using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
 using META;
 using Newtonsoft.Json;
+using System.IO;
 
 
 namespace CyPhyMasterInterpreter
@@ -625,16 +626,13 @@ namespace CyPhyMasterInterpreter
 
             bool success = true;
 
-            foreach (var interpreter in this.Interpreters)
-            {
-                // TODO: what if some of them failed ???
-                if (interpreter.result.Success)
+            if (this.Interpreters.All(i => i.result.Success)) {
+                foreach (var interpreter in this.Interpreters)
                 {
                     string runCommand = interpreter.result.RunCommand;
                     string title = string.Empty;
                     string testbenchName = string.Empty;
                     string workingDirectory = interpreter.MainParameters.OutputDirectory;
-
 
                     string interpreterName = interpreter.Name.StartsWith("MGA.Interpreter.") ?
                         interpreter.Name.Substring("MGA.Interpreter.".Length) :
@@ -643,7 +641,11 @@ namespace CyPhyMasterInterpreter
                     title = String.Format("{0}_{1}", interpreterName, this.expandedTestBenchType.Name).Replace(" ", "_");
                     testbenchName = this.testBenchType.Name;
 
-                    success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, interpreter);
+                    // JobManager will run python.exe -m testbenchexecutor if testbench_manifest.json exists, which will run all the steps
+                    if (!File.Exists(Path.Combine(interpreter.MainParameters.OutputDirectory, "testbench_manifest.json")) || interpreter == this.Interpreters.Last())
+                    {
+                        success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, interpreter);
+                    }
                 }
             }
 
@@ -659,7 +661,7 @@ namespace CyPhyMasterInterpreter
             return success;
         }
 
-        public override bool SaveTestBenchManifest(AVM.DDP.MetaAvmProject project)
+        public override bool SaveTestBenchManifest(AVM.DDP.MetaAvmProject project, DateTime analysisStartTime)
         {
             if (project == null)
             {
@@ -677,7 +679,8 @@ namespace CyPhyMasterInterpreter
                 this.Configuration.Name,
                 this.expandedTestBenchType,
                 this.OutputDirectory,
-                this.testBenchType);
+                this.testBenchType,
+                analysisStartTime);
             }
             catch (Exception ex)
             {

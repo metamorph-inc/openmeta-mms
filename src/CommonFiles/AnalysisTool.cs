@@ -60,57 +60,65 @@ namespace META
             _byName = new SortedDictionary<string, AnalysisTool>();
             _byProgId = new SortedDictionary<string, List<AnalysisTool>>();
 
-            var analysisToolKey = Registry.LocalMachine.OpenSubKey(@"Software\META\AnalysisTools");
-            if (analysisToolKey != null)
+            foreach (var analysisToolKey in new RegistryKey[] {
+                Registry.CurrentUser.OpenSubKey(@"Software\META\AnalysisTools"),
+                Registry.LocalMachine.OpenSubKey(@"Software\META\AnalysisTools") })
             {
-                foreach (string subkeyname in analysisToolKey.GetSubKeyNames())
+                if (analysisToolKey != null)
                 {
-                    AnalysisTool analysistool = new AnalysisTool()
+                    foreach (string subkeyname in analysisToolKey.GetSubKeyNames())
+                    {
+                        AnalysisTool analysistool = new AnalysisTool()
                         {
                             Name = subkeyname
                         };
 
-                    var subkey = analysisToolKey.OpenSubKey(subkeyname);
-                    string value;
-                    value = subkey.GetValue("InstallLocation") as string;
-                    if (value != null)
-                    {
-                        analysistool.InstallLocation = value;
-                    }
+                        var subkey = analysisToolKey.OpenSubKey(subkeyname);
+                        string value;
+                        value = subkey.GetValue("InstallLocation") as string;
+                        if (value != null)
+                        {
+                            analysistool.InstallLocation = value;
+                        }
 
-                    value = subkey.GetValue("Version") as string;
-                    if (value != null)
-                    {
-                        analysistool.Version = value;
-                    }
+                        value = subkey.GetValue("Version") as string;
+                        if (value != null)
+                        {
+                            analysistool.Version = value;
+                        }
 
-                    value = subkey.GetValue("OutputDirectory") as string;
-                    if (value != null)
-                    {
-                        analysistool.OutputDirectory = value;
-                    }
+                        value = subkey.GetValue("OutputDirectory") as string;
+                        if (value != null)
+                        {
+                            analysistool.OutputDirectory = value;
+                        }
 
-                    value = subkey.GetValue("RunCommand") as string;
-                    if (value != null)
-                    {
-                        analysistool.RunCommand = value;
-                    }
+                        value = subkey.GetValue("RunCommand") as string;
+                        if (value != null)
+                        {
+                            analysistool.RunCommand = value;
+                        }
 
-                    value = subkey.GetValue("RequiredInterpreter") as string;
-                    if (value != null)
-                    {
-                        analysistool.RequiredInterpreter = value;
-                    }
+                        value = subkey.GetValue("RequiredInterpreter") as string;
+                        if (value != null)
+                        {
+                            analysistool.RequiredInterpreter = value;
+                        }
 
-                    List<AnalysisTool> tools = new List<AnalysisTool>();
-                    _byProgId.TryGetValue(analysistool.RequiredInterpreter, out tools);
-                    if (tools == null)
-                    {
-                        tools = new List<AnalysisTool>();
+                        List<AnalysisTool> tools = new List<AnalysisTool>();
+                        _byProgId.TryGetValue(analysistool.RequiredInterpreter, out tools);
+                        if (tools == null)
+                        {
+                            tools = new List<AnalysisTool>();
+                        }
+                        // HKCU takes precedence
+                        if (_byName.ContainsKey(analysistool.Name) == false)
+                        {
+                            tools.Add(analysistool);
+                            _byProgId[analysistool.RequiredInterpreter] = tools;
+                            _byName[analysistool.Name] = analysistool;
+                        }
                     }
-                    tools.Add(analysistool);
-                    _byProgId[analysistool.RequiredInterpreter] = tools;
-                    _byName[analysistool.Name] = analysistool;
                 }
             }
         }

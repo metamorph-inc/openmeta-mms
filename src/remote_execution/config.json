@@ -1,0 +1,6 @@
+{
+"target": "http://127.0.0.1:8080",
+"bcrypt_rounds": 12,
+"port": 5050,
+"files_dir": "c:\\Users\\kevin\\tmp\\"
+}

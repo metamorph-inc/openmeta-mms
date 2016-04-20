@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="6032f181-9271-4efa-b930-c966be40bda5" Name="DMN2005LP4K_7B" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-24eea896-4504-4514-8541-12565cae4f82" Author="" Notes="" XPosition="270" YPosition="200" Name="EDAModel" Package="DMN2005LP4K" Device="" Library="General_Andres" DeviceSet="DMN2005LP4K-7B" xmlns="">
+    <Pin ID="id-c36fd9c1-4356-4b7d-8648-c5d941d5081e" PortMap="" Notes="" XPosition="225" Definition="" YPosition="25" Name="SOURCE" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-5.08" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-f4c3298d-1e47-45ef-b699-a53335941fbd" PortMap="" Notes="" XPosition="25" Definition="" YPosition="25" Name="DRAIN" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="5.08" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-71b7f7ae-c006-466a-9a4f-c1edbd225e65" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="GATE" EDAGate="G$1" EDASymbolLocationX="-5.08" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </DomainModel>
+  <ResourceDependency XPosition="650" YPosition="200" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-24eea896-4504-4514-8541-12565cae4f82" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-35b21ff2-1f4c-4689-8f03-f0c3532b48d0" ApplyJoinData="" Notes="" Name="SOURCE" Definition="" YPosition="448" XPosition="560" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-cf3dfffe-85b2-4ca9-bfc9-c80c6cf39a09" PortMap="id-c36fd9c1-4356-4b7d-8648-c5d941d5081e" Notes="" XPosition="100" Definition="" YPosition="100" Name="SOURCE" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-5.08" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-dd1bf3ee-7908-447e-b291-d8199620167b" ApplyJoinData="" Notes="" Name="GATE" Definition="" YPosition="322" XPosition="560" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-d8a366e8-c12c-485c-a92d-4f10aba45afd" PortMap="id-71b7f7ae-c006-466a-9a4f-c1edbd225e65" Notes="" XPosition="100" Definition="" YPosition="100" Name="GATE" EDAGate="G$1" EDASymbolLocationX="-5.08" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-ec0a08ed-9878-465b-934e-4dfca03d2691" ApplyJoinData="" Notes="" Name="DRAIN" Definition="" YPosition="448" XPosition="112" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-cd527b3c-f6bd-4d99-90be-ae1c684637f8" PortMap="id-f4c3298d-1e47-45ef-b699-a53335941fbd" Notes="" XPosition="100" Definition="" YPosition="100" Name="DRAIN" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="5.08" EDASymbolRotation="R270" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">semiconductors_and_actives.discretes.transistors.mosfets.n_channel_mosfet</Classifications>
+</Component>

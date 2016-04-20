@@ -8,7 +8,7 @@ namespace XSD2CSharp
 {
     public static class AvmXmlSerializer
     {
-        private static Type[] getAVMClasses()
+        public static Type[] getAVMClasses()
         {
             // return System.Reflection.Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass).Where(t => t.Namespace.StartsWith("avm") && t.FullName != "avm.simulink.Port").ToArray();
             return typeof(AvmXmlSerializer).Assembly.GetTypes().Where(t => t.IsClass).Where(t => t.Namespace.StartsWith("avm") && t.FullName != "avm.simulink.Port").ToArray();

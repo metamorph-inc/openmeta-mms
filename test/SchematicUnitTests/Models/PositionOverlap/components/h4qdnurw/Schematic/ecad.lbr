@@ -1,0 +1,78 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="INDUCTIVE_MEDIA_CONVERTER" xmlns="eagle">
+          <smd name="9" x="3.374896875" y="1.122425" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="7" x="3.375659375" y="-3.374896875" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="10" x="3.375659375" y="3.374896875" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="8" x="3.375659375" y="-1.124965625" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="11" x="1.124965625" y="3.374896875" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="12" x="-1.124965625" y="3.374896875" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="1" x="-3.374896875" y="3.374896875" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="5" x="-1.124965625" y="-3.374896875" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="4" x="-3.374896875" y="-3.374896875" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="3" x="-3.374896875" y="-1.124965625" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="6" x="1.124965625" y="-3.374896875" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          <smd name="2" x="-3.374896875" y="1.124965625" dx="1.6002" dy="1.6002" layer="1" roundness="100" />
+          
+          <wire x1="-4.826" y1="4.572" x2="-4.826" y2="-4.572" width="0.1524" layer="21" />
+          <wire x1="-4.826" y1="-4.572" x2="4.826" y2="-4.572" width="0.1524" layer="21" />
+          <wire x1="4.826" y1="-4.572" x2="4.826" y2="4.572" width="0.1524" layer="21" />
+          <wire x1="4.826" y1="4.572" x2="-4.826" y2="4.572" width="0.1524" layer="21" />
+          <circle x="-5.334" y="4.572" radius="0.0635" width="0.1524" layer="21" />
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="INDUCTIVE_MEDIA_CONVERTER">
+          <wire x1="-15.24" y1="12.7" x2="-15.24" y2="-12.7" width="0.254" layer="94" />
+          <wire x1="-15.24" y1="-12.7" x2="15.24" y2="-12.7" width="0.254" layer="94" />
+          <wire x1="15.24" y1="-12.7" x2="15.24" y2="12.7" width="0.254" layer="94" />
+          <wire x1="15.24" y1="12.7" x2="-15.24" y2="12.7" width="0.254" layer="94" />
+          <pin name="RF" x="-20.32" y="10.16" visible="pin" length="middle" direction="pas" />
+          <pin name="DET/WAKE" x="-20.32" y="5.08" visible="pin" length="middle" direction="pas" />
+          <pin name="MTXDON" x="-20.32" y="0" visible="pin" length="middle" direction="pas" />
+          <pin name="MTXDOP" x="-20.32" y="-5.08" visible="pin" length="middle" direction="pas" />
+          <pin name="MRXDON" x="-20.32" y="-10.16" visible="pin" length="middle" direction="pas" />
+          <pin name="MRXDOP" x="20.32" y="10.16" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="MTXD1P" x="20.32" y="5.08" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="MTXD1N" x="20.32" y="0" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="MRXD1P" x="20.32" y="-5.08" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="MRXD1N" x="20.32" y="-10.16" visible="pin" length="middle" direction="pas" rot="R180" />
+          <pin name="VCONN" x="0" y="17.78" visible="pin" length="middle" direction="pas" rot="R270" />
+          <pin name="GND" x="0" y="-17.78" visible="pin" length="middle" direction="pas" rot="R90" />
+          
+          
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="INDUCTIVE_MEDIA_CONVERTER" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="INDUCTIVE_MEDIA_CONVERTER" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="INDUCTIVE_MEDIA_CONVERTER" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="DET/WAKE" pad="2" />
+                <connect gate="G$1" pin="GND" pad="12" />
+                <connect gate="G$1" pin="MRXD1N" pad="11" />
+                <connect gate="G$1" pin="MRXD1P" pad="10" />
+                <connect gate="G$1" pin="MRXDON" pad="6" />
+                <connect gate="G$1" pin="MRXDOP" pad="7" />
+                <connect gate="G$1" pin="MTXD1N" pad="9" />
+                <connect gate="G$1" pin="MTXD1P" pad="8" />
+                <connect gate="G$1" pin="MTXDON" pad="4" />
+                <connect gate="G$1" pin="MTXDOP" pad="5" />
+                <connect gate="G$1" pin="RF" pad="1" />
+                <connect gate="G$1" pin="VCONN" pad="3" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

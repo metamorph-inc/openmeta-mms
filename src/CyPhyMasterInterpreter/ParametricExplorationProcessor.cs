@@ -27,6 +27,24 @@ namespace CyPhyMasterInterpreter
                 .Children
                 .TopLevelSystemUnderTestCollection
                 .FirstOrDefault();
+
+            var pet = this.parametricExploration;
+            if (pet.Children.PCCDriverCollection.Count() == 1)
+            {
+                cmdName = "run_PCC.cmd";
+            }
+            else if (pet.Children.OptimizerCollection.Count() == 1)
+            {
+                cmdName = "run_optimizer.cmd";
+            }
+            else if (pet.Children.ParameterStudyCollection.Count() == 1)
+            {
+                cmdName = "run_parameter_study.cmd";
+            }
+            if (cmdName == null)
+            {
+                throw new ApplicationException("Invalid Parametric Exploration: must have exactly one PCCDriver, Optimizer, or Parameter Study");
+            }
         }
 
         public override MgaModel GetInvokedObject()
@@ -153,7 +171,7 @@ namespace CyPhyMasterInterpreter
             return success;
         }
 
-        public override bool SaveTestBenchManifest(AVM.DDP.MetaAvmProject project)
+        public override bool SaveTestBenchManifest(AVM.DDP.MetaAvmProject project, DateTime analysisStartTime)
         {
             if (project == null)
             {
@@ -186,7 +204,8 @@ namespace CyPhyMasterInterpreter
                 this.Configuration.Name,
                 expandedTestBench,
                 this.OutputDirectory,
-                originalTestBench);
+                originalTestBench,
+                analysisStartTime);
 
 
             return success;
@@ -215,9 +234,15 @@ namespace CyPhyMasterInterpreter
             return success;
         }
 
+        string cmdName = null;
         public override bool UpdateTestBenchManifestExecutionSteps(AVM.DDP.MetaTBManifest manifest)
         {
-            // FIXME: return fake true for now.
+            manifest.Steps.Add(new AVM.DDP.MetaTBManifest.Step() {
+                Invocation = "python.exe -m run_mdao",
+                Description = "ParametricExploration",
+                // Type = "Parametric Study",
+                Status = AVM.DDP.MetaTBManifest.StatusEnum.UNEXECUTED
+            });
             return true;
         }
     }

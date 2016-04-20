@@ -41,6 +41,7 @@ namespace ComponentInterchangeTest
         {
             proj.Save();
             proj.Close();
+            proj = null;
         }
 
         public MgaProject proj { get; private set; }

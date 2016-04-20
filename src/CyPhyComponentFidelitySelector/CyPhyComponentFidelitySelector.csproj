@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -84,15 +84,32 @@
       <DependentUpon>FidelitySelectorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ModelicaModel.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Registrar.cs" />
     <Compile Include="MgaGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpiceSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SpiceSelector.Designer.cs">
+      <DependentUpon>SpiceSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SpiceSelectorElement.cs" />
     <!--$ADDITIONALFILES$-->
   </ItemGroup>
   <ItemGroup>
     <Content Include="CyPhyComponentFidelitySelector.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="tiny_tree_root.png" />
+    <None Include="tiny_tree_leaf.png" />
+    <None Include="Resources\ic_close_black_18dp.png" />
+    <None Include="Resources\ic_expand_more_black_18dp.png" />
+    <None Include="Resources\ic_expand_less_black_18dp.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AssemblySignature.snk" />
@@ -102,11 +119,22 @@
     <EmbeddedResource Include="FidelitySelectorForm.resx">
       <DependentUpon>FidelitySelectorForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SpiceSelector.resx">
+      <DependentUpon>SpiceSelector.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CyPhyGUIs\CyPhyGUIs.csproj">
       <Project>{AB27EE78-6819-4B8C-B678-68BC4FBC99D2}</Project>
       <Name>CyPhyGUIs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CyPhyMLCS\CyPhyMLCS.csproj">
+      <Project>{a7efedc9-9557-4083-a990-efcac684e3c6}</Project>
+      <Name>CyPhyMLCS</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

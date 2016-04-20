@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{01054157-AE03-456C-892D-351D82492151}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CyPhy2RF</RootNamespace>
+    <AssemblyName>CyPhy2RF</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>true</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>AssemblySignature.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ComponentLibraryManager">
+      <HintPath>..\..\..\src\ComponentLibraryManager\bin\Release\ComponentLibraryManager.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyCOMInterfacesCS">
+      <HintPath>..\..\..\src\CyPhyCOMInterfacesCS\bin\Release\CyPhyCOMInterfacesCS.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyElaborateCS">
+      <HintPath>..\..\..\src\CyPhyElaborateCS\bin\Release\CyPhyElaborateCS.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyGUIs">
+      <HintPath>..\..\..\src\CyPhyGUIs\bin\Release\CyPhyGUIs.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyML">
+      <HintPath>..\..\..\src\CyPhyMLCS\bin\Release\CyPhyML.dll</HintPath>
+    </Reference>
+    <Reference Include="ISIS.GME.Common, Version=1.0.4.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+      <HintPath>..\..\..\src\CyPhyMLCS\ISIS.GME.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="MgaMeta">
+      <HintPath>..\..\..\src\CyPhyMLCS\MgaMeta.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="GME, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />
+    <Reference Include="GME.Util, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />
+    <Reference Include="GME.MGA, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />
+    <Reference Include="GME.MGA.Core, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />
+    <Reference Include="GME.MGA.Meta, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\CyPhy2Modelica_v2\MgaGateway.cs">
+      <Link>MgaGateway.cs</Link>
+    </Compile>
+    <Compile Include="ComponentConfig.cs" />
+    <Compile Include="CyPhy2RF.cs" />
+    <Compile Include="CyPhy2RF_Settings.cs" />
+    <Compile Include="CodeGenerator.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Registrar.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <!--$ADDITIONALFILES$-->
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CyPhy2RF.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AssemblySignature.snk" />
+    <None Include="run_dir_simulation.cmd" />
+    <None Include="run_sar_simulation.cmd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSXCAD\CSXCADLib.csproj">
+      <Project>{F8FDFE2F-C2AF-490C-8FA9-039487D90E56}</Project>
+      <Name>CSXCADLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FDTDPostprocess\FDTDPostprocess.csproj">
+      <Project>{53EFD5B3-2B30-4FA5-B91A-F3EAE3A9A401}</Project>
+      <Name>FDTDPostprocess</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!--
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

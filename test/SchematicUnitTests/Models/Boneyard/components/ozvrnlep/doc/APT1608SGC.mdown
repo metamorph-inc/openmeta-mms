@@ -1,0 +1,15 @@
+# 1.6X0.8mm SMD CHIP LED LAMP
+## APT1608SGC
+### Optoelectronics > Light Sources and Emitters > LEDs > LEDs (Discrete)
+***
+
+###Summary
+LED 1.6X0.8MM 568NM GRN CLR SMD
+
+####General Description
+The Super Bright Green source color devices are made with Gallium Phosphide Green Light Emitting Diode. 
+
+###Connectors 
+- ***Anode* [StdSignal]:** Anode of LED 
+- ***Cath* [StdSignal]:** Cathode of LED
+

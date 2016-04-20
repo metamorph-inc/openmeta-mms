@@ -11,35 +11,21 @@ using System.Collections.Concurrent;
 
 namespace DesignExporterUnitTests
 {
-    public class LayoutFixture : IDisposable
+    public class LayoutFixture : ExporterFixture
     {
-        public static String PathTest = Path.Combine(META.VersionInfo.MetaPath,
-                                                     "test",
-                                                     "InterchangeTest",
-                                                     "DesignInterchangeTest",
-                                                     "ExportTestModels",
-                                                     "Layout");
-
-        public String pathXME = Path.Combine(PathTest, "Layout.xme");
-
-        public LayoutFixture()
+        public override String pathXME
         {
-            String mgaConnectionString;
-            GME.MGA.MgaUtils.ImportXMEForTest(pathXME, out mgaConnectionString);
-
-            proj = new MgaProject();
-            bool ro_mode;
-            proj.Open(mgaConnectionString, out ro_mode);
-            proj.EnableAutoAddOns(true);
+            get
+            {
+                return Path.Combine(META.VersionInfo.MetaPath,
+                                    "test",
+                                    "InterchangeTest",
+                                    "DesignInterchangeTest",
+                                    "ExportTestModels",
+                                    "Layout",
+                                    "Layout.xme");
+            }
         }
-
-        public void Dispose()
-        {
-            proj.Save();
-            proj.Close();
-        }
-
-        public MgaProject proj { get; private set; }
     }
 
     internal static class Utils
@@ -81,7 +67,7 @@ namespace DesignExporterUnitTests
             });
             Assert.NotNull(design);
 
-            String pathXmlOut = Path.Combine(LayoutFixture.PathTest, "DesignContainer.adm");
+            String pathXmlOut = Path.Combine(fixture.PathTest, "DesignContainer.adm");
             using (StreamWriter sw = new StreamWriter(pathXmlOut, false))
             {
                 sw.Write(design.Serialize());

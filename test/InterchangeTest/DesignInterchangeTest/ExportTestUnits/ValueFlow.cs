@@ -12,35 +12,21 @@ using CyPhyGUIs;
 
 namespace DesignExporterUnitTests
 {
-    public class ValueFlowFixture : IDisposable
+    public class ValueFlowFixture : ExporterFixture
     {
-        public static String PathTest = Path.Combine(META.VersionInfo.MetaPath,
-                                                     "test",
-                                                     "InterchangeTest",
-                                                     "DesignInterchangeTest",
-                                                     "ExportTestModels",
-                                                     "ValueFlow");
-
-        public String pathXME = Path.Combine(PathTest, "ValueFlow.xme");
-
-        public ValueFlowFixture()
+        public override String pathXME
         {
-            String mgaConnectionString;
-            GME.MGA.MgaUtils.ImportXMEForTest(pathXME, out mgaConnectionString);
-
-            proj = new MgaProject();
-            bool ro_mode;
-            proj.Open(mgaConnectionString, out ro_mode);
-            proj.EnableAutoAddOns(true);
+            get
+            {
+                return Path.Combine(META.VersionInfo.MetaPath,
+                                    "test",
+                                    "InterchangeTest",
+                                    "DesignInterchangeTest",
+                                    "ExportTestModels",
+                                    "ValueFlow",
+                                    "ValueFlow.xme");
+            }
         }
-
-        public void Dispose()
-        {
-            proj.Save();
-            proj.Close();
-        }
-
-        public MgaProject proj { get; private set; }
     }
     
     public class ValueFlow : IUseFixture<ValueFlowFixture>
@@ -60,7 +46,7 @@ namespace DesignExporterUnitTests
         {
             String pathCA = "ComponentAssemblies/SimpleFormula";
 
-            avm.Design design = Convert(pathCA);
+            avm.Design design = fixture.Convert(pathCA);
             
             // Get objects
             var rc = design.RootContainer;
@@ -104,7 +90,7 @@ namespace DesignExporterUnitTests
         {
             String pathCA = "ComponentAssemblies/CustomFormula";
 
-            avm.Design design = Convert(pathCA);
+            avm.Design design = fixture.Convert(pathCA);
 
             // Get objects
             var rc = design.RootContainer;
@@ -149,7 +135,7 @@ namespace DesignExporterUnitTests
         {
             String pathCA = "ComponentAssemblies/FlowToSubAsm";
 
-            avm.Design design = Convert(pathCA);
+            avm.Design design = fixture.Convert(pathCA);
 
             #region Get Objects
             var rc = design.RootContainer;
@@ -222,7 +208,7 @@ namespace DesignExporterUnitTests
         {
             String pathCA = "ComponentAssemblies/FlowToComponentInstance";
 
-            avm.Design design = Convert(pathCA);
+            avm.Design design = fixture.Convert(pathCA);
 
             #region Get Objects
             var rc = design.RootContainer;
@@ -314,7 +300,7 @@ namespace DesignExporterUnitTests
         {
             String pathDS = "DesignSpaces/DC_SimpleFormula";
 
-            avm.Design design = Convert(pathDS);
+            avm.Design design = fixture.Convert(pathDS);
 
             // Get objects
             var rc = design.RootContainer;
@@ -349,7 +335,7 @@ namespace DesignExporterUnitTests
         {
             String pathDS = "DesignSpaces/DC_CustomFormula";
 
-            avm.Design design = Convert(pathDS);
+            avm.Design design = fixture.Convert(pathDS);
 
             // Get objects
             var rc = design.RootContainer;
@@ -394,7 +380,7 @@ namespace DesignExporterUnitTests
         {
             String pathDS = "DesignSpaces/DC_FlowToDesignContainer";
 
-            avm.Design design = Convert(pathDS);
+            avm.Design design = fixture.Convert(pathDS);
 
             #region Get Objects
             var rc = design.RootContainer;
@@ -467,7 +453,7 @@ namespace DesignExporterUnitTests
         {
             String pathDS = "DesignSpaces/DC_FlowToComponentInstance";
 
-            avm.Design design = Convert(pathDS);
+            avm.Design design = fixture.Convert(pathDS);
 
             #region Get Objects
             var rc = design.RootContainer;
@@ -555,7 +541,7 @@ namespace DesignExporterUnitTests
         public void CA_SimpleFormula_OpTypes()
         {
             String pathCA = "ComponentAssemblies/SimpleFormula_OpTypes";
-            avm.Design design = Convert(pathCA);
+            avm.Design design = fixture.Convert(pathCA);
             var rc = design.RootContainer;
             Assert.NotNull(rc);
 
@@ -573,7 +559,7 @@ namespace DesignExporterUnitTests
         public void CA_FlowBetweenComponentInstances()
         {
             String pathCA = "ComponentAssemblies/FlowBetweenComponentInstances";
-            avm.Design design = Convert(pathCA);
+            avm.Design design = fixture.Convert(pathCA);
             var rc = design.RootContainer;
             Assert.NotNull(rc);
 
@@ -605,7 +591,7 @@ namespace DesignExporterUnitTests
         public void CA_Parameters()
         {
             String pathCA = "ComponentAssemblies/Parameters";
-            avm.Design design = Convert(pathCA);
+            avm.Design design = fixture.Convert(pathCA);
             var rc = design.RootContainer;
             Assert.NotNull(rc);
 
@@ -669,7 +655,7 @@ namespace DesignExporterUnitTests
         public void CA_SubAsmFlowToComponentInstance()
         {
             String pathCA = "ComponentAssemblies/SubAsmFlowToComponentInstance";
-            avm.Design design = Convert(pathCA);
+            avm.Design design = fixture.Convert(pathCA);
             var rc = design.RootContainer;
             Assert.NotNull(rc);
 
@@ -744,36 +730,6 @@ namespace DesignExporterUnitTests
             Assert.IsType<avm.ParametricValue>(primitiveProperty.Value.ValueExpression);
             var parametricValue = primitiveProperty.Value.ValueExpression as avm.ParametricValue;
             return parametricValue;
-        }
-
-        private avm.Design Convert(String pathDE)
-        {
-            MgaObject objDE = null;
-            proj.PerformInTransaction(delegate
-            {
-                objDE = proj.get_ObjectByPath(pathDE);
-            });
-            Assert.NotNull(objDE);
-
-            var interp = new CyPhyDesignExporter.CyPhyDesignExporterInterpreter();
-            interp.Initialize(proj);
-            InterpreterMainParameters param = new InterpreterMainParameters()
-            {
-                OutputDirectory = ValueFlowFixture.PathTest,
-                CurrentFCO = objDE as MgaFCO,
-                Project = proj                
-            };
-            var result = interp.Main(param);
-            Assert.True(result.Success);
-
-            // Load the new .adm file
-            var pathAdm = Path.Combine(ValueFlowFixture.PathTest,
-                                       pathDE.Split('/').Last() + ".adm");
-            var xml = File.ReadAllText(pathAdm);
-            var design = XSD2CSharp.AvmXmlSerializer.Deserialize<avm.Design>(xml);
-            Assert.NotNull(design);
-            
-            return design;
-        }
+        }        
     }
 }

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <NoWarn>0114,0108</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -58,6 +58,9 @@
     <Preprocess Include="..\..\..\schema\avm.manufacturing.xsd" />
     <Preprocess Include="..\..\..\schema\avm.modelica.xsd" />
     <Preprocess Include="..\..\..\schema\avm.cyber.xsd" />
+    <Preprocess Include="..\..\..\schema\avm.systemc.xsd" />
+    <Preprocess Include="..\..\..\schema\avm.schematic.xsd" />
+    <Preprocess Include="..\..\..\schema\avm.rf.xsd" />
     <Preprocess Include="..\..\..\schema\assemblyDetails.xsd" />
   </ItemGroup>
   <ItemGroup>
@@ -65,13 +68,31 @@
     <Compile Include="generated\avm.adamsCar.designer.cs" />
     <Compile Include="generated\avm.cad.designer.cs" />
     <Compile Include="generated\avm.designer.cs" />
+    <Compile Include="generated\avm.domainmapping.designer.cs" />
     <Compile Include="generated\avm.manufacturing.designer.cs" />
     <Compile Include="generated\avm.modelica.designer.cs" />
     <Compile Include="generated\avm.cyber.designer.cs" />
     <Compile Include="generated\AssemblyDetails.designer.cs" />
+    <Compile Include="generated\avm.rf.designer.cs" />
+    <Compile Include="generated\avm.schematic.designer.cs" />
+    <Compile Include="generated\avm.schematic.eda.designer.cs" />
+    <Compile Include="generated\avm.schematic.spice.designer.cs" />
+    <Compile Include="generated\avm.systemc.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\schema\avm.domainmapping.xsd">
+      <Link>avm.domainmapping.xsd</Link>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\..\..\schema\avm.schematic.eda.xsd">
+      <Link>avm.schematic.eda.xsd</Link>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\..\..\schema\avm.schematic.spice.xsd">
+      <Link>avm.schematic.spice.xsd</Link>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="..\..\..\schema\avm.adamsCar.xsd">
       <Link>avm.adamsCar.xsd</Link>
       <SubType>Designer</SubType>

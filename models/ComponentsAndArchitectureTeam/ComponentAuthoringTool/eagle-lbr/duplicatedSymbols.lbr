@@ -1,0 +1,124 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="14-SOIC" xmlns="eagle">
+          <smd name="14" x="2.7" y="3.81" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="13" x="2.7" y="2.54" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="12" x="2.7" y="1.27" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="11" x="2.7" y="0" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="10" x="2.7" y="-1.27" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="9" x="2.7" y="-2.54" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="8" x="2.7" y="-3.81" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="1" x="-2.7" y="3.81" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="2" x="-2.7" y="2.54" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="3" x="-2.7" y="1.27" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="4" x="-2.7" y="0" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="5" x="-2.7" y="-1.27" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="6" x="-2.7" y="-2.54" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <smd name="7" x="-2.7" y="-3.81" dx="0.67" dy="1.55" layer="1" rot="R270" />
+          <circle x="-3.25" y="4.6" radius="0.0635" width="0.15" layer="21" />
+          <wire x1="4.5" y1="5" x2="4.5" y2="-5" width="0.15" layer="21" />
+          <wire x1="4.5" y1="-5" x2="-4.5" y2="-5" width="0.15" layer="21" />
+          <wire x1="-4.5" y1="-5" x2="-4.5" y2="5" width="0.15" layer="21" />
+          <wire x1="4.5" y1="5" x2="-4.5" y2="5" width="0.15" layer="21" />
+          <text x="-0.44" y="6.34" size="1" layer="25" font="vector" ratio="15" rot="R180">&gt;NAME</text>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="14_PIN_COMPARATOR">
+          <wire x1="-2.54" y1="5.08" x2="-2.54" y2="-5.08" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="-2.54" y1="-5.08" x2="7.62" y2="0" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="7.62" y1="0" x2="-2.54" y2="5.08" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="-1.27" y1="3.175" x2="-1.27" y2="1.905" width="0.1524" layer="94" xmlns="eagle" />
+          <wire x1="-1.905" y1="2.54" x2="-0.635" y2="2.54" width="0.1524" layer="94" xmlns="eagle" />
+          <wire x1="-1.905" y1="-2.54" x2="-0.635" y2="-2.54" width="0.1524" layer="94" xmlns="eagle" />
+          <text x="5.08" y="3.175" size="1.778" layer="95" xmlns="eagle">&gt;NAME</text>
+          <text x="5.08" y="-5.08" size="1.778" layer="96" xmlns="eagle">&gt;VALUE</text>
+          <pin name="-IN" x="-5.08" y="-2.54" visible="pad" length="short" direction="pas" xmlns="eagle" />
+          <pin name="+IN" x="-5.08" y="2.54" visible="pad" length="short" direction="pas" xmlns="eagle" />
+          <pin name="OUT" x="10.16" y="0" visible="pad" length="short" direction="pas" rot="R180" xmlns="eagle" />
+        </symbol>
+        <symbol name="14_PIN_COMPARATOR">
+          <wire x1="-2.54" y1="5.08" x2="-2.54" y2="-5.08" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="-2.54" y1="-5.08" x2="7.62" y2="0" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="7.62" y1="0" x2="-2.54" y2="5.08" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="-1.27" y1="3.175" x2="-1.27" y2="1.905" width="0.1524" layer="94" xmlns="eagle" />
+          <wire x1="-1.905" y1="2.54" x2="-0.635" y2="2.54" width="0.1524" layer="94" xmlns="eagle" />
+          <wire x1="-1.905" y1="-2.54" x2="-0.635" y2="-2.54" width="0.1524" layer="94" xmlns="eagle" />
+          <text x="5.08" y="3.175" size="1.778" layer="95" xmlns="eagle">&gt;NAME</text>
+          <text x="5.08" y="-5.08" size="1.778" layer="96" xmlns="eagle">&gt;VALUE</text>
+          <pin name="-IN" x="-5.08" y="-2.54" visible="pad" length="short" direction="pas" xmlns="eagle" />
+          <pin name="+IN" x="-5.08" y="2.54" visible="pad" length="short" direction="pas" xmlns="eagle" />
+          <pin name="OUT" x="10.16" y="0" visible="pad" length="short" direction="pas" rot="R180" xmlns="eagle" />
+        </symbol>
+        <symbol name="14_PIN_COMPARATOR">
+          <wire x1="-2.54" y1="5.08" x2="-2.54" y2="-5.08" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="-2.54" y1="-5.08" x2="7.62" y2="0" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="7.62" y1="0" x2="-2.54" y2="5.08" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="-1.27" y1="3.175" x2="-1.27" y2="1.905" width="0.1524" layer="94" xmlns="eagle" />
+          <wire x1="-1.905" y1="2.54" x2="-0.635" y2="2.54" width="0.1524" layer="94" xmlns="eagle" />
+          <wire x1="-1.905" y1="-2.54" x2="-0.635" y2="-2.54" width="0.1524" layer="94" xmlns="eagle" />
+          <text x="5.08" y="3.175" size="1.778" layer="95" xmlns="eagle">&gt;NAME</text>
+          <text x="5.08" y="-5.08" size="1.778" layer="96" xmlns="eagle">&gt;VALUE</text>
+          <pin name="-IN" x="-5.08" y="-2.54" visible="pad" length="short" direction="pas" xmlns="eagle" />
+          <pin name="+IN" x="-5.08" y="2.54" visible="pad" length="short" direction="pas" xmlns="eagle" />
+          <pin name="OUT" x="10.16" y="0" visible="pad" length="short" direction="pas" rot="R180" xmlns="eagle" />
+        </symbol>
+        <symbol name="14_PIN_COMPARATOR">
+          <wire x1="-2.54" y1="5.08" x2="-2.54" y2="-5.08" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="-2.54" y1="-5.08" x2="7.62" y2="0" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="7.62" y1="0" x2="-2.54" y2="5.08" width="0.4064" layer="94" xmlns="eagle" />
+          <wire x1="-1.27" y1="3.175" x2="-1.27" y2="1.905" width="0.1524" layer="94" xmlns="eagle" />
+          <wire x1="-1.905" y1="2.54" x2="-0.635" y2="2.54" width="0.1524" layer="94" xmlns="eagle" />
+          <wire x1="-1.905" y1="-2.54" x2="-0.635" y2="-2.54" width="0.1524" layer="94" xmlns="eagle" />
+          <text x="5.08" y="3.175" size="1.778" layer="95" xmlns="eagle">&gt;NAME</text>
+          <text x="5.08" y="-5.08" size="1.778" layer="96" xmlns="eagle">&gt;VALUE</text>
+          <pin name="-IN" x="-5.08" y="-2.54" visible="pad" length="short" direction="pas" xmlns="eagle" />
+          <pin name="+IN" x="-5.08" y="2.54" visible="pad" length="short" direction="pas" xmlns="eagle" />
+          <pin name="OUT" x="10.16" y="0" visible="pad" length="short" direction="pas" rot="R180" xmlns="eagle" />
+        </symbol>
+        <symbol name="PWR+-">
+          <text x="1.27" y="3.175" size="0.8128" layer="93" rot="R90" xmlns="eagle">V+</text>
+          <text x="1.27" y="-4.445" size="0.8128" layer="93" rot="R90" xmlns="eagle">V-</text>
+          <pin name="V+" x="0" y="7.62" visible="pad" length="middle" direction="pwr" rot="R270" xmlns="eagle" />
+          <pin name="V-" x="0" y="-7.62" visible="pad" length="middle" direction="pwr" rot="R90" xmlns="eagle" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="LM139_COMPARATOR" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="14_PIN_COMPARATOR" x="-2.54" y="20.32" />
+            <gate name="G$2" symbol="14_PIN_COMPARATOR" x="-2.54" y="7.62" />
+            <gate name="G$3" symbol="14_PIN_COMPARATOR" x="-2.54" y="-7.62" />
+            <gate name="G$4" symbol="14_PIN_COMPARATOR" x="-2.54" y="-20.32" />
+            <gate name="G$5" symbol="PWR+-" x="0" y="20.32" />
+          </gates>
+          <devices>
+            <device name="" package="14-SOIC" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="+IN" pad="7" />
+                <connect gate="G$1" pin="-IN" pad="6" />
+                <connect gate="G$1" pin="OUT" pad="1" />
+                <connect gate="G$2" pin="+IN" pad="5" />
+                <connect gate="G$2" pin="-IN" pad="4" />
+                <connect gate="G$2" pin="OUT" pad="2" />
+                <connect gate="G$3" pin="+IN" pad="9" />
+                <connect gate="G$3" pin="-IN" pad="8" />
+                <connect gate="G$3" pin="OUT" pad="14" />
+                <connect gate="G$4" pin="+IN" pad="11" />
+                <connect gate="G$4" pin="-IN" pad="10" />
+                <connect gate="G$4" pin="OUT" pad="13" />
+                <connect gate="G$5" pin="V+" pad="3" />
+                <connect gate="G$5" pin="V-" pad="12" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

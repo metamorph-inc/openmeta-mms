@@ -1,8 +1,9 @@
 import os
+import sys
 from xml.etree import ElementTree
 
 # get all dlls that will be present in the GAC on the user's machine
-meta_x64_wxs = '..\deploy\META_x64.wxs'
+meta_x64_wxs = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..\deploy\META_x64.wxs')
 meta_x64 = ElementTree.parse(meta_x64_wxs)
 
 dlls_in_gac = []
@@ -20,10 +21,12 @@ ElementTree.register_namespace('', 'http://schemas.microsoft.com/developer/msbui
 
 cwd = os.getcwd()
 
-projects = [l.split(",")[1][2:-1] for l in open("CyPhy-FunctionalTests.sln") if l.startswith("Project")]
+sln = "CyPhy-FunctionalTests.sln" if len(sys.argv) < 2 else sys.argv[1]
+os.chdir(os.path.dirname(os.path.abspath(sln)))
+projects = [l.split(",")[1][2:-1] for l in open(os.path.basename(sln)) if l.startswith("Project")]
 project_basenames = set((os.path.basename(project) for project in projects))
 
-for project in projects:
+for project in (p for p in projects if p.endswith(".csproj")):
     print 'Updating ' + project
     csproj = ElementTree.parse(project)
     
@@ -45,6 +48,10 @@ for project in projects:
                 #print child.tag
                 # we remove all elements inside the Reference element (SpecificVersion and HintPath)
                 reference.remove(child)
+    for hintpath in csproj.findall('.//' + _msbuild + 'Reference/' + _msbuild + 'HintPath'):
+        fullpath = os.path.join(r'C:\Program Files (x86)\META\bin', os.path.basename(hintpath.text))
+        if os.path.isfile(fullpath):
+            hintpath.text = fullpath
     
     parent_map = dict((c, p) for p in csproj.getiterator() for c in p)
     for project_reference in list(csproj.findall(_msbuild + 'ItemGroup/' + _msbuild + 'ProjectReference')):

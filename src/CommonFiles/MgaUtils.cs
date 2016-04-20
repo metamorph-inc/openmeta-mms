@@ -23,6 +23,7 @@ namespace GME.MGA
                 File.Delete(mgaPath);
             }
 
+            
             connectionString = "MGA=" + mgaPath;
             ImportXME(xmePath, mgaPath);
         }

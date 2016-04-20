@@ -1,0 +1,11 @@
+*.opensdf
+*.sdf
+*.suo
+ipch/
+*.vcxproj.user
+*.mga
+*.mta
+*.xmp
+*.vcd
+**/Debug
+**/Release

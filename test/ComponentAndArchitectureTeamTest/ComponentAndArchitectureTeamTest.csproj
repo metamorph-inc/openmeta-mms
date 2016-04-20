@@ -11,7 +11,8 @@
     <RootNamespace>ComponentAndArchitectureTeamTest</RootNamespace>
     <AssemblyName>ComponentAndArchitectureTeamTest</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -92,6 +93,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="SystemCParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\SystemCParser\bin\Release\SystemCParser.dll</HintPath>
+    </Reference>
     <Reference Include="xunit">
       <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.dll</HintPath>
     </Reference>

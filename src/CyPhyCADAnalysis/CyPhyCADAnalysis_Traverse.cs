@@ -39,7 +39,6 @@
                 this.AssemblyName = design.Name;
                 design.SaveToFile(Path.Combine(this.OutputDirectory, this.TestBenchName + ".adm"));
                 
-
                 foreach (var wf_item in tb.Children.WorkflowRefCollection)
                 {
                     string TB_child_item_name = wf_item.Name;

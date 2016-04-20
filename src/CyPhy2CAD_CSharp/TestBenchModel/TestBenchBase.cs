@@ -84,7 +84,7 @@ namespace CyPhy2CAD_CSharp.TestBenchModel
         // a CADComputationComponent
         //public bool InterferenceCheck { get; set; } // Adds an analysis type (only for CAD test benches)
         public string CADOptions { get; set; } // Additional options for the CAD executable (CAD only)
-
+        
         public bool CopySTL { get; set; }
         
         public TestBenchBase(CyPhy2CADSettings cadSetting,
@@ -213,7 +213,7 @@ namespace CyPhy2CAD_CSharp.TestBenchModel
                     CAD.STEPFormatType formatout = new CAD.STEPFormatType();
                     formatout._id = UtilityHelpers.MakeUdmID();
                     formatout.Name = item;
-                    exchangelist.Add(formatout);    
+                    exchangelist.Add(formatout);                    
                 }
 
                 List<CAD.NonSTEPFormatType> stllist = new List<CAD.NonSTEPFormatType>();
@@ -385,6 +385,17 @@ namespace CyPhy2CAD_CSharp.TestBenchModel
                 Uri uriout = new Uri(Path.Combine(OutputDirectory, "abc.xyz"));
                 relativeAuxDir = Uri.UnescapeDataString(uriout.MakeRelativeUri(uricad).ToString().Replace('/', '\\'));
                 cad_search_paths.Insert(0, relativeAuxDir);
+            }
+
+            // MOT-243 This adds orphan/unassembled components to the Creo paths in search_META.pro
+            foreach (var item in cadDataContainer.orphans
+                                                 .Where(c => !String.IsNullOrWhiteSpace(c.ModelURI)))
+            {
+                Uri uricad = new Uri(Path.Combine(Path.GetFullPath(item.CyPhyModelPath), item.ModelURI));
+                Uri uriout = new Uri(Path.Combine(OutputDirectory, "abc.xyz"));
+                String relativeDir = Uri.UnescapeDataString(uriout.MakeRelativeUri(uricad).ToString().Replace('/', '\\'));
+
+                cad_search_paths.Add(relativeDir);
             }
 
             Template.search_meta_local searchmeta = new Template.search_meta_local()

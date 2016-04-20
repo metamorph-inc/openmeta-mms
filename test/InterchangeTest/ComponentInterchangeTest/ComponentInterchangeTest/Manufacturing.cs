@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ComponentInterchangeTest
 {
-    public class ManufacturingFixture
+    public class ManufacturingFixture : IDisposable
     {
         public ManufacturingFixture()
         {
@@ -33,15 +33,10 @@ namespace ComponentInterchangeTest
             var rtnCode_Importer = CommonFunctions.runCyPhyComponentImporterCLRecursively(Manufacturing.mgaPath_InputModel, Manufacturing.path_ExportedComponents);
             Assert.True(0 == rtnCode_Importer, "Component Importer had a non-zero return code of " + rtnCode_Importer);
         }
-    }
 
-    public class ManufacturingModelImport
-    {
-        [Fact]
-        [Trait("ProjectImport/Open", "Manufacturing")]
-        public void ProjectXmeImport()
+        public void Dispose()
         {
-            Assert.DoesNotThrow(() => { new ManufacturingFixture(); });
+            // No state, so nothing to do here.
         }
     }
 
@@ -81,7 +76,7 @@ namespace ComponentInterchangeTest
 
         public static readonly string path_ExportedComponents = Path.Combine(
             testPath,
-            "Imported_Components"
+            "Components"
             );
         #endregion
 

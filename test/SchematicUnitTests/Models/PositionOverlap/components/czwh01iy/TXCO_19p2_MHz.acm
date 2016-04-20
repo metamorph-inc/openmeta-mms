@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="c2815fed-57ca-41b0-8492-050d72b5eb46" Name="TXCO_19p2_MHz" Version="" xmlns="avm">
+  <Connector ConnectorComposition="" ID="id-17e30774-7a35-48e1-a1c4-5e95c93ab9d9" ApplyJoinData="" Notes="" Name="Gnd" Definition="" YPosition="203" XPosition="70" xmlns="">
+    <Role xmlns:q1="schematic" xsi:type="q1:Pin" ID="id-97db9163-8dad-43d4-be2a-1814f28b0eeb" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-fc448cd3-631d-45e2-ab61-b9493728971d" ApplyJoinData="" Notes="" Name="NC_Gnd" Definition="" YPosition="203" XPosition="385" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-da8b9d4f-ff34-4492-a05f-d38bd663c689" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-fa8443fa-f556-49e5-9eeb-55b2c7826207" ApplyJoinData="" Notes="" Name="VCC" Definition="" YPosition="84" XPosition="385" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-05b896f2-004a-4f2a-9fc6-ec4f2caf26c3" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-7eabb68f-86cf-4fc2-9f1d-07612a00cde8" ApplyJoinData="" Notes="" Name="Output" Definition="" YPosition="84" XPosition="70" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-709ffc2a-c7ea-4a55-a80f-ee1c20bd316c" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">ara_components</Classifications>
+</Component>

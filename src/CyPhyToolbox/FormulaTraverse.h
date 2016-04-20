@@ -125,10 +125,16 @@ protected:
 	set<CyPhyML::CADParameter> m_cadParameters;
 	set<CyPhyML::ManufacturingModelParameter> m_manufactureParameters;
 	set<CyPhyML::ModelicaParameter> m_modelicaParameters; 	// ZL 11/20/2013 support modelica parameters as value flow targets
+	set<CyPhyML::EDAModelParameter> m_edaModelParameters;
+	set<CyPhyML::SPICEModelParameter> m_spiceModelParameters;
+	set<CyPhyML::SystemCParameter> m_systemcParameters;
 	set<CyPhyML::Units> m_units_folders;
 	map<string, CyPhyML::unit> m_unit_name_table;
 	void EvaluateCADParameters();
 	void EvaluateManufactureParameters();
+	void EvaluateEDAParameters();
+	void EvaluateSPICEParameters();
+	void EvaluateSystemCParameters();
 	void EvaluateCarParameters();
 
 	std::string NonRealValueFixture( CyPhyML::ValueFlowTarget &vft, std::string &value );

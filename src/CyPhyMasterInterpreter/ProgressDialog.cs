@@ -15,6 +15,19 @@ namespace CyPhyMasterInterpreter
         [DllImport("user32.dll")]
         public static extern bool EnableWindow(IntPtr hwnd, bool bEnable);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
         public ProgressDialog(CyPhyMasterInterpreterAPI masterInterpreter)
         {
             InitializeComponent();
@@ -24,18 +37,29 @@ namespace CyPhyMasterInterpreter
             this.m_stopwatch = new System.Diagnostics.Stopwatch();
 
             // Set default position of the dialog box to not overlay the console.
-            var workingArea = Screen.GetWorkingArea(this);
-            this.Top = 200;
+            RECT GMEsize = new RECT();
+            if (GetWindowRect(m_mainWindow, ref GMEsize))
+            {
+                this.Top = GMEsize.Top + 200;
+                this.Left = GMEsize.Left + ((GMEsize.Right - GMEsize.Left) - this.Width) / 2;
+            }
+            else
+            {
+                var workingArea = Screen.GetWorkingArea(this);
+                this.Top = 200;
+                this.Left = workingArea.Left + ((workingArea.Right - workingArea.Left) - this.Width) / 2;
+            }
+            
         }
-
-        private System.Diagnostics.Stopwatch m_stopwatch { get; set; }
 
         private IntPtr m_mainWindow = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
 
+        private System.Diagnostics.Stopwatch m_stopwatch { get; set; }
+
         public void ShowWithDisabledMainWindow()
         {
-            EnableWindow(m_mainWindow, false);
             this.Show();
+            EnableWindow(m_mainWindow, false);
             this.m_RaiseExceptionOnClose = true;
             this.m_FormClosed = false;
             this.m_UserCancelled = true;

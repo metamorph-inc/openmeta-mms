@@ -343,7 +343,7 @@ namespace CyPhyComponentAuthoring.Modules
             {
                 var exporter = new CyPhyComponentExporter.CyPhyComponentExporterInterpreter();
                 String acmPath = Path.Combine(PathforComp,GetCurrentComp().Name + ".component.acm");
-                CyPhyComponentExporterInterpreter.ExportToFile(GetCurrentComp(), Path.GetDirectoryName(acmPath));
+                CyPhyComponentExporterInterpreter.ExportToDirectory(GetCurrentComp(), Path.GetDirectoryName(acmPath));
             }
 
             // Clean up

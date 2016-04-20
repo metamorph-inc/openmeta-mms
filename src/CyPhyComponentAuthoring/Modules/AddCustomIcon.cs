@@ -46,8 +46,8 @@ namespace CyPhyComponentAuthoring.Modules
             }
         }
 
-        [CyPhyComponentAuthoringInterpreter.CATDnD(Extension = ".ico")]
         [CyPhyComponentAuthoringInterpreter.CATDnD(Extension = ".png")]
+        [CyPhyComponentAuthoringInterpreter.CATDnD(Extension = ".svg")]
         public void AddCustomIcon(string IconFileSourcePath = null)
         {
             this.Logger = new CyPhyGUIs.GMELogger(CurrentProj, this.GetType().Name);
@@ -99,7 +99,8 @@ namespace CyPhyComponentAuthoring.Modules
                     IconFileDestPath = GetCurrentComp().GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
 
                     // copy the selected file
-                    IconFileDestName = System.IO.Path.Combine(IconFileDestPath, "Icon.png");
+                    var FileName = "Icon" + Path.GetExtension(IconFileSourceName).ToLowerInvariant();
+                    IconFileDestName = System.IO.Path.Combine(IconFileDestPath, FileName);
                     System.IO.File.Copy(IconFileSourceName, IconFileDestName, true);
                 }
                 catch (Exception err_copy_icon_file)
@@ -117,23 +118,26 @@ namespace CyPhyComponentAuthoring.Modules
             {
                 CyPhy.Resource ResourceObj = CyPhyClasses.Resource.Create(GetCurrentComp());
                 ResourceObj.Attributes.ID = Guid.NewGuid().ToString("B");
-                ResourceObj.Attributes.Path = "Icon.png";
+                ResourceObj.Attributes.Path = Path.GetFileName(IconFileDestName);
                 ResourceObj.Attributes.Notes = "Custom icon for this component";
                 ResourceObj.Name = Path.GetFileName(IconFileDestName);
 
                 String iconPath_RelativeToProjRoot = Path.Combine(GetCurrentComp().GetDirectoryPath(ComponentLibraryManager.PathConvention.REL_TO_PROJ_ROOT),
-                                                                  "Icon.png");
+                                                                  Path.GetFileName(IconFileDestName));
 
-                //- Finally, it must be set as the CyPhy Component's icon
-                try
+                if (Path.GetExtension(IconFileDestName) == ".png")
                 {
-                    (GetCurrentComp().Impl as GME.MGA.IMgaFCO).set_RegistryValue("icon", iconPath_RelativeToProjRoot);
-                }
-                catch (Exception err_set_registry)
-                {
-                    this.Logger.WriteError("Error setting Icon Registry Value" + err_set_registry.Message);
-                    clean_up(false);
-                    return;
+                    //- Finally, it must be set as the CyPhy Component's icon
+                    try
+                    {
+                        (GetCurrentComp().Impl as GME.MGA.IMgaFCO).set_RegistryValue("icon", iconPath_RelativeToProjRoot);
+                    }
+                    catch (Exception err_set_registry)
+                    {
+                        this.Logger.WriteError("Error setting Icon Registry Value" + err_set_registry.Message);
+                        clean_up(false);
+                        return;
+                    }
                 }
             }
             #endregion
@@ -152,7 +156,7 @@ namespace CyPhyComponentAuthoring.Modules
                 ofd.CheckFileExists = true;
                 ofd.DefaultExt = "test.png";
                 ofd.Multiselect = false;
-                ofd.Filter = "PNG files (*.png)|*.png*|All files (*.*)|*.*";
+                ofd.Filter = "Icon files (*.png;*.svg)|*.png;*.svg|All files (*.*)|*.*";
                 dr = ofd.ShowDialog();
                 if (dr == DialogResult.OK)
                 {

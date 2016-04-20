@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <DirectoryRef Id="INSTALLDIR_BIN" />
+</Fragment>
+<Fragment>
+<ComponentGroup Id="CyPhy2SystemC">
+  <Component Id="CyPhy2SystemC.dll" Directory="INSTALLDIR_BIN">
+    <File Id="CyPhy2SystemC.dll" Name="CyPhy2SystemC.dll" KeyPath="yes" Source="../src/CyPhy2SystemC\bin\Release\CyPhy2SystemC.dll" />
+    <Class Id="{AF0B9735-FF04-4589-8C56-DC997FB3FA97}" Context="InprocServer32" Description="MGA.Interpreter.CyPhy2SystemC" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="MGA.Interpreter.CyPhy2SystemC" Description="MGA.Interpreter.CyPhy2SystemC" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{AF0B9735-FF04-4589-8C56-DC997FB3FA97}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{AF0B9735-FF04-4589-8C56-DC997FB3FA97}\InprocServer32" Name="Class" Value="CyPhy2SystemC.CyPhy2SystemCInterpreter" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{AF0B9735-FF04-4589-8C56-DC997FB3FA97}\InprocServer32" Name="Assembly" Value="CyPhy2SystemC, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{AF0B9735-FF04-4589-8C56-DC997FB3FA97}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{AF0B9735-FF04-4589-8C56-DC997FB3FA97}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2SystemC.dll]" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
+    <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.CyPhy2SystemC'>
+      <RegistryValue Name='Description' Type='string' Value='CyPhy2SystemC'/>
+      <RegistryValue Name='Icon' Type='string' Value='[#CyPhy2SystemC.ico]'/>
+      <RegistryValue Name='Paradigm' Type='string' Value='CyPhyML'/>
+      <RegistryValue Name='Tooltip' Type='string' Value='CyPhy2SystemC'/>
+      <RegistryValue Name='Type' Type='integer' Value='1'/>
+
+      <!-- not Associated -->
+
+    </RegistryKey>
+    <Class Id="{7FD21679-8092-4D8F-BA74-3D3FFCD6966E}" Context="InprocServer32" Description="ISIS.META.CyPhy2SystemC_Settings" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="ISIS.META.CyPhy2SystemC_Settings" Description="ISIS.META.CyPhy2SystemC_Settings" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{7FD21679-8092-4D8F-BA74-3D3FFCD6966E}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{7FD21679-8092-4D8F-BA74-3D3FFCD6966E}\InprocServer32" Name="Class" Value="CyPhy2SystemC.CyPhy2SystemC_Settings" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{7FD21679-8092-4D8F-BA74-3D3FFCD6966E}\InprocServer32" Name="Assembly" Value="CyPhy2SystemC, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{7FD21679-8092-4D8F-BA74-3D3FFCD6966E}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{7FD21679-8092-4D8F-BA74-3D3FFCD6966E}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2SystemC.dll]" Type="string" Action="write" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="../src/CyPhy2SystemC/CyPhy2SystemC.ico" />
+  </Component>
+</ComponentGroup>
+</Fragment>
+</Wix>

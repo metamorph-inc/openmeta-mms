@@ -11,6 +11,8 @@ using GME.CSharp;
 using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
 using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
 using CyPhyCOMInterfaces;
+using System.Globalization;
+using ISIS.GME.Common.Interfaces;
 
 namespace CyPhyPET.Rules
 {
@@ -56,17 +58,6 @@ namespace CyPhyPET.Rules
 
 #region TestBench
         /// <summary>
-        /// Contains all supported work-flows in a TestBench. (One and only one must be defined.)
-        /// </summary>
-        public static HashSet<string> AllSupportedInterpreters = new HashSet<string>() 
-        {
-            "MGA.Interpreter.CyPhy2Modelica_v2",
-            "MGA.Interpreter.CyPhy2CAD_CSharp",
-            "MGA.Interpreter.CyPhyFormulaEvaluator",
-            "MGA.Interpreter.CyPhyPython"  
-        };
-
-        /// <summary>
         /// Looks if a work-flow with a task is defined in testBench and if so, returns the ProgID defined
         /// in task. If the rules are not fulfilled an empty string is returned.
         /// </summary>
@@ -97,16 +88,16 @@ namespace CyPhyPET.Rules
             return result;
         }
 
-        [CheckerRule("OneAndOnlyOneTestBenchRef", Description = "There should be one and only one TestBenchReference.")]
+        [CheckerRule("UniqueTestBenchRefNames", Description = "TestBenchReferences should have unique names")]
         [Tags("PET")]
         [ValidContext("ParametricExploration")]
-        public static IEnumerable<RuleFeedbackBase> OneAndOnlyOneTestBenchRef(MgaFCO context)
+        public static IEnumerable<RuleFeedbackBase> UniqueTestBenchRefNames(MgaFCO context)
         {
             var pet = CyPhyClasses.ParametricExploration.Cast(context);
-            return OneAndOnlyOneTestBenchRef(pet);
+            return UniqueTestBenchRefNames(pet);
         }
 
-        public static IEnumerable<RuleFeedbackBase> OneAndOnlyOneTestBenchRef(CyPhy.ParametricExploration pet)
+        public static IEnumerable<RuleFeedbackBase> UniqueTestBenchRefNames(CyPhy.ParametricExploration pet)
         {
             var result = new List<RuleFeedbackBase>();
 
@@ -124,13 +115,17 @@ namespace CyPhyPET.Rules
             }
             else if (cnt > 1)
             {
-                var feedback = new GenericRuleFeedback()
+                var dupNames = pet.Children.TestBenchRefCollection.GroupBy(tb => tb.Name).Where(group => group.Count() > 1)
+                    .Select(group => group.Key);
+                if (dupNames.Count() > 0)
                 {
-                    FeedbackType = FeedbackTypes.Error,
-                    Message = string.Format("The ParameterExploration-model has {0} TestBenchRefs. There must only be one.", cnt)
-                };
-
-                result.Add(feedback);
+                    var feedback = new GenericRuleFeedback()
+                    {
+                        FeedbackType = FeedbackTypes.Error,
+                        Message = string.Format("PET requires unique TestBenchRef names. Duplicate names: {0}", String.Join(",", dupNames.ToArray()))
+                    };
+                    result.Add(feedback);
+                }
             }
 
             return result;
@@ -174,10 +169,11 @@ namespace CyPhyPET.Rules
                 var parameters = testBench.Children.ParameterCollection;
                 if (parameters.Count() != parameters.Select(p => p.Name).Distinct().Count())
                 {
+                    var names = String.Join(", ", parameters.Select(p => p.Name).GroupBy(p => p).Where(x => x.Count() > 1).Select(x => x.First()).ToArray());
                     var feedback = new GenericRuleFeedback()
                     {
                         FeedbackType = FeedbackTypes.Error,
-                        Message = string.Format("Parameters in test-bench share common names.")
+                        Message = string.Format("Duplicate parameter names '{0}'.", names)
                     };
 
                     feedback.InvolvedObjectsByRole.Add(testBench.Impl as IMgaFCO);
@@ -238,28 +234,12 @@ namespace CyPhyPET.Rules
                         var feedback = new GenericRuleFeedback()
                         {
                             FeedbackType = FeedbackTypes.Error,
-                            Message = string.Format("Workflow must have exactly one task ({0}): {1}.",
-                            workflow.Name)
+                            Message = string.Format("Workflow must have exactly one task: {0}.",
+                                workflow.Name)
                         };
 
                         feedback.InvolvedObjectsByRole.Add(workflow.Impl as IMgaFCO);
                         result.Add(feedback);
-                    }
-                    else
-                    {
-                        var task = workflow.Children.TaskCollection.FirstOrDefault();
-
-                        if (AllSupportedInterpreters.Contains(task.Attributes.COMName) == false)
-                        {
-                            var feedback = new GenericRuleFeedback()
-                            {
-                                FeedbackType = FeedbackTypes.Error,
-                                Message = string.Format("Workflow task '{0}' is not supported.", task.Attributes.COMName)
-                            };
-
-                            feedback.InvolvedObjectsByRole.Add(workflow.Impl as IMgaFCO);
-                            result.Add(feedback);
-                        }
                     }
                 }
             }
@@ -384,7 +364,7 @@ namespace CyPhyPET.Rules
 
                             var value = tbParam.Attributes.Value;
                             double dummy;
-                            if (double.TryParse(value, out dummy) == false)
+                            if (value != "" && double.TryParse(value, out dummy) == false)
                             {
                                 var feedback = new GenericRuleFeedback()
                                 {
@@ -411,7 +391,7 @@ namespace CyPhyPET.Rules
 
                         tbParamsWithConnections.Add(tbParam);
                     }
-                    
+
                 }
                 else if (driveParamCollection != null &&
                     driveParamCollection.Count() != 1)
@@ -450,7 +430,7 @@ namespace CyPhyPET.Rules
                     {
                         var tbMetricParent = tbMetric.ParentContainer;
                         if (tbMetricParent != null &&
-                            (tbMetricParent is CyPhy.TestBenchType) == false)
+                            ((tbMetricParent is CyPhy.TestBenchType) == false && (tbMetricParent is CyPhy.ParametricTestBench) == false))
                         {
                             var feedback = new GenericRuleFeedback()
                             {
@@ -529,12 +509,12 @@ namespace CyPhyPET.Rules
             double minValue = 0;
             double pccTarget = output.Attributes.TargetPCCValue;
 
-            bool compareValues = 
+            bool compareValues =
                 double.TryParse(output.Attributes.MaxValue.Trim(), out maxValue) &&
                 double.TryParse(output.Attributes.MinValue.Trim(), out minValue);
 
-            bool pccTargetValid = 
-                (0 <= pccTarget) && 
+            bool pccTargetValid =
+                (0 <= pccTarget) &&
                 (pccTarget <= 1);
 
             if (compareValues)
@@ -767,7 +747,7 @@ namespace CyPhyPET.Rules
                     {
                         var tbParamParent = tbParam.ParentContainer;
                         if (tbParamParent != null &&
-                            (tbParamParent is CyPhy.TestBenchType) == false)
+                            ((tbParamParent is CyPhy.TestBenchType) == false && (tbParamParent is CyPhy.ParametricTestBench) == false))
                         {
                             var feedback = new GenericRuleFeedback()
                             {
@@ -808,7 +788,7 @@ namespace CyPhyPET.Rules
 
                             var value = tbParam.Attributes.Value;
                             double dummy;
-                            if (double.TryParse(value, out dummy) == false)
+                            if (value != "" && double.TryParse(value, out dummy) == false)
                             {
                                 var feedback = new GenericRuleFeedback()
                                 {
@@ -828,20 +808,20 @@ namespace CyPhyPET.Rules
                                 Message = string.Format("TestBench Parameter ({0}) must have only 1 connection from a DesignVariable", tbParam.Name)
                             };
 
-                            feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
-                            checkResults.Add(feedback);
+                          //  feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
+                          //  checkResults.Add(feedback);
                         }
 
                         tbParamsWithConnections.Add(tbParam);
                     }
                 }
                 else if (varSweepCollection != null &&
-                    varSweepCollection.Count() != 1)
+                    varSweepCollection.Count() == 0)
                 {
                     var feedback = new GenericRuleFeedback()
                     {
                         FeedbackType = FeedbackTypes.Error,
-                        Message = string.Format("Driver DesignVariable ({0}) must have (only) 1 connection to a Testbench Parameter/Property", designVar.Name)
+                        Message = string.Format("Driver DesignVariable ({0}) must have at least 1 connection to a Testbench Parameter/Property", designVar.Name)
                     };
 
                     feedback.InvolvedObjectsByRole.Add(designVar.Impl as IMgaFCO);
@@ -875,7 +855,7 @@ namespace CyPhyPET.Rules
                     {
                         var tbMetricParent = tbMetric.ParentContainer;
                         if (tbMetricParent != null &&
-                            (tbMetricParent is CyPhy.TestBenchType) == false)
+                            ((tbMetricParent is CyPhy.TestBenchType) == false && (tbMetricParent is CyPhy.ParametricTestBench) == false))
                         {
                             var feedback = new GenericRuleFeedback()
                             {
@@ -902,6 +882,7 @@ namespace CyPhyPET.Rules
 
                             if (metricNames.Contains(tbMetric.Name))
                             {
+                                // FIXME must this be an error. perhaps we can allow it...
                                 var feedback = new GenericRuleFeedback()
                                 {
                                     FeedbackType = FeedbackTypes.Error,
@@ -930,17 +911,30 @@ namespace CyPhyPET.Rules
                         tbMetricsWithConnections.Add(tbMetric);
                     }
                 }
-                else if (objMappingCollection != null &&
-                    objMappingCollection.Count() != 1)
+                else if (objMappingCollection != null)
                 {
-                    var feedback = new GenericRuleFeedback()
+                    if (objMappingCollection.Count() > 1)
                     {
-                        FeedbackType = FeedbackTypes.Error,
-                        Message = string.Format("Driver Objective ({0}) must have (only) 1 connection from a Testbench Metric", obj.Name)
-                    };
+                        var feedback = new GenericRuleFeedback()
+                        {
+                            FeedbackType = FeedbackTypes.Error,
+                            Message = string.Format("Driver Objective ({0}) must not have multiple connections from Testbench Metrics", obj.Name)
+                        };
 
-                    feedback.InvolvedObjectsByRole.Add(obj.Impl as IMgaFCO);
-                    checkResults.Add(feedback);
+                        feedback.InvolvedObjectsByRole.Add(obj.Impl as IMgaFCO);
+                        checkResults.Add(feedback);
+                    }
+                    else if (objMappingCollection.Count() == 0)
+                    {
+                        var feedback = new GenericRuleFeedback()
+                        {
+                            FeedbackType = FeedbackTypes.Warning,
+                            Message = string.Format("Driver Objective ({0}) does not have a connection from a Testbench Metric", obj.Name)
+                        };
+
+                        feedback.InvolvedObjectsByRole.Add(obj.Impl as IMgaFCO);
+                        checkResults.Add(feedback);
+                    }
                 }
             }
 
@@ -965,7 +959,7 @@ namespace CyPhyPET.Rules
                 foreach (var rp in rangePieces)
                 {
                     double val = 0;
-                    if (double.TryParse(rp, out val) == false)
+                    if (double.TryParse(rp, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out val) == false)
                     {
                         var feedback = new GenericRuleFeedback()
                         {
@@ -984,8 +978,10 @@ namespace CyPhyPET.Rules
                 double min = 0;
                 double max = 0;
                 bool canGetMaxAndMin =
-                    double.TryParse(splitRange[0].Trim(), out min) &&
-                    double.TryParse(splitRange[1].Trim(), out max);
+                    double.TryParse(splitRange[0].Trim(), NumberStyles.Float | NumberStyles.AllowThousands,
+                            CultureInfo.InvariantCulture, out min) &&
+                    double.TryParse(splitRange[1].Trim(), NumberStyles.Float | NumberStyles.AllowThousands,
+                            CultureInfo.InvariantCulture, out max);
                 if (canGetMaxAndMin)
                 {
                     if (min > max)
@@ -1012,12 +1008,29 @@ namespace CyPhyPET.Rules
                     attributeCheckResults.Add(feedback);
                 }
             }
+            else if (splitRange.Count() == 1)
+            {
+                double singlePoint = 0;
+                if (double.TryParse(splitRange[0].Trim(), NumberStyles.Float | NumberStyles.AllowThousands,
+                            CultureInfo.InvariantCulture, out singlePoint) == false)
+                {
+                    var feedback = new GenericRuleFeedback()
+                    {
+                        FeedbackType = FeedbackTypes.Error,
+                        Message = string.Format("MDAODriver DesignVariable ({0}) Range: Could not parse value... is it a decimal?", designVar.Name)
+                    };
+
+                    feedback.InvolvedObjectsByRole.Add(designVar.Impl as IMgaFCO);
+                    // FIXME: need to rewrite this test for ;-delimited enums
+                    // attributeCheckResults.Add(feedback);
+                }
+            }
             else// if (range != "-inf..inf") We need to make a judgement call on whether or not to accept "-inf..inf"
             {
                 var feedback = new GenericRuleFeedback()
                 {
                     FeedbackType = FeedbackTypes.Error,
-                    Message = string.Format("MDAODriver DesignVariable ({0}) Range Attribute should have format 'Min, Max' where Min and Max are Reals", designVar.Name)
+                    Message = string.Format("MDAODriver DesignVariable ({0}) Range Attribute should have format 'Min, Max' where Min and Max are Reals, or 'Val' where Val is Real", designVar.Name)
                 };
 
                 feedback.InvolvedObjectsByRole.Add(designVar.Impl as IMgaFCO);

@@ -52,7 +52,7 @@ namespace CyPhyMetaLink
         private readonly CreoStartupDialog StartupDialog = new CreoStartupDialog();
         private Dictionary<string, int> interests = new Dictionary<string, int>();
         private Dictionary<string, int> InstanceIDToConstraint_Table = new Dictionary<string, int>();
-
+        
         private readonly HashSet<string> datumKinds = new HashSet<string>()
             {
                 "Datum", // abstract
@@ -150,7 +150,7 @@ namespace CyPhyMetaLink
                         }
                     }
                 }
-
+                
             }
 
             // Write message to console if it's an error response
@@ -195,7 +195,7 @@ namespace CyPhyMetaLink
                 {
                     syncedComponents.Remove(""); // CAD has been started in an empty mode
                 }
-
+                
                 else
                 {
                     Guid componentAssemblyID = Guid.Parse(cdata.Id);
@@ -267,7 +267,7 @@ namespace CyPhyMetaLink
                             ProcessResync(message.actions[0].subjectID);
                         }
                         else
-
+                
                             // Send assembly/component info to the client
                             if (message.mode.SequenceEqual(new Edit.EditMode[] { Edit.EditMode.INTEREST }))
                             {
@@ -529,7 +529,7 @@ namespace CyPhyMetaLink
                 CyPhyMLClasses.PortComposition.Connect(datum, dscopy, parent: (CyPhyML.DesignElement)null);
                 i++;
             }
-
+            
         }
 
         /// <summary>
@@ -936,7 +936,7 @@ namespace CyPhyMetaLink
                         usesRes = cyPhyComponent.Children.ResourceCollection.Where(res => res.Attributes.ID.Equals(models.Key.UsesResource)).First();
                         if (!usesRes.SrcConnections.UsesResourceCollection.Any())
                         {
-                            CyPhyMLClasses.UsesResource.Connect(newCADModel, usesRes);
+                            CyPhyMLClasses.UsesResource.Connect(newCADModel, usesRes, null, null, (CyPhyML.Component)null);
                         }
                     }
                     catch (Exception)
@@ -1158,7 +1158,6 @@ namespace CyPhyMetaLink
             {
                 return;
             }
-
             // TODO: Handle global events
             // MessageBox.Show(@event.ToString());
         }
@@ -1415,7 +1414,7 @@ namespace CyPhyMetaLink
                         newRes.Name = res;
                         newRes.Attributes.Path = Path.Combine("Manufacturing", res);
                         newResources.Add(newRes);
-                        CyPhyMLClasses.UsesResource.Connect(mmodel, newRes);
+                        CyPhyMLClasses.UsesResource.Connect(mmodel, newRes, null, null, component);
                     }
                 }
             }

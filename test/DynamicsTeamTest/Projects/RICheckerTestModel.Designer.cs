@@ -76,6 +76,7 @@ namespace DynamicsTeamTest.Projects
             Assert.False(result, "CyPhy2Modelica_v2 should have failed, but did not.");
         }
 
+        /* MOT-171: Case can no longer occur -- Connectors are now "unrolled"
         [Fact]
         [Trait("Model", "RICheckerTestModel")]
         [Trait("CheckerShouldFail", "RICheckerTestModel")]
@@ -89,6 +90,7 @@ namespace DynamicsTeamTest.Projects
 
             Assert.False(result, "CyPhy2Modelica_v2 should have failed, but did not.");
         }
+        */
 
         [Fact]
         [Trait("Model", "RICheckerTestModel")]
@@ -104,6 +106,7 @@ namespace DynamicsTeamTest.Projects
             Assert.False(result, "CyPhy2Modelica_v2 should have failed, but did not.");
         }
 
+        /* MOT-171 obsolete test
         [Fact]
         [Trait("Model", "RICheckerTestModel")]
         [Trait("CyPhy2Modelica", "RICheckerTestModel")]
@@ -117,6 +120,7 @@ namespace DynamicsTeamTest.Projects
 
             Assert.True(result, "CyPhy2Modelica_v2 failed.");
         }
+        */
 
         [Fact]
         [Trait("Model", "RICheckerTestModel")]

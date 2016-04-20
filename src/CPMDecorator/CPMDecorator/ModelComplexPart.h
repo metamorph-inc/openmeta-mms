@@ -40,6 +40,20 @@ protected:
 
 	std::unique_ptr<Gdiplus::Bitmap> m_bmp;
 
+	struct ProminentAttr {
+		_bstr_t name;
+		_bstr_t value;
+	};
+	std::vector<ProminentAttr> prominentAttrs;
+	int m_prominentAttrsCY;
+	int m_prominentAttrsNamesCX;
+	int m_prominentAttrsValuesCX;
+	CSize getProminentAttrsSize() const {
+		return CSize(m_prominentAttrsNamesCX + m_prominentAttrsValuesCX, m_prominentAttrsCY);
+	}
+	__declspec(property(get=getProminentAttrsSize))
+	CSize m_prominentAttrsSize;
+
 public:
 	ModelComplexPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ModelComplexPart();
@@ -50,6 +64,8 @@ public:
 public:
 	virtual void			Initialize			(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
 												 CComPtr<IMgaFCO>& pFCO);
+	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
+												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 	virtual void			Destroy				(void);
 	virtual CString			GetMnemonic			(void) const;
 	virtual feature_code	GetFeatures			(void) const;
@@ -64,9 +80,6 @@ public:
 	virtual bool			GetPorts			(CComPtr<IMgaFCOs>& portFCOs) const;
 	virtual void			Draw				(CDC* pDC, Gdiplus::Graphics* gdip);
 	virtual void			SaveState			(void);
-
-	virtual void	InitializeEx				(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart,
-												 CComPtr<IMgaFCO>& pFCO, HWND parentWnd, PreferenceMap& preferences);
 	virtual void	SetSelected					(bool bIsSelected);
 	virtual bool	MouseMoved					(UINT nFlags, const CPoint& point, HDC transformHDC);
 	virtual bool	MouseLeftButtonDown			(UINT nFlags, const CPoint& point, HDC transformHDC);

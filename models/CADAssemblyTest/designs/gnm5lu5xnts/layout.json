@@ -1,0 +1,113 @@
+
+{
+	"boardHeight" : 40.0,
+	"boardWidth" : 40.0,
+	"constraints" : null,
+	"numLayers" : 2,
+	"packages" : 
+	[
+		
+		{
+			"ComponentID" : "{382a1057-c6f7-46bf-adcd-3fb0552c32c4}",
+			"constraints" : null,
+			"doNotPlace" : null,
+			"height" : 1.9660,
+			"layer" : 0,
+			"name" : "Rfb",
+			"originX" : 0.0,
+			"originY" : 0.0,
+			"package" : "R0603",
+			"pkg_idx" : 0,
+			"rotation" : 0,
+			"width" : 2.9460,
+			"x" : 0.20,
+			"y" : 7.80
+		},
+		
+		{
+			"ComponentID" : "{ec47d21e-45be-435a-8ba9-284410145306}",
+			"constraints" : null,
+			"doNotPlace" : null,
+			"height" : 1.9660,
+			"layer" : 0,
+			"name" : "Rin",
+			"originX" : 0.0,
+			"originY" : 0.0,
+			"package" : "R0603",
+			"pkg_idx" : 1,
+			"rotation" : 0,
+			"width" : 2.9460,
+			"x" : 3.40,
+			"y" : 7.80
+		},
+		
+		{
+			"ComponentID" : "{35942f63-a715-4a71-8882-97d54c9d1fcd}",
+			"constraints" : null,
+			"doNotPlace" : null,
+			"height" : 7.40,
+			"layer" : 0,
+			"name" : "SpicySingleOpAmp",
+			"originX" : 0.0,
+			"originY" : 0.0,
+			"package" : "SO08",
+			"pkg_idx" : 2,
+			"rotation" : 0,
+			"width" : 4.410,
+			"x" : 0.20,
+			"y" : 0.20
+		}
+	],
+	"signals" : 
+	[
+		
+		{
+			"name" : "N$0",
+			"pins" : 
+			[
+				
+				{
+					"gate" : "G$1",
+					"name" : "2",
+					"package" : "RFB",
+					"pad" : "2"
+				},
+				
+				{
+					"gate" : "A",
+					"name" : "OUT",
+					"package" : "SPICYSINGLEOPAMP",
+					"pad" : "1"
+				}
+			]
+		},
+		
+		{
+			"name" : "N$1",
+			"pins" : 
+			[
+				
+				{
+					"gate" : "G$1",
+					"name" : "1",
+					"package" : "RFB",
+					"pad" : "1"
+				},
+				
+				{
+					"gate" : "A",
+					"name" : "-IN",
+					"package" : "SPICYSINGLEOPAMP",
+					"pad" : "2"
+				},
+				
+				{
+					"gate" : "G$1",
+					"name" : "2",
+					"package" : "RIN",
+					"pad" : "2"
+				}
+			]
+		}
+	]
+}

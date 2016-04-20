@@ -1,0 +1,27 @@
+{
+    "name": "remote_execution_proxy",
+    "version": "0.2.0",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "license": "TBD",
+    "dependencies": {
+        "http-proxy": ">=1.1.4",
+        "express": ">=4.3.1",
+        "cookies": ">=0.1.0",
+        "superagent": ">=0.18.0",
+        "bcrypt": ">=0.7.8",
+        "cookie-parser": ">=1.1.0"
+    },
+    "devDependencies": {
+        "mocha": ">=1.20.0"
+    },
+    "engines": {
+        "node": ">=0.10.0"
+    },
+    "config": {
+    },
+    "scripts": {
+    }
+}

@@ -98,6 +98,7 @@ namespace ComponentInterchangeTest
                 importer.Initialize(fixture.proj);
 
                 fco = importer.ImportFile(fixture.proj, fixture.proj.GetRootDirectoryPath(), acmPath);
+                importer.DisposeLogger();
             });
 
             proj.PerformInTransaction(delegate
@@ -121,6 +122,7 @@ namespace ComponentInterchangeTest
                 var importer = new CyPhyComponentImporter.CyPhyComponentImporterInterpreter();
                 importer.Initialize(fixture.proj);
                 fco = importer.ImportFile(fixture.proj, fixture.proj.GetRootDirectoryPath(), acmPath);
+                importer.DisposeLogger();
             });
 
             proj.PerformInTransaction(delegate
@@ -150,6 +152,7 @@ namespace ComponentInterchangeTest
                 importer.Initialize(fixture.proj);
 
                 fco = importer.ImportFile(fixture.proj, fixture.proj.GetRootDirectoryPath(), acmPath);
+                importer.DisposeLogger();
             });
 
             proj.PerformInTransaction(delegate
@@ -299,7 +302,7 @@ namespace ComponentInterchangeTest
             proj.PerformInTransaction(delegate
             {
                 CyPhy.RootFolder rf = CyPhyClasses.RootFolder.GetRootFolder(proj);
-                CyPhy.Components cf = rf.Children.ComponentsCollection.First(f => f.Name == "Imported_Components");
+                CyPhy.Components cf = rf.Children.ComponentsCollection.First(f => f.Name == "Components");
 
                 avm.Component avmComp = new avm.Component()
                 {
@@ -318,7 +321,7 @@ namespace ComponentInterchangeTest
             proj.PerformInTransaction(delegate
             {
                 CyPhy.RootFolder rf = CyPhyClasses.RootFolder.GetRootFolder(proj);
-                CyPhy.Components cf = rf.Children.ComponentsCollection.First(f => f.Name == "Imported_Components");
+                CyPhy.Components cf = rf.Children.ComponentsCollection.First(f => f.Name == "Components");
 
                 avm.Component avmComp = new avm.Component()
                 {
@@ -344,7 +347,7 @@ namespace ComponentInterchangeTest
             proj.PerformInTransaction(delegate
             {
                 CyPhy.RootFolder rf = CyPhyClasses.RootFolder.GetRootFolder(proj);
-                CyPhy.Components cf = rf.Children.ComponentsCollection.First(f => f.Name == "Imported_Components");
+                CyPhy.Components cf = rf.Children.ComponentsCollection.First(f => f.Name == "Components");
 
                 avm.Component avmComp = new avm.Component()
                 {
@@ -379,7 +382,7 @@ namespace ComponentInterchangeTest
             proj.PerformInTransaction(delegate
             {
                 CyPhy.RootFolder rf = CyPhyClasses.RootFolder.GetRootFolder(proj);
-                CyPhy.Components cf = rf.Children.ComponentsCollection.First(f => f.Name == "Imported_Components");
+                CyPhy.Components cf = rf.Children.ComponentsCollection.First(f => f.Name == "Components");
 
                 avm.Component avmComp = new avm.Component()
                 {

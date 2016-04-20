@@ -6,13 +6,13 @@
   <?define UpgradeCode='E7E2109B-6CEA-4D8C-B020-1F0588DA719A' ?>
 
   <Product Name='META toolchain' Id='*' UpgradeCode='$(var.UpgradeCode)'
-      Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)' Manufacturer='Vanderbilt University, ISIS'>
+      Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)' Manufacturer='MetaMorph Software, Inc; Vanderbilt University, ISIS'>
 
-    <Package Id='*' Description='META Vehicle Design Suite'
-        Manufacturer='Vanderbilt University, ISIS'
+    <Package Id='*' Description='Tonka Design Suite'
+        Manufacturer='MetaMorph Software, Inc; Vanderbilt University, ISIS'
         InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252'
         InstallPrivileges='elevated' InstallScope='perMachine' Platform='x64'
-		Comments='Created from $(var.SVNVERSION) ($(var.GITVERSION))'/>
+		Comments='Version $(var.VERSIONSTR) ($(var.GITVERSION))'/>
 
     <Upgrade Id="$(var.UpgradeCode)">
       <UpgradeVersion Minimum="$(var.VERSIONSTR)" OnlyDetect="yes" Property="NEWERFOUND"/>
@@ -42,7 +42,6 @@
       <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
     </Condition>
 
-    <Property Id='ARPPRODUCTICON' Value='META.ico' />
     <PropertyRef Id='WIX_DIR_COMMON_DOCUMENTS' />
 
     <CustomAction Id="SetDocProps" Return="check" Property="Documentation.5875F5A4_E9AD_421C_BDF1_7E7D36837AEF" Value="[ProgramFilesFolder]META\Documentation"/>
@@ -54,8 +53,8 @@
     </InstallUISequence>
 
     <WixVariable Id="WixUILicenseRtf" Value="..\license.rtf" />
-    <WixVariable Id="WixUIBannerBmp" Value="WixUiBanner.bmp" />
-    <WixVariable Id="WixUIDialogBmp" Value="WixUIDialog.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="WixUiBanner_mms.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="WixUIDialog_mms.bmp" />
 
     <!-- =========================================================== -->
     <!-- DIRECTORY STRUCTURE -->
@@ -299,11 +298,16 @@
     <Component Directory="INSTALLDIR_BIN" Win64="no">
       <File Source="..\src\ComponentLibraryManager\bin\Release\ComponentLibraryManager.dll"/>
     </Component>
+    <Component Directory="INSTALLDIR_BIN" Win64="no">
+      <File Source="..\src\UnitsManager\bin\Release\UnitsManager.dll"/>
+    </Component>
 
     <!-- =========================================================== -->
     <!-- FEATURES -->
     <!-- =========================================================== -->
     <Feature Id='Complete' Title='META Toolchain' Description='The complete package' Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
+      <ComponentGroupRef Id='tonka'/>
+    
       <ComponentGroupRef Id='WebGME'/>
       <ComponentRef Id='CPMDecorator.dll'/>
       <ComponentRef Id='ApplicationShortcut'/>
@@ -329,6 +333,7 @@
       <!-- Commented out in install.cmd: CADAddOn.dll -->
       <ComponentRef Id='XSD2CSharp.dll' />
       <ComponentRef Id='CyPhy2ComponentModel.dll' />
+      <ComponentRef Id='UnitsManager.dll' />
       <ComponentGroupRef Id='CyPhyComponentImporter' />
       <ComponentGroupRef Id='CyPhyComponentExporter' />
       <ComponentGroupRef Id='ComponentExportImportCL' />
@@ -409,6 +414,8 @@
 
       <ComponentGroupRef Id='MaterialLibrary'/>
       <ComponentGroupRef Id='Validation'/>
+
+      <ComponentGroupRef Id='Dig_run'/>
       
       <ComponentGroupRef Id='Ionic.Zip'/>
       <!--<ComponentGroupRef Id='ComponentAuthoringAssistant'/>-->

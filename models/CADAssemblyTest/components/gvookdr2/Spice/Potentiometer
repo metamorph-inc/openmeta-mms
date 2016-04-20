@@ -1,0 +1,12 @@
+*Potentiometer 100K Trimmer .15W
+*Connections:    VDD
+*				  |  VOUT
+*				  |   |  GND
+*				  |   |   |
+.subckt CB10	  1   2   3
+.PARAMS M = 350 THETA = 60 Max = 84k
+*
+R1	1 2 { THETA*M +.01 }
+R2  2 3 { (Max +.01) - THETA*M }
+*
+.ENDS

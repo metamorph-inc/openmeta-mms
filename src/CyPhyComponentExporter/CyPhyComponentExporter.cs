@@ -29,6 +29,8 @@ namespace CyPhyComponentExporter
     {
         protected static readonly Regex cadResourceRegex = new Regex("^(.*)(\\.prt|\\.asm)\\.([0-9]*)$", RegexOptions.IgnoreCase);
 
+        public static string previousExportPath = null; // MOT-387
+        
         /// <summary>
         /// Contains information about the GUI event that initiated the invocation.
         /// </summary>
@@ -44,8 +46,6 @@ namespace CyPhyComponentExporter
             GME_SILENT_MODE = 128 		// Not used by GME, available to testers not using GME
         }
 
-        public static string previousExportPath = null; // MOT-387
-        
         /// <summary>
         /// This function is called for each interpreter invocation before Main.
         /// Don't perform MGA operations here unless you open a tansaction.
@@ -80,12 +80,17 @@ namespace CyPhyComponentExporter
             return rtn;
         }
 
-        public static String ExportToFile(CyPhy.Component c, String s_outFolder)
+        public static String ExportToDirectory(CyPhy.Component c, String s_outFolder)
+        {
+            String s_outFilePath = String.Format("{0}\\{1}.component.acm", s_outFolder, System.IO.Path.GetRandomFileName());
+            return ExportToFile(c, s_outFilePath);
+        }
+
+        public static string ExportToFile(CyPhy.Component c, String s_outFilePath)
         {
             try
             {
                 avm.Component avmComponent = CyPhy2ComponentModel.Convert.CyPhyML2AVMComponent(c);
-                String s_outFilePath = String.Format("{0}\\{1}.component.acm", s_outFolder, System.IO.Path.GetRandomFileName());
                 SerializeAvmComponent(avmComponent, s_outFilePath);
 
                 return s_outFilePath;
@@ -325,6 +330,7 @@ namespace CyPhyComponentExporter
                 return;
             }
 
+            // MOT-387: Remember the path used previously
             string startupPath;
 
             if (false == String.IsNullOrWhiteSpace(previousExportPath)
@@ -336,7 +342,7 @@ namespace CyPhyComponentExporter
             {
                 startupPath = Path.GetDirectoryName(project.ProjectConnStr.Substring("MGA=".Length));
             }
-
+                        
             // Get an output path from the user.
             if (this.OutputDir == null)
             {

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="8fe1f92c-cc7d-49b8-b707-3b6286617a27" Name="TL3342F160QG" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-ae88e61c-9ef0-4489-8d3a-39e379a2786b" Author="" Notes="" XPosition="658" YPosition="217" Name="EDAModel" Package="TL3342F160QG" Device="" Library="TL3342F160QG-697586" DeviceSet="TL3342F160QG" xmlns="">
+    <Pin ID="id-ec472274-9633-4928-8e32-df1513acd387" PortMap="id-ce2128d8-26eb-4f09-ad4b-0f645bdd1fd1" Notes="" XPosition="325" Definition="" YPosition="25" Name="4" EDAGate="G$1" EDASymbolLocationX="12.7" EDASymbolLocationY="10.16" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-e5448323-001e-4078-b01a-b98a9e7cb461" PortMap="" Notes="" XPosition="225" Definition="" YPosition="25" Name="3" EDAGate="G$1" EDASymbolLocationX="-12.7" EDASymbolLocationY="10.16" EDASymbolRotation="R270" SPICEPortNumber="0" />
+    <Pin ID="id-027ec71a-947e-475b-95f3-00b22bc06602" PortMap="id-db679dfe-4f68-45b0-89fe-715b9fb7acd6" Notes="" XPosition="25" Definition="" YPosition="25" Name="1" EDAGate="G$1" EDASymbolLocationX="-12.7" EDASymbolLocationY="-27.94" EDASymbolRotation="R90" SPICEPortNumber="0" />
+    <Pin ID="id-a087d16f-a816-4aea-94fd-1c4e653f6f89" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="2" EDAGate="G$1" EDASymbolLocationX="12.7" EDASymbolLocationY="-27.94" EDASymbolRotation="R90" SPICEPortNumber="0" />
+  </DomainModel>
+  <Property xmlns:q2="avm" xsi:type="q2:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-79320b27-f6f9-40a2-b768-528e1731dbf7" XPosition="476" YPosition="14" xmlns="">
+    <Value ID="id-79320b27-f6f9-40a2-b768-528e1731dbf7" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q2:FixedValue">
+        <Value>TL3342F160QG</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency Name="TL3342F160QG.md" Path="doc\TL3342F160QG.md" Hash="" ID="id-45e91c94-cc95-4a86-bf1e-65031030decc" Notes="" xmlns="" />
+  <ResourceDependency XPosition="707" YPosition="140" Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-ae88e61c-9ef0-4489-8d3a-39e379a2786b" Notes="Standalone EAGLE library for this device" xmlns="" />
+  <ResourceDependency XPosition="238" YPosition="7" Name="TL3342F160QG_datasheet.pdf" Path="doc\TL3342F160QG_datasheet.pdf" Hash="" ID="id-160c34e1-6322-41a6-a699-1b50800bea8a" Notes="" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-2474e08f-6b75-48f5-8f8a-64e42c5cd133" ApplyJoinData="" Notes="" Name="3" Definition="StdPin" YPosition="147" XPosition="973" xmlns="">
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-b3517a15-375a-4f4e-b822-adff18a4cd20" PortMap="id-e5448323-001e-4078-b01a-b98a9e7cb461" Notes="" XPosition="35" Definition="" YPosition="147" Name="Pin" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-2819793c-cf65-4fb8-9a90-c3abde7469d2" ApplyJoinData="" Notes="" Name="4" Definition="StdPin" YPosition="266" XPosition="973" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-ce2128d8-26eb-4f09-ad4b-0f645bdd1fd1" PortMap="" Notes="" XPosition="35" Definition="" YPosition="147" Name="Pin" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-b294aeae-d5d9-44d5-b94b-1457fc724b44" ApplyJoinData="" Notes="" Name="1" Definition="StdPin" YPosition="147" XPosition="280" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-db679dfe-4f68-45b0-89fe-715b9fb7acd6" PortMap="" Notes="" XPosition="35" Definition="" YPosition="147" Name="Pin" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-4a293664-2f65-4ade-b9eb-ae3f74dffc17" ApplyJoinData="" Notes="" Name="2" Definition="StdPin" YPosition="266" XPosition="280" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-4a51c4a0-bacc-4057-a838-84e030bbc750" PortMap="id-a087d16f-a816-4aea-94fd-1c4e653f6f89" Notes="" XPosition="35" Definition="" YPosition="147" Name="Pin" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">industrial_control.switches.tactile_jog</Classifications>
+</Component>

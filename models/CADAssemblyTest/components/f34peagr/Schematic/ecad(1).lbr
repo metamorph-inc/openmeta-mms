@@ -1,0 +1,54 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="LED" xmlns="eagle">
+          <smd name="ANODE" x="-0.75" y="0" dx="0.8" dy="0.8" layer="1" />
+          <smd name="CATHODE" x="0.75" y="0" dx="0.8" dy="0.8" layer="1" />
+          <wire x1="-1.5" y1="1" x2="1.5" y2="1" width="0.127" layer="21" />
+          <wire x1="1.5" y1="1" x2="1.5" y2="-1" width="0.127" layer="21" />
+          <wire x1="1.5" y1="-1" x2="-1.5" y2="-1" width="0.127" layer="21" />
+          <wire x1="-1.5" y1="-1" x2="-1.5" y2="1" width="0.127" layer="21" />
+          <circle x="1.25" y="-0.75" radius="0.06" width="0.15" layer="21" />
+          <text x="-2" y="1.25" size="0.75" layer="25">&gt;NAME</text>
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="LED">
+          <wire x1="0" y1="7.62" x2="0" y2="5.08" width="0.254" layer="94" />
+          <wire x1="0" y1="5.08" x2="0" y2="-2.54" width="0.254" layer="94" />
+          <wire x1="-2.54" y1="5.08" x2="0" y2="5.08" width="0.254" layer="94" />
+          <wire x1="0" y1="5.08" x2="2.54" y2="5.08" width="0.254" layer="94" />
+          <wire x1="-2.54" y1="0" x2="0" y2="5.08" width="0.254" layer="94" />
+          <wire x1="0" y1="5.08" x2="2.54" y2="0" width="0.254" layer="94" />
+          <wire x1="2.54" y1="0" x2="-2.54" y2="0" width="0.254" layer="94" />
+          <wire x1="5.08" y1="5.08" x2="7.62" y2="7.62" width="0.254" layer="94" />
+          <wire x1="7.62" y1="5.08" x2="7.62" y2="7.62" width="0.254" layer="94" />
+          <wire x1="7.62" y1="7.62" x2="5.08" y2="7.62" width="0.254" layer="94" />
+          <pin name="ANODE" x="0" y="-2.54" visible="pin" length="point" direction="pas" function="dot" />
+          <pin name="CATHODE" x="0" y="7.62" length="point" direction="pas" function="dot" />
+          <text x="-5.08" y="10.16" size="1.27" layer="95">&gt;NAME</text>
+          <text x="-5.08" y="-5.08" size="1.27" layer="96">&gt;VALUE</text>
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="LED">
+          <gates>
+            <gate name="G$1" symbol="LED" x="0" y="2.54" />
+          </gates>
+          <devices>
+            <device name="" package="LED" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="ANODE" pad="ANODE" />
+                <connect gate="G$1" pin="CATHODE" pad="CATHODE" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

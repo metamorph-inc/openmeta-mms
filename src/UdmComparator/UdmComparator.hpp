@@ -20,7 +20,7 @@ public:
 private:
 	static NameUmlAttributeMap getNameUmlAttributeMap( Uml::Class umlClass );
 	static UmlAttributeSet getAllUmlAttributes( Uml::Class umlClass );
-	static UmlAssociationRoleSet getAllUmlAssociationRoles( Uml::Class umlClass );
+	std::set<std::pair<Uml::AssociationRole, Uml::AssociationRole> > getAllUmlAssociationRoles(Uml::Class umlClass);
 
 	class ObjectName {
 	public:
@@ -194,6 +194,8 @@ public:
 	typedef std::set< std::string > StringSet;
 	typedef std::map< std::string, StringSet > StringStringSetMap;
 
+	typedef std::set<std::string> BidirectionalRolenameFilter;
+
 	class ClassNameFilter {
 	private:
 		StringSet _inclusiveClassNameSet;
@@ -257,8 +259,13 @@ public:
 private:
 	UdmObjectMap _udmObjectMap;
 	ClassNameFilter _classNameFilter;
+	BidirectionalRolenameFilter _bidirRolenameFilter;
 
 public:
+
+	void setBidirectionalRolenameFilter(const BidirectionalRolenameFilter &filter) {
+		_bidirRolenameFilter = filter;
+	}
 	void setClassNameFilter( const ClassNameFilter &classNameFilter ) {
 		_classNameFilter = classNameFilter;
 	}

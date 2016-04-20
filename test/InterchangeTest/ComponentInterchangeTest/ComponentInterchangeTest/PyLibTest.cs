@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ComponentImporterUnitTests
 {
-    public class PyLibTestFixture
+    public class PyLibTestFixture : IDisposable
     {
         public PyLibTestFixture()
         {
@@ -25,6 +25,11 @@ namespace ComponentImporterUnitTests
             var args = (PyLibTest.mgaPath + " -f " + PyLibTest.acmFilesPath).Split();
             var rtnCode = CyPhyComponentExporterCL.CyPhyComponentExporterCL.Main(args);
             Assert.True(rtnCode == 0, "Component Exporter had non-zero return code.");
+        }
+
+        public void Dispose()
+        {
+            // No state, so nothing to do here.
         }
     }
 

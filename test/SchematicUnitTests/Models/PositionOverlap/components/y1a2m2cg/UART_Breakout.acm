@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="474afd2c-b6fc-479d-bbdd-d0219c304c61" Name="UART_Breakout" Version="" xmlns="avm">
+  <Connector ConnectorComposition="" ID="id-534adcb4-fdf9-48f9-8750-2865fa3705cc" ApplyJoinData="" Notes="" Name="UART_RTS" Definition="" YPosition="322" XPosition="112" xmlns="">
+    <Role xmlns:q1="schematic" xsi:type="q1:Pin" ID="id-b40ee3eb-4eac-4f10-a241-339103606cf4" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-e33dc892-39e5-4c19-bd72-e31d6882d082" ApplyJoinData="" Notes="" Name="UART" Definition="" YPosition="217" XPosition="679" xmlns="">
+    <Role xmlns:q2="schematic" xsi:type="q2:Pin" ID="id-ba3af626-96a2-4e9e-b59b-134e9779924d" PortMap="id-9854719c-ab39-4152-8f72-4a793f0a19a0" Notes="" Definition="" Name="CTS" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q3="schematic" xsi:type="q3:Pin" ID="id-8272654a-f6d4-4921-9333-f2a12d17f146" PortMap="id-b40ee3eb-4eac-4f10-a241-339103606cf4" Notes="" Definition="" Name="RTS" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-52ac9ebf-cbf2-4dc4-91cd-dee5cf20e84b" PortMap="id-808586ca-507f-493e-b71e-2df883ce636e" Notes="" Definition="" Name="RX" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-4740e2e6-d82a-4459-8482-d9ed952b0613" PortMap="" Notes="" Definition="" Name="TX" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-37ec475c-6ac9-487b-b346-10c070f9628b" ApplyJoinData="" Notes="" Name="UART_RX" Definition="" YPosition="105" XPosition="112" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-808586ca-507f-493e-b71e-2df883ce636e" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-94c6dd6a-40f1-4c12-81ac-fa0e94eceb90" ApplyJoinData="" Notes="" Name="UART_TX" Definition="" YPosition="210" XPosition="112" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-044bfa04-a701-42f8-83f0-3e9120ee2b55" PortMap="id-4740e2e6-d82a-4459-8482-d9ed952b0613" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-4f670652-38e1-4e47-b176-172ce6671736" ApplyJoinData="" Notes="" Name="UART_CTS" Definition="" YPosition="427" XPosition="112" xmlns="">
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-9854719c-ab39-4152-8f72-4a793f0a19a0" PortMap="" Notes="" XPosition="100" Definition="" YPosition="100" Name="Pin" EDAGate="G$1" EDASymbolLocationX="-20.32" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">model_utilities.breakout_components</Classifications>
+</Component>

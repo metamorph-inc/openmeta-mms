@@ -1,0 +1,65 @@
+* LM139 VOLTAGE COMPARATOR COMPLETE MODEL SUBCIRCUIT
+*CONNECTIONS:  Output 1
+*	           | Output 2
+*	           | | VCC
+*	           | | | 2- INPUT
+*	           | | | | 2+ INPUT
+*	           | | | | | 1- INPUT
+*	           | | | | | | 1+ INPUT
+*	           | | | | | | | 3- INPUT
+*	           | | | | | | | | 3+ INPUT
+*	           | | | | | | | | | 4- INPUT
+*	           | | | | | | | | | |  4+ INPUT
+*	           | | | | | | | | | |  |  GND
+*	           | | | | | | | | | |  |  |  OUTPUT 4
+*	           | | | | | | | | | |  |  |  |  OUTPUT 3
+*	           | | | | | | | | | |  |  |  |  |
+.SUBCKT LM139  1 2 3 4 5 6 7 8 9 10 11 12 13 14
+*
+F1     19  3 V1 1
+IEE	   3  17 DC 100.0E-6
+VI1    21  7 DC .75
+VI2    22  6 DC .75
+VI3    23  5 DC .75
+VI4    24  4 DC .75
+VI5    25  9 DC .75
+VI6    26  8 DC .75
+VI7    27 11 DC .75
+VI8    28 10 DC .75
+Q1     19 21 17 QIN
+Q2     18 22 17 QIN
+Q3     19 18 12 QMO
+Q4     18 18 12 QMI
+Q5     19 23 37 QIN
+Q6     38 24 37 QIN
+Q7     19 38 12 QMO
+Q8     38 38 12 QMI
+Q9     19 25 47 QIN
+Q10    48 26 47 QIN
+Q11    19 48 12 QMO
+Q12    48 48 12 QMI
+Q13    19 27 57 QIN
+Q14    58 28 57 QIN
+Q15    19 58 12 QMO
+Q16    58 58 12 QMI
+.MODEL QIN PNP(IS=800.0E-18 BF=2.000E3)
+.MODEL QMI NPN(IS=800.0E-18 BF=1002)
+.MODEL QMO NPN(IS=800.0E-18 BF=1000 CJC=1E-15 TR=807.4E-9)
+E1     50 12 19 12 1
+E2     51 12 19 12 1
+E3     52 12 19 12 1
+E4     53 12 19 12 1
+V1     50 61 DC 0
+V2     51 62 DC 0
+V3     52 63 DC 0
+V4     53 64 DC 0
+Q17     1 61 12 QOC
+Q18     2 62 12 QOC
+Q19    14 63 12 QOC
+Q20    13 64 12 QOC
+.MODEL QOC NPN(IS=800.0E-18 BF =20.29E3 CJC=1E-15 TF=942.6E-12 TR=543.8E-9)
+DP     12 3 DX
+RP   3 12 46.3E3
+.MODEL DX D(IS=800.0E-18)
+*
+.ENDS

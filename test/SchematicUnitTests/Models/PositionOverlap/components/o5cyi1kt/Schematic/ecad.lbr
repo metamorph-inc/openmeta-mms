@@ -1,0 +1,98 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="20_BUMP_YFF" xmlns="eagle">
+          <smd name="C3" x="0.2" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="C4" x="0.6" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="D2" x="-0.2" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="D4" x="0.6" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="B1" x="-0.6" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="B2" x="-0.2" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="E2" x="-0.2" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="E3" x="0.2" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="E1" x="-0.6" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="E4" x="0.6" y="-0.8" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="D1" x="-0.6" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="C2" x="-0.2" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="C1" x="-0.6" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="B3" x="0.2" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="A4" x="0.6" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="A2" x="-0.2" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="A1" x="-0.6" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="A3" x="0.2" y="0.8" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="B4" x="0.6" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <smd name="D3" x="0.2" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" rot="R180" stop="no" />
+          <circle x="0.6" y="-0.8" radius="0.127" width="0" layer="29" />
+          <circle x="0.2" y="-0.8" radius="0.127" width="0" layer="29" />
+          <circle x="-0.2" y="-0.8" radius="0.127" width="0" layer="29" />
+          <circle x="-0.6" y="-0.8" radius="0.127" width="0" layer="29" />
+          <circle x="0.6" y="-0.4" radius="0.127" width="0" layer="29" />
+          <circle x="0.2" y="-0.4" radius="0.127" width="0" layer="29" />
+          <circle x="-0.2" y="-0.4" radius="0.127" width="0" layer="29" />
+          <circle x="-0.6" y="-0.4" radius="0.127" width="0" layer="29" />
+          <circle x="-0.6" y="0" radius="0.127" width="0" layer="29" />
+          <circle x="-0.2" y="0" radius="0.127" width="0" layer="29" />
+          <circle x="0.2" y="0" radius="0.127" width="0" layer="29" />
+          <circle x="0.6" y="0" radius="0.127" width="0" layer="29" />
+          <circle x="-0.6" y="0.4" radius="0.127" width="0" layer="29" />
+          <circle x="-0.2" y="0.4" radius="0.127" width="0" layer="29" />
+          <circle x="0.2" y="0.4" radius="0.127" width="0" layer="29" />
+          <circle x="0.6" y="0.4" radius="0.127" width="0" layer="29" />
+          <circle x="-0.6" y="0.8" radius="0.127" width="0" layer="29" />
+          <circle x="-0.2" y="0.8" radius="0.127" width="0" layer="29" />
+          <circle x="0.2" y="0.8" radius="0.127" width="0" layer="29" />
+          <circle x="0.6" y="0.8" radius="0.127" width="0" layer="29" />
+          <circle x="-1.2" y="1" radius="0.0635" width="0.16" layer="21" />
+          
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="TPS63025">
+          <wire x1="-17.78" y1="-12.7" x2="17.78" y2="-12.7" width="0.254" layer="94" />
+          <wire x1="17.78" y1="-12.7" x2="17.78" y2="12.7" width="0.254" layer="94" />
+          <wire x1="17.78" y1="12.7" x2="-17.78" y2="12.7" width="0.254" layer="94" />
+          <pin name="L1" x="-20.32" y="10.16" visible="pin" length="short" direction="pas" />
+          <wire x1="-17.78" y1="12.7" x2="-17.78" y2="-12.7" width="0.254" layer="94" />
+          <pin name="VIN" x="-2.54" y="15.24" visible="pin" length="short" direction="pas" rot="R270" />
+          <pin name="EN" x="-20.32" y="5.08" visible="pin" length="short" direction="pas" />
+          <pin name="L2" x="-20.32" y="-10.16" visible="pin" length="short" direction="pas" />
+          <pin name="VOUT" x="20.32" y="0" visible="pin" length="short" direction="pas" rot="R180" />
+          <pin name="FB" x="-20.32" y="0" visible="pin" length="short" direction="pas" />
+          <pin name="PFM/PWM" x="-20.32" y="-5.08" visible="pin" length="short" direction="pas" />
+          <pin name="VINA" x="2.54" y="15.24" visible="pin" length="short" direction="pas" rot="R270" />
+          <pin name="PGND" x="2.54" y="-15.24" visible="pin" length="short" direction="pas" rot="R90" />
+          <pin name="GND" x="-2.54" y="-15.24" visible="pin" length="short" direction="pas" rot="R90" />
+          
+          
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="TPS63025" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="TPS63025" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="20_BUMP_YFF" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="EN" pad="D4" />
+                <connect gate="G$1" pin="FB" pad="A4" />
+                <connect gate="G$1" pin="GND" pad="C4" />
+                <connect gate="G$1" pin="L1" pad="D1 D2 D3" />
+                <connect gate="G$1" pin="L2" pad="B1 B2 B3" />
+                <connect gate="G$1" pin="PFM/PWM" pad="B4" />
+                <connect gate="G$1" pin="PGND" pad="C1 C2 C3" />
+                <connect gate="G$1" pin="VIN" pad="E1 E2 E3" />
+                <connect gate="G$1" pin="VINA" pad="E4" />
+                <connect gate="G$1" pin="VOUT" pad="A1 A2 A3" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

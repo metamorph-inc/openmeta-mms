@@ -7,12 +7,12 @@ using System.IO;
 
 namespace ComponentExporterUnitTests
 {
-    public class ModelicaStructuresFixture
+    public class ModelicaStructuresFixture : IDisposable
     {
         public ModelicaStructuresFixture()
         {
             // Clear the Components folder
-            var compFolder = Path.Combine(ModelicaStructures.testPath, "Imported_Components");
+            var compFolder = Path.Combine(ModelicaStructures.testPath, "Components");
             try
             {
                 if (Directory.Exists(compFolder))
@@ -30,6 +30,11 @@ namespace ComponentExporterUnitTests
 
             // Export the components
             Assert.True(0 == Common.runCyPhyComponentExporterCL(ModelicaStructures.mgaPath), "Component Exporter had non-zero return code");
+        }
+        
+        public void Dispose()
+        {
+            // Nothing to do
         }
     }
 
@@ -66,7 +71,11 @@ namespace ComponentExporterUnitTests
         [Trait("Interchange", "Component Export")]
         public void ModelRedeclareExport()
         {
-            var generatedACM = Path.Combine(testPath, "Imported_Components", "Comp_ModelRedeclare", "Comp_ModelRedeclare.component.acm");
+            var generatedACM = Path.Combine(testPath, 
+                                            "Components",
+                                            "Some_Class",
+                                            "Comp_ModelRedeclare", 
+                                            "Comp_ModelRedeclare.component.acm");
             var expectedACM = Path.Combine(testPath, "Comp_ModelRedeclare.expected.acm");
 
             Assert.True(File.Exists(generatedACM), "Exported ACM file not found.");
@@ -78,7 +87,10 @@ namespace ComponentExporterUnitTests
         [Trait("Interchange", "Component Export")]
         public void PortRedeclareExport()
         {
-            var generatedACM = Path.Combine(testPath, "Imported_Components", "Comp_PortRedeclare", "Comp_PortRedeclare.component.acm");
+            var generatedACM = Path.Combine(testPath, 
+                                            "Components", 
+                                            "Comp_PortRedeclare", 
+                                            "Comp_PortRedeclare.component.acm");
             var expectedACM = Path.Combine(testPath, "Comp_PortRedeclare.expected.acm");
 
             Assert.True(File.Exists(generatedACM), "Exported ACM file not found.");
@@ -90,7 +102,11 @@ namespace ComponentExporterUnitTests
         [Trait("Interchange", "Component Export")]
         public void PortRedeclareAtCompLevelExport()
         {
-            var generatedACM = Path.Combine(testPath, "Imported_Components", "Comp_PortRedeclareAtCompLvl", "Comp_PortRedeclareAtCompLvl.component.acm");
+            var generatedACM = Path.Combine(testPath, 
+                                            "Components", 
+                                            "Engine",
+                                            "Comp_PortRedeclareAtCompLvl", 
+                                            "Comp_PortRedeclareAtCompLvl.component.acm");
             var expectedACM = Path.Combine(testPath, "Comp_PortRedeclareAtCompLvl.expected.acm");
 
             Assert.True(File.Exists(generatedACM), "Exported ACM file not found.");

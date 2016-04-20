@@ -1,0 +1,74 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="9_BUMP_WLP" xmlns="eagle">
+          <smd name="A1" x="-0.4" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <smd name="B1" x="-0.4" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <smd name="C1" x="-0.4" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <smd name="A2" x="0" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <smd name="B2" x="0" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <smd name="C2" x="0" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <smd name="A3" x="0.4" y="0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <smd name="B3" x="0.4" y="0" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <smd name="C3" x="0.4" y="-0.4" dx="0.28" dy="0.28" layer="1" roundness="100" stop="no" />
+          <circle x="-0.8" y="0.8" radius="0.0635" width="0.16" layer="21" />
+          
+          <circle x="-0.4" y="-0.4" radius="0.127" width="0" layer="29" />
+          <circle x="-0.4" y="0" radius="0.127" width="0" layer="29" />
+          <circle x="0" y="-0.4" radius="0.127" width="0" layer="29" />
+          <circle x="0" y="0" radius="0.127" width="0" layer="29" />
+          <circle x="0.4" y="-0.4" radius="0.127" width="0" layer="29" />
+          <circle x="0.4" y="0" radius="0.127" width="0" layer="29" />
+          <circle x="0.4" y="0.4" radius="0.127" width="0" layer="29" />
+          <circle x="0" y="0.4" radius="0.127" width="0" layer="29" />
+          <circle x="-0.4" y="0.4" radius="0.127" width="0" layer="29" />
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="DUAL_COMPARATOR">
+          <pin name="-INA" x="-12.7" y="2.54" visible="pin" length="short" direction="pas" />
+          <pin name="+INA" x="-12.7" y="7.62" visible="pin" length="short" direction="pas" />
+          <pin name="OUTA" x="12.7" y="5.08" visible="pin" length="short" direction="pas" rot="R180" />
+          <pin name="-INB" x="-12.7" y="-7.62" visible="pin" length="short" direction="pas" />
+          <pin name="+INB" x="-12.7" y="-2.54" visible="pin" length="short" direction="pas" />
+          <pin name="OUTB" x="12.7" y="-5.08" visible="pin" length="short" direction="pas" rot="R180" />
+          <wire x1="-10.16" y1="-17.78" x2="10.16" y2="-17.78" width="0.254" layer="94" />
+          <wire x1="10.16" y1="-17.78" x2="10.16" y2="17.78" width="0.254" layer="94" />
+          <wire x1="10.16" y1="17.78" x2="-10.16" y2="17.78" width="0.254" layer="94" />
+          <pin name="VCC" x="0" y="22.86" visible="pin" length="middle" direction="pas" rot="R270" />
+          <pin name="GND" x="0" y="-22.86" visible="pin" length="middle" direction="pas" rot="R90" />
+          <wire x1="-10.16" y1="17.78" x2="-10.16" y2="-17.78" width="0.254" layer="94" />
+          
+          
+          <pin name="NC" x="12.7" y="0" length="short" direction="pas" rot="R180" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="MAX44269" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="DUAL_COMPARATOR" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="9_BUMP_WLP" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="+INA" pad="A2" />
+                <connect gate="G$1" pin="+INB" pad="C2" />
+                <connect gate="G$1" pin="-INA" pad="A1" />
+                <connect gate="G$1" pin="-INB" pad="C1" />
+                <connect gate="G$1" pin="GND" pad="B1" />
+                <connect gate="G$1" pin="NC" pad="B2" />
+                <connect gate="G$1" pin="OUTA" pad="A3" />
+                <connect gate="G$1" pin="OUTB" pad="C3" />
+                <connect gate="G$1" pin="VCC" pad="B3" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

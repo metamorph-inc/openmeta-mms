@@ -7,14 +7,24 @@ namespace CyPhy2DesignInterchange
 {
     public class DesignPrimitivesWrapper
     {
-        private object Primitive { get; set; }
+        public ISIS.GME.Common.Interfaces.FCO Primitive { get; set; }
 
-        public DesignPrimitivesWrapper(object primitive)
+        public DesignPrimitivesWrapper(ISIS.GME.Common.Interfaces.FCO primitive)
         {
             Primitive = primitive;
             _portCompositionCache = new Dictionary<object, List<CyPhy.PortComposition>>();
         }
 
+        public string Description
+        {
+            get
+            {
+                if (Primitive is CyPhy.ComponentAssembly)
+                    return ((CyPhy.ComponentAssembly)Primitive).Attributes.Description;
+                else
+                    return "";
+            }
+        }
 
         #region xPorts
 
@@ -102,6 +112,38 @@ namespace CyPhy2DesignInterchange
             }
         }
 
+        public List<CyPhy.SchematicModelPort> SchematicModelPort
+        {
+            get
+            {
+                if (Primitive is CyPhy.ComponentAssembly)
+                    return new List<CyPhy.SchematicModelPort>(((CyPhy.ComponentAssembly)Primitive).Children.SchematicModelPortCollection);
+                else
+                    return new List<CyPhy.SchematicModelPort>(((CyPhy.DesignContainer)Primitive).Children.SchematicModelPortCollection);
+            }
+        }
+
+        public List<CyPhy.SystemCPort> SystemCPort
+        {
+            get
+            {
+                if (Primitive is CyPhy.ComponentAssembly)
+                    return new List<CyPhy.SystemCPort>(((CyPhy.ComponentAssembly)Primitive).Children.SystemCPortCollection);
+                else
+                    return new List<CyPhy.SystemCPort>(((CyPhy.DesignContainer)Primitive).Children.SystemCPortCollection);
+            }
+        }
+
+        public List<CyPhy.RFPort> RFPort
+        {
+            get
+            {
+                if (Primitive is CyPhy.ComponentAssembly)
+                    return new List<CyPhy.RFPort>(((CyPhy.ComponentAssembly)Primitive).Children.RFPortCollection);
+                else
+                    return new List<CyPhy.RFPort>(((CyPhy.DesignContainer)Primitive).Children.RFPortCollection);
+            }
+        }
 
         public string Path
         {
@@ -242,6 +284,24 @@ namespace CyPhy2DesignInterchange
                     return new List<CyPhy.Port>(((CyPhy.ComponentAssembly)Primitive).Children.PortCollection);
                 else
                     return new List<CyPhy.Port>(((CyPhy.DesignContainer)Primitive).Children.PortCollection);
+            }
+        }
+
+        public List<CyPhy.PcbLayoutConstraint> LayoutConstraints
+        {
+            get
+            {
+                if (Primitive is CyPhy.ComponentAssembly)
+                    return new List<CyPhy.PcbLayoutConstraint>(((CyPhy.ComponentAssembly)Primitive).Children.PcbLayoutConstraintCollection);
+                return new List<CyPhy.PcbLayoutConstraint>();
+            }
+        }
+
+        public List<CyPhy.Resource> Resources { 
+            get {
+                if (Primitive is CyPhy.ComponentAssembly)
+                    return new List<CyPhy.Resource>(((CyPhy.ComponentAssembly)Primitive).Children.ResourceCollection);
+                return new List<CyPhy.Resource>();
             }
         }
     }

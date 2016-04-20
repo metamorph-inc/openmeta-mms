@@ -1,0 +1,52 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="2_PIN_AB0" xmlns="eagle">
+          <smd name="1" x="-0.225" y="0" dx="0.21" dy="0.35" layer="1" rot="R180" stop="no" />
+          <smd name="2" x="0.225" y="0" dx="0.21" dy="0.35" layer="1" rot="R180" stop="no" />
+          <rectangle x1="-0.375" y1="-0.2" x2="-0.075" y2="0.2" layer="29" />
+          <rectangle x1="0.075" y1="-0.2" x2="0.375" y2="0.2" layer="29" />
+          <circle x="-1" y="0" radius="0.0635" width="0.16" layer="21" />
+          
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="BIDIRECTIONAL_DIODE">
+          <wire x1="-1.27" y1="0" x2="0" y2="-2.54" width="0.254" layer="94" />
+          <wire x1="0" y1="-2.54" x2="1.27" y2="0" width="0.254" layer="94" />
+          <wire x1="1.27" y1="0" x2="-1.27" y2="0" width="0.254" layer="94" />
+          <pin name="C2" x="0" y="-7.62" visible="off" length="short" direction="pas" rot="R90" />
+          <pin name="C1" x="0" y="2.54" visible="off" length="short" direction="pas" rot="R270" />
+          
+          
+          <wire x1="0" y1="-2.54" x2="1.27" y2="-2.54" width="0.254" layer="94" />
+          <wire x1="1.27" y1="-2.54" x2="2.54" y2="-1.27" width="0.254" layer="94" />
+          <wire x1="0" y1="-2.54" x2="-1.27" y2="-2.54" width="0.254" layer="94" />
+          <wire x1="-1.27" y1="-2.54" x2="-2.54" y2="-3.81" width="0.254" layer="94" />
+          <wire x1="0" y1="-2.54" x2="-1.27" y2="-5.08" width="0.254" layer="94" />
+          <wire x1="-1.27" y1="-5.08" x2="1.27" y2="-5.08" width="0.254" layer="94" />
+          <wire x1="1.27" y1="-5.08" x2="0" y2="-2.54" width="0.254" layer="94" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="TVN0201" prefix="D">
+          <gates>
+            <gate name="G$1" symbol="BIDIRECTIONAL_DIODE" x="0" y="2.54" />
+          </gates>
+          <devices>
+            <device name="" package="2_PIN_AB0" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="C1" pad="1" />
+                <connect gate="G$1" pin="C2" pad="2" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

@@ -1,0 +1,13 @@
+*MCP9700 Temperature Sensor with input Temperature
+*Connections:    VDD
+*                 |  VOUT
+*                 |   |
+*                 |   |  GND
+*                 |   |   |
+.subckt MCP9700   1   2   3
+.PARAMS M = .0191 B= .4197 TEMP = 25.0
+*
+BV1	 2  3  v=  { TEMP*M +B }
+R1   1  3 833E3
+*
+.ENDS

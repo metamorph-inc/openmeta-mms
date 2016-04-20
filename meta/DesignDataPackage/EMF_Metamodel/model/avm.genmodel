@@ -13,6 +13,12 @@
       <details key="http://www.eclipse.org/emf/2003/XMLType" value="XMLType.xsd"/>
       <details key="iFAB" value="AssemblyDetails.xsd"/>
       <details key="cyber" value="avm.cyber.xsd"/>
+      <details key="schematic" value="avm.schematic.xsd"/>
+      <details key="systemc" value="avm.systemc.xsd"/>
+      <details key="eda" value="avm.schematic.eda.xsd"/>
+      <details key="spice" value="avm.schematic.spice.xsd"/>
+      <details key="rf" value="avm.rf.xsd"/>
+      <details key="domainmapping" value="avm.domainmapping.xsd"/>
       <details key="adamsCar" value="avm.adamsCar.xsd"/>
     </genAnnotations>
     <details key="directoryURI" value="."/>
@@ -86,6 +92,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Component/ID"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Component/Supercedes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Component/Formula"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Component/DomainMapping"/>
     </genClasses>
     <genClasses image="false" ecoreClass="AVM.ecore#//DomainModel">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference AVM.ecore#//DomainModel/UsesResource"/>
@@ -94,6 +101,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//DomainModel/XPosition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//DomainModel/YPosition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//DomainModel/Name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//DomainModel/ID"/>
     </genClasses>
     <genClasses image="false" ecoreClass="AVM.ecore#//Property">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Property/Name"/>
@@ -211,8 +219,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Design/Name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Design/DesignSpaceSrcID"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Design/DomainFeature"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Design/ResourceDependency"/>
     </genClasses>
     <genClasses image="false" ecoreClass="AVM.ecore#//Container">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Container/XPosition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Container/Name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/Container"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/Property"/>
@@ -220,9 +230,15 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/Port"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/Connector"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/JoinData"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Container/XPosition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Container/YPosition"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/Formula"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/ContainerFeature"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Container/ID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Container/Description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/ResourceDependency"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/DomainModel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//Container/Resource"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//Container/Classifications"/>
     </genClasses>
     <genClasses ecoreClass="AVM.ecore#//Compound"/>
     <genClasses ecoreClass="AVM.ecore#//Optional"/>
@@ -284,6 +300,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//DoDDistributionStatement/Type"/>
     </genClasses>
     <genClasses image="false" ecoreClass="AVM.ecore#//ConnectorFeature"/>
+    <genClasses image="false" ecoreClass="AVM.ecore#//ContainerFeature"/>
+    <genClasses image="false" ecoreClass="AVM.ecore#//DomainMapping"/>
     <genClasses ecoreClass="AVM.ecore#//TestBench">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//TestBench/Name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//TestBench/TopLevelSystemUnderTest"/>
@@ -445,10 +463,17 @@
         <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//cad/GeometryQualifierEnum/InteriorOnly"/>
         <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//cad/GeometryQualifierEnum/BoundaryOnly"/>
       </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//cad/FileFormat">
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//cad/FileFormat/Creo"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//cad/FileFormat/AP_203"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//cad/FileFormat/AP_214"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//cad/FileFormat/STL"/>
+      </genEnums>
       <genClasses ecoreClass="AVM.ecore#//cad/CADModel">
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//cad/CADModel/Datum"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//cad/CADModel/Parameter"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//cad/CADModel/ModelMetric"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//cad/CADModel/Format"/>
       </genClasses>
       <genClasses image="false" ecoreClass="AVM.ecore#//cad/Datum">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//cad/Datum/DatumName"/>
@@ -585,6 +610,249 @@
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//cyber/CyberModel/Connector"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//cyber/CyberModel/Parameter"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//cyber/CyberModel/Locator"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Schematic" basePackage="avm" resource="XML" disposableProviderFactory="true"
+        ecorePackage="AVM.ecore#//schematic">
+      <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+        <genAnnotations source="avm.schematic.xsd">
+          <details key="http://www.eclipse.org/emf/2003/XMLType" value="XMLType.xsd"/>
+        </genAnnotations>
+      </genAnnotations>
+      <genClasses ecoreClass="AVM.ecore#//schematic/SchematicModel">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//schematic/SchematicModel/Pin"/>
+      </genClasses>
+      <genClasses ecoreClass="AVM.ecore#//schematic/Pin">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/Pin/EDAGate"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/Pin/EDASymbolLocationX"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/Pin/EDASymbolLocationY"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/Pin/EDASymbolRotation"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/Pin/SPICEPortNumber"/>
+      </genClasses>
+      <nestedGenPackages prefix="Eda" basePackage="avm.schematic" resource="XML" disposableProviderFactory="true"
+          ecorePackage="AVM.ecore#//schematic/eda">
+        <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+          <genAnnotations source="avm.schematic.eda.xsd">
+            <details key="http://www.eclipse.org/emf/2003/XMLType" value="XMLType.xsd"/>
+          </genAnnotations>
+        </genAnnotations>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//schematic/eda/RotationEnum">
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RotationEnum/r0"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RotationEnum/r90"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RotationEnum/r180"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RotationEnum/r270"/>
+        </genEnums>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//schematic/eda/LayerEnum">
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/LayerEnum/Top"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/LayerEnum/Bottom"/>
+        </genEnums>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//schematic/eda/LayerRangeEnum">
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/LayerRangeEnum/Either"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/LayerRangeEnum/Top"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/LayerRangeEnum/Bottom"/>
+        </genEnums>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//schematic/eda/RelativeLayerEnum">
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RelativeLayerEnum/Same"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RelativeLayerEnum/Opposite"/>
+        </genEnums>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//schematic/eda/RangeConstraintTypeEnum">
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RangeConstraintTypeEnum/Inclusion"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RangeConstraintTypeEnum/Exclusion"/>
+        </genEnums>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//schematic/eda/GlobalConstraintTypeEnum">
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/GlobalConstraintTypeEnum/BoardEdgeSpacing"/>
+        </genEnums>
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//schematic/eda/RelativeRotationEnum">
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RelativeRotationEnum/r0"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RelativeRotationEnum/r90"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RelativeRotationEnum/r180"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RelativeRotationEnum/r270"/>
+          <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//schematic/eda/RelativeRotationEnum/NoRestriction"/>
+        </genEnums>
+        <genClasses ecoreClass="AVM.ecore#//schematic/eda/EDAModel">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/EDAModel/Library"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/EDAModel/DeviceSet"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/EDAModel/Device"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/EDAModel/Package"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/EDAModel/Parameter"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/EDAModel/HasMultiLayerFootprint"/>
+        </genClasses>
+        <genClasses ecoreClass="AVM.ecore#//schematic/eda/Parameter">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/Parameter/Locator"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/Parameter/Value"/>
+        </genClasses>
+        <genClasses image="false" ecoreClass="AVM.ecore#//schematic/eda/PcbLayoutConstraint">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/PcbLayoutConstraint/XPosition"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/PcbLayoutConstraint/YPosition"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/PcbLayoutConstraint/Notes"/>
+        </genClasses>
+        <genClasses ecoreClass="AVM.ecore#//schematic/eda/ExactLayoutConstraint">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/ExactLayoutConstraint/X"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/ExactLayoutConstraint/Y"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/ExactLayoutConstraint/Layer"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/ExactLayoutConstraint/Rotation"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/ExactLayoutConstraint/ConstraintTarget"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/ExactLayoutConstraint/ContainerConstraintTarget"/>
+        </genClasses>
+        <genClasses ecoreClass="AVM.ecore#//schematic/eda/RangeLayoutConstraint">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RangeLayoutConstraint/XRangeMin"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RangeLayoutConstraint/XRangeMax"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RangeLayoutConstraint/YRangeMin"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RangeLayoutConstraint/YRangeMax"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RangeLayoutConstraint/LayerRange"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/RangeLayoutConstraint/ConstraintTarget"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/RangeLayoutConstraint/ContainerConstraintTarget"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RangeLayoutConstraint/Type"/>
+        </genClasses>
+        <genClasses ecoreClass="AVM.ecore#//schematic/eda/RelativeLayoutConstraint">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeLayoutConstraint/XOffset"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeLayoutConstraint/YOffset"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/RelativeLayoutConstraint/ConstraintTarget"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/RelativeLayoutConstraint/Origin"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/RelativeLayoutConstraint/ContainerConstraintTarget"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeLayoutConstraint/RelativeLayer"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeLayoutConstraint/RelativeRotation"/>
+        </genClasses>
+        <genClasses ecoreClass="AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint/XRelativeRangeMin"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint/XRelativeRangeMax"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint/YRelativeRangeMin"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint/YRelativeRangeMax"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint/RelativeLayer"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint/ContainerConstraintTarget"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint/Origin"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/RelativeRangeLayoutConstraint/ConstraintTarget"/>
+        </genClasses>
+        <genClasses ecoreClass="AVM.ecore#//schematic/eda/GlobalLayoutConstraintException">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/GlobalLayoutConstraintException/ConstraintTarget"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference AVM.ecore#//schematic/eda/GlobalLayoutConstraintException/ContainerConstraintTarget"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/GlobalLayoutConstraintException/Constraint"/>
+        </genClasses>
+        <genClasses ecoreClass="AVM.ecore#//schematic/eda/CircuitLayout">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/eda/CircuitLayout/BoundingBoxes"/>
+        </genClasses>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="Spice" basePackage="avm.schematic" resource="XML"
+          disposableProviderFactory="true" ecorePackage="AVM.ecore#//schematic/spice">
+        <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+          <genAnnotations source="avm.schematic.spice.xsd">
+            <details key="http://www.eclipse.org/emf/2003/XMLType" value="XMLType.xsd"/>
+          </genAnnotations>
+        </genAnnotations>
+        <genClasses ecoreClass="AVM.ecore#//schematic/spice/SPICEModel">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/spice/SPICEModel/Class"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//schematic/spice/SPICEModel/Parameter"/>
+        </genClasses>
+        <genClasses ecoreClass="AVM.ecore#//schematic/spice/Parameter">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//schematic/spice/Parameter/Locator"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//schematic/spice/Parameter/Value"/>
+        </genClasses>
+      </nestedGenPackages>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Systemc" basePackage="avm" resource="XML" disposableProviderFactory="true"
+        ecorePackage="AVM.ecore#//systemc">
+      <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+        <genAnnotations source="avm.systemc.xsd">
+          <details key="http://www.eclipse.org/emf/2003/XMLType" value="XMLType.xsd"/>
+        </genAnnotations>
+      </genAnnotations>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//systemc/SystemCDataTypeEnum">
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/SystemCDataTypeEnum/bool"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/SystemCDataTypeEnum/sc_int"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/SystemCDataTypeEnum/sc_uint"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/SystemCDataTypeEnum/sc_logic"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/SystemCDataTypeEnum/sc_bit"/>
+      </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//systemc/DirectionalityEnum">
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/DirectionalityEnum/in"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/DirectionalityEnum/out"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/DirectionalityEnum/inout"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/DirectionalityEnum/not_applicable"/>
+      </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//systemc/FunctionEnum">
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/FunctionEnum/normal"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/FunctionEnum/clock"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/FunctionEnum/reset_async"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//systemc/FunctionEnum/reset_sync"/>
+      </genEnums>
+      <genClasses ecoreClass="AVM.ecore#//systemc/SystemCModel">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//systemc/SystemCModel/SystemCPort"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//systemc/SystemCModel/Parameter"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//systemc/SystemCModel/ModuleName"/>
+      </genClasses>
+      <genClasses ecoreClass="AVM.ecore#//systemc/Parameter">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//systemc/Parameter/ParamName"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//systemc/Parameter/ParamPosition"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//systemc/Parameter/Value"/>
+      </genClasses>
+      <genClasses ecoreClass="AVM.ecore#//systemc/SystemCPort">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//systemc/SystemCPort/DataType"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//systemc/SystemCPort/DataTypeDimension"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//systemc/SystemCPort/Directionality"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//systemc/SystemCPort/Function"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Rf" basePackage="avm" resource="XML" disposableProviderFactory="true"
+        ecorePackage="AVM.ecore#//rf">
+      <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+        <genAnnotations source="avm.rf.xsd">
+          <details key="http://www.eclipse.org/emf/2003/XMLType" value="XMLType.xsd"/>
+        </genAnnotations>
+      </genAnnotations>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//rf/RotationEnum">
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//rf/RotationEnum/r0"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//rf/RotationEnum/r90"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//rf/RotationEnum/r180"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//rf/RotationEnum/r270"/>
+      </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="AVM.ecore#//rf/PortDirectionality">
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//rf/PortDirectionality/in"/>
+        <genEnumLiterals ecoreEnumLiteral="AVM.ecore#//rf/PortDirectionality/out"/>
+      </genEnums>
+      <genClasses ecoreClass="AVM.ecore#//rf/RFModel">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AVM.ecore#//rf/RFModel/RFPort"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//rf/RFModel/Rotation"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//rf/RFModel/X"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//rf/RFModel/Y"/>
+      </genClasses>
+      <genClasses ecoreClass="AVM.ecore#//rf/RFPort">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//rf/RFPort/Directionality"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//rf/RFPort/NominalImpedance"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Domainmapping" basePackage="avm" resource="XML" disposableProviderFactory="true"
+        ecorePackage="AVM.ecore#//domainmapping">
+      <genAnnotations source="http://www.eclipse.org/emf/2002/GenModel/exporter/org.eclipse.xsd.ecore.exporter">
+        <genAnnotations source="avm.domainmapping.xsd">
+          <details key="http://www.eclipse.org/emf/2003/XMLType" value="XMLType.xsd"/>
+        </genAnnotations>
+      </genAnnotations>
+      <genClasses ecoreClass="AVM.ecore#//domainmapping/CAD2EDATransform">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/RotationX"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/RotationY"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/RotationZ"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/TranslationX"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/TranslationY"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/TranslationZ"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/ScaleX"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/ScaleY"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AVM.ecore#//domainmapping/CAD2EDATransform/ScaleZ"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference AVM.ecore#//domainmapping/CAD2EDATransform/EDAModel"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference AVM.ecore#//domainmapping/CAD2EDATransform/CADModel"/>
       </genClasses>
     </nestedGenPackages>
     <nestedGenPackages prefix="AdamsCar" basePackage="avm" resource="XML" disposableProviderFactory="true"

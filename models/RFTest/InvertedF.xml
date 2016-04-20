@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--Test XML file for CyPhy generated openEMS simulations-->
+<openEMS>
+  <FDTD NumberOfTimesteps="1000000000" endCriteria="1E-05" f_max="2950000000">
+    <Excitation Type="0" f0="2450000000" fc="500000000"></Excitation>
+    <BoundaryCond xmin="PML_8" xmax="PML_8" ymin="PML_8" ymax="PML_8" zmin="PML_8" zmax="PML_8"></BoundaryCond>
+  </FDTD>
+  <ContinuousStructure CoordSystem="0">
+    <Properties>
+      <Metal Name="antenna-inverted-f">
+        <FillColor R="235" G="148" B="7" a="255"></FillColor>
+        <EdgeColor R="235" G="148" B="7" a="255"></EdgeColor>
+        <Primitives>
+          <LinPoly Priority="100" Elevation="0" Length="0.01" NormDir="2">
+            <Vertex X1="-0.67999999999999972" X2="0"></Vertex>
+            <Vertex X1="-0.67999999999999972" X2="2.0300000000000002"></Vertex>
+            <Vertex X1="-8.68" X2="2.0300000000000002"></Vertex>
+            <Vertex X1="-8.68" X2="4.7"></Vertex>
+            <Vertex X1="-2.879999999999999" X2="4.7"></Vertex>
+            <Vertex X1="-2.879999999999999" X2="3.9000000000000004"></Vertex>
+            <Vertex X1="-3.879999999999999" X2="3.9000000000000004"></Vertex>
+            <Vertex X1="-3.879999999999999" X2="2.6900000000000004"></Vertex>
+            <Vertex X1="-0.77999999999999936" X2="2.6900000000000004"></Vertex>
+            <Vertex X1="-0.23000000000000043" X2="2.2300000000000004"></Vertex>
+            <Vertex X1="-0.23000000000000043" X2="0"></Vertex>
+            <Vertex X1="0.23000000000000043" X2="0"></Vertex>
+            <Vertex X1="0.23000000000000043" X2="2.4702691193458124"></Vertex>
+            <Vertex X1="-0.67999999999999972" X2="3.2605382386916242"></Vertex>
+            <Vertex X1="-0.67999999999999972" X2="3.9000000000000004"></Vertex>
+            <Vertex X1="-1.6799999999999997" X2="3.9000000000000004"></Vertex>
+            <Vertex X1="-1.6799999999999997" X2="5.7"></Vertex>
+            <Vertex X1="14.719999999999999" X2="5.7"></Vertex>
+            <Vertex X1="14.719999999999999" X2="6.91"></Vertex>
+            <Vertex X1="-10.86" X2="6.91"></Vertex>
+            <Vertex X1="-10.86" X2="0.74"></Vertex>
+            <Vertex X1="-3.879999999999999" X2="0.74"></Vertex>
+            <Vertex X1="-3.879999999999999" X2="0"></Vertex>
+            <Vertex X1="-2.6799999999999997" X2="0"></Vertex>
+            <Vertex X1="-2.6799999999999997" X2="0.74"></Vertex>
+            <Vertex X1="-1.879999999999999" X2="0.74"></Vertex>
+            <Vertex X1="-1.879999999999999" X2="0"></Vertex>
+          </LinPoly>
+        </Primitives>
+      </Metal>
+      <Metal Name="bottom-ground">
+        <FillColor R="235" G="148" B="7" a="255"></FillColor>
+        <EdgeColor R="235" G="148" B="7" a="255"></EdgeColor>
+        <Primitives>
+          <Box Priority="100">
+            <P1 X="-10.86" Y="0" Z="-0.56"></P1>
+            <P2 X="14.72" Y="-8" Z="-0.57"></P2>
+          </Box>
+        </Primitives>
+      </Metal>
+      <Metal Name="top-ground">
+        <FillColor R="235" G="148" B="7" a="255"></FillColor>
+        <EdgeColor R="235" G="148" B="7" a="255"></EdgeColor>
+        <Primitives>
+          <Box Priority="100">
+            <P1 X="-10.86" Y="0" Z="0"></P1>
+            <P2 X="-0.68" Y="-5" Z="0.01"></P2>
+          </Box>
+          <Box Priority="100">
+            <P1 X="0.68" Y="0" Z="0"></P1>
+            <P2 X="14.72" Y="-5" Z="0.01"></P2>
+          </Box>
+        </Primitives>
+      </Metal>
+    </Properties>
+    <RectilinearGrid DeltaUnit="0.001" CoordSystem="0">
+      <XLines>-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45</XLines>
+      <YLines>-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45</YLines>
+      <ZLines>-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45</ZLines>
+    </RectilinearGrid>
+  </ContinuousStructure>
+</openEMS>

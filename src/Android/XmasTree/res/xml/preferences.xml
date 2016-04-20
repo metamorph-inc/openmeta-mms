@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference android:title="Local SystemC Simulator" android:key="systemc_simulator_local" android:disableDependentsState="true" android:defaultValue="true" />
+    <EditTextPreference android:title="Remote Simulator Address" android:key="systemc_simulator_address" android:dependency="systemc_simulator_local" />
+</PreferenceScreen>

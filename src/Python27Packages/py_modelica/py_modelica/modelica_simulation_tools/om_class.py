@@ -315,6 +315,11 @@ class OpenModelica(ToolBase):
         my_env["PATH"] = env_var_bin + os.pathsep + my_env["PATH"]
         log.debug('Added "{0}" to beginning of env var PATH.'.format(env_var_bin))
 
+        env_var_bin = os.path.join(os.getenv('OPENMODELICAHOME'), 'bin')
+        my_env = os.environ
+        my_env["PATH"] = env_var_bin + os.pathsep + my_env["PATH"]
+        log.debug('Added "{0}" to beginning of env var PATH.'.format(env_var_bin))
+
         om_stdout = open('om_stdout.txt', 'w')
         t_stamp = time.time()
         sim_process = subprocess.Popen([command], stdout=om_stdout, stderr=om_stdout, env=my_env)

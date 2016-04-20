@@ -220,6 +220,7 @@ namespace CyPhyComponentImporterCL {
                         var importer = new CyPhyComponentImporter.CyPhyComponentImporterInterpreter();
                         importer.Initialize(cyPhyMLRootFolder.Impl.Project);
                         importer.ImportFiles(cyPhyMLRootFolder.Impl.Project, libroot, lp_FilesToImport.ToArray(), true);
+                        importer.DisposeLogger();
                         bExceptionOccurred = importer.Errors.Count > 0;
                     });
 

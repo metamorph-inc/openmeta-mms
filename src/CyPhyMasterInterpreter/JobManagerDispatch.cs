@@ -173,7 +173,7 @@ namespace CyPhyMasterInterpreter
         {
             // n.b. Assembly.Location is wrong with Shadow Copy enabled
             string assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            string exe = Path.Combine(assemblyDir, "JobManager.exe");
+            string exe = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "JobManager.exe");
             if (!File.Exists(exe))
                 exe = Path.Combine(assemblyDir, "..\\..\\..\\JobManager\\JobManager\\bin\\Release\\JobManager.exe");
             if (!File.Exists(exe))

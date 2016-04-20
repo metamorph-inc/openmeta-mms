@@ -1,0 +1,79 @@
+{
+  "boardWidth": 20.0,
+  "boardHeight": 20.0,
+  "numLayers": 2,
+  "boardTemplate": null,
+  "designRules": null,
+  "packages": [
+    {
+      "name": "R_0402_200_0.1W_1%_Thick_Film",
+      "package": "R_0402",
+      "pkg_idx": 0,
+      "ComponentID": "{8edaefb4-310f-4577-9030-bf4217ba1545}",
+      "RelComponentID": null,
+      "width": 1.3,
+      "height": 0.9,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 2.6,
+      "y": 17.4,
+      "rotation": 3,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    },
+    {
+      "name": "Red_LED",
+      "package": "LED",
+      "pkg_idx": 1,
+      "ComponentID": "{eb928f07-4d65-4d65-b675-50a444f052ca}",
+      "RelComponentID": null,
+      "width": 3.0,
+      "height": 2.0,
+      "originX": 0.0,
+      "originY": 0.0,
+      "x": 2.0,
+      "y": 12.5,
+      "rotation": 3,
+      "layer": 0,
+      "constraints": null,
+      "multiLayer": null,
+      "doNotPlace": null
+    }
+  ],
+  "signals": [
+    {
+      "name": "N$0",
+      "length": 2.8500000000000014,
+      "bends": 0,
+      "RelComponentID": null,
+      "pins": [
+        {
+          "name": "2",
+          "gate": "A",
+          "pad": "P$2",
+          "package": "R_0402_200_0.1W_1%_THICK_FILM"
+        },
+        {
+          "name": "ANODE",
+          "gate": "G$1",
+          "pad": "ANODE",
+          "package": "RED_LED"
+        }
+      ],
+      "wires": [
+        {
+          "x1": 3.0,
+          "y1": 14.75,
+          "x2": 3.0,
+          "y2": 17.6,
+          "width": 0.254,
+          "layer": 1
+        }
+      ],
+      "vias": []
+    }
+  ],
+  "constraints": null
+}

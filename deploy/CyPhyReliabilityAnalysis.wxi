@@ -23,9 +23,7 @@
       <RegistryValue Name='Tooltip' Type='string' Value='FAME System Requirement Assessment Tool'/>
       <RegistryValue Name='Type' Type='integer' Value='1'/>
 
-      <RegistryKey Key='Associated'>
-        <RegistryValue Name='CyPhyML' Type='string' Value=''/>
-      </RegistryKey>
+      <!-- not Associated -->
 
     </RegistryKey>
     

@@ -18,7 +18,7 @@ namespace ComponentInterchangeTest
             // Clear the Components folder
             try
             {
-                Directory.Delete(Path.Combine(CAD.testPath, "Imported_Components"), true);
+                Directory.Delete(Path.Combine(CAD.testPath, "Exported"), true);
             }
             catch (DirectoryNotFoundException)
             {
@@ -34,10 +34,19 @@ namespace ComponentInterchangeTest
             mgaPath = CommonFunctions.unpackXme(CAD.xmePath);
 
             // Export the components
-            Assert.Equal(0, CommonFunctions.runCyPhyComponentExporterCL(mgaPath));
+            Assert.Equal(0, CommonFunctions.runCyPhyComponentExporterCL(mgaPath, "Exported"));
         }
 
         public string mgaPath { get; private set; }
+    }
+
+    public class CADFixtureTest
+    {
+        [Fact]
+        public void Test()
+        {
+            var fixture = new CADFixture();
+        }
     }
 
     public class CAD : IUseFixture<CADFixture>
@@ -72,7 +81,7 @@ namespace ComponentInterchangeTest
         [Trait("Interchange","Component Export")]
         public void AllComponentsExported()
         {
-            var exportedACMRoot = Path.Combine(testPath, "Imported_Components");
+            var exportedACMRoot = Path.Combine(testPath, "Exported");
             var acmFiles = Directory.GetFiles(exportedACMRoot, "*.acm", SearchOption.AllDirectories);
             Assert.Equal(4, acmFiles.Length);
         }
@@ -85,7 +94,7 @@ namespace ComponentInterchangeTest
             var importMgaPath = CommonFunctions.unpackXme(importXmePath);
             Assert.True(File.Exists(importMgaPath),"MGA file not found. Model import may have failed.");
             
-            var compFolderRoot = Path.Combine(testPath,"Imported_Components");
+            var compFolderRoot = Path.Combine(testPath,"Exported");
             int rtnCode = CommonFunctions.runCyPhyComponentImporterCLRecursively(importMgaPath, compFolderRoot);
             Assert.True(rtnCode == 0, String.Format("Importer failed on one or more components"));
 

@@ -24,9 +24,7 @@
       <!-- RegistryValue Name='Tooltip' Type='string' Value='TOOLTIP_TEXT'/ -->
       <RegistryValue Name='Type' Type='integer' Value='1'/>
 
-      <RegistryKey Key='Associated'>
-        <RegistryValue Name='CyPhyML' Type='string' Value=''/>
-      </RegistryKey>
+      <!-- not Associated -->
 
     </RegistryKey>
     <Class Id="{4B678D98-3921-4969-85B8-C9DE47D15835}" Context="InprocServer32" Description="ISIS.META.CyPhy2Modelica_v2Settings" ThreadingModel="both" ForeignServer="mscoree.dll">

@@ -28,5 +28,3 @@ set "PATH=%VIRTUAL_ENV%\Scripts;%PATH%"
 
 :END
 
-for /f "delims=" %%A in ('get_full_libpath') do @set PATH=%%A
-

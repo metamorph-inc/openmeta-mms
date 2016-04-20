@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Release|Win32">
@@ -47,29 +47,35 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <xme2mga>
-      <AdditionalDependencies>$(META_PATH)\generated\CyPhyML\models\CyPhyML.xmp</AdditionalDependencies>
+      <AdditionalDependencies>$(META_PATH)\generated\CyPhyML\models\CyPhyML.mta</AdditionalDependencies>
     </xme2mga>
+    <PostBuildEvent>
+      <Command>cd ..\meta
+..\bin\Python27\scripts\Python.exe create_empty_mga.py</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <xme2mga>
       <AdditionalDependencies>$(META_PATH)\generated\CyPhyML\models\CyPhyML.xmp</AdditionalDependencies>
     </xme2mga>
+    <PostBuildEvent>
+      <Command>cd ..\meta
+..\bin\Python27\scripts\Python.exe create_empty_mga.py</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <xme2mga Include="..\meta\CyPhyMLQudt.xme" />
     <xme2mga Include="..\meta\CyPhy_PortLib.xme" />
     <xme2mga Include="..\meta\CyPhy_MaterialLib.xme" />
     <xme2mga Include="..\meta\CyPhy_CADResourceLib.xme" />
-    <xme2mga Include="IFV\CompLib_DesignSpace_andDesigns.xme">
-      <OutFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(META_PATH)\generated\IFV\models\%(FileName).mga</OutFile>
-      <OutFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(META_PATH)\generated\IFV\models\%(FileName).mga</OutFile>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </xme2mga>
+    <xme2mga Include="..\meta\Testbenches.xme" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\CyPhyMLRegister\CyPhyMLRegister.vcxproj">
       <Project>{d004018a-8dfe-4397-8db0-295efcfa05ce}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\src\CyPhySignalBlocksAddOn\CyPhySignalBlocksAddOn.csproj">
+      <Project>{fd77b394-97ab-4775-92a8-d98f967089d6}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -25,6 +25,7 @@ int main( int argc, char **argv ) {
 
 		UdmComparator::StringSet exclusiveClassNameSet;
 		exclusiveClassNameSet.insert( "ReferenceCoordinateSystem" );
+		exclusiveClassNameSet.insert( "RootFolder" );
 
 		UdmComparator::StringStringSetMap exclusiveClassNameAttributeNameSetMap;
 		UdmComparator::StringSet exclusiveAttributeNameSet;
@@ -34,7 +35,7 @@ int main( int argc, char **argv ) {
 		exclusiveAttributeNameSet.clear();
 		exclusiveAttributeNameSet.insert( "InstanceGUID" );
 		exclusiveAttributeNameSet.insert("ID");
-		exclusiveClassNameAttributeNameSetMap.insert(  std::make_pair( "ComponentRef", exclusiveAttributeNameSet )  );
+		exclusiveClassNameAttributeNameSetMap.insert(std::make_pair("ComponentRef", exclusiveAttributeNameSet));
 		
 		exclusiveAttributeNameSet.clear();
 		exclusiveAttributeNameSet.insert("Path");
@@ -42,14 +43,18 @@ int main( int argc, char **argv ) {
 		exclusiveClassNameAttributeNameSetMap.insert(  std::make_pair( "Component", exclusiveAttributeNameSet )  );
 
 		exclusiveAttributeNameSet.clear();
-		exclusiveAttributeNameSet.insert("Path");
 		exclusiveAttributeNameSet.insert("ID");
+		exclusiveAttributeNameSet.insert("Path");
 		exclusiveClassNameAttributeNameSetMap.insert(std::make_pair("ComponentAssembly", exclusiveAttributeNameSet));
 
 		UdmComparator::ClassNameFilter classNameFilter;
 		classNameFilter.setExclusiveClassNameSet( exclusiveClassNameSet );
 		classNameFilter.setExclusiveClassNameAttributeNameMap( exclusiveClassNameAttributeNameSetMap );
 		udmComparator.setClassNameFilter( classNameFilter );
+
+		UdmComparator::BidirectionalRolenameFilter bidirConns;
+		bidirConns.insert("srcPortComposition_refport_parent");
+		udmComparator.setBidirectionalRolenameFilter(bidirConns);
 		
 		bool result = true;
 		result = udmComparator.compareNode( rootObject1, rootObject2 );

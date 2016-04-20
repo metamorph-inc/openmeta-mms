@@ -80,6 +80,7 @@ CManager::
   Destroy(simpleFormulas);
   for (int i=0; i<MAX_GENERATIONS; i++)
   {
+	  // FIXME Destroy dynContainers[i] ?
     Destroy(dynSpaces[i]);
     Destroy(dynDomains[i]);
     Destroy(dynConstraintSets[i]);
@@ -89,12 +90,12 @@ CManager::
   generations.RemoveAll();
 }
 
-CCosmicList* CManager::GetContainer(const TCHAR * ContainerName) 
+CCosmicList* CManager::GetContainer(const TCHAR * ContainerName)
 {
 	CCosmicList *list = NULL;
 
-	
-	
+
+
 	if (generations.IsEmpty())
 	{
 		CElementContainer* cont;
@@ -115,10 +116,10 @@ CCosmicList* CManager::GetContainer(const TCHAR * ContainerName)
 	return list;
 };
 
-CCosmicList* CManager::GetContainer(CString &ContainerName) 
+CCosmicList* CManager::GetContainer(CString &ContainerName)
 {
 	CCosmicList *list = NULL;
-	
+
 	if (generations.IsEmpty())
 	{
 		CElementContainer* cont;
@@ -128,7 +129,7 @@ CCosmicList* CManager::GetContainer(CString &ContainerName)
 	}
 	else
 	{
-		GET_CURRENTGENERATION 
+		GET_CURRENTGENERATION
 
 		CDynElementContainer* cont;
 		bool ret = Find(dynContainers[currentGeneration], cont, ContainerName);
@@ -163,14 +164,14 @@ long CManager::CreateElement(CString &n, long s, short d, long p, long e)
 {
 	CElementContainer * container = 0 ;
 	bool ret;
-  
+
 	//check for correct decomposition
 	//ASSERT_EX( d>=0 && d<=2, _T("CManager::CreateElement"), _T("invalid decomposition") );
 	if (d < 0 || d >2) throw new CDesertException( _T("CManager::CreateElement(): invalid decompostion"));
-  
+
 	//find conatiner
 	ret = Find(baseContainers, container, s);
-  
+
 	//ASSERT_EX( ret, _T("CManager::Element"), _T("Container (space _or_ domain) not found") );
 	if (!ret) throw new CDesertException(_T("CManager::CreateElement(): Container space or domain not found!"));
 
@@ -188,7 +189,7 @@ long CManager::CreateElement(CString &n, long s, short d, long p, long e)
 	if (!el)
 		throw new CDesertException(_T("CManager::CreateElement(): Create Element failed!"));
 	//insert into container
-	container->InsertElement(el);	
+	container->InsertElement(el);
 	//insert into parent
 	if (parent) parent->InsertChild(el);
 	//return new element
@@ -256,17 +257,17 @@ long CManager::CreateConstantProperty(CString& n, CString& pcm_fn, long o, long 
   CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements???
   if (!owner)
 	  throw new CDesertException(_T("CManager::ConstantProperty(): owner not found!"));
-	  
-  
+
+
  // ASSERT_EX( owner, _T("CManager::ConstantProperty"), _T("owner not found") );
-  
+
   CProperty *property = new CConstantProperty(n, pcm_fn, domain, owner, v);
   if (!property)
 	  throw new CDesertException(_T("CManager::ConstantProperty(): Create Constant Property Failed!"));
 
   //ASSERT_EX( property, _T("CManager::ConstantProperty"), _T("new CConstantProperty failed") );
   owner->InsertProperty(property);
-  
+
   // Create a clfunction object for the built-in pcm functions
   ClFunction::CreatePCMFn(n, pcm_fn);
 
@@ -290,21 +291,21 @@ CreateVariableProperty(CString& n, CString& pcm_fn, long o, long d)
   if (!ret)
 	  throw new CDesertException(_T("CManager::ConstantProperty(): domain not found!"));
 
-  
+
   CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements???
   //ASSERT_EX( owner, _T("CManager::VariableProperty"), _T("owner not found") );
    if (!owner)
 	  throw new CDesertException(_T("CManager::ConstantProperty(): owner not found!"));
 
-  
-  
+
+
   CProperty *property = new CVariableProperty(n, pcm_fn, domain, owner);
   //ASSERT_EX( property, _T("CManager::VariableProperty"), _T("new CVariableProperty failed") );
 	if (!property)
 	  throw new CDesertException(_T("CManager::ConstantProperty(): Create Constant Property Failed!"));
 
-  
-  
+
+
   owner->InsertProperty(property);
 
   // Create a clfunction object for the built-in pcm functions
@@ -354,12 +355,12 @@ long CManager::CreateParametricVariableProperty(const TCHAR *name, long o,  cons
 	  throw new CDesertException(_T("CManager::CreateParametricVariableProperty(): owner not found!"));
 
    CFormula *formula = new CFormula(name, owner, text);
-  
+
   //ASSERT_EX( property, _T("CManager::VariableProperty"), _T("new CVariableProperty failed") );
 	if (!formula)
 	  throw new CDesertException(_T("CManager::CreateParametricVariableProperty(): Create Formula Failed!"));
 
-  
+
    bool ret = formula->Parse();
 	  if (!ret)
 	  {
@@ -395,11 +396,11 @@ long CManager::CreateRelation(long c, long s, long d)
     CElement *destination = FindElement(baseSpaces, d);
     //ASSERT_EX( destination, _T("CManager::CreateRelation"), _T("destination not found") );
 	if (!destination) throw new CDesertException(_T("CManager::CreateRelation(): Relation destination not found!"));
-    
+
 	rel = new CRelation(sp_ctx, source, destination);
-    
+
 	sp_ctx->InsertRelation(rel);
-      
+
   }
   else if (dm_ctx)
   {
@@ -421,7 +422,7 @@ long CManager::CreateRelation(long c, long s, long d)
 	throw new CDesertException(_T("CManager::CreateRelation(): context not found!"));
 
   //ASSERT_EX( rel, _T("CManager::CreateRelation"), _T("new failed") );
-  
+
   if (!rel) throw new CDesertException(_T("CManager::CreateRelation(): Create relation failed!"));
 
   return *rel;
@@ -559,21 +560,21 @@ long CManager::AddtoVariableProperty(const TCHAR *n, CString &name, long o, long
 	if (!ret) throw new CDesertException(_T("CManager::AddToVariableProperty(): domain not found") );
 
 
-	CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements??? - they don't exist!                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+	CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements??? - they don't exist!
 	//ASSERT_EX( owner, _T("CManager::AddToVariableProperty"), _T("owner not found") );
 	if (!owner) throw new CDesertException(_T("CManager::AddToVariableProperty(): owner not found"));
-	
+
 	CVariableProperty *property = (CVariableProperty *)owner->FindProperty(n);
 	//ASSERT_EX( property && property->IsType(typeVariableProperty), _T("CManager::AddToVariableProperty"), _T("property not found") );
 	if (!property || !property->IsType(typeVariableProperty))
 		throw new CDesertException(_T("CManager::AddToVariableProperty(): property not found"));
-	
+
 	CElement *value = domain->FindElement(v);
 	//ASSERT_EX( value || domain->IsType(typeNaturalDomain), _T("CManager::AddToVariableProperty"), _T("value not found in domain and domain is not a natural domain") );
 
 	if (!value && !domain->IsType(typeNaturalDomain))
 		throw new CDesertException(_T("CManager::AddToVariableProperty(): Value not found in custom domain!"));
-	
+
 	if (value)
 	return property->AddToRange(value, name);
 	else
@@ -590,19 +591,19 @@ long CManager::AddtoVariableProperty(long p, CString &name, long o, long v, long
 	CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements???
 	//ASSERT_EX( owner, _T("CManager::AddToVariableProperty"), _T("owner not found") );
 	if (!owner) throw new CDesertException(_T("CManager::AddToVariableProperty(): owner not found"));
-  
+
 	CVariableProperty *property = (CVariableProperty *)owner->FindProperty(p);
 	//ASSERT_EX( property && property->IsType(typeVariableProperty), _T("CManager::AddToVariableProperty"), _T("property not found") );
 	if (!property || !property->IsType(typeVariableProperty))
 		throw new CDesertException(_T("CManager::AddToVariableProperty(): property not found"));
-	
+
 	CElement *value = domain->FindElement(v);
 	//ASSERT_EX( value || domain->IsType(typeNaturalDomain), _T("CManager::AddToVariableProperty"), _T("value not found in domain and domain is not a natural domain") );
 	if (!value && !domain->IsType(typeNaturalDomain))
 		throw new CDesertException(_T("CManager::AddToVariableProperty(): Value not found in custom domain!"));
-	
-  
-  
+
+
+
 	if (value)
 		return property->AddToRange(value, name);
 	else
@@ -630,10 +631,10 @@ long CManager::AddtoVariableProperty(const TCHAR *n, CString &name, long o, doub
 	if (!ret) throw new CDesertException(_T("CManager::AddToVariableProperty(): domain not found") );
 
 
-	CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements??? - they don't exist!                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+	CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements??? - they don't exist!
 	//ASSERT_EX( owner, _T("CManager::AddToVariableProperty"), _T("owner not found") );
 	if (!owner) throw new CDesertException(_T("CManager::AddToVariableProperty(): owner not found"));
-	
+
 	CVariableProperty *property = (CVariableProperty *)owner->FindProperty(n);
 	//ASSERT_EX( property && property->IsType(typeVariableProperty), _T("CManager::AddToVariableProperty"), _T("property not found") );
 	if (!property || !property->IsType(typeVariableProperty))
@@ -671,12 +672,12 @@ long CManager::AddtoVariableProperty(long p, CString &name, long o, double v, lo
 	CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements???
 	//ASSERT_EX( owner, _T("CManager::AddToVariableProperty"), _T("owner not found") );
 	if (!owner) throw new CDesertException(_T("CManager::AddToVariableProperty(): owner not found"));
-  
+
 	CVariableProperty *property = (CVariableProperty *)owner->FindProperty(p);
 	//ASSERT_EX( property && property->IsType(typeVariableProperty), _T("CManager::AddToVariableProperty"), _T("property not found") );
 	if (!property || !property->IsType(typeVariableProperty))
 		throw new CDesertException(_T("CManager::AddToVariableProperty(): property not found"));
-	
+
 	//CElement *value = domain->FindElement(v);
 	////ASSERT_EX( value || domain->IsType(typeNaturalDomain), _T("CManager::AddToVariableProperty"), _T("value not found in domain and domain is not a natural domain") );
 	//if (!value && !domain->IsType(typeNaturalDomain))
@@ -691,7 +692,7 @@ long CManager::AddtoVariableProperty(long p, CString &name, long o, double v, lo
 		if(!value)
 			throw new CDesertException(_T("CManager::AddToVariableProperty(): Value not found in custom domain!"));
 	}
-	
+
 	if (value)
 		return property->AddToRange(value, name);
 	else
@@ -717,7 +718,7 @@ CProperty * CManager::GetProperty(long p, long o)
 	CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements???
 	//ASSERT_EX( owner, _T("CManager::AddToVariableProperty"), _T("owner not found") );
 	if (!owner) throw new CDesertException(_T("CManager::AddToVariableProperty(): owner not found"));
-  
+
 	CProperty *vp = (CProperty *)owner->FindProperty(p);
 	return vp;
 }
@@ -752,7 +753,7 @@ long CManager::AddtoSimpleFormulaVariableProperty(long p, const TCHAR *n, long o
 	CElement *owner = FindElement(baseSpaces, o); // what about property of domain elements???
 	//ASSERT_EX( owner, _T("CManager::AddToVariableProperty"), _T("owner not found") );
 	if (!owner) throw new CDesertException(_T("CManager::AddToVariableProperty(): owner not found"));
-  
+
 	CVariableProperty *vp = (CVariableProperty *)owner->FindProperty(p);
 	//ASSERT_EX( property && property->IsType(typeVariableProperty), _T("CManager::AddToVariableProperty"), _T("property not found") );
 	if (!vp|| !vp->IsType(typeVariableProperty))
@@ -761,7 +762,7 @@ long CManager::AddtoSimpleFormulaVariableProperty(long p, const TCHAR *n, long o
 	CElement *src_owner = FindElement(baseSpaces, so); // what about property of domain elements???
 	//ASSERT_EX( owner, _T("CManager::AddToVariableProperty"), _T("owner not found") );
 	if (!src_owner) throw new CDesertException(_T("CManager::AddToVariableProperty(): owner not found"));
-  
+
 	CVariableProperty *src_vp = (CVariableProperty *)src_owner->FindProperty(sp);
 	//ASSERT_EX( property && property->IsType(typeVariableProperty), _T("CManager::AddToVariableProperty"), _T("property not found") );
 	if (!src_vp|| !src_vp->IsType(typeVariableProperty))
@@ -863,21 +864,21 @@ void CManager::ShowStats()
 int CManager :: GetCurrStepsBack()
 {
 	//see where are we in the list of generations
-	POSITION pos = currentGenerationPosition;	
-	int curr_steps_back = 0;			
-	while (pos && (curr_steps_back < MAX_GENERATIONS))  
+	POSITION pos = currentGenerationPosition;
+	int curr_steps_back = 0;
+	while (pos && (curr_steps_back < MAX_GENERATIONS))
 	{
-		int i = generations.GetNext(pos); 
+		int i = generations.GetNext(pos);
 		if(pos)curr_steps_back++;
 	}
 	return curr_steps_back ;
-	
+
 }
-bool CManager :: IsBackNavigable()		
+bool CManager :: IsBackNavigable()
 {
 	/*
 		1. list is not empty
-		2. no more then MAX_GENERATION steps 
+		2. no more then MAX_GENERATION steps
 
 	*/
 
@@ -892,10 +893,10 @@ bool CManager :: IsBackNavigable()
 
 
 	int curr_steps_back =	GetCurrStepsBack();
-	
+
 	if(!curr_steps_back)
 	{
-		//if this is the first back-navigation, 
+		//if this is the first back-navigation,
 		//we check for two steps back, the last one is just a copy of the previous one
 		if (generations.GetCount() <= 2) return false;
 		//if (generations.GetCount() < 2) return false;
@@ -905,10 +906,10 @@ bool CManager :: IsBackNavigable()
 
 	return ( curr_steps_back < MAX_GENERATIONS);
 
-}; 
+};
 
-bool CManager :: IsForwardNavigable()	
-{ 
+bool CManager :: IsForwardNavigable()
+{
 	//if list is empty, than it's not navigable
 	if (generations.IsEmpty()) return false;
 	//if ther's no current position
@@ -919,13 +920,13 @@ bool CManager :: IsForwardNavigable()
 	return (pos != NULL);
 };
 
-void CManager :: NavigateBack()			
+void CManager :: NavigateBack()
 {
 	//check
 	//ASSERT_EX(IsBackNavigable(), _T("CManager::NavigateBack()"), _T("Manager is not backnavigable!"));
 	if (!IsBackNavigable())
 		throw new CDesertException(_T("CManager::NavigateBack(): Manager is not backnavigable!"));
-	
+
 
 	//we actually step two step backwards
 	//to effectively step back a configuration
@@ -937,31 +938,31 @@ void CManager :: NavigateBack()
 
 	//actually step back
 	int i = generations.GetPrev(currentGenerationPosition);
-	
+
 	if (!currentGenerationPosition)
 		throw new CDesertException(_T("CManager::NavigateBack(): BackNavigation failed!"));
-	
+
 	//force the refresh of the enconding length and compute time on the UI
 	ui_refresh_needed = true;
 
 	////if it's not the first back-navigation, step back only one...
-	//if (curr_steps_back) 
+	//if (curr_steps_back)
 	//{
 	//	i = generations.GetPrev(currentGenerationPosition);
 	//		return;
 	//}
 
-	//else, step back one more 
+	//else, step back one more
 	i = generations.GetPrev(currentGenerationPosition);
-	
-	
+
+
 	//check
 	//ASSERT_EX(currentGenerationPosition,_T("CManager::NavigateBack()"), _T("BackNavigation failed"));
 
 
 };
 
-void CManager :: NavigateForward()		
+void CManager :: NavigateForward()
 {
 	//check
 	//ASSERT_EX(IsForwardNavigable(), _T("CManager::NavigateForward()"), _T("Manager is not forward-navigable!"));
@@ -978,14 +979,15 @@ void CManager :: NavigateForward()
 	//ASSERT_EX(currentGenerationPosition,_T("CManager::NavigateForward()"), _T("ForwardNavigation failed"));
 	if (!currentGenerationPosition)
 		throw new CDesertException(_T("CManager::NavigateBack(): BackNavigation failed!"));
-	
+
 };
 
 void CManager::GenerateNextHierarchy()
 {
 	int prev;
-	
-	if (generations.IsEmpty()) prev = -1;
+
+	if (generations.IsEmpty())
+		prev = -1;
 	else
 	{
 		//ASSERT_EX(currentGenerationPosition, _T("CManager::GenerateNextHierarchy"), _T("current generation is NULL"));
@@ -993,7 +995,7 @@ void CManager::GenerateNextHierarchy()
 			throw new CDesertException(_T("CManager::GenerateNextHierarchy(): current generation is NULL!"));
 		prev = generations.GetAt(currentGenerationPosition) % MAX_GENERATIONS;
 	}
-  
+
 
 	/*
 		Remove any configurations behind the current one,
@@ -1008,25 +1010,28 @@ void CManager::GenerateNextHierarchy()
 	{
 		pos = currentGenerationPosition;
 		int i  = generations.GetNext(pos);
-		if (pos) 
+		if (pos)
 		{
 			generations.RemoveAt(pos);
 			more_to_come = true;
-		} else more_to_come = false;
+		} else {
+			more_to_come = false;
+		}
 
 	} while (more_to_come);
 
 
 
 	static int generation_id = -1;
-	if(generations.IsEmpty()) generation_id = -1;
-	
+	if(generations.IsEmpty())
+		generation_id = -1;
+
 	generation_id++;
 	currentGenerationPosition = generations.AddTail(generation_id);
 	int currentGeneration = generation_id % MAX_GENERATIONS;
 
 
-  
+
   CDynSpaceList& spaces = dynSpaces[currentGeneration];
   CDynDomainList& domains = dynDomains[currentGeneration];
   CDynElementContainerList& containers = dynContainers[currentGeneration];
@@ -1035,6 +1040,7 @@ void CManager::GenerateNextHierarchy()
   ::Destroy(domains);                   // MAX_GENERATIONS must be atleast 2
   ::Destroy(spaces);
   ::Destroy(consets);
+  // FIXME this crashes when over MAX_GENERATIONS
   ::Destroy(containers);
   dynContainers[currentGeneration].RemoveAll();
 
@@ -1049,7 +1055,7 @@ void CManager::GenerateNextHierarchy()
 			//there's no sense to express project().domain(), if that domain is not a customdomain.
 			//anyway, it won't have any elements.
 			if(dmn->GetType() == typeDynCustomDomain)
-			{	
+			{
 				containers.AddHead((CDynCustomDomain*)dmn);
 			}
 
@@ -1074,7 +1080,7 @@ void CManager::GenerateNextHierarchy()
 		while(pos)
 		{
 			CSimpleFormula *sf = simpleFormulas.GetNext(pos);
-			CPropertyList &dstlist = sf->GetDestinationList();			
+			CPropertyList &dstlist = sf->GetDestinationList();
 			CDynVariablePropertyList dyndstlist;
 			POSITION pos1 = dstlist.GetHeadPosition();
 			while(pos1)
@@ -1133,7 +1139,7 @@ void CManager::GenerateNextHierarchy()
         {
 			domains.AddTail(dmn);
 			if(dmn->GetType() == typeDynCustomDomain)
-			{	
+			{
 				containers.AddTail((CDynCustomDomain*)dmn);
 			}
 			dmn->Clone(frm);
@@ -1174,7 +1180,7 @@ void CManager::GenerateNextHierarchy()
 		while(pos)
 		{
 			CSimpleFormula *sf = simpleFormulas.GetNext(pos);
-			CPropertyList &dstlist = sf->GetDestinationList();			
+			CPropertyList &dstlist = sf->GetDestinationList();
 			CDynVariablePropertyList dyndstlist;
 			POSITION pos1 = dstlist.GetHeadPosition();
 			while(pos1)
@@ -1222,7 +1228,7 @@ void CManager::Dump(FILE *f, const TCHAR * comment)
 		POSITION pos;
 
 		if (f) _ftprintf(f, _T("---->>begin of curr gen at %s<<----------------------------------------------------\n"), comment);
-		
+
 		pos = domains.GetHeadPosition();
 		while(pos)
 		{
@@ -1246,9 +1252,9 @@ void CManager::Dump(FILE *f, const TCHAR * comment)
 			_ftprintf(f, _T(" Container element: at address: %x \n"), fuck_ec);
 			fuck_ec->Dump(f);
 		}
-		
+
 		_ftprintf(f, _T("===========<<end of curr========================================================\n"));
-				
+
 
 	}
 
@@ -1275,7 +1281,7 @@ CDynConstraintSet* CManager::GetConstraintSet(ConstraintType t)
 bool CManager::Prune(CDynConstraintSet* set)
 {
   	if (!set || set->IsEmpty() || generations.IsEmpty()) return false;
-	
+
 
 	GET_CURRENTGENERATION
 
@@ -1300,7 +1306,7 @@ bool CManager::Prune(CDynConstraintSet *set, CDynElement *root)
   CBdd::Init(encodingLength, 0);
 
   // now encode the space/subspace
-  // 
+  //
   // a) assign an encoding value to each element in the space
   //    encoding value is basically a string of bits, which represents the binary encoding
   //    of the element. don't cares in this string are represented by -1
@@ -1345,7 +1351,7 @@ bool CManager::Prune(CDynConstraintSet *set, CDynSpaceList& spaces)
   CBdd config = one;
 
   // now encode the space/subspace
-  // 
+  //
   // a) assign an encoding value to each element in the space
   //    encoding value is basically a string of bits, which represents the binary encoding
   //    of the element. don't cares in this string are represented by -1
@@ -1396,7 +1402,7 @@ bool CManager::Prune(CDynConstraintSet *set, CDynElement *root, bool)
   root->SetEncodingLen(0);
   int encodingLength = root->FindEncodingLen();
 
-	
+
   // init bdd library
   int start = encodingLength;
   encodingLength += propEncodingLength*(vectors+3);
@@ -1442,7 +1448,7 @@ bool CManager::Prune(CDynConstraintSet *set, CDynElement *root, bool)
   int size = config.size();
 
   CBdd cons = set->MaptoBdd();
-  
+
   CBdd res = config && cons;
 #endif
   // now restrict (actually prune the space), remove the dead alternatives
@@ -1520,13 +1526,13 @@ void * CManager::StoreConfigurations(const TCHAR *fname, tstring &errmsg)
     CDynConstraintSet *set = consets.GetNext(pos);
     CDynConstraintList& cons = set->GetConstraints();
     POSITION consPos = cons.GetHeadPosition();
-	
-	
+
+
     while(consPos)
     {
       CDynConstraint *c = cons.GetNext(consPos);
-      if (c->WasApplied())  
-		  toSet->InsertConstraint(c);	  
+      if (c->WasApplied())
+		  toSet->InsertConstraint(c);
     }
   }
 
@@ -1534,7 +1540,7 @@ void * CManager::StoreConfigurations(const TCHAR *fname, tstring &errmsg)
   try{
 	  CBdd cons = toSet->MaptoBdd();
 	  CBdd prun = config && cons;
- 
+
 	  // now build the configurations wrt the prun bdd
 	  {
 
@@ -1546,7 +1552,7 @@ void * CManager::StoreConfigurations(const TCHAR *fname, tstring &errmsg)
 		//ASSERT_EX(cs, _T("CManager::StoreConfigurations"), _T("new failed"));
 
 		POSITION mPos = spaces.GetHeadPosition();
-	
+
 		while (mPos)
 		{
 			CDynSpace *procSpace = spaces.GetNext(mPos);
@@ -1559,13 +1565,13 @@ void * CManager::StoreConfigurations(const TCHAR *fname, tstring &errmsg)
 			  CDynElement *root = roots.GetNext(pos);
 			  // create a configuration root object in the configurationstore
 			  //CConfigurationRoot *cfgRoot = cs->CreateConfigurationRoot(root->GetExternal());
-		  
+
 			  //this list of structs will be returned
 			  configurations = new BackIfaceFunctions::DBConfigurations;
 
 
 			  BuildConfigurations(configurations, root, prun, encodingLength);
-		    		  
+
 
 			}//eo while(pos)
 		}//eo while (mPos)
@@ -1593,7 +1599,7 @@ void * CManager::StoreConfigurations(const TCHAR *fname, tstring &errmsg)
 long CManager::CalcRealNoOfConfigurations()
 {
 	if (generations.IsEmpty()) GenerateNextHierarchy();
-	
+
 	double sizeOfDesignSpace = ComputeSize();
 	if (sizeOfDesignSpace > MAX_CONFIGURATIONS) {
 		// TODO: If design space is too large, check the prun.sat_frac()
@@ -1621,7 +1627,7 @@ long CManager::CalcRealNoOfConfigurations()
 	int start = encodingLength;
 
 	CBdd::Init(encodingLength, 0);
-	
+
 	CBdd one = CBdd::One();
 	CBdd config = one;
 
@@ -1648,7 +1654,7 @@ long CManager::CalcRealNoOfConfigurations()
 		while(consPos)
 		{
 			CDynConstraint *c = cons.GetNext(consPos);
-			if (c->WasApplied())  
+			if (c->WasApplied())
 				toSet->InsertConstraint(c);
 		}
 	}
@@ -1721,7 +1727,7 @@ void CManager:: BuildConfigurations(BackIfaceFunctions::DBConfigurations *config
   CPtrList encVectors;
   int count = CBdd::Satisfy(config, encVectors);
   POSITION pos = encVectors.GetHeadPosition();
-	
+
   while(pos)
   {
     int *encVec = (int *)encVectors.GetNext(pos);
@@ -1735,12 +1741,12 @@ void CManager:: BuildConfigurations(BackIfaceFunctions::DBConfigurations *config
 //		if (debug) _ftprintf(debug, _T(" %d,"), encVec[i++]);
 //	fclose(debug);
 
-	
+
     // convert the value to bdd, to write configuration
     CBdd enc = CBdd::Encode(encVec, 0, encLen);
     if ( root->NotRedundant(encVec) )
     {
-		
+
 		BackIfaceFunctions::DBConfiguration *conf = new BackIfaceFunctions::DBConfiguration;
 		conf->id = theInstance->GetConfNumber();
 		configs->AddTail(conf);
@@ -1754,9 +1760,9 @@ void CManager:: BuildConfigurations(BackIfaceFunctions::DBConfigurations *config
 
 bool CManager::HasConstraints()
 {
-  	  
+
 	GET_CURRENTGENERATION
-  
+
   CDynConstraintSetList& sets = dynConstraintSets[currentGeneration];
 
   bool empty = true;
@@ -1798,7 +1804,7 @@ ClData CManager::Eval(const CCosmic *other) const
     case typeDynElement:
       ret = ((CDynElement *)other)->GetEncoding();
       break;
-      
+
     default:
       Todo(_T("CDynElement::Eval"), _T("Eval for unimplemented type %d"), (int)(other->GetType()));
     }
@@ -1876,7 +1882,7 @@ bool CManager::Profile(double& dspSize, long& repSize, long& encSize, long& cons
   pos = spaces.GetHeadPosition();
   while(pos)
   {
-    CDynSpace *space = spaces.GetNext(pos); 
+    CDynSpace *space = spaces.GetNext(pos);
     vectors += space->FindNonOrthElementCount();
 	propertyEncodingLength += space->FindPropertyEncodingLen(_T("latency"));
   }
@@ -1942,7 +1948,7 @@ bool CManager::GetSizeInfo(double& dspSize, long& repSize, long& clockTime, CDyn
   TRACE( _T("CManager::GetSizeInfo \n") );
 
   GET_CURRENTGENERATION
-  
+
   CDynSpaceList& spaces = dynSpaces[currentGeneration];
   CDynConstraintSetList& consets = dynConstraintSets[currentGeneration];
   int encodingLength = 0;
@@ -1961,7 +1967,7 @@ bool CManager::GetSizeInfo(double& dspSize, long& repSize, long& clockTime, CDyn
   int vectors = 0;
   propertyEncodingLength = 0;
   pos = spaces.GetHeadPosition();
- 
+
   // init bdd library
   int start = encodingLength;
   CBdd::Init(encodingLength, 0);
@@ -1992,7 +1998,7 @@ bool CManager::GetSizeInfo(double& dspSize, long& repSize, long& clockTime, CDyn
 
   bool doRestrict = (toSet != NULL);
 
-  
+
   if (!doRestrict)
   {
     toSet = new CDynConstraintSet(0);
@@ -2011,7 +2017,7 @@ bool CManager::GetSizeInfo(double& dspSize, long& repSize, long& clockTime, CDyn
     while(consPos)
     {
       CDynConstraint *c = cons.GetNext(consPos);
-	  if (c->WasApplied()) 
+	  if (c->WasApplied())
 		  toSet->InsertConstraint(c);
     }
   }
@@ -2020,7 +2026,7 @@ bool CManager::GetSizeInfo(double& dspSize, long& repSize, long& clockTime, CDyn
   try{
 	  CBdd cons = toSet->MaptoBdd();
 	  CBdd prun = config && cons;
-	
+
 
 	  t2 = clock();
 
@@ -2036,7 +2042,7 @@ bool CManager::GetSizeInfo(double& dspSize, long& repSize, long& clockTime, CDyn
 	  designSpaceSize = dspSize;
 
 	  signal( SIGFPE, old_handler );
-	  if (fp_except) 
+	  if (fp_except)
 	  {
 		  dspSize = HUGE_VAL;
 		  fp_except = false;
@@ -2046,7 +2052,7 @@ bool CManager::GetSizeInfo(double& dspSize, long& repSize, long& clockTime, CDyn
 
 
 	  // now restrict (actually prune the space), remove the dead alternatives
-  
+
 	  bool r1 = false;
 	  pos = spaces.GetHeadPosition();
 	  while(pos) r1 = spaces.GetNext(pos)->Restrict(prun) || r1;
@@ -2125,7 +2131,7 @@ inline CConstraint * CManager::FindConstraint(long i)
 
 inline CDynSpace * CManager:: FindSpace(const CSpace *c)
 {
-	
+
 	GET_CURRENTGENERATION
 
 	CDynSpace *s;

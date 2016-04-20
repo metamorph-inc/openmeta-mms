@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<style type="text/css"><![CDATA[
+			circle.leaf {
+			/* circle.root { */
+				fill: red;
+                fill-opacity: 1;
+            }
+			circle {
+                fill-opacity: 0;
+				stroke: black;
+				stroke-width: 7;
+			}
+            line {
+                stroke: black;
+                stroke-width: 7;
+            }
+		]]></style>
+	</defs>
+
+    <circle cx="50" cy="20" r="14" class="root"/>
+    <circle cx="75" cy="60" r="14" class="leaf"/>
+    <circle cx="25" cy="60" r="14" class="leaf"/>
+
+     <line x1="58" y1="30" x2="69" y2="49" />
+     <line x1="42" y1="30" x2="31" y2="49" />
+</svg>

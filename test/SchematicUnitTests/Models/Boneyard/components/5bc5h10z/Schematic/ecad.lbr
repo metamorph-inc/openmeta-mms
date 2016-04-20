@@ -1,0 +1,81 @@
+<eagle version="6.5.0" xmlns="eagle">
+  <drawing>
+    <library>
+      <packages>
+        <package name="SO08" xmlns="eagle">
+          <wire x1="1.9" y1="-2.4" x2="-1.4" y2="-2.4" width="0.2032" layer="51" />
+          <wire x1="-1.4" y1="-2.4" x2="-1.9" y2="-2.4" width="0.2032" layer="51" />
+          <wire x1="-1.9" y1="-2.4" x2="-1.9" y2="2.4" width="0.2032" layer="51" />
+          <wire x1="-1.9" y1="2.4" x2="-1.4" y2="2.4" width="0.2032" layer="51" />
+          <wire x1="-1.4" y1="2.4" x2="1.9" y2="2.4" width="0.2032" layer="51" />
+          <wire x1="1.9" y1="2.4" x2="1.9" y2="-2.4" width="0.2032" layer="51" />
+          <wire x1="-1.4" y1="-2.4" x2="-1.4" y2="2.4" width="0.2032" layer="51" />
+          <text x="-1.905" y="2.667" size="1.27" layer="25">&gt;NAME</text>
+          <text x="-1.905" y="-3.937" size="1.27" layer="27">&gt;VALUE</text>
+          <rectangle x1="-2.795" y1="1.355" x2="-2.305" y2="2.455" layer="51" rot="R270" />
+          <rectangle x1="-2.795" y1="0.085" x2="-2.305" y2="1.185" layer="51" rot="R270" />
+          <rectangle x1="-2.795" y1="-1.185" x2="-2.305" y2="-0.085" layer="51" rot="R270" />
+          <rectangle x1="-2.795" y1="-2.455" x2="-2.305" y2="-1.355" layer="51" rot="R270" />
+          <rectangle x1="2.305" y1="-2.455" x2="2.795" y2="-1.355" layer="51" rot="R270" />
+          <rectangle x1="2.305" y1="-1.185" x2="2.795" y2="-0.085" layer="51" rot="R270" />
+          <rectangle x1="2.305" y1="0.085" x2="2.795" y2="1.185" layer="51" rot="R270" />
+          <rectangle x1="2.305" y1="1.355" x2="2.795" y2="2.455" layer="51" rot="R270" />
+          <circle x="-2.54" y="3.048" radius="0.127" width="0.127" layer="21" />
+          <smd name="2" x="-2.6" y="0.635" dx="0.6" dy="2.2" layer="1" rot="R270" />
+          <smd name="7" x="2.6" y="0.635" dx="0.6" dy="2.2" layer="1" rot="R270" />
+          <smd name="1" x="-2.6" y="1.905" dx="0.6" dy="2.2" layer="1" rot="R270" />
+          <smd name="3" x="-2.6" y="-0.635" dx="0.6" dy="2.2" layer="1" rot="R270" />
+          <smd name="4" x="-2.6" y="-1.905" dx="0.6" dy="2.2" layer="1" rot="R270" />
+          <smd name="8" x="2.6" y="1.905" dx="0.6" dy="2.2" layer="1" rot="R270" />
+          <smd name="6" x="2.6" y="-0.635" dx="0.6" dy="2.2" layer="1" rot="R270" />
+          <smd name="5" x="2.6" y="-1.905" dx="0.6" dy="2.2" layer="1" rot="R270" />
+        </package>
+      </packages>
+      <symbols>
+        <symbol name="NE555DR">
+          <wire x1="-10.16" y1="12.7" x2="-10.16" y2="-12.7" width="0.254" layer="94" />
+          <wire x1="-10.16" y1="-12.7" x2="10.16" y2="-12.7" width="0.254" layer="94" />
+          <wire x1="10.16" y1="-12.7" x2="10.16" y2="12.7" width="0.254" layer="94" />
+          <wire x1="10.16" y1="12.7" x2="2.54" y2="12.7" width="0.254" layer="94" />
+          <wire x1="-2.54" y1="12.7" x2="-10.16" y2="12.7" width="0.254" layer="94" />
+          <wire x1="2.54" y1="12.7" x2="-2.54" y2="12.7" width="0.254" layer="94" curve="-180" />
+          <circle x="-7.62" y="10.16" radius="0.803215625" width="0.254" layer="94" />
+          <text x="-12.7" y="-17.78" size="1.778" layer="95">&gt;NAME</text>
+          <text x="-12.7" y="-20.32" size="1.778" layer="96">&gt;VALUE</text>
+          <pin name="GND" x="-15.24" y="7.62" length="middle" direction="pas" />
+          <pin name="TRIG" x="-15.24" y="2.54" length="middle" direction="pas" />
+          <pin name="OUT" x="-15.24" y="-2.54" length="middle" direction="pas" />
+          <pin name="RESET" x="-15.24" y="-7.62" length="middle" direction="pas" />
+          <pin name="CONT" x="15.24" y="-7.62" length="middle" direction="pas" rot="R180" />
+          <pin name="THRES" x="15.24" y="-2.54" length="middle" direction="pas" rot="R180" />
+          <pin name="DISCH" x="15.24" y="2.54" length="middle" direction="pas" rot="R180" />
+          <pin name="VCC" x="15.24" y="7.62" length="middle" direction="pas" rot="R180" />
+        </symbol>
+      </symbols>
+      <devicesets>
+        <deviceset name="NE555DR" prefix="U">
+          <gates>
+            <gate name="G$1" symbol="NE555DR" x="0" y="0" />
+          </gates>
+          <devices>
+            <device name="" package="SO08" xmlns="eagle">
+              <connects>
+                <connect gate="G$1" pin="CONT" pad="5" />
+                <connect gate="G$1" pin="DISCH" pad="7" />
+                <connect gate="G$1" pin="GND" pad="1" />
+                <connect gate="G$1" pin="OUT" pad="3" />
+                <connect gate="G$1" pin="RESET" pad="4" />
+                <connect gate="G$1" pin="THRES" pad="6" />
+                <connect gate="G$1" pin="TRIG" pad="2" />
+                <connect gate="G$1" pin="VCC" pad="8" />
+              </connects>
+              <technologies>
+                <technology name="" />
+              </technologies>
+            </device>
+          </devices>
+        </deviceset>
+      </devicesets>
+    </library>
+  </drawing>
+</eagle>

@@ -401,13 +401,22 @@ namespace META
             bool success = false;
             if (MgaComponent is ICyPhyInterpreter)
             {
-                PreConfigArgs preConfigArgs = new PreConfigArgs();
-                preConfigArgs.ProjectDirectory = projectDir;
-                // FIXME: fill in other preConfigArgs
-                this.InterpreterConfig = META.ComComponent.DeserializeConfiguration(projectDir, InterpreterConfig.GetType(), ProgId);
+                PreConfigArgs preConfigArgs = new PreConfigArgs() { ProjectDirectory = projectDir };
                 IInterpreterPreConfiguration preConfig = (MgaComponent as ICyPhyInterpreter).PreConfig(preConfigArgs);
-                 // Set configuration based on Workflow Parameters. This will override all [WorkflowConfigItem] members.
-                this.SetWorkflowParameterValues();
+
+                // Get previous configuration
+                if (InterpreterConfig != null)
+                {
+                    META.ComComponent.DeserializeConfiguration(projectDir, InterpreterConfig.GetType(), ProgId);
+                    // Set configuration based on Workflow Parameters. This will override all [WorkflowConfigItem] members.
+                    this.SetWorkflowParameterValues();
+                }
+                else
+                {
+                    success = true;
+                    return success;
+                }
+
                 if (showGUI == false)
                 {
                     return true;

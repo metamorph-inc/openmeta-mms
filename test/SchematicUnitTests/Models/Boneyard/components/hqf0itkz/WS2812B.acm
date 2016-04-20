@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="e51b5bbc-623f-4cff-b6a8-48d3378b56d8" Name="WS2812B" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-5e0cf38e-2446-42ec-abea-5334117d87c0" Author="" Notes="" XPosition="270" YPosition="200" Name="EDAModel" ID="id-f483335f-cc36-4013-8eca-b2dde634668f" Package="WS2812B" Device="" Library="SparkFun-LED" DeviceSet="WS2812B" xmlns="">
+    <Pin ID="id-ba9abb59-c71c-4863-acc9-240f2f708c32" PortMap="" Notes="" XPosition="575" Definition="" YPosition="25" Name="VSS" EDAGate="G$1" EDASymbolLocationX="17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-36748564-0ee2-4ab9-bf8f-de4a10aa7888" PortMap="" Notes="" XPosition="475" Definition="" YPosition="25" Name="VDD" EDAGate="G$1" EDASymbolLocationX="-5.08" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-cf3ed7f7-0121-404c-8810-c43a2ded66f3" PortMap="" Notes="" XPosition="25" Definition="" YPosition="25" Name="DIN" EDAGate="G$1" EDASymbolLocationX="17.78" EDASymbolLocationY="5.08" EDASymbolRotation="R180" SPICEPortNumber="0" />
+    <Pin ID="id-1b4e47f6-6d99-41a4-b601-b53f922964e1" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="DOUT" EDAGate="G$1" EDASymbolLocationX="-5.08" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Parameter XPosition="225" YPosition="25" Locator="value">
+      <Value ID="id-933d01b2-dc6a-42bd-9e5c-c971000750f4">
+        <ValueExpression xmlns:q2="avm" xsi:type="q2:DerivedValue" ValueSource="id-bbd840e8-5810-4ea1-8cf9-56e857af2da6" />
+      </Value>
+    </Parameter>
+  </DomainModel>
+  <Property xmlns:q3="avm" xsi:type="q3:PrimitiveProperty" Name="value" OnDataSheet="false" ID="property.id-bbd840e8-5810-4ea1-8cf9-56e857af2da6" XPosition="1000" YPosition="40" xmlns="">
+    <Value ID="id-bbd840e8-5810-4ea1-8cf9-56e857af2da6" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q3:FixedValue">
+        <Value />
+      </ValueExpression>
+    </Value>
+  </Property>
+  <Property xmlns:q4="avm" xsi:type="q4:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-cdba87e1-9e1e-4b69-a26e-a5c6d2450876" XPosition="994" YPosition="77" xmlns="">
+    <Value ID="id-cdba87e1-9e1e-4b69-a26e-a5c6d2450876" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q4:FixedValue">
+        <Value>WS2812B</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency Name="WS2812B.pdf" Path="doc\WS2812B.pdf" Hash="" ID="id-aea7a9b7-bd90-4f5c-8a96-c1a934e95239" Notes="" XPosition="105" YPosition="49" xmlns="" />
+  <ResourceDependency Name="ecad(1)" Path="Schematic\ecad(1).lbr" Hash="" ID="id-5e0cf38e-2446-42ec-abea-5334117d87c0" Notes="Standalone EAGLE library for this device" XPosition="329" YPosition="105" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-c8959c7e-056e-4b2e-a2d6-0bda12e5b03b" ApplyJoinData="" XPosition="91" YPosition="161" Notes="" Definition="AnalogSignal" Name="VDD" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-f2a7e4ca-badc-478d-8fdc-bd7743599129" PortMap="id-36748564-0ee2-4ab9-bf8f-de4a10aa7888" Notes="" XPosition="100" Definition="" YPosition="100" Name="VDD" EDAGate="G$1" EDASymbolLocationX="-5.08" EDASymbolLocationY="5.08" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-678043ca-052b-4ae0-a6d5-a0715a97b18e" ApplyJoinData="" XPosition="518" YPosition="168" Notes="" Definition="AnalogSignal" Name="VSS" xmlns="">
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-286f101c-054a-4e83-b508-b25101a68aad" PortMap="id-ba9abb59-c71c-4863-acc9-240f2f708c32" Notes="" XPosition="100" Definition="" YPosition="100" Name="VSS" EDAGate="G$1" EDASymbolLocationX="17.78" EDASymbolLocationY="-2.54" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-e2803edd-6b51-4012-a3ab-eadbfabdac8d" ApplyJoinData="" XPosition="98" YPosition="308" Notes="" Definition="DigitalSignal" Name="DOUT" xmlns="">
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-81d3d075-999a-46cb-b148-751a9ff2f933" PortMap="id-1b4e47f6-6d99-41a4-b601-b53f922964e1" Notes="" XPosition="100" Definition="" YPosition="100" Name="DOUT" EDAGate="G$1" EDASymbolLocationX="-5.08" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-58b823f1-5d7d-47c3-ac20-7b57a3b2d970" ApplyJoinData="" XPosition="532" YPosition="294" Notes="" Definition="DigitalSignal" Name="DIN" xmlns="">
+    <Role xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-dfcd950e-564b-405d-9237-a729d4c0b944" PortMap="id-cf3ed7f7-0121-404c-8810-c43a2ded66f3" Notes="" XPosition="100" Definition="" YPosition="100" Name="DIN" EDAGate="G$1" EDASymbolLocationX="17.78" EDASymbolLocationY="5.08" EDASymbolRotation="R180" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="">optoelectronics.light_sources_and_emitters.leds.leds</Classifications>
+</Component>

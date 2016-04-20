@@ -1,0 +1,6223 @@
+{
+  "boardWidth": 71.0,
+  "boardHeight": 71.0,
+  "numLayers": 2,
+  "boardTemplate": "irregularCircularBoard.brd",
+  "omitBoundary": true,
+  "packages": [
+    {
+      "name": "Capacitor_C0805",
+      "package": "C0805",
+      "pkg_idx": 0,
+      "ComponentID": "{b5e59d83-c49f-4646-a8e7-a36e9d6b8c88}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$1",
+      "package": "C0805",
+      "pkg_idx": 1,
+      "ComponentID": "{042004ca-3e46-4932-b0a6-0003e9ab3d54}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$2",
+      "package": "C0805",
+      "pkg_idx": 2,
+      "ComponentID": "{39194dbd-1563-4246-82a1-0f3ebcfb794f}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$3",
+      "package": "C0805",
+      "pkg_idx": 3,
+      "ComponentID": "{46bc51dd-e61d-47da-a97b-d0165aa0b936}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$4",
+      "package": "C0805",
+      "pkg_idx": 4,
+      "ComponentID": "{934af7e8-27b1-4ab0-9461-900cc9540192}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$5",
+      "package": "C0805",
+      "pkg_idx": 5,
+      "ComponentID": "{c9ede091-cd2a-4f95-a89f-16b5fff11bf5}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$6",
+      "package": "C0805",
+      "pkg_idx": 6,
+      "ComponentID": "{851d76c9-7463-431b-ab9d-b3b57afeecfb}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$7",
+      "package": "C0805",
+      "pkg_idx": 7,
+      "ComponentID": "{cef5b99e-94c6-4ebd-9786-2fded9d028fd}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "Capacitor_C0805$8",
+      "package": "C0805",
+      "pkg_idx": 8,
+      "ComponentID": "{92655fa3-9c85-45a9-b741-ad1793236af1}",
+      "width": 3.946,
+      "height": 1.966,
+      "koWidth": 3.946,
+      "koHeight": 1.966,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 9,
+      "ComponentID": "{23925925-aca5-4449-b9a6-577b94e36b7b}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$1",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 10,
+      "ComponentID": "{0e5853cf-5648-4b26-9107-42422e9895a0}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$10",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 11,
+      "ComponentID": "{7e459654-b33c-4a44-826a-b6bbe2444d9b}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$11",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 12,
+      "ComponentID": "{d3efae5c-3c38-429f-a8e3-76606fc6f3a8}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$12",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 13,
+      "ComponentID": "{d6eb5e6e-d13c-431d-afb1-88f40d0ebe28}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$13",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 14,
+      "ComponentID": "{5ea29b30-8887-4aac-8633-01ac28b17530}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$14",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 15,
+      "ComponentID": "{e8d86fb9-f45a-45e9-9b57-c799e92d0b9e}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$15",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 16,
+      "ComponentID": "{502efe5d-275d-4aae-8674-ce70ae6f91eb}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$16",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 17,
+      "ComponentID": "{a7ccd1dc-0348-4d22-81b8-6693b4c8e37c}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$17",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 18,
+      "ComponentID": "{bfcf7d00-aaf0-41d7-a33d-f412f4d9ff1b}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$18",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 19,
+      "ComponentID": "{4266bb5c-fb51-41be-b954-563619b8b1d0}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$19",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 20,
+      "ComponentID": "{c04092f5-25c0-4851-a083-64ad38f06168}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$2",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 21,
+      "ComponentID": "{febba43e-831a-4b29-b217-d2331cd822be}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$20",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 22,
+      "ComponentID": "{d27cedb1-1ad5-48b6-b332-2ac1302a4534}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$21",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 23,
+      "ComponentID": "{0d7069be-e371-4931-b360-f36c9dc8cf32}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$22",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 24,
+      "ComponentID": "{802f8fda-a2d8-480b-a403-eeb927ffa147}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$23",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 25,
+      "ComponentID": "{ec45005d-7e8c-45ed-be5f-d05c22051c7c}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$24",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 26,
+      "ComponentID": "{99b220b6-6300-44fa-9afb-ca849d2c5765}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$25",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 27,
+      "ComponentID": "{3946df1d-c2c1-4d22-bb6d-b9537c300f95}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$26",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 28,
+      "ComponentID": "{9d23f707-3909-44a6-8535-9fc0f856800c}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$27",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 29,
+      "ComponentID": "{e6a887fb-2b86-4187-bfdc-c2367eadd7a6}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$28",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 30,
+      "ComponentID": "{42cb5e52-2c2c-4df8-9c75-261b5b846259}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$29",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 31,
+      "ComponentID": "{2c36a438-b2c6-4824-b94d-a8e570137671}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$3",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 32,
+      "ComponentID": "{2d305afd-7471-4996-a7e8-edc838628196}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$30",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 33,
+      "ComponentID": "{223dcf2b-04c9-4082-869d-d0ff9e1e6210}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$31",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 34,
+      "ComponentID": "{bf861266-7fdc-4e07-8536-bf425384e4f7}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$32",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 35,
+      "ComponentID": "{05a3dc39-5d5f-47f5-b6c5:10ee599a05c1}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$33",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 36,
+      "ComponentID": "{bb580fef-edbe-48b5-abba-1665c0ba1736}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$34",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 37,
+      "ComponentID": "{a67ef09d-27b3-46a7-b2c1-19db288edc14}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$35",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 38,
+      "ComponentID": "{2bc5d7b9-9284-4a94-9774-70c548042e43}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$36",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 39,
+      "ComponentID": "{29de3804-afb4-41b4-97aa-96cbc0736810}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$37",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 40,
+      "ComponentID": "{66a895a0-c297-42b1-9e8e-4ff0f4fdb92b}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$38",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 41,
+      "ComponentID": "{d5b06a4d-1fa0-4b35-af4a-dd6c45dc845d}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$39",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 42,
+      "ComponentID": "{36e81272-9a6f-4015-b508-6958c57e0c55}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$4",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 43,
+      "ComponentID": "{fd60628d-7979-41f5-b4dd-8f8f6eeb6df4}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$40",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 44,
+      "ComponentID": "{b352181d-4b76-42d6-bebe-f761975dbcb5}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$41",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 45,
+      "ComponentID": "{205e37de-9723-4ec7-af43-4d34bf133bdd}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$42",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 46,
+      "ComponentID": "{135ad81a-5389-44ad-aa50-f1bced71c986}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$43",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 47,
+      "ComponentID": "{8180d26a-a2d7-43f2-9e42-7a14fc95498f}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$44",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 48,
+      "ComponentID": "{a84159b4-112a-4c40-808c-39d438b05da1}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$45",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 49,
+      "ComponentID": "{27f013e2-81b6-4e1e-b364-7c9dd713364d}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$46",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 50,
+      "ComponentID": "{6193074e-065a-41b1-b7f2-3ce495f90e6e}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$47",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 51,
+      "ComponentID": "{15669149-99da-4f8b-8d4c-ac5b3252a52e}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$48",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 52,
+      "ComponentID": "{490bbc50-16ce-43e2-a7b9-267a19a640fb}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$49",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 53,
+      "ComponentID": "{1852ff2a-c95c-4142-a461-2d63295d077b}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$5",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 54,
+      "ComponentID": "{936e4d3f-6d50-483f-b43c-b58bd47308a8}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$50",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 55,
+      "ComponentID": "{b12c767f-6ab1-46c7-ac42-c7501b2e1fb4}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$51",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 56,
+      "ComponentID": "{705b6c7c-e77e-4391-b3bd-8c022ee6ef2e}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$52",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 57,
+      "ComponentID": "{bb7bce7b-febb-46e4-ac65-67e104d15b29}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$53",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 58,
+      "ComponentID": "{b6348242-b05e-4812-a903-212b9f01699b}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$54",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 59,
+      "ComponentID": "{cc63fe56-59d7-46e0-b502-21973bf8f233}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$55",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 60,
+      "ComponentID": "{318ff1de-6124-4bea-9c97-1398b6fb2d5a}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$56",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 61,
+      "ComponentID": "{edcb4e9c-42a2-4ad8-91f7-c48870f6ac52}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$57",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 62,
+      "ComponentID": "{660a79e6-e5cd-42ac-9d64-5b4eaab48067}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$58",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 63,
+      "ComponentID": "{9ae52f25-4b86-48cb-a38a-b7d659eba621}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$6",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 64,
+      "ComponentID": "{4fdcfeba-0c48-44dd-b736-a158df92ae71}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$7",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 65,
+      "ComponentID": "{e64ee44e-98ec-419c-8af3-8e999c05381d}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$8",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 66,
+      "ComponentID": "{3dc59eeb-8424-4956-9be8-3563e0c049a2}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    },
+    {
+      "name": "MAX11043ATL$9",
+      "package": "21-0141I_T4066-5",
+      "pkg_idx": 67,
+      "ComponentID": "{abc39d24-ccf2-45de-afbd-a6ea5176992d}",
+      "width": 6.7056000000000004,
+      "height": 6.7056000000000004,
+      "koWidth": 6.7056000000000004,
+      "koHeight": 6.7056000000000004,
+      "originX": 0.0,
+      "originY": 0.0,
+      "constraints": []
+    }
+  ],
+  "signals": [
+    {
+      "name": "N$0",
+      "pins": [
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "CAPACITOR_C0805$1"
+        },
+        {
+          "name": "1",
+          "gate": "G$1",
+          "pad": "1",
+          "package": "CAPACITOR_C0805$5"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$45"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$45"
+        }
+      ]
+    },
+    {
+      "name": "N$1",
+      "pins": [
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "CAPACITOR_C0805$1"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$45"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$45"
+        },
+        {
+          "name": "2",
+          "gate": "G$1",
+          "pad": "2",
+          "package": "CAPACITOR_C0805$5"
+        }
+      ]
+    },
+    {
+      "name": "N$2",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL"
+        }
+      ]
+    },
+    {
+      "name": "N$3",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL"
+        }
+      ]
+    },
+    {
+      "name": "N$4",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL"
+        }
+      ]
+    },
+    {
+      "name": "N$5",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL"
+        }
+      ]
+    },
+    {
+      "name": "N$6",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$1"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$1"
+        }
+      ]
+    },
+    {
+      "name": "N$7",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$1"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$1"
+        }
+      ]
+    },
+    {
+      "name": "N$8",
+      "pins": [
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$1"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$1"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$1"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$1"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$1"
+        }
+      ]
+    },
+    {
+      "name": "N$9",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$1"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$1"
+        }
+      ]
+    },
+    {
+      "name": "N$10",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$10"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$10"
+        }
+      ]
+    },
+    {
+      "name": "N$11",
+      "pins": [
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$10"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$10"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$10"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$10"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$10"
+        }
+      ]
+    },
+    {
+      "name": "N$12",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$10"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$10"
+        }
+      ]
+    },
+    {
+      "name": "N$13",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$10"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$10"
+        }
+      ]
+    },
+    {
+      "name": "N$14",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$11"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$11"
+        }
+      ]
+    },
+    {
+      "name": "N$15",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$11"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$11"
+        }
+      ]
+    },
+    {
+      "name": "N$16",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$11"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$11"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$11"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$11"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$11"
+        }
+      ]
+    },
+    {
+      "name": "N$17",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$11"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$11"
+        }
+      ]
+    },
+    {
+      "name": "N$18",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$12"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$12"
+        }
+      ]
+    },
+    {
+      "name": "N$19",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$12"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$12"
+        }
+      ]
+    },
+    {
+      "name": "N$20",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$12"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$12"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$12"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$12"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$12"
+        }
+      ]
+    },
+    {
+      "name": "N$21",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$12"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$12"
+        }
+      ]
+    },
+    {
+      "name": "N$22",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$13"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$13"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$13"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$13"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$13"
+        }
+      ]
+    },
+    {
+      "name": "N$23",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$13"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$13"
+        }
+      ]
+    },
+    {
+      "name": "N$24",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$13"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$13"
+        }
+      ]
+    },
+    {
+      "name": "N$25",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$13"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$13"
+        }
+      ]
+    },
+    {
+      "name": "N$26",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$14"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$14"
+        }
+      ]
+    },
+    {
+      "name": "N$27",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$14"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$14"
+        }
+      ]
+    },
+    {
+      "name": "N$28",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$14"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$14"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$14"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$14"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$14"
+        }
+      ]
+    },
+    {
+      "name": "N$29",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$14"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$14"
+        }
+      ]
+    },
+    {
+      "name": "N$30",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$15"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$15"
+        }
+      ]
+    },
+    {
+      "name": "N$31",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$15"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$15"
+        }
+      ]
+    },
+    {
+      "name": "N$32",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$15"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$15"
+        }
+      ]
+    },
+    {
+      "name": "N$33",
+      "pins": [
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$15"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$15"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$15"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$15"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$15"
+        }
+      ]
+    },
+    {
+      "name": "N$34",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$16"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$16"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$16"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$16"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$16"
+        }
+      ]
+    },
+    {
+      "name": "N$35",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$16"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$16"
+        }
+      ]
+    },
+    {
+      "name": "N$36",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$16"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$16"
+        }
+      ]
+    },
+    {
+      "name": "N$37",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$16"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$16"
+        }
+      ]
+    },
+    {
+      "name": "N$38",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$17"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$17"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$17"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$17"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$17"
+        }
+      ]
+    },
+    {
+      "name": "N$39",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$17"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$17"
+        }
+      ]
+    },
+    {
+      "name": "N$40",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$17"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$17"
+        }
+      ]
+    },
+    {
+      "name": "N$41",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$17"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$17"
+        }
+      ]
+    },
+    {
+      "name": "N$42",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$18"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$18"
+        }
+      ]
+    },
+    {
+      "name": "N$43",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$18"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$18"
+        }
+      ]
+    },
+    {
+      "name": "N$44",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$18"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$18"
+        }
+      ]
+    },
+    {
+      "name": "N$45",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$18"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$18"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$18"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$18"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$18"
+        }
+      ]
+    },
+    {
+      "name": "N$46",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$19"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$19"
+        }
+      ]
+    },
+    {
+      "name": "N$47",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$19"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$19"
+        }
+      ]
+    },
+    {
+      "name": "N$48",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$19"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$19"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$19"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$19"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$19"
+        }
+      ]
+    },
+    {
+      "name": "N$49",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$19"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$19"
+        }
+      ]
+    },
+    {
+      "name": "N$50",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$2"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$2"
+        }
+      ]
+    },
+    {
+      "name": "N$51",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$2"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$2"
+        }
+      ]
+    },
+    {
+      "name": "N$52",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$2"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$2"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$2"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$2"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$2"
+        }
+      ]
+    },
+    {
+      "name": "N$53",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$2"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$2"
+        }
+      ]
+    },
+    {
+      "name": "N$54",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$20"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$20"
+        }
+      ]
+    },
+    {
+      "name": "N$55",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$20"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$20"
+        }
+      ]
+    },
+    {
+      "name": "N$56",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$20"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$20"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$20"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$20"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$20"
+        }
+      ]
+    },
+    {
+      "name": "N$57",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$20"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$20"
+        }
+      ]
+    },
+    {
+      "name": "N$58",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$21"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$21"
+        }
+      ]
+    },
+    {
+      "name": "N$59",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$21"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$21"
+        }
+      ]
+    },
+    {
+      "name": "N$60",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$21"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$21"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$21"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$21"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$21"
+        }
+      ]
+    },
+    {
+      "name": "N$61",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$21"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$21"
+        }
+      ]
+    },
+    {
+      "name": "N$62",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$22"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$22"
+        }
+      ]
+    },
+    {
+      "name": "N$63",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$22"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$22"
+        }
+      ]
+    },
+    {
+      "name": "N$64",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$22"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$22"
+        }
+      ]
+    },
+    {
+      "name": "N$65",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$22"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$22"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$22"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$22"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$22"
+        }
+      ]
+    },
+    {
+      "name": "N$66",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$23"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$23"
+        }
+      ]
+    },
+    {
+      "name": "N$67",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$23"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$23"
+        }
+      ]
+    },
+    {
+      "name": "N$68",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$23"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$23"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$23"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$23"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$23"
+        }
+      ]
+    },
+    {
+      "name": "N$69",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$23"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$23"
+        }
+      ]
+    },
+    {
+      "name": "N$70",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$24"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$24"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$24"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$24"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$24"
+        }
+      ]
+    },
+    {
+      "name": "N$71",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$24"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$24"
+        }
+      ]
+    },
+    {
+      "name": "N$72",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$24"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$24"
+        }
+      ]
+    },
+    {
+      "name": "N$73",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$24"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$24"
+        }
+      ]
+    },
+    {
+      "name": "N$74",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$25"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$25"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$25"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$25"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$25"
+        }
+      ]
+    },
+    {
+      "name": "N$75",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$25"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$25"
+        }
+      ]
+    },
+    {
+      "name": "N$76",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$25"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$25"
+        }
+      ]
+    },
+    {
+      "name": "N$77",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$25"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$25"
+        }
+      ]
+    },
+    {
+      "name": "N$78",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$26"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$26"
+        }
+      ]
+    },
+    {
+      "name": "N$79",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$26"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$26"
+        }
+      ]
+    },
+    {
+      "name": "N$80",
+      "pins": [
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$26"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$26"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$26"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$26"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$26"
+        }
+      ]
+    },
+    {
+      "name": "N$81",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$26"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$26"
+        }
+      ]
+    },
+    {
+      "name": "N$82",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$27"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$27"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$27"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$27"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$27"
+        }
+      ]
+    },
+    {
+      "name": "N$83",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$27"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$27"
+        }
+      ]
+    },
+    {
+      "name": "N$84",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$27"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$27"
+        }
+      ]
+    },
+    {
+      "name": "N$85",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$27"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$27"
+        }
+      ]
+    },
+    {
+      "name": "N$86",
+      "pins": [
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$28"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$28"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$28"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$28"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$28"
+        }
+      ]
+    },
+    {
+      "name": "N$87",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$28"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$28"
+        }
+      ]
+    },
+    {
+      "name": "N$88",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$28"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$28"
+        }
+      ]
+    },
+    {
+      "name": "N$89",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$28"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$28"
+        }
+      ]
+    },
+    {
+      "name": "N$90",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$29"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$29"
+        }
+      ]
+    },
+    {
+      "name": "N$91",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$29"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$29"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$29"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$29"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$29"
+        }
+      ]
+    },
+    {
+      "name": "N$92",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$29"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$29"
+        }
+      ]
+    },
+    {
+      "name": "N$93",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$29"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$29"
+        }
+      ]
+    },
+    {
+      "name": "N$94",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$3"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$3"
+        }
+      ]
+    },
+    {
+      "name": "N$95",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$3"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$3"
+        }
+      ]
+    },
+    {
+      "name": "N$96",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$3"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$3"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$3"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$3"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$3"
+        }
+      ]
+    },
+    {
+      "name": "N$97",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$3"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$3"
+        }
+      ]
+    },
+    {
+      "name": "N$98",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$30"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$30"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$30"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$30"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$30"
+        }
+      ]
+    },
+    {
+      "name": "N$99",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$30"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$30"
+        }
+      ]
+    },
+    {
+      "name": "N$100",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$30"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$30"
+        }
+      ]
+    },
+    {
+      "name": "N$101",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$30"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$30"
+        }
+      ]
+    },
+    {
+      "name": "N$102",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$31"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$31"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$31"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$31"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$31"
+        }
+      ]
+    },
+    {
+      "name": "N$103",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$31"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$31"
+        }
+      ]
+    },
+    {
+      "name": "N$104",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$31"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$31"
+        }
+      ]
+    },
+    {
+      "name": "N$105",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$31"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$31"
+        }
+      ]
+    },
+    {
+      "name": "N$106",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$32"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$32"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$32"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$32"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$32"
+        }
+      ]
+    },
+    {
+      "name": "N$107",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$32"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$32"
+        }
+      ]
+    },
+    {
+      "name": "N$108",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$32"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$32"
+        }
+      ]
+    },
+    {
+      "name": "N$109",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$32"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$32"
+        }
+      ]
+    },
+    {
+      "name": "N$110",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$33"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$33"
+        }
+      ]
+    },
+    {
+      "name": "N$111",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$33"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$33"
+        }
+      ]
+    },
+    {
+      "name": "N$112",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$33"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$33"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$33"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$33"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$33"
+        }
+      ]
+    },
+    {
+      "name": "N$113",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$33"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$33"
+        }
+      ]
+    },
+    {
+      "name": "N$114",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$34"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$34"
+        }
+      ]
+    },
+    {
+      "name": "N$115",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$34"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$34"
+        }
+      ]
+    },
+    {
+      "name": "N$116",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$34"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$34"
+        }
+      ]
+    },
+    {
+      "name": "N$117",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$34"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$34"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$34"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$34"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$34"
+        }
+      ]
+    },
+    {
+      "name": "N$118",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$35"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$35"
+        }
+      ]
+    },
+    {
+      "name": "N$119",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$35"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$35"
+        }
+      ]
+    },
+    {
+      "name": "N$120",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$35"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$35"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$35"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$35"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$35"
+        }
+      ]
+    },
+    {
+      "name": "N$121",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$35"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$35"
+        }
+      ]
+    },
+    {
+      "name": "N$122",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$36"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$36"
+        }
+      ]
+    },
+    {
+      "name": "N$123",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$36"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$36"
+        }
+      ]
+    },
+    {
+      "name": "N$124",
+      "pins": [
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$36"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$36"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$36"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$36"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$36"
+        }
+      ]
+    },
+    {
+      "name": "N$125",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$36"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$36"
+        }
+      ]
+    },
+    {
+      "name": "N$126",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$37"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$37"
+        }
+      ]
+    },
+    {
+      "name": "N$127",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$37"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$37"
+        }
+      ]
+    },
+    {
+      "name": "N$128",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$37"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$37"
+        }
+      ]
+    },
+    {
+      "name": "N$129",
+      "pins": [
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$37"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$37"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$37"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$37"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$37"
+        }
+      ]
+    },
+    {
+      "name": "N$130",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$38"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$38"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$38"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$38"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$38"
+        }
+      ]
+    },
+    {
+      "name": "N$131",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$38"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$38"
+        }
+      ]
+    },
+    {
+      "name": "N$132",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$38"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$38"
+        }
+      ]
+    },
+    {
+      "name": "N$133",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$38"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$38"
+        }
+      ]
+    },
+    {
+      "name": "N$134",
+      "pins": [
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$39"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$39"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$39"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$39"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$39"
+        }
+      ]
+    },
+    {
+      "name": "N$135",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$39"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$39"
+        }
+      ]
+    },
+    {
+      "name": "N$136",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$39"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$39"
+        }
+      ]
+    },
+    {
+      "name": "N$137",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$39"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$39"
+        }
+      ]
+    },
+    {
+      "name": "N$138",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$4"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$4"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$4"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$4"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$4"
+        }
+      ]
+    },
+    {
+      "name": "N$139",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$4"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$4"
+        }
+      ]
+    },
+    {
+      "name": "N$140",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$4"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$4"
+        }
+      ]
+    },
+    {
+      "name": "N$141",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$4"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$4"
+        }
+      ]
+    },
+    {
+      "name": "N$142",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$40"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$40"
+        }
+      ]
+    },
+    {
+      "name": "N$143",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$40"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$40"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$40"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$40"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$40"
+        }
+      ]
+    },
+    {
+      "name": "N$144",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$40"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$40"
+        }
+      ]
+    },
+    {
+      "name": "N$145",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$40"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$40"
+        }
+      ]
+    },
+    {
+      "name": "N$146",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$41"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$41"
+        }
+      ]
+    },
+    {
+      "name": "N$147",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$41"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$41"
+        }
+      ]
+    },
+    {
+      "name": "N$148",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$41"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$41"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$41"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$41"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$41"
+        }
+      ]
+    },
+    {
+      "name": "N$149",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$41"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$41"
+        }
+      ]
+    },
+    {
+      "name": "N$150",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$42"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$42"
+        }
+      ]
+    },
+    {
+      "name": "N$151",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$42"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$42"
+        }
+      ]
+    },
+    {
+      "name": "N$152",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$42"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$42"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$42"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$42"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$42"
+        }
+      ]
+    },
+    {
+      "name": "N$153",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$42"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$42"
+        }
+      ]
+    },
+    {
+      "name": "N$154",
+      "pins": [
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$43"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$43"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$43"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$43"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$43"
+        }
+      ]
+    },
+    {
+      "name": "N$155",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$43"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$43"
+        }
+      ]
+    },
+    {
+      "name": "N$156",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$43"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$43"
+        }
+      ]
+    },
+    {
+      "name": "N$157",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$43"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$43"
+        }
+      ]
+    },
+    {
+      "name": "N$158",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$44"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$44"
+        }
+      ]
+    },
+    {
+      "name": "N$159",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$44"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$44"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$44"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$44"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$44"
+        }
+      ]
+    },
+    {
+      "name": "N$160",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$44"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$44"
+        }
+      ]
+    },
+    {
+      "name": "N$161",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$44"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$44"
+        }
+      ]
+    },
+    {
+      "name": "N$162",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$45"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$45"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$45"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$45"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$45"
+        }
+      ]
+    },
+    {
+      "name": "N$163",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$45"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$45"
+        }
+      ]
+    },
+    {
+      "name": "N$164",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$46"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$46"
+        }
+      ]
+    },
+    {
+      "name": "N$165",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$46"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$46"
+        }
+      ]
+    },
+    {
+      "name": "N$166",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$46"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$46"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$46"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$46"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$46"
+        }
+      ]
+    },
+    {
+      "name": "N$167",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$46"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$46"
+        }
+      ]
+    },
+    {
+      "name": "N$168",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$47"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$47"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$47"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$47"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$47"
+        }
+      ]
+    },
+    {
+      "name": "N$169",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$47"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$47"
+        }
+      ]
+    },
+    {
+      "name": "N$170",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$47"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$47"
+        }
+      ]
+    },
+    {
+      "name": "N$171",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$47"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$47"
+        }
+      ]
+    },
+    {
+      "name": "N$172",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$48"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$48"
+        }
+      ]
+    },
+    {
+      "name": "N$173",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$48"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$48"
+        }
+      ]
+    },
+    {
+      "name": "N$174",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$48"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$48"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$48"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$48"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$48"
+        }
+      ]
+    },
+    {
+      "name": "N$175",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$48"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$48"
+        }
+      ]
+    },
+    {
+      "name": "N$176",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$49"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$49"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$49"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$49"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$49"
+        }
+      ]
+    },
+    {
+      "name": "N$177",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$49"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$49"
+        }
+      ]
+    },
+    {
+      "name": "N$178",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$49"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$49"
+        }
+      ]
+    },
+    {
+      "name": "N$179",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$49"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$49"
+        }
+      ]
+    },
+    {
+      "name": "N$180",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$5"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$5"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$5"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$5"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$5"
+        }
+      ]
+    },
+    {
+      "name": "N$181",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$5"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$5"
+        }
+      ]
+    },
+    {
+      "name": "N$182",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$5"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$5"
+        }
+      ]
+    },
+    {
+      "name": "N$183",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$5"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$5"
+        }
+      ]
+    },
+    {
+      "name": "N$184",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$50"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$50"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$50"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$50"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$50"
+        }
+      ]
+    },
+    {
+      "name": "N$185",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$50"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$50"
+        }
+      ]
+    },
+    {
+      "name": "N$186",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$50"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$50"
+        }
+      ]
+    },
+    {
+      "name": "N$187",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$50"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$50"
+        }
+      ]
+    },
+    {
+      "name": "N$188",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$51"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$51"
+        }
+      ]
+    },
+    {
+      "name": "N$189",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$51"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$51"
+        }
+      ]
+    },
+    {
+      "name": "N$190",
+      "pins": [
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$51"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$51"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$51"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$51"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$51"
+        }
+      ]
+    },
+    {
+      "name": "N$191",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$51"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$51"
+        }
+      ]
+    },
+    {
+      "name": "N$192",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$52"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$52"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$52"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$52"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$52"
+        }
+      ]
+    },
+    {
+      "name": "N$193",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$52"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$52"
+        }
+      ]
+    },
+    {
+      "name": "N$194",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$52"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$52"
+        }
+      ]
+    },
+    {
+      "name": "N$195",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$52"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$52"
+        }
+      ]
+    },
+    {
+      "name": "N$196",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$53"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$53"
+        }
+      ]
+    },
+    {
+      "name": "N$197",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$53"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$53"
+        }
+      ]
+    },
+    {
+      "name": "N$198",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$53"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$53"
+        }
+      ]
+    },
+    {
+      "name": "N$199",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$53"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$53"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$53"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$53"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$53"
+        }
+      ]
+    },
+    {
+      "name": "N$200",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$54"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$54"
+        }
+      ]
+    },
+    {
+      "name": "N$201",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$54"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$54"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$54"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$54"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$54"
+        }
+      ]
+    },
+    {
+      "name": "N$202",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$54"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$54"
+        }
+      ]
+    },
+    {
+      "name": "N$203",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$54"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$54"
+        }
+      ]
+    },
+    {
+      "name": "N$204",
+      "pins": [
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$55"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$55"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$55"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$55"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$55"
+        }
+      ]
+    },
+    {
+      "name": "N$205",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$55"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$55"
+        }
+      ]
+    },
+    {
+      "name": "N$206",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$55"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$55"
+        }
+      ]
+    },
+    {
+      "name": "N$207",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$55"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$55"
+        }
+      ]
+    },
+    {
+      "name": "N$208",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$56"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$56"
+        }
+      ]
+    },
+    {
+      "name": "N$209",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$56"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$56"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$56"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$56"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$56"
+        }
+      ]
+    },
+    {
+      "name": "N$210",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$56"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$56"
+        }
+      ]
+    },
+    {
+      "name": "N$211",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$56"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$56"
+        }
+      ]
+    },
+    {
+      "name": "N$212",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$57"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$57"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$57"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$57"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$57"
+        }
+      ]
+    },
+    {
+      "name": "N$213",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$57"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$57"
+        }
+      ]
+    },
+    {
+      "name": "N$214",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$57"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$57"
+        }
+      ]
+    },
+    {
+      "name": "N$215",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$57"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$57"
+        }
+      ]
+    },
+    {
+      "name": "N$216",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$58"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$58"
+        }
+      ]
+    },
+    {
+      "name": "N$217",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$58"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$58"
+        }
+      ]
+    },
+    {
+      "name": "N$218",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$58"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$58"
+        }
+      ]
+    },
+    {
+      "name": "N$219",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$58"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$58"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$58"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$58"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$58"
+        }
+      ]
+    },
+    {
+      "name": "N$220",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$6"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$6"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$6"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$6"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$6"
+        }
+      ]
+    },
+    {
+      "name": "N$221",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$6"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$6"
+        }
+      ]
+    },
+    {
+      "name": "N$222",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$6"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$6"
+        }
+      ]
+    },
+    {
+      "name": "N$223",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$6"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$6"
+        }
+      ]
+    },
+    {
+      "name": "N$224",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$7"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$7"
+        }
+      ]
+    },
+    {
+      "name": "N$225",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$7"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$7"
+        }
+      ]
+    },
+    {
+      "name": "N$226",
+      "pins": [
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$7"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$7"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$7"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$7"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$7"
+        }
+      ]
+    },
+    {
+      "name": "N$227",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$7"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$7"
+        }
+      ]
+    },
+    {
+      "name": "N$228",
+      "pins": [
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$8"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$8"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$8"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$8"
+        },
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$8"
+        }
+      ]
+    },
+    {
+      "name": "N$229",
+      "pins": [
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$8"
+        },
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$8"
+        }
+      ]
+    },
+    {
+      "name": "N$230",
+      "pins": [
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$8"
+        },
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$8"
+        }
+      ]
+    },
+    {
+      "name": "N$231",
+      "pins": [
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$8"
+        },
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$8"
+        }
+      ]
+    },
+    {
+      "name": "N$232",
+      "pins": [
+        {
+          "name": "DVDD_2",
+          "gate": "A",
+          "pad": "8",
+          "package": "MAX11043ATL$9"
+        },
+        {
+          "name": "DVDD",
+          "gate": "A",
+          "pad": "22",
+          "package": "MAX11043ATL$9"
+        }
+      ]
+    },
+    {
+      "name": "N$233",
+      "pins": [
+        {
+          "name": "DGND",
+          "gate": "A",
+          "pad": "23",
+          "package": "MAX11043ATL$9"
+        },
+        {
+          "name": "DGND_2",
+          "gate": "A",
+          "pad": "7",
+          "package": "MAX11043ATL$9"
+        }
+      ]
+    },
+    {
+      "name": "N$234",
+      "pins": [
+        {
+          "name": "AGND_3",
+          "gate": "A",
+          "pad": "24",
+          "package": "MAX11043ATL$9"
+        },
+        {
+          "name": "IC_2",
+          "gate": "A",
+          "pad": "17",
+          "package": "MAX11043ATL$9"
+        },
+        {
+          "name": "AGND_2",
+          "gate": "A",
+          "pad": "6",
+          "package": "MAX11043ATL$9"
+        },
+        {
+          "name": "AGND",
+          "gate": "A",
+          "pad": "33",
+          "package": "MAX11043ATL$9"
+        },
+        {
+          "name": "IC",
+          "gate": "A",
+          "pad": "35",
+          "package": "MAX11043ATL$9"
+        }
+      ]
+    },
+    {
+      "name": "N$235",
+      "pins": [
+        {
+          "name": "AVDD_2",
+          "gate": "A",
+          "pad": "5",
+          "package": "MAX11043ATL$9"
+        },
+        {
+          "name": "AVDD",
+          "gate": "A",
+          "pad": "26",
+          "package": "MAX11043ATL$9"
+        }
+      ]
+    }
+  ],
+  "constraints": [
+    {
+      "x": "29:42",
+      "y": "29:42",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "29:42",
+      "y": "29:42",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "0:5",
+      "y": "0:29",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "0:5",
+      "y": "0:29",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "5:10",
+      "y": "0:17",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "5:10",
+      "y": "0:17",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "10:15",
+      "y": "0:11",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "10:15",
+      "y": "0:11",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "15:20",
+      "y": "0:6",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "15:20",
+      "y": "0:6",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "20:51",
+      "y": "0:3",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "20:51",
+      "y": "0:3",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "51:56",
+      "y": "0:6",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "51:56",
+      "y": "0:6",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "56:61",
+      "y": "0:11",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "56:61",
+      "y": "0:11",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "61:66",
+      "y": "0:17",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "61:66",
+      "y": "0:17",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "66:71",
+      "y": "0:29",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "66:71",
+      "y": "0:29",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "0:5",
+      "y": "42:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "0:5",
+      "y": "42:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "5:10",
+      "y": "54:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "5:10",
+      "y": "54:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "10:15",
+      "y": "60:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "10:15",
+      "y": "60:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "15:20",
+      "y": "65:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "15:20",
+      "y": "65:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "20:51",
+      "y": "68:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "20:51",
+      "y": "68:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "51:56",
+      "y": "65:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "51:56",
+      "y": "65:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "56:61",
+      "y": "60:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "56:61",
+      "y": "60:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "61:66",
+      "y": "54:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "61:66",
+      "y": "54:71",
+      "layer": "1",
+      "type": "ex-region"
+    },
+    {
+      "x": "66:71",
+      "y": "42:71",
+      "layer": "0",
+      "type": "ex-region"
+    },
+    {
+      "x": "66:71",
+      "y": "42:71",
+      "layer": "1",
+      "type": "ex-region"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SchemaVersion="2.5" ID="1646205f-6dbc-4f33-a260-00de39c5f0e7" Name="Red_LED" Version="" xmlns="avm">
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" UsesResource="id-7e29e8cd-3aea-4ed6-b67f-55d1153b0a3f" Author="" Notes="" XPosition="270" YPosition="200" Name="EDAModel" ID="id-05d938b4-2623-49e3-8dbc-d961c250bd12" Package="LED" Device="" Library="Andres_Project" DeviceSet="LED" xmlns="">
+    <Pin ID="id-037b6c25-2c24-4ae7-a8a0-483e40af94d3" PortMap="" Notes="" XPosition="125" Definition="" YPosition="25" Name="CATHODE" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+    <Pin ID="id-df1a85b5-0b1c-4ce8-8555-ba18a8afa001" PortMap="" Notes="" XPosition="25" Definition="" YPosition="25" Name="ANODE" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </DomainModel>
+  <DomainModel xmlns:q2="spice" xsi:type="q2:SPICEModel" UsesResource="id-cc6a0a41-1f2e-440e-940c-13961e347361" Author="" Notes="Created using SPICE Model CAT Module" XPosition="350" YPosition="690" Name="D_red_SPICEModel" Class="D:D_red" xmlns="">
+    <Pin ID="id-a3391c49-89bc-444a-a4f1-ec6530773b29" PortMap="id-10eae21a-98e1-4e7a-a51f-533c74832f1f" Notes="" XPosition="50" Definition="" YPosition="50" Name="ANODE" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="0" />
+    <Pin ID="id-54862890-5068-471f-afbc-f1945a4ff2b2" PortMap="id-42bcb87c-8336-446a-a03a-f2775dad3aa9" Notes="" XPosition="50" Definition="" YPosition="150" Name="CATHODE" EDAGate="" EDASymbolLocationX="" EDASymbolLocationY="" EDASymbolRotation="" SPICEPortNumber="1" />
+  </DomainModel>
+  <Property xmlns:q3="avm" xsi:type="q3:PrimitiveProperty" Name="octopart_mpn" OnDataSheet="false" ID="property.id-d12d40f5-c53c-443e-9152-56cd13644855" XPosition="504" YPosition="490" xmlns="">
+    <Value ID="id-d12d40f5-c53c-443e-9152-56cd13644855" DimensionType="Scalar" Dimensions="" DataType="String">
+      <ValueExpression xsi:type="q3:FixedValue">
+        <Value>LTST-C191KRKT</Value>
+      </ValueExpression>
+    </Value>
+  </Property>
+  <ResourceDependency Name="Icon.png" Path="Icon.png" Hash="" ID="id-4c9f262c-aac2-422e-825e-a4dc45a34b62" Notes="Custom icon for this component" xmlns="" />
+  <ResourceDependency Name="ecad" Path="Schematic\ecad.lbr" Hash="" ID="id-7e29e8cd-3aea-4ed6-b67f-55d1153b0a3f" Notes="Standalone EAGLE library for this device" XPosition="650" YPosition="200" xmlns="" />
+  <ResourceDependency Name="SPICEModelFile" Path="Spice\Red_LED.txt" Hash="" ID="id-cc6a0a41-1f2e-440e-940c-13961e347361" Notes="Derived from 'C:\Users\Andres\Desktop\Spice_Components\Red_LED.txt'.&#xA;" XPosition="550" YPosition="590" xmlns="" />
+  <Connector ConnectorComposition="" ID="id-b6b40634-1922-4a04-9750-87e1436784cd" ApplyJoinData="" XPosition="100" YPosition="915" Notes="" Definition="" Name="ANODE" xmlns="">
+    <Role xmlns:q4="schematic" xsi:type="q4:Pin" ID="id-10eae21a-98e1-4e7a-a51f-533c74832f1f" PortMap="id-df1a85b5-0b1c-4ce8-8555-ba18a8afa001" Notes="" XPosition="100" Definition="" YPosition="100" Name="ANODE" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="-2.54" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Connector ConnectorComposition="" ID="id-73b09791-4046-432b-b609-bcb1d8a04dc6" ApplyJoinData="" XPosition="100" YPosition="790" Notes="" Definition="" Name="CATHODE" xmlns="">
+    <Role xmlns:q5="schematic" xsi:type="q5:Pin" ID="id-42bcb87c-8336-446a-a03a-f2775dad3aa9" PortMap="id-037b6c25-2c24-4ae7-a8a0-483e40af94d3" Notes="" XPosition="100" Definition="" YPosition="100" Name="CATHODE" EDAGate="G$1" EDASymbolLocationX="0" EDASymbolLocationY="7.62" EDASymbolRotation="0" SPICEPortNumber="0" />
+  </Connector>
+  <Classifications xmlns="" />
+</Component>
