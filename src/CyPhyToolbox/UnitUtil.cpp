@@ -4,6 +4,7 @@
 #include <fstream>
 #include <math.h>
 
+UnitUtil::DimensionRep UnitUtil::DimensionRep::zeroes = UnitUtil::DimensionRep(0.0);
 
 	UnitUtil::ValueUnitRep::ValueUnitRep(UnitUtil& unitUtil, double aValue, unit& unitRef)
 	{
