@@ -1126,18 +1126,74 @@ namespace CyPhyPET
                 excel.Attributes.ExcelFilename = excel.Attributes.ExcelFilename.Substring((mgaDir + "\\").Length);
             }
 
-            var valueFlow = ((GME.MGA.Meta.IMgaMetaModel)excel.Impl.MetaBase).AspectByName["ValueFlowAspect"];
+            HashSet<ISIS.GME.Common.Interfaces.FCO> metricsAndParameters = new HashSet<ISIS.GME.Common.Interfaces.FCO>(new DsmlFCOComparer());
+            foreach (var metricOrParameter in excel.Children.MetricCollection.Concat<ISIS.GME.Common.Interfaces.FCO>(excel.Children.ParameterCollection))
+            {
+                metricsAndParameters.Add(metricOrParameter);
+            }
 
-            var excelApp = (Excel.Application)Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application"));
+            var valueFlow = ((GME.MGA.Meta.IMgaMetaModel)excel.Impl.MetaBase).AspectByName["ValueFlowAspect"];
+            GetExcelInputsAndOutputs(dialog.FileName, (string name, string refersTo) =>
+            {
+                var metric = excel.Children.MetricCollection.Where(m => m.Name == name).FirstOrDefault();
+                if (metric == null)
+                {
+                    metric = CyPhyClasses.Metric.Create(excel);
+                    metric.Name = name;
+                    metric.Attributes.Description = refersTo;
+                    ((IMgaFCO)metric.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 800, 300);
+                }
+                else
+                {
+                    metricsAndParameters.Remove(metric);
+                }
+            }, (string name, string refersTo) =>
+            {
+                var param = excel.Children.ParameterCollection.Where(m => m.Name == name).FirstOrDefault();
+                if (param == null)
+                {
+                    param = CyPhyClasses.Parameter.Create(excel);
+                    param.Name = name;
+                    param.Attributes.Description = refersTo;
+                }
+                else
+                {
+                    metricsAndParameters.Remove(param);
+                }
+            }, () =>
+            {
+                foreach (var metricOrParameter in metricsAndParameters)
+                {
+                    // no longer in Excel doc
+                    metricOrParameter.Delete();
+                }
+            });
+        }
+
+        internal static void GetExcelInputsAndOutputs(string xlFilename, Action<string, string> addOutput, Action<string, string> addInput, Action done)
+        {
+
+            Excel.Application excelApp;
             try
             {
-                HashSet<ISIS.GME.Common.Interfaces.FCO> metricsAndParameters = new HashSet<ISIS.GME.Common.Interfaces.FCO>(new DsmlFCOComparer());
-                foreach (var metricOrParameter in excel.Children.MetricCollection.Concat<ISIS.GME.Common.Interfaces.FCO>(excel.Children.ParameterCollection))
+                excelApp = (Excel.Application)Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application"));
+            }
+            catch (COMException e)
+            {
+                int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
+                if (e.ErrorCode == REGDB_E_CLASSNOTREG)
                 {
-                    metricsAndParameters.Add(metricOrParameter);
+                    throw new ApplicationException("Excel is not installed");
                 }
+                else
+                {
+                    throw;
+                }
+            }
+            try
+            {
                 // n.b. Excel needs an absolute path
-                var workbook = excelApp.Workbooks.Open(dialog.FileName);
+                var workbook = excelApp.Workbooks.Open(xlFilename);
                 // for (var workbook in excelApp.Workbooks
                 foreach (Excel.Name name in workbook.Names)
                 {
@@ -1168,40 +1224,15 @@ namespace CyPhyPET
                         var formula = range.Formula;
                         if (formula is string && ((string)formula).StartsWith("="))
                         {
-                            var metric = excel.Children.MetricCollection.Where(m => m.Name == nameName).FirstOrDefault();
-                            if (metric == null)
-                            {
-                                metric = CyPhyClasses.Metric.Create(excel);
-                                metric.Name = nameName;
-                                metric.Attributes.Description = rt;
-                                ((IMgaFCO)metric.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 800, 300);
-                            }
-                            else
-                            {
-                                metricsAndParameters.Remove(metric);
-                            }
+                            addOutput(nameName, rt);
                         }
                         else
                         {
-                            var param = excel.Children.ParameterCollection.Where(m => m.Name == nameName).FirstOrDefault();
-                            if (param == null)
-                            {
-                                param = CyPhyClasses.Parameter.Create(excel);
-                                param.Name = nameName;
-                                param.Attributes.Description = rt;
-                            }
-                            else
-                            {
-                                metricsAndParameters.Remove(param);
-                            }
+                            addInput(nameName, rt);
                         }
                     }
                 }
-                foreach (var metricOrParameter in metricsAndParameters)
-                {
-                    // no longer in Excel doc
-                    metricOrParameter.Delete();
-                }
+                done();
             }
             finally
             {

@@ -631,6 +631,29 @@ namespace CyPhyPET
                 {"varFile", generateXLFileJson(excel)}
             };
             config.type = "excel_wrapper.excel_wrapper.ExcelWrapper";
+
+            var inputs = excel.Children.ParameterCollection.Select(fco => fco.Name).ToList();
+            var outputs = excel.Children.MetricCollection.Select(fco => fco.Name).ToList();
+
+            HashSet<string> xlInputs = new HashSet<string>();
+            HashSet<string> xlOutputs = new HashSet<string>();
+            CyPhyPETInterpreter.GetExcelInputsAndOutputs(config.details["excelFile"], (string name, string refersTo) =>
+            {
+                outputs.Remove(name);
+            }, (string name, string refersTo) =>
+            {
+                inputs.Remove(name);
+            },
+            () => { });
+
+            if (inputs.Count > 0)
+            {
+                throw new ApplicationException(String.Format("ExcelWrapper {0} has inputs {1} that are not in the Excel file", excel.Name, String.Join(",", inputs.ToArray())));
+            }
+            if (outputs.Count > 0)
+            {
+                throw new ApplicationException(String.Format("ExcelWrapper {0} has outputs {1} that are not in the Excel file", excel.Name, String.Join(",", outputs.ToArray())));
+            }
         }
 
         public void GenerateCode(CyPhy.PythonWrapper python)
@@ -665,6 +688,10 @@ namespace CyPhyPET
 
             foreach (var parameter in excel.Children.ParameterCollection)
             {
+                if (parameter.SrcConnections.ValueFlowCollection.Count() == 0)
+                {
+                    continue;
+                }
                 var sourcePath = GetSourcePath(null, (MgaFCO)parameter.Impl);
                 if (sourcePath != null)
                 {
