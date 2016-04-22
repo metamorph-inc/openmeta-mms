@@ -37,6 +37,13 @@ protected:
 	COLORREF					m_crPortText;
 	bool						m_bPortLabelInside;
 	long						m_iLongestPortTextLength;
+	_bstr_t kind;
+
+	struct ModelButton {
+		std::unique_ptr<Gdiplus::Bitmap> m_bmp;
+		CRect position;
+	};
+	std::unique_ptr<ModelButton> button;
 
 	std::unique_ptr<Gdiplus::Bitmap> m_bmp;
 
