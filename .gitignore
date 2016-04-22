@@ -6,6 +6,7 @@
 *.VC.db
 *.VC.opendb
 bin
+!/bin/
 obj
 *.mga
 *.vcxproj.user
@@ -635,3 +636,14 @@ test/InterchangeTest/DesignInterchangeTest/ImportTestUnits/Ports/testbench_manif
 models/DynamicsTeam/MasterInterpreter/results/
 test/ComponentAuthoringToolTests/
 test/results/
+/src/MetaLink/**/target/
+/test/InterchangeTest/ComponentInterchangeTest/SharedModels/GuideDatum/components/*
+/test/InterchangeTest/ComponentInterchangeTest/ImportTestModels/ImportWithResource/log**
+/diff
+/patch
+/models/ComponentsAndArchitectureTeam/ComponentLibraryManager_AddOn/designs/*
+dependency-reduced-pom.xml
+/tmp.cmd
+/meta/CyPhyML/CyPhyML*.mta
+/meta/CyPhyML/CyPhyML.xmp
+/meta/CyPhyML/CyPhyML.xmp.log
