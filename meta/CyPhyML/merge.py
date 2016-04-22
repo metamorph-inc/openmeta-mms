@@ -24,6 +24,10 @@ OBJTYPE_FOLDER = 6
 
 vu_rev = '4fbabdd2ecfc24cbe3c452b716a14f7989c4ce2a'
 # vu_rev = open(subprocess.check_output('git rev-parse --show-toplevel').strip() + '/.git/MERGE_HEAD', 'rb').read().strip()
+# subprocess.check_call('git show {}:./CyPhyML-core.xme > CyPhyML-core.xme'.format(vu_rev), shell=True)
+# subprocess.check_call('git show {}:./CyPhyML.xme > CyPhyML.xme'.format(vu_rev), shell=True)
+
+
 
 
 @contextlib.contextmanager
@@ -122,23 +126,17 @@ def import_xme(project, filename):
 
 
 def update_core():
-    subprocess.check_call('git show {}:./CyPhyML-core.xme > CyPhyML-core.xme'.format(vu_rev), shell=True)
-
     project = Dispatch("Mga.MgaProject")
     project.Create("MGA=" + "CyPhyML-core.mga", "MetaGME")
     import_xme(project, "CyPhyML-core.xme")
 
-    def add_resource_to_componentassembly(project):
-        hasResourceProxy = project.RootFolder.GetObjectByPathDisp("/@1_Component|kind=SheetFolder/@1x_Component|kind=ParadigmSheet/@Component")
-        hasResourceProxy.Referred = project.RootFolder.GetObjectByPathDisp("/@1_Component|kind=SheetFolder/@1_Component|kind=ParadigmSheet/@DesignElement|kind=Model")
-        hasResourceProxy.Name = "DesignElement"
 
-    do_mods(project, core_mods, add_resource_to_componentassembly)
+    do_mods(project, core_mods)
 
     project.Save()
 
-    dumper = Dispatch("Mga.MgaDumper")
-    dumper.DumpProject(project, "CyPhyML-core.xme")
+    # dumper = Dispatch("Mga.MgaDumper")
+    # dumper.DumpProject(project, "CyPhyML-core.xme")
     project.Close(True)
 
 
@@ -171,8 +169,7 @@ def switch_lib(from_, to):
 
 
 def update_cyphy(version):
-    subprocess.check_call('git show {}:./CyPhyML.xme > CyPhyML.xme'.format(vu_rev), shell=True)
-
+    subprocess.check_call('git show {}:./CyPhyML.xme > CyPhyML.xme'.format('meta-core/master'), shell=True)
     project = Dispatch("Mga.MgaProject")
     project.Create("MGA=" + "CyPhyML.mga", "MetaGME")
     import_xme(project, "CyPhyML.xme")
