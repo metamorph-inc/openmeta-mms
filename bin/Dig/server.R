@@ -39,7 +39,7 @@ shinyServer(function(input, output, clientData, session) {
   rawAbsMin = apply(raw, 2, min, na.rm=TRUE)
   rawAbsMax = apply(raw, 2, max, na.rm=TRUE)
   
-  varRange <- varNames[((as.numeric(rawAbsMax)-as.numeric(rawAbsMin))!= "0")]
+  varRange <- varNames[(((as.numeric(rawAbsMax)-as.numeric(rawAbsMin))!= "0")&(rawAbsMin!=Inf))]
   varRange <- varRange[!is.na(varRange)]
   varRangeNum <- varRange[varClass[varRange] == "numeric" | varClass[varRange] == "integer"]
   print(paste("varRange", varRangeNum))
@@ -215,13 +215,13 @@ shinyServer(function(input, output, clientData, session) {
         bottom <- slider[1]
         top <- slider[2]
         print(paste("Coloring Data:", name, bottom, top))
-        data$color[(data[[name]] >= bottom) & (data[[name]] <= top)] <- "yellow"
+        data$color[(data[[name]] >= bottom) & (data[[name]] <= top)] <- "#F1C40F"
         if (input$radio == "max") {
-          data$color[data[[name]] < bottom] <- "red"
-          data$color[data[[name]] > top] <- "green"
+          data$color[data[[name]] < bottom] <- "#E74C3C"
+          data$color[data[[name]] > top] <- "#2ECC71"
         } else {
-          data$color[data[[name]] < bottom] <- "green"
-          data$color[data[[name]] > top] <- "red"
+          data$color[data[[name]] < bottom] <- "#2ECC71"
+          data$color[data[[name]] > top] <- "#E74C3C"
         }
       # } else {
       #   # Coloring of factors is currently unsupported!
@@ -304,14 +304,14 @@ shinyServer(function(input, output, clientData, session) {
   })
 
   infoTable <- eventReactive(input$updateStats, {
-    tb <- table(factor(colorData()$color, c("green", "yellow", "red", "black")))
+    tb <- table(factor(colorData()$color, c("#2ECC71", "#F1C40F", "#E74C3C", "black")))
     if (input$color) { # & input$colType == 'Max/Min') {
       paste0("Total Points: ", nrow(raw),
              "\nCurrent Points: ", nrow(filterData()),
-             "\nVisible Points: ", sum(tb[["green"]], tb[["yellow"]], tb[["red"]], tb[["black"]]),
-             "\nGreen Points: ", tb[["green"]],
-             "\nYellow Points: ", tb[["yellow"]],
-             "\nRed Points: ", tb[["red"]]
+             "\nVisible Points: ", sum(tb[["#2ECC71"]], tb[["#F1C40F"]], tb[["#E74C3C"]], tb[["black"]]),
+             "\nGreen Points: ", tb[["#2ECC71"]],
+             "\nYellow Points: ", tb[["#F1C40F"]],
+             "\nRed Points: ", tb[["#E74C3C"]]
       )
     } else {
       paste0("Total Points: ", nrow(raw),

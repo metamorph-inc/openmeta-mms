@@ -77,12 +77,14 @@ namespace CyPhyPET
             components = new Dictionary<string, PETConfig.Component>(),
             drivers = new Dictionary<string, PETConfig.Driver>()
         };
+        private string originalProjectDirectory;
 
         public PET(CyPhyGUIs.IInterpreterMainParameters parameters, CyPhyGUIs.GMELogger logger)
         {
             this.Logger = logger;
             this.pet = CyPhyClasses.ParametricExploration.Cast(parameters.CurrentFCO);
             this.outputDirectory = parameters.OutputDirectory;
+            this.originalProjectDirectory = parameters.ProjectDirectory;
             this.PCCPropertyInputDistributions = new Dictionary<string, string>();
             // Determine type of driver of the Parametric Exploration
             if (this.pet.Children.PCCDriverCollection.Count() == 1)
@@ -307,9 +309,13 @@ namespace CyPhyPET
 
             File.WriteAllText(Path.Combine(this.outputDirectory, "mdao_config.json"), Newtonsoft.Json.JsonConvert.SerializeObject(this.config, Newtonsoft.Json.Formatting.Indented), new System.Text.UTF8Encoding(false));
 
-            File.WriteAllText(Path.Combine(this.outputDirectory, "..", "CyPhyPET_combine.cmd"),
-                "FOR /F \"skip=2 tokens=2,*\" %%A IN ('C:\\Windows\\SysWoW64\\REG.exe query \"HKLM\\software\\META\" /v \"META_PATH\"') DO set META_PATH=%%B" +
+            File.WriteAllText(Path.Combine(this.originalProjectDirectory, "PET_combine.cmd"),
+                "FOR /F \"skip=2 tokens=2,*\" %%A IN ('C:\\Windows\\SysWoW64\\REG.exe query \"HKLM\\software\\META\" /v \"META_PATH\"') DO set META_PATH=%%B\n" +
                 @"%META_PATH%\bin\Python27\Scripts\Python.exe %META_PATH%\bin\PetViz.py");
+
+            File.WriteAllText(Path.Combine(this.originalProjectDirectory, "PET_archive.cmd"),
+                "FOR /F \"skip=2 tokens=2,*\" %%A IN ('C:\\Windows\\SysWoW64\\REG.exe query \"HKLM\\software\\META\" /v \"META_PATH\"') DO set META_PATH=%%B\n" +
+                @"%META_PATH%\bin\Python27\Scripts\Python.exe %META_PATH%\bin\PetResultsArchive.py");
 
             using (StreamWriter writer = new StreamWriter(Path.Combine(outputDirectory, "zip.py")))
             {
