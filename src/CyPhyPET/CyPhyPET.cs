@@ -15,7 +15,6 @@ using System.Diagnostics;
 using CyPhyGUIs;
 using Newtonsoft.Json;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace CyPhyPET
 {
@@ -1133,7 +1132,7 @@ namespace CyPhyPET
             }
 
             var valueFlow = ((GME.MGA.Meta.IMgaMetaModel)excel.Impl.MetaBase).AspectByName["ValueFlowAspect"];
-            GetExcelInputsAndOutputs(dialog.FileName, (string name, string refersTo) =>
+            ExcelInterop.GetExcelInputsAndOutputs(dialog.FileName, (string name, string refersTo) =>
             {
                 var metric = excel.Children.MetricCollection.Where(m => m.Name == name).FirstOrDefault();
                 if (metric == null)
@@ -1168,81 +1167,6 @@ namespace CyPhyPET
                     metricOrParameter.Delete();
                 }
             });
-        }
-
-        internal static void GetExcelInputsAndOutputs(string xlFilename, Action<string, string> addOutput, Action<string, string> addInput, Action done)
-        {
-
-            Excel.Application excelApp;
-            try
-            {
-                excelApp = (Excel.Application)Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application"));
-            }
-            catch (COMException e)
-            {
-                int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
-                if (e.ErrorCode == REGDB_E_CLASSNOTREG)
-                {
-                    throw new ApplicationException("Excel is not installed");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            try
-            {
-                // n.b. Excel needs an absolute path
-                var workbook = excelApp.Workbooks.Open(xlFilename);
-                // for (var workbook in excelApp.Workbooks
-                foreach (Excel.Name name in workbook.Names)
-                {
-                    var nameName = name.Name;
-                    var rt = name.RefersToLocal;
-                    // FIXME name.RefersToLocal may be c:\path\asdf\[proj.xlsx]Sheet!A2
-                    // skip Hidden names
-                    if (name.Visible && rt is string)
-                    {
-                        dynamic range;
-                        try
-                        {
-                            range = name.RefersToRange;
-                        }
-                        catch
-                        {
-                            try
-                            {
-                                range = excelApp.Range[rt];
-                            }
-                            catch
-                            {
-                                continue;
-                            }
-                        }
-
-                        var val = range.Value;
-                        var formula = range.Formula;
-                        if (formula is string && ((string)formula).StartsWith("="))
-                        {
-                            addOutput(nameName, rt);
-                        }
-                        else
-                        {
-                            addInput(nameName, rt);
-                        }
-                    }
-                }
-                done();
-            }
-            finally
-            {
-                foreach (Excel.Workbook workbook in excelApp.Workbooks)
-                {
-                    workbook.Close(false);
-                }
-                excelApp.Quit();
-                Marshal.FinalReleaseComObject(excelApp);
-            }
         }
 
         [DllImport("user32.dll")]

@@ -637,7 +637,7 @@ namespace CyPhyPET
 
             HashSet<string> xlInputs = new HashSet<string>();
             HashSet<string> xlOutputs = new HashSet<string>();
-            CyPhyPETInterpreter.GetExcelInputsAndOutputs(config.details["excelFile"], (string name, string refersTo) =>
+            ExcelInterop.GetExcelInputsAndOutputs(config.details["excelFile"], (string name, string refersTo) =>
             {
                 outputs.Remove(name);
             }, (string name, string refersTo) =>
