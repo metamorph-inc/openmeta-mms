@@ -979,7 +979,7 @@ namespace CyPhyPET
                 else if (((IMgaFCO)fco).Meta.Name == "MATLABWrapper")
                 {
                     var wrapper = CyPhyClasses.MATLABWrapper.Cast((IMgaFCO)fco);
-                    string filename = CreateParametersAndMetricsForOpenMDAOComponent("MATLAB file|*.m|All Files (*.*)|*.*", wrapper.Attributes.MFilename, wrapper, "matlab_wrapper",
+                    string filename = CreateParametersAndMetricsForOpenMDAOComponent("MATLAB file|*.m|All Files (*.*)|*.*", ".m", wrapper.Attributes.MFilename, wrapper, "matlab_wrapper",
                         () => CyPhyClasses.Metric.Create(wrapper), () => CyPhyClasses.Parameter.Create(wrapper));
                     if (filename != null)
                     {
@@ -989,7 +989,7 @@ namespace CyPhyPET
                 else if (((IMgaFCO)fco).Meta.Name == "PythonWrapper")
                 {
                     var wrapper = CyPhyClasses.PythonWrapper.Cast((IMgaFCO)fco);
-                    string filename = CreateParametersAndMetricsForOpenMDAOComponent("Python file|*.py;*.pyd|All Files (*.*)|*.*", wrapper.Attributes.PyFilename, wrapper, "run_mdao.python_component.get_params_and_unknowns",
+                    string filename = CreateParametersAndMetricsForOpenMDAOComponent("Python file|*.py;*.pyd|All Files (*.*)|*.*", ".py", wrapper.Attributes.PyFilename, wrapper, "run_mdao.python_component.get_params_and_unknowns",
                         () => CyPhyClasses.Metric.Create(wrapper), () => CyPhyClasses.Parameter.Create(wrapper));
                     if (filename != null)
                     {
@@ -1011,15 +1011,26 @@ namespace CyPhyPET
             }
         }
 
-        private string CreateParametersAndMetricsForOpenMDAOComponent(string openFileFilter, string oldFilename, CyPhy.ParametricTestBench tb, string pythonModule, Func<CyPhy.Metric> metricCreate, Func<CyPhy.Parameter> paramCreate)
+        private string CreateParametersAndMetricsForOpenMDAOComponent(string openFileFilter, string defaultExt, string oldFilename, CyPhy.ParametricTestBench tb, string pythonModule, Func<CyPhy.Metric> metricCreate, Func<CyPhy.Parameter> paramCreate)
         {
+            string mgaDir = Path.GetDirectoryName(Path.GetFullPath(tb.Impl.Project.ProjectConnStr.Substring("MGA=".Length)));
+            oldFilename = Path.Combine(mgaDir, oldFilename);
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.DefaultExt = ".m";
+            dialog.DefaultExt = defaultExt;
             dialog.CheckFileExists = true;
             if (String.IsNullOrEmpty(oldFilename) == false
                 && Directory.Exists(Path.GetDirectoryName(oldFilename)))
             {
                 dialog.InitialDirectory = Path.GetDirectoryName(oldFilename);
+                if (File.Exists(oldFilename))
+                {
+                    dialog.FileName = Path.GetFileName(oldFilename);
+                    dialog.ShowHelp = true; // https://connect.microsoft.com/VisualStudio/feedback/details/525070/openfiledialog-show-part-of-file-name-in-win7
+                }
+            }
+            else
+            {
+                dialog.InitialDirectory = mgaDir;
             }
             dialog.Filter = openFileFilter;
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -1072,7 +1083,13 @@ namespace CyPhyPET
                 // no longer in MATLAB function declaration
                 metricOrParameter.Delete();
             }
-            return dialog.FileName;
+            var filename = dialog.FileName;
+            // make relative if filename is in same directory as GME project
+            if (filename.StartsWith(mgaDir + "\\"))
+            {
+                filename = filename.Substring((mgaDir + "\\").Length);
+            }
+            return filename;
         }
 
         private static Dictionary<string, Dictionary<string, Dictionary<string, object>>> GetParamsAndUnknowns(string filename, string pythonModule)
@@ -1104,13 +1121,23 @@ namespace CyPhyPET
         private static void CreateParametersAndMetricsForExcel(object fco)
         {
             var excel = CyPhyClasses.ExcelWrapper.Cast((IMgaFCO)fco);
+            string mgaDir = Path.GetDirectoryName(Path.GetFullPath(excel.Impl.Project.ProjectConnStr.Substring("MGA=".Length)));
+            var filename = excel.Attributes.ExcelFilename;
+            filename = Path.Combine(mgaDir, filename);
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.DefaultExt = ".xlsx";
             dialog.CheckFileExists = true;
-            if (String.IsNullOrEmpty(excel.Attributes.ExcelFilename) == false
-                && Directory.Exists(Path.GetDirectoryName(excel.Attributes.ExcelFilename)))
+            if (String.IsNullOrEmpty(filename) == false
+                && Directory.Exists(Path.GetDirectoryName(filename)))
             {
-                dialog.InitialDirectory = Path.GetDirectoryName(excel.Attributes.ExcelFilename);
+                dialog.InitialDirectory = Path.GetDirectoryName(filename);
+
+                if (File.Exists(filename))
+                {
+                    dialog.FileName = Path.GetFileName(filename);
+                    dialog.ShowHelp = true; // https://connect.microsoft.com/VisualStudio/feedback/details/525070/openfiledialog-show-part-of-file-name-in-win7
+                }
+
             }
             dialog.Filter = "Excel File|*.xlsx;*.xlsm;*.xlsb;*.xls|All Files (*.*)|*.*";
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -1118,7 +1145,6 @@ namespace CyPhyPET
                 return;
             }
             excel.Attributes.ExcelFilename = dialog.FileName;
-            string mgaDir = Path.GetDirectoryName(Path.GetFullPath(excel.Impl.Project.ProjectConnStr.Substring("MGA=".Length)));
             // make relative if possible
             if (excel.Attributes.ExcelFilename.StartsWith(mgaDir + "\\"))
             {

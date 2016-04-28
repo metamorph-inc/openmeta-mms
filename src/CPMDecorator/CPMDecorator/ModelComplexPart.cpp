@@ -28,6 +28,24 @@ bool operator==(const _bstr_t& a, const wchar_t* b) {
 	return wcscmp(a, b) == 0;
 }
 
+struct {
+	const wchar_t* kind;
+	const wchar_t* fileAttribute;
+} PETKinds[] = {
+	{ L"ExcelWrapper", L"ExcelFilename" },
+	{ L"MATLABWrapper", L"MFilename" },
+	{ L"PythonWrapper", L"PyFilename" },
+};
+const wchar_t* PETWrapperLookup(_bstr_t& kind) {
+	for (size_t i = 0; i < _countof(PETKinds); i++) {
+		if (kind == PETKinds[i].kind) {
+			return PETKinds[i].fileAttribute;
+		}
+	}
+	return NULL;
+}
+
+
 class CPMPortLabelPart : public PortLabelPart
 {
 public:
@@ -498,7 +516,7 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 			std::sort(prominentAttrs.begin(), prominentAttrs.end(), [](const ProminentAttr& l, const ProminentAttr& r) { return l.name < r.name; });
 		}
 
-		if (kind == L"ExcelWrapper") {
+		if (PETWrapperLookup(kind)) {
 			button = std::unique_ptr<ModelButton>(new ModelButton());
 
 			if (getFacilities().arePathesValid())
@@ -809,11 +827,11 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& poi
 		}
 
 
-		if (kind.length() && (kind == L"ExcelWrapper" || kind == L"MATLABWrapper" || kind == L"PythonWrapper"))
+		if (kind.length() && PETWrapperLookup(kind))
 		{
 			proj->BeginTransactionInNewTerr(TRANSACTION_NON_NESTED, &terr);
-			if (kind == L"ExcelWrapper" && m_spFCO->GetStrAttrByName(L"ExcelFilename").length()) {
-				;
+			if (m_spFCO->GetStrAttrByName(PETWrapperLookup(kind)).length() > 0) {
+				; // use default action (open model)
 			}
 			else {
 				CComDispatchDriver dd;

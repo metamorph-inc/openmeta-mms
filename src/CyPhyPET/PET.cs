@@ -660,9 +660,11 @@ namespace CyPhyPET
         {
             var config = GenerateCode((CyPhy.ParametricTestBench)python);
 
+            var projectDir = Path.GetDirectoryName(Path.GetFullPath(python.Impl.Project.ProjectConnStr.Substring("MGA=".Length)));
             config.details = new Dictionary<string, string>()
             {
-                {"filename", python.Attributes.PyFilename}
+                // TODO: maybe generate a relative path instead of making absolute here
+                {"filename", Path.Combine(projectDir, python.Attributes.PyFilename)}
             };
             config.type = "run_mdao.python_component.PythonComponent";
         }
@@ -671,9 +673,11 @@ namespace CyPhyPET
         {
             var config = GenerateCode((CyPhy.ParametricTestBench)matlab);
 
+            var projectDir = Path.GetDirectoryName(Path.GetFullPath(matlab.Impl.Project.ProjectConnStr.Substring("MGA=".Length)));
             config.details = new Dictionary<string, string>()
             {
-                {"mFile", matlab.Attributes.MFilename},
+                // TODO: maybe generate a relative path instead of making absolute here
+                {"mFile", Path.Combine(projectDir, matlab.Attributes.MFilename)},
             };
             config.type = "matlab_wrapper.MatlabWrapper";
         }
