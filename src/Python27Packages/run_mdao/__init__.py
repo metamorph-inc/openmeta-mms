@@ -31,7 +31,7 @@ __all__ = ['run', 'run_one', 'with_problem']
 
 
 def CouchDBRecorder(*args, **kwargs):
-    '''Lazy load CouchDBRecorder'''
+    """Lazy load CouchDBRecorder."""
     from couchdb_recorder.couchdb_recorder import CouchDBRecorder
     return CouchDBRecorder(*args, **kwargs)
 
@@ -80,7 +80,7 @@ def _memoize_solve(component, fn):
 
 
 def run_one(filename, input):
-    """Runs one iteration with specified inputs."""
+    """Run one iteration with specified inputs."""
     original_dir = os.path.dirname(os.path.abspath(filename))
 
     class OneInputDriver(PredeterminedRunsDriver):
@@ -134,7 +134,7 @@ def instantiate_component(component, component_name, mdao_config, root):
 
 
 def run(filename, override_driver=None):
-    """Runs OpenMDAO on an mdao_config."""
+    """Run OpenMDAO on an mdao_config."""
     original_dir = os.path.dirname(os.path.abspath(filename))
     if MPI:
         mdao_config = par_clone_and_config(filename)
@@ -176,6 +176,9 @@ def with_problem(mdao_config, original_dir, override_driver=None):
             top.driver = driver_type(**driver_params)
         else:
             top.driver = override_driver
+        seed = getattr(top.driver, 'seed', None)
+        if seed is not None:
+            print('Using random seed {}'.format(seed))
     elif driver['type'] == 'PCCDriver':
         import PCC.pcc_driver
         driver_params.update(driver['details'])
@@ -252,7 +255,7 @@ def with_problem(mdao_config, original_dir, override_driver=None):
                 raise ValueError('Unimplemented designVariable type "{}"'.format(var['type']))
 
         def get_sorted_components():
-            """Applies Tarjan's algorithm to the Components."""
+            """Apply Tarjan's algorithm to the Components."""
             visited = {}
             tbs_sorted = []
 

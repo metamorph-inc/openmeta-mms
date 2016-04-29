@@ -35,7 +35,7 @@ def main():
             run_mdao.run_one('mdao_config_constant.json', (('designVariable.Naca_Code', 4040), ))
 
         with run_regression(os.path.join(_this_dir, 'run_failure.csv')):
-            run_mdao.run_one('mdao_config_basic_CyPhy.json', (('designVariable.y', 0), ('designVariable.x', 'Ia') ))
+            run_mdao.run_one('mdao_config_basic_CyPhy.json', (('designVariable.y', 0), ('designVariable.x', 'Ia')))
 
     finally:
         for tb_json_name, contents in tb_jsons:

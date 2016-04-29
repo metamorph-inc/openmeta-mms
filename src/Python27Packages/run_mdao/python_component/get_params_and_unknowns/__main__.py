@@ -11,6 +11,8 @@ if __name__ == '__main__':
             return repr(obj)
         if isinstance(obj, numpy.ndarray):
             return repr(obj)
+        if isinstance(obj, type):
+            return obj.__name__
         raise TypeError(repr(obj) + " is not JSON serializable")
 
     c = run_mdao.python_component.PythonComponent(sys.argv[1])

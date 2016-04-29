@@ -13,12 +13,17 @@ from openmdao.core.mpi_wrap import MPI, debug
 from openmdao.api import AnalysisError
 import openmdao.api
 
-import random
-from random import shuffle, randint
+# from random import shuffle, randint
 import numpy as np
-from six import moves, itervalues, iteritems
+from six import itervalues, iteritems
 from six.moves import range
 from six.moves import zip
+
+
+def _get_seed_and_random(seed):
+    if seed is None:
+        seed = numpy.random.randint(0, 2**31-1) + numpy.random.randint(0, 2**31-1)
+    return seed, numpy.random.RandomState(seed)
 
 
 class PredeterminedRunsDriver(openmdao.api.PredeterminedRunsDriver):
@@ -42,9 +47,7 @@ class PredeterminedRunsDriver(openmdao.api.PredeterminedRunsDriver):
             self.restart = RestartRecorder(self.original_dir, comm)
 
     def run(self, problem):
-        """Build a runlist and execute the Problem for each set of generated
-        parameters.
-        """
+        """Build a runlist and execute the Problem for each set of generated parameters."""
         self.iter_count = 0
 
         if MPI and self._num_par_doe > 1:
@@ -141,27 +144,29 @@ class FullFactorialDriver(PredeterminedRunsDriver):
 
 
 class UniformDriver(PredeterminedRunsDriver):
-    def __init__(self, num_samples=1, *args, **kwargs):
+    def __init__(self, num_samples=1, seed=None, *args, **kwargs):
         super(UniformDriver, self).__init__(*args, **kwargs)
         self.num_samples = num_samples
+        self.seed, self.random = _get_seed_and_random(seed)
 
     def _build_runlist(self):
         def sample_var(metadata):
             if metadata.get('type', 'double') == 'double':
-                return numpy.random.uniform(metadata['lower'], metadata['upper'])
+                return self.random.uniform(metadata['lower'], metadata['upper'])
             elif metadata.get('type') == 'enum':
-                return numpy.random.choice(metadata['items'])
+                return self.random.choice(metadata['items'])
             elif metadata.get('type') == 'int':
-                return numpy.random.randint(metadata['lower'], metadata['upper'] + 1)
+                return self.random.randint(metadata['lower'], metadata['upper'] + 1)
 
         for i in range(self.num_samples):
             yield ((key, sample_var(metadata)) for key, metadata in iteritems(self.get_desvar_metadata()))
 
 
 class LatinHypercubeDriver(PredeterminedRunsDriver):
-    def __init__(self, num_samples=1, *args, **kwargs):
+    def __init__(self, num_samples=1, seed=None, *args, **kwargs):
         super(LatinHypercubeDriver, self).__init__(*args, **kwargs)
         self.num_samples = num_samples
+        self.seed, self.random = _get_seed_and_random(seed)
 
     def _build_runlist(self):
         design_vars = self.get_desvar_metadata()
@@ -171,7 +176,7 @@ class LatinHypercubeDriver(PredeterminedRunsDriver):
             metadata = design_vars[design_var_name]
             if metadata.get('type', 'double') == 'double':
                 bucket_walls = numpy.linspace(metadata['lower'], metadata['upper'], num=self.num_samples + 1)
-                buckets[design_var_name] = [numpy.random.uniform(low, high) for low, high in zip(bucket_walls[0:-1], bucket_walls[1:])]
+                buckets[design_var_name] = [self.random.uniform(low, high) for low, high in zip(bucket_walls[0:-1], bucket_walls[1:])]
             elif metadata.get('type') == 'enum':
                 # length is generated such that all items have an equal chance of appearing when num_samples % len(items) != 0
                 length = self.num_samples + (-self.num_samples % len(metadata['items']))
@@ -182,7 +187,7 @@ class LatinHypercubeDriver(PredeterminedRunsDriver):
                 length = self.num_samples + (-self.num_samples % num_items)
                 buckets[design_var_name] = list(itertools.islice(itertools.cycle(range(int(metadata['lower']), int(metadata['upper'] + 1))), length))
 
-            numpy.random.shuffle(buckets[design_var_name])
+            self.random.shuffle(buckets[design_var_name])
 
         for i in range(self.num_samples):
             yield ((key, values[i]) for key, values in iteritems(buckets))
@@ -200,15 +205,13 @@ class OptimizedLatinHypercubeDriver(PredeterminedRunsDriver):
         self.population = population
         self.generations = generations
         self.norm_method = norm_method
+        self.seed, self.random = _get_seed_and_random(self.seed)
 
     def _build_runlist(self):
         """Build a runlist based on the Latin Hypercube method."""
         design_vars = self.get_desvar_metadata()
         design_vars_names = list(design_vars)
         self.num_design_vars = len(design_vars_names)
-        if self.seed is not None:
-            random.seed(self.seed)
-            np.random.seed(self.seed)
 
         # Generate an LHC of the proper size
         rand_lhc = self._get_lhc()
@@ -219,12 +222,12 @@ class OptimizedLatinHypercubeDriver(PredeterminedRunsDriver):
                 # length is generated such that all items have an equal chance of appearing when num_samples % len(items) != 0
                 length = self.num_samples + (-self.num_samples % len(metadata['items']))
                 values = list(itertools.islice(itertools.cycle(metadata['items']), length))
-                numpy.random.shuffle(values)
+                self.random.shuffle(values)
                 enums[design_var_name] = values
             elif metadata.get('type', 'double') == 'int':
                 low, high = int(metadata['lower']), int(metadata['upper'])
                 values = list(range(low, high + 1))
-                numpy.random.shuffle(values)
+                self.random.shuffle(values)
                 enums[design_var_name] = values
 
         # Return random values in given buckets
@@ -236,14 +239,14 @@ class OptimizedLatinHypercubeDriver(PredeterminedRunsDriver):
                 elif metadata.get('type', 'double') == 'double':
                     low, high = metadata['lower'], metadata['upper']
                     bucket_size = (high - low) / self.num_samples
-                    return numpy.random.uniform(low + bucket_size * bucket, low + bucket_size * (bucket + 1))
+                    return self.random.uniform(low + bucket_size * bucket, low + bucket_size * (bucket + 1))
                 elif metadata.get('type') == 'int':
                     low, high = int(metadata['lower']), int(metadata['upper'])
                     num_items = int(metadata['upper'] - metadata['lower'] + 1)
 
                     if self.num_samples <= num_items:
                         # FIXME do we need to round max up sometimes
-                        return numpy.random.randint(low + (num_items * bucket // self.num_samples), low + (num_items * (bucket + 1) // self.num_samples))
+                        return self.random.randint(low + (num_items * bucket // self.num_samples), low + (num_items * (bucket + 1) // self.num_samples))
                     else:
                         if bucket < self.num_samples - (self.num_samples % num_items):
                             return low + bucket % num_items
@@ -256,12 +259,12 @@ class OptimizedLatinHypercubeDriver(PredeterminedRunsDriver):
         """Generate an Optimized Latin Hypercube
         """
 
-        rand_lhc = _rand_latin_hypercube(self.num_samples, self.num_design_vars)
+        rand_lhc = _rand_latin_hypercube(self.random, self.num_samples, self.num_design_vars)
 
         # Optimize our LHC before returning it
-        best_lhc = _LHC_Individual(rand_lhc, q=1, p=self.norm_method)
+        best_lhc = _LHC_Individual(rand_lhc, self.random, q=1, p=self.norm_method)
         for q in self.qs:
-            lhc_start = _LHC_Individual(rand_lhc, q, self.norm_method)
+            lhc_start = _LHC_Individual(rand_lhc, self.random, q, self.norm_method)
             lhc_opt = _mmlhs(lhc_start, self.population, self.generations)
             if lhc_opt.mmphi() < best_lhc.mmphi():
                 best_lhc = lhc_opt
@@ -270,11 +273,13 @@ class OptimizedLatinHypercubeDriver(PredeterminedRunsDriver):
 
 
 class _LHC_Individual(object):
-    def __init__(self, doe, q=2, p=1):
+    def __init__(self, doe, random, q=2, p=1):
         self.q = q
         self.p = p
         self.doe = doe
         self.phi = None  # Morris-Mitchell sampling criterion
+        self.random = random
+        random.randint
 
     @property
     def shape(self):
@@ -315,6 +320,11 @@ class _LHC_Individual(object):
         be a Latin hypercube.
         """
 
+        def randint(low, high):
+            if low == high:
+                return low
+            return self.random.randint(low, high)
+
         new_doe = self.doe.copy()
         n, k = self.doe.shape
         for count in range(mutation_count):
@@ -322,14 +332,14 @@ class _LHC_Individual(object):
 
             # Choosing two distinct random points
             el1 = randint(0, n - 1)
-            el2 = randint(0, n - 1)
-            while el1 == el2:
-                el2 = randint(0, n - 1)
+            el2 = randint(0, n - 2)
+            if el1 == el2:
+                el2 = el2 + 1
 
             new_doe[el1, col] = self.doe[el2, col]
             new_doe[el2, col] = self.doe[el1, col]
 
-        return _LHC_Individual(new_doe, self.q, self.p)
+        return _LHC_Individual(new_doe, self.random, self.q, self.p)
 
     def __iter__(self):
         return self._get_rows()
@@ -351,12 +361,12 @@ class _LHC_Individual(object):
         return self.doe
 
 
-def _rand_latin_hypercube(n, k):
+def _rand_latin_hypercube(random, n, k):
     # Calculates a random Latin hypercube set of n points in k dimensions within [0,n-1]^k hypercube.
     arr = np.zeros((n, k))
     row = list(range(0, n))
     for i in range(k):
-        shuffle(row)
+        random.shuffle(row)
         arr[:, i] = row
     return arr
 
