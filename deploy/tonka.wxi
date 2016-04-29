@@ -19,6 +19,7 @@
       <ComponentGroupRef Id='CyPhy2RF'/>
       <ComponentGroupRef Id='CyPhy2PCBMfg'/>
       <ComponentGroupRef Id='AcmEditor'/>
+      <ComponentGroupRef Id="CyPhyResultsViewer"/>
       <Component Directory="INSTALLDIR_BIN">
         <File Source="..\src\ComponentCreator\bin\Release\ComponentCreator.exe" />
       </Component>

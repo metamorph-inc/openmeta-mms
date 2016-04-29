@@ -667,3 +667,5 @@ deploy/analysis_tool_FAME.wxi
 deploy/analysis_tool_HybridSal.wxi
 deploy/analysis_tool_PYTHON_RICARDO.wxi
 deploy/analysis_tool_QR.wxi
+/models/**/PET_archive.cmd
+/models/**/PET_combine.cmd
