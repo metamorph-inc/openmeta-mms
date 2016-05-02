@@ -5,12 +5,13 @@ import os
 import os.path
 import win32com.client
 import gen_dir_wxi
-from gen_dir_wxi import add_wix_to_path
+from gen_dir_wxi import add_wix_to_path, CommentedTreeBuilder
 import gen_analysis_tool_wxi
 import glob
 import subprocess
 
 import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 
 prefs = { 'verbose': True }
 this_dir = os.path.dirname(os.path.abspath(__file__))
@@ -74,6 +75,19 @@ def get_nuget_packages():
     if destination_files:
         raise Exception('Could not find files %s in NuGet packages' % repr(destination_files))
 
+def bin_mods():
+    output_filename = 'bin.wxi'
+    ElementTree.register_namespace("", "http://schemas.microsoft.com/wix/2006/wi")
+    tree = ElementTree.parse(output_filename, parser=CommentedTreeBuilder()).getroot()
+    dig_dir = tree.findall(".//{http://schemas.microsoft.com/wix/2006/wi}Directory[@Id='dir_bin_Dig']")[0]
+    dig_dir.insert(0, ElementTree.fromstring("""<Component Id="dir_bin_Dig_perms" Guid="7adf3bbd-3720-421a-9f6c-85d6637176ed">
+  <CreateFolder>
+    <PermissionEx xmlns="http://schemas.microsoft.com/wix/UtilExtension" User="[WIX_ACCOUNT_USERS]" GenericWrite="yes" GenericRead="yes" Read="yes" GenericExecute="yes" ChangePermission="yes"/>
+  </CreateFolder>
+</Component>"""))
+
+    ElementTree.ElementTree(tree).write(output_filename, xml_declaration=True, encoding='utf-8')
+
 def build_msi():
     get_nuget_packages()
 
@@ -122,6 +136,8 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\py_modelica_exporter\py_modelica_exporter",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\CADAssembler\Python", id="CADPython")
     gen_dir_wxi.gen_dir_from_vc(r"..\meta\DesignDataPackage\lib\python", "DesignDataPackage_python.wxi", "DesignDataPackage_python")
+
+    bin_mods()
 
     def get_svnversion():
         p = subprocess.Popen("git rev-list HEAD --count".split(), stdout=subprocess.PIPE)
