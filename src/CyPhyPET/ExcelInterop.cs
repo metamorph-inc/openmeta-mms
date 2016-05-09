@@ -11,14 +11,19 @@ namespace CyPhyPET
         internal static void GetExcelInputsAndOutputs(string xlFilename, Action<string, string> addOutput, Action<string, string> addInput, Action done)
         {
 
+            int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
             Excel.Application excelApp;
             try
             {
-                excelApp = (Excel.Application)Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application"));
+                var excelType = Type.GetTypeFromProgID("Excel.Application");
+                if (excelType == null)
+                {
+                    throw new COMException("No type Excel.Application", REGDB_E_CLASSNOTREG);
+                }
+                excelApp = (Excel.Application)Activator.CreateInstance(excelType);
             }
             catch (COMException e)
             {
-                int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
                 if (e.ErrorCode == REGDB_E_CLASSNOTREG)
                 {
                     throw new ApplicationException("Excel is not installed");

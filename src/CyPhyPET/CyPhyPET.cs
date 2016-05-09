@@ -581,6 +581,11 @@ namespace CyPhyPET
                     this.Logger.WriteError("PET Interpreter failed! See error messages above.");
                 }
             }
+            catch (ApplicationException e)
+            {
+                this.result.Success = false;
+                this.Logger.WriteError(String.Format("PET Interpreter failed: {0}", e.Message));
+            }
             finally
             {
                 if (disposeLogger && this.Logger != null)
