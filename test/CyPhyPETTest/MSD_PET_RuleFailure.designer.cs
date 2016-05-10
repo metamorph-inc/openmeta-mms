@@ -286,7 +286,8 @@ namespace DynamicsTeamTest.Projects
             Assert.False(result, "CyPhyPET should have failed, but did not.");
         }
 
-        [Fact]
+        // disabled: CyPhyPET+run_mdao can run this
+        // [Fact]
         [Trait("Model", "MSD_PET_RuleFailure")]
         [Trait("CheckerShouldFail", "MSD_PET_RuleFailure")]
         public void PET_Fail_MultipleTestBenchRefs()

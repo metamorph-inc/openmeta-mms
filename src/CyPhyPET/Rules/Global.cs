@@ -299,7 +299,7 @@ namespace CyPhyPET.Rules
                 checkResults.Add(feedback);
             }
 
-            List<ISIS.GME.Common.Interfaces.FCO> tbParamsWithConnections = new List<ISIS.GME.Common.Interfaces.FCO>();
+            var tbParamsWithConnections = new HashSet<Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>>();
 
             // Check for connections and names of parameters in the test-bench.
             foreach (var param in parameters)
@@ -317,6 +317,7 @@ namespace CyPhyPET.Rules
                 {
                     CyPhy.DriveParameter driveParam = driveParamCollection.FirstOrDefault();
                     var tbParam = driveParam.DstEnds.Parameter;
+                    var tb = driveParam.GenericDstEndRef;
 
                     if (tbParam != null)
                     {
@@ -362,7 +363,8 @@ namespace CyPhyPET.Rules
                             }
                         }
 
-                        if (tbParamsWithConnections.Contains(tbParam))
+                        if (tbParamsWithConnections.Add(
+                            new Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>(tb, tbParam)) == false)
                         {
                             var feedback = new GenericRuleFeedback()
                             {
@@ -373,8 +375,6 @@ namespace CyPhyPET.Rules
                             feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
                             checkResults.Add(feedback);
                         }
-
-                        tbParamsWithConnections.Add(tbParam);
                     }
 
                 }
@@ -696,7 +696,7 @@ namespace CyPhyPET.Rules
                 checkResults.Add(feedback);
             }
 
-            List<ISIS.GME.Common.Interfaces.FCO> tbParamsWithConnections = new List<ISIS.GME.Common.Interfaces.FCO>();
+            var tbParamsWithConnections = new HashSet<Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>>();
             var tbMetricsWithConnections = new HashSet<Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>>();
             // Check for connections and names of parameters in the test-bench.
             var rangeLengths = new List<int>();
@@ -712,6 +712,7 @@ namespace CyPhyPET.Rules
                 {
                     CyPhy.VariableSweep varSweep = varSweepCollection.FirstOrDefault();
                     var tbParam = varSweep.DstEnds.Parameter;
+                    var tb = varSweep.GenericDstEndRef;
                     if (tbParam != null)
                     {
                         var tbParamParent = tbParam.ParentContainer;
@@ -755,7 +756,9 @@ namespace CyPhyPET.Rules
                                 checkResults.Add(feedback);
                             }
                         }
-                        if (tbParamsWithConnections.Contains(tbParam))
+
+                        if (tbParamsWithConnections.Add(
+                            new Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>(tb, tbParam)) == false)
                         {
                             var feedback = new GenericRuleFeedback()
                             {
@@ -763,11 +766,9 @@ namespace CyPhyPET.Rules
                                 Message = string.Format("TestBench Parameter ({0}) must have only 1 connection from a DesignVariable", tbParam.Name)
                             };
 
-                          //  feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
-                          //  checkResults.Add(feedback);
+                            feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
+                            checkResults.Add(feedback);
                         }
-
-                        tbParamsWithConnections.Add(tbParam);
                     }
                 }
                 else if (varSweepCollection != null &&
