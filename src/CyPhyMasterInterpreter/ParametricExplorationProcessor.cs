@@ -61,7 +61,9 @@ namespace CyPhyMasterInterpreter
         {
             this.Configuration = configuration;
 
-            if (this.OriginalSystemUnderTest.Referred.DesignEntity.ID == configuration.ID)
+            if (false)
+            // FIXME: this test should be repaired. It does not work correctly if TBs have different SUTs. Be safe and make a copy always
+            // if (this.OriginalSystemUnderTest.Referred.DesignEntity.ID == configuration.ID)
             {
                 this.expandedParametricExploration = this.parametricExploration;
             }
