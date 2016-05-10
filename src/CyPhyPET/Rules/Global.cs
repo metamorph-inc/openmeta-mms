@@ -302,7 +302,6 @@ namespace CyPhyPET.Rules
             List<ISIS.GME.Common.Interfaces.FCO> tbParamsWithConnections = new List<ISIS.GME.Common.Interfaces.FCO>();
 
             // Check for connections and names of parameters in the test-bench.
-            HashSet<string> parameterNames = new HashSet<string>();
             foreach (var param in parameters)
             {
                 var attributeCheckResults = checkPccParamAttributes(param);
@@ -347,20 +346,6 @@ namespace CyPhyPET.Rules
                                 feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
                                 checkResults.Add(feedback);
                             }
-
-                            if (parameterNames.Contains(tbParam.Name))
-                            {
-                                var feedback = new GenericRuleFeedback()
-                                {
-                                    FeedbackType = FeedbackTypes.Error,
-                                    Message = string.Format("Connected Parameters share common name: {0}.", tbParam.Name)
-                                };
-
-                                feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
-                                checkResults.Add(feedback);
-                            }
-
-                            parameterNames.Add(tbParam.Name);
 
                             var value = tbParam.Attributes.Value;
                             double dummy;
@@ -407,9 +392,8 @@ namespace CyPhyPET.Rules
                 }
             }
 
-            List<ISIS.GME.Common.Interfaces.FCO> tbMetricsWithConnections = new List<ISIS.GME.Common.Interfaces.FCO>();
+            var tbMetricsWithConnections = new HashSet<Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>>();
             // Check for connections and names of metrics in the test-bench.
-            HashSet<string> metricNames = new HashSet<string>();
             foreach (var output in outputs)
             {
                 var attributeCheckResults = checkPccOutputAttributes(output);
@@ -425,6 +409,7 @@ namespace CyPhyPET.Rules
                 {
                     CyPhy.PCCOutputMapping pccOutputMap = pccOutputMappingCollection.FirstOrDefault();
                     var tbMetric = pccOutputMap.SrcEnd;
+                    var tb = pccOutputMap.GenericSrcEndRef;
 
                     if (tbMetric != null)
                     {
@@ -454,22 +439,9 @@ namespace CyPhyPET.Rules
                                 feedback.InvolvedObjectsByRole.Add(tbMetric.Impl as IMgaFCO);
                                 checkResults.Add(feedback);
                             }
-
-                            if (metricNames.Contains(tbMetric.Name))
-                            {
-                                var feedback = new GenericRuleFeedback()
-                                {
-                                    FeedbackType = FeedbackTypes.Error,
-                                    Message = string.Format("Connected Parameters share common name: {0}.", tbMetric.Name)
-                                };
-
-                                feedback.InvolvedObjectsByRole.Add(tbMetric.Impl as IMgaFCO);
-                                checkResults.Add(feedback);
-                            }
-
-                            metricNames.Add(tbMetric.Name);
                         }
-                        if (tbMetricsWithConnections.Contains(tbMetric))
+                        if (tbMetricsWithConnections.Add(
+                            new Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>(tb, tbMetric)) == false)
                         {
                             var feedback = new GenericRuleFeedback()
                             {
@@ -480,8 +452,6 @@ namespace CyPhyPET.Rules
                             feedback.InvolvedObjectsByRole.Add(tbMetric.Impl as IMgaFCO);
                             checkResults.Add(feedback);
                         }
-
-                        tbMetricsWithConnections.Add(tbMetric);
                     }
                 }
                 else if (pccOutputMappingCollection != null &&
@@ -727,9 +697,8 @@ namespace CyPhyPET.Rules
             }
 
             List<ISIS.GME.Common.Interfaces.FCO> tbParamsWithConnections = new List<ISIS.GME.Common.Interfaces.FCO>();
-            List<ISIS.GME.Common.Interfaces.FCO> tbMetricsWithConnections = new List<ISIS.GME.Common.Interfaces.FCO>();
+            var tbMetricsWithConnections = new HashSet<Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>>();
             // Check for connections and names of parameters in the test-bench.
-            HashSet<string> parameterNames = new HashSet<string>();
             var rangeLengths = new List<int>();
             foreach (var designVar in designVariables)
             {
@@ -771,20 +740,6 @@ namespace CyPhyPET.Rules
                                 feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
                                 checkResults.Add(feedback);
                             }
-
-                            if (parameterNames.Contains(tbParam.Name))
-                            {
-                                var feedback = new GenericRuleFeedback()
-                                {
-                                    FeedbackType = FeedbackTypes.Error,
-                                    Message = string.Format("Connected Parameters share common name : {0}.", tbParam.Name)
-                                };
-
-                                feedback.InvolvedObjectsByRole.Add(tbParam.Impl as IMgaFCO);
-                                checkResults.Add(feedback);
-                            }
-
-                            parameterNames.Add(tbParam.Name);
 
                             var value = tbParam.Attributes.Value;
                             double dummy;
@@ -842,7 +797,6 @@ namespace CyPhyPET.Rules
                 checkResults.Add(feedback);
             }
             // Check for connections and names of metrics in the test-bench.
-            HashSet<string> metricNames = new HashSet<string>();
             foreach (var obj in objectives)
             {
                 var objMappingCollection = obj.SrcConnections.ObjectiveMappingCollection;
@@ -851,6 +805,7 @@ namespace CyPhyPET.Rules
                 {
                     CyPhy.ObjectiveMapping objMap = objMappingCollection.FirstOrDefault();
                     var tbMetric = objMap.SrcEnd;
+                    var tb = objMap.GenericSrcEndRef;
                     if (tbMetric != null)
                     {
                         var tbMetricParent = tbMetric.ParentContainer;
@@ -879,24 +834,10 @@ namespace CyPhyPET.Rules
                                 feedback.InvolvedObjectsByRole.Add(tbMetric.Impl as IMgaFCO);
                                 checkResults.Add(feedback);
                             }
-
-                            if (metricNames.Contains(tbMetric.Name))
-                            {
-                                // FIXME must this be an error. perhaps we can allow it...
-                                var feedback = new GenericRuleFeedback()
-                                {
-                                    FeedbackType = FeedbackTypes.Error,
-                                    Message = string.Format("Connected Metrics share common name : {0}.", tbMetric.Name)
-                                };
-
-                                feedback.InvolvedObjectsByRole.Add(tbMetric.Impl as IMgaFCO);
-                                checkResults.Add(feedback);
-                            }
-
-                            metricNames.Add(tbMetric.Name);
                         }
 
-                        if (tbMetricsWithConnections.Contains(tbMetric))
+                        if (tbMetricsWithConnections.Add(
+                            new Tuple<ISIS.GME.Common.Interfaces.Reference, ISIS.GME.Common.Interfaces.FCO>(tb, tbMetric)) == false)
                         {
                             var feedback = new GenericRuleFeedback()
                             {
@@ -907,8 +848,6 @@ namespace CyPhyPET.Rules
                             feedback.InvolvedObjectsByRole.Add(tbMetric.Impl as IMgaFCO);
                             checkResults.Add(feedback);
                         }
-
-                        tbMetricsWithConnections.Add(tbMetric);
                     }
                 }
                 else if (objMappingCollection != null)
@@ -1068,7 +1007,7 @@ namespace CyPhyPET.Rules
                 result.Add(new GenericRuleFeedback()
                 {
                     FeedbackType = FeedbackTypes.Error,
-                    Message = string.Format("Optimizers cannot have more than one output variable.")
+                    Message = string.Format("Optimizers cannot have more than one objective.")
                 });
             }
 
