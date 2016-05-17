@@ -1,0 +1,36 @@
+﻿<Window x:Class="PETBrowser.DatasetListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PET Browser" Height="423" Width="805" Loaded="Window_Loaded">
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar x:Name="toolBar">
+                <Button x:Name="SelectResultsFolderButton" Content="Select Results Folder" Click="SelectResultsFolderButton_Click"/>
+                <Separator />
+                <Button x:Name="button" Content="Archive Selected" Click="button_Click"/>
+                <Button x:Name="vizButton" Content="Open Selected in Visualizer" Click="vizButton_Click"/>
+            </ToolBar>
+        </ToolBarTray>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="StatusText">Test</TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+        <DataGrid ItemsSource="{Binding Datasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableColumnVirtualization="True">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="" Width="30">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="60"/>
+                <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
+                <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
+                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </DockPanel>
+</Window>
