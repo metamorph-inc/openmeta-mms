@@ -14,10 +14,10 @@ from matlab_wrapper.engine import SMOPEngine, import_mfile
 
 
 class MatlabWrapper(Component):
-    def __init__(self, mFile, varFile=None):
+    def __init__(self, mFile, start_engine=True, var_file=None):
         super(MatlabWrapper, self).__init__()
         # self.var_dict = None
-        # self.jsonFile = varFile
+        # self.jsonFile = var_file
         # self.create_json_dict()
 
         if False:
@@ -52,11 +52,12 @@ class MatlabWrapper(Component):
         for output in self._output_names:
             self.add_output(output, val=0.0)
 
-        from matlab_proxy import get_matlab_engine
-        self.eng = get_matlab_engine()
-        if self.eng is None:
-            self.eng = SMOPEngine()
-        self.eng.addpath(os.path.dirname(os.path.abspath(mFile)), nargout=0)
+        if start_engine:
+            from matlab_proxy import get_matlab_engine
+            self.eng = get_matlab_engine()
+            if self.eng is None:
+                self.eng = SMOPEngine()
+            self.eng.addpath(os.path.dirname(os.path.abspath(mFile)), nargout=0)
 
     def __del__(self):
         # TODO
