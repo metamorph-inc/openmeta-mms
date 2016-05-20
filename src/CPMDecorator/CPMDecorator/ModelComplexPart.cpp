@@ -287,27 +287,34 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 		lWidth = (8 * 3 + GAP_LABEL + WIDTH_PORT + GAP_XMODELPORT) * 2 + GAP_PORTLABEL;
 	}
 
+	const auto& button = this->button;
+	auto setButtonPosition = [&RightPortsMaxLabelLength, &button](const CSize& size) {
+		if (button) {
+			int y = size.cy - button->m_bmp->GetHeight();
+			int x = size.cx - RightPortsMaxLabelLength - button->m_bmp->GetWidth();
+			button->position = CRect(x, y, x + button->m_bmp->GetWidth(), y + button->m_bmp->GetHeight());
+		}
+	};
+
 	long lHeight = GAP_YMODELPORT * 2 +
 					max(m_LeftPorts.size(), m_RightPorts.size()) * (HEIGHT_PORT + GAP_PORT) - GAP_PORT;
 
 	if (hasStoredCustomSize) {
 		CSize calcSize = CSize(min(size.cx, lWidth), min(size.cy, lHeight));
 		const_cast<Decor::ModelComplexPart*>(this)->resizeLogic.SetMinimumSize(calcSize);
+		setButtonPosition(size);
 		return size;
 	}
+	else {
+		CSize bitmapSize = TypeableBitmapPart::GetPreferredSize();
+		lWidth = max(lWidth, max(bitmapSize.cx, m_prominentAttrsSize.cx));
+		lHeight = max(lHeight, bitmapSize.cy + m_prominentAttrsSize.cy);
+		const_cast<Decor::ModelComplexPart*>(this)->resizeLogic.SetMinimumSize(CSize(lWidth, lHeight));
 
-	CSize bitmapSize = TypeableBitmapPart::GetPreferredSize();
-	lWidth = max(lWidth, max(bitmapSize.cx, m_prominentAttrsSize.cx));
-	lHeight = max(lHeight, bitmapSize.cy + m_prominentAttrsSize.cy);
-	const_cast<Decor::ModelComplexPart*>(this)->resizeLogic.SetMinimumSize(CSize(lWidth, lHeight));
-
-	if (button) {
-		int y = lHeight - button->m_bmp->GetHeight();
-		int x = lWidth - RightPortsMaxLabelLength - button->m_bmp->GetWidth();
-		button->position = CRect(x, y, x + button->m_bmp->GetWidth(), y + button->m_bmp->GetHeight());
+		CSize size(max((long)WIDTH_MODEL, lWidth), max((long)HEIGHT_MODEL, lHeight));
+		setButtonPosition(size);
+		return size;
 	}
-
-	return CSize(max((long) WIDTH_MODEL, lWidth), max((long) HEIGHT_MODEL, lHeight));
 }
 
 void ModelComplexPart::SetLocation(const CRect& location)
