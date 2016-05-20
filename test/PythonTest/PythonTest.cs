@@ -72,6 +72,8 @@ namespace PythonTest
                     "layout_json",
                     "pyqtgraph",
                     "spice_viewer",
+                    "matlab_wrapper",
+                    "matlab_proxy",
             };
 
             foreach (var test in module_names.Select(moduleName =>
