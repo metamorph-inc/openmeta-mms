@@ -6,9 +6,6 @@
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar x:Name="toolBar">
                 <Button x:Name="SelectResultsFolderButton" Content="Select Results Folder" Click="SelectResultsFolderButton_Click"/>
-                <Separator />
-                <Button x:Name="button" Content="Archive Selected" Click="button_Click"/>
-                <Button x:Name="vizButton" Content="Open Selected in Visualizer" Click="vizButton_Click"/>
             </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
@@ -16,21 +13,79 @@
                 <TextBlock Name="StatusText">Test</TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <DataGrid ItemsSource="{Binding Datasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableColumnVirtualization="True">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="" Width="30">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="60"/>
-                <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
-                <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
-                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="150"/>
-            </DataGrid.Columns>
-        </DataGrid>
-
+        <TabControl>
+            <TabItem Header="PET">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                            <Button x:Name="button" Content="Archive Selected"  Margin="0,10,5,10" Click="button_Click" Padding="5,3"/>
+                            <Button x:Name="vizButton" Content="Open Selected in Visualizer"  Margin="5,10,10,10" Click="vizButton_Click" Padding="5,3"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding PetDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal">
+                        <DataGrid.HorizontalGridLinesBrush>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                        </DataGrid.HorizontalGridLinesBrush>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="" Width="30">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="60"/>
+                            <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
+                            <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
+                            <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Test Benches">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                            <Button x:Name="explorerButton" Content="Open Selected in Explorer"  Margin="5,10,10,10" Padding="5,3" Click="explorerButton_Click" IsEnabled="{Binding SelectedItems.Count, ElementName=TestBenchGrid}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <DataGrid x:Name="TestBenchGrid" ItemsSource="{Binding TestBenchDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="100"/>
+                            <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="200"/>
+                            <DataGridTextColumn Binding="{Binding DesignName}" ClipboardContentBinding="{x:Null}" Header="Design" IsReadOnly="True" Width="200"/>
+                            <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
+                            <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
+                        </DataGrid.Columns>
+                        <DataGrid.Resources>
+                            <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="Open in Explorer" Click="explorerButton_Click" />
+                            </ContextMenu>
+                        </DataGrid.Resources>
+                        <DataGrid.HorizontalGridLinesBrush>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                        </DataGrid.HorizontalGridLinesBrush>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Status}" Value="FAILED">
+                                        <Setter Property="Background" Value="#FFFFAFAF" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="OK">
+                                        <Setter Property="Background" Value="#FFAFFFAF"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
+                                        <Setter Property="Background" Value="#FFFFFFAF"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                                <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                            </Style>
+                        </DataGrid.RowStyle>
+                        
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
     </DockPanel>
+
 </Window>

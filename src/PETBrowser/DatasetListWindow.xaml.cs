@@ -122,43 +122,76 @@ namespace PETBrowser
                 ShowErrorDialog("Archive error", "An error occurred while archiving results.", "", ex.ToString());
             }
         }
+
+        private void explorerButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var selectedDataset = (Dataset) TestBenchGrid.SelectedItem;
+
+                var datasetPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.ResultsDirectory,
+                    selectedDataset.Folders[0]);
+
+                //Explorer doesn't accept forward slashes in paths
+                datasetPath = datasetPath.Replace("/", "\\");
+
+                Console.WriteLine("/select,\"" + datasetPath + "\"");
+
+                Process.Start("explorer.exe", "/select,\"" + datasetPath + "\"");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
+            }
+        }
     }
 
     public class DatasetListWindowViewModel
     {
-        public List<Dataset> DatasetsList { get; set; }
-        public ICollectionView Datasets { get; set; }
+        public List<Dataset> PetDatasetsList { get; set; }
+        public ICollectionView PetDatasets { get; set; }
+
+        public List<Dataset> TestBenchDatasetsList { get; set; }
+        public ICollectionView TestBenchDatasets { get; set; }
+
         public DatasetStore Store { get; set; }
 
         public bool AllowArchive
         {
-            get { return DatasetsList.Exists(dataset => dataset.Selected); }
+            get { return PetDatasetsList.Exists(dataset => dataset.Selected); }
         }
 
         public DatasetListWindowViewModel()
         {
             Store = null;
-            DatasetsList = new List<Dataset>();
-            Datasets = new ListCollectionView(DatasetsList);
+            PetDatasetsList = new List<Dataset>();
+            PetDatasets = new ListCollectionView(PetDatasetsList);
+
+            TestBenchDatasetsList = new List<Dataset>();
+            TestBenchDatasets = new ListCollectionView(TestBenchDatasetsList);
         }
 
         public void LoadDataset(string path)
         {
             Store = new DatasetStore(path);
-            DatasetsList.Clear();
-            DatasetsList.AddRange(Store.ResultDatasets);
-            DatasetsList.AddRange(Store.ArchiveDatasets);
-            Datasets.Refresh();
+            PetDatasetsList.Clear();
+            PetDatasetsList.AddRange(Store.ResultDatasets);
+            PetDatasetsList.AddRange(Store.ArchiveDatasets);
+            PetDatasets.Refresh();
+
+            TestBenchDatasetsList.Clear();
+            TestBenchDatasetsList.AddRange(Store.TestbenchDatasets);
+            TestBenchDatasets.Refresh();
         }
 
         public void ReloadArchives()
         {
             Store.LoadArchiveDatasets();
 
-            DatasetsList.Clear();
-            DatasetsList.AddRange(Store.ResultDatasets);
-            DatasetsList.AddRange(Store.ArchiveDatasets);
-            Datasets.Refresh();
+            PetDatasetsList.Clear();
+            PetDatasetsList.AddRange(Store.ResultDatasets);
+            PetDatasetsList.AddRange(Store.ArchiveDatasets);
+            PetDatasets.Refresh();
         }
     }
 }

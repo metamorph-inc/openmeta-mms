@@ -24,12 +24,14 @@ namespace PETBrowser
 
         public List<Dataset> ResultDatasets { get; private set; }
         public List<Dataset> ArchiveDatasets { get; private set; }
+        public List<Dataset> TestbenchDatasets { get; private set; }
 
         public DatasetStore(string dataDirectory)
         {
             this.DataDirectory = dataDirectory;
 
             ResultDatasets = new List<Dataset>();
+            TestbenchDatasets = new List<Dataset>();
             LoadResultDatasets();
 
             ArchiveDatasets = new List<Dataset>();
@@ -73,7 +75,7 @@ namespace PETBrowser
 
                     if (!datasets.ContainsKey(time))
                     {
-                        datasets[time] = new Dataset(Dataset.DatasetKind.Result, time, name);
+                        datasets[time] = new Dataset(Dataset.DatasetKind.PetResult, time, name);
                     }
 
                     var thisDataset = datasets[time];
@@ -82,7 +84,25 @@ namespace PETBrowser
                 }
                 else
                 {
-                    // Don't add non-PET runs to the browser
+                    // Non-PET run; add it as a TestBench
+                    var testbenchManifestFilePath = Path.Combine(DataDirectory, ResultsDirectory, folder);
+
+                    using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
+                    using (var jsonReader = new JsonTextReader(testbenchManifestFile))
+                    {
+                        var manifestJson = (JObject) JToken.ReadFrom(jsonReader);
+
+                        var testBenchName = (string) manifestJson["TestBench"];
+
+                        var newDataset = new Dataset(Dataset.DatasetKind.TestBenchResult, time, testBenchName);
+                        newDataset.Status = (string) manifestJson["Status"];
+                        newDataset.DesignName = (string) manifestJson["DesignName"];
+
+                        newDataset.Count++;
+                        newDataset.Folders.Add(folder);
+
+                        TestbenchDatasets.Add(newDataset);
+                    }
                 }
             }
 
@@ -156,7 +176,7 @@ namespace PETBrowser
                     bool firstHeaderReadForFolder = true;
 
                     string csvFileName;
-                    if (d.Kind == Dataset.DatasetKind.Result)
+                    if (d.Kind == Dataset.DatasetKind.PetResult)
                     {
                         csvFileName = Path.Combine(this.DataDirectory, ResultsDirectory,
                             folder.Replace("testbench_manifest.json", "output.csv"));
@@ -227,13 +247,17 @@ namespace PETBrowser
     {
         public enum DatasetKind
         {
-            Result,
-            Archive
+            PetResult,
+            Archive,
+            TestBenchResult
         }
 
         public DatasetKind Kind { get; set; } 
         public string Time { get; set; }
         public string Name { get; set; }
+        public string DesignName { get; set; }
+        public string Status { get; set; }
+
         public int Count { get; set; }
         public List<string> Folders { get; private set; }
         public bool Selected { get; set; }
@@ -243,6 +267,8 @@ namespace PETBrowser
             this.Kind = kind;
             this.Time = time;
             this.Name = name;
+            this.DesignName = "";
+            this.Status = "";
             this.Count = 0;
             this.Folders = new List<string>();
             this.Selected = false;
