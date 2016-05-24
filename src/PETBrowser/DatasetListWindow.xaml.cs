@@ -39,6 +39,18 @@ namespace PETBrowser
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //this.ViewModel.LoadDataset("C:\\source\\viz");
+            try
+            {
+                this.ViewModel.LoadDataset(".");
+            }
+            catch (FileNotFoundException ex)
+            {
+                ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
+            }
         }
 
         private void button_Click(object sender, RoutedEventArgs e)

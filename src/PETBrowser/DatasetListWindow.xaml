@@ -2,9 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="PET Browser" Height="423" Width="805" Loaded="Window_Loaded">
-    <DockPanel>
+    <DockPanel Background="#FFEEF5FD">
         <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar x:Name="toolBar">
+            <ToolBar x:Name="toolBar" Band="1" BandIndex="1">
                 <Button x:Name="SelectResultsFolderButton" Content="Select Results Folder" Click="SelectResultsFolderButton_Click"/>
             </ToolBar>
         </ToolBarTray>
@@ -22,7 +22,7 @@
                             <Button x:Name="vizButton" Content="Open Selected in Visualizer"  Margin="5,10,10,10" Click="vizButton_Click" Padding="5,3"/>
                         </StackPanel>
                     </StackPanel>
-                    <DataGrid ItemsSource="{Binding PetDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal">
+                    <DataGrid ItemsSource="{Binding PetDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableRowVirtualization="False" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal">
                         <DataGrid.HorizontalGridLinesBrush>
                             <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
                         </DataGrid.HorizontalGridLinesBrush>
@@ -49,7 +49,14 @@
                             <Button x:Name="explorerButton" Content="Open Selected in Explorer"  Margin="5,10,10,10" Padding="5,3" Click="explorerButton_Click" IsEnabled="{Binding SelectedItems.Count, ElementName=TestBenchGrid}"/>
                         </StackPanel>
                     </StackPanel>
-                    <DataGrid x:Name="TestBenchGrid" ItemsSource="{Binding TestBenchDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal">
+                    <DataGrid x:Name="TestBenchGrid"
+                              ItemsSource="{Binding TestBenchDatasets, IsAsync=True}"
+                              AutoGenerateColumns="False" 
+                              RowHeight="20" 
+                              MaxWidth="2560"
+                              MaxHeight="1600" 
+                              SelectionMode="Single"
+                              GridLinesVisibility="Horizontal">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="100"/>
                             <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="200"/>
