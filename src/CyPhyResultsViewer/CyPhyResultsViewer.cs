@@ -66,8 +66,8 @@ namespace CyPhyResultsViewer
         {
             ProcessStartInfo info = new ProcessStartInfo()
             {
-                FileName = Path.Combine(META.VersionInfo.PythonVEnvScriptsPath, "pythonw.exe"),
-                Arguments = String.Format("-E \"{0}\"", Path.Combine(META.VersionInfo.MetaPath, "bin", "PetViz.py")),
+                FileName = Path.Combine(META.VersionInfo.MetaPath, "bin", "PetBrowser.exe"),
+                Arguments = "",
                 WorkingDirectory = project.GetProjectDirectoryPath(),
                 UseShellExecute = false,
                 RedirectStandardError = true
