@@ -64,10 +64,15 @@ namespace CyPhyResultsViewer
         [ComVisible(false)]
         public void Main(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, ComponentStartMode startMode)
         {
+            var exePath = Path.Combine(META.VersionInfo.MetaPath, @"bin\PETBrowser.exe");
+            if (File.Exists(exePath) == false)
+            {
+                exePath = Path.Combine(META.VersionInfo.MetaPath, @"src\PETBrowser\bin\Release\PETBrowser.exe");
+            }
             ProcessStartInfo info = new ProcessStartInfo()
             {
-                FileName = Path.Combine(META.VersionInfo.PythonVEnvScriptsPath, "pythonw.exe"),
-                Arguments = String.Format("-E \"{0}\"", Path.Combine(META.VersionInfo.MetaPath, "bin", "PetViz.py")),
+                FileName = exePath,
+                // Arguments =
                 WorkingDirectory = project.GetProjectDirectoryPath(),
                 UseShellExecute = false,
                 RedirectStandardError = true
