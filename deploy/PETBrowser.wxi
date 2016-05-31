@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <DirectoryRef Id="INSTALLDIR_BIN" />
+</Fragment>
+<Fragment>
+<ComponentGroup Id="PETBrowser">
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\PETBrowser.exe" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\CsvHelper.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\Ookii.Dialogs.Wpf.dll" />
+  </Component>
+</ComponentGroup>
+</Fragment>
+</Wix>
