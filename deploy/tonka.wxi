@@ -15,6 +15,7 @@
       <ComponentGroupRef Id='tonka_python'/>
       <ComponentGroupRef Id='ShowNet'/>
       <ComponentGroupRef Id='PinMatcher'/>
+      <ComponentGroupRef Id='PETBrowser'/>
       <ComponentGroupRef Id='SpiceLib'/>
       <ComponentGroupRef Id='CyPhy2RF'/>
       <ComponentGroupRef Id='CyPhy2PCBMfg'/>

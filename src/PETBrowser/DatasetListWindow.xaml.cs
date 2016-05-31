@@ -117,7 +117,7 @@ namespace PETBrowser
             {
                 var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz();
 
-                Process.Start("C:\\Program Files (x86)\\META\\bin\\Dig\\run.cmd", exportPath);
+                Process.Start(System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath);
 
                 var taskDialog = new TaskDialog
                 {
