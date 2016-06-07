@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PETBrowser"
         mc:Ignorable="d"
         Title="TestBenchDetailsWindow"
-        Width="500"
+        Width="600"
         SizeToContent="Height"
         ResizeMode="NoResize"
         Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
@@ -16,6 +16,16 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="100" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -34,7 +44,100 @@
         <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Design ID</Label>
         <TextBox Grid.Row="3" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding Manifest.DesignID}"/>
 
-        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+        <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Steps</Label>
+        <DataGrid Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal">
+            <DataGrid.HorizontalGridLinesBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+            </DataGrid.HorizontalGridLinesBrush>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Invocation}" Header="Invocation" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Status}" Header="Status" IsReadOnly="True" />
+            </DataGrid.Columns>
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="FAILED">
+                            <Setter Property="Background" Value="#FFFFAFAF" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="OK">
+                            <Setter Property="Background" Value="#FFAFFFAF"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
+                            <Setter Property="Background" Value="#FFFFFFAF"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+
+                    <EventSetter Event="MouseDoubleClick" Handler="StepsRow_DoubleClick"></EventSetter>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
+            </DataGrid.Resources>
+        </DataGrid>
+
+        <Label Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Parameters</Label>
+        <DataGrid Grid.Row="6" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal">
+            <DataGrid.HorizontalGridLinesBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+            </DataGrid.HorizontalGridLinesBrush>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Range}" Header="Range" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
+        <DataGrid Grid.Row="8" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal">
+            <DataGrid.HorizontalGridLinesBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+            </DataGrid.HorizontalGridLinesBrush>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Artifacts</Label>
+        <DataGrid Grid.Row="10" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal">
+            <DataGrid.HorizontalGridLinesBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+            </DataGrid.HorizontalGridLinesBrush>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="ArtifactsRow_DoubleClick"></EventSetter>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+
+        <Label Grid.Row="12" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Visualization Artifacts</Label>
+        <DataGrid Grid.Row="12" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal">
+            <DataGrid.HorizontalGridLinesBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+            </DataGrid.HorizontalGridLinesBrush>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="ArtifactsRow_DoubleClick"></EventSetter>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+        
+        <StackPanel Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2">
             <Border BorderThickness="0,1,0,0" Margin="2,5,2,2">
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>

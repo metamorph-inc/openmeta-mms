@@ -66,8 +66,8 @@
                         </DataGrid.Columns>
                         <DataGrid.Resources>
                             <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="Details..." Click="showDetails" FontWeight="Bold"></MenuItem>
                                 <MenuItem Header="Open in Explorer" Click="explorerButton_Click" />
-                                <MenuItem Header="Details..." Click="showDetails"></MenuItem>
                             </ContextMenu>
                         </DataGrid.Resources>
                         <DataGrid.HorizontalGridLinesBrush>
@@ -87,6 +87,7 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                                 <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                                <EventSetter Event="MouseDoubleClick" Handler="showDetails"></EventSetter>
                             </Style>
                         </DataGrid.RowStyle>
                         
