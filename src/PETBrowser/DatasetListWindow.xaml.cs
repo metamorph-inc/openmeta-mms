@@ -120,16 +120,6 @@ namespace PETBrowser
                 var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset);
 
                 Process.Start(System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath);
-
-                var taskDialog = new TaskDialog
-                {
-                    WindowTitle = "Export Succeeded",
-                    MainInstruction = "The export completed successfully.",
-                    Content = "Results have been placed in results\\mergedPET.csv for use with the visualizer.  Launch the visualizer to continue.",
-                    MainIcon = TaskDialogIcon.Information
-                };
-                taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Ok));
-                taskDialog.ShowDialog(this);
             }
             catch (Exception ex)
             {
@@ -192,10 +182,16 @@ namespace PETBrowser
         {
             var selectedDataset = (Dataset)PetGrid.SelectedItem;
 
-            var detailsWindow = new PetDetailsWindow(selectedDataset);
-            detailsWindow.Owner = this;
-            detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            detailsWindow.ShowDialog();
+            if (selectedDataset.Kind == Dataset.DatasetKind.PetResult)
+            {
+                var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
+                    DatasetStore.ResultsDirectory);
+
+                var detailsWindow = new PetDetailsWindow(selectedDataset, resultsDirectory);
+                detailsWindow.Owner = this;
+                detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                detailsWindow.ShowDialog();
+            }
         }
     }
 

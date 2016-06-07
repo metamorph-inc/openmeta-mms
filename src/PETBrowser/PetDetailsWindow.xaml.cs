@@ -29,9 +29,9 @@ namespace PETBrowser
             set { DataContext = value; }
         }
 
-        public PetDetailsWindow(Dataset dataset)
+        public PetDetailsWindow(Dataset dataset, string resultsDirectory)
         {
-            this.ViewModel = new PetDetailsViewModel(dataset);
+            this.ViewModel = new PetDetailsViewModel(dataset, resultsDirectory);
             InitializeComponent();
         }
 
