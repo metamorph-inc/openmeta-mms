@@ -67,6 +67,7 @@
                         <DataGrid.Resources>
                             <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                 <MenuItem Header="Open in Explorer" Click="explorerButton_Click" />
+                                <MenuItem Header="Details..." Click="showDetails"></MenuItem>
                             </ContextMenu>
                         </DataGrid.Resources>
                         <DataGrid.HorizontalGridLinesBrush>

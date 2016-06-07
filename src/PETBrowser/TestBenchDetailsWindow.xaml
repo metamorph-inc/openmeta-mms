@@ -1,0 +1,48 @@
+﻿<Window x:Class="PETBrowser.TestBenchDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PETBrowser"
+        mc:Ignorable="d"
+        Title="TestBenchDetailsWindow"
+        Width="500"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+    <Grid Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3" Margin="2">Design Name</Label>
+        <TextBox Grid.Row="0" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding Manifest.DesignName}"/>
+
+        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Test Bench</Label>
+        <TextBox Grid.Row="1" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding Manifest.TestBench}"/>
+
+        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Created</Label>
+        <TextBox Grid.Row="2" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding CreatedTime, Mode=OneTime}"/>
+
+        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Design ID</Label>
+        <TextBox Grid.Row="3" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding Manifest.DesignID}"/>
+
+        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+            <Border BorderThickness="0,1,0,0" Margin="2,5,2,2">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                </Border.BorderBrush>
+            </Border>
+            <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                <Button x:Name="CloseButton" Content="Close"  Margin="2,5" Padding="13,3" Click="CloseButton_OnClick" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

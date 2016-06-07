@@ -156,6 +156,19 @@ namespace PETBrowser
                 ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
             }
         }
+
+        private void showDetails(object sender, RoutedEventArgs e)
+        {
+            var selectedDataset = (Dataset)TestBenchGrid.SelectedItem;
+
+            var datasetPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.ResultsDirectory,
+                selectedDataset.Folders[0]);
+
+            var detailsWindow = new TestBenchDetailsWindow(datasetPath);
+            detailsWindow.Owner = this;
+            detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            detailsWindow.ShowDialog();
+        }
     }
 
     public class DatasetListWindowViewModel

@@ -58,23 +58,23 @@ namespace PETBrowser
 
                 if (File.Exists(mdaoName))
                 {
-                    var names = new List<string>();
-
-                    using (var mdaoFile = File.OpenText(mdaoName))
-                    using (var jsonReader = new JsonTextReader(mdaoFile))
-                    {
-                        var mdaoJson = (JObject) JToken.ReadFrom(jsonReader);
-
-                        names.AddRange(((JObject) mdaoJson["components"]).Properties().Select(property => property.Name));
-                    }
-                    var nameBuilder = new StringBuilder();
-                    nameBuilder.Append("[");
-                    nameBuilder.Append(string.Join(",", names));
-                    nameBuilder.Append("]");
-                    var name = nameBuilder.ToString();
-
                     if (!datasets.ContainsKey(time))
                     {
+                        var names = new List<string>();
+
+                        using (var mdaoFile = File.OpenText(mdaoName))
+                        using (var jsonReader = new JsonTextReader(mdaoFile))
+                        {
+                            var mdaoJson = (JObject) JToken.ReadFrom(jsonReader);
+
+                            names.AddRange(((JObject) mdaoJson["components"]).Properties().Select(property => property.Name));
+                        }
+                        var nameBuilder = new StringBuilder();
+                        nameBuilder.Append("[");
+                        nameBuilder.Append(string.Join(",", names));
+                        nameBuilder.Append("]");
+                        var name = nameBuilder.ToString();
+                    
                         datasets[time] = new Dataset(Dataset.DatasetKind.PetResult, time, name);
                     }
 
