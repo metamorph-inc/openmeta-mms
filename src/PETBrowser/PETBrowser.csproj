@@ -82,6 +82,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PetDetailsViewModel.cs" />
+    <Compile Include="PetDetailsWindow.xaml.cs">
+      <DependentUpon>PetDetailsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TBManifestViewModel.cs" />
     <Compile Include="TestBenchDetailsWindow.xaml.cs">
       <DependentUpon>TestBenchDetailsWindow.xaml</DependentUpon>
@@ -102,6 +106,10 @@
     <Page Include="Icons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PetDetailsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="PromptDialog.xaml">
       <SubType>Designer</SubType>

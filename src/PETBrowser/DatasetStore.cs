@@ -130,11 +130,11 @@ namespace PETBrowser
             }
         }
 
-        public void ArchiveSelectedDatasets(string archiveName)
+        public void ArchiveSelectedDatasets(string archiveName, Dataset highlightedDataset)
         {
             var archivePath = Path.Combine(this.DataDirectory, ArchiveDirectory, archiveName + ".csv");
 
-            WriteSelectedDatasetsToCsv(archivePath, false, null);
+            WriteSelectedDatasetsToCsv(archivePath, false, highlightedDataset);
         }
 
         public string ExportSelectedDatasetsToViz(Dataset highlightedDataset)
@@ -155,12 +155,18 @@ namespace PETBrowser
                 var writer = new CsvWriter(outputCsvFile);
                 foreach (var d in ResultDatasets)
                 {
-                    WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                    if (d.Selected)
+                    {
+                        WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                    }
                 }
 
                 foreach (var d in ArchiveDatasets)
                 {
-                    WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                    if (d.Selected)
+                    {
+                        WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                    }
                 }
 
                 if (headers == null)
@@ -168,6 +174,7 @@ namespace PETBrowser
                     //No selected datasets; if we have a highlighted dataset, write the highlighted dataset instead
                     if (highlightedDataset != null)
                     {
+                        Console.WriteLine("No selected datasets; writing highlighted dataset");
                         WriteDatasetToCsv(highlightedDataset, ref headers, writer, writeNoneAsEmpty);
                     }
                     else
@@ -180,76 +187,73 @@ namespace PETBrowser
 
         private void WriteDatasetToCsv(Dataset d, ref List<string> headers, CsvWriter writer, bool writeNoneAsEmpty)
         {
-            if (d.Selected)
+            Console.WriteLine(d.Name);
+
+            foreach (var folder in d.Folders)
             {
-                Console.WriteLine(d.Name);
+                bool firstHeaderReadForFolder = true;
 
-                foreach (var folder in d.Folders)
+                string csvFileName;
+                if (d.Kind == Dataset.DatasetKind.PetResult)
                 {
-                    bool firstHeaderReadForFolder = true;
+                    csvFileName = Path.Combine(this.DataDirectory, ResultsDirectory,
+                        folder.Replace("testbench_manifest.json", "output.csv"));
+                }
+                else
+                {
+                    csvFileName = Path.Combine(this.DataDirectory, ArchiveDirectory, folder);
+                }
 
-                    string csvFileName;
-                    if (d.Kind == Dataset.DatasetKind.PetResult)
+                using (var csvFile = File.OpenText(csvFileName))
+                {
+                    var csvReader = new CsvReader(csvFile, new CsvConfiguration()
                     {
-                        csvFileName = Path.Combine(this.DataDirectory, ResultsDirectory,
-                            folder.Replace("testbench_manifest.json", "output.csv"));
-                    }
-                    else
-                    {
-                        csvFileName = Path.Combine(this.DataDirectory, ArchiveDirectory, folder);
-                    }
+                        HasHeaderRecord = true
+                    });
 
-                    using (var csvFile = File.OpenText(csvFileName))
+                    while (csvReader.Read())
                     {
-                        var csvReader = new CsvReader(csvFile, new CsvConfiguration()
+                        if (headers == null)
                         {
-                            HasHeaderRecord = true
-                        });
-
-                        while (csvReader.Read())
-                        {
-                            if (headers == null)
-                            {
-                                Console.Out.WriteLine(csvFileName);
-                                headers = new List<string>(csvReader.FieldHeaders);
-                                headers.Sort();
-                                firstHeaderReadForFolder = false;
-                                foreach (var header in headers)
-                                {
-                                    writer.WriteField<string>(header);
-                                }
-                                writer.NextRecord();
-                            }
-                            else
-                            {
-                                if (firstHeaderReadForFolder)
-                                {
-                                    var otherHeaders = new List<string>(csvReader.FieldHeaders);
-                                    otherHeaders.Sort();
-                                    if (!headers.SequenceEqual(otherHeaders))
-                                    {
-                                        Console.WriteLine("Headers for {0} didn't match initial headers",
-                                            csvFileName);
-                                        break;
-                                    }
-                                }
-                            }
-
+                            Console.Out.WriteLine(csvFileName);
+                            headers = new List<string>(csvReader.FieldHeaders);
+                            headers.Sort();
+                            firstHeaderReadForFolder = false;
                             foreach (var header in headers)
                             {
-                                string fieldValue = csvReader.GetField<string>(header);
-
-                                if (writeNoneAsEmpty && fieldValue == "None")
-                                {
-                                    writer.WriteField<string>("");
-                                }
-                                else
-                                {
-                                    writer.WriteField<string>(fieldValue);
-                                }
+                                writer.WriteField<string>(header);
                             }
                             writer.NextRecord();
                         }
+                        else
+                        {
+                            if (firstHeaderReadForFolder)
+                            {
+                                var otherHeaders = new List<string>(csvReader.FieldHeaders);
+                                otherHeaders.Sort();
+                                if (!headers.SequenceEqual(otherHeaders))
+                                {
+                                    Console.WriteLine("Headers for {0} didn't match initial headers",
+                                        csvFileName);
+                                    break;
+                                }
+                            }
+                        }
+
+                        foreach (var header in headers)
+                        {
+                            string fieldValue = csvReader.GetField<string>(header);
+
+                            if (writeNoneAsEmpty && fieldValue == "None")
+                            {
+                                writer.WriteField<string>("");
+                            }
+                            else
+                            {
+                                writer.WriteField<string>(fieldValue);
+                            }
+                        }
+                        writer.NextRecord();
                     }
                 }
             }

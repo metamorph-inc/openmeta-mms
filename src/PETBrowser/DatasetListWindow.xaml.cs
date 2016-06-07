@@ -61,13 +61,14 @@ namespace PETBrowser
 
                 if (promptDialog.ShowDialog() == true)
                 {
-                    this.ViewModel.Store.ArchiveSelectedDatasets(promptDialog.Text);
+                    var highlightedDataset = (Dataset)PetGrid.SelectedItem;
+                    this.ViewModel.Store.ArchiveSelectedDatasets(promptDialog.Text, highlightedDataset);
                     this.ViewModel.ReloadArchives();
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("Archive error", "An error occurred while archiving results.", "", ex.ToString());
+                ShowErrorDialog("Archive error", "An error occurred while archiving results.", ex.Message, ex.ToString());
             }
         }
 
@@ -132,7 +133,7 @@ namespace PETBrowser
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("Archive error", "An error occurred while archiving results.", "", ex.ToString());
+                ShowErrorDialog("Archive error", "An error occurred while archiving results.", ex.Message, ex.ToString());
             }
         }
 
@@ -185,6 +186,16 @@ namespace PETBrowser
             {
                 ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
             }
+        }
+
+        private void showPetDetails(object sender, MouseButtonEventArgs e)
+        {
+            var selectedDataset = (Dataset)PetGrid.SelectedItem;
+
+            var detailsWindow = new PetDetailsWindow(selectedDataset);
+            detailsWindow.Owner = this;
+            detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            detailsWindow.ShowDialog();
         }
     }
 
