@@ -134,19 +134,19 @@ namespace PETBrowser
         {
             var archivePath = Path.Combine(this.DataDirectory, ArchiveDirectory, archiveName + ".csv");
 
-            WriteSelectedDatasetsToCsv(archivePath, false);
+            WriteSelectedDatasetsToCsv(archivePath, false, null);
         }
 
-        public string ExportSelectedDatasetsToViz()
+        public string ExportSelectedDatasetsToViz(Dataset highlightedDataset)
         {
             var exportPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mergedPET.csv");
 
-            WriteSelectedDatasetsToCsv(exportPath, true);
+            WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset);
 
             return exportPath;
         }
 
-        private void WriteSelectedDatasetsToCsv(string csvPath, bool writeNoneAsEmpty)
+        private void WriteSelectedDatasetsToCsv(string csvPath, bool writeNoneAsEmpty, Dataset highlightedDataset)
         {
             List<string> headers = null;
 
@@ -161,6 +161,19 @@ namespace PETBrowser
                 foreach (var d in ArchiveDatasets)
                 {
                     WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                }
+
+                if (headers == null)
+                {
+                    //No selected datasets; if we have a highlighted dataset, write the highlighted dataset instead
+                    if (highlightedDataset != null)
+                    {
+                        WriteDatasetToCsv(highlightedDataset, ref headers, writer, writeNoneAsEmpty);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("No data exported; no datasets were selected to export");
+                    }
                 }
             }
         }

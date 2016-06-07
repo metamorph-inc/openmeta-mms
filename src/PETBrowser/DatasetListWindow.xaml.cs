@@ -115,7 +115,8 @@ namespace PETBrowser
         {
             try
             {
-                var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz();
+                var highlightedDataset = (Dataset) PetGrid.SelectedItem;
+                var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset);
 
                 Process.Start(System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath);
 
@@ -168,6 +169,22 @@ namespace PETBrowser
             detailsWindow.Owner = this;
             detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             detailsWindow.ShowDialog();
+        }
+
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ViewModel.LoadDataset(ViewModel.Store.DataDirectory);
+            }
+            catch (FileNotFoundException ex)
+            {
+                ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
+            }
         }
     }
 
