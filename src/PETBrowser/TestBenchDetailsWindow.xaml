@@ -5,16 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PETBrowser"
         mc:Ignorable="d"
-        Title="TestBenchDetailsWindow"
         Width="600"
         SizeToContent="Height"
         ResizeMode="NoResize"
         Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-    <Grid Margin="2">
+    <Window.Title>
+        <MultiBinding StringFormat="{}{0}: {1} — Test Bench Details">
+            <Binding Path="Manifest.TestBench" />
+            <Binding Path="Manifest.DesignName" />
+        </MultiBinding>
+    </Window.Title>
+    <Grid Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="100" />
@@ -32,20 +34,47 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3" Margin="2">Design Name</Label>
-        <TextBox Grid.Row="0" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding Manifest.DesignName}"/>
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Test Bench" Text="{Binding Manifest.TestBench}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
+            <TextBox Grid.Row="0" Grid.Column="2"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
+            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,3" ToolTip="Design ID" Text="{Binding Manifest.DesignID}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#BF000000" />
+            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,0,0,1" >
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                </Border.BorderBrush>
+            </Border>
+            <Grid.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Manifest.Status}" Value="FAILED">
+                            <Setter Property="Grid.Background" Value="#FFFFAFAF" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Manifest.Status}" Value="OK">
+                            <Setter Property="Grid.Background" Value="#FFAFFFAF"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Manifest.Status}" Value="UNEXECUTED">
+                            <Setter Property="Grid.Background" Value="#FFFFFFAF"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
 
-        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Test Bench</Label>
-        <TextBox Grid.Row="1" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding Manifest.TestBench}"/>
-
-        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Created</Label>
-        <TextBox Grid.Row="2" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding CreatedTime, Mode=OneTime}"/>
-
-        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Design ID</Label>
-        <TextBox Grid.Row="3" Grid.Column="1"  IsReadOnly="True" VerticalAlignment="Center" Padding="3" Margin="2" Text="{Binding Manifest.DesignID}"/>
-
-        <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Steps</Label>
-        <DataGrid Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Steps</Label>
+        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -80,8 +109,8 @@
             </DataGrid.Resources>
         </DataGrid>
 
-        <Label Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Parameters</Label>
-        <DataGrid Grid.Row="6" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Parameters</Label>
+        <DataGrid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -93,8 +122,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
-        <DataGrid Grid.Row="8" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
+        <DataGrid Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -105,8 +134,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Artifacts</Label>
-        <DataGrid Grid.Row="10" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <Label Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Artifacts</Label>
+        <DataGrid Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -121,8 +150,8 @@
             </DataGrid.RowStyle>
         </DataGrid>
 
-        <Label Grid.Row="12" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Visualization Artifacts</Label>
-        <DataGrid Grid.Row="12" Grid.Column="1" Grid.RowSpan="2" Margin="2" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Visualization Artifacts</Label>
+        <DataGrid Grid.Row="9" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -136,15 +165,15 @@
                 </Style>
             </DataGrid.RowStyle>
         </DataGrid>
-        
-        <StackPanel Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2">
-            <Border BorderThickness="0,1,0,0" Margin="2,5,2,2">
+
+        <StackPanel Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2">
+            <Border BorderThickness="0,1,0,0" Margin="4,5,4,4">
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
                 </Border.BorderBrush>
             </Border>
             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                <Button x:Name="CloseButton" Content="Close"  Margin="2,5" Padding="13,3" Click="CloseButton_OnClick" />
+                <Button x:Name="CloseButton" Content="Close"  Margin="4,5,4,8" Padding="13,3" Click="CloseButton_OnClick" />
             </StackPanel>
         </StackPanel>
     </Grid>
