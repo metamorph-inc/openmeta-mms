@@ -49,7 +49,7 @@ LayoutOptions solverOptions;
 
 using namespace Gecode;
 
-const double nan = -1e-15;	// Constant used to represent an undefined double.
+const double nan_ = -1e-15;	// Constant used to represent an undefined double.
 
 int GistDebug(LayoutSolver *);
 int	tryToPlace( const char *inputFileName, option::Option *options, option::Parser parse, std::vector<char *> preOpts );
@@ -314,8 +314,8 @@ std::string getPythonPath()
 int tryToPlace( const char *inputFileName, option::Option *options, option::Parser parse, std::vector<char *> preOpts )
 {
 	const char *infn = inputFileName;
-	double inchipgap = options[Chipgap].arg ? atof(options[Chipgap].arg) : nan;
-	double optionEdgeGap = options[Edgegap].arg ? atof(options[Edgegap].arg) : nan;
+	double inchipgap = options[Chipgap].arg ? atof(options[Chipgap].arg) : nan_;
+	double optionEdgeGap = options[Edgegap].arg ? atof(options[Edgegap].arg) : nan_;
 
 	double nthreads = options[Threads].arg ? atoi(options[Threads].arg) : 0;
 	int failstop = options[Maxtries].arg ? atol(options[Maxtries].arg) : 100000;
@@ -365,7 +365,7 @@ int tryToPlace( const char *inputFileName, option::Option *options, option::Pars
 			std::string interChipGapName = "interChipSpace";
 			std::string optionEdgeGapName = "boardEdgeSpace";
 
-			if( nan != inchipgap )
+			if( nan_ != inchipgap )
 			{
 				std::cout << "Inter-chip space from chipgap argument: " << inchipgap << " mm." << std::endl;
 				root[interChipGapName] = inchipgap;
@@ -385,7 +385,7 @@ int tryToPlace( const char *inputFileName, option::Option *options, option::Pars
 				}
 			}
 
-			if( nan != optionEdgeGap )
+			if( nan_ != optionEdgeGap )
 			{
 				std::cout << "Board-edge space from edgegap argument: " << optionEdgeGap << " mm." << std::endl;
 				root[optionEdgeGapName] = optionEdgeGap;

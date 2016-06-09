@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -23,14 +23,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -100,7 +100,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\nuget\jsoncpp.0.5.0-r20140114\build\native\jsoncpp.targets" Condition="Exists('..\..\nuget\jsoncpp.0.5.0-r20140114\build\native\jsoncpp.targets')" />
-    <Import Project="..\..\nuget\jsoncpp-vc100.0.5.0-r20140114\build\native\jsoncpp-vc100.targets" Condition="Exists('..\..\nuget\jsoncpp-vc100.0.5.0-r20140114\build\native\jsoncpp-vc100.targets')" />
     <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+    <Import Project="..\..\nuget\jsoncpp-vc140.0.5.0-r20140114\build\native\jsoncpp-vc140.targets" Condition="Exists('..\..\nuget\jsoncpp-vc140.0.5.0-r20140114\build\native\jsoncpp-vc140.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\nuget\jsoncpp-vc140.0.5.0-r20140114\build\native\jsoncpp-vc140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\nuget\jsoncpp-vc140.0.5.0-r20140114\build\native\jsoncpp-vc140.targets'))" />
+  </Target>
 </Project>

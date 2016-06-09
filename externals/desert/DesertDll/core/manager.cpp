@@ -1233,7 +1233,7 @@ void CManager::Dump(FILE *f, const TCHAR * comment)
 		while(pos)
 		{
 			CDynDomain *fuck_domain = domains.GetNext(pos);
-			if(f)_ftprintf(f, _T(" Domain element: %s at address: %x \n"), fuck_domain->GetName(), fuck_domain);
+			if(f)_ftprintf(f, _T(" Domain element: %s at address: %p \n"), static_cast<const TCHAR*>(fuck_domain->GetName()), fuck_domain);
 			fuck_domain->Dump(f);
 		}
 
@@ -1241,7 +1241,7 @@ void CManager::Dump(FILE *f, const TCHAR * comment)
 		while(pos)
 		{
 			CDynSpace *fuck_space = spaces.GetNext(pos);
-			if(f)_ftprintf(f, _T(" Space element: %s at address: %x \n"), fuck_space->GetName(), fuck_space);
+			if(f)_ftprintf(f, _T(" Space element: %s at address: %p \n"), static_cast<const TCHAR*>(fuck_space->GetName()), fuck_space);
 			fuck_space->Dump(f);
 		}
 
@@ -1249,7 +1249,7 @@ void CManager::Dump(FILE *f, const TCHAR * comment)
 		while(pos)
 		{
 			CDynElementContainer *fuck_ec = containers.GetNext(pos);
-			_ftprintf(f, _T(" Container element: at address: %x \n"), fuck_ec);
+			_ftprintf(f, _T(" Container element: at address: %p \n"), fuck_ec);
 			fuck_ec->Dump(f);
 		}
 

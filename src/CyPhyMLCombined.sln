@@ -123,6 +123,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyPhy2Modelica_v2", "CyPhy2Modelica_v2\CyPhy2Modelica_v2.csproj", "{D2DEA0A5-78D5-4346-9C24-4CD7AE10B8AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyPhyMetaLinkBridgeClient", "CyPhyMetaLinkBridgeClient\CyPhyMetaLinkBridgeClient.csproj", "{89D01A92-0ABD-40C5-8323-1792CD65C8E1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EF6DE767-A722-4D29-8041-B7FA81BAD65C} = {EF6DE767-A722-4D29-8041-B7FA81BAD65C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyPhyMLCS", "CyPhyMLCS\CyPhyMLCS.csproj", "{A7EFEDC9-9557-4083-A990-EFCAC684E3C6}"
 EndProject
