@@ -17,6 +17,8 @@
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="150" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -38,8 +40,10 @@
             </Grid.ColumnDefinitions>
             <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Test Bench" Text="{Binding Manifest.TestBench}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
             <TextBox Grid.Row="0" Grid.Column="2"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
-            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
-            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,3" ToolTip="Design ID" Text="{Binding Manifest.DesignID}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#BF000000" />
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
+            <TextBox Grid.Row="1" Grid.Column="2" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" Text="{Binding RecordCount, Mode=OneWay, StringFormat={}{0} records}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
+            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,3" ToolTip="Design ID" Text="{Binding Manifest.DesignID}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#BF000000" />
+            <TextBox Grid.Row="2" Grid.Column="2" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1,4,3" Text="{Binding DetailsDataset.Count, Mode=OneWay, StringFormat={}{0} runs}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
             <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,0,0,1" >
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
@@ -62,7 +66,21 @@
             </Grid.Style>
         </Grid>
 
-        <StackPanel Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2">
+        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
+        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+            <DataGrid.HorizontalGridLinesBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+            </DataGrid.HorizontalGridLinesBrush>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Kind}" Header="Kind" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding MinFormatted, Mode=OneWay}" Header="Min" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding MaxFormatted, Mode=OneWay}" Header="Max" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding AverageFormatted, Mode=OneWay}" Header="Average" IsReadOnly="True"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
             <Border BorderThickness="0,1,0,0" Margin="4,5,4,4">
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
