@@ -87,21 +87,32 @@ namespace PETBrowser
                     // Non-PET run; add it as a TestBench
                     var testbenchManifestFilePath = Path.Combine(DataDirectory, ResultsDirectory, folder);
 
-                    using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
-                    using (var jsonReader = new JsonTextReader(testbenchManifestFile))
+                    try
                     {
-                        var manifestJson = (JObject) JToken.ReadFrom(jsonReader);
+                        using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
+                        using (var jsonReader = new JsonTextReader(testbenchManifestFile))
+                        {
+                            var manifestJson = (JObject) JToken.ReadFrom(jsonReader);
 
-                        var testBenchName = (string) manifestJson["TestBench"];
+                            var testBenchName = (string) manifestJson["TestBench"];
 
-                        var newDataset = new Dataset(Dataset.DatasetKind.TestBenchResult, time, testBenchName);
-                        newDataset.Status = (string) manifestJson["Status"];
-                        newDataset.DesignName = (string) manifestJson["DesignName"];
+                            var newDataset = new Dataset(Dataset.DatasetKind.TestBenchResult, time, testBenchName);
+                            newDataset.Status = (string) manifestJson["Status"];
+                            newDataset.DesignName = (string) manifestJson["DesignName"];
 
-                        newDataset.Count++;
-                        newDataset.Folders.Add(folder);
+                            newDataset.Count++;
+                            newDataset.Folders.Add(folder);
 
-                        TestbenchDatasets.Add(newDataset);
+                            TestbenchDatasets.Add(newDataset);
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        //Don't add testbench if we don't find a corresponding testbenchmanifest in its results folder
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        //Don't add testbench if we don't find its directory
                     }
                 }
             }
