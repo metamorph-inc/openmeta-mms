@@ -28,7 +28,14 @@
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Name="StatusText">Test</TextBlock>
+                <TextBlock Name="StatusText">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} PET(s); {1} other test bench(es)">
+                            <Binding Path="PetDatasets.Count"></Binding>
+                            <Binding Path="TestBenchDatasets.Count"></Binding>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
             </StatusBarItem>
         </StatusBar>
         <TabControl>

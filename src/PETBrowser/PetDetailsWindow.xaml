@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Test Bench" Text="{Binding Manifest.TestBench}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
+            <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Test Bench" Text="{Binding DetailsDataset.Name}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
             <TextBox Grid.Row="0" Grid.Column="2"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
             <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
             <TextBox Grid.Row="1" Grid.Column="2" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" Text="{Binding RecordCount, Mode=OneWay, StringFormat={}{0} records}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
