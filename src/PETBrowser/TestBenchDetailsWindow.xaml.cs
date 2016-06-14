@@ -94,5 +94,22 @@ namespace PETBrowser
                 ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
             }
         }
+
+        private void ExplorerButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //Explorer doesn't accept forward slashes in paths
+                var datasetPath = ManifestPath.Replace("/", "\\");
+
+                Console.WriteLine("/select,\"" + datasetPath + "\"");
+
+                Process.Start("explorer.exe", "/select,\"" + datasetPath + "\"");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
+            }
+        }
     }
 }

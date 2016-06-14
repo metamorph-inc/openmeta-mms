@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AVM.DDP;
+using CsvHelper;
+using META;
 
 namespace PETBrowser
 {
@@ -31,6 +33,14 @@ namespace PETBrowser
             else
             {
                 Manifest = null;
+            }
+        }
+
+        private void ComputeStatistics()
+        {
+            foreach (var folder in DetailsDataset.Folders)
+            {
+                
             }
         }
     }
