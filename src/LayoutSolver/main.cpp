@@ -569,9 +569,9 @@ int GistDebug(LayoutSolver *m)
 {
 #ifndef _DEBUG
 	// we /DELAYLOAD gecode gist under Release configuration
-	if (LoadLibraryA("GECODEGIST-4-2-1-R-X86.DLL") == nullptr)
+	if (LoadLibraryA("GECODEGIST-4-4-0-R-X86.DLL") == nullptr)
 	{
-		std::cerr << "Could not load '""GECODEGIST-4-2-1-R-X86.DLL""'. Check that it and its dependencies are on the %PATH% or in the application directory" << std::endl;
+		std::cerr << "Could not load '""GECODEGIST-4-4-0-R-X86.DLL""'. Check that it and its dependencies are on the %PATH% or in the application directory" << std::endl;
 		return ERROR_MOD_NOT_FOUND;
 	}
 #endif
