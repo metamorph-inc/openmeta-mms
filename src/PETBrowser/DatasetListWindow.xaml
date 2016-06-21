@@ -51,6 +51,15 @@
                         <DataGrid.HorizontalGridLinesBrush>
                             <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
                         </DataGrid.HorizontalGridLinesBrush>
+                        <DataGrid.Resources>
+                            <ContextMenu x:Key="PetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="Details..." Click="showPetDetails" FontWeight="Bold" />
+                                <MenuItem Header="Delete..." Click="DeletePetItem" />
+                            </ContextMenu>
+                            <ContextMenu x:Key="ArchiveRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="Delete..." Click="DeletePetItem" />
+                            </ContextMenu>
+                        </DataGrid.Resources>
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="" Width="30">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -68,6 +77,15 @@
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <EventSetter Event="MouseDoubleClick" Handler="showPetDetails"></EventSetter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Kind}" Value="PetResult">
+                                        <Setter Property="ContextMenu" Value="{StaticResource PetRowMenu}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Kind}" Value="Archive">
+                                        <Setter Property="ContextMenu" Value="{StaticResource ArchiveRowMenu}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                                
                             </Style>
                         </DataGrid.RowStyle>
                     </DataGrid>
@@ -100,6 +118,7 @@
                             <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                 <MenuItem Header="Details..." Click="showDetails" FontWeight="Bold"></MenuItem>
                                 <MenuItem Header="Open in Explorer" Click="explorerButton_Click" />
+                                <MenuItem Header="Delete..." Click="DeleteTestBenchItem" />
                             </ContextMenu>
                         </DataGrid.Resources>
                         <DataGrid.HorizontalGridLinesBrush>

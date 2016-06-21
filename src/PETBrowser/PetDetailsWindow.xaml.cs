@@ -29,9 +29,12 @@ namespace PETBrowser
             set { DataContext = value; }
         }
 
-        public PetDetailsWindow(Dataset dataset, string resultsDirectory)
+        private DatasetListWindowViewModel DatasetViewModel { get; set; }
+
+        public PetDetailsWindow(Dataset dataset, string resultsDirectory, DatasetListWindowViewModel datasetViewModel)
         {
             this.ViewModel = new PetDetailsViewModel(dataset, resultsDirectory);
+            this.DatasetViewModel = datasetViewModel;
             InitializeComponent();
         }
 
@@ -56,6 +59,21 @@ namespace PETBrowser
             taskDialog.ShowDialog(this);
             //MessageBox.Show(this, "The selected folder doesn't appear to be a valid data folder.",
             //    "Error loading datasets", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+
+        private void VizButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var exportPath = this.DatasetViewModel.Store.ExportSelectedDatasetsToViz(ViewModel.DetailsDataset, true);
+
+                Process.Start(System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Archive error", "An error occurred while archiving results.", ex.Message, ex.ToString());
+            }
         }
     }
 }

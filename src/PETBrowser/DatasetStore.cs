@@ -141,6 +141,33 @@ namespace PETBrowser
             }
         }
 
+        /**
+         * Deletes a dataset from results.metaresults.json (or from the Archive folder as appropriate).
+         * The caller is responsible for reloading the list of datasets if desired.
+         */
+        public void DeleteDataset(Dataset datasetToDelete)
+        {
+            if (datasetToDelete.Kind == Dataset.DatasetKind.Archive)
+            {
+                //Archives aren't represented in metadata; just delete the archive file
+                var archivePath = Path.Combine(this.DataDirectory, ArchiveDirectory, datasetToDelete.Folders[0]);
+                File.Delete(archivePath);
+            }
+            else
+            {
+                // Remove all results where folder ("Summary") is in the dataset's Folders list
+                Metadata.Results.RemoveAll(item => datasetToDelete.Folders.Contains(item.Summary));
+
+                // Now update results.metaresults.json
+                var metadataPath = Path.Combine(DataDirectory, ResultsDirectory, MetadataFilename);
+                using (var metadataFile = File.CreateText(metadataPath))
+                {
+                    var serializer = new JsonSerializer();
+                    serializer.Serialize(metadataFile, Metadata);
+                }
+            }
+        }
+
         public void ArchiveSelectedDatasets(string archiveName, Dataset highlightedDataset)
         {
             var archivePath = Path.Combine(this.DataDirectory, ArchiveDirectory, archiveName + ".csv");
@@ -148,35 +175,38 @@ namespace PETBrowser
             WriteSelectedDatasetsToCsv(archivePath, false, highlightedDataset);
         }
 
-        public string ExportSelectedDatasetsToViz(Dataset highlightedDataset)
+        public string ExportSelectedDatasetsToViz(Dataset highlightedDataset, bool highlightedDatasetOnly = false)
         {
             var exportPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mergedPET.csv");
 
-            WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset);
+            WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset, highlightedDatasetOnly);
 
             return exportPath;
         }
 
-        private void WriteSelectedDatasetsToCsv(string csvPath, bool writeNoneAsEmpty, Dataset highlightedDataset)
+        private void WriteSelectedDatasetsToCsv(string csvPath, bool writeNoneAsEmpty, Dataset highlightedDataset, bool highlightedDatasetOnly = false)
         {
             List<string> headers = null;
 
             using (var outputCsvFile = File.CreateText(csvPath))
             {
                 var writer = new CsvWriter(outputCsvFile);
-                foreach (var d in ResultDatasets)
+                if (!highlightedDatasetOnly)
                 {
-                    if (d.Selected)
+                    foreach (var d in ResultDatasets)
                     {
-                        WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                        if (d.Selected)
+                        {
+                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                        }
                     }
-                }
 
-                foreach (var d in ArchiveDatasets)
-                {
-                    if (d.Selected)
+                    foreach (var d in ArchiveDatasets)
                     {
-                        WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                        if (d.Selected)
+                        {
+                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                        }
                     }
                 }
 

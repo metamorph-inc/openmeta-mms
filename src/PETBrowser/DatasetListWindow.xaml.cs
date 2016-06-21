@@ -180,7 +180,7 @@ namespace PETBrowser
             }
         }
 
-        private void showPetDetails(object sender, MouseButtonEventArgs e)
+        private void showPetDetails(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -191,7 +191,7 @@ namespace PETBrowser
                     var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
                         DatasetStore.ResultsDirectory);
 
-                    var detailsWindow = new PetDetailsWindow(selectedDataset, resultsDirectory);
+                    var detailsWindow = new PetDetailsWindow(selectedDataset, resultsDirectory, ViewModel);
                     detailsWindow.Owner = this;
                     detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     detailsWindow.ShowDialog();
@@ -200,6 +200,44 @@ namespace PETBrowser
             catch (Exception ex)
             {
                 ShowErrorDialog("Error", "An error occurred while loading dataset details.", ex.Message, ex.ToString());
+            }
+        }
+
+        private void DeletePetItem(object sender, RoutedEventArgs e)
+        {
+            var selectedDataset = (Dataset) PetGrid.SelectedItem;
+            DeleteItem(selectedDataset);
+        }
+
+        private void DeleteTestBenchItem(object sender, RoutedEventArgs e)
+        {
+            var selectedDataset = (Dataset)TestBenchGrid.SelectedItem;
+            DeleteItem(selectedDataset);
+        }
+
+        private void DeleteItem(Dataset datasetToDelete)
+        {
+            var taskDialog = new TaskDialog
+            {
+                WindowTitle = "Delete item",
+                MainInstruction = "Are you sure you want to permanently delete this item?",
+                Content = "This operation cannot be undone.",
+                ExpandedControlText = "Exception details",
+                MainIcon = TaskDialogIcon.Warning
+            };
+            taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Yes));
+            taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.No)
+            {
+                Default = true
+            });
+            taskDialog.CenterParent = true;
+            var selectedButton = taskDialog.ShowDialog(this);
+
+            if (selectedButton.ButtonType == ButtonType.Yes)
+            {
+                //Delete the item
+                Console.WriteLine("Delete");
+                ViewModel.DeleteItem(datasetToDelete);
             }
         }
     }
@@ -250,6 +288,14 @@ namespace PETBrowser
             PetDatasetsList.AddRange(Store.ResultDatasets);
             PetDatasetsList.AddRange(Store.ArchiveDatasets);
             PetDatasets.Refresh();
+        }
+
+        public void DeleteItem(Dataset datasetToDelete)
+        {
+            Store.DeleteDataset(datasetToDelete);
+
+            //Naive reload--  this could be faster if we only removed the dataset we deleted
+            LoadDataset(Store.DataDirectory);
         }
     }
 }
