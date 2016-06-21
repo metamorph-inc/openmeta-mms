@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -107,6 +108,7 @@ namespace PETBrowser
                 MainIcon = TaskDialogIcon.Error
             };
             taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Ok));
+            taskDialog.CenterParent = true;
             taskDialog.ShowDialog(this);
             //MessageBox.Show(this, "The selected folder doesn't appear to be a valid data folder.",
             //    "Error loading datasets", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -180,17 +182,24 @@ namespace PETBrowser
 
         private void showPetDetails(object sender, MouseButtonEventArgs e)
         {
-            var selectedDataset = (Dataset)PetGrid.SelectedItem;
-
-            if (selectedDataset.Kind == Dataset.DatasetKind.PetResult)
+            try
             {
-                var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
-                    DatasetStore.ResultsDirectory);
+                var selectedDataset = (Dataset) PetGrid.SelectedItem;
 
-                var detailsWindow = new PetDetailsWindow(selectedDataset, resultsDirectory);
-                detailsWindow.Owner = this;
-                detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                detailsWindow.ShowDialog();
+                if (selectedDataset.Kind == Dataset.DatasetKind.PetResult)
+                {
+                    var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
+                        DatasetStore.ResultsDirectory);
+
+                    var detailsWindow = new PetDetailsWindow(selectedDataset, resultsDirectory);
+                    detailsWindow.Owner = this;
+                    detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    detailsWindow.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while loading dataset details.", ex.Message, ex.ToString());
             }
         }
     }

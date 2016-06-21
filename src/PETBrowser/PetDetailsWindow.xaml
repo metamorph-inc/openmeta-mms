@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:PETBrowser"
         mc:Ignorable="d"
         Width="600"
-        SizeToContent="Height"
-        ResizeMode="NoResize"
+        Height="350"
+        MinWidth="600"
+        MinHeight="350"
         Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
     <Window.Title>
         <MultiBinding StringFormat="{}{0} Details">
@@ -18,7 +19,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
-            <RowDefinition Height="150" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -34,17 +35,16 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Test Bench" Text="{Binding DetailsDataset.Name}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
-            <TextBox Grid.Row="0" Grid.Column="2"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
+            <TextBox Grid.Row="0" Grid.Column="1"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
             <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
-            <TextBox Grid.Row="1" Grid.Column="2" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" Text="{Binding RecordCount, Mode=OneWay, StringFormat={}{0} records}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
+            <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" Text="{Binding RecordCount, Mode=OneWay, StringFormat={}{0} records}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
             <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,3" ToolTip="Design ID" Text="{Binding Manifest.DesignID}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#BF000000" />
-            <TextBox Grid.Row="2" Grid.Column="2" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1,4,3" Text="{Binding DetailsDataset.Count, Mode=OneWay, StringFormat={}{0} runs}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
-            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,0,0,1" >
+            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1,4,3" Text="{Binding DetailsDataset.Count, Mode=OneWay, StringFormat={}{0} runs}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
+            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" >
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
                 </Border.BorderBrush>
