@@ -14,6 +14,7 @@
 
 #include <cassert>
 #include <cstring>
+#include <algorithm>
 
 #include "ShelfNextFitBinPack.h"
 

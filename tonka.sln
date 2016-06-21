@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyPhy2Schematic", "src\CyPhy2Schematic\CyPhy2Schematic.csproj", "{8D5BA6AB-6D10-4BAE-B310-4DB8A3D9E87A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchematicUnitTests", "test\SchematicUnitTests\SchematicUnitTests.csproj", "{F446635B-63B9-4C30-B286-8095B43EF06A}"

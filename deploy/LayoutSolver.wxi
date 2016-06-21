@@ -9,34 +9,34 @@
         <File Source="..\bin\LayoutSolver.exe" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeDriver-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeDriver-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeFlatZinc-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeFlatZinc-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeFloat-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeFloat-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeGist-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeGist-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeInt-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeInt-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeKernel-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeKernel-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeMinimodel-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeMinimodel-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeSearch-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeSearch-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeSet-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeSet-4-4-0-r-x86.dll" />
     </Component>
     <Component Directory="INSTALLDIR_BIN">
-        <File Source="..\bin\GecodeSupport-4-2-1-r-x86.dll" />
+        <File Source="..\bin\GecodeSupport-4-4-0-r-x86.dll" />
     </Component>
 </ComponentGroup>
 </Fragment>

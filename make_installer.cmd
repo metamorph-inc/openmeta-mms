@@ -1,6 +1,7 @@
+SetLocal EnableDelayedExpansion
 @rem BUILD SOLUTIONS
-C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make.msbuild /t:All /m /nodeReuse:false || exit /b !ERRORLEVEL!
-C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make_tonka.msbuild /t:All /m /nodeReuse:false || exit /b !ERRORLEVEL!
+"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" make.msbuild /t:All /m /nodeReuse:false || exit /b !ERRORLEVEL!
+"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" make_tonka.msbuild /t:All /m /nodeReuse:false || exit /b !ERRORLEVEL!
 
 @rem BUILD INSTALLER
 pushd deploy

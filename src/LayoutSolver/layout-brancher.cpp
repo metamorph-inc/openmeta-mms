@@ -167,9 +167,9 @@ double LayoutBrancher::constraintMetric(size_t a) const
 {
 	double area = pw[a]*(double)ph[a];
 	double dpx = 1.0, dpy = 1.0;
-	for(IntVarRanges pxr(px[a]); pxr(); pxr++)
+	for(IntVarRanges pxr(px[a]); pxr(); ++pxr)
 		dpx += (pxr.max() - pxr.min());
-	for(IntVarRanges pyr(py[a]); pyr(); pyr++)
+	for(IntVarRanges pyr(py[a]); pyr(); ++pyr)
 		dpy += (pyr.max() - pyr.min());
 
 	return (area*area) / (dpx*dpy);

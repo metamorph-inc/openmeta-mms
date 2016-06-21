@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -48,6 +48,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -55,6 +56,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -104,17 +106,17 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LargeAddressAware>true</LargeAddressAware>
-      <DelayLoadDLLs>GECODEGIST-4-2-1-R-X86.DLL</DelayLoadDLLs>
+      <DelayLoadDLLs>GECODEGIST-4-4-0-R-X86.DLL</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\nuget\gecode.4.2.1\build\native\gecode.targets" Condition="Exists('..\nuget\gecode.4.2.1\build\native\gecode.targets')" />
-    <Import Project="..\nuget\gecode-vc100.redist.4.2.1\build\native\gecode-vc100.redist.targets" Condition="Exists('..\nuget\gecode-vc100.redist.4.2.1\build\native\gecode-vc100.redist.targets')" />
-    <Import Project="..\nuget\gecode-vc100.4.2.1\build\native\gecode-vc100.targets" Condition="Exists('..\nuget\gecode-vc100.4.2.1\build\native\gecode-vc100.targets')" />
     <Import Project="..\nuget\jsoncpp.0.5.0-r20140114\build\native\jsoncpp.targets" Condition="Exists('..\nuget\jsoncpp.0.5.0-r20140114\build\native\jsoncpp.targets')" />
-    <Import Project="..\nuget\jsoncpp-vc100.0.5.0-r20140114\build\native\jsoncpp-vc100.targets" Condition="Exists('..\nuget\jsoncpp-vc100.0.5.0-r20140114\build\native\jsoncpp-vc100.targets')" />
     <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+    <Import Project="..\nuget\gecode.4.4.0\build\native\gecode.targets" Condition="Exists('..\nuget\gecode.4.4.0\build\native\gecode.targets')" />
+    <Import Project="..\nuget\gecode-vc140.redist.4.4.0\build\native\gecode-vc140.redist.targets" Condition="Exists('..\nuget\gecode-vc140.redist.4.4.0\build\native\gecode-vc140.redist.targets')" />
+    <Import Project="..\nuget\gecode-vc140.4.4.0\build\native\gecode-vc140.targets" Condition="Exists('..\nuget\gecode-vc140.4.4.0\build\native\gecode-vc140.targets')" />
+    <Import Project="..\nuget\jsoncpp-vc140.0.5.0-r20140114\build\native\jsoncpp-vc140.targets" Condition="Exists('..\nuget\jsoncpp-vc140.0.5.0-r20140114\build\native\jsoncpp-vc140.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -122,5 +124,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\nuget\boost.1.55.0.10\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\nuget\boost.1.55.0.10\build\native\boost.targets'))" />
     <Error Condition="!Exists('..\nuget\boost_program_options.1.55.0.16\build\native\boost_program_options.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\nuget\boost_program_options.1.55.0.16\build\native\boost_program_options.targets'))" />
+    <Error Condition="!Exists('..\nuget\gecode.4.4.0\build\native\gecode.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\nuget\gecode.4.4.0\build\native\gecode.targets'))" />
+    <Error Condition="!Exists('..\nuget\gecode-vc140.redist.4.4.0\build\native\gecode-vc140.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\nuget\gecode-vc140.redist.4.4.0\build\native\gecode-vc140.redist.targets'))" />
+    <Error Condition="!Exists('..\nuget\gecode-vc140.4.4.0\build\native\gecode-vc140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\nuget\gecode-vc140.4.4.0\build\native\gecode-vc140.targets'))" />
+    <Error Condition="!Exists('..\nuget\jsoncpp-vc140.0.5.0-r20140114\build\native\jsoncpp-vc140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\nuget\jsoncpp-vc140.0.5.0-r20140114\build\native\jsoncpp-vc140.targets'))" />
   </Target>
 </Project>

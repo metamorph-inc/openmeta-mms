@@ -17,7 +17,10 @@ namespace MfgBom.Bom
 {
     public partial class Part
     {
-        public bool QueryOctopartData(String apikey = "22becbab",
+        public const string OCTOPART_API_KEY = "22becbab";
+
+
+        public bool QueryOctopartData(String apikey = OCTOPART_API_KEY,
                                       bool exact_only = false,
                                       List<string> includes = null,
                                       bool grab_first = true)
@@ -53,7 +56,7 @@ namespace MfgBom.Bom
                 }
             }
 
-            if (string.Compare(octopart_result, "toomany") != 0 && 
+            if (string.Compare(octopart_result, "toomany") != 0 &&
                 string.Compare(octopart_result, "none") != 0)
             {
                 // Default properties returned by OctoPart query
@@ -66,7 +69,7 @@ namespace MfgBom.Bom
                 this.notes = GetNotes(octopart_result);
                 this.SellerMapStructure = GetSellerMapStructure(octopart_result);
                 this.TechnicalSpecifications = GetTechnicalSpecifications(octopart_result);
-                
+
                 // Non-default returned properties (for custom "includes" passed to Query function
                 if (includes.Contains("category_uids"))
                 {
@@ -100,7 +103,7 @@ namespace MfgBom.Bom
             return true;
         }
 
-        public bool QueryCategory(string uid, String apikey = "22becbab")
+        public bool QueryCategory(string uid, String apikey = OCTOPART_API_KEY)
         {
             if (String.IsNullOrWhiteSpace(uid))
             {
@@ -227,10 +230,10 @@ namespace MfgBom.Bom
             string rVal = null;
             string url;
             dynamic dynJson = JsonConvert.DeserializeObject(OctopartResult);
-            if (dynJson != null) 
+            if (dynJson != null)
             {
                 foreach (var imageset in dynJson.imagesets)
-                { 
+                {
                     if (imageset.small_image.url != null)
                     {
                         url = imageset.small_image.url.Value;
@@ -274,7 +277,7 @@ namespace MfgBom.Bom
             return rVal;
         }
 
-        
+
         /// <summary>
         /// Gets the manufacturer's name from the JSON result string.
         /// </summary>
@@ -326,7 +329,7 @@ namespace MfgBom.Bom
         /// In general, the JSON string contains multiple descriptions of a part, with varying
         /// levels of detail.  Each description is associated with a source of the info.
         /// We try to select the best one, based on a list of favored info sources.
-        /// 
+        ///
         /// If no favored info source is found, we use a "Goldilocks" approach, trying
         /// to find a description that is about the right length for the BOM spreadsheet column.
         /// </remarks>
@@ -411,7 +414,7 @@ namespace MfgBom.Bom
             dynamic dynJson = JsonConvert.DeserializeObject(OctopartResult);
             string rVal = "";
 
-            if ((dynJson != null) && 
+            if ((dynJson != null) &&
                 (dynJson.specs != null) &&
                 (dynJson.specs.case_package != null) &&
                  (dynJson.specs.case_package.value != null) )
@@ -430,8 +433,8 @@ namespace MfgBom.Bom
                 }
             }
             return rVal;
-        }  
-      
+        }
+
 
         /// <summary>
         /// Generates miscellaneous notes from the JSON results string.
@@ -486,20 +489,20 @@ namespace MfgBom.Bom
 
 
         ///// <summary>
-        ///// Gets the best supplier's name, part number, and price breaks, 
+        ///// Gets the best supplier's name, part number, and price breaks,
         ///// from the JSON result string, based on supplier affinity.
         ///// </summary>
         ///// <remarks>
         ///// For our current purposes of costing the board in US dollars, only suppliers
         ///// who have price lists in US dollars are considered qualified.
-        ///// 
+        /////
         ///// To find the best supplier for this part, first we create two dictionaries:
         ///// one that maps all qualified suppliers to their quantity in stock, and one
         ///// that maps all qualified suppliers to their US-dollar price list.
-        ///// 
+        /////
         ///// Then, the best supplier is the first supplier we find on the affinity list
         ///// who is also in our dictionary of qualified suppliers.
-        ///// 
+        /////
         ///// If none of the affinity suppliers make the cut, then the best is considered
         ///// to be the qualified supplier with the maximum number of these parts in stock.
         ///// </remarks>
@@ -509,10 +512,10 @@ namespace MfgBom.Bom
         ///// <param name="OctopartResult">The input JSON results string</param>
         ///// <param name="SourceAffinity">A list of preferred suppliers, with the most favored first.</param>
         //public static void GetSupplierNameAndPartNumberAndPriceBreaks(
-        //        out string supplierName, 
+        //        out string supplierName,
         //        out string supplierPartNumber,
         //        out List<KeyValuePair<int, float>> supplierPriceBreaks,
-        //        String OctopartResult, 
+        //        String OctopartResult,
         //        List<String> SourceAffinity = null)
         //{
         //    supplierName = "";

@@ -286,7 +286,7 @@ namespace CyPhyComponentAuthoring.Modules
             {
                 foreach (var spec in dynJson)
                 {
-                    CyPhyClasses.Property.AttributesClass.DataType_enum type = 
+                    CyPhyClasses.Property.AttributesClass.DataType_enum type =
                         DeterminePropertyDataType((string)spec.Value.metadata.datatype, (string)spec.Value.metadata.key);
 
                     if (spec.Value.value.Count > 0)
@@ -343,10 +343,10 @@ namespace CyPhyComponentAuthoring.Modules
         }
 
 
-        public void BuildCyPhyProperty(CyPhy.Component comp, 
-                                       string name, 
-                                       string value, 
-                                       CyPhyClasses.Property.AttributesClass.DataType_enum type, 
+        public void BuildCyPhyProperty(CyPhy.Component comp,
+                                       string name,
+                                       string value,
+                                       CyPhyClasses.Property.AttributesClass.DataType_enum type,
                                        bool is_prominent)
         {
             if (CheckPropertyDoesNotExist(comp, name))
@@ -355,7 +355,7 @@ namespace CyPhyComponentAuthoring.Modules
                 property.Name = name;
                 property.Attributes.Value = value;
                 property.Attributes.DataType = type;
-                property.Attributes.IsProminent = is_prominent; 
+                property.Attributes.IsProminent = is_prominent;
             }
         }
 
@@ -404,6 +404,7 @@ namespace CyPhyComponentAuthoring.Modules
             {
                 //Download icon to temp directory
                 WebClient webClient = new WebClient();
+                webClient.Headers.Add("user-agent", "meta-tools/" + VersionInfo.CyPhyML);
                 String iconPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName().Replace(".", "") + ".png");
                 webClient.DownloadFile(part.Icon, iconPath);
 
@@ -431,7 +432,7 @@ namespace CyPhyComponentAuthoring.Modules
                     }
                     else
                     {
-                        LogMessage(String.Format("Error creating icon resource for component {0}.", comp.Name), 
+                        LogMessage(String.Format("Error creating icon resource for component {0}.", comp.Name),
                                    CyPhyGUIs.SmartLogger.MessageType_enum.Error);
                     }
 
@@ -462,6 +463,7 @@ namespace CyPhyComponentAuthoring.Modules
             {
                 //Download icon to temp directory
                 WebClient webClient = new WebClient();
+                webClient.Headers.Add("user-agent", "meta-tools/" + VersionInfo.CyPhyML);
                 String datasheetPath = Path.Combine(Path.GetTempPath(), "Datasheet.pdf");
                 webClient.DownloadFile(part.Datasheet, datasheetPath);
 
