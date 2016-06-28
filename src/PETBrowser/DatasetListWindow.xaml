@@ -41,6 +41,12 @@
         <TabControl>
             <TabItem Header="PET">
                 <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                            <Label Margin="5,5,5,5" Padding="5,3">Search:</Label>
+                            <TextBox x:Name="PetSearchTextBox" Width="200" Margin="0,5,5,5" Padding="5,3" TextChanged="PetSearchTextBox_TextChanged" />
+                        </StackPanel>
+                    </StackPanel>
                     <StackPanel DockPanel.Dock="Bottom">
                         <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
                             <Button x:Name="button" Content="Archive Selected"  Margin="0,10,5,10" Click="button_Click" Padding="5,3"/>
@@ -93,6 +99,12 @@
             </TabItem>
             <TabItem Header="Test Benches">
                 <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                            <Label Margin="5,5,5,5" Padding="5,3">Search:</Label>
+                            <TextBox x:Name="TestBenchSearchTextBox" Width="200" Margin="0,5,5,5" Padding="5,3" TextChanged="TestBenchSearchTextBox_TextChanged" />
+                        </StackPanel>
+                    </StackPanel>
                     <StackPanel DockPanel.Dock="Bottom">
                         <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
                             <Button x:Name="explorerButton" Content="Open Selected in Explorer"  Margin="5,10,10,10" Padding="5,3" Click="explorerButton_Click" IsEnabled="{Binding SelectedItems.Count, ElementName=TestBenchGrid}"/>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -240,6 +241,16 @@ namespace PETBrowser
                 ViewModel.DeleteItem(datasetToDelete);
             }
         }
+
+        private void PetSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ViewModel.FilterPets(PetSearchTextBox.Text);
+        }
+
+        private void TestBenchSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ViewModel.FilterTestBenches(TestBenchSearchTextBox.Text);
+        }
     }
 
     public class DatasetListWindowViewModel
@@ -290,12 +301,49 @@ namespace PETBrowser
             PetDatasets.Refresh();
         }
 
+        public void FilterPets(string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                PetDatasets.Filter = null;
+            }
+            else
+            {
+                PetDatasets.Filter = o =>
+                {
+                    var dataset = (Dataset) o;
+                    return ContainsIgnoreCase(dataset.Name, filter);
+                };
+            }
+        }
+
+        public void FilterTestBenches(string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                TestBenchDatasets.Filter = null;
+            }
+            else
+            {
+                TestBenchDatasets.Filter = o =>
+                {
+                    var dataset = (Dataset)o;
+                    return ContainsIgnoreCase(dataset.Name, filter) || ContainsIgnoreCase(dataset.DesignName, filter); ;
+                };
+            }
+        }
+
         public void DeleteItem(Dataset datasetToDelete)
         {
             Store.DeleteDataset(datasetToDelete);
 
             //Naive reload--  this could be faster if we only removed the dataset we deleted
             LoadDataset(Store.DataDirectory);
+        }
+
+        private bool ContainsIgnoreCase(string source, string value)
+        {
+            return CultureInfo.InvariantCulture.CompareInfo.IndexOf(source, value, CompareOptions.IgnoreCase) >= 0;
         }
     }
 }
