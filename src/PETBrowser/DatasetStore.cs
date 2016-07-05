@@ -17,6 +17,7 @@ namespace PETBrowser
     {
         public const string ResultsDirectory = "results";
         public const string ArchiveDirectory = "archive";
+        public const string DeletedDirectory = "_deleted";
         private const string MetadataFilename = "results.metaresults.json";
 
         public string DataDirectory { get; private set; }
@@ -27,9 +28,13 @@ namespace PETBrowser
         public List<Dataset> ArchiveDatasets { get; private set; }
         public List<Dataset> TestbenchDatasets { get; private set; }
 
+        public HashSet<string> TrackedResultsFolders { get; private set; }
+
         public DatasetStore(string dataDirectory)
         {
             this.DataDirectory = dataDirectory;
+
+            TrackedResultsFolders = new HashSet<string>();
 
             ResultDatasets = new List<Dataset>();
             TestbenchDatasets = new List<Dataset>();
@@ -82,6 +87,8 @@ namespace PETBrowser
                     var thisDataset = datasets[time];
                     thisDataset.Count++;
                     thisDataset.Folders.Add(folder);
+                    var actualDirectory = Directory.GetParent(Path.Combine(DataDirectory, ResultsDirectory, folder));
+                    TrackedResultsFolders.Add(actualDirectory.FullName);
                 }
                 else
                 {
@@ -103,6 +110,9 @@ namespace PETBrowser
 
                             newDataset.Count++;
                             newDataset.Folders.Add(folder);
+
+                            var actualDirectory = Directory.GetParent(Path.Combine(DataDirectory, ResultsDirectory, folder));
+                            TrackedResultsFolders.Add(actualDirectory.FullName);
 
                             TestbenchDatasets.Add(newDataset);
                         }
@@ -146,13 +156,15 @@ namespace PETBrowser
          * Deletes a dataset from results.metaresults.json (or from the Archive folder as appropriate).
          * The caller is responsible for reloading the list of datasets if desired.
          */
-        public void DeleteDataset(Dataset datasetToDelete, bool deleteAllFiles)
+        public void DeleteDataset(Dataset datasetToDelete)
         {
             if (datasetToDelete.Kind == Dataset.DatasetKind.Archive)
             {
                 //Archives aren't represented in metadata; just delete the archive file
                 var archivePath = Path.Combine(this.DataDirectory, ArchiveDirectory, datasetToDelete.Folders[0]);
-                File.Delete(archivePath);
+
+                var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
+                File.Move(archivePath, Path.Combine(deletedDirectory.FullName, Path.GetFileName(archivePath)));
             }
             else
             {
@@ -164,21 +176,38 @@ namespace PETBrowser
                 using (var metadataFile = File.CreateText(metadataPath))
                 {
                     var serializer = new JsonSerializer();
+                    serializer.Formatting = Formatting.Indented;
                     serializer.Serialize(metadataFile, Metadata);
                 }
 
-                // Delete all associated files and folders if deleteAllFiles is true
-                if (deleteAllFiles)
+                foreach (var path in datasetToDelete.Folders)
                 {
-                    foreach (var path in datasetToDelete.Folders)
-                    {
-                        var directoryToDelete =
-                            Directory.GetParent(Path.Combine(this.DataDirectory, ResultsDirectory, path));
+                    var directoryToDelete =
+                        Directory.GetParent(Path.Combine(this.DataDirectory, ResultsDirectory, path));
 
-                        directoryToDelete.Delete(true);
-                    }
+                    MoveFolderToDeleted(directoryToDelete);
                 }
             }
+        }
+
+        public void Cleanup()
+        {
+            var resultsDirectory = new DirectoryInfo(Path.Combine(DataDirectory, ResultsDirectory));
+
+            foreach (var subdirectory in resultsDirectory.EnumerateDirectories())
+            {
+                if (!TrackedResultsFolders.Contains(subdirectory.FullName))
+                {
+                    MoveFolderToDeleted(subdirectory);
+                }
+            }
+        }
+
+        public void MoveFolderToDeleted(DirectoryInfo directoryToMove)
+        {
+            var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
+
+            directoryToMove.MoveTo(Path.Combine(deletedDirectory.FullName, directoryToMove.Name));
         }
 
         public void ArchiveSelectedDatasets(string archiveName, Dataset highlightedDataset)

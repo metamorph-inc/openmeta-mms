@@ -24,6 +24,12 @@
                         <TextBlock Margin="3,0,0,0">Refresh</TextBlock>
                     </StackPanel>
                 </Button>
+                <Button x:Name="CleanupButton" Click="CleanupButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource RefreshIcon}" />
+                        <TextBlock Margin="3,0,0,0">Cleanup</TextBlock>
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">

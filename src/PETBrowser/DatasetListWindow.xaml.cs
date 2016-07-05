@@ -223,18 +223,17 @@ namespace PETBrowser
                 var taskDialog = new TaskDialog
                 {
                     WindowTitle = "Delete item",
-                    MainInstruction = "Are you sure you want to permanently delete this archive?",
+                    MainInstruction = "Are you sure you want to remove this archive?",
                     Content = "This operation cannot be undone.",
-                    ExpandedControlText = "Exception details",
                     MainIcon = TaskDialogIcon.Warning
                 };
 
                 var deletePermanentlyButton = new TaskDialogButton()
                 {
                     ButtonType = ButtonType.Custom,
-                    Text = "Delete archive from disk",
+                    Text = "Remove archive from list",
                     CommandLinkNote =
-                        "This archive will be permanently deleted."
+                        "This archive will be removed from the list and placed in the deleted folder."
                 };
                 taskDialog.Buttons.Add(deletePermanentlyButton);
 
@@ -250,7 +249,7 @@ namespace PETBrowser
                 {
                     //Delete the item
                     Console.WriteLine("Delete");
-                    ViewModel.DeleteItem(datasetToDelete, false);
+                    ViewModel.DeleteItem(datasetToDelete);
                 }
             }
             else
@@ -258,9 +257,8 @@ namespace PETBrowser
                 var taskDialog = new TaskDialog
                 {
                     WindowTitle = "Delete item",
-                    MainInstruction = "Are you sure you want to permanently delete this dataset?",
+                    MainInstruction = "Are you sure you want to remove this dataset?",
                     Content = "This operation cannot be undone.",
-                    ExpandedControlText = "Exception details",
                     MainIcon = TaskDialogIcon.Warning
                 };
 
@@ -269,18 +267,9 @@ namespace PETBrowser
                     ButtonType = ButtonType.Custom,
                     Text = "Remove dataset from list",
                     CommandLinkNote =
-                        "This dataset will be removed from the list, but all files, folders, results, and artifacts will remain on disk."
+                        "This dataset will be removed from the list and its files, folders, results, and artifacts will be moved to the deleted folder."
                 };
                 taskDialog.Buttons.Add(removeFromListButton);
-
-                var deletePermanentlyButton = new TaskDialogButton()
-                {
-                    ButtonType = ButtonType.Custom,
-                    Text = "Delete dataset from disk",
-                    CommandLinkNote =
-                        "This dataset will be removed from the list and all files, folders, results, and artifacts will be permanently deleted."
-                };
-                taskDialog.Buttons.Add(deletePermanentlyButton);
 
                 taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Cancel)
                 {
@@ -294,12 +283,7 @@ namespace PETBrowser
                 {
                     //Delete the item
                     Console.WriteLine("Remove");
-                    ViewModel.DeleteItem(datasetToDelete, false);
-                } else if (selectedButton == deletePermanentlyButton)
-                {
-                    //Delete the item
-                    Console.WriteLine("Delete");
-                    ViewModel.DeleteItem(datasetToDelete, true);
+                    ViewModel.DeleteItem(datasetToDelete);
                 }
             }
         }
@@ -312,6 +296,11 @@ namespace PETBrowser
         private void TestBenchSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ViewModel.FilterTestBenches(TestBenchSearchTextBox.Text);
+        }
+
+        private void CleanupButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Store.Cleanup();
         }
     }
 
@@ -395,9 +384,9 @@ namespace PETBrowser
             }
         }
 
-        public void DeleteItem(Dataset datasetToDelete, bool deleteAllFiles)
+        public void DeleteItem(Dataset datasetToDelete)
         {
-            Store.DeleteDataset(datasetToDelete, deleteAllFiles);
+            Store.DeleteDataset(datasetToDelete);
 
             //Naive reload--  this could be faster if we only removed the dataset we deleted
             LoadDataset(Store.DataDirectory);
