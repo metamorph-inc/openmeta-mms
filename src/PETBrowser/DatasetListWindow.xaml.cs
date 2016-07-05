@@ -218,27 +218,89 @@ namespace PETBrowser
 
         private void DeleteItem(Dataset datasetToDelete)
         {
-            var taskDialog = new TaskDialog
+            if (datasetToDelete.Kind == Dataset.DatasetKind.Archive)
             {
-                WindowTitle = "Delete item",
-                MainInstruction = "Are you sure you want to permanently delete this item?",
-                Content = "This operation cannot be undone.",
-                ExpandedControlText = "Exception details",
-                MainIcon = TaskDialogIcon.Warning
-            };
-            taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Yes));
-            taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.No)
-            {
-                Default = true
-            });
-            taskDialog.CenterParent = true;
-            var selectedButton = taskDialog.ShowDialog(this);
+                var taskDialog = new TaskDialog
+                {
+                    WindowTitle = "Delete item",
+                    MainInstruction = "Are you sure you want to permanently delete this archive?",
+                    Content = "This operation cannot be undone.",
+                    ExpandedControlText = "Exception details",
+                    MainIcon = TaskDialogIcon.Warning
+                };
 
-            if (selectedButton.ButtonType == ButtonType.Yes)
+                var deletePermanentlyButton = new TaskDialogButton()
+                {
+                    ButtonType = ButtonType.Custom,
+                    Text = "Delete archive from disk",
+                    CommandLinkNote =
+                        "This archive will be permanently deleted."
+                };
+                taskDialog.Buttons.Add(deletePermanentlyButton);
+
+                taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Cancel)
+                {
+                    Default = true
+                });
+                taskDialog.CenterParent = true;
+                taskDialog.ButtonStyle = TaskDialogButtonStyle.CommandLinks;
+                var selectedButton = taskDialog.ShowDialog(this);
+
+                if (selectedButton == deletePermanentlyButton)
+                {
+                    //Delete the item
+                    Console.WriteLine("Delete");
+                    ViewModel.DeleteItem(datasetToDelete, false);
+                }
+            }
+            else
             {
-                //Delete the item
-                Console.WriteLine("Delete");
-                ViewModel.DeleteItem(datasetToDelete);
+                var taskDialog = new TaskDialog
+                {
+                    WindowTitle = "Delete item",
+                    MainInstruction = "Are you sure you want to permanently delete this dataset?",
+                    Content = "This operation cannot be undone.",
+                    ExpandedControlText = "Exception details",
+                    MainIcon = TaskDialogIcon.Warning
+                };
+
+                var removeFromListButton = new TaskDialogButton()
+                {
+                    ButtonType = ButtonType.Custom,
+                    Text = "Remove dataset from list",
+                    CommandLinkNote =
+                        "This dataset will be removed from the list, but all files, folders, results, and artifacts will remain on disk."
+                };
+                taskDialog.Buttons.Add(removeFromListButton);
+
+                var deletePermanentlyButton = new TaskDialogButton()
+                {
+                    ButtonType = ButtonType.Custom,
+                    Text = "Delete dataset from disk",
+                    CommandLinkNote =
+                        "This dataset will be removed from the list and all files, folders, results, and artifacts will be permanently deleted."
+                };
+                taskDialog.Buttons.Add(deletePermanentlyButton);
+
+                taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Cancel)
+                {
+                    Default = true
+                });
+                taskDialog.CenterParent = true;
+                taskDialog.ButtonStyle = TaskDialogButtonStyle.CommandLinks;
+                var selectedButton = taskDialog.ShowDialog(this);
+
+                if (selectedButton == removeFromListButton)
+                {
+                    //Delete the item
+                    Console.WriteLine("Remove");
+                    ViewModel.DeleteItem(datasetToDelete, false);
+                } else if (selectedButton == deletePermanentlyButton)
+                {
+                    //Delete the item
+                    Console.WriteLine("Delete");
+                    ViewModel.DeleteItem(datasetToDelete, true);
+                }
             }
         }
 
@@ -333,9 +395,9 @@ namespace PETBrowser
             }
         }
 
-        public void DeleteItem(Dataset datasetToDelete)
+        public void DeleteItem(Dataset datasetToDelete, bool deleteAllFiles)
         {
-            Store.DeleteDataset(datasetToDelete);
+            Store.DeleteDataset(datasetToDelete, deleteAllFiles);
 
             //Naive reload--  this could be faster if we only removed the dataset we deleted
             LoadDataset(Store.DataDirectory);

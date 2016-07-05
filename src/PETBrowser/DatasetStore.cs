@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
+using META;
 
 namespace PETBrowser
 {
@@ -145,7 +146,7 @@ namespace PETBrowser
          * Deletes a dataset from results.metaresults.json (or from the Archive folder as appropriate).
          * The caller is responsible for reloading the list of datasets if desired.
          */
-        public void DeleteDataset(Dataset datasetToDelete)
+        public void DeleteDataset(Dataset datasetToDelete, bool deleteAllFiles)
         {
             if (datasetToDelete.Kind == Dataset.DatasetKind.Archive)
             {
@@ -164,6 +165,18 @@ namespace PETBrowser
                 {
                     var serializer = new JsonSerializer();
                     serializer.Serialize(metadataFile, Metadata);
+                }
+
+                // Delete all associated files and folders if deleteAllFiles is true
+                if (deleteAllFiles)
+                {
+                    foreach (var path in datasetToDelete.Folders)
+                    {
+                        var directoryToDelete =
+                            Directory.GetParent(Path.Combine(this.DataDirectory, ResultsDirectory, path));
+
+                        directoryToDelete.Delete(true);
+                    }
                 }
             }
         }
