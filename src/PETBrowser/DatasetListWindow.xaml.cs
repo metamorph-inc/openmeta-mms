@@ -300,7 +300,33 @@ namespace PETBrowser
 
         private void CleanupButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ViewModel.Store.Cleanup();
+            var taskDialog = new TaskDialog
+            {
+                WindowTitle = "Clean results folder",
+                MainInstruction = "Are you sure you want to clean up the results folder?"
+            };
+
+            var cleanButton = new TaskDialogButton()
+            {
+                ButtonType = ButtonType.Custom,
+                Text = "Clean results folder",
+                CommandLinkNote =
+                    "All folders in the results folder which are not included in the library will be moved to the deleted folder."
+            };
+            taskDialog.Buttons.Add(cleanButton);
+
+            taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Cancel)
+            {
+                Default = true
+            });
+            taskDialog.CenterParent = true;
+            taskDialog.ButtonStyle = TaskDialogButtonStyle.CommandLinks;
+            var selectedButton = taskDialog.ShowDialog(this);
+
+            if (selectedButton == cleanButton)
+            {
+                ViewModel.Store.Cleanup();
+            }
         }
     }
 
