@@ -17,6 +17,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Security.Policy;
+using System.Threading;
+using System.Threading.Tasks;
 using Ookii.Dialogs.Wpf;
 
 namespace PETBrowser
@@ -41,18 +43,28 @@ namespace PETBrowser
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //this.ViewModel.LoadDataset("C:\\source\\viz");
-            try
+            LoadDataset(".");
+        }
+
+        private void LoadDataset(string path)
+        {
+            this.ViewModel.LoadDataset(path, exception =>
             {
-                this.ViewModel.LoadDataset(".");
-            }
-            catch (FileNotFoundException ex)
-            {
-                ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
-            }
-            catch (DirectoryNotFoundException ex)
-            {
-                ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
-            }
+                if (exception is FileNotFoundException || exception is DirectoryNotFoundException)
+                {
+                    ShowErrorDialog("Error loading datasets",
+                        "The selected folder doesn't appear to be a valid data folder.",
+                        "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.",
+                        exception.ToString());
+                }
+                else
+                {
+                    ShowErrorDialog("Error loading datasets",
+                        "An unknown error occurred while loading datasets.",
+                        "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.",
+                        exception.ToString());
+                }
+            });
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -81,18 +93,7 @@ namespace PETBrowser
 
             if (folderDialog.ShowDialog() == true)
             {
-                try
-                {
-                    ViewModel.LoadDataset(folderDialog.SelectedPath);
-                }
-                catch (FileNotFoundException ex)
-                {
-                    ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
-                }
-                catch (DirectoryNotFoundException ex)
-                {
-                    ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
-                }
+                LoadDataset(folderDialog.SelectedPath);
             }
         }
 
@@ -167,18 +168,7 @@ namespace PETBrowser
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                ViewModel.LoadDataset(ViewModel.Store.DataDirectory);
-            }
-            catch (FileNotFoundException ex)
-            {
-                ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
-            }
-            catch (DirectoryNotFoundException ex)
-            {
-                ShowErrorDialog("Error loading datasets", "The selected folder doesn't appear to be a valid data folder.", "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.", ex.ToString());
-            }
+            LoadDataset(ViewModel.Store.DataDirectory);
         }
 
         private void showPetDetails(object sender, RoutedEventArgs e)
@@ -330,8 +320,10 @@ namespace PETBrowser
         }
     }
 
-    public class DatasetListWindowViewModel
+    public class DatasetListWindowViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public List<Dataset> PetDatasetsList { get; set; }
         public ICollectionView PetDatasets { get; set; }
 
@@ -340,14 +332,29 @@ namespace PETBrowser
 
         public DatasetStore Store { get; set; }
 
+        public delegate void DatasetLoadFailedCallback(Exception exception);
+
         public bool AllowArchive
         {
             get { return PetDatasetsList.Exists(dataset => dataset.Selected); }
         }
 
+        private bool _datasetLoaded;
+        public bool DatasetLoaded
+        {
+            get { return _datasetLoaded; }
+
+            set
+            {
+                Console.WriteLine("loaded = " + value);
+                PropertyChanged.ChangeAndNotify(ref _datasetLoaded, value, () => DatasetLoaded);
+            }
+        }
+
         public DatasetListWindowViewModel()
         {
             Store = null;
+            DatasetLoaded = false;
             PetDatasetsList = new List<Dataset>();
             PetDatasets = new ListCollectionView(PetDatasetsList);
 
@@ -355,17 +362,56 @@ namespace PETBrowser
             TestBenchDatasets = new ListCollectionView(TestBenchDatasetsList);
         }
 
-        public void LoadDataset(string path)
+        public void LoadDataset(string path, DatasetLoadFailedCallback callback)
         {
-            Store = new DatasetStore(path);
+            Store = null;
+            DatasetLoaded = false;
             PetDatasetsList.Clear();
-            PetDatasetsList.AddRange(Store.ResultDatasets);
-            PetDatasetsList.AddRange(Store.ArchiveDatasets);
             PetDatasets.Refresh();
-
             TestBenchDatasetsList.Clear();
-            TestBenchDatasetsList.AddRange(Store.TestbenchDatasets);
             TestBenchDatasets.Refresh();
+
+            Task<DatasetStore> loadTask = new Task<DatasetStore>(() =>
+            {
+                var newStore = new DatasetStore(path);
+
+                return newStore;
+            });
+
+            loadTask.ContinueWith(task =>
+            {
+                if (task.Exception != null)
+                {
+                    if (callback != null)
+                    {
+                        task.Exception.Handle(exception =>
+                        {
+                            if (callback != null)
+                            {
+                                callback(exception);
+                            }
+                            return true;
+                        });
+                    }
+                }
+                else
+                {
+                    Store = task.Result;
+
+                    PetDatasetsList.Clear();
+                    PetDatasetsList.AddRange(Store.ResultDatasets);
+                    PetDatasetsList.AddRange(Store.ArchiveDatasets);
+                    PetDatasets.Refresh();
+
+                    TestBenchDatasetsList.Clear();
+                    TestBenchDatasetsList.AddRange(Store.TestbenchDatasets);
+                    TestBenchDatasets.Refresh();
+
+                    DatasetLoaded = true;
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext()); //this should run on the UI thread
+
+            loadTask.Start();
         }
 
         public void ReloadArchives()
@@ -415,7 +461,7 @@ namespace PETBrowser
             Store.DeleteDataset(datasetToDelete);
 
             //Naive reload--  this could be faster if we only removed the dataset we deleted
-            LoadDataset(Store.DataDirectory);
+            LoadDataset(Store.DataDirectory, null);
         }
 
         private bool ContainsIgnoreCase(string source, string value)

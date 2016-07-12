@@ -86,6 +86,7 @@
     <Compile Include="PetDetailsWindow.xaml.cs">
       <DependentUpon>PetDetailsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PropertyChangedExtensions.cs" />
     <Compile Include="TBManifestViewModel.cs" />
     <Compile Include="TestBenchDetailsWindow.xaml.cs">
       <DependentUpon>TestBenchDetailsWindow.xaml</DependentUpon>

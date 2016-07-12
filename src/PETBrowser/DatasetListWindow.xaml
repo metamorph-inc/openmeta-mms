@@ -1,6 +1,7 @@
 ﻿<Window x:Class="PETBrowser.DatasetListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         Title="PET Browser" Height="423" Width="805" Loaded="Window_Loaded" ResizeMode="CanResizeWithGrip">
     <Window.Resources>
         <ResourceDictionary>
@@ -18,13 +19,13 @@
                         <TextBlock Margin="3,0,0,0">Select Results Folder</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="RefreshButton" Click="RefreshButton_OnClick">
+                <Button x:Name="RefreshButton" Click="RefreshButton_OnClick" IsEnabled="{Binding DatasetLoaded}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource RefreshIcon}" />
                         <TextBlock Margin="3,0,0,0">Refresh</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="CleanupButton" Click="CleanupButton_OnClick">
+                <Button x:Name="CleanupButton" Click="CleanupButton_OnClick" IsEnabled="{Binding DatasetLoaded}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource CleanIcon}" />
                         <TextBlock Margin="3,0,0,0">Cleanup</TextBlock>
@@ -55,8 +56,8 @@
                     </StackPanel>
                     <StackPanel DockPanel.Dock="Bottom">
                         <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                            <Button x:Name="button" Content="Archive Selected"  Margin="0,10,5,10" Click="button_Click" Padding="5,3"/>
-                            <Button x:Name="vizButton" Content="Open Selected in Visualizer"  Margin="5,10,10,10" Click="vizButton_Click" Padding="5,3"/>
+                            <Button x:Name="button" Content="Archive Selected"  Margin="0,10,5,10" Click="button_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
+                            <Button x:Name="vizButton" Content="Open Selected in Visualizer"  Margin="5,10,10,10" Click="vizButton_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
                         </StackPanel>
                     </StackPanel>
                     <DataGrid Name="PetGrid" ItemsSource="{Binding PetDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableRowVirtualization="False" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal"  HeadersVisibility="Column">
