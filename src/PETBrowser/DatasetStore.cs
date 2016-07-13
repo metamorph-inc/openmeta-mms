@@ -19,6 +19,7 @@ namespace PETBrowser
         public const string ArchiveDirectory = "archive";
         public const string DeletedDirectory = "_deleted";
         private const string MetadataFilename = "results.metaresults.json";
+        private const int ProgressUpdateInterval = 100;
 
         public string DataDirectory { get; private set; }
 
@@ -30,7 +31,9 @@ namespace PETBrowser
 
         public HashSet<string> TrackedResultsFolders { get; private set; }
 
-        public DatasetStore(string dataDirectory)
+        public delegate void LoadProgressCallback(int completed, int total);
+
+        public DatasetStore(string dataDirectory, LoadProgressCallback progressCallback)
         {
             this.DataDirectory = dataDirectory;
 
@@ -38,13 +41,13 @@ namespace PETBrowser
 
             ResultDatasets = new List<Dataset>();
             TestbenchDatasets = new List<Dataset>();
-            LoadResultDatasets();
+            LoadResultDatasets(progressCallback);
 
             ArchiveDatasets = new List<Dataset>();
             LoadArchiveDatasets();
         }
 
-        private void LoadResultDatasets()
+        private void LoadResultDatasets(LoadProgressCallback progressCallback)
         {
             Dictionary<string, Dataset> datasets = new Dictionary<string, Dataset>();
 
@@ -54,6 +57,9 @@ namespace PETBrowser
                 var serializer = new JsonSerializer();
                 this.Metadata = (ResultsMetadata) serializer.Deserialize(metadataFile, typeof(ResultsMetadata));
             }
+
+            var totalResultsCount = this.Metadata.Results.Count;
+            var processedResultsCount = 0;
 
             foreach (var result in this.Metadata.Results)
             {
@@ -125,6 +131,13 @@ namespace PETBrowser
                     {
                         //Don't add testbench if we don't find its directory
                     }
+                }
+
+                processedResultsCount++;
+
+                if (processedResultsCount % ProgressUpdateInterval == 0)
+                {
+                    progressCallback(processedResultsCount, totalResultsCount);
                 }
             }
 

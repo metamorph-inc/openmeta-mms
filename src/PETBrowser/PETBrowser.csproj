@@ -82,6 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BoolVisibilityConverter.cs" />
     <Compile Include="PetDetailsViewModel.cs" />
     <Compile Include="PetDetailsWindow.xaml.cs">
       <DependentUpon>PetDetailsWindow.xaml</DependentUpon>

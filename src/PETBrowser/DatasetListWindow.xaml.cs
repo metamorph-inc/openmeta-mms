@@ -351,10 +351,40 @@ namespace PETBrowser
             }
         }
 
+        private bool _isLoading;
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _isLoading, value, () => IsLoading); }
+        }
+
+        private int _loadProgressCount;
+
+        public int LoadProgressCount
+        {
+            get { return _loadProgressCount; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _loadProgressCount, value, () => LoadProgressCount); }
+        }
+
+        private int _loadTotalCount;
+
+        public int LoadTotalCount
+        {
+            get { return _loadTotalCount; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _loadTotalCount, value, () => LoadTotalCount); }
+        }
+
         public DatasetListWindowViewModel()
         {
             Store = null;
             DatasetLoaded = false;
+            IsLoading = false;
+            LoadProgressCount = 0;
+            LoadTotalCount = 1;
             PetDatasetsList = new List<Dataset>();
             PetDatasets = new ListCollectionView(PetDatasetsList);
 
@@ -366,20 +396,33 @@ namespace PETBrowser
         {
             Store = null;
             DatasetLoaded = false;
+            IsLoading = true;
+            LoadProgressCount = 0;
+            LoadTotalCount = 1;
             PetDatasetsList.Clear();
             PetDatasets.Refresh();
             TestBenchDatasetsList.Clear();
             TestBenchDatasets.Refresh();
 
+            var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
+
             Task<DatasetStore> loadTask = new Task<DatasetStore>(() =>
             {
-                var newStore = new DatasetStore(path);
+                var newStore = new DatasetStore(path, (completed, total) =>
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        LoadProgressCount = completed;
+                        LoadTotalCount = total;
+                    }, new CancellationToken(), TaskCreationOptions.None, uiContext);
+                });
 
                 return newStore;
             });
 
             loadTask.ContinueWith(task =>
             {
+                IsLoading = false;
                 if (task.Exception != null)
                 {
                     if (callback != null)
