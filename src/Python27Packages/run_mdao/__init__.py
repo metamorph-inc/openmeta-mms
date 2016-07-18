@@ -229,7 +229,10 @@ def with_problem(mdao_config, original_dir, override_driver=None):
         driver_vars = []
         for var_name, var in six.iteritems(driver['designVariables']):
             if var.get('type', 'double') == 'double':
-                driver_vars.append((var_name, var['RangeMin'] + (var['RangeMax'] - var['RangeMin']) / 2))
+                default = 0
+                if 'RangeMin' in var and 'RangeMax' in var:
+                    default = var['RangeMin'] + (var['RangeMax'] - var['RangeMin']) / 2
+                driver_vars.append((var_name, default))
             elif var['type'] == 'enum':
                 driver_vars.append((var_name, var['items'][0], {"pass_by_obj": True}))
             elif var['type'] == 'int':
