@@ -9,7 +9,8 @@ import subprocess
 import contextlib
 import six
 import numpy
-from openmdao.api import AnalysisError, Component
+from run_mdao.drivers import AnalysisError
+from openmdao.api import Component
 
 
 def _get_param_name(param_name, component_type=None):
@@ -43,9 +44,12 @@ class TestBenchComponent(Component):
                 val = source_component._init_unknowns_dict[param['source'][-1]]['val']
                 pass_by_obj = source_component._init_unknowns_dict[param['source'][-1]].get('pass_by_obj', False)
             elif 'source' in param:
-                if mdao_config['drivers'][param['source'][0]]['designVariables'][param['source'][-1]].get('type') == "enum":
+                source_type = mdao_config['drivers'][param['source'][0]]['designVariables'][param['source'][-1]].get('type')
+                if source_type == "enum":
                     val = u''
                     pass_by_obj = True
+                elif source_type == "int":
+                    val = 0
             else:
                 with self._get_tb_param(param_name) as manifest_param:
                     val = manifest_param['Value']
@@ -54,7 +58,12 @@ class TestBenchComponent(Component):
             self.add_param(_get_param_name(param_name), val=val, pass_by_obj=pass_by_obj, **get_meta(param))
 
         for metric_name, metric in six.iteritems(mdao_config['components'][name].get('unknowns', {})):
-            self.add_output(metric_name, val=0.0, pass_by_obj=True, **get_meta(metric))
+            pass_by_obj = True
+            for driver in mdao_config['drivers'].values():
+                for objective in driver['objectives'].values():
+                    if objective['source'][0] == name and objective['source'][1] == metric_name:
+                        pass_by_obj = False
+            self.add_output(metric_name, val=0.0, pass_by_obj=pass_by_obj, **get_meta(metric))
         self.add_output('_ret_code', val=0, pass_by_obj=True)
 
     def _read_testbench_manifest(self):
@@ -76,9 +85,8 @@ class TestBenchComponent(Component):
         else:
             raise Exception('Could not find parameter "{}" in {}/testbench_manifest.json'.format(param_name, self.__directory))
 
-
     def _run_testbench(self):
-        return subprocess.call([sys.executable, '-m', 'testbenchexecutor', 'testbench_manifest.json'], cwd=self.__directory)
+        return subprocess.call([sys.executable, '-m', 'testbenchexecutor', '--detailed-errors', 'testbench_manifest.json'], cwd=self.__directory)
 
     def solve_nonlinear(self, params, unknowns, resids):
         # FIXME: without dict(), this returns wrong values. why?

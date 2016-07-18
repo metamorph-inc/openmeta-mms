@@ -1,5 +1,6 @@
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
 import os
 import os.path
 import io
@@ -161,7 +162,7 @@ def with_problem(mdao_config, original_dir, override_driver=None):
 
     if driver['type'] == 'optimizer':
         top.driver = ScipyOptimizer()
-        top.driver.options['optimizer'] = 'SLSQP'  # FIXME read from driver['details']['OptimizationFunction']
+        top.driver.options['optimizer'] = str(driver.get('details', {}).get('OptimizationFunction', 'SLSQP'))
     elif driver['type'] == 'parameterStudy':
         drivers = {
             "Uniform": UniformDriver,
@@ -228,7 +229,7 @@ def with_problem(mdao_config, original_dir, override_driver=None):
         driver_vars = []
         for var_name, var in six.iteritems(driver['designVariables']):
             if var.get('type', 'double') == 'double':
-                driver_vars.append((var_name, 0.0))
+                driver_vars.append((var_name, var['RangeMin'] + (var['RangeMax'] - var['RangeMin']) / 2))
             elif var['type'] == 'enum':
                 driver_vars.append((var_name, var['items'][0], {"pass_by_obj": True}))
             elif var['type'] == 'int':

@@ -10,7 +10,6 @@ from openmdao.util.array_util import evenly_distrib_idxs
 from openmdao.util.record_util import create_local_meta, update_local_meta
 
 from openmdao.core.mpi_wrap import MPI, debug
-from openmdao.api import AnalysisError
 import openmdao.api
 
 # from random import shuffle, randint
@@ -18,6 +17,13 @@ import numpy as np
 from six import itervalues, iteritems
 from six.moves import range
 from six.moves import zip
+
+try:
+    AnalysisError = openmdao.api.AnalysisError
+except AttributeError:
+    # older version of openmdao
+    class AnalysisError(Exception):
+        pass
 
 
 def _get_seed_and_random(seed):

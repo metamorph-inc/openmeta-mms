@@ -22,7 +22,7 @@ def run_regression(output_filename):
         raise Exception(changed)
 
 
-def main():
+def test_main():
     tb_json_names = glob.glob(os.path.join(_this_dir, '*/testbench_manifest.json'))
     tb_jsons = [(tb_json_name, open(tb_json_name, 'r').read()) for tb_json_name in tb_json_names]
     try:
@@ -43,4 +43,4 @@ def main():
                 tb_json.write(contents)
 
 if __name__ == '__main__':
-    main()
+    test_main()

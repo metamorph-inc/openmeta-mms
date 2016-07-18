@@ -9,7 +9,7 @@ from openmdao.core.component import Component
 
 
 def PythonComponent(filename):
-    sys.path.append(os.path.dirname(os.path.abspath(filename)))
+    sys.path.insert(0, os.path.dirname(os.path.abspath(filename)))
     try:
         modname = os.path.splitext(os.path.basename(filename))[0]
         mod = importlib.import_module(modname)
@@ -25,4 +25,4 @@ def PythonComponent(filename):
         component = components[0]
         return component()
     finally:
-        sys.path.pop()
+        sys.path[:1] = []
