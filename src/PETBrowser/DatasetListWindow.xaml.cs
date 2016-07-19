@@ -63,6 +63,7 @@ namespace PETBrowser
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            PetDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
             //this.ViewModel.LoadDataset("C:\\source\\viz");
             LoadDataset(".");
         }
@@ -198,16 +199,16 @@ namespace PETBrowser
             {
                 var selectedDataset = (Dataset) PetGrid.SelectedItem;
 
-                if (selectedDataset.Kind == Dataset.DatasetKind.PetResult)
+                /*if (selectedDataset.Kind == Dataset.DatasetKind.PetResult)
                 {
                     var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
                         DatasetStore.ResultsDirectory);
 
-                    var detailsWindow = new PetDetailsWindow(selectedDataset, resultsDirectory, ViewModel);
+                    var detailsWindow = new PetDetailsControl(selectedDataset, resultsDirectory, ViewModel);
                     detailsWindow.Owner = this;
                     detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     detailsWindow.ShowDialog();
-                }
+                }*/
             }
             catch (Exception ex)
             {
@@ -366,6 +367,34 @@ namespace PETBrowser
                     SetNativeEnabled(true); //this must appear first, or we lose focus when the progress dialog closes
                     progressDialog.Close();
                 }, uiContext);
+            }
+        }
+
+        private void PetGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PetDetailsPanel.Children.Clear();
+            PetDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
+            try
+            {
+                if (PetGrid.SelectedItem != null)
+                {
+                    var selectedDataset = (Dataset) PetGrid.SelectedItem;
+
+                    if (selectedDataset.Kind == Dataset.DatasetKind.PetResult)
+                    {
+                        var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
+                            DatasetStore.ResultsDirectory);
+
+                        var detailsControl = new PetDetailsControl(selectedDataset, resultsDirectory, ViewModel);
+
+                        PetDetailsPanel.Children.Clear();
+                        PetDetailsPanel.Children.Add(detailsControl);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while loading dataset details.", ex.Message, ex.ToString());
             }
         }
     }

@@ -84,8 +84,11 @@
     </ApplicationDefinition>
     <Compile Include="BoolVisibilityConverter.cs" />
     <Compile Include="PetDetailsViewModel.cs" />
-    <Compile Include="PetDetailsWindow.xaml.cs">
-      <DependentUpon>PetDetailsWindow.xaml</DependentUpon>
+    <Compile Include="PetDetailsControl.xaml.cs">
+      <DependentUpon>PetDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PlaceholderDetailsPanel.xaml.cs">
+      <DependentUpon>PlaceholderDetailsPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
@@ -112,9 +115,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PetDetailsWindow.xaml">
+    <Page Include="PetDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PlaceholderDetailsPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ProgressDialog.xaml">
       <SubType>Designer</SubType>

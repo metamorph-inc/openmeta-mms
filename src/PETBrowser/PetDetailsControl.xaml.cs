@@ -19,9 +19,9 @@ using Ookii.Dialogs.Wpf;
 namespace PETBrowser
 {
     /// <summary>
-    /// Interaction logic for PetDetailsWindow.xaml
+    /// Interaction logic for PetDetailsControl.xaml
     /// </summary>
-    public partial class PetDetailsWindow : Window
+    public partial class PetDetailsControl : UserControl
     {
         public PetDetailsViewModel ViewModel
         {
@@ -31,7 +31,7 @@ namespace PETBrowser
 
         private DatasetListWindowViewModel DatasetViewModel { get; set; }
 
-        public PetDetailsWindow(Dataset dataset, string resultsDirectory, DatasetListWindowViewModel datasetViewModel)
+        public PetDetailsControl(Dataset dataset, string resultsDirectory, DatasetListWindowViewModel datasetViewModel)
         {
             this.ViewModel = new PetDetailsViewModel(dataset, resultsDirectory);
             this.DatasetViewModel = datasetViewModel;
@@ -40,7 +40,7 @@ namespace PETBrowser
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            //this.Close();
         }
 
         private void ShowErrorDialog(string title, string mainInstruction, string content, string exceptionDetails)
@@ -56,7 +56,7 @@ namespace PETBrowser
                 MainIcon = TaskDialogIcon.Error
             };
             taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Ok));
-            taskDialog.ShowDialog(this);
+            taskDialog.ShowDialog(Window.GetWindow(this));
             //MessageBox.Show(this, "The selected folder doesn't appear to be a valid data folder.",
             //    "Error loading datasets", MessageBoxButton.OK, MessageBoxImage.Error);
         }

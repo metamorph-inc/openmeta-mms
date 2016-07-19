@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         xmlns:petBrowser="clr-namespace:PETBrowser"
-        Title="PET Browser" Height="423" Width="805" Loaded="Window_Loaded" ResizeMode="CanResizeWithGrip">
+        Title="PET Browser" Height="600" Width="1000" Loaded="Window_Loaded" ResizeMode="CanResizeWithGrip">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -50,64 +50,76 @@
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <TabControl>
+        <TabControl Padding="0">
             <TabItem Header="PET">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Top">
-                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                            <Label Margin="5,5,5,5" Padding="5,3">Search:</Label>
-                            <TextBox x:Name="PetSearchTextBox" Width="200" Margin="0,5,5,5" Padding="5,3" TextChanged="PetSearchTextBox_TextChanged" />
+                <Grid Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" MinWidth="400"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="2">
+                        <StackPanel DockPanel.Dock="Top">
+                            <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                                <Label Margin="5,5,5,5" Padding="5,3">Search:</Label>
+                                <TextBox x:Name="PetSearchTextBox" Width="200" Margin="0,5,5,5" Padding="5,3" TextChanged="PetSearchTextBox_TextChanged" />
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                    <StackPanel DockPanel.Dock="Bottom">
-                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                            <Button x:Name="button" Content="Archive Selected"  Margin="0,10,5,10" Click="button_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
-                            <Button x:Name="vizButton" Content="Open Selected in Visualizer"  Margin="5,10,10,10" Click="vizButton_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
+                        <StackPanel DockPanel.Dock="Bottom">
+                            <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                                <Button x:Name="button" Content="Archive Selected"  Margin="0,10,5,10" Click="button_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
+                                <Button x:Name="vizButton" Content="Open Selected in Visualizer"  Margin="5,10,10,10" Click="vizButton_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                    <DataGrid Name="PetGrid" ItemsSource="{Binding PetDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableRowVirtualization="False" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal"  HeadersVisibility="Column">
-                        <DataGrid.HorizontalGridLinesBrush>
-                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
-                        </DataGrid.HorizontalGridLinesBrush>
-                        <DataGrid.Resources>
-                            <ContextMenu x:Key="PetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                <MenuItem Header="Details..." Click="showPetDetails" FontWeight="Bold" />
-                                <MenuItem Header="Delete..." Click="DeletePetItem" />
-                            </ContextMenu>
-                            <ContextMenu x:Key="ArchiveRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                <MenuItem Header="Delete..." Click="DeletePetItem" />
-                            </ContextMenu>
-                        </DataGrid.Resources>
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="" Width="30">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="60"/>
-                            <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
-                            <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
-                            <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
-                        </DataGrid.Columns>
+                        <DataGrid Name="PetGrid" ItemsSource="{Binding PetDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableRowVirtualization="False" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal"  HeadersVisibility="Column" SelectionChanged="PetGrid_SelectionChanged">
+                            <DataGrid.HorizontalGridLinesBrush>
+                                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                            </DataGrid.HorizontalGridLinesBrush>
+                            <DataGrid.Resources>
+                                <ContextMenu x:Key="PetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <MenuItem Header="Details..." Click="showPetDetails" FontWeight="Bold" />
+                                    <MenuItem Header="Delete..." Click="DeletePetItem" />
+                                </ContextMenu>
+                                <ContextMenu x:Key="ArchiveRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <MenuItem Header="Delete..." Click="DeletePetItem" />
+                                </ContextMenu>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="" Width="30">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="60"/>
+                                <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
+                                <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
+                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
+                            </DataGrid.Columns>
 
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow">
-                                <EventSetter Event="MouseDoubleClick" Handler="showPetDetails"></EventSetter>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Kind}" Value="PetResult">
-                                        <Setter Property="ContextMenu" Value="{StaticResource PetRowMenu}" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Kind}" Value="Archive">
-                                        <Setter Property="ContextMenu" Value="{StaticResource ArchiveRowMenu}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                                
-                            </Style>
-                        </DataGrid.RowStyle>
-                    </DataGrid>
-                </DockPanel>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <EventSetter Event="MouseDoubleClick" Handler="showPetDetails"></EventSetter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Kind}" Value="PetResult">
+                                            <Setter Property="ContextMenu" Value="{StaticResource PetRowMenu}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Kind}" Value="Archive">
+                                            <Setter Property="ContextMenu" Value="{StaticResource ArchiveRowMenu}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
+                    </DockPanel>
+                    <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+                    <DockPanel x:Name="PetDetailsPanel" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" />
+                </Grid>
             </TabItem>
             <TabItem Header="Test Benches">
                 <DockPanel>
