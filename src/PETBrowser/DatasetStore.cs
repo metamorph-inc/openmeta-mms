@@ -31,9 +31,9 @@ namespace PETBrowser
 
         public HashSet<string> TrackedResultsFolders { get; private set; }
 
-        public delegate void LoadProgressCallback(int completed, int total);
+        public delegate void ProgressCallback(int completed, int total);
 
-        public DatasetStore(string dataDirectory, LoadProgressCallback progressCallback)
+        public DatasetStore(string dataDirectory, ProgressCallback progressCallback)
         {
             this.DataDirectory = dataDirectory;
 
@@ -47,7 +47,7 @@ namespace PETBrowser
             LoadArchiveDatasets();
         }
 
-        private void LoadResultDatasets(LoadProgressCallback progressCallback)
+        private void LoadResultDatasets(ProgressCallback progressCallback)
         {
             Dictionary<string, Dataset> datasets = new Dictionary<string, Dataset>();
 
@@ -203,15 +203,25 @@ namespace PETBrowser
             }
         }
 
-        public void Cleanup()
+        public void Cleanup(ProgressCallback callback)
         {
             var resultsDirectory = new DirectoryInfo(Path.Combine(DataDirectory, ResultsDirectory));
+
+            var directories = resultsDirectory.EnumerateDirectories();
+            var totalCount = directories.Count();
+            var deletedCount = 0;
 
             foreach (var subdirectory in resultsDirectory.EnumerateDirectories())
             {
                 if (!TrackedResultsFolders.Contains(subdirectory.FullName))
                 {
                     MoveFolderToDeleted(subdirectory);
+                    deletedCount++;
+
+                    if (deletedCount%ProgressUpdateInterval == 0)
+                    {
+                        callback(deletedCount, totalCount);
+                    }
                 }
             }
         }

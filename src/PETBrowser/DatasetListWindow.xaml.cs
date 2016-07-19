@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +20,7 @@ using System.Windows.Shapes;
 using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Interop;
 using Ookii.Dialogs.Wpf;
 
 namespace PETBrowser
@@ -28,6 +30,25 @@ namespace PETBrowser
     /// </summary>
     public partial class DatasetListWindow : Window
     {
+        const int GWL_STYLE = -16;
+        const int WS_DISABLED = 0x08000000;
+
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+
+        [DllImport("user32.dll")]
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+
+        void SetNativeEnabled(bool enabled)
+        {
+            var windowHandle = new WindowInteropHelper(this).Handle;
+            SetWindowLong(windowHandle, GWL_STYLE, GetWindowLong(windowHandle, GWL_STYLE) &
+                ~WS_DISABLED | (enabled ? 0 : WS_DISABLED));
+        }
+
         public DatasetListWindowViewModel ViewModel
         {
             get { return (DatasetListWindowViewModel) DataContext; }
@@ -313,9 +334,38 @@ namespace PETBrowser
             taskDialog.ButtonStyle = TaskDialogButtonStyle.CommandLinks;
             var selectedButton = taskDialog.ShowDialog(this);
 
+            
+
             if (selectedButton == cleanButton)
             {
-                ViewModel.Store.Cleanup();
+                SetNativeEnabled(false);
+                var progressDialog = new ProgressDialog
+                {
+                    Text = "Cleaning results folder...",
+                    ProgressCurrentCount = 0,
+                    ProgressTotalCount = 1,
+                    Owner = this
+                };
+                progressDialog.Show();
+
+                var store = ViewModel.Store;
+                var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
+
+                var cleanupTask = Task.Factory.StartNew(() =>
+                {
+                    store.Cleanup((completed, total) =>
+                    {
+                        Task.Factory.StartNew(() =>
+                        {
+                            progressDialog.ProgressCurrentCount = completed;
+                            progressDialog.ProgressTotalCount = total;
+                        }, new CancellationToken(), TaskCreationOptions.None, uiContext);
+                    });
+                }).ContinueWith(task =>
+                {
+                    SetNativeEnabled(true); //this must appear first, or we lose focus when the progress dialog closes
+                    progressDialog.Close();
+                }, uiContext);
             }
         }
     }

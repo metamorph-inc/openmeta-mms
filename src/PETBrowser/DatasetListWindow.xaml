@@ -11,7 +11,6 @@
             </ResourceDictionary.MergedDictionaries>
             <petBrowser:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
         </ResourceDictionary>
-        
     </Window.Resources>
     <DockPanel Background="#FFEEF5FD">
         <ToolBarTray DockPanel.Dock="Top">
