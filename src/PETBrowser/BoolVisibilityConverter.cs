@@ -30,4 +30,30 @@ namespace PETBrowser
             }
         }
     }
+
+    public class NotBoolVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var boolValue = (bool)value;
+
+            return boolValue ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var visibilityValue = (Visibility)value;
+
+            switch (visibilityValue)
+            {
+                case Visibility.Visible:
+                    return false;
+                case Visibility.Hidden:
+                case Visibility.Collapsed:
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
 }

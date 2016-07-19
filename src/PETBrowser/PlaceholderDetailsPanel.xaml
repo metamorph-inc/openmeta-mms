@@ -5,8 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PETBrowser"
              mc:Ignorable="d" 
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
+        <local:NotBoolVisibilityConverter x:Key="NotBoolVisibilityConverter" />
+    </UserControl.Resources>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <ProgressBar Width="200" Height="16" IsIndeterminate="True"></ProgressBar>
+        <Label Content="{Binding DisplayText}" Visibility="{Binding IsLoading, Converter={StaticResource NotBoolVisibilityConverter}}"></Label>
+        <ProgressBar Width="200" Height="16" IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={StaticResource BoolVisibilityConverter}}"></ProgressBar>
     </StackPanel>
 </UserControl>

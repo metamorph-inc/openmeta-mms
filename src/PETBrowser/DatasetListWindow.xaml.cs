@@ -373,7 +373,8 @@ namespace PETBrowser
         private void PetGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PetDetailsPanel.Children.Clear();
-            PetDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
+            var placeholderPanel = new PlaceholderDetailsPanel();
+            PetDetailsPanel.Children.Add(placeholderPanel);
             try
             {
                 if (PetGrid.SelectedItem != null)
@@ -382,6 +383,7 @@ namespace PETBrowser
 
                     if (selectedDataset.Kind == Dataset.DatasetKind.PetResult)
                     {
+                        placeholderPanel.IsLoading = true;
                         var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
                             DatasetStore.ResultsDirectory);
 
@@ -390,10 +392,16 @@ namespace PETBrowser
                         PetDetailsPanel.Children.Clear();
                         PetDetailsPanel.Children.Add(detailsControl);
                     }
+                    else
+                    {
+                        placeholderPanel.DisplayText = "No archive inspector";
+                    }
                 }
             }
             catch (Exception ex)
             {
+                placeholderPanel.IsLoading = false;
+                placeholderPanel.DisplayText = "An error occurred while inspecting selected object.";
                 ShowErrorDialog("Error", "An error occurred while loading dataset details.", ex.Message, ex.ToString());
             }
         }
