@@ -177,7 +177,7 @@ namespace JobManager
                 if (File.Exists(Path.Combine(job.WorkingDirectory, "testbench_manifest.json")))
                 {
                     psi.FileName = META.VersionInfo.PythonVEnvExe;
-                    psi.Arguments = "-m testbenchexecutor testbench_manifest.json";
+                    psi.Arguments = "-m testbenchexecutor --detailed-errors testbench_manifest.json";
                 }
                 else
                 {
