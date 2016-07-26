@@ -12,7 +12,7 @@
         <local:NotBoolVisibilityConverter x:Key="NotBoolVisibilityConverter" />
     </UserControl.Resources>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Label Content="{Binding DisplayText}" Visibility="{Binding IsLoading, Converter={StaticResource NotBoolVisibilityConverter}}"></Label>
+        <TextBlock Text="{Binding DisplayText}" Visibility="{Binding IsLoading, Converter={StaticResource NotBoolVisibilityConverter}}" TextAlignment="Center"></TextBlock>
         <ProgressBar Width="200" Height="16" IsIndeterminate="True" Visibility="{Binding IsLoading, Converter={StaticResource BoolVisibilityConverter}}"></ProgressBar>
     </StackPanel>
 </UserControl>

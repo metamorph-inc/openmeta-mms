@@ -101,64 +101,73 @@ namespace PETBrowser
             Dictionary<string, Metric> metrics = new Dictionary<string, Metric>();
             foreach (var folder in DetailsDataset.Folders)
             {
-                var csvFileName = Path.Combine(ResultsDirectory,
+
+                try
+                {
+                    var csvFileName = Path.Combine(ResultsDirectory,
                         folder.Replace("testbench_manifest.json", "output.csv"));
 
-                using (var csvFile = File.OpenText(csvFileName))
-                {
-                    var csvReader = new CsvReader(csvFile, new CsvConfiguration()
+                    using (var csvFile = File.OpenText(csvFileName))
                     {
-                        HasHeaderRecord = true
-                    });
-
-                    while (csvReader.Read())
-                    {
-                        RecordCount++;
-                        foreach (var header in csvReader.FieldHeaders)
+                        var csvReader = new CsvReader(csvFile, new CsvConfiguration()
                         {
-                            string fieldValue = csvReader.GetField<string>(header);
+                            HasHeaderRecord = true
+                        });
 
-                            if (fieldValue == "" || fieldValue == "None")
+                        while (csvReader.Read())
+                        {
+                            RecordCount++;
+                            foreach (var header in csvReader.FieldHeaders)
                             {
-                                // Ignore empty/none values
-                            }
-                            else
-                            {
-                                if (!metrics.ContainsKey(header))
+                                string fieldValue = csvReader.GetField<string>(header);
+
+                                if (fieldValue == "" || fieldValue == "None")
                                 {
-                                    metrics[header] = new Metric(header);
+                                    // Ignore empty/none values
                                 }
-
-                                var thisMetric = metrics[header];
-
-                                if (thisMetric.Kind == Metric.MetricKind.Number)
+                                else
                                 {
-                                    double doubleValue = 0;
-                                    var isDouble = double.TryParse(fieldValue, out doubleValue);
-
-                                    if (isDouble)
+                                    if (!metrics.ContainsKey(header))
                                     {
-                                        thisMetric.Sum += doubleValue;
-                                        thisMetric.Count++;
-
-                                        if (doubleValue > thisMetric.Max)
-                                        {
-                                            thisMetric.Max = doubleValue;
-                                        }
-                                        if (doubleValue < thisMetric.Min)
-                                        {
-                                            thisMetric.Min = doubleValue;
-                                        }
+                                        metrics[header] = new Metric(header);
                                     }
-                                    else
+
+                                    var thisMetric = metrics[header];
+
+                                    if (thisMetric.Kind == Metric.MetricKind.Number)
                                     {
-                                        thisMetric.Kind = Metric.MetricKind.String;
+                                        double doubleValue = 0;
+                                        var isDouble = double.TryParse(fieldValue, out doubleValue);
+
+                                        if (isDouble)
+                                        {
+                                            thisMetric.Sum += doubleValue;
+                                            thisMetric.Count++;
+
+                                            if (doubleValue > thisMetric.Max)
+                                            {
+                                                thisMetric.Max = doubleValue;
+                                            }
+                                            if (doubleValue < thisMetric.Min)
+                                            {
+                                                thisMetric.Min = doubleValue;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            thisMetric.Kind = Metric.MetricKind.String;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+                catch (Exception)
+                {
+                    //Silently ignore CSV files that don't exist or can't be read
+                }
+                
             }
 
             var metricsList = new List<Metric>(metrics.Values);

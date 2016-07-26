@@ -31,9 +31,9 @@ namespace PETBrowser
 
         private DatasetListWindowViewModel DatasetViewModel { get; set; }
 
-        public PetDetailsControl(Dataset dataset, string resultsDirectory, DatasetListWindowViewModel datasetViewModel)
+        public PetDetailsControl(PetDetailsViewModel petDetailsViewModel, DatasetListWindowViewModel datasetViewModel)
         {
-            this.ViewModel = new PetDetailsViewModel(dataset, resultsDirectory);
+            this.ViewModel = petDetailsViewModel;
             this.DatasetViewModel = datasetViewModel;
             InitializeComponent();
         }

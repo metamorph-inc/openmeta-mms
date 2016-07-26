@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         xmlns:petBrowser="clr-namespace:PETBrowser"
-        Title="PET Browser" Height="600" Width="1000" Loaded="Window_Loaded" ResizeMode="CanResizeWithGrip">
+        Title="PET Browser" Height="600" Width="1000" Loaded="Window_Loaded" ResizeMode="CanResizeWithGrip" Icon="CyPhyResultsViewer.ico">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

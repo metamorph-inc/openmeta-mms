@@ -41,6 +41,8 @@ namespace PETBrowser
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
+        private Task<PetDetailsViewModel> PetDetailsLoadTask;
+
 
         void SetNativeEnabled(bool enabled)
         {
@@ -57,6 +59,7 @@ namespace PETBrowser
 
         public DatasetListWindow()
         {
+            PetDetailsLoadTask = null;
             this.ViewModel = new DatasetListWindowViewModel();
             InitializeComponent();
         }
@@ -373,8 +376,14 @@ namespace PETBrowser
         private void PetGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PetDetailsPanel.Children.Clear();
+
+            //If we recreate this intermediate panel every time this method's called, we can
+            //avoid displaying the wrong results if the user changes focus while data's loading
+            var detailsPanel = new DockPanel();
+            PetDetailsPanel.Children.Add(detailsPanel);
+
             var placeholderPanel = new PlaceholderDetailsPanel();
-            PetDetailsPanel.Children.Add(placeholderPanel);
+            detailsPanel.Children.Add(placeholderPanel);
             try
             {
                 if (PetGrid.SelectedItem != null)
@@ -387,10 +396,35 @@ namespace PETBrowser
                         var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
                             DatasetStore.ResultsDirectory);
 
-                        var detailsControl = new PetDetailsControl(selectedDataset, resultsDirectory, ViewModel);
+                        var loadTask = Task<PetDetailsViewModel>.Factory.StartNew(() =>
+                        {
+                            return new PetDetailsViewModel(selectedDataset, resultsDirectory);
+                        });
+                        
+                        loadTask.ContinueWith(task =>
+                        {
+                            if (!task.IsCanceled)
+                            {
+                                if (task.Exception != null)
+                                {
+                                    placeholderPanel.IsLoading = false;
+                                    placeholderPanel.DisplayText =
+                                        "An error occurred while inspecting selected object: \n";
 
-                        PetDetailsPanel.Children.Clear();
-                        PetDetailsPanel.Children.Add(detailsControl);
+                                    foreach (var exception in task.Exception.InnerExceptions)
+                                    {
+                                        placeholderPanel.DisplayText += "\n" + exception.Message;
+                                    }
+                                }
+                                else
+                                {
+                                    var detailsControl = new PetDetailsControl(task.Result, ViewModel);
+
+                                    detailsPanel.Children.Clear();
+                                    detailsPanel.Children.Add(detailsControl);
+                                }
+                            }
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
                     }
                     else
                     {
