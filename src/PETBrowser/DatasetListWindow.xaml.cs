@@ -30,19 +30,15 @@ namespace PETBrowser
     /// </summary>
     public partial class DatasetListWindow : Window
     {
+        // PInvoke declarations for native window manipulation (specifically, setting the "disabled" style)
         const int GWL_STYLE = -16;
         const int WS_DISABLED = 0x08000000;
-
-
+        
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
-
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        private Task<PetDetailsViewModel> PetDetailsLoadTask;
-
 
         void SetNativeEnabled(bool enabled)
         {
@@ -59,7 +55,6 @@ namespace PETBrowser
 
         public DatasetListWindow()
         {
-            PetDetailsLoadTask = null;
             this.ViewModel = new DatasetListWindowViewModel();
             InitializeComponent();
         }
@@ -67,6 +62,7 @@ namespace PETBrowser
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             PetDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
+            TestBenchDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
             //this.ViewModel.LoadDataset("C:\\source\\viz");
             LoadDataset(".");
         }
@@ -180,15 +176,15 @@ namespace PETBrowser
 
         private void showDetails(object sender, RoutedEventArgs e)
         {
-            var selectedDataset = (Dataset)TestBenchGrid.SelectedItem;
+            /*var selectedDataset = (Dataset)TestBenchGrid.SelectedItem;
 
             var datasetPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.ResultsDirectory,
                 selectedDataset.Folders[0]);
 
-            var detailsWindow = new TestBenchDetailsWindow(datasetPath);
+            var detailsWindow = new TestBenchDetailsControl(datasetPath);
             detailsWindow.Owner = this;
             detailsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            detailsWindow.ShowDialog();
+            detailsWindow.ShowDialog();*/
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
@@ -429,6 +425,73 @@ namespace PETBrowser
                     else
                     {
                         placeholderPanel.DisplayText = "No archive inspector";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                placeholderPanel.IsLoading = false;
+                placeholderPanel.DisplayText = "An error occurred while inspecting selected object.";
+                ShowErrorDialog("Error", "An error occurred while loading dataset details.", ex.Message, ex.ToString());
+            }
+        }
+
+        private void TestBenchGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TestBenchDetailsPanel.Children.Clear();
+
+            //If we recreate this intermediate panel every time this method's called, we can
+            //avoid displaying the wrong results if the user changes focus while data's loading
+            var detailsPanel = new DockPanel();
+            TestBenchDetailsPanel.Children.Add(detailsPanel);
+
+            var placeholderPanel = new PlaceholderDetailsPanel();
+            detailsPanel.Children.Add(placeholderPanel);
+            try
+            {
+                if (TestBenchGrid.SelectedItem != null)
+                {
+                    var selectedDataset = (Dataset)TestBenchGrid.SelectedItem;
+
+                    if (selectedDataset.Kind == Dataset.DatasetKind.TestBenchResult)
+                    {
+                        placeholderPanel.IsLoading = true;
+                        var datasetPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.ResultsDirectory,
+                            selectedDataset.Folders[0]);
+
+                        var loadTask = Task<TBManifestViewModel>.Factory.StartNew(() =>
+                        {
+                            return new TBManifestViewModel(datasetPath);
+                        });
+
+                        loadTask.ContinueWith(task =>
+                        {
+                            if (!task.IsCanceled)
+                            {
+                                if (task.Exception != null)
+                                {
+                                    placeholderPanel.IsLoading = false;
+                                    placeholderPanel.DisplayText =
+                                        "An error occurred while inspecting selected object: \n";
+
+                                    foreach (var exception in task.Exception.InnerExceptions)
+                                    {
+                                        placeholderPanel.DisplayText += "\n" + exception.Message;
+                                    }
+                                }
+                                else
+                                {
+                                    var detailsControl = new TestBenchDetailsControl(datasetPath, task.Result);
+
+                                    detailsPanel.Children.Clear();
+                                    detailsPanel.Children.Add(detailsControl);
+                                }
+                            }
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
+                    }
+                    else
+                    {
+                        placeholderPanel.DisplayText = "No inspector available";
                     }
                 }
             }

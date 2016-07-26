@@ -95,8 +95,8 @@
     </Compile>
     <Compile Include="PropertyChangedExtensions.cs" />
     <Compile Include="TBManifestViewModel.cs" />
-    <Compile Include="TestBenchDetailsWindow.xaml.cs">
-      <DependentUpon>TestBenchDetailsWindow.xaml</DependentUpon>
+    <Compile Include="TestBenchDetailsControl.xaml.cs">
+      <DependentUpon>TestBenchDetailsControl.xaml</DependentUpon>
     </Compile>
     <Page Include="DatasetListWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -131,7 +131,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TestBenchDetailsWindow.xaml">
+    <Page Include="TestBenchDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

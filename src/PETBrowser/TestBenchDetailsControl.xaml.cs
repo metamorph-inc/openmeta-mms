@@ -19,9 +19,9 @@ using Ookii.Dialogs.Wpf;
 namespace PETBrowser
 {
     /// <summary>
-    /// Interaction logic for TestBenchDetailsWindow.xaml
+    /// Interaction logic for TestBenchDetailsControl.xaml
     /// </summary>
-    public partial class TestBenchDetailsWindow : Window
+    public partial class TestBenchDetailsControl : UserControl
     {
         public TBManifestViewModel ViewModel
         {
@@ -31,16 +31,11 @@ namespace PETBrowser
 
         public string ManifestPath { get; private set; }
 
-        public TestBenchDetailsWindow(string manifestPath)
+        public TestBenchDetailsControl(string manifestPath, TBManifestViewModel model)
         {
             this.ManifestPath = manifestPath;
-            this.ViewModel = new TBManifestViewModel(manifestPath);
+            this.ViewModel = model;
             InitializeComponent();
-        }
-
-        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
 
         private void ArtifactsRow_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -73,7 +68,7 @@ namespace PETBrowser
                 MainIcon = TaskDialogIcon.Error
             };
             taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Ok));
-            taskDialog.ShowDialog(this);
+            taskDialog.ShowDialog(Window.GetWindow(this));
             //MessageBox.Show(this, "The selected folder doesn't appear to be a valid data folder.",
             //    "Error loading datasets", MessageBoxButton.OK, MessageBoxImage.Error);
         }
