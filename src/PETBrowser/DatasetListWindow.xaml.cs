@@ -502,6 +502,16 @@ namespace PETBrowser
                 ShowErrorDialog("Error", "An error occurred while loading dataset details.", ex.Message, ex.ToString());
             }
         }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SelectAllPets();
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DeselectAllPets();
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
@@ -689,6 +699,32 @@ namespace PETBrowser
 
             //Naive reload--  this could be faster if we only removed the dataset we deleted
             LoadDataset(Store.DataDirectory, null);
+        }
+
+        public void SelectAllPets()
+        {
+            foreach (var dataset in Store.ResultDatasets)
+            {
+                dataset.Selected = true;
+            }
+
+            foreach (var dataset in Store.ArchiveDatasets)
+            {
+                dataset.Selected = true;
+            }
+        }
+
+        public void DeselectAllPets()
+        {
+            foreach (var dataset in Store.ResultDatasets)
+            {
+                dataset.Selected = false;
+            }
+
+            foreach (var dataset in Store.ArchiveDatasets)
+            {
+                dataset.Selected = false;
+            }
         }
 
         private bool ContainsIgnoreCase(string source, string value)

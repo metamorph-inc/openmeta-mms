@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -366,8 +367,10 @@ namespace PETBrowser
         }
     }
 
-    public class Dataset
+    public class Dataset : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public enum DatasetKind
         {
             PetResult,
@@ -383,7 +386,14 @@ namespace PETBrowser
 
         public int Count { get; set; }
         public List<string> Folders { get; private set; }
-        public bool Selected { get; set; }
+
+        private bool _selected;
+
+        public bool Selected
+        {
+            get { return _selected; }
+            set { PropertyChanged.ChangeAndNotify(ref _selected, value, () => Selected); }
+        }
 
         public Dataset(DatasetKind kind, string time, string name)
         {
