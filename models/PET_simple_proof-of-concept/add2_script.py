@@ -89,3 +89,5 @@ if __name__ == '__main__':
     output = json.dumps(testbench_manifest, indent=4)
     with open('testbench_manifest.json', 'wb') as testbench_manifest_json:
         testbench_manifest_json.write(output)
+    raise 'oops'
+
