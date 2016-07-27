@@ -1,0 +1,22 @@
+classFuncs              Add/remove CSS class
+colourInput             Create a colour input control
+colourPicker            Colour picker gadget
+delay                   Execute R code after a specified number of
+                        milliseconds has elapsed
+disabled                Initialize a Shiny input as disabled
+extendShinyjs           Extend shinyjs by calling your own JavaScript
+                        functions
+hidden                  Initialize a Shiny tag as hidden
+html                    Change the HTML (or text) inside an element
+inlineCSS               Add inline CSS
+messageFuncs            Show a message
+onevent                 Run R code when an event is triggered on an
+                        element
+reset                   Reset input elements to their original values
+runExample              Run shinyjs examples
+runjs                   Run JavaScript code
+shinyjs                 shinyjs
+stateFuncs              Enable/disable an input element
+updateColourInput       Change the value of a colour input
+useShinyjs              Set up a Shiny app to use shinyjs
+visibilityFuncs         Display/hide an element
