@@ -69,7 +69,7 @@ def main():
     installer_name = 'META_x64'
     
     # TODO: take the build number as parameter if empty use last successful build
-    url = "{0}/{1}/artifact/META/deploy/{2}.msi".format(installer, build_number, installer_name)
+    url = "{0}/{1}/artifact/deploy/{2}.msi".format(installer, build_number, installer_name)
     
     print " == Arguments =="
     print installer
