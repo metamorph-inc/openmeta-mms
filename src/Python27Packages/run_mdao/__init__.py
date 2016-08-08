@@ -16,11 +16,7 @@ from run_mdao.enum_mapper import EnumMapper
 from run_mdao.drivers import FullFactorialDriver, UniformDriver, LatinHypercubeDriver, OptimizedLatinHypercubeDriver, PredeterminedRunsDriver
 from run_mdao.restart_recorder import RestartRecorder
 
-# from openmdao.api import IndepVarComp, Component, Problem, Group
-from openmdao.core.problem import Problem
-from openmdao.core.group import Group
-from openmdao.components.indep_var_comp import IndepVarComp
-from openmdao.api import ScipyOptimizer
+from openmdao.api import IndepVarComp, Problem, Group, ScipyOptimizer
 
 from openmdao.core.mpi_wrap import MPI
 
@@ -28,7 +24,7 @@ from run_mdao.testbenchcomponent import TestBenchComponent, _get_param_name
 from run_mdao.parallel_execution import par_clone_and_config
 
 
-__all__ = ['run', 'run_one', 'with_problem']
+__all__ = ('run', 'run_one', 'with_problem')
 
 
 def CouchDBRecorder(*args, **kwargs):
@@ -92,7 +88,7 @@ def run_one(filename, input):
         def _deserialize_or_create_runlist(self):
             return [input]
 
-    run(filename, override_driver=OneInputDriver())
+    return run(filename, override_driver=OneInputDriver())
 
 
 def instantiate_component(component, component_name, mdao_config, root):
@@ -144,6 +140,7 @@ def run(filename, override_driver=None):
             mdao_config = json.loads(mdao_config_json.read())
     with with_problem(mdao_config, original_dir, override_driver) as top:
         top.run()
+        return top
 
 
 @contextlib.contextmanager
