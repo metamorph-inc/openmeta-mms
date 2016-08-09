@@ -60,6 +60,8 @@ class TestBenchComponent(Component):
         for metric_name, metric in six.iteritems(mdao_config['components'][name].get('unknowns', {})):
             pass_by_obj = True
             for driver in mdao_config['drivers'].values():
+                if driver.get('type') != 'optimizer':
+                    continue
                 for objective in driver['objectives'].values():
                     if objective['source'][0] == name and objective['source'][1] == metric_name:
                         pass_by_obj = False
