@@ -152,6 +152,11 @@ namespace PETBrowser
 
             var archiveDirectory = Path.Combine(DataDirectory, ArchiveDirectory);
 
+            if (!Directory.Exists(archiveDirectory))
+            {
+                Directory.CreateDirectory(archiveDirectory);
+            }
+
             foreach (var file in Directory.EnumerateFiles(archiveDirectory))
             {
                 var fileBasename = Path.GetFileName(file);
