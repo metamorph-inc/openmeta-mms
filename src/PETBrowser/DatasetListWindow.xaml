@@ -160,7 +160,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="100"/>
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="200"/>
-                                <DataGridTextColumn Binding="{Binding DesignName}" ClipboardContentBinding="{x:Null}" Header="Design" IsReadOnly="True" Width="200"/>
+                                <DataGridTextColumn Binding="{Binding DesignName}" ClipboardContentBinding="{x:Null}" Header="Design" IsReadOnly="True" Width="120"/>
                                 <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
                                 <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
                             </DataGrid.Columns>
