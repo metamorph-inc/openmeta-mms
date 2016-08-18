@@ -61,19 +61,5 @@ namespace PETBrowser
             //    "Error loading datasets", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-
-        private void VizButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var exportPath = this.DatasetViewModel.Store.ExportSelectedDatasetsToViz(ViewModel.DetailsDataset, true);
-
-                Process.Start(System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath);
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("Archive error", "An error occurred while archiving results.", ex.Message, ex.ToString());
-            }
-        }
     }
 }

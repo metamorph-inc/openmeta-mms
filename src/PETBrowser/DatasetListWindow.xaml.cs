@@ -143,12 +143,28 @@ namespace PETBrowser
             {
                 var highlightedDataset = (Dataset) PetGrid.SelectedItem;
                 var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset);
+                string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
 
-                Process.Start(System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath);
+                ProcessStartInfo psi = new ProcessStartInfo()
+                {
+                    FileName = "cmd.exe",
+                    Arguments = String.Format("/S /C \"\"{0}\" \"{1}\" > \"{2}\" 2>&1\"", System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath, logPath),
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    // WorkingDirectory = ,
+                    // RedirectStandardError = true,
+                    // RedirectStandardOutput = true,
+                    UseShellExecute = false
+                };
+                var p = new Process();
+                p.StartInfo = psi;
+                p.Start();
+
+                p.Dispose();
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("Archive error", "An error occurred while archiving results.", ex.Message, ex.ToString());
+                ShowErrorDialog("Error", "An error occurred while starting visualizer.", ex.Message, ex.ToString());
             }
         }
 
