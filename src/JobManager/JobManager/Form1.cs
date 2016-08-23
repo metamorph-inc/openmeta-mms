@@ -21,7 +21,7 @@ using System.Collections.Concurrent;
 
 namespace JobManager
 {
-    public partial class JobManager : Form
+    public partial class JobManagerForm : Form
     {
         private SpringLabel toolStripStatusLabel { get; set; }
 
@@ -599,7 +599,7 @@ except Exception as msg:
         private string password { get; set; }
         JobManagerEntities1 entities;
 
-        public JobManager(JobServerImpl server, Dictionary<string, string> settings = null)
+        public JobManagerForm(JobServerImpl server, Dictionary<string, string> settings = null)
         {
             string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "JobManager.db");
             // entities = new JobManagerEntities1(String.Format("Data Source={0};Version=3;", dbPath));
@@ -739,37 +739,37 @@ except Exception as msg:
             Uri matlab = new Uri(Properties.Settings.Default.MatLabUri);
             Uri cad = new Uri(Properties.Settings.Default.CADUri);
 
-            Dictionary<Job.TypeEnum, JobManager.TargetMachine> config = new Dictionary<Job.TypeEnum, JobManager.TargetMachine>();
-            JobManager.TargetMachine.TargetMachineType type = JobManager.TargetMachine.TargetMachineType.Local;
+            Dictionary<Job.TypeEnum, JobManagerForm.TargetMachine> config = new Dictionary<Job.TypeEnum, JobManagerForm.TargetMachine>();
+            JobManagerForm.TargetMachine.TargetMachineType type = JobManagerForm.TargetMachine.TargetMachineType.Local;
             if (cmd.Host.Equals("localhost"))
             {
-                type = JobManager.TargetMachine.TargetMachineType.Local;
+                type = JobManagerForm.TargetMachine.TargetMachineType.Local;
             }
             else
             {
-                type = JobManager.TargetMachine.TargetMachineType.Remote;
+                type = JobManagerForm.TargetMachine.TargetMachineType.Remote;
             }
-            config.Add(Job.TypeEnum.Command, new JobManager.TargetMachine(cmd, type));
+            config.Add(Job.TypeEnum.Command, new JobManagerForm.TargetMachine(cmd, type));
 
             if (matlab.Host.Equals("localhost"))
             {
-                type = JobManager.TargetMachine.TargetMachineType.Local;
+                type = JobManagerForm.TargetMachine.TargetMachineType.Local;
             }
             else
             {
-                type = JobManager.TargetMachine.TargetMachineType.Remote;
+                type = JobManagerForm.TargetMachine.TargetMachineType.Remote;
             }
-            config.Add(Job.TypeEnum.Matlab, new JobManager.TargetMachine(matlab, type));
+            config.Add(Job.TypeEnum.Matlab, new JobManagerForm.TargetMachine(matlab, type));
 
             if (cad.Host.Equals("localhost"))
             {
-                type = JobManager.TargetMachine.TargetMachineType.Local;
+                type = JobManagerForm.TargetMachine.TargetMachineType.Local;
             }
             else
             {
-                type = JobManager.TargetMachine.TargetMachineType.Remote;
+                type = JobManagerForm.TargetMachine.TargetMachineType.Remote;
             }
-            config.Add(Job.TypeEnum.CAD, new JobManager.TargetMachine(cad, type));
+            config.Add(Job.TypeEnum.CAD, new JobManagerForm.TargetMachine(cad, type));
 
             UpdateRuntimeConfig(config);
 

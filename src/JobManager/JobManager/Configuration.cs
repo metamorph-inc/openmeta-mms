@@ -114,42 +114,42 @@ namespace JobManager
 
                 Properties.Settings.Default.Save();
 
-                JobManager manager = (Owner as JobManager);
-                if (manager != null)
+                JobManagerForm managerForm = (Owner as JobManagerForm);
+                if (managerForm != null)
                 {
-                    Dictionary<Job.TypeEnum, JobManager.TargetMachine> config = new Dictionary<Job.TypeEnum, JobManager.TargetMachine>();
-                    JobManager.TargetMachine.TargetMachineType type = JobManager.TargetMachine.TargetMachineType.Local;
+                    Dictionary<Job.TypeEnum, JobManagerForm.TargetMachine> config = new Dictionary<Job.TypeEnum, JobManagerForm.TargetMachine>();
+                    JobManagerForm.TargetMachine.TargetMachineType type = JobManagerForm.TargetMachine.TargetMachineType.Local;
                     //if (cmd.Host.Equals("localhost"))
                     //{
-                    //    type = JobManager.TargetMachine.TargetMachineType.Local;
+                    //    type = JobManagerForm.TargetMachine.TargetMachineType.Local;
                     //}
                     //else
                     //{
-                    //    type = JobManager.TargetMachine.TargetMachineType.Remote;
+                    //    type = JobManagerForm.TargetMachine.TargetMachineType.Remote;
                     //}
-                    //config.Add(Job.TypeEnum.Command, new JobManager.TargetMachine(cmd, type));
+                    //config.Add(Job.TypeEnum.Command, new JobManagerForm.TargetMachine(cmd, type));
 
                     //if (matlab.Host.Equals("localhost"))
                     //{
-                    //    type = JobManager.TargetMachine.TargetMachineType.Local;
+                    //    type = JobManagerForm.TargetMachine.TargetMachineType.Local;
                     //}
                     //else
                     //{
-                    //    type = JobManager.TargetMachine.TargetMachineType.Remote;
+                    //    type = JobManagerForm.TargetMachine.TargetMachineType.Remote;
                     //}
-                    //config.Add(Job.TypeEnum.Matlab, new JobManager.TargetMachine(matlab, type));
+                    //config.Add(Job.TypeEnum.Matlab, new JobManagerForm.TargetMachine(matlab, type));
 
                     //if (cad.Host.Equals("localhost"))
                     //{
-                    //    type = JobManager.TargetMachine.TargetMachineType.Local;
+                    //    type = JobManagerForm.TargetMachine.TargetMachineType.Local;
                     //}
                     //else
                     //{
-                    //    type = JobManager.TargetMachine.TargetMachineType.Remote;
+                    //    type = JobManagerForm.TargetMachine.TargetMachineType.Remote;
                     //}
-                    //config.Add(Job.TypeEnum.CAD, new JobManager.TargetMachine(cad, type));
+                    //config.Add(Job.TypeEnum.CAD, new JobManagerForm.TargetMachine(cad, type));
 
-                    manager.UpdateRuntimeConfig(config);
+                    managerForm.UpdateRuntimeConfig(config);
                 }
 
                 DialogResult = System.Windows.Forms.DialogResult.OK;

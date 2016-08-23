@@ -16,7 +16,7 @@ namespace JobManager
 
         public bool RerunEnabled { get; set; }
 
-        public global::JobManager.JobManager.RemoteJobInfo remoteInfo { get; set; }
+        public global::JobManager.JobManagerForm.RemoteJobInfo remoteInfo { get; set; }
 
         public string GetURLOverride { get; set; }
 

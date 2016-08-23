@@ -65,12 +65,12 @@ namespace JobManager
                 JobServerImpl server = new JobServerImpl();
                 RemotingServices.Marshal(server, "JobServer");
 
-                JobManager manager = new JobManager(server, settings);
+                JobManagerForm managerForm = new JobManagerForm(server, settings);
                 Console.Out.WriteLine("JobManager has started");
 
-                manager.Text = "JobManager (Port:" + port.ToString() + ")";
+                managerForm.Text = "JobManager (Port:" + port.ToString() + ")";
                 
-                Application.Run(manager);
+                Application.Run(managerForm);
                 ChannelServices.UnregisterChannel(tcpServerChannel);
             }
             catch (Exception ex)
