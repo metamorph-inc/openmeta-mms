@@ -8,16 +8,16 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
-
-namespace JobManager
+namespace JobManagerFramework
 {
     #region Contexts
     
@@ -82,6 +82,7 @@ namespace JobManager
         private ObjectSet<SavedJob> _SavedJobs;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -93,11 +94,11 @@ namespace JobManager
         }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -130,6 +131,7 @@ namespace JobManager
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -280,9 +282,11 @@ namespace JobManager
         partial void OnVFUrlChanged();
 
         #endregion
+
     
     }
 
     #endregion
+
     
 }

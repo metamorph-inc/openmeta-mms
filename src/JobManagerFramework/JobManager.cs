@@ -20,6 +20,38 @@ namespace JobManagerFramework
 {
     public class JobManager : IDisposable
     {
+        public class JobAddedEventArgs : EventArgs
+        {
+            public Job Job { get; set; }
+            public Job.StatusEnum Status { get; set; }
+        }
+
+        /**
+         * Invoked when a new job is submitted to the job server.
+         * 
+         * May be raised on an arbitrary thread; code that interacts with UI is responsible
+         * for scheduling on the UI thread.
+         */
+        public event EventHandler<JobAddedEventArgs> JobAdded;
+
+        public class SotAddedEventArgs : EventArgs
+        {
+            public SoT Sot { get; set; }
+        }
+
+        /**
+         * Invoked when a new SoT is submitted to the job server.
+         */
+        public event EventHandler<SotAddedEventArgs> SotAdded;
+
+        /**
+         * Gets the server-side list of jobs.
+         */
+        public IList<Job> Jobs
+        {
+            get { return Server.Jobs; }
+        }
+
         public const int DefaultPort = 35010;
 
         private TcpServerChannel ServerChannel { get; set; }
@@ -201,8 +233,9 @@ namespace JobManagerFramework
             Server = new JobServerImpl();
             RemotingServices.Marshal(Server, "JobServer");
 
-            Server.JobAdded += JobAdded;
-            Server.SoTAdded += SoTAdded;
+            Server.JobAdded += JobAddedHandler;
+            Server.SoTAdded += SoTAddedHandler;
+            Server.handlersAdded.Set(); // TODO: should we wait until UI has added handlers before setting this?
         }
 
         private void InitializePersistence()
@@ -389,9 +422,87 @@ namespace JobManagerFramework
 
             return result;
         }
-         
 
-        private void JobAdded(JobImpl job, Job.StatusEnum status)
+        /**
+         * Retries the download for selected jobs, if download failed
+         */
+        public void RetryDownload(IEnumerable<Job> jobs)
+        {
+            var toRedownload = jobs.Where(x => x.Status == Job.StatusEnum.FailedToDownload);
+
+            foreach (var selectedJob in toRedownload)
+            {
+                selectedJob.Status = Job.StatusEnum.RedownloadQueued;
+            }
+
+            RestartMonitorTimer();
+        }
+
+        /**
+         * Aborts selected jobs on server
+         */
+        public void AbortJobs(IEnumerable<Job> jobs)
+        {
+            var toAbort = jobs.Where(x => new Job.StatusEnum[] {
+                    Job.StatusEnum.RunningOnServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer }.Contains(x.Status));
+
+            foreach (var selectedJob in toAbort)
+            {
+                // selectedJob.SubItems[Headers.Status.ToString()].Text = "Redownload Queued";
+                selectedJob.Status = Job.StatusEnum.AbortOnServerRequested;
+            }
+            RestartMonitorTimer();
+        }
+
+        /**
+         * Re-runs selected jobs on server
+         */
+        public void ReRunJobs(IEnumerable<Job> jobs)
+        {
+            var toReRun = jobs.Cast<JobImpl>().Where(x =>
+                (x.IsFailed() || x.Status == Job.StatusEnum.Succeeded) &&
+                x.RerunEnabled);
+
+            foreach (var selectedJob in toReRun)
+            {
+                try
+                {
+                    // run it again
+                    selectedJob.Status = Job.StatusEnum.WaitingForStart;
+                    selectedJob.Start();
+                    Trace.TraceInformation("Rerunning job: {0} {1}", selectedJob.Id, selectedJob.Title);
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError(ex.ToString());
+                }
+            }
+        }
+
+        /**
+         * Makes specified jobs high priority on server
+         */
+
+        public void MakeHighPriority(IEnumerable<Job> jobs)
+        {
+            var toMakeHighPriority = jobs.Where(x => new Job.StatusEnum[] {
+                    Job.StatusEnum.PostedToServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer }.Contains(x.Status));
+
+            foreach (var selectedJob in toMakeHighPriority)
+            {
+                RemoteJobInfo remoteJob;
+                if (JobMap.TryGetValue(selectedJob, out remoteJob))
+                {
+                    // TODO: would be good to do this on another thread
+                    JenkinsInstance.MakeHighPriority(remoteJob.JenkinsJobName);
+                    highPriorityJobsRemaining--;
+                    // called primarly for UpdateServiceStatus, which will update the status bar
+                    RestartMonitorTimer();
+                }
+            }
+        }
+
+        private void JobAddedHandler(JobImpl job, Job.StatusEnum status)
         {
             lock (this)
             {
@@ -400,6 +511,14 @@ namespace JobManagerFramework
                     JobsToBeStarted.Add(() => { StartJob(job); });
                 }
                 //TODO: Raise event notifying UI code of new job
+            }
+            if (JobAdded != null)
+            {
+                JobAdded(this, new JobAddedEventArgs
+                {
+                    Job = job,
+                    Status = status
+                });
             }
         }
 
@@ -652,7 +771,7 @@ finally:
             }
         }
 
-        private void SoTAdded(SoT sot_)
+        private void SoTAddedHandler(SoT sot_)
         {
             SoTImpl sot = (SoTImpl)sot_;
             Trace.TraceInformation("SoT added.");
@@ -755,7 +874,8 @@ finally:
             {
                 try
                 {
-                    if (GetServiceStatus().isRemoteServer && GetServiceStatus().jenkinsConnected && GetServiceStatus().vfConnected)
+                    var status = GetServiceStatus();
+                    if (status.isRemoteServer && status.jenkinsConnected && status.vfConnected)
                     {
                         var jobs = JobMap.ToList().Where(j => !(j.Key.IsFailed() || j.Key.Status == Job.StatusEnum.Succeeded)).ToList();
                         jobs.Sort((Comparison<KeyValuePair<Job, RemoteJobInfo>>)((x, y) => { return x.Key.Id.CompareTo(y.Key.Id); }));

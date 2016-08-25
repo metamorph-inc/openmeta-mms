@@ -14,10 +14,9 @@ namespace JobManager
 {
     public partial class Configuration : Form
     {
-        Jenkins.Jenkins jenkins;
-        public Configuration(Jenkins.Jenkins jenkins, string password = null)
+        public Configuration(string password = null)
         {
-            this.jenkins = jenkins;
+            //this.jenkins = jenkins;
             InitializeComponent();
             AcceptButton = btnSave;
             chbRemoteExec.CheckedChanged +=new EventHandler(delegate (object o, EventArgs args) {
@@ -58,8 +57,8 @@ namespace JobManager
         internal void btnSave_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.UserID = this.txtUsername.Text;
-            jenkins.Username = this.txtUsername.Text;
-            jenkins.Password = this.mtbPassword.Text;
+            //jenkins.Username = this.txtUsername.Text;
+            //jenkins.Password = this.mtbPassword.Text;
 
             if (!chbRemoteExec.Checked)
             {
@@ -85,11 +84,11 @@ namespace JobManager
                 labelJenkinsTest.Visible = true;
                 linkCancelCheck.Visible = true;
                 cancel_Clicked = false;
-                jenkins.Username = txtUsername.Text;
-                jenkins.Password = mtbPassword.Text;
-                Action userCreateDelegate = delegate() { jenkins.Login(); };
+                //jenkins.Username = txtUsername.Text;
+                //jenkins.Password = mtbPassword.Text;
+                //Action userCreateDelegate = delegate() { jenkins.Login(); };
                 IAsyncResult userCreateResult = null;
-                userCreateResult = userCreateDelegate.BeginInvoke(null, null);
+                //userCreateResult = userCreateDelegate.BeginInvoke(null, null);
                 while (true)
                 {
                     Application.DoEvents();
@@ -109,16 +108,16 @@ namespace JobManager
                 {
                     return;
                 }
-                if (userCreateResult != null)
-                    userCreateDelegate.EndInvoke(userCreateResult);
+                //if (userCreateResult != null)
+                //    userCreateDelegate.EndInvoke(userCreateResult);
 
                 Properties.Settings.Default.Save();
 
                 JobManagerForm managerForm = (Owner as JobManagerForm);
                 if (managerForm != null)
                 {
-                    Dictionary<Job.TypeEnum, JobManagerForm.TargetMachine> config = new Dictionary<Job.TypeEnum, JobManagerForm.TargetMachine>();
-                    JobManagerForm.TargetMachine.TargetMachineType type = JobManagerForm.TargetMachine.TargetMachineType.Local;
+                    //Dictionary<Job.TypeEnum, JobManagerForm.TargetMachine> config = new Dictionary<Job.TypeEnum, JobManagerForm.TargetMachine>();
+                    //JobManagerForm.TargetMachine.TargetMachineType type = JobManagerForm.TargetMachine.TargetMachineType.Local;
                     //if (cmd.Host.Equals("localhost"))
                     //{
                     //    type = JobManagerForm.TargetMachine.TargetMachineType.Local;
@@ -149,7 +148,7 @@ namespace JobManager
                     //}
                     //config.Add(Job.TypeEnum.CAD, new JobManagerForm.TargetMachine(cad, type));
 
-                    managerForm.UpdateRuntimeConfig(config);
+                    //managerForm.UpdateRuntimeConfig(config);
                 }
 
                 DialogResult = System.Windows.Forms.DialogResult.OK;

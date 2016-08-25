@@ -11,7 +11,7 @@ using JobManager;
 
 namespace JobManagerFramework
 {
-    internal class LocalPool
+    public class LocalPool
     {
         /// <summary>
         /// Each job must generate this file if the execution was failed.
