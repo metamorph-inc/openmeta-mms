@@ -506,11 +506,11 @@ namespace JobManagerFramework
         {
             lock (this)
             {
+                job.JobStatusChanged += JobStatusChanged;
                 if (job.Status == Job.StatusEnum.Ready)
                 {
                     JobsToBeStarted.Add(() => { StartJob(job); });
                 }
-                //TODO: Raise event notifying UI code of new job
             }
             if (JobAdded != null)
             {
@@ -742,7 +742,10 @@ finally:
                             return;
                         }
                     }
-                    else; // FIXME throw?
+                    else
+                    {
+                        
+                    }; // FIXME throw?
 
                     // send zip and start job
                     if (JenkinsInstance.BuildJob(jobname, jobname, job.BuildQuery) == null)

@@ -174,6 +174,8 @@ namespace JobManager
         {
             InitializeComponent();
 
+            InitJobQueue();
+
             this.toolStripStatusLabel = new SpringLabel();
             this.toolStripStatusLabel.Text = "Loading";
             this.statusStrip1.Items.Add(this.toolStripStatusLabel);
