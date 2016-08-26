@@ -180,10 +180,10 @@
                                             <Setter Property="Background" Value="#FFFFAFAF" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="OK">
-                                            <Setter Property="Background" Value="#FFAFFFAF"/>
+                                            <Setter Property="Background" Value="LightGreen"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
-                                            <Setter Property="Background" Value="#FFFFFFAF"/>
+                                            <Setter Property="Background" Value="PeachPuff"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                     <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
@@ -205,11 +205,12 @@
                               MaxHeight="1600" 
                               SelectionMode="Single"
                               GridLinesVisibility="Horizontal"
-                              HeadersVisibility="Column">
+                              HeadersVisibility="Column"
+                              Margin="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Title}" ClipboardContentBinding="{x:Null}" Header="Title" IsReadOnly="True" Width="100"/>
+                        <DataGridTextColumn Binding="{Binding Title}" ClipboardContentBinding="{x:Null}" Header="Title" IsReadOnly="True" Width="200"/>
                         <DataGridTextColumn Binding="{Binding TestBenchName}" ClipboardContentBinding="{x:Null}" Header="Test Bench Name" IsReadOnly="True" Width="200"/>
-                        <DataGridTextColumn Binding="{Binding WorkingDirectory}" ClipboardContentBinding="{x:Null}" Header="Working Directory" IsReadOnly="True" Width="120"/>
+                        <DataGridTextColumn Binding="{Binding WorkingDirectory}" ClipboardContentBinding="{x:Null}" Header="Working Directory" IsReadOnly="True" Width="200"/>
                         <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
                         <DataGridTextColumn Binding="{Binding RunCommand}" ClipboardContentBinding="{x:Null}" Header="RunCommand" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>
@@ -225,14 +226,53 @@
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="Ready">
+                                    <Setter Property="Background" Value="PeachPuff"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="QueuedLocal">
+                                    <Setter Property="Background" Value="LightYellow"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="QueuedOnServer">
+                                    <Setter Property="Background" Value="LightYellow"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="StartedOnServer">
+                                    <Setter Property="Background" Value="LightYellow"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="UploadPackage">
+                                    <Setter Property="Background" Value="PaleTurquoise"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="DownloadResults">
+                                    <Setter Property="Background" Value="PaleTurquoise"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="PostedToServer">
+                                    <Setter Property="Background" Value="Khaki"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="RunningOnServer">
+                                    <Setter Property="Background" Value="LightSkyBlue"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="RunningLocal">
+                                    <Setter Property="Background" Value="LightSkyBlue"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Succeeded">
+                                    <Setter Property="Background" Value="LightGreen"/>
+                                </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="Failed">
                                     <Setter Property="Background" Value="#FFFFAFAF" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Status}" Value="Succeeded">
-                                    <Setter Property="Background" Value="#FFAFFFAF"/>
+                                <DataTrigger Binding="{Binding Status}" Value="FailedAbortOnServer">
+                                    <Setter Property="Background" Value="#FFFFAFAF" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Status}" Value="Ready">
-                                    <Setter Property="Background" Value="#FFFFFFAF"/>
+                                <DataTrigger Binding="{Binding Status}" Value="FailedExecution">
+                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="FailedToUploadServer">
+                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="FailedToDownload">
+                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="AbortOnServerRequested">
+                                    <Setter Property="Background" Value="#FFFFAFAF" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
