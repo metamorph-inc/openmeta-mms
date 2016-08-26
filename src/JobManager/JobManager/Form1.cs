@@ -234,13 +234,26 @@ namespace JobManager
             Trace.TraceInformation(META.Logger.Header());
 
             //TODO: pass in configuration loaded from Settings
-            manager = new JobManagerFramework.JobManager(port, new JobManagerFramework.JobManager.JobManagerConfiguration());
+            var config = new JobManagerFramework.JobManager.JobManagerConfiguration()
+            {
+                CommandUri = Properties.Settings.Default.CommandUri,
+                MatlabUri = Properties.Settings.Default.MatLabUri,
+                CadUri = Properties.Settings.Default.CADUri,
+                VehicleForgeUri = Properties.Settings.Default.VehicleForgeUri,
+                SshHost = Properties.Settings.Default.SSHHost,
+                SshPort = Properties.Settings.Default.SSHPort,
+                SshUser = Properties.Settings.Default.SSHUser,
+                RemoteExecution = Properties.Settings.Default.RemoteExecution,
+                WipeWorkspaceOnSuccess = Properties.Settings.Default.WipeWorkspaceOnSuccess,
+                DeleteJobOnSuccess = Properties.Settings.Default.DeleteJobOnSuccess,
+                UserId = Properties.Settings.Default.UserID,
+                JenkinsUri = Properties.Settings.Default.JenkinsUri
+            };
+            manager = new JobManagerFramework.JobManager(port, config);
 
             this.FormClosing += (sender, args) =>
             {
-                // TODO: Prompt for close if incomplete SoTs or local jobs (need JobManager methods to get that data)
-                /*if (this.SoTs.Any(s => s.TestBenchJobMap.Any(j => j.Value.Status == Job.StatusEnum.Ready &&
-                    ExtensionMethods.Closure(j.Key, sot => sot.UpstreamTestBenches).All(tb => s.TestBenchJobMap[tb].IsFailed() == false))))
+                if (manager.HasIncompleteSots)
                 {
                     DialogResult dr = MessageBox.Show(this, "Some jobs have not been posted and will be lost. Do you want to exit anyways?", "JobManager", MessageBoxButtons.YesNo);
                     if (dr == DialogResult.No)
@@ -249,9 +262,9 @@ namespace JobManager
                         return;
                     }
                 }
-                if (server.IsRemote == false)
+                if (manager.IsRemote == false)
                 {
-                    int unfinished = this.pool.GetNumberOfUnfinishedJobs();
+                    int unfinished = manager.UnfinishedJobCount;
                     if (unfinished > 0)
                     {
                         DialogResult dr = MessageBox.Show(this, unfinished + " jobs have not completed. Do you want to exit and terminate running processes?", "JobManager", MessageBoxButtons.YesNo);
@@ -261,10 +274,8 @@ namespace JobManager
                             return;
                         }
                     }
-                    this.pool.Dispose();
                 }
                 Trace.TraceInformation("JobManager is closing");
-                SoTTodo.Add(null);*/
             };
             this.Resize += new EventHandler(JobManager_Resize);
             NotifyIcon = new NotifyIcon();

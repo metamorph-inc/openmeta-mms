@@ -52,6 +52,37 @@ namespace JobManagerFramework
             get { return Server.Jobs; }
         }
 
+        /**
+         * Returns true if the server is configured for remote execution.
+         */
+        public bool IsRemote { get { return Server.IsRemote; } }
+
+        /**
+         * Returns true if there are SoTs which haven't posted yet
+         */
+        public bool HasIncompleteSots
+        {
+            get
+            {
+                return this.SoTs.Any(s => s.TestBenchJobMap.Any(j => j.Value.Status == Job.StatusEnum.Ready &&
+                                                                     ExtensionMethods.Closure(j.Key,
+                                                                             sot => sot.UpstreamTestBenches)
+                                                                         .All(
+                                                                             tb =>
+                                                                                 s.TestBenchJobMap[tb].IsFailed() ==
+                                                                                 false)));
+            }
+        }
+
+        /**
+         * Returns the count of unfinished jobs
+         */
+
+        public int UnfinishedJobCount
+        {
+            get { return this.pool.GetNumberOfUnfinishedJobs(); }
+        }
+
         public const int DefaultPort = 35010;
 
         private TcpServerChannel ServerChannel { get; set; }
@@ -383,6 +414,9 @@ namespace JobManagerFramework
             {
                 ChannelServices.UnregisterChannel(ServerChannel);
             }
+
+            SoTTodo.Add(null); //signals SOT thread to terminate
+            this.pool.Dispose(); 
         }
 
         public class ServiceStatus
@@ -1232,6 +1266,27 @@ except Exception as msg:
             }
 
             return port;
+        }
+
+        private static class ExtensionMethods
+        {
+            public static IEnumerable<T> Closure<T>(T root, Func<T, IEnumerable<T>> children)
+            {
+                var seen = new HashSet<T>();
+                var stack = new Stack<T>();
+                stack.Push(root);
+
+                while (stack.Count != 0)
+                {
+                    T item = stack.Pop();
+                    if (seen.Contains(item))
+                        continue;
+                    seen.Add(item);
+                    yield return item;
+                    foreach (var child in children(item))
+                        stack.Push(child);
+                }
+            }
         }
     }
 }
