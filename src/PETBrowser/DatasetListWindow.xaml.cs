@@ -55,8 +55,16 @@ namespace PETBrowser
 
         public DatasetListWindow()
         {
-            this.ViewModel = new DatasetListWindowViewModel();
-            InitializeComponent();
+            try
+            {
+                this.ViewModel = new DatasetListWindowViewModel();
+                InitializeComponent();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                throw e;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -541,6 +549,9 @@ namespace PETBrowser
         public ICollectionView TestBenchDatasets { get; set; }
 
         public DatasetStore Store { get; set; }
+        public JobStore JobStore { get; set; }
+
+        public ICollectionView JobsView { get; set; }
 
         public delegate void DatasetLoadFailedCallback(Exception exception);
 
@@ -600,6 +611,13 @@ namespace PETBrowser
 
             TestBenchDatasetsList = new List<Dataset>();
             TestBenchDatasets = new ListCollectionView(TestBenchDatasetsList);
+
+            JobStore = new JobStore();
+            JobsView = new ListCollectionView(JobStore.TrackedJobs);
+            JobStore.TrackedJobsChanged += (sender, args) =>
+            {
+                JobsView.Refresh();
+            };
         }
 
         public void LoadDataset(string path, DatasetLoadFailedCallback callback)

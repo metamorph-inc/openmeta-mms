@@ -65,6 +65,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\3rdParty\System.Data.SQLite\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\..\3rdParty\System.Data.SQLite\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -83,6 +92,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BoolVisibilityConverter.cs" />
+    <Compile Include="JobStore.cs" />
     <Compile Include="PetDetailsViewModel.cs" />
     <Compile Include="PetDetailsControl.xaml.cs">
       <DependentUpon>PetDetailsControl.xaml</DependentUpon>
@@ -178,6 +188,14 @@
     <ProjectReference Include="..\CyPhyGUIs\CyPhyGUIs.csproj">
       <Project>{ab27ee78-6819-4b8c-b678-68bc4fbc99d2}</Project>
       <Name>CyPhyGUIs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JobManagerFramework\JobManagerFramework.csproj">
+      <Project>{59715556-ef7c-4729-9780-3f7ea3fec627}</Project>
+      <Name>JobManagerFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JobManager\JobManagerLib\JobManagerLib.csproj">
+      <Project>{8b9963d3-f23c-4923-84c9-cbd6872105a6}</Project>
+      <Name>JobManagerLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

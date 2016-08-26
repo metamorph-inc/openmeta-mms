@@ -295,6 +295,7 @@ namespace JobManagerFramework
             }
             cnn.Close();
 
+            // This call needs the Sqlite provider to be present in consumer's app.config--  see original job manager or PET browser for example
             Entities = new JobManagerEntities1(String.Format("metadata=res://*/SavedJobs.csdl|res://*/SavedJobs.ssdl|res://*/SavedJobs.msl;provider=System.Data.SQLite;provider connection string=\"data source={0}\"", dbPath));
             // Fail fast
             Entities.SavedJobs.ToList();

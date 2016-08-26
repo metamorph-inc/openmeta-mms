@@ -196,6 +196,49 @@
                     <DockPanel x:Name="TestBenchDetailsPanel" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" />
                 </Grid>
             </TabItem>
+            <TabItem Header="Active Jobs">
+                <DataGrid x:Name="JobGrid"
+                              ItemsSource="{Binding JobsView, IsAsync=True}"
+                              AutoGenerateColumns="False" 
+                              RowHeight="20" 
+                              MaxWidth="2560"
+                              MaxHeight="1600" 
+                              SelectionMode="Single"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Title}" ClipboardContentBinding="{x:Null}" Header="Title" IsReadOnly="True" Width="100"/>
+                        <DataGridTextColumn Binding="{Binding TestBenchName}" ClipboardContentBinding="{x:Null}" Header="Test Bench Name" IsReadOnly="True" Width="200"/>
+                        <DataGridTextColumn Binding="{Binding WorkingDirectory}" ClipboardContentBinding="{x:Null}" Header="Working Directory" IsReadOnly="True" Width="120"/>
+                        <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
+                        <DataGridTextColumn Binding="{Binding RunCommand}" ClipboardContentBinding="{x:Null}" Header="RunCommand" IsReadOnly="True" Width="*"/>
+                    </DataGrid.Columns>
+                    <DataGrid.Resources>
+                        <!--<ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                            <MenuItem Header="Open in Explorer" Click="explorerButton_Click" />
+                            <MenuItem Header="Delete..." Click="DeleteTestBenchItem" />
+                        </ContextMenu>-->
+                    </DataGrid.Resources>
+                    <DataGrid.HorizontalGridLinesBrush>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                    </DataGrid.HorizontalGridLinesBrush>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Succeeded">
+                                    <Setter Property="Background" Value="#FFAFFFAF"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Ready">
+                                    <Setter Property="Background" Value="#FFFFFFAF"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+            </TabItem>
         </TabControl>
     </DockPanel>
 
