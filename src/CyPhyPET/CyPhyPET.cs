@@ -811,6 +811,7 @@ namespace CyPhyPET
             "MGA.Interpreter.CyPhy2CAD_CSharp",
             "MGA.Interpreter.CyPhy2CAD",
             "MGA.Interpreter.CyPhyDesignExporter",
+            "MGA.Interpreter.CyPhy2Schematic",
             "MGA.Interpreter.CyPhyPython"
         };
 
