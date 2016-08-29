@@ -21,6 +21,7 @@ using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Interop;
+using JobManager;
 using Ookii.Dialogs.Wpf;
 
 namespace PETBrowser
@@ -535,6 +536,13 @@ namespace PETBrowser
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             ViewModel.DeselectAllPets();
+        }
+
+        private void reRunJob_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedJob = (JobViewModel) JobGrid.SelectedItem;
+
+            ViewModel.JobStore.ReRunJob(selectedJob.Job);
         }
     }
 

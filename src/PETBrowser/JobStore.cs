@@ -13,7 +13,7 @@ namespace PETBrowser
     public class JobStore
     {
         private JobManagerFramework.JobManager Manager { get; set; }
-        public List<Job> TrackedJobs { get; private set; }
+        public List<JobViewModel> TrackedJobs { get; private set; }
 
         public event EventHandler TrackedJobsChanged;
 
@@ -25,20 +25,23 @@ namespace PETBrowser
 
             UiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
-            TrackedJobs = new List<Job>();
+            TrackedJobs = new List<JobViewModel>();
             Manager = new JobManagerFramework.JobManager(35010,
                 new JobManagerFramework.JobManager.JobManagerConfiguration());
 
             Manager.JobAdded += Manager_JobAdded;
         }
 
+        public void ReRunJob(Job j)
+        {
+            Manager.ReRunJobs(new [] {j});
+        }
+
         private void Manager_JobAdded(object sender, JobManagerFramework.JobManager.JobAddedEventArgs e)
         {
             InvokeOnMainThread(() =>
             {
-                ((JobImpl)e.Job).JobStatusChanged += JobStatusChanged;
-
-                TrackedJobs.Add(e.Job);
+                TrackedJobs.Add(new JobViewModel(e.Job));
                 InvokeTrackedJobsChanged();
             });
         }

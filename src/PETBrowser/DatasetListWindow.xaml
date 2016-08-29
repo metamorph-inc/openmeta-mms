@@ -230,16 +230,16 @@
                         <DataGridTextColumn Binding="{Binding RunCommand}" ClipboardContentBinding="{x:Null}" Header="RunCommand" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>
                     <DataGrid.Resources>
-                        <!--<ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                            <MenuItem Header="Open in Explorer" Click="explorerButton_Click" />
-                            <MenuItem Header="Delete..." Click="DeleteTestBenchItem" />
-                        </ContextMenu>-->
+                        <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                            <MenuItem Header="Re-run Job" Click="reRunJob_Click" IsEnabled="{Binding AllowReRun}"/>
+                        </ContextMenu>
                     </DataGrid.Resources>
                     <DataGrid.HorizontalGridLinesBrush>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
                     </DataGrid.HorizontalGridLinesBrush>
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
+                            <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Status}" Value="Ready">
                                     <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>

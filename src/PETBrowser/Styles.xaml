@@ -2,18 +2,22 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:PETBrowser">
     <!-- Style definitions for translucent data grid highlight color -->
+    <!-- Solution for .NET 4.0 adapted from here:  http://stackoverflow.com/questions/7998112/datagrids-selected-row-color-when-inactive/8095932#8095932 -->
+    <!-- This is simpler in .NET 4.5; override InactiveSelectionHighlightBrush there -->
     <Color x:Key="GridHighlightColor">#66000000</Color>
     <Color x:Key="InactiveGridHighlightColor">#33000000</Color>
     <SolidColorBrush x:Key="GridHighlightBrush" Color="{StaticResource GridHighlightColor}" />
     <SolidColorBrush x:Key="InactiveGridHighlightBrush" Color="{StaticResource InactiveGridHighlightColor}" />
     <Style x:Key="GridStyle" BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
         <Style.Triggers>
+            <!-- Highlight when grid is focused -->
             <Trigger  Property="IsSelected" Value="true">
                 <Setter Property="Background" Value="{StaticResource GridHighlightBrush}" />
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
                 <Setter Property="BorderBrush" Value="{StaticResource GridHighlightBrush}" />
             </Trigger>
             <MultiDataTrigger>
+                <!-- Highlight when grid is unfocused -->
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
                     <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=IsKeyboardFocusWithin}" Value="False" />
@@ -26,7 +30,7 @@
             </MultiDataTrigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- Job status colors -->
     <Color x:Key="ReadyColor">PeachPuff</Color>
     <Color x:Key="QueuedColor">LightYellow</Color>
@@ -34,7 +38,7 @@
     <Color x:Key="PostedColor">Khaki</Color>
     <Color x:Key="RunningColor">LightSkyBlue</Color>
     <Color x:Key="SuccessColor">LightGreen</Color>
-    <Color x:Key="FailedColor">#FFFFAFAF</Color>
+    <Color x:Key="FailedColor">LightPink</Color>
     
     <SolidColorBrush x:Key="ReadyBrush" Color="{StaticResource ReadyColor}" />
     <SolidColorBrush x:Key="QueuedBrush" Color="{StaticResource QueuedColor}" />

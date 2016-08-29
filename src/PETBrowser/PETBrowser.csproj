@@ -93,6 +93,7 @@
     </ApplicationDefinition>
     <Compile Include="BoolVisibilityConverter.cs" />
     <Compile Include="JobStore.cs" />
+    <Compile Include="JobViewModel.cs" />
     <Compile Include="PetDetailsViewModel.cs" />
     <Compile Include="PetDetailsControl.xaml.cs">
       <DependentUpon>PetDetailsControl.xaml</DependentUpon>
