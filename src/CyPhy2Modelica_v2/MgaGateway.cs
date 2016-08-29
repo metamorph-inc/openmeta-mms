@@ -20,7 +20,6 @@ namespace GME.CSharp
         public IMgaTerritory territory = null;
 
         private bool projectWasInTransaction = false;
-        private bool projectHasBeenAborted = false;
         #region TRANSACTION HANDLING
         public void BeginTransaction(transactiontype_enum mode = transactiontype_enum.TRANSACTION_GENERAL)
         {
@@ -44,30 +43,20 @@ namespace GME.CSharp
             bool abort = true)
         {
             this.projectWasInTransaction = (project.ProjectStatus & 8) != 0;
-            this.projectHasBeenAborted = false;
+            bool projectHasBeenAborted = false;
 
             if (this.projectWasInTransaction == false)
             {
                 BeginTransaction(mode);
             }
 
-            if (this.projectWasInTransaction && abort)
-            {
-                CommitTransaction();
-                BeginTransaction(mode);
-            }
-
             try
             {
                 d();
-                if (abort)
+                if (!this.projectWasInTransaction && abort)
                 {
                     AbortTransaction();
                     projectHasBeenAborted = true;
-                    if (this.projectWasInTransaction)
-                    {
-                        BeginTransaction(mode);
-                    }
                 }
                 else
                 {
