@@ -7,6 +7,13 @@
         mc:Ignorable="d"
         d:DesignWidth="600"
         d:DesignHeight="700">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -64,7 +71,7 @@
         </Grid>
 
         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Steps</Label>
-        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -90,17 +97,10 @@
                     <EventSetter Event="MouseDoubleClick" Handler="StepsRow_DoubleClick"></EventSetter>
                 </Style>
             </DataGrid.RowStyle>
-
-            <DataGrid.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
-            </DataGrid.Resources>
         </DataGrid>
 
         <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Parameters</Label>
-        <DataGrid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -113,7 +113,7 @@
         </DataGrid>
 
         <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
-        <DataGrid Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -125,7 +125,7 @@
         </DataGrid>
 
         <Label Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Artifacts</Label>
-        <DataGrid Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -141,7 +141,7 @@
         </DataGrid>
 
         <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Visualization Artifacts</Label>
-        <DataGrid Grid.Row="9" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="9" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>

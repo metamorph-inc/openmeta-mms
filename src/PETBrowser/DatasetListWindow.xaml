@@ -7,7 +7,8 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Icons.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Icons.xaml" />
+                <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <petBrowser:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
         </ResourceDictionary>
@@ -74,7 +75,19 @@
                                 <Button x:Name="vizButton" Content="Open Selected in Visualizer"  Margin="5,10,10,10" Click="vizButton_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
                             </StackPanel>
                         </StackPanel>
-                        <DataGrid Name="PetGrid" ItemsSource="{Binding PetDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableRowVirtualization="False" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal"  HeadersVisibility="Column" SelectionChanged="PetGrid_SelectionChanged">
+                        <DataGrid Name="PetGrid" ItemsSource="{Binding PetDatasets, IsAsync=True}"
+                                  AutoGenerateColumns="False"
+                                  FrozenColumnCount="1"
+                                  RowHeight="20"
+                                  MaxWidth="2560"
+                                  MaxHeight="1600"
+                                  SelectionMode="Single"
+                                  EnableRowVirtualization="False"
+                                  EnableColumnVirtualization="True"
+                                  GridLinesVisibility="Horizontal"
+                                  HeadersVisibility="Column"
+                                  SelectionChanged="PetGrid_SelectionChanged"
+                                  CellStyle="{DynamicResource GridStyle}">
                             <DataGrid.HorizontalGridLinesBrush>
                                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
                             </DataGrid.HorizontalGridLinesBrush>
@@ -156,7 +169,8 @@
                               MaxHeight="1600" 
                               SelectionMode="Single"
                               GridLinesVisibility="Horizontal"
-                              HeadersVisibility="Column" SelectionChanged="TestBenchGrid_SelectionChanged">
+                              HeadersVisibility="Column" SelectionChanged="TestBenchGrid_SelectionChanged"
+                              CellStyle="{DynamicResource GridStyle}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="100"/>
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="200"/>
@@ -206,7 +220,8 @@
                               SelectionMode="Single"
                               GridLinesVisibility="Horizontal"
                               HeadersVisibility="Column"
-                              Margin="2">
+                              Margin="2"
+                              CellStyle="{DynamicResource GridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Title}" ClipboardContentBinding="{x:Null}" Header="Title" IsReadOnly="True" Width="200"/>
                         <DataGridTextColumn Binding="{Binding TestBenchName}" ClipboardContentBinding="{x:Null}" Header="Test Bench Name" IsReadOnly="True" Width="200"/>

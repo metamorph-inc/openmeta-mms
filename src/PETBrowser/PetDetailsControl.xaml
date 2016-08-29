@@ -7,6 +7,13 @@
         mc:Ignorable="d"
         d:DesignWidth="600"
         d:DesignHeight="350">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -58,7 +65,7 @@
         </Grid>
 
         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
-        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{StaticResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
