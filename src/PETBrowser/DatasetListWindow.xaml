@@ -191,13 +191,13 @@
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="FAILED">
-                                            <Setter Property="Background" Value="#FFFFAFAF" />
+                                            <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="OK">
-                                            <Setter Property="Background" Value="LightGreen"/>
+                                            <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
-                                            <Setter Property="Background" Value="PeachPuff"/>
+                                            <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                     <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
@@ -242,52 +242,52 @@
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Status}" Value="Ready">
-                                    <Setter Property="Background" Value="PeachPuff"/>
+                                    <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="QueuedLocal">
-                                    <Setter Property="Background" Value="LightYellow"/>
+                                    <Setter Property="Background" Value="{StaticResource QueuedBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="QueuedOnServer">
-                                    <Setter Property="Background" Value="LightYellow"/>
+                                    <Setter Property="Background" Value="{StaticResource QueuedBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="StartedOnServer">
-                                    <Setter Property="Background" Value="LightYellow"/>
+                                    <Setter Property="Background" Value="{StaticResource QueuedBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="UploadPackage">
-                                    <Setter Property="Background" Value="PaleTurquoise"/>
+                                    <Setter Property="Background" Value="{StaticResource UploadDownloadBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="DownloadResults">
-                                    <Setter Property="Background" Value="PaleTurquoise"/>
+                                    <Setter Property="Background" Value="{StaticResource UploadDownloadBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="PostedToServer">
-                                    <Setter Property="Background" Value="Khaki"/>
+                                    <Setter Property="Background" Value="{StaticResource PostedBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="RunningOnServer">
-                                    <Setter Property="Background" Value="LightSkyBlue"/>
+                                    <Setter Property="Background" Value="{StaticResource RunningBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="RunningLocal">
-                                    <Setter Property="Background" Value="LightSkyBlue"/>
+                                    <Setter Property="Background" Value="{StaticResource RunningBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="Succeeded">
-                                    <Setter Property="Background" Value="LightGreen"/>
+                                    <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="Failed">
-                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="FailedAbortOnServer">
-                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="FailedExecution">
-                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="FailedToUploadServer">
-                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="FailedToDownload">
-                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Status}" Value="AbortOnServerRequested">
-                                    <Setter Property="Background" Value="#FFFFAFAF" />
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

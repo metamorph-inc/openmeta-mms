@@ -26,4 +26,21 @@
             </MultiDataTrigger>
         </Style.Triggers>
     </Style>
+    
+    <!-- Job status colors -->
+    <Color x:Key="ReadyColor">PeachPuff</Color>
+    <Color x:Key="QueuedColor">LightYellow</Color>
+    <Color x:Key="UploadDownloadColor">PaleTurquoise</Color>
+    <Color x:Key="PostedColor">Khaki</Color>
+    <Color x:Key="RunningColor">LightSkyBlue</Color>
+    <Color x:Key="SuccessColor">LightGreen</Color>
+    <Color x:Key="FailedColor">#FFFFAFAF</Color>
+    
+    <SolidColorBrush x:Key="ReadyBrush" Color="{StaticResource ReadyColor}" />
+    <SolidColorBrush x:Key="QueuedBrush" Color="{StaticResource QueuedColor}" />
+    <SolidColorBrush x:Key="UploadDownloadBrush" Color="{StaticResource UploadDownloadColor}" />
+    <SolidColorBrush x:Key="PostedBrush" Color="{StaticResource PostedColor}" />
+    <SolidColorBrush x:Key="RunningBrush" Color="{StaticResource RunningColor}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+    <SolidColorBrush x:Key="FailedBrush" Color="{StaticResource FailedColor}" />
 </ResourceDictionary>

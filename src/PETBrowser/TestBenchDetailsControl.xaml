@@ -57,13 +57,13 @@
                 <Style>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Manifest.Status}" Value="FAILED">
-                            <Setter Property="Grid.Background" Value="#FFFFAFAF" />
+                            <Setter Property="Grid.Background" Value="{StaticResource FailedBrush}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Manifest.Status}" Value="OK">
-                            <Setter Property="Grid.Background" Value="#FFAFFFAF"/>
+                            <Setter Property="Grid.Background" Value="{StaticResource SuccessBrush}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Manifest.Status}" Value="UNEXECUTED">
-                            <Setter Property="Grid.Background" Value="#FFFFFFAF"/>
+                            <Setter Property="Grid.Background" Value="{StaticResource ReadyBrush}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -84,13 +84,13 @@
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Status}" Value="FAILED">
-                            <Setter Property="Background" Value="#FFFFAFAF" />
+                            <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Status}" Value="OK">
-                            <Setter Property="Background" Value="#FFAFFFAF"/>
+                            <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
-                            <Setter Property="Background" Value="#FFFFFFAF"/>
+                            <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>
                         </DataTrigger>
                     </Style.Triggers>
 
