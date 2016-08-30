@@ -633,6 +633,7 @@ namespace CyPhyMasterInterpreter
                     string title = string.Empty;
                     string testbenchName = string.Empty;
                     string workingDirectory = interpreter.MainParameters.OutputDirectory;
+                    string projectDirectory = ProjectDirectory;
 
                     string interpreterName = interpreter.Name.StartsWith("MGA.Interpreter.") ?
                         interpreter.Name.Substring("MGA.Interpreter.".Length) :
@@ -644,7 +645,7 @@ namespace CyPhyMasterInterpreter
                     // JobManager will run python.exe -m testbenchexecutor if testbench_manifest.json exists, which will run all the steps
                     if (!File.Exists(Path.Combine(interpreter.MainParameters.OutputDirectory, "testbench_manifest.json")) || interpreter == this.Interpreters.Last())
                     {
-                        success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, interpreter);
+                        success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, projectDirectory, interpreter);
                     }
                 }
             }
