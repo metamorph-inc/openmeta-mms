@@ -76,10 +76,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CyPhy2Modelica_v2\MgaGateway.cs">
+      <Link>MgaGateway.cs</Link>
+    </Compile>
     <Compile Include="ComponentConfig.cs" />
     <Compile Include="CyPhyDesignExporter.cs" />
     <Compile Include="Registrar.cs" />
-    <Compile Include="MgaGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <!--$ADDITIONALFILES$-->
   </ItemGroup>

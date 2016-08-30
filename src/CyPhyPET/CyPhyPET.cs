@@ -766,13 +766,7 @@ namespace CyPhyPET
                 // if RunCommand is specified, add it to the manifest
                 var tbManifest = AVM.DDP.MetaTBManifest.OpenForUpdate(interpreter.MainParameters.OutputDirectory);
 
-                tbManifest.AddStep(new AVM.DDP.MetaTBManifest.Step()
-                {
-                    Status = AVM.DDP.MetaTBManifest.StatusEnum.UNEXECUTED,
-                    Invocation = interpreter.result.RunCommand,
-                    Description = "Run testbench",
-                    // TODO MaxIterationExecutionTime = 2 // hours
-                });
+                tbManifest.AddAllTasks(testBench, new META.ComComponent[] { interpreter });
                 tbManifest.Serialize(interpreter.MainParameters.OutputDirectory);
 
                 return true;
@@ -817,6 +811,7 @@ namespace CyPhyPET
             "MGA.Interpreter.CyPhy2CAD_CSharp",
             "MGA.Interpreter.CyPhy2CAD",
             "MGA.Interpreter.CyPhyDesignExporter",
+            "MGA.Interpreter.CyPhy2Schematic",
             "MGA.Interpreter.CyPhyPython"
         };
 
@@ -831,6 +826,41 @@ namespace CyPhyPET
                     interpreter.InterpreterConfig.GetType(),
                     interpreter.ProgId);
             }
+
+            CyPhy.Task task = null;
+            string result = string.Empty;
+            if (testBench.Children.WorkflowRefCollection.Count() == 1)
+            {
+                var workflowRef = testBench.Children.WorkflowRefCollection.FirstOrDefault();
+                if (workflowRef != null &&
+                    workflowRef.Referred.Workflow != null)
+                {
+                    var workflow = workflowRef.Referred.Workflow;
+                    if (workflow.Children.TaskCollection.Count() == 1)
+                    {
+                        task = workflow.Children.TaskCollection.FirstOrDefault();
+                    }
+                }
+            }
+
+            if (task != null)
+            {
+                string parameters = task.Attributes.Parameters;
+                try
+                {
+                    interpreter.WorkflowParameters = (Dictionary<string, string>)JsonConvert.DeserializeObject(parameters, typeof(Dictionary<string, string>));
+                    if (interpreter.WorkflowParameters == null)
+                    {
+                        interpreter.WorkflowParameters = new Dictionary<string, string>();
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    throw new ApplicationException(String.Format("Could not parse Parameters for '{0}'", task.Name), ex);
+                }
+            }
+
+            interpreter.SetWorkflowParameterValues();
 
             interpreter.Initialize(this.mainParameters.Project);
 

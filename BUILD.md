@@ -18,19 +18,6 @@ When installing, select these packages (at minimum):
 ## Microsoft Visual Studio 2015 Update 2
 [Download](https://www.visualstudio.com/en-us/news/vs2015-update2-vs.aspx)
 
-## Python 2.7.x x86
-Get the latest Python 2.7 (2.7.8 at the time of writing). Make sure the .py extension is associated with Python 2.7, and it is installed for All Users (NOT ”just for me”). Download it [here](http://www.python.org/download/releases/2.7.8/) _(and don’t get the 64-bit version)_.
-
-## pywin32 for Python 2.7
-Get *pywin32-219.win32-py2.7.exe* [here](http://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/)
-
-_Again, *don't* get the 64-bit version._
-
-## WIX
-[Download 3.x here](http://wixtoolset.org/releases/) (get the newest 3.10 version).
-
-3.6, 3.7, 3.8, 3.9, 3.10 are detected by the build_msi.py script.
-
 ## Java JDK 7 or above
 [Download it here](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 
