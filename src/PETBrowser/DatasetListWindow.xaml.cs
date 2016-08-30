@@ -544,6 +544,24 @@ namespace PETBrowser
 
             ViewModel.JobStore.ReRunJob(selectedJob.Job);
         }
+
+        private void showJobInExplorer(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var selectedJob = (JobViewModel)JobGrid.SelectedItem;
+                var jobDirectoryPath = selectedJob.Job.WorkingDirectory;
+
+                //Explorer doesn't accept forward slashes in paths
+                jobDirectoryPath = jobDirectoryPath.Replace("/", "\\");
+
+                Process.Start("explorer.exe", jobDirectoryPath);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
+            }
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
