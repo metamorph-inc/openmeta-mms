@@ -66,7 +66,7 @@ namespace CyPhyMasterInterpreter
                 {
                     string workingDirectory = interpreter.MainParameters.OutputDirectory;
 
-                    success = success && manager.EnqueueSoT(workingDirectory, ProjectDirectory);
+                    success = success && manager.EnqueueSoT(workingDirectory);
                 }
             }
 

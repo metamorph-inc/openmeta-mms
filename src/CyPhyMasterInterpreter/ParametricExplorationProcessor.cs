@@ -142,7 +142,6 @@ namespace CyPhyMasterInterpreter
                     string title = string.Empty;
                     string testbenchName = string.Empty;
                     string workingDirectory = interpreter.MainParameters.OutputDirectory;
-                    string projectDirectory = ProjectDirectory;
 
 
                     string interpreterName = interpreter.Name.StartsWith("MGA.Interpreter.") ?
@@ -158,7 +157,7 @@ namespace CyPhyMasterInterpreter
                         .TestBenchType
                         .Name;
 
-                    success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, projectDirectory, interpreter);
+                    success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, interpreter);
                 }
             }
 

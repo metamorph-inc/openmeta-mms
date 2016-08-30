@@ -69,7 +69,6 @@ namespace CyPhyMasterInterpreter
             string title,
             string testbenchName,
             string workingDirectory,
-            string projectDirectory,
             ComComponent interpreter,
             Job.TypeEnum type = Job.TypeEnum.Command)
         {
@@ -77,7 +76,7 @@ namespace CyPhyMasterInterpreter
             try
             {
                 JobServer manager;
-                Job j = CreateJob(out manager, projectDirectory);
+                Job j = CreateJob(out manager);
 
                 j.RunCommand = runCommand;
                 j.Title = title;
@@ -114,12 +113,12 @@ namespace CyPhyMasterInterpreter
             }
         }
 
-        public bool EnqueueSoT(string workingDirectory, string projectDirectory)
+        public bool EnqueueSoT(string workingDirectory)
         {
             try
             {
                 JobServer manager;
-                SoT sot = CreateSoT(out manager, projectDirectory);
+                SoT sot = CreateSoT(out manager);
                 sot.WorkingDirectory = workingDirectory;
 
                 sotsToAdd.Enqueue(new KeyValuePair<JobServer, SoT>(manager, sot));
@@ -136,7 +135,7 @@ namespace CyPhyMasterInterpreter
             }
         }
 
-        private SoT CreateSoT(out JobServer manager, string projectDirectory)
+        private SoT CreateSoT(out JobServer manager)
         {
             SoT sot;
             try
@@ -146,14 +145,14 @@ namespace CyPhyMasterInterpreter
             }
             catch (System.Net.Sockets.SocketException)
             {
-                this.StartJobManager(projectDirectory);
+                this.StartJobManager();
                 manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
                 sot = manager.CreateSoT();
             }
             return sot;
         }
 
-        private Job CreateJob(out JobServer manager, string projectDirectory)
+        private Job CreateJob(out JobServer manager)
         {
             Job j;
             try
@@ -163,29 +162,28 @@ namespace CyPhyMasterInterpreter
             }
             catch (System.Net.Sockets.SocketException)
             {
-                this.StartJobManager(projectDirectory);
+                this.StartJobManager();
                 manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
                 j = manager.CreateJob();
             }
             return j;
         }
 
-        private void StartJobManager(string projectDirectory)
+        private void StartJobManager()
         {
             // n.b. Assembly.Location is wrong with Shadow Copy enabled
             string assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            string exe = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "PETBrowser.exe");
+            string exe = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "JobManager.exe");
             if (!File.Exists(exe))
-                exe = Path.Combine(assemblyDir, "..\\..\\..\\PETBrowser\\bin\\Release\\PETBrowser.exe");
+                exe = Path.Combine(assemblyDir, "..\\..\\..\\JobManager\\JobManager\\bin\\Release\\JobManager.exe");
             if (!File.Exists(exe))
-                exe = Path.Combine(assemblyDir, "..\\..\\..\\PETBrowser\\bin\\Debug\\PETBrowser.exe");
+                exe = Path.Combine(assemblyDir, "..\\..\\..\\JobManager\\JobManager\\bin\\Debug\\JobManager.exe");
             if (File.Exists(exe))
             {
                 Process proc = new Process();
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.FileName = exe;
                 proc.StartInfo.RedirectStandardOutput = true;
-                proc.StartInfo.WorkingDirectory = projectDirectory;
                 proc.Start();
                 proc.WaitForInputIdle(10 * 1000);
                 proc.StandardOutput.ReadLine(); // matches Console.Out.WriteLine("JobManager has started"); in JobManager
