@@ -60,6 +60,10 @@ namespace PETBrowser
             {
                 this.ViewModel = new DatasetListWindowViewModel();
                 InitializeComponent();
+                this.ViewModel.TrackedJobsChanged += (sender, args) =>
+                {
+                    TabControl.SelectedItem = JobsTab;
+                };
             }
             catch (Exception e)
             {
@@ -568,6 +572,8 @@ namespace PETBrowser
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public event EventHandler TrackedJobsChanged;
+
         public List<Dataset> PetDatasetsList { get; set; }
         public ICollectionView PetDatasets { get; set; }
 
@@ -643,6 +649,17 @@ namespace PETBrowser
             JobStore.TrackedJobsChanged += (sender, args) =>
             {
                 JobsView.Refresh();
+                if (TrackedJobsChanged != null)
+                {
+                    TrackedJobsChanged(this, EventArgs.Empty);
+                }
+            };
+            JobStore.JobCompleted += (sender, args) =>
+            {
+                if (DatasetLoaded)
+                {
+                    LoadDataset(Store.DataDirectory, exception => Console.WriteLine(exception));
+                }
             };
         }
 

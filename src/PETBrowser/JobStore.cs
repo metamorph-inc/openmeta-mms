@@ -17,6 +17,18 @@ namespace PETBrowser
 
         public event EventHandler TrackedJobsChanged;
 
+        public class JobCompletedEventArgs : EventArgs
+        {
+            public Job Job { get; set; }
+
+            public JobCompletedEventArgs(Job job)
+            {
+                Job = job;
+            }
+        }
+
+        public event EventHandler<JobCompletedEventArgs> JobCompleted;
+
         private TaskScheduler UiTaskScheduler { get; set; }
 
         //Constructor MUST be called on UI thread (we capture the UI synchronization context for use later)
@@ -42,6 +54,20 @@ namespace PETBrowser
             InvokeOnMainThread(() =>
             {
                 TrackedJobs.Add(new JobViewModel(e.Job));
+                ((JobImpl) e.Job).JobStatusChanged += (job, status) =>
+                {
+                    InvokeOnMainThread(() =>
+                    {
+                        if (job.Status == Job.StatusEnum.Succeeded || job.IsFailed())
+                        {
+                            if (JobCompleted != null)
+                            {
+                                JobCompleted(this, new JobCompletedEventArgs(e.Job));
+                            }
+                        }
+                    });
+                    
+                };
                 InvokeTrackedJobsChanged();
             });
         }

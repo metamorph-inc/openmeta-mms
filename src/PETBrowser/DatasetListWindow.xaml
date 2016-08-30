@@ -51,8 +51,8 @@
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <TabControl Padding="0">
-            <TabItem Header="PET">
+        <TabControl x:Name="TabControl" Padding="0">
+            <TabItem x:Name="PetsTab" Header="PET">
                 <Grid Margin="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -138,7 +138,7 @@
                     <DockPanel x:Name="PetDetailsPanel" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Test Benches">
+            <TabItem x:Name="TestBenchesTab" Header="Test Benches">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -209,7 +209,7 @@
                     <DockPanel x:Name="TestBenchDetailsPanel" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Active Jobs">
+            <TabItem x:Name="JobsTab" Header="Active Jobs">
                 <DataGrid x:Name="JobGrid"
                               ItemsSource="{Binding JobsView, IsAsync=True}"
                               AutoGenerateColumns="False" 
