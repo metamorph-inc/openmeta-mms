@@ -821,7 +821,7 @@ namespace PETBrowser
             }
         }
 
-        private bool ContainsIgnoreCase(string source, string value)
+        private static bool ContainsIgnoreCase(string source, string value)
         {
             return CultureInfo.InvariantCulture.CompareInfo.IndexOf(source, value, CompareOptions.IgnoreCase) >= 0;
         }
