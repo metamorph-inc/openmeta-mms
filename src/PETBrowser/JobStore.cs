@@ -15,6 +15,11 @@ namespace PETBrowser
         private JobManagerFramework.JobManager Manager { get; set; }
         public List<JobViewModel> TrackedJobs { get; private set; }
 
+        public int Port
+        {
+            get { return Manager.Port; }
+        }
+
         public event EventHandler TrackedJobsChanged;
 
         public class JobCompletedEventArgs : EventArgs

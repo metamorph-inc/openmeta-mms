@@ -631,6 +631,20 @@ namespace PETBrowser
             set { PropertyChanged.ChangeAndNotify(ref _loadTotalCount, value, () => LoadTotalCount); }
         }
 
+        private string _projectPath;
+
+        public string ProjectPath
+        {
+            get { return _projectPath; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _projectPath, value, () => ProjectPath); }
+        }
+
+        public int ManagerPort
+        {
+            get { return JobStore.Port; }
+        }
+
         public DatasetListWindowViewModel()
         {
             Store = null;
@@ -638,6 +652,7 @@ namespace PETBrowser
             IsLoading = false;
             LoadProgressCount = 0;
             LoadTotalCount = 1;
+            ProjectPath = "No project loaded";
             PetDatasetsList = new List<Dataset>();
             PetDatasets = new ListCollectionView(PetDatasetsList);
 
@@ -670,6 +685,7 @@ namespace PETBrowser
             IsLoading = true;
             LoadProgressCount = 0;
             LoadTotalCount = 1;
+            ProjectPath = "No project loaded";
             PetDatasetsList.Clear();
             PetDatasets.Refresh();
             TestBenchDatasetsList.Clear();
@@ -721,6 +737,7 @@ namespace PETBrowser
                     TestBenchDatasetsList.AddRange(Store.TestbenchDatasets);
                     TestBenchDatasets.Refresh();
 
+                    ProjectPath = System.IO.Path.GetFullPath(path);
                     DatasetLoaded = true;
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext()); //this should run on the UI thread

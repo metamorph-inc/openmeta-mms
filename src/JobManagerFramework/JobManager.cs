@@ -85,6 +85,8 @@ namespace JobManagerFramework
 
         public const int DefaultPort = 35010;
 
+        public int Port { get; private set; }
+
         private TcpServerChannel ServerChannel { get; set; }
         private JobServerImpl Server { get; set; }
 
@@ -246,17 +248,17 @@ namespace JobManagerFramework
                 new System.Runtime.Remoting.Channels.Tcp.TcpClientChannel(clientTcpChannelProperties,
                     new BinaryClientFormatterSinkProvider()), false);
 
-            int port = preferredPort;
+            Port = preferredPort;
 
-            port = GetPort(port);
+            Port = GetPort(Port);
 
-            if (port == -1)
+            if (Port == -1)
             {
                 // there is no free tcp port
             }
 
             System.Collections.IDictionary TcpChannelProperties = new Dictionary<string, object>();
-            TcpChannelProperties["port"] = port;
+            TcpChannelProperties["port"] = Port;
             TcpChannelProperties["bindTo"] = System.Net.IPAddress.Loopback.ToString();
             ServerChannel = new System.Runtime.Remoting.Channels.Tcp.TcpServerChannel(TcpChannelProperties, serverProv);
             ChannelServices.RegisterChannel(ServerChannel, false);
