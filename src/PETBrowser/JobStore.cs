@@ -54,6 +54,11 @@ namespace PETBrowser
             Manager.ReRunJobs(new [] {j});
         }
 
+        public void AbortJob(Job j)
+        {
+            Manager.AbortJobs(new [] {j});
+        }
+
         private void Manager_JobAdded(object sender, JobManagerFramework.JobManager.JobAddedEventArgs e)
         {
             InvokeOnMainThread(() =>

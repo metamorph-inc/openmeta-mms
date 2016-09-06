@@ -480,13 +480,26 @@ namespace JobManagerFramework
          */
         public void AbortJobs(IEnumerable<Job> jobs)
         {
+            
             var toAbort = jobs.Where(x => new Job.StatusEnum[] {
-                    Job.StatusEnum.RunningOnServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer }.Contains(x.Status));
+                    Job.StatusEnum.RunningOnServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer, Job.StatusEnum.RunningLocal, Job.StatusEnum.QueuedLocal }.Contains(x.Status));
 
             foreach (var selectedJob in toAbort)
             {
-                // selectedJob.SubItems[Headers.Status.ToString()].Text = "Redownload Queued";
-                selectedJob.Status = Job.StatusEnum.AbortOnServerRequested;
+                if (new Job.StatusEnum[]
+                {
+                    Job.StatusEnum.RunningOnServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer
+                }.Contains(selectedJob.Status))
+                {
+                    // Cancel remote execution
+                    // selectedJob.SubItems[Headers.Status.ToString()].Text = "Redownload Queued";
+                    selectedJob.Status = Job.StatusEnum.AbortOnServerRequested;
+                }
+                else
+                {
+                    // Cancel local execution
+                    pool.AbortJob(selectedJob);
+                }
             }
             RestartMonitorTimer();
         }

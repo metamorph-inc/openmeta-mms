@@ -7,6 +7,8 @@ using System.Threading;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.Concurrent;
+using System.ComponentModel;
+using System.Management;
 using JobManager;
 
 namespace JobManagerFramework
@@ -130,9 +132,41 @@ namespace JobManagerFramework
             JobAdded.Set();
         }
 
+        public bool AbortJob(Job j)
+        {
+            lock (QueuedJobs)
+            {
+                Trace.TraceInformation(string.Format("Job Aborted in local pool: {0} {1}", j.Id, j.Title));
+
+                //Find job in queue and remove it if present
+                bool foundJob = QueuedJobs.Remove(j);
+                if (foundJob)
+                {
+                    j.Status = Job.StatusEnum.FailedAbortOnServer;
+                    return true;
+                }
+                else
+                {
+                    // Job not in queue; means it must be running
+                    var abortJobEvent = GetAbortJobEvent(j);
+                    if (abortJobEvent != null)
+                    {
+                        abortJobEvent.Set();
+                        return true;
+                    }
+                    else
+                    {
+                        Trace.TraceError("Attempted to abort job that appears to not be running");
+                        return false;
+                    }
+                }
+            }
+        }
+
         LinkedList<Job> QueuedJobs = new LinkedList<Job>();
         AutoResetEvent JobAdded = new AutoResetEvent(false);
         List<ManualResetEvent> RunningJobs = new List<ManualResetEvent>();
+        Dictionary<Job, ManualResetEvent> AbortJobEvents = new Dictionary<Job, ManualResetEvent>();
 
         private void JobRunner()
         {
@@ -212,6 +246,9 @@ namespace JobManagerFramework
                 using (StreamWriter stderr = new StreamWriter(Path.Combine(job.WorkingDirectory, "stderr.txt")))
                 using (StreamWriter stdout = new StreamWriter(Path.Combine(job.WorkingDirectory, "stdout.txt")))
                 using (proc0)
+                {
+                    var jobAborted = new ManualResetEvent(false);
+                    AddAbortJobEvent(job, jobAborted);
                     try
                     {
                         proc0.OutputDataReceived += ((sender, e) =>
@@ -266,7 +303,8 @@ namespace JobManagerFramework
                             commandToShowToUser = Path.Combine(job.WorkingDirectory, job.RunCommand);
                         }
 
-                        int iWaitHandle = WaitHandle.WaitAny(new WaitHandle[] { processExited, this.ShutdownPool });
+                        int iWaitHandle =
+                            WaitHandle.WaitAny(new WaitHandle[] {processExited, this.ShutdownPool, jobAborted});
                         if (iWaitHandle == 1)
                         {
                             // JobManager is closing
@@ -283,6 +321,22 @@ namespace JobManagerFramework
                                 writer.WriteLine("Execution was cancelled due to JobManager exit");
                             }
                             job.Status = Job.StatusEnum.FailedExecution;
+                        } else if (iWaitHandle == 2)
+                        {
+                            // Job aborted by user
+                            try
+                            {
+                                KillProcessAndChildren(proc0);
+                            }
+                            catch (System.InvalidOperationException)
+                            {
+                                // possible race between WaitAny and process exit
+                            }
+                            using (StreamWriter writer = new StreamWriter(failedLog))
+                            {
+                                writer.WriteLine("Execution was cancelled due to user abort");
+                            }
+                            job.Status = Job.StatusEnum.FailedAbortOnServer;
                         }
                         else if (File.Exists(failedLog))
                         {
@@ -293,7 +347,8 @@ namespace JobManagerFramework
                         {
                             using (StreamWriter writer = new StreamWriter(failedLog))
                             {
-                                writer.WriteLine(String.Format("\"{0}\" exited with non-zero code {1}", commandToShowToUser, proc0.ExitCode));
+                                writer.WriteLine(String.Format("\"{0}\" exited with non-zero code {1}",
+                                    commandToShowToUser, proc0.ExitCode));
                             }
                             job.Status = Job.StatusEnum.FailedExecution;
                         }
@@ -310,6 +365,11 @@ namespace JobManagerFramework
                         System.Diagnostics.Debug.WriteLine(ex);
                         Trace.TraceError(ex.ToString());
                     }
+                    finally
+                    {
+                        RemoveAndCloseAbortJobEvent(job);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -350,6 +410,75 @@ namespace JobManagerFramework
             lock (RunningJobs)
             {
                 return QueuedJobs.Count + RunningJobs.Where(e => e.WaitOne(0) == false).Count();
+            }
+        }
+
+        private void AddAbortJobEvent(Job job, ManualResetEvent ev)
+        {
+            lock (AbortJobEvents)
+            {
+                AbortJobEvents[job] = ev;
+            }
+        }
+
+        private void RemoveAndCloseAbortJobEvent(Job job)
+        {
+            lock (AbortJobEvents)
+            {
+                var abortJobEvent = GetAbortJobEvent(job);
+                if (abortJobEvent != null)
+                {
+                    AbortJobEvents.Remove(job);
+                    abortJobEvent.Close();
+                }
+            }
+        }
+
+        private ManualResetEvent GetAbortJobEvent(Job job)
+        {
+            lock (AbortJobEvents)
+            {
+                ManualResetEvent abortJobEvent;
+
+                var success = AbortJobEvents.TryGetValue(job, out abortJobEvent);
+
+                if (success)
+                {
+                    return abortJobEvent;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private static void KillProcessAndChildren(Process process)
+        {
+            KillProcessAndChildren(process.Id);
+        }
+
+        /// <summary>
+        /// Kill a process, and all of its children, grandchildren, etc.
+        /// </summary>
+        /// <param name="pid">Process ID.</param>
+        private static void KillProcessAndChildren(int pid)
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher
+              ("Select * From Win32_Process Where ParentProcessID=" + pid);
+            ManagementObjectCollection moc = searcher.Get();
+            foreach (var mo in moc)
+            {
+                KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+            }
+            try
+            {
+                Process proc = Process.GetProcessById(pid);
+                proc.Kill();
+            }
+            catch (ArgumentException)
+            {
+                // Process already exited.
             }
         }
     }

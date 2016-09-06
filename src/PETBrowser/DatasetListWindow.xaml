@@ -237,6 +237,7 @@
                     <DataGrid.Resources>
                         <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                             <MenuItem Header="Show in Explorer" Click="showJobInExplorer" IsEnabled="{Binding AllowReRun}"/>
+                            <MenuItem Header="Abort Job" Click="abortJob_Click"/>
                             <MenuItem Header="Re-run Job" Click="reRunJob_Click" IsEnabled="{Binding AllowReRun}"/>
                         </ContextMenu>
                     </DataGrid.Resources>
@@ -245,7 +246,7 @@
                     </DataGrid.HorizontalGridLinesBrush>
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
-                            <EventSetter Event="MouseDoubleClick" Handler="showJobInExplorer"></EventSetter>
+                            <EventSetter Event="MouseDoubleClick" Handler="abortJob_Click"></EventSetter>
                             <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Status}" Value="Ready">

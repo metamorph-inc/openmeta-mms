@@ -549,6 +549,13 @@ namespace PETBrowser
             ViewModel.JobStore.ReRunJob(selectedJob.Job);
         }
 
+        private void abortJob_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedJob = (JobViewModel)JobGrid.SelectedItem;
+
+            ViewModel.JobStore.AbortJob(selectedJob.Job);
+        }
+
         private void showJobInExplorer(object sender, RoutedEventArgs e)
         {
             try
