@@ -22,6 +22,8 @@ namespace PETBrowser
             get { return Job.IsFailed() || Job.Status == Job.StatusEnum.Succeeded; }
         }
 
+        public bool AllowAbort { get { return !AllowReRun; } }
+
         public JobViewModel(Job job)
         {
             Job = job;
@@ -33,6 +35,7 @@ namespace PETBrowser
             // Notify that Status and all dependent properties have changed
             PropertyChanged.Notify(() => Status);
             PropertyChanged.Notify(() => AllowReRun);
+            PropertyChanged.Notify(() => AllowAbort);
         }
     }
 }

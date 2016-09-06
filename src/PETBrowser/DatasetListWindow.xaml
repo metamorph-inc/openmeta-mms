@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <petBrowser:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
+            <petBrowser:CountAndBoolMultiValueConverter x:Key="CountAndBoolMultiValueConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <Window.Title>
@@ -216,7 +217,28 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="JobsTab" Header="Active Jobs">
-                <DataGrid x:Name="JobGrid"
+                <DockPanel Margin="2">
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                            <Button x:Name="abortJobButton" Content="Abort Selected Job"  Margin="0,10,5,10" Padding="5,3" Click="abortJob_Click">
+                                <Button.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource CountAndBoolMultiValueConverter}">
+                                        <Binding Path="SelectedItems.Count" ElementName="JobGrid" />
+                                        <Binding Path="SelectedItem.AllowAbort" ElementName="JobGrid" />
+                                    </MultiBinding>
+                                </Button.IsEnabled>
+                            </Button>
+                            <Button x:Name="openJobInExplorerButton" Content="Open Selected Job in Explorer"  Margin="5,10,10,10" Padding="5,3" Click="showJobInExplorer">
+                                <Button.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource CountAndBoolMultiValueConverter}">
+                                        <Binding Path="SelectedItems.Count" ElementName="JobGrid" />
+                                        <Binding Path="SelectedItem.AllowReRun" ElementName="JobGrid" />
+                                    </MultiBinding>
+                                </Button.IsEnabled>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                    <DataGrid x:Name="JobGrid"
                               ItemsSource="{Binding JobsView, IsAsync=True}"
                               AutoGenerateColumns="False" 
                               RowHeight="20" 
@@ -225,7 +247,6 @@
                               SelectionMode="Single"
                               GridLinesVisibility="Horizontal"
                               HeadersVisibility="Column"
-                              Margin="2"
                               CellStyle="{DynamicResource GridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Title}" ClipboardContentBinding="{x:Null}" Header="Title" IsReadOnly="True" Width="200"/>
@@ -246,7 +267,7 @@
                     </DataGrid.HorizontalGridLinesBrush>
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
-                            <EventSetter Event="MouseDoubleClick" Handler="abortJob_Click"></EventSetter>
+                            <EventSetter Event="MouseDoubleClick" Handler="showJobInExplorer"></EventSetter>
                             <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Status}" Value="Ready">
@@ -301,6 +322,7 @@
                         </Style>
                     </DataGrid.RowStyle>
                 </DataGrid>
+                </DockPanel>
             </TabItem>
         </TabControl>
     </DockPanel>
