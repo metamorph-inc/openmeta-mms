@@ -129,6 +129,8 @@ namespace JobManagerFramework
             Trace.TraceInformation(string.Format("JobEnqueued in local pool: {0} {1}", j.Id, j.Title));
 
             QueuedJobs.AddLast(j);
+            j.Status = Job.StatusEnum.QueuedLocal;
+
             JobAdded.Set();
         }
 

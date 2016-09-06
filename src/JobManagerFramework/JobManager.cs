@@ -482,7 +482,7 @@ namespace JobManagerFramework
         {
             
             var toAbort = jobs.Where(x => new Job.StatusEnum[] {
-                    Job.StatusEnum.RunningOnServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer, Job.StatusEnum.RunningLocal, Job.StatusEnum.QueuedLocal }.Contains(x.Status));
+                    Job.StatusEnum.RunningOnServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer, Job.StatusEnum.RunningLocal, Job.StatusEnum.QueuedLocal, Job.StatusEnum.Ready }.Contains(x.Status));
 
             foreach (var selectedJob in toAbort)
             {
