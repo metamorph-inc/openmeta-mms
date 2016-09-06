@@ -15,6 +15,18 @@ namespace PETBrowser
     /// </summary>
     public partial class App : Application
     {
+        [STAThread]
+        public static void Main()
+        {
+            if (!SingleInstanceClient.OpenBrowserIfRunning(Path.GetFullPath(".")))
+            {
+                //Application isn't already running; continue with startup
+                var app = new App();
+                app.InitializeComponent();
+                app.Run();
+            }
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);

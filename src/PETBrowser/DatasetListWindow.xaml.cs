@@ -41,6 +41,10 @@ namespace PETBrowser
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
+        private string initialWorkingDirectory;
+
+        private SingleInstanceManager instanceManager;
+
         void SetNativeEnabled(bool enabled)
         {
             var windowHandle = new WindowInteropHelper(this).Handle;
@@ -54,11 +58,35 @@ namespace PETBrowser
             set { DataContext = value; }
         }
 
-        public DatasetListWindow()
+        public DatasetListWindow() : this(null, null, ".")
+        {
+        }
+
+        public DatasetListWindow(JobStore jobStore, SingleInstanceManager instanceManager, string initialWorkingDirectory)
         {
             try
             {
-                this.ViewModel = new DatasetListWindowViewModel();
+                this.initialWorkingDirectory = initialWorkingDirectory;
+
+                this.ViewModel = new DatasetListWindowViewModel(jobStore);
+
+                if (instanceManager == null)
+                {
+                    this.instanceManager = new SingleInstanceManager();
+                    this.instanceManager.OnCreateForWorkingDirectory += (sender, args) =>
+                    {
+                        Task.Factory.StartNew(() =>
+                        {
+                            var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, args.WorkingDirectory);
+                            newDatasetListWindow.Show();
+                        }, new CancellationToken(), TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                    };
+                }
+                else
+                {
+                    this.instanceManager = instanceManager;
+                }
+
                 InitializeComponent();
                 this.ViewModel.TrackedJobsChanged += (sender, args) =>
                 {
@@ -77,7 +105,7 @@ namespace PETBrowser
             PetDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
             TestBenchDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
             //this.ViewModel.LoadDataset("C:\\source\\viz");
-            LoadDataset(".");
+            LoadDataset(initialWorkingDirectory);
         }
 
         private void LoadDataset(string path)
@@ -573,6 +601,12 @@ namespace PETBrowser
                 ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
             }
         }
+
+        private void NewWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, ".");
+            newDatasetListWindow.Show();
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
@@ -652,7 +686,7 @@ namespace PETBrowser
             get { return JobStore.Port; }
         }
 
-        public DatasetListWindowViewModel()
+        public DatasetListWindowViewModel(JobStore jobStore)
         {
             Store = null;
             DatasetLoaded = false;
@@ -668,7 +702,14 @@ namespace PETBrowser
             TestBenchDatasets = new ListCollectionView(TestBenchDatasetsList);
             TestBenchDatasets.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Descending));
 
-            JobStore = new JobStore();
+            if (jobStore == null)
+            {
+                JobStore = new JobStore();
+            }
+            else
+            {
+                JobStore = jobStore;
+            }
             JobsView = new ListCollectionView(JobStore.TrackedJobs);
             JobStore.TrackedJobsChanged += (sender, args) =>
             {

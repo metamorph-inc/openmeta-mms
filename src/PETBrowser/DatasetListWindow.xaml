@@ -23,6 +23,12 @@
     <DockPanel Background="#FFEEF5FD">
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar x:Name="toolBar" Band="1" BandIndex="1">
+                <Button x:Name="NewWindowButton" Click="NewWindowButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource FolderOpenIcon}" />
+                        <TextBlock Margin="3,0,0,0">New Window</TextBlock>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="SelectResultsFolderButton" Click="SelectResultsFolderButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource FolderOpenIcon}" />

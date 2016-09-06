@@ -258,6 +258,7 @@ namespace JobManagerFramework
             }
 
             System.Collections.IDictionary TcpChannelProperties = new Dictionary<string, object>();
+            TcpChannelProperties["name"] = "jobs";
             TcpChannelProperties["port"] = Port;
             TcpChannelProperties["bindTo"] = System.Net.IPAddress.Loopback.ToString();
             ServerChannel = new System.Runtime.Remoting.Channels.Tcp.TcpServerChannel(TcpChannelProperties, serverProv);
