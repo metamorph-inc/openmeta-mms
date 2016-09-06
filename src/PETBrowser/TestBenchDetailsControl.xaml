@@ -105,7 +105,7 @@
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending" />
                 <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Range}" Header="Range" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
@@ -118,7 +118,7 @@
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending" />
                 <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
             </DataGrid.Columns>
@@ -130,7 +130,7 @@
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.RowStyle>
@@ -146,7 +146,7 @@
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.RowStyle>

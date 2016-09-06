@@ -122,7 +122,7 @@
                                 <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="60"/>
                                 <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
-                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*" SortDirection="Descending" /> <!-- Note: data is actually sorted by the ListCollectionView, in code-behind -->
                             </DataGrid.Columns>
 
                             <DataGrid.RowStyle>
@@ -183,7 +183,7 @@
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="200"/>
                                 <DataGridTextColumn Binding="{Binding DesignName}" ClipboardContentBinding="{x:Null}" Header="Design" IsReadOnly="True" Width="120"/>
                                 <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
-                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*" SortDirection="Descending"/> <!-- Note: data is actually sorted by the ListCollectionView, in code-behind -->
                             </DataGrid.Columns>
                             <DataGrid.Resources>
                                 <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">

@@ -662,9 +662,11 @@ namespace PETBrowser
             ProjectPath = "No project loaded";
             PetDatasetsList = new List<Dataset>();
             PetDatasets = new ListCollectionView(PetDatasetsList);
+            PetDatasets.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Descending));
 
             TestBenchDatasetsList = new List<Dataset>();
             TestBenchDatasets = new ListCollectionView(TestBenchDatasetsList);
+            TestBenchDatasets.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Descending));
 
             JobStore = new JobStore();
             JobsView = new ListCollectionView(JobStore.TrackedJobs);

@@ -70,7 +70,7 @@
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Kind}" Header="Kind" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding MinFormatted, Mode=OneWay}" Header="Min" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding MaxFormatted, Mode=OneWay}" Header="Max" IsReadOnly="True"></DataGridTextColumn>
