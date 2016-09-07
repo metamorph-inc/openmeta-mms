@@ -96,6 +96,8 @@ namespace PETBrowser
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Trace.TraceError("Error occurred while creating window:");
+                Trace.TraceError(e.ToString());
                 throw e;
             }
         }
@@ -604,7 +606,16 @@ namespace PETBrowser
 
         private void NewWindowButton_Click(object sender, RoutedEventArgs e)
         {
-            var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, ".");
+            string datasetPath;
+            if (ViewModel.Store != null)
+            {
+                datasetPath = ViewModel.Store.DataDirectory;
+            }
+            else
+            {
+                datasetPath = ".";
+            }
+            var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, datasetPath);
             newDatasetListWindow.Show();
         }
     }
