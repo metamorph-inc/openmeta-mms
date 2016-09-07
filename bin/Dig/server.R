@@ -1,4 +1,6 @@
 library(shiny)
+library(plotly)
+library(DT)
 #library(ggplot2)
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
@@ -12,7 +14,7 @@ importData <- NULL
 
 shinyServer(function(input, output, session) {
 
-  importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, tier3 = FALSE)
+  importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE)
   
   session$onSessionEnded(function() {
     stopApp()
@@ -40,6 +42,7 @@ shinyServer(function(input, output, session) {
   {
     # raw = read.csv("../data.csv", fill=T)
     raw = read.csv("../../results/mergedPET.csv", fill=T)
+    # raw = iris
   }
   
   
@@ -72,7 +75,8 @@ shinyServer(function(input, output, session) {
                          "upperPanel",
                          "autoInfo",
                          "autoData",
-                         "autoRange")
+                         "autoRange",
+                         "viewAllFilters")
       
       tier1Selects <- c("colVarNum",
                         "display",
@@ -82,13 +86,16 @@ shinyServer(function(input, output, session) {
                         "colVarFactor",
                         "numDevs",
                         "pointSize",
-                        "pointStyle")
+                        "pointStyle",
+                        "radio",
+                        "weightMetrics")
                      
       tier1Colors <- c("normColor", 
                        "minColor", 
                        "maxColor", 
                        "midColor", 
-                       "highlightColor")
+                       "highlightColor",
+                       "rankColor")
       
       for(i in 1:length(tier1CheckBox)){
         current <- tier1CheckBox[i]
@@ -108,6 +115,7 @@ shinyServer(function(input, output, session) {
         trimmedValue <- gsub("^\\s+|\\s+$", "", importData[[current]])
         updateColourInput(session, current, value = trimmedValue)
       }
+      updateTabsetPanel(session, "inTabset", "Pairs Plot")
     }
   })
   
@@ -164,72 +172,34 @@ shinyServer(function(input, output, session) {
     }
   )
   
-  processRemoveOutliers <- function(condition){
-    data <- raw
-    
-    if(condition){
-      
-      for(column in 1:length(varNames)) {
-        
-        nname = varNames[column]
-        rng <- c(0,1)
-        
-        if((varClass[column]=="numeric" | varClass[column]=="integer")) {
-          suppressWarnings(stdDev <- sd(data[[nname]], na.rm = TRUE))
-          suppressWarnings(mean <- mean(data[[nname]], na.rm = TRUE))
-          rng[1] <- round(mean - as.numeric(input$numDevs)*stdDev, 6)
-          rng[2] <- round(mean + as.numeric(input$numDevs)*stdDev, 6)
-          if(varClass[column] == "integer"){
-            rng[2] <- round(rng[2])
-          }
-          above <- (data[[nname]] >= rng[1])
-          below <- (data[[nname]] <= rng[2])
-          inRange <- above & below | is.na(data[[nname]])
-          data <- subset(data, inRange)
-        }
-      }
-      
-    }
-    
-    data
-  }
-  
-  processRemoveMissing <- function(condition){
-    data <- raw
-    
-    if(condition){
-      
-      for(column in 1:length(varNames)) {
-        nname = varNames[column]
-        inRange <- !is.na(data[[nname]])
-        data <- subset(data, inRange)
-      }
-      
-    }
-    
-    data
-  }
-
-  
-  raw_rm_outliers <- reactive({
-    
-    print("In remove outliers")
-    
-    processRemoveOutliers(input$removeOutliers)
-    
-  })
-  
-  raw_rm_missing <- reactive({
-    
-    print("In remove missing")
-    
-    processRemoveMissing(input$removeMissing)
-    
-  })
-  
   raw_plus <- reactive({
     print("In raw plus")
-    data <- merge.data.frame(raw_rm_missing(), raw_rm_outliers())
+    data <- raw
+    
+    if(input$removeMissing){
+      #Filter out rows with missing data
+      data <- data[complete.cases(data),]
+      
+    }
+    
+    if(input$removeOutliers){
+      #Filter out rows by standard deviation
+      for(column in 1:length(varNum)) {
+        a <- sapply(data[varNum[column]], 
+          function(x) {
+            m <- mean(x, na.rm = TRUE)
+            s <- sd(x, na.rm = TRUE)
+            x >= m - input$numDevs*s &
+            x <= m + input$numDevs*s
+          }
+        )
+        data <- subset(data, a)
+        
+      }
+      
+    }
+    
+    data
   })
 
   # Pre-processing -----------------------------------------------------------
@@ -288,6 +258,7 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "colVarFactor", choices = varRangeFac())  
     updateSelectInput(session, "colVarNum", choices = varRangeNum())#, selected = varRangeNum()[c(1)])
     updateSelectInput(session, "display", choices = varRange(), selected = varRange()[c(1,2)])
+    updateSelectInput(session, "weightMetrics", choices = varNum, selected = NULL)
     updateSelectInput(session, "xInput", choices = varRange(), selected = varRange()[c(1)])
     updateSelectInput(session, "yInput", choices = varRange(), selected = varRange()[c(2)])
     })   
@@ -333,144 +304,257 @@ shinyServer(function(input, output, session) {
   print(paste("Finished Preprocessing the Data ----------------------------------------------------"))
   
   # Sliders ------------------------------------------------------------------
-  output$enums <- renderUI({
-    print("In render factor enums")
-    fluidRow(
-      lapply(1:length(varNames), function(column) {
-        isolate(currentVal <- input[[paste0('inp', column)]])
-        items <- names(table(raw_plus()[varNames[column]]))
-        if (varClass[column] == "factor" & length(items) > 1) {
-          isolate({
-            if(!is.null(currentVal) & length(currentVal) != length(items) & input$stickyFilters){
-              column(2, selectInput(paste0('inp', column),
-                                    varNames[column],
-                                    multiple = TRUE,
-                                    selectize = FALSE,
-                                    choices = items,
-                                    selected = currentVal)
-              )
-            }
-            else{
-              column(2, selectInput(paste0('inp', column),
-                                 varNames[column],
-                                 multiple = TRUE,
-                                 selectize = FALSE,
-                                 choices = items,
-                                 selected = items)
-              )
-            }
+  
+  output$filters <- renderUI({
+    req(varsList())
+    print("In render filters")
+    fullFilterUI()
+  })
+  
+  filterVars <- reactive({
+    req(input$display)
+    if(input$viewAllFilters)
+      match(varRange(), varNames)
+    else
+      varsList()
+  })
+  
+  fullFilterUI <- reactive({
+    vars <- filterVars()
+    data <- raw_plus()
+    
+    facVars <- NULL
+    intVars <- NULL
+    numVars <- NULL
+    
+    for(i in 1:length(vars)){
+      current <- vars[i]
+      if(varClass[current] == "factor")
+        facVars <- c(facVars, current)
+      else if(varClass[current] == "integer")
+        intVars <- c(intVars, current)
+      else if(varClass[current] == "numeric")
+        numVars <- c(numVars, current)
+    }
+    
+    isolate({
+      wellPanel(
+        fluidRow(
+          lapply(facVars, function(column) {
+              generateEnumUI(column)
           })
-        }
-      })
-    )
+        ),
+        fluidRow(
+          lapply(intVars, function(column) {
+            generateIntegerSliderUI(column)
+          }),
+          lapply(numVars, function(column) {
+            generateNumericSliderUI(column)
+          })
+        )
+      )
+    })
   })
   
-  output$sliders <- renderUI({
-    print("In render sliders")
-    fluidRow(
-      lapply(1:length(varNames), function(column) {
-        isolate(currentVal <- input[[paste0('inp', column)]])
-        
-        max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
-        min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
-        
-        isolate({
-        
-          if(varClass[column] == "numeric") {
-            
-            diff <- (max-min)
-            # print(paste(column, "min", min, "max", max, "diff", diff))
-            if (diff != 0) {
-              #print(paste(column, varNames[column], as.numeric(unname(rawAbsMax()[varNames[column]]))))
-              step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
-              # cat("step", diff*0.01, abs(min)*0.001, abs(max)*0.001, "\n", sep = " ")
-              
-              if(!is.null(currentVal) & input$stickyFilters){
-  
-                  sliderChange <- currentVal %in%  c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4))
-                  min = signif(min-step*10, digits = 4)
-                  max = signif(max+step*10, digits = 4)
-                  if(sliderChange[1] & sliderChange[2]){
-                    column(2, sliderInput(paste0('inp', column),
-                                       varNames[column],
-                                       step = signif(step, digits = 4),
-                                       min = min,
-                                       max = max,
-                                       value = currentVal)
-                    )
-                  }
-                  else {
-                    if(currentVal[1] < min){
-                      currentVal[1] <- min
-                    }
-                    if(currentVal[2] > max){
-                      currentVal[2] <- max
-                    }
-                    column(2, sliderInput(paste0('inp', column),
-                                  varNames[column],
-                                  step = signif(step, digits = 4),
-                                  min = min,
-                                  max = max,
-                                  value = currentVal)
-                    )
-                  }
-                }
-                else{
-                  column(2, sliderInput(paste0('inp', column),
-                                     varNames[column],
-                                     step = signif(step, digits = 4),
-                                     min = signif(min-step*10, digits = 4),
-                                     max = signif(max+step*10, digits = 4),
-                                     value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
-                  )
-                }
-              
-            }
-          } 
-          else {
-            if (varClass[column] == "integer") {
-              if (min != max) {
-                if(!is.null(currentVal) & input$stickyFilters){
-                  sliderChange <- currentVal %in%  c(min, max)
-                  if(sliderChange[1] & sliderChange[2]){
-                    column(2, sliderInput(paste0('inp', column),
-                                       varNames[column],
-                                       min = min,
-                                       max = max,
-                                       value = c(min, max))
-                    )
-                  }
-                  else {
-                    if(currentVal[1] < min){
-                      currentVal[1] <- min
-                    }
-                    if(currentVal[2] > max){
-                      currentVal[2] <- max
-                    }
-                    column(2, sliderInput(paste0('inp', column),
-                                       varNames[column],
-                                       min = min,
-                                       max = max,
-                                       value = currentVal)
-                    )
-                  }
-                }
-                
-                else{
-                  column(2, sliderInput(paste0('inp', column),
-                                     varNames[column],
-                                     min = min,
-                                     max = max,
-                                     value = c(min, max))
-                  )
-                }
-              }
-            }
-          }
-        })
-      })
+  generateEnumUI <- function(current) {
+    items <- names(table(raw_plus()[varNames[current]]))
+    
+    selectVal <- input[[paste0('inp', current)]]
+    if(is.null(selectVal) | !input$stickyFilters)
+      selectVal <- items
+    
+    column(2, selectInput(paste0('inp', current),
+                          varNames[current],
+                          multiple = TRUE,
+                          selectize = FALSE,
+                          choices = items,
+                          selected = selectVal)
     )
-  })
+    
+    
+  }
+  
+  generateNumericSliderUI <- function(current) {
+    
+    max <- as.numeric(unname(rawAbsMax()[varNames[current]]))
+    min <- as.numeric(unname(rawAbsMin()[varNames[current]]))
+    step <- max((max-min)*0.01, abs(min)*0.001, abs(max)*0.001)
+    
+    if (min != max) {
+    
+      sliderVal <- input[[paste0('inp', current)]]
+      if(is.null(sliderVal) | !input$stickyFilters)
+        sliderVal <- c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4))
+      
+      column(2, sliderInput(paste0('inp', current),
+                            varNames[current],
+                            step = signif(step, digits = 4),
+                            min = signif(min-step*10, digits = 4),
+                            max = signif(max+step*10, digits = 4),
+                            value = sliderVal)
+      )
+    }
+  }
+  
+  generateIntegerSliderUI <- function(current) {
+    
+    max <- as.numeric(unname(rawAbsMax()[varNames[current]]))
+    min <- as.numeric(unname(rawAbsMin()[varNames[current]]))
+    
+    if(min != max) {
+      
+      sliderVal <- input[[paste0('inp', current)]]
+      if(is.null(sliderVal) | !input$stickyFilters)
+        sliderVal <- c(min, max)
+      
+      column(2, sliderInput(paste0('inp', current),
+                            varNames[current],
+                            min = min,
+                            max = max,
+                            value = sliderVal)
+      )
+    }
+    
+  }
+  
+  # output$enums <- renderUI({
+  #   print("In render factor enums")
+  #   fluidRow(
+  #     lapply(1:length(varNames), function(column) {
+  #       isolate(currentVal <- input[[paste0('inp', column)]])
+  #       items <- names(table(raw_plus()[varNames[column]]))
+  #       if (varClass[column] == "factor" & length(items) > 1) {
+  #         isolate({
+  #           if(!is.null(currentVal) & length(currentVal) != length(items) & input$stickyFilters){
+  #             column(2, selectInput(paste0('inp', column),
+  #                                   varNames[column],
+  #                                   multiple = TRUE,
+  #                                   selectize = FALSE,
+  #                                   choices = items,
+  #                                   selected = currentVal)
+  #             )
+  #           }
+  #           else{
+  #             column(2, selectInput(paste0('inp', column),
+  #                                varNames[column],
+  #                                multiple = TRUE,
+  #                                selectize = FALSE,
+  #                                choices = items,
+  #                                selected = items)
+  #             )
+  #           }
+  #         })
+  #       }
+  #     })
+  #   )
+  # })
+  # 
+  # output$sliders <- renderUI({
+  #   print("In render sliders")
+  #   fluidRow(
+  #     lapply(1:length(varNames), function(column) {
+  #       isolate(currentVal <- input[[paste0('inp', column)]])
+  #       
+  #       max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
+  #       min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
+  #       
+  #       isolate({
+  #       
+  #         if(varClass[column] == "numeric") {
+  #           
+  #           diff <- (max-min)
+  #           # print(paste(column, "min", min, "max", max, "diff", diff))
+  #           if (diff != 0) {
+  #             #print(paste(column, varNames[column], as.numeric(unname(rawAbsMax()[varNames[column]]))))
+  #             step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
+  #             # cat("step", diff*0.01, abs(min)*0.001, abs(max)*0.001, "\n", sep = " ")
+  #             
+  #             if(!is.null(currentVal) & input$stickyFilters){
+  # 
+  #                 sliderChange <- currentVal %in%  c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4))
+  #                 min = signif(min-step*10, digits = 4)
+  #                 max = signif(max+step*10, digits = 4)
+  #                 if(sliderChange[1] & sliderChange[2]){
+  #                   column(2, sliderInput(paste0('inp', column),
+  #                                      varNames[column],
+  #                                      step = signif(step, digits = 4),
+  #                                      min = min,
+  #                                      max = max,
+  #                                      value = currentVal)
+  #                   )
+  #                 }
+  #                 else {
+  #                   if(currentVal[1] < min){
+  #                     currentVal[1] <- min
+  #                   }
+  #                   if(currentVal[2] > max){
+  #                     currentVal[2] <- max
+  #                   }
+  #                   column(2, sliderInput(paste0('inp', column),
+  #                                 varNames[column],
+  #                                 step = signif(step, digits = 4),
+  #                                 min = min,
+  #                                 max = max,
+  #                                 value = currentVal)
+  #                   )
+  #                 }
+  #               }
+  #               else{
+  #                 column(2, sliderInput(paste0('inp', column),
+  #                                    varNames[column],
+  #                                    step = signif(step, digits = 4),
+  #                                    min = signif(min-step*10, digits = 4),
+  #                                    max = signif(max+step*10, digits = 4),
+  #                                    value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
+  #                 )
+  #               }
+  #             
+  #           }
+  #         } 
+  #         else {
+  #           if (varClass[column] == "integer") {
+  #             if (min != max) {
+  #               if(!is.null(currentVal) & input$stickyFilters){
+  #                 sliderChange <- currentVal %in%  c(min, max)
+  #                 if(sliderChange[1] & sliderChange[2]){
+  #                   column(2, sliderInput(paste0('inp', column),
+  #                                      varNames[column],
+  #                                      min = min,
+  #                                      max = max,
+  #                                      value = c(min, max))
+  #                   )
+  #                 }
+  #                 else {
+  #                   if(currentVal[1] < min){
+  #                     currentVal[1] <- min
+  #                   }
+  #                   if(currentVal[2] > max){
+  #                     currentVal[2] <- max
+  #                   }
+  #                   column(2, sliderInput(paste0('inp', column),
+  #                                      varNames[column],
+  #                                      min = min,
+  #                                      max = max,
+  #                                      value = currentVal)
+  #                   )
+  #                 }
+  #               }
+  #               
+  #               else{
+  #                 column(2, sliderInput(paste0('inp', column),
+  #                                    varNames[column],
+  #                                    min = min,
+  #                                    max = max,
+  #                                    value = c(min, max))
+  #                 )
+  #               }
+  #             }
+  #           }
+  #         }
+  #       })
+  #     })
+  #   )
+  # })
   
   output$constants <- renderUI({
     print("In render constants")
@@ -497,7 +581,9 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  resetDefaultSliders <- observeEvent(input$resetSliders, {
+  
+  
+  observeEvent(input$resetSliders, {
     print("In resetDefaultSliders()")
     for(column in 1:length(varNames)) {
       if(varClass[column] == "numeric") {
@@ -523,7 +609,7 @@ shinyServer(function(input, output, session) {
       }
     }
   })
-  
+    
   filterData <- reactive({
     print("In filterData()")
     data <- raw_plus()
@@ -628,6 +714,12 @@ shinyServer(function(input, output, session) {
              data$color[xRange & yRange] <- input$highlightColor #light blue
            }
          }
+         else {
+           if (input$colType == "Ranked"){
+             selected <- isolate(input$rankTable_rows_selected)
+             data[input$rankTable_rows_selected, "color"] <- input$rankColor
+           }
+         }
        }
      }
     print("Data Colored")
@@ -673,22 +765,24 @@ shinyServer(function(input, output, session) {
   
   pairsTrendline <- function(...){
     print("In pairs trendline")
+    
     if(input$upperPanel) {
       if(input$trendLines) {
-        pairs(pairs_data()[pairs_vars()], lower.panel = panel.smooth, upper.panel = panel.smooth, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
+        p <- pairs(pairs_data()[pairs_vars()], lower.panel = panel.smooth, upper.panel = panel.smooth, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
       }
       else {
-        pairs(pairs_data()[pairs_vars()], col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
+        p <- pairs(pairs_data()[pairs_vars()], col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
       }
     }
     else {
       if(input$trendLines) {
-        pairs(pairs_data()[pairs_vars()], lower.panel = panel.smooth, upper.panel = NULL, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
+        p <- pairs(pairs_data()[pairs_vars()], lower.panel = panel.smooth, upper.panel = NULL, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
       }
       else {
-        pairs(pairs_data()[pairs_vars()], upper.panel = NULL, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
+        p <- pairs(pairs_data()[pairs_vars()], upper.panel = NULL, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
       }
     }
+    
   }
   
   output$pairsDisplay <- renderUI({
@@ -700,8 +794,8 @@ shinyServer(function(input, output, session) {
     
     print("In render plot")
     
-    output$displayVars <- renderText("")
-    output$filterVars <- renderText("")
+    output$displayError <- renderText("")
+    output$filterError <- renderText("")
     
     if (length(input$display) >= 2 & nrow(filterData()) > 0) {
       print("Rendering Plot.")
@@ -710,12 +804,12 @@ shinyServer(function(input, output, session) {
     }
     else {
       if (nrow(filterData()) == 0) {
-        output$filterVars <- 
+        output$filterError <- 
           renderText(
             "No data points fit the current filtering scheme")
       }
       if (length(input$display) < 2) {
-        output$displayVars <- 
+        output$displayError <- 
           renderText(
             "Please select two or more display variables.")
       }
@@ -798,16 +892,12 @@ shinyServer(function(input, output, session) {
         ylimits <- xlimits        
       }
     }
-    # print("Printing vars")
-    # print(x_var)
-    # print(y_var)
-    # print("Done printing vars")
   })
   
   
   varsList <- reactive({
     print("Getting Variable List.")
-    idx = 0
+    idx = NULL
     for(choice in 1:length(input$display)) {
       mm <- match(input$display[choice],varNames)
       if(mm > 0) { idx <- c(idx,mm) }
@@ -817,7 +907,6 @@ shinyServer(function(input, output, session) {
   })
   
   slowVarsList <- eventReactive(input$renderPlot, {
-    # print(paste("input$renderPlot:", input$renderPlot))
     print("Getting Variable List.")
     idx = 0
     for(choice in 1:length(input$display)) {
@@ -834,22 +923,33 @@ shinyServer(function(input, output, session) {
   
   output$stats <- renderText({
     print("In render stats")
-    if(input$autoInfo == TRUE){
-      table <- infoTable()
+    if(nrow(filterData()) > 0){
+      if(input$autoInfo == TRUE){
+        table <- infoTable()
+      }
+      else {
+        table <- slowInfoTable()
+      }
     }
-    else {
-      table <- slowInfoTable()
-    }
+    else
+      table <- "No data points fit the filtering scheme"
     if(importFlags$tier1){
       importFlags$tier1 <- FALSE
       importFlags$tier2 <- TRUE
+      importFlags$ranking <- TRUE
     }
     table
-  })
+})
 
   infoTable <- function(...){
     print("In info table")
-    tb <- table(factor(colorData()$color, c(input$midColor, input$minColor, input$highlightColor, input$maxColor, input$normColor)))
+    tb <- table(factor(colorData()$color, 
+                       c(input$midColor, 
+                         input$minColor, 
+                         input$highlightColor, 
+                         input$rankColor,
+                         input$maxColor, 
+                         input$normColor)))
     if (input$colType == 'Max/Min') {
       paste0("Total Points: ", nrow(raw),
              "\nCurrent Points: ", nrow(filterData()),
@@ -882,8 +982,13 @@ shinyServer(function(input, output, session) {
     else if(input$colType == 'Highlighted') {
       paste0("Total Points: ", nrow(raw),
              "\nCurrent Points: ", nrow(filterData()),
-             "\nColored Points: ", sum(tb[[input$highlightColor]], tb[[input$normColor]]),
              "\nHighlighted Points: ", tb[[input$highlightColor]]
+      )
+    }
+    else if(input$colType == 'Ranked') {
+      paste0("Total Points: ", nrow(raw),
+             "\nCurrent Points: ", nrow(filterData()),
+             "\nRanked Points: ", tb[[input$rankColor]]
       )
     }
     else{
@@ -961,6 +1066,190 @@ shinyServer(function(input, output, session) {
       data <- slowFilterData()
     }
   })
+  
+  # Data Ranking Tab ---------------------
+  
+  metricsList <- reactive({
+    idx = NULL
+    req(input$weightMetrics)
+    print("Getting Metrics List.")
+    for(choice in 1:length(input$weightMetrics)) {
+      mm <- match(input$weightMetrics[choice],varNames)
+      if(mm > 0) { idx <- c(idx,mm) }
+    }
+    print(idx)
+    idx
+  })
+  
+  
+  observeEvent(input$clearMetrics, {
+    updateSelectInput(session, "weightMetrics", choices = varNum, selected = NULL) 
+  })
+  
+  output$rankPieChart <- renderPlotly({
+    
+    weights <- unlist(lapply(metricsList(), function(x) input[[paste0('rnk', x)]]))
+    totalWeight <- 0
+    for(i in 1:length(weights)){
+      totalWeight <- totalWeight + weights[i]
+    }
+    p <- plot_ly(values = 0, type = "pie")
+    req(totalWeight)
+    if(totalWeight > 0){
+      print("In Render Plotly Pie Chart")
+      slices <- unlist(lapply(weights, function(x) x/totalWeight))
+      lbls <- unlist(lapply(metricsList(), function(x) varNames[x]))
+      ind_zeros <- which(slices %in% 0)
+      if(length(ind_zeros) > 0){
+        slices <- slices[-ind_zeros]
+        lbls <- lbls[-ind_zeros]
+      }
+      p <- plot_ly(pull = 0.1, labels = lbls, values = slices, type = "pie") 
+    }
+    p %>% layout(title = "Distribution of Weighted Metrics")
+  })
+  
+  generateMetricUI <- function(current, slider, radioSel, radioType, textUtil) {
+    
+    if(missing(slider) & missing(radioSel) & missing(radioType) & missing(textUtil)){
+      sliderVal <- input[[paste0('rnk', current)]]
+      if(is.null(sliderVal))
+        sliderVal <- 1
+      
+      selVal <- input[[paste0('sel', current)]]
+      if(is.null(selVal))
+        selVal <- "Min"
+      
+      typeVal <- input[[paste0('type', current)]]
+      if(is.null(typeVal))
+        typeVal <- "Weight"
+      
+      utilVal <- input[[paste0('util', current)]]
+      if(is.null(utilVal))
+        utilVal <- NULL
+    }
+    else{
+      sliderVal <- slider
+      selVal <- radioSel
+      typeVal <- radioType
+      utilVal <- textUtil
+    }
+    
+    weightCondition <- toString(paste0("input.type", current, " == ", "'Weight'"))
+    functionCondition <- toString(paste0("input.type", current, " == ", "'Function'"))
+      
+    column(3, 
+      h4(varNames[current]),
+      radioButtons(paste0('type', current),
+                   "Score By:",
+                   choices = c("Weight", "Function"),
+                   selected = typeVal),
+      conditionalPanel(condition = weightCondition, 
+        radioButtons(paste0('sel', current), 
+                     "Weight:",
+                     choices = c("Min", "Max"),
+                     selected = selVal,
+                     inline = TRUE),
+        sliderInput(paste0('rnk', current),
+                    NULL,
+                    step = 0.01,
+                    min = 0,
+                    max = 1,
+                    value = sliderVal)
+      ),
+      conditionalPanel(condition = functionCondition,
+        textInput(paste0('util', current),
+                  "Function:",
+                  utilVal,
+                  placeholder = "e.g. > 10 & < 20; >=20"
+        )
+      )
+    )
+  }
+  
+  fullMetricUI <- reactive({
+    if(!importFlags$ranking){
+      fluidRow(
+        lapply(metricsList(), function(column) {
+          generateMetricUI(column)
+        })
+      )
+    }
+    else{
+      fluidRow(
+        lapply(metricsList(), function(column) {
+          importedSlider <- importData[[paste0('rnk', column)]]
+          importedRadioSel <- importData[[paste0('sel', column)]]
+          importedRadioType <- importData[[paste0('type', column)]]
+          importedUtil <- importData[[paste0('util', column)]]
+          generateMetricUI(column, 
+                           importedSlider, 
+                           importedRadioSel, 
+                           importedRadioType, 
+                           importedUtil)
+        })
+      )
+    }
+  })
+
+  output$rankings <- renderUI({
+    req(metricsList())
+    print("In render ranking sliders")
+    fullMetricUI()
+  })
+  
+  getUtilityFunction <- function(current){
+    funcInput <- input[[paste0("util", current)]]
+    unlist(strsplit(gsub(" ", "", funcInput, fixed = TRUE), ";"))
+  }
+  
+  rankData <- reactive({
+    req(metricsList())
+    print("In calculate ranked data")
+    data <- filterData()[varNum]
+    normData <- data.frame(t(t(data)/apply(data,2,max)))
+    scoreData <- sapply(row.names(normData) ,function(x) 0)
+    
+    for(i in 1:length(metricsList())) {
+      column <- varNames[metricsList()[i]]
+      scoreType <- input[[paste0('type', toString(metricsList()[i]))]]
+      req(scoreType)
+      if(scoreType == "Weight"){
+        rnkName <- paste0("rnk", toString(metricsList()[i]))
+        weight <- input[[rnkName]]
+        req(weight)
+        radioSelect <- paste0("sel", toString(metricsList()[i]))
+        if(input[[radioSelect]] == "Min"){
+          colMin <- min(normData[column])
+          for(j in 1:length(unlist(normData[column]))) {
+            item <- normData[j,column]
+            normData[j,column] <- 1 -item + colMin
+          }
+        }
+        scoreData <- scoreData + unlist(unname(weight*normData[column]))
+      }
+    }
+    importFlags$ranking <- FALSE
+    scoreData <- sort(scoreData, decreasing = TRUE)
+    filterData()[names(scoreData),]
+  })
+  
+  output$rankTable <- DT::renderDataTable({
+    print("In render ranked data table")
+    rankData()
+  })
+  
+  observeEvent(input$colorRanked, {
+    req(input$rankTable_rows_selected)
+    updateTabsetPanel(session, "inTabset", selected = "Pairs Plot")
+    updateSelectInput(session, "colType", selected = "Ranked")
+  })
+  
+  output$exportPoints <- downloadHandler(
+    filename = function() { paste('ranked_points-', Sys.Date(), '.csv', sep='') },
+    content = function(file) { 
+      write.csv(filterData()[input$rankTable_rows_selected, ], file) }
+  )
   
   # Ranges Table Tab --------------------------------------------------------------------------------
   slowRangeData <- eventReactive(input$updateRanges, {

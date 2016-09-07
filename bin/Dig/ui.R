@@ -1,4 +1,5 @@
 library(shiny)
+library(plotly)
 require(shinyjs)
 
 # Define UI for PET Design Space Browser application
@@ -23,7 +24,7 @@ shinyUI(fluidPage(
               br()
             ), hr(),
               h4("Data Coloring"),
-              selectInput("colType", "Type:", choices = c("None", "Max/Min", "Discrete", "Highlighted"), selected = "None"),
+              selectInput("colType", "Type:", choices = c("None", "Max/Min", "Discrete", "Highlighted", "Ranked"), selected = "None"),
               conditionalPanel(
                 condition = "input.colType == 'Max/Min'",
                 selectInput("colVarNum", "Colored Variable:", c()),
@@ -43,7 +44,7 @@ shinyUI(fluidPage(
                             actionButton("updateStats", "Update"),
                             br()),  hr(),
             h4("Download"),
-            downloadButton('exportData', 'Dataset'),
+            downloadButton('exportData', 'Dataset'), 
             paste("          "),
             downloadButton('exportPlot', 'Plot'), hr(),
             actionButton("resetOptions", "Reset to Default Options")
@@ -53,8 +54,6 @@ shinyUI(fluidPage(
             uiOutput("displayError"),   
             uiOutput("filterError"),
             uiOutput("pairsDisplay")
-          
-          #h4(textOutput("filterVars"), align = "center")
         )
       )
     ),
@@ -96,6 +95,25 @@ shinyUI(fluidPage(
           dataTableOutput(outputId="table")
         )
       )
+    ),
+    tabPanel("Data Ranking",
+             wellPanel(
+               fluidRow(
+                 column(4, selectInput("weightMetrics",
+                             "Select Weighted Metrics:",
+                             c(),
+                             multiple = TRUE),
+                        actionButton("clearMetrics", "Clear Metrics")),
+                 column(8, plotlyOutput("rankPieChart")),
+                 br(), br(), br()
+               ),
+               uiOutput("rankings"), 
+               downloadButton("exportPoints", "Export Selected Points"), 
+               actionButton("colorRanked", "Color by Selected Rows"), 
+               br(), hr(),
+               h4(strong("Ranked Data"), align = "center"),
+               DT::dataTableOutput("rankTable")
+             )
     ),
     tabPanel("Ranges",
      wellPanel(
@@ -173,7 +191,11 @@ shinyUI(fluidPage(
             fluidRow(
               column(4, tags$div(title = "Color of highlighted data points.",
                                  colourInput("highlightColor", "Highlighted", "#377EB8")))
-            ), hr(),
+            ),
+            fluidRow(
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("rankColor", "Ranked", "#D13ABA")))
+            ),hr(),
 
 
             tags$div(title = "Return to default settings.",
@@ -193,8 +215,8 @@ shinyUI(fluidPage(
             hr(),
             
             h4("About"),
-            p(strong("Version:"), "v1.2.7"),
-            p(strong("Date:"), "8/22/2016"),
+            p(strong("Version:"), "v1.2.10"),
+            p(strong("Date:"), "9/2/2016"),
             p(strong("Developer:"), "Metamorph Software"),
             p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )
@@ -204,14 +226,15 @@ shinyUI(fluidPage(
   id = "inTabset"),
   h3("Filter Data:"),
   fluidRow(
-    column(2,
-      tags$div(title = "Return sliders to default state.",
-               actionButton("resetSliders", "Reset Filters"))
+    column(3,
+      tags$div(title = "Activate to show filters for all dataset variables.",
+               checkboxInput("viewAllFilters", "View All Filters", value = FALSE)),
+      tags$div(title = "Return visible sliders to default state.",
+               actionButton("resetSliders", "Reset Visible Filters"))
     ),
-    br(), br()
+    br(), br(), br(), br(), br()
   ),
-  uiOutput("enums"),
-  uiOutput("sliders"),
+  uiOutput("filters"),
   h3("Constants:"),
   uiOutput("constants")
   
