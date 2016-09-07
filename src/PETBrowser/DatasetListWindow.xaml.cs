@@ -92,6 +92,7 @@ namespace PETBrowser
                 {
                     TabControl.SelectedItem = JobsTab;
                 };
+                Console.WriteLine("Results browser window opened");
             }
             catch (Exception e)
             {
@@ -651,7 +652,6 @@ namespace PETBrowser
 
             set
             {
-                Console.WriteLine("loaded = " + value);
                 PropertyChanged.ChangeAndNotify(ref _datasetLoaded, value, () => DatasetLoaded);
             }
         }
