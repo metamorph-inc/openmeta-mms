@@ -41,7 +41,7 @@ shinyServer(function(input, output, session) {
   else
   {
     # raw = read.csv("../data.csv", fill=T)
-    raw = read.csv("../../results/mergedPET.csv", fill=T)
+    raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # raw = iris
   }
   
@@ -1136,9 +1136,20 @@ shinyServer(function(input, output, session) {
                   step = 0.01,
                   min = 0,
                   max = 1,
-                  value = sliderVal)
+                  value = sliderVal),
+      utilityPlot(current)
     )
   }
+  
+  utilityPlot <- function(current){
+    renderPlotly({
+      plot_ly(x = c(min(filterData()[[varNames[current]]]),
+                     max(filterData()[[varNames[current]]])),
+                   y = c(0,1))
+    })
+  }
+  
+  
   
   fullMetricUI <- reactive({
     if(!importFlags$ranking){
