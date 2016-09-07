@@ -54,6 +54,7 @@ namespace PETBrowser
             Trace.Listeners.Add(fileTL);
 
             //Trace.TraceInformation(META.Logger.Header());
+            Console.WriteLine("Results Browser has started");
             Trace.TraceInformation("Results Browser launched");
         }
     }

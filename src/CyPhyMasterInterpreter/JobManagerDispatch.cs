@@ -187,7 +187,7 @@ namespace CyPhyMasterInterpreter
                 proc.StartInfo.RedirectStandardOutput = true;
                 proc.StartInfo.WorkingDirectory = projectDirectory;
                 proc.Start();
-                proc.WaitForInputIdle(10 * 1000);
+                proc.WaitForInputIdle(20 * 1000);
                 proc.StandardOutput.ReadLine(); // matches Console.Out.WriteLine("JobManager has started"); in JobManager
                 //System.Threading.Thread.Sleep(3 * 1000);
             }
