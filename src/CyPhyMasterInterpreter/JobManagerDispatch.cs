@@ -6,6 +6,7 @@ using JobManager;
 using META;
 using System.IO;
 using System.Diagnostics;
+using System.Net.Sockets;
 using System.Reflection;
 
 namespace CyPhyMasterInterpreter
@@ -147,8 +148,28 @@ namespace CyPhyMasterInterpreter
             catch (System.Net.Sockets.SocketException)
             {
                 this.StartJobManager(projectDirectory);
-                manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
-                sot = manager.CreateSoT();
+
+                // Retry three times; rethrow the last socket exception if it continues to fail
+                var retryCount = 0;
+                while (true)
+                {
+                    retryCount++;
+                    try
+                    {
+                        manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
+                        sot = manager.CreateSoT();
+                        break;
+                    }
+                    catch (SocketException e)
+                    {
+                        if (retryCount > 3)
+                        {
+                            throw;
+                        }
+
+                        System.Threading.Thread.Sleep(3 * 1000);
+                    }
+                }
             }
             return sot;
         }
@@ -164,8 +185,28 @@ namespace CyPhyMasterInterpreter
             catch (System.Net.Sockets.SocketException)
             {
                 this.StartJobManager(projectDirectory);
-                manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
-                j = manager.CreateJob();
+
+                // Retry three times; rethrow the last socket exception if it continues to fail
+                var retryCount = 0;
+                while(true)
+                {
+                    retryCount++;
+                    try
+                    {
+                        manager = (JobServer) Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
+                        j = manager.CreateJob();
+                        break;
+                    }
+                    catch (SocketException e)
+                    {
+                        if (retryCount > 3)
+                        {
+                            throw;
+                        }
+
+                        System.Threading.Thread.Sleep(3*1000);
+                    }
+                }
             }
             return j;
         }
