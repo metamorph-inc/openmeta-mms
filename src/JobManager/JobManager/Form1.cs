@@ -510,6 +510,7 @@ namespace JobManager
                             break;
                         case Job.StatusEnum.Failed:
                         case Job.StatusEnum.FailedAbortOnServer:
+                        case Job.StatusEnum.FailedAbortByUser:
                         case Job.StatusEnum.FailedExecution:
                         case Job.StatusEnum.FailedToUploadServer:
                         case Job.StatusEnum.FailedToDownload:

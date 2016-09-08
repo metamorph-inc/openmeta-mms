@@ -321,7 +321,10 @@
                                 <DataTrigger Binding="{Binding Status}" Value="FailedToDownload">
                                     <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Status}" Value="AbortOnServerRequested">
+                                    <DataTrigger Binding="{Binding Status}" Value="FailedAbortByUser">
+                                        <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="AbortOnServerRequested">
                                     <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                 </DataTrigger>
                             </Style.Triggers>
