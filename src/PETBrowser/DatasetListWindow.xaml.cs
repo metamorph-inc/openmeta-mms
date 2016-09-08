@@ -77,6 +77,33 @@ namespace PETBrowser
                     {
                         Task.Factory.StartNew(() =>
                         {
+                            // Try and locate a window that already contains this working directory; raise it if one exists,
+                            // rather than creating a new one.
+                            foreach (var window in Application.Current.Windows)
+                            {
+                                var datasetWindow = window as DatasetListWindow;
+                                if (datasetWindow != null && datasetWindow.Visibility == Visibility.Visible)
+                                {
+                                    try
+                                    {
+                                        var windowFullPath =
+                                            System.IO.Path.GetFullPath(datasetWindow.ViewModel.Store.DataDirectory);
+                                        var newDirectoryFullPath = System.IO.Path.GetFullPath(args.WorkingDirectory);
+
+                                        if(windowFullPath == newDirectoryFullPath) // TODO: better way to check for path equality?
+                                        {
+                                            datasetWindow.Refresh();
+                                            datasetWindow.Activate();
+                                            return;
+                                        }
+                                    }
+                                    catch (Exception)
+                                    {
+                                        //quietly fail; if GetFullPath fails on either path, we don't really care (just move on to the next window)
+                                    }
+                                }
+                            }
+
                             var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, args.WorkingDirectory);
                             newDatasetListWindow.Show();
                             newDatasetListWindow.Activate();
@@ -249,6 +276,11 @@ namespace PETBrowser
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Refresh();
+        }
+
+        public void Refresh()
         {
             LoadDataset(ViewModel.Store.DataDirectory);
         }
