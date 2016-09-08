@@ -115,5 +115,13 @@ namespace PETBrowser
                 OnCreateForWorkingDirectory(this, new OnCreateForWorkingDirectoryEventArgs(workingDirectory));
             }
         }
+
+        /**
+         * Required to prevent remote object from being destroyed after timeout (probably five minutes)
+         */
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
     }
 }

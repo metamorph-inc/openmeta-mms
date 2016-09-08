@@ -144,7 +144,7 @@ namespace JobManagerFramework
                 bool foundJob = QueuedJobs.Remove(j);
                 if (foundJob)
                 {
-                    j.Status = Job.StatusEnum.FailedAbortOnServer;
+                    j.Status = Job.StatusEnum.FailedAbortByUser;
                     return true;
                 }
                 else
@@ -338,7 +338,7 @@ namespace JobManagerFramework
                             {
                                 writer.WriteLine("Execution was cancelled due to user abort");
                             }
-                            job.Status = Job.StatusEnum.FailedAbortOnServer;
+                            job.Status = Job.StatusEnum.FailedAbortByUser;
                         }
                         else if (File.Exists(failedLog))
                         {
