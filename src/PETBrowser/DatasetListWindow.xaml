@@ -25,10 +25,11 @@
             <ToolBar x:Name="toolBar" Band="1" BandIndex="1">
                 <Button x:Name="NewWindowButton" Click="NewWindowButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource FolderOpenIcon}" />
+                        <Image Source="{StaticResource NewWindowIcon}" />
                         <TextBlock Margin="3,0,0,0">New Window</TextBlock>
                     </StackPanel>
                 </Button>
+                <Separator />
                 <Button x:Name="SelectResultsFolderButton" Click="SelectResultsFolderButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource FolderOpenIcon}" />
@@ -234,14 +235,7 @@
                                     </MultiBinding>
                                 </Button.IsEnabled>
                             </Button>
-                            <Button x:Name="openJobInExplorerButton" Content="Open Selected Job in Explorer"  Margin="5,10,10,10" Padding="5,3" Click="showJobInExplorer">
-                                <Button.IsEnabled>
-                                    <MultiBinding Converter="{StaticResource CountAndBoolMultiValueConverter}">
-                                        <Binding Path="SelectedItems.Count" ElementName="JobGrid" />
-                                        <Binding Path="SelectedItem.AllowReRun" ElementName="JobGrid" />
-                                    </MultiBinding>
-                                </Button.IsEnabled>
-                            </Button>
+                            <Button x:Name="openJobInExplorerButton" Content="Open Selected Job in Explorer"  Margin="5,10,10,10" Padding="5,3" Click="showJobInExplorer" IsEnabled="{Binding SelectedItems.Count, ElementName=JobGrid}"/>
                         </StackPanel>
                     </StackPanel>
                     <DataGrid x:Name="JobGrid"
@@ -259,12 +253,12 @@
                         <DataGridTextColumn Binding="{Binding TestBenchName}" ClipboardContentBinding="{x:Null}" Header="Test Bench Name" IsReadOnly="True" Width="200"/>
                         <DataGridTextColumn Binding="{Binding WorkingDirectory}" ClipboardContentBinding="{x:Null}" Header="Working Directory" IsReadOnly="True" Width="200"/>
                         <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
-                        <DataGridTextColumn Binding="{Binding RunCommand}" ClipboardContentBinding="{x:Null}" Header="RunCommand" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding RunCommand}" ClipboardContentBinding="{x:Null}" Header="Run Command" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>
                     <DataGrid.Resources>
                         <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                            <MenuItem Header="Show in Explorer" Click="showJobInExplorer" IsEnabled="{Binding AllowReRun}"/>
-                            <MenuItem Header="Abort Job" Click="abortJob_Click"/>
+                            <MenuItem Header="Show in Explorer" Click="showJobInExplorer" />
+                            <MenuItem Header="Abort Job" Click="abortJob_Click" IsEnabled="{Binding AllowAbort}" />
                             <MenuItem Header="Re-run Job" Click="reRunJob_Click" IsEnabled="{Binding AllowReRun}"/>
                         </ContextMenu>
                     </DataGrid.Resources>
