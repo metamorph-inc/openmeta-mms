@@ -226,7 +226,7 @@ namespace PETBrowser
                     // WorkingDirectory = ,
                     // RedirectStandardError = true,
                     // RedirectStandardOutput = true,
-                    UseShellExecute = false
+                    UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
                 };
                 var p = new Process();
                 p.StartInfo = psi;
@@ -651,6 +651,11 @@ namespace PETBrowser
             }
             var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, datasetPath);
             newDatasetListWindow.Show();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+
         }
     }
 
