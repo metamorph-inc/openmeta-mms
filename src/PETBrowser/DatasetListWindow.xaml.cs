@@ -655,7 +655,48 @@ namespace PETBrowser
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            var unfinishedJobCount = ViewModel.JobStore.UnfinishedJobCount;
+            var hasIncompleteSots = ViewModel.JobStore.HasIncompleteSots;
 
+            //Check to see if we're the last DatasetListWindow
+            var windows = Application.Current.Windows.OfType<DatasetListWindow>();
+
+            if ((unfinishedJobCount > 0 || hasIncompleteSots) && windows.Count() == 1)
+            {
+                var taskDialog = new TaskDialog
+                {
+                    WindowTitle = "Results Browser",
+                    MainInstruction = "Are you sure you want to close the Results Browser?",
+                    Content = String.Format("There are {0} unfinished jobs remaining in the queue.", unfinishedJobCount),
+                    MainIcon = TaskDialogIcon.Warning
+                };
+                taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Yes));
+                taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.No)
+                {
+                    Default = true
+                });
+                taskDialog.CenterParent = true;
+                var selectedButton = taskDialog.ShowDialog(this);
+
+                if (selectedButton.ButtonType != ButtonType.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            //Check to see if we're the last DatasetListWindow
+            var windows = Application.Current.Windows.OfType<DatasetListWindow>();
+
+            if (!windows.Any())
+            {
+                Console.WriteLine("Last window");
+
+                ViewModel.JobStore.Dispose();
+                instanceManager.Dispose();
+            }
         }
     }
 

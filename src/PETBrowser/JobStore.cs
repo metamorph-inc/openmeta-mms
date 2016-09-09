@@ -10,7 +10,7 @@ using JobManagerFramework;
 
 namespace PETBrowser
 {
-    public class JobStore
+    public class JobStore : IDisposable
     {
         private JobManagerFramework.JobManager Manager { get; set; }
         public List<JobViewModel> TrackedJobs { get; private set; }
@@ -36,6 +36,16 @@ namespace PETBrowser
 
         private TaskScheduler UiTaskScheduler { get; set; }
 
+        public int UnfinishedJobCount
+        {
+            get { return Manager.UnfinishedJobCount; }
+        }
+
+        public bool HasIncompleteSots
+        {
+            get { return Manager.HasIncompleteSots; }
+        }
+
         //Constructor MUST be called on UI thread (we capture the UI synchronization context for use later)
         public JobStore()
         {
@@ -47,6 +57,13 @@ namespace PETBrowser
                 new JobManagerFramework.JobManager.JobManagerConfiguration());
 
             Manager.JobAdded += Manager_JobAdded;
+        }
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Manager.Dispose();
         }
 
         public void ReRunJob(Job j)

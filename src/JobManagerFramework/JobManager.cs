@@ -237,6 +237,11 @@ namespace JobManagerFramework
             LoadSavedJobs();
         }
 
+        ~JobManager()
+        {
+            this.Dispose();
+        }
+
         private void InitializeChannels(int preferredPort)
         {
             BinaryServerFormatterSinkProvider serverProv = new BinaryServerFormatterSinkProvider();
@@ -412,15 +417,20 @@ namespace JobManagerFramework
             }
         }
 
+        private bool disposed = false;
         public void Dispose()
         {
-            if (ChannelServices.RegisteredChannels.Contains(ServerChannel))
+            if (!disposed)
             {
-                ChannelServices.UnregisterChannel(ServerChannel);
-            }
+                disposed = true;
+                if (ChannelServices.RegisteredChannels.Contains(ServerChannel))
+                {
+                    ChannelServices.UnregisterChannel(ServerChannel);
+                }
 
-            SoTTodo.Add(null); //signals SOT thread to terminate
-            this.pool.Dispose(); 
+                SoTTodo.Add(null); //signals SOT thread to terminate
+                this.pool.Dispose();
+            }
         }
 
         public class ServiceStatus

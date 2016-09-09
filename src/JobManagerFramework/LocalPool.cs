@@ -106,7 +106,7 @@ namespace JobManagerFramework
                 {
                     disposed = true;
                     ShutdownPool.Set();
-                    ts.Cancel();
+                    //ts.Cancel();
                     // n.b. should not timeout, but you can't be too careful.
                     lock (RunningJobs)
                     {
@@ -312,7 +312,7 @@ namespace JobManagerFramework
                             // JobManager is closing
                             try
                             {
-                                proc0.Kill();
+                                KillProcessAndChildren(proc0);
                             }
                             catch (System.InvalidOperationException)
                             {

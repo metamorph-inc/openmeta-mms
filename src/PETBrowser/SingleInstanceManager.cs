@@ -11,7 +11,7 @@ using JobManagerFramework;
 
 namespace PETBrowser
 {
-    public class SingleInstanceManager
+    public class SingleInstanceManager : IDisposable
     {
         public const int PortNumber = 36010;
         public const string ServerName = "BrowserInstance";
@@ -62,11 +62,16 @@ namespace PETBrowser
             RemotingServices.Marshal(Instance, ServerName);
         }
 
-        ~SingleInstanceManager()
+        private bool disposed = false;
+        public void Dispose()
         {
-            if (ChannelServices.RegisteredChannels.Contains(ServerChannel))
+            if (!disposed)
             {
-                ChannelServices.UnregisterChannel(ServerChannel);
+                disposed = true;
+                if (ChannelServices.RegisteredChannels.Contains(ServerChannel))
+                {
+                    ChannelServices.UnregisterChannel(ServerChannel);
+                }
             }
         }
     }
