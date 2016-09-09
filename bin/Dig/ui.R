@@ -1,6 +1,6 @@
 library(shiny)
 library(plotly)
-require(shinyjs)
+library(shinyjs)
 
 # Define UI for PET Design Space Browser application
 shinyUI(fluidPage(
