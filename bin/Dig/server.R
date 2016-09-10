@@ -1,5 +1,4 @@
 library(shiny)
-library(plotly)
 library(DT)
 #library(ggplot2)
 #options(shiny.trace=TRUE)
@@ -41,7 +40,7 @@ shinyServer(function(input, output, session) {
   else
   {
     # raw = read.csv("../data.csv", fill=T)
-    raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    raw = read.csv("../../results/mergedPET.csv", fill=T)
     # raw = iris
   }
   
@@ -306,7 +305,7 @@ shinyServer(function(input, output, session) {
   # Sliders ------------------------------------------------------------------
   
   output$filters <- renderUI({
-    req(varsList())
+    req(input$display)
     print("In render filters")
     fullFilterUI()
   })
@@ -1084,30 +1083,30 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "weightMetrics", choices = varNum, selected = NULL) 
   })
   
-  output$rankPieChart <- renderPlotly({
-    
-    weights <- unlist(lapply(metricsList(), function(x) input[[paste0('rnk', x)]]))
-    isolate({
-      totalWeight <- 0
-      for(i in 1:length(weights)){
-        totalWeight <- totalWeight + weights[i]
-      }
-      p <- plot_ly(values = 0, type = "pie")
-      req(totalWeight)
-      if(totalWeight > 0){
-        print("In Render Plotly Pie Chart")
-        slices <- unlist(lapply(weights, function(x) x/totalWeight))
-        lbls <- unlist(lapply(metricsList(), function(x) varNames[x]))
-        ind_zeros <- which(slices %in% 0)
-        if(length(ind_zeros) > 0){
-          slices <- slices[-ind_zeros]
-          lbls <- lbls[-ind_zeros]
-        }
-        p <- plot_ly(pull = 0.1, labels = lbls, values = slices, type = "pie") 
-      }
-      p %>% layout(title = "Distribution of Weighted Metrics")
-    })
-  })
+  # output$rankPieChart <- renderPlotly({
+  #   
+  #   weights <- unlist(lapply(metricsList(), function(x) input[[paste0('rnk', x)]]))
+  #   isolate({
+  #     totalWeight <- 0
+  #     for(i in 1:length(weights)){
+  #       totalWeight <- totalWeight + weights[i]
+  #     }
+  #     p <- plot_ly(values = 0, type = "pie")
+  #     req(totalWeight)
+  #     if(totalWeight > 0){
+  #       print("In Render Plotly Pie Chart")
+  #       slices <- unlist(lapply(weights, function(x) x/totalWeight))
+  #       lbls <- unlist(lapply(metricsList(), function(x) varNames[x]))
+  #       ind_zeros <- which(slices %in% 0)
+  #       if(length(ind_zeros) > 0){
+  #         slices <- slices[-ind_zeros]
+  #         lbls <- lbls[-ind_zeros]
+  #       }
+  #       p <- plot_ly(pull = 0.1, labels = lbls, values = slices, type = "pie") 
+  #     }
+  #     p %>% layout(title = "Distribution of Weighted Metrics")
+  #   })
+  # })
   
   generateMetricUI <- function(current, slider, radio, util) {
     
@@ -1172,18 +1171,16 @@ shinyServer(function(input, output, session) {
       title = "Score",
       titlefont = f
     )
-    renderPlotly({
+    renderPlot({
       plotPoints <- parseUserInputPoints(current)
       req(plotPoints)
-      p <- plot_ly(x = unlist(lapply(names(plotPoints), as.numeric)),
-                   y = unname(plotPoints)) %>%
-        layout(xaxis = x,
-               yaxis = y)
+      p <- plot(x = unlist(lapply(names(plotPoints), as.numeric)),
+                y = unname(plotPoints),
+                xlab = varNames[current],
+                ylab = "Score")
       p
     })
   }
-  
-  transferFunctionDataFrame 
   
   parseUserInputPoints <- function(current){
     xVals <- NULL
@@ -1193,7 +1190,11 @@ shinyServer(function(input, output, session) {
     for(i in 1:length(points)){
       current_point <- unlist(strsplit(points[i], "="))
       req(length(current_point) == 2)
-      xVals <- c(xVals, as.numeric(current_point[1]))
+      current_val <- as.numeric(current_point[1])
+      low <- rawAbsMin()[current]
+      hi <- rawAbsMax()[current]
+      req(findInterval(current_val, c(low, hi)) == 1)
+      xVals <- c(xVals, current_val)
       yVals <- c(yVals, as.numeric(current_point[2]))
     }
     #Sort list by 'xVals' (while paired with yVals)
