@@ -257,7 +257,7 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "colVarFactor", choices = varRangeFac())  
     updateSelectInput(session, "colVarNum", choices = varRangeNum())#, selected = varRangeNum()[c(1)])
     updateSelectInput(session, "display", choices = varRange(), selected = varRange()[c(1,2)])
-    updateSelectInput(session, "weightMetrics", choices = varNum, selected = NULL)
+    updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL)
     updateSelectInput(session, "xInput", choices = varRange(), selected = varRange()[c(1)])
     updateSelectInput(session, "yInput", choices = varRange(), selected = varRange()[c(2)])
     })   
@@ -1080,7 +1080,7 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$clearMetrics, {
-    updateSelectInput(session, "weightMetrics", choices = varNum, selected = NULL) 
+    updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
   })
   
   # output$rankPieChart <- renderPlotly({
@@ -1143,16 +1143,17 @@ shinyServer(function(input, output, session) {
                   step = 0.01,
                   min = 0,
                   max = 1,
-                  value = sliderVal),
-      checkboxInput(paste0('util', current),
-                    "Add Transfer Function",
-                    value = utilVal),
-      conditionalPanel(condition = transferCondition,
-                       textInput(paste0('func', current),
-                                 "Enter Data Points",
-                                 placeholder = "e.g. 40 = 0.1, 50 = 0.5"),
-                       utilityPlot(current)),
-      br(), br(), br()
+                  value = sliderVal)
+      # ,
+      # checkboxInput(paste0('util', current),
+      #               "Add Transfer Function",
+      #               value = utilVal),
+      # conditionalPanel(condition = transferCondition,
+      #                  textInput(paste0('func', current),
+      #                            "Enter Data Points",
+      #                            placeholder = "e.g. 40 = 0.1, 50 = 0.5"),
+      #                  utilityPlot(current)),
+      # br(), br(), br()
     )
   }
   
@@ -1242,7 +1243,7 @@ shinyServer(function(input, output, session) {
   rankData <- reactive({
     req(metricsList())
     print("In calculate ranked data")
-    data <- filterData()[varNum]
+    data <- filterData()[varRangeNum()]
     normData <- data.frame(t(t(data)/apply(data,2,max)))
     
     scoreData <- sapply(row.names(normData) ,function(x) 0)
@@ -1265,7 +1266,7 @@ shinyServer(function(input, output, session) {
     
     importFlags$ranking <- FALSE
     scoreData <- sort(scoreData, decreasing = TRUE)
-    filterData()[names(scoreData),]
+    filterData()[names(scoreData),varRangeNum()]
     
   })
   
