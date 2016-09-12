@@ -1,0 +1,16 @@
+Package: yaml
+Type: Package
+Title: Methods to convert R data to YAML and back
+Version: 2.1.13
+Suggests: testthat
+Date: 2014-06-12
+Author: Jeremy Stephens <jeremy.stephens@vanderbilt.edu>
+Maintainer: Jeremy Stephens <jeremy.stephens@vanderbilt.edu>
+License: BSD_3_clause + file LICENSE
+Description: This package implements the libyaml YAML 1.1 parser and emitter (http://pyyaml.org/wiki/LibYAML) for R.
+Packaged: 2014-06-12 18:04:44 UTC; stephej1
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2014-06-12 21:01:16
+Built: R 3.3.1; x86_64-w64-mingw32; 2016-07-11 00:39:21 UTC; windows
+Archs: i386, x64
