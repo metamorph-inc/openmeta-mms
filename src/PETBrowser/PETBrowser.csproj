@@ -97,6 +97,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AnalysisTools.cs" />
     <Compile Include="BoolVisibilityConverter.cs" />
     <Compile Include="CountAndBoolMultiValueConverter.cs" />
     <Compile Include="JobStore.cs" />

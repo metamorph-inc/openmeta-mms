@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using JobManager;
 using Ookii.Dialogs.Wpf;
@@ -698,6 +699,91 @@ namespace PETBrowser
                 instanceManager.Dispose();
             }
         }
+
+        private bool isContextMenuOpen = false;
+        private int attachedCount = 0;
+        private void AnalysisToolsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var source = sender as Button;
+
+            if (source != null && source.ContextMenu != null)
+            {
+                // Only open the ContextMenu when it is not already open. If it is already open,
+                // when the button is pressed the ContextMenu will lose focus and automatically close.
+                if (!isContextMenuOpen)
+                {
+                    source.ContextMenu.AddHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed), true);
+                    Interlocked.Increment(ref attachedCount);
+                    // If there is a drop-down assigned to this button, then position and display it 
+                    source.ContextMenu.PlacementTarget = source;
+                    source.ContextMenu.Placement = PlacementMode.Bottom;
+                    source.ContextMenu.IsOpen = true;
+                    isContextMenuOpen = true;
+                }
+            }
+        }
+
+        void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            isContextMenuOpen = false;
+            var contextMenu = sender as ContextMenu;
+            if (contextMenu != null)
+            {
+                contextMenu.RemoveHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed));
+                Interlocked.Decrement(ref attachedCount);
+            }
+        }
+
+        private void PetAnalysisToolRun(object sender, RoutedEventArgs e)
+        {
+            var source = (MenuItem) sender;
+
+            var analysisTool = (AnalysisTool) source.DataContext;
+            Console.WriteLine("Running analysis tool {0}", analysisTool.DisplayName);
+
+            try
+            {
+                var highlightedDataset = (Dataset)PetGrid.SelectedItem;
+                var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset);
+                string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
+
+                var exePath = ExpandAnalysisToolString(analysisTool.ExecutableFilePath, exportPath, ViewModel.Store.DataDirectory);
+                var arguments = ExpandAnalysisToolString(analysisTool.ProcessArguments, exportPath, ViewModel.Store.DataDirectory);
+                var workingDirectory = ExpandAnalysisToolString(analysisTool.WorkingDirectory, exportPath, ViewModel.Store.DataDirectory);
+
+                ProcessStartInfo psi = new ProcessStartInfo()
+                {
+                    FileName = "cmd.exe",
+                    Arguments = String.Format("/S /C \"\"{0}\" {1} > \"{2}\" 2>&1\"", exePath, arguments, logPath),
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    WorkingDirectory = workingDirectory,
+                    // RedirectStandardError = true,
+                    // RedirectStandardOutput = true,
+                    UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
+                };
+                Console.WriteLine(psi.Arguments);
+                var p = new Process();
+                p.StartInfo = psi;
+                p.Start();
+
+                p.Dispose();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while starting visualizer.", ex.Message, ex.ToString());
+            }
+        }
+
+        private static string ExpandAnalysisToolString(string input, string exportPath, string workingDirectory)
+        {
+            string result = input.Replace("%1", exportPath);
+            result = result.Replace("%2", workingDirectory);
+            //TODO: %3 should be list of all selected directories; can we get that?
+            result = result.Replace("%4", META.VersionInfo.MetaPath);
+
+            return result;
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
@@ -714,6 +800,7 @@ namespace PETBrowser
 
         public DatasetStore Store { get; set; }
         public JobStore JobStore { get; set; }
+        public AnalysisTools AnalysisTools { get; set; }
 
         public ICollectionView JobsView { get; set; }
 
@@ -791,6 +878,8 @@ namespace PETBrowser
             TestBenchDatasetsList = new List<Dataset>();
             TestBenchDatasets = new ListCollectionView(TestBenchDatasetsList);
             TestBenchDatasets.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Descending));
+
+            AnalysisTools = new AnalysisTools();
 
             if (jobStore == null)
             {
