@@ -695,7 +695,7 @@ shinyServer(function(input, output, session) {
                }
                if(varClass[input$yInput] == "factor"){
                  lower <- ceiling(input$plot_brush$ymin)
-                 upper <- floor(input$plot_brush$ymay)
+                 upper <- floor(input$plot_brush$ymax)
                  yRange <- FALSE
                  for (i in lower:upper){
                    yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
@@ -720,8 +720,8 @@ shinyServer(function(input, output, session) {
          }
        }
      }
-    print("Data Colored")
-    data
+     print("Data Colored")
+     data
   })
 
   output$colorLegend <- renderUI({
@@ -1030,7 +1030,6 @@ shinyServer(function(input, output, session) {
   })
   
   output$info <- renderPrint({
-    print("In info")
     t(nearPoints(filterData(), input$plot_click, xvar = input$xInput, yvar = input$yInput, maxpoints = 8))
   })
   
@@ -1055,7 +1054,7 @@ shinyServer(function(input, output, session) {
     df
   }
   
-  output$table <- renderDataTable({
+  output$table <- DT::renderDataTable({
     print("In render data table")
     if(input$autoData == TRUE){
       filterData()
