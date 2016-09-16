@@ -40,8 +40,8 @@ shinyServer(function(input, output, session) {
   else
   {
     # raw = read.csv("../data.csv", fill=T)
-    # raw = read.csv("../../results/mergedPET.csv", fill=T)
-    raw = iris
+    raw = read.csv("../../results/mergedPET.csv", fill=T)
+    # raw = iris
   }
   
   
@@ -695,7 +695,7 @@ shinyServer(function(input, output, session) {
                }
                if(varClass[input$yInput] == "factor"){
                  lower <- ceiling(input$plot_brush$ymin)
-                 upper <- floor(input$plot_brush$ymay)
+                 upper <- floor(input$plot_brush$ymax)
                  yRange <- FALSE
                  for (i in lower:upper){
                    yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
@@ -720,8 +720,8 @@ shinyServer(function(input, output, session) {
          }
        }
      }
-    print("Data Colored")
-    data
+     print("Data Colored")
+     data
   })
 
   output$colorLegend <- renderUI({
@@ -1030,7 +1030,6 @@ shinyServer(function(input, output, session) {
   })
   
   output$info <- renderPrint({
-    print("In info")
     t(nearPoints(filterData(), input$plot_click, xvar = input$xInput, yvar = input$yInput, maxpoints = 8))
   })
   
@@ -1055,7 +1054,7 @@ shinyServer(function(input, output, session) {
     df
   }
   
-  output$table <- renderDataTable({
+  output$table <- DT::renderDataTable({
     print("In render data table")
     if(input$autoData == TRUE){
       filterData()
@@ -1143,20 +1142,17 @@ shinyServer(function(input, output, session) {
                   step = 0.01,
                   min = 0,
                   max = 1,
-                  value = sliderVal),
-      checkboxInput(paste0('util', current),
-                    "Add Transfer Function",
-                    value = utilVal),
-      conditionalPanel(condition = transferCondition,
-                       textInput(paste0('func', current),
-                                 "Enter Data Points",
-                        placeholder = paste0("e.g. ", 
-                                             rawAbsMin()[current],
-                                             " = 1, ",
-                                             rawAbsMax()[current],
-                                             "= 0.5")),
-                       utilityPlot(current)),
-      br(), br(), br()
+                  value = sliderVal)
+      # ,
+      # checkboxInput(paste0('util', current),
+      #               "Add Transfer Function",
+      #               value = utilVal),
+      # conditionalPanel(condition = transferCondition,
+      #                  textInput(paste0('func', current),
+      #                            "Enter Data Points",
+      #                            placeholder = "e.g. 40 = 0.1, 50 = 0.5"),
+      #                  utilityPlot(current)),
+      # br(), br(), br()
     )
   }
   
@@ -1186,10 +1182,6 @@ shinyServer(function(input, output, session) {
     })
   }
   
-  gX <- data.frame()
-  gX <- gX[1:2,]
-  row.names(gX) <- c("Values", "Scores")
-  
   parseUserInputPoints <- function(current){
     xVals <- NULL
     yVals <- NULL
@@ -1201,7 +1193,7 @@ shinyServer(function(input, output, session) {
       current_val <- as.numeric(current_point[1])
       low <- rawAbsMin()[current]
       hi <- rawAbsMax()[current]
-      req(findInterval(current_val, c(low, hi), rightmost.closed = TRUE) == 1)
+      req(findInterval(current_val, c(low, hi)) == 1)
       xVals <- c(xVals, current_val)
       yVals <- c(yVals, as.numeric(current_point[2]))
     }
@@ -1213,7 +1205,6 @@ shinyServer(function(input, output, session) {
     #Flip-flop names&values of a named list
     outputVals <- sapply(names(sortedVals), as.numeric)
     names(outputVals) <- sortedVals
-    gX[[toString(current)]] <<- list(names(outputVals), outputVals)
     outputVals
   }
   
@@ -1246,6 +1237,8 @@ shinyServer(function(input, output, session) {
     fullMetricUI()
   })
   
+
+  
   rankData <- reactive({
     req(metricsList())
     print("In calculate ranked data")
@@ -1253,7 +1246,6 @@ shinyServer(function(input, output, session) {
     normData <- data.frame(t(t(data)/apply(data,2,max)))
     
     scoreData <- sapply(row.names(normData) ,function(x) 0)
-    xFuncs <- gX
     
     for(i in 1:length(metricsList())) {
       column <- varNames[metricsList()[i]]
@@ -1267,35 +1259,6 @@ shinyServer(function(input, output, session) {
           item <- normData[j,column]
           normData[j,column] <- 1 -item + colMin
         }
-      }
-      xFunc <- unlist(xFuncs[[toString(metricsList()[i])]][2])
-        if(!is.null(xFunc)){
-        normValue <- max(data[[column]])
-        transferData <- data[[column]]
-        for(t in 1:length(transferData)){
-          item <- transferData[t]
-          if(length(names(xFunc)) == 1){
-            if(input[[radioSelect]] == "Max"){
-              if(item <= as.numeric(names(xFunc)))
-                transferData[t] <- item*xFunc/normValue
-              else
-                transferData[t] <- 0
-            }
-            else{
-              if(item >= as.numeric(names(xFunc)))
-                transferData[t] <- item*xFunc/normValue
-              else
-                transferData[t] <- 0
-            }
-          }
-          else{
-            slot <- findInterval(item,
-                                 as.numeric(names(xFunc)),
-                                 rightmost.closed = TRUE)
-            transferData[t] <- item*xFunc[slot]/normValue
-          }
-        }
-        scoreData <- scoreData + transferData
       }
       scoreData <- scoreData + unlist(unname(weight*normData[column]))
     }
