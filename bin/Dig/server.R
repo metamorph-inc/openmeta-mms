@@ -10,8 +10,14 @@ palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
          "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
 
 importData <- NULL
+gX <- data.frame()
+gX <- gX[1:2,]
+row.names(gX) <- c("Values", "Scores")
 
 shinyServer(function(input, output, session) {
+  
+  xFuncs <- gX
+  makeReactiveBinding("xFuncs")
 
   importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE)
   
@@ -193,11 +199,8 @@ shinyServer(function(input, output, session) {
           }
         )
         data <- subset(data, a)
-        
       }
-      
     }
-    
     data
   })
 
@@ -1082,31 +1085,6 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
   })
   
-  # output$rankPieChart <- renderPlotly({
-  #   
-  #   weights <- unlist(lapply(metricsList(), function(x) input[[paste0('rnk', x)]]))
-  #   isolate({
-  #     totalWeight <- 0
-  #     for(i in 1:length(weights)){
-  #       totalWeight <- totalWeight + weights[i]
-  #     }
-  #     p <- plot_ly(values = 0, type = "pie")
-  #     req(totalWeight)
-  #     if(totalWeight > 0){
-  #       print("In Render Plotly Pie Chart")
-  #       slices <- unlist(lapply(weights, function(x) x/totalWeight))
-  #       lbls <- unlist(lapply(metricsList(), function(x) varNames[x]))
-  #       ind_zeros <- which(slices %in% 0)
-  #       if(length(ind_zeros) > 0){
-  #         slices <- slices[-ind_zeros]
-  #         lbls <- lbls[-ind_zeros]
-  #       }
-  #       p <- plot_ly(pull = 0.1, labels = lbls, values = slices, type = "pie") 
-  #     }
-  #     p %>% layout(title = "Distribution of Weighted Metrics")
-  #   })
-  # })
-  
   generateMetricUI <- function(current, slider, radio, util) {
     
     if(missing(slider) & missing(radio) & missing(util)){
@@ -1129,6 +1107,7 @@ shinyServer(function(input, output, session) {
     }
     
     transferCondition = toString(paste0("input.util",current," == true"))
+    
       
     column(3, 
       h4(varNames[current]),
@@ -1149,7 +1128,7 @@ shinyServer(function(input, output, session) {
       conditionalPanel(condition = transferCondition,
                        textInput(paste0('func', current),
                                  "Enter Data Points",
-                        placeholder = paste0("e.g. ", 
+                        placeholder = paste0("Value = Score | e.g. ", 
                                              rawAbsMin()[current],
                                              " = 1, ",
                                              rawAbsMax()[current],
@@ -1181,13 +1160,20 @@ shinyServer(function(input, output, session) {
                 y = unname(plotPoints),
                 xlab = varNames[current],
                 ylab = "Score")
+      if(length(plotPoints) > 1){
+        for(i in 1:(length(plotPoints)-1)){
+          segments(x0 = as.numeric(names(plotPoints)[i]),
+                  y0 = plotPoints[i],
+                  x1 = as.numeric(names(plotPoints)[i+1]),
+                  y1 = plotPoints[i+1])
+                  
+        }
+      }
       p
     })
   }
   
-  gX <- data.frame()
-  gX <- gX[1:2,]
-  row.names(gX) <- c("Values", "Scores")
+  
   
   parseUserInputPoints <- function(current){
     xVals <- NULL
@@ -1212,7 +1198,7 @@ shinyServer(function(input, output, session) {
     #Flip-flop names&values of a named list
     outputVals <- sapply(names(sortedVals), as.numeric)
     names(outputVals) <- sortedVals
-    gX[[toString(current)]] <<- list(names(outputVals), outputVals)
+    xFuncs[[toString(current)]] <<- list(names(outputVals), outputVals)
     outputVals
   }
   
@@ -1252,7 +1238,6 @@ shinyServer(function(input, output, session) {
     normData <- data.frame(t(t(data)/apply(data,2,max)))
     
     scoreData <- sapply(row.names(normData) ,function(x) 0)
-    xFuncs <- gX
     
     for(i in 1:length(metricsList())) {
       column <- varNames[metricsList()[i]]
