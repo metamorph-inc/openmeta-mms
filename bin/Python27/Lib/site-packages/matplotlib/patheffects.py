@@ -7,12 +7,10 @@ and :class:`~matplotlib.patches.Patch`.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 from matplotlib.backend_bases import RendererBase
-from matplotlib.backends.backend_mixed import MixedModeRenderer
 import matplotlib.transforms as mtransforms
-import matplotlib.cbook as cbook
 from matplotlib.colors import colorConverter
 import matplotlib.patches as mpatches
 
@@ -42,12 +40,6 @@ class AbstractPathEffect(object):
         return transform + self._offset_trans.clear().translate(offset_x,
                                                                 offset_y)
 
-    def get_proxy_renderer(self, renderer):
-        """Return a PathEffectRenderer instance for this PathEffect."""
-        cbook.deprecated('v1.4', name='get_proxy_renderer',
-                         alternative='PathEffectRenderer')
-        return PathEffectRenderer([self], renderer)
-
     def _update_gc(self, gc, new_gc_dict):
         """
         Update the given GraphicsCollection with the given
@@ -64,7 +56,7 @@ class AbstractPathEffect(object):
         for k, v in six.iteritems(new_gc_dict):
             set_method = getattr(gc, 'set_' + k, None)
             if set_method is None or not six.callable(set_method):
-                raise AttributeError('Unknown property {}'.format(k))
+                raise AttributeError('Unknown property {0}'.format(k))
             set_method(v)
         return gc
 
@@ -105,6 +97,9 @@ class PathEffectRenderer(RendererBase):
         """
         self._path_effects = path_effects
         self._renderer = renderer
+
+    def new_gc(self):
+        return self._renderer.new_gc()
 
     def copy_with_path_effect(self, path_effects):
         return self.__class__(path_effects, self._renderer)
@@ -219,9 +214,9 @@ class withStroke(Stroke):
 
 class SimplePatchShadow(AbstractPathEffect):
     """A simple shadow via a filled patch."""
-    def __init__(self, offset=(2,-2),
-                 shadow_rgbFace=None, alpha=None, patch_alpha=None,
-                 rho=0.3, offset_xy=None, **kwargs):
+    def __init__(self, offset=(2, -2),
+                 shadow_rgbFace=None, alpha=None,
+                 rho=0.3, **kwargs):
         """
         Parameters
         ----------
@@ -241,24 +236,12 @@ class SimplePatchShadow(AbstractPathEffect):
             :meth:`AbstractPathEffect._update_gc`.
 
         """
-        if offset_xy is not None:
-            cbook.deprecated('v1.4', 'The offset_xy keyword is deprecated. '
-                             'Use the offset keyword instead.')
-            offset = offset_xy
         super(SimplePatchShadow, self).__init__(offset)
 
         if shadow_rgbFace is None:
             self._shadow_rgbFace = shadow_rgbFace
         else:
             self._shadow_rgbFace = colorConverter.to_rgba(shadow_rgbFace)
-        if patch_alpha is not None:
-            cbook.deprecated('v1.4', 'The patch_alpha keyword is deprecated. '
-                             'Use the alpha keyword instead. Transform your '
-                             'patch_alpha by alpha = 1 - patch_alpha')
-            if alpha is not None:
-                raise ValueError("Both alpha and patch_alpha were set. "
-                                 "Just use alpha.")
-            alpha = 1 - patch_alpha
 
         if alpha is None:
             alpha = 0.3

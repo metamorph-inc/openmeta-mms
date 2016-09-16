@@ -13,7 +13,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 import math
 import datetime as DT
@@ -23,7 +23,7 @@ from matplotlib.dates import date2num
 #===========================================================================
 
 #===========================================================================
-class Epoch:
+class Epoch(object):
    # Frame conversion offsets in seconds
    # t(TO) = t(FROM) + allowed[ FROM ][ TO ]
    allowed = {

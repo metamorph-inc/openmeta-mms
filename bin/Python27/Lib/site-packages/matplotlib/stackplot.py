@@ -9,9 +9,10 @@ http://stackoverflow.com/questions/2225995/how-can-i-create-stacked-line-graph-w
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
-from six.moves import xrange
+from matplotlib.externals import six
+from matplotlib.externals.six.moves import xrange
 
+from cycler import cycler
 import numpy as np
 
 __all__ = ['stackplot']
@@ -41,6 +42,9 @@ def stackplot(axes, x, *args, **kwargs):
                 can be found at http://www.leebyron.com/else/streamgraph/.
 
 
+    *labels* : A list or tuple of labels to assign to each data series.
+
+
     *colors* : A list or tuple of colors. These will be cycled through and
                used to colour the stacked areas.
                All other keyword arguments are passed to
@@ -49,11 +53,6 @@ def stackplot(axes, x, *args, **kwargs):
     Returns *r* : A list of
     :class:`~matplotlib.collections.PolyCollection`, one for each
     element in the stacked area plot.
-
-    Note that :class:`~matplotlib.legend.Legend` does not support
-    :class:`~matplotlib.collections.PolyCollection` objects.  To create a
-    legend on a stackplot, use a proxy artist:
-    http://matplotlib.org/users/legend_guide.html#using-proxy-artist
     """
 
     if len(args) == 1:
@@ -61,9 +60,11 @@ def stackplot(axes, x, *args, **kwargs):
     elif len(args) > 1:
         y = np.row_stack(args)
 
+    labels = iter(kwargs.pop('labels', []))
+
     colors = kwargs.pop('colors', None)
     if colors is not None:
-        axes.set_color_cycle(colors)
+        axes.set_prop_cycle(cycler('color', colors))
 
     baseline = kwargs.pop('baseline', 'zero')
     # Assume data passed has not been 'stacked', so stack it here.
@@ -102,14 +103,23 @@ def stackplot(axes, x, *args, **kwargs):
         raise ValueError(errstr)
 
     # Color between x = 0 and the first array.
+    if 'color' in axes._get_lines._prop_keys:
+        color = six.next(axes._get_lines.prop_cycler)['color']
+    else:
+        color = None
     r.append(axes.fill_between(x, first_line, stack[0, :],
-                               facecolor=six.next(axes._get_lines.color_cycle),
+                               facecolor=color,
+                               label= six.next(labels, None),
                                **kwargs))
 
     # Color between array i-1 and array i
     for i in xrange(len(y) - 1):
-        color = six.next(axes._get_lines.color_cycle)
+        if 'color' in axes._get_lines._prop_keys:
+            color = six.next(axes._get_lines.prop_cycler)['color']
+        else:
+            color = None
         r.append(axes.fill_between(x, stack[i, :], stack[i + 1, :],
-                                   facecolor= color,
+                                   facecolor=color,
+                                   label= six.next(labels, None),
                                    **kwargs))
     return r

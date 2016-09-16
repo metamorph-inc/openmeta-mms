@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
-from six.moves import map
+from matplotlib.externals import six
+from matplotlib.externals.six.moves import map
 
 from matplotlib.gridspec import GridSpec, SubplotSpec
 from matplotlib import docstring
@@ -58,15 +58,10 @@ class SubplotBase(object):
                 num = [int(n) for n in num]
                 self._subplotspec = GridSpec(rows, cols)[num[0] - 1:num[1]]
             else:
-                if num < 0 or num > rows*cols:
+                if num < 1 or num > rows*cols:
                     raise ValueError(
-                        "num must be 0 <= num <= {maxn}, not {num}".format(
+                        "num must be 1 <= num <= {maxn}, not {num}".format(
                             maxn=rows*cols, num=num))
-                if num == 0:
-                    warnings.warn("The use of 0 (which ends up being the "
-                                  "_last_ sub-plot) is deprecated in 1.4 "
-                                  "and will raise an error in 1.5",
-                                  mplDeprecation)
                 self._subplotspec = GridSpec(rows, cols)[int(num) - 1]
                 # num - 1 for converting from MATLAB to python indexing
         else:
@@ -78,10 +73,14 @@ class SubplotBase(object):
         self._axes_class.__init__(self, fig, self.figbox, **kwargs)
 
     def __reduce__(self):
-        # get the first axes class which does not inherit from a subplotbase
-        not_subplotbase = lambda c: issubclass(c, Axes) and \
-            not issubclass(c, SubplotBase)
-        axes_class = [c for c in self.__class__.mro() if not_subplotbase(c)][0]
+        # get the first axes class which does not
+        # inherit from a subplotbase
+
+        def not_subplotbase(c):
+            return issubclass(c, Axes) and not issubclass(c, SubplotBase)
+
+        axes_class = [c for c in self.__class__.mro()
+                      if not_subplotbase(c)][0]
         r = [_PicklableSubplotClassConstructor(),
              (axes_class,),
              self.__getstate__()]

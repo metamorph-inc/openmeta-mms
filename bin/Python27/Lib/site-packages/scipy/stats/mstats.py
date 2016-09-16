@@ -70,10 +70,32 @@ is a relatively new package, some API changes are still possible.
    winsorize
    zmap
    zscore
+   compare_medians_ms
+   gmean
+   hdmedian
+   hdquantiles
+   hdquantiles_sd
+   hmean
+   idealfourths
+   kruskal
+   ks_2samp
+   median_cihs
+   meppf
+   mjci
+   mquantiles_cimj
+   rsh
+   sen_seasonal_slopes
+   trimmed_mean
+   trimmed_mean_ci
+   trimmed_std
+   trimmed_var
+   ttest_1samp
 
 """
 from __future__ import division, print_function, absolute_import
 
 from .mstats_basic import *
 from .mstats_extras import *
-from scipy.stats import gmean, hmean
+# Functions that support masked array input in stats but need to be kept in the
+# mstats namespace for backwards compatibility:
+from scipy.stats import gmean, hmean, zmap, zscore, chisquare

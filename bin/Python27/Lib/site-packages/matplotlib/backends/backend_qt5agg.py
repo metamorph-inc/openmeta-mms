@@ -4,14 +4,11 @@ Render to qt from agg
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
-import os  # not used
 import sys
 import ctypes
-import warnings
 
-import matplotlib
 from matplotlib.figure import Figure
 
 from .backend_agg import FigureCanvasAgg
@@ -26,9 +23,7 @@ from .backend_qt5 import show
 from .backend_qt5 import draw_if_interactive
 from .backend_qt5 import backend_version
 ######
-
-
-from matplotlib.cbook import mplDeprecation
+from .qt_compat import QT_API
 
 DEBUG = False
 
@@ -63,12 +58,16 @@ class FigureCanvasQTAggBase(object):
 
     Public attribute
 
-      figure - A Figure instance
-   """
+        figure - A Figure instance
+    """
+
+    def __init__(self, figure):
+        super(FigureCanvasQTAggBase, self).__init__(figure=figure)
+        self._agg_draw_pending = False
 
     def drawRectangle(self, rect):
         self._drawRect = rect
-        self.repaint()
+        self.update()
 
     def paintEvent(self, e):
         """
@@ -76,11 +75,14 @@ class FigureCanvasQTAggBase(object):
         In Qt, all drawing should be done inside of here when a widget is
         shown onscreen.
         """
+        # if the canvas does not have a renderer, then give up and wait for
+        # FigureCanvasAgg.draw(self) to be called
+        if not hasattr(self, 'renderer'):
+            return
 
-        # FigureCanvasQT.paintEvent(self, e)
         if DEBUG:
             print('FigureCanvasQtAgg.paintEvent: ', self,
-                self.get_width_height())
+                  self.get_width_height())
 
         if self.blitbox is None:
             # matplotlib is in rgba byte order.  QImage wants to put the bytes
@@ -130,28 +132,64 @@ class FigureCanvasQTAggBase(object):
             stringBuffer = reg.to_string_argb()
             qImage = QtGui.QImage(stringBuffer, w, h,
                                   QtGui.QImage.Format_ARGB32)
+            # Adjust the stringBuffer reference count to work around a memory
+            # leak bug in QImage() under PySide on Python 3.x
+            if QT_API == 'PySide' and six.PY3:
+                ctypes.c_long.from_address(id(stringBuffer)).value = 1
+
             pixmap = QtGui.QPixmap.fromImage(qImage)
             p = QtGui.QPainter(self)
             p.drawPixmap(QtCore.QPoint(l, self.renderer.height-t), pixmap)
+
+            # draw the zoom rectangle to the QPainter
+            if self._drawRect is not None:
+                p.setPen(QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.DotLine))
+                x, y, w, h = self._drawRect
+                p.drawRect(x, y, w, h)
             p.end()
             self.blitbox = None
-        self._drawRect = None
 
     def draw(self):
         """
-        Draw the figure with Agg, and queue a request
-        for a Qt draw.
+        Draw the figure with Agg, and queue a request for a Qt draw.
         """
-        # The Agg draw is done here; delaying it until the paintEvent
-        # causes problems with code that uses the result of the
-        # draw() to update plot elements.
+        # The Agg draw is done here; delaying causes problems with code that
+        # uses the result of the draw() to update plot elements.
         FigureCanvasAgg.draw(self)
-        self._priv_update()
+        self.update()
+
+    def draw_idle(self):
+        """
+        Queue redraw of the Agg buffer and request Qt paintEvent.
+        """
+        # The Agg draw needs to be handled by the same thread matplotlib
+        # modifies the scene graph from. Post Agg draw request to the
+        # current event loop in order to ensure thread affinity and to
+        # accumulate multiple draw requests from event handling.
+        # TODO: queued signal connection might be safer than singleShot
+        if not self._agg_draw_pending:
+            self._agg_draw_pending = True
+            QtCore.QTimer.singleShot(0, self.__draw_idle_agg)
+
+    def __draw_idle_agg(self, *args):
+        if self.height() < 0 or self.width() < 0:
+            self._agg_draw_pending = False
+            return
+        try:
+            FigureCanvasAgg.draw(self)
+            self.update()
+        finally:
+            self._agg_draw_pending = False
 
     def blit(self, bbox=None):
         """
         Blit the region in bbox
         """
+        # If bbox is None, blit the entire canvas. Otherwise
+        # blit only the area defined by the bbox.
+        if bbox is None and self.figure:
+            bbox = self.figure.bbox
+
         self.blitbox = bbox
         l, b, w, h = bbox.bounds
         t = b + h
@@ -178,37 +216,10 @@ class FigureCanvasQTAgg(FigureCanvasQTAggBase,
     def __init__(self, figure):
         if DEBUG:
             print('FigureCanvasQtAgg: ', figure)
-        FigureCanvasQT.__init__(self, figure)
-        FigureCanvasAgg.__init__(self, figure)
+        super(FigureCanvasQTAgg, self).__init__(figure=figure)
         self._drawRect = None
         self.blitbox = None
         self.setAttribute(QtCore.Qt.WA_OpaquePaintEvent)
-        # it has been reported that Qt is semi-broken in a windows
-        # environment.  If `self.draw()` uses `update` to trigger a
-        # system-level window repaint (as is explicitly advised in the
-        # Qt documentation) the figure responds very slowly to mouse
-        # input.  The work around is to directly use `repaint`
-        # (against the advice of the Qt documentation).  The
-        # difference between `update` and repaint is that `update`
-        # schedules a `repaint` for the next time the system is idle,
-        # where as `repaint` repaints the window immediately.  The
-        # risk is if `self.draw` gets called with in another `repaint`
-        # method there will be an infinite recursion.  Thus, we only
-        # expose windows users to this risk.
-        if sys.platform.startswith('win'):
-            self._priv_update = self.repaint
-        else:
-            self._priv_update = self.update
-
-
-class NavigationToolbar2QTAgg(NavigationToolbar2QT):
-    def __init__(*args, **kwargs):
-        warnings.warn('This class has been deprecated in 1.4 ' +
-                      'as it has no additional functionality over ' +
-                      '`NavigationToolbar2QT`.  Please change your code to '
-                      'use `NavigationToolbar2QT` instead',
-                    mplDeprecation)
-        NavigationToolbar2QT.__init__(*args, **kwargs)
 
 
 FigureCanvas = FigureCanvasQTAgg

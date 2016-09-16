@@ -70,9 +70,16 @@ _css_import_re = re.compile(
 
 # All kinds of schemes besides just javascript: that can cause
 # execution:
-_is_javascript_scheme = re.compile(
+_is_image_dataurl = re.compile(
+    r'^data:image/.+;base64', re.I).search
+_is_possibly_malicious_scheme = re.compile(
     r'(?:javascript|jscript|livescript|vbscript|data|about|mocha):',
     re.I).search
+def _is_javascript_scheme(s):
+    if _is_image_dataurl(s):
+        return None
+    return _is_possibly_malicious_scheme(s)
+
 _substitute_whitespace = re.compile(r'[\s\x00-\x08\x0B\x0C\x0E-\x19]+').sub
 # FIXME: should data: be blocked?
 
@@ -87,6 +94,7 @@ _find_external_links = etree.XPath(
     ("descendant-or-self::a  [normalize-space(@href) and substring(normalize-space(@href),1,1) != '#'] |"
      "descendant-or-self::x:a[normalize-space(@href) and substring(normalize-space(@href),1,1) != '#']"),
     namespaces={'x':XHTML_NAMESPACE})
+
 
 class Cleaner(object):
     """
@@ -105,7 +113,10 @@ class Cleaner(object):
         Removes any comments.
 
     ``style``:
-        Removes any style tags or attributes.
+        Removes any style tags.
+
+    ``inline_style``
+        Removes any style attributes.  Defaults to the value of the ``style`` option.
 
     ``links``:
         Removes any ``<link>`` tags
@@ -184,6 +195,7 @@ class Cleaner(object):
     javascript = True
     comments = True
     style = False
+    inline_style = None
     links = True
     meta = True
     page_structure = True
@@ -208,6 +220,8 @@ class Cleaner(object):
                 raise TypeError(
                     "Unknown parameter: %s=%r" % (name, value))
             setattr(self, name, value)
+        if self.inline_style is None and 'inline_style' not in kw:
+            self.inline_style = self.style
 
     # Used to lookup the primary URL for a given tag that is up for
     # removal:
@@ -273,9 +287,9 @@ class Cleaner(object):
                             del attrib[aname]
             doc.rewrite_links(self._remove_javascript_link,
                               resolve_base_href=False)
-            if not self.style:
-                # If we're deleting style then we don't have to remove JS links
-                # from styles, otherwise...
+            # If we're deleting style then we don't have to remove JS links
+            # from styles, otherwise...
+            if not self.inline_style:
                 for el in _find_styled_elements(doc):
                     old = el.get('style')
                     new = _css_javascript_re.sub('', old)
@@ -285,6 +299,7 @@ class Cleaner(object):
                         del el.attrib['style']
                     elif new != old:
                         el.set('style', new)
+            if not self.style:
                 for el in list(doc.iter('style')):
                     if el.get('type', '').lower().strip() == 'text/javascript':
                         el.drop_tree()
@@ -307,6 +322,7 @@ class Cleaner(object):
             kill_tags.add(etree.ProcessingInstruction)
         if self.style:
             kill_tags.add('style')
+        if self.inline_style:
             etree.strip_attributes(doc, 'style')
         if self.links:
             kill_tags.add('link')

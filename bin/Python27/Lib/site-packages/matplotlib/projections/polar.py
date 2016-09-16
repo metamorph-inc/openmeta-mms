@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 import math
 import warnings
@@ -112,9 +112,6 @@ class PolarAffine(Affine2DBase):
         return self._mtx
     get_matrix.__doc__ = Affine2DBase.get_matrix.__doc__
 
-    def __getstate__(self):
-        return {}
-
 
 class InvertedPolarTransform(Transform):
     """
@@ -146,7 +143,13 @@ class InvertedPolarTransform(Transform):
         x = xy[:, 0:1]
         y = xy[:, 1:]
         r = np.sqrt(x*x + y*y)
-        theta = np.arccos(x / r)
+        with np.errstate(invalid='ignore'):
+            # At x=y=r=0 this will raise an
+            # invalid value warning when doing 0/0
+            # Divide by zero warnings are only raised when
+            # the numerator is different from 0. That
+            # should not happen here.
+            theta = np.arccos(x / r)
         theta = np.where(y < 0, 2 * np.pi - theta, theta)
 
         theta -= theta_offset
@@ -334,7 +337,9 @@ cbook.simple_linear_interpolation on the data before passing to matplotlib.""")
             )
 
     def get_xaxis_transform(self,which='grid'):
-        assert which in ['tick1','tick2','grid']
+        if which not in ['tick1','tick2','grid']:
+            msg = "'which' must be one of [ 'tick1' | 'tick2' | 'grid' ]"
+            raise ValueError(msg)
         return self._xaxis_transform
 
     def get_xaxis_text1_transform(self, pad):
@@ -344,7 +349,9 @@ cbook.simple_linear_interpolation on the data before passing to matplotlib.""")
         return self._xaxis_text2_transform, 'center', 'center'
 
     def get_yaxis_transform(self,which='grid'):
-        assert which in ['tick1','tick2','grid']
+        if which not in ['tick1','tick2','grid']:
+            msg = "'which' must be on of [ 'tick1' | 'tick2' | 'grid' ]"
+            raise ValueError(msg)
         return self._yaxis_transform
 
     def get_yaxis_text1_transform(self, pad):
@@ -464,10 +471,10 @@ cbook.simple_linear_interpolation on the data before passing to matplotlib.""")
             The theta position of the radius labels in degrees.
         """
         return self._r_label_position.to_values()[4]
-    
+
     def set_rlabel_position(self, value):
         """Updates the theta position of the radius labels.
-        
+
         Parameters
         ----------
         value : number
@@ -652,7 +659,7 @@ cbook.simple_linear_interpolation on the data before passing to matplotlib.""")
             dt0 = t - startt
             dt1 = startt - t
             if abs(dt1) < abs(dt0):
-                dt = abs(dt1) * sign(dt0) * -1.0
+                dt = abs(dt1) * np.sign(dt0) * -1.0
             else:
                 dt = dt0 * -1.0
             dt = (dt / np.pi) * 180.0

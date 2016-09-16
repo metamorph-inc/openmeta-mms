@@ -52,7 +52,7 @@ namespace CyPhyMasterInterpreter.Rules
                 {
                     Success = true,
                     Subject = this.parametricExploration.Children.TestBenchRefCollection.FirstOrDefault().Impl,
-                    Message = "One or more test bench references found."
+                    Message = "One or more test bench reference found."
                 };
 
                 results.Add(feedback);
