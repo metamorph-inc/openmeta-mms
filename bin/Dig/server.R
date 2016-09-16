@@ -1,5 +1,4 @@
 library(shiny)
-library(plotly)
 library(DT)
 #library(ggplot2)
 #options(shiny.trace=TRUE)
@@ -258,7 +257,7 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "colVarFactor", choices = varRangeFac())  
     updateSelectInput(session, "colVarNum", choices = varRangeNum())#, selected = varRangeNum()[c(1)])
     updateSelectInput(session, "display", choices = varRange(), selected = varRange()[c(1,2)])
-    updateSelectInput(session, "weightMetrics", choices = varNum, selected = NULL)
+    updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL)
     updateSelectInput(session, "xInput", choices = varRange(), selected = varRange()[c(1)])
     updateSelectInput(session, "yInput", choices = varRange(), selected = varRange()[c(2)])
     })   
@@ -306,7 +305,7 @@ shinyServer(function(input, output, session) {
   # Sliders ------------------------------------------------------------------
   
   output$filters <- renderUI({
-    req(varsList())
+    req(input$display)
     print("In render filters")
     fullFilterUI()
   })
@@ -1080,37 +1079,38 @@ shinyServer(function(input, output, session) {
     idx
   })
   
-  
   observeEvent(input$clearMetrics, {
-    updateSelectInput(session, "weightMetrics", choices = varNum, selected = NULL) 
+    updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
   })
   
-  output$rankPieChart <- renderPlotly({
-    
-    weights <- unlist(lapply(metricsList(), function(x) input[[paste0('rnk', x)]]))
-    totalWeight <- 0
-    for(i in 1:length(weights)){
-      totalWeight <- totalWeight + weights[i]
-    }
-    p <- plot_ly(values = 0, type = "pie")
-    req(totalWeight)
-    if(totalWeight > 0){
-      print("In Render Plotly Pie Chart")
-      slices <- unlist(lapply(weights, function(x) x/totalWeight))
-      lbls <- unlist(lapply(metricsList(), function(x) varNames[x]))
-      ind_zeros <- which(slices %in% 0)
-      if(length(ind_zeros) > 0){
-        slices <- slices[-ind_zeros]
-        lbls <- lbls[-ind_zeros]
-      }
-      p <- plot_ly(pull = 0.1, labels = lbls, values = slices, type = "pie") 
-    }
-    p %>% layout(title = "Distribution of Weighted Metrics")
-  })
+  # output$rankPieChart <- renderPlotly({
+  #   
+  #   weights <- unlist(lapply(metricsList(), function(x) input[[paste0('rnk', x)]]))
+  #   isolate({
+  #     totalWeight <- 0
+  #     for(i in 1:length(weights)){
+  #       totalWeight <- totalWeight + weights[i]
+  #     }
+  #     p <- plot_ly(values = 0, type = "pie")
+  #     req(totalWeight)
+  #     if(totalWeight > 0){
+  #       print("In Render Plotly Pie Chart")
+  #       slices <- unlist(lapply(weights, function(x) x/totalWeight))
+  #       lbls <- unlist(lapply(metricsList(), function(x) varNames[x]))
+  #       ind_zeros <- which(slices %in% 0)
+  #       if(length(ind_zeros) > 0){
+  #         slices <- slices[-ind_zeros]
+  #         lbls <- lbls[-ind_zeros]
+  #       }
+  #       p <- plot_ly(pull = 0.1, labels = lbls, values = slices, type = "pie") 
+  #     }
+  #     p %>% layout(title = "Distribution of Weighted Metrics")
+  #   })
+  # })
   
-  generateMetricUI <- function(current, slider, radio) {
+  generateMetricUI <- function(current, slider, radio, util) {
     
-    if(missing(slider) & missing(radio)){
+    if(missing(slider) & missing(radio) & missing(util)){
       sliderVal <- input[[paste0('rnk', current)]]
       if(is.null(sliderVal))
         sliderVal <- 1
@@ -1118,11 +1118,18 @@ shinyServer(function(input, output, session) {
       radioVal <- input[[paste0('sel', current)]]
       if(is.null(radioVal))
         radioVal <- "Min"
+      
+      utilVal <- input[[paste0('util', current)]]
+      if(is.null(utilVal))
+        utilVal <- FALSE
     }
     else{
       sliderVal <- slider
       radioVal <- radio
+      utilVal <- util
     }
+    
+    transferCondition = toString(paste0("input.util",current," == true"))
       
     column(3, 
       h4(varNames[current]),
@@ -1137,14 +1144,76 @@ shinyServer(function(input, output, session) {
                   min = 0,
                   max = 1,
                   value = sliderVal)
+      # ,
+      # checkboxInput(paste0('util', current),
+      #               "Add Transfer Function",
+      #               value = utilVal),
+      # conditionalPanel(condition = transferCondition,
+      #                  textInput(paste0('func', current),
+      #                            "Enter Data Points",
+      #                            placeholder = "e.g. 40 = 0.1, 50 = 0.5"),
+      #                  utilityPlot(current)),
+      # br(), br(), br()
     )
+  }
+  
+  utilityPlot <- function(current){
+    plotName <- paste0("transferPlot", current)
+    f <- list(
+      family = "Courier New, monospace",
+      size = 18,
+      color = "#7f7f7f"
+    )
+    x <- list(
+      title = varNames[current],
+      titlefont = f
+    )
+    y <- list(
+      title = "Score",
+      titlefont = f
+    )
+    renderPlot({
+      plotPoints <- parseUserInputPoints(current)
+      req(plotPoints)
+      p <- plot(x = unlist(lapply(names(plotPoints), as.numeric)),
+                y = unname(plotPoints),
+                xlab = varNames[current],
+                ylab = "Score")
+      p
+    })
+  }
+  
+  parseUserInputPoints <- function(current){
+    xVals <- NULL
+    yVals <- NULL
+    raw_text <- input[[paste0('func', current)]]
+    points <- unlist(strsplit(raw_text, ","))
+    for(i in 1:length(points)){
+      current_point <- unlist(strsplit(points[i], "="))
+      req(length(current_point) == 2)
+      current_val <- as.numeric(current_point[1])
+      low <- rawAbsMin()[current]
+      hi <- rawAbsMax()[current]
+      req(findInterval(current_val, c(low, hi)) == 1)
+      xVals <- c(xVals, current_val)
+      yVals <- c(yVals, as.numeric(current_point[2]))
+    }
+    #Sort list by 'xVals' (while paired with yVals)
+    unsortedVals <- xVals
+    names(unsortedVals) <- yVals
+    sortedVals <- sort(unsortedVals)
+    
+    #Flip-flop names&values of a named list
+    outputVals <- sapply(names(sortedVals), as.numeric)
+    names(outputVals) <- sortedVals
+    outputVals
   }
   
   fullMetricUI <- reactive({
     if(!importFlags$ranking){
       fluidRow(
         lapply(metricsList(), function(column) {
-          generateMetricUI(column)
+          isolate(generateMetricUI(column))
         })
       )
     }
@@ -1153,7 +1222,11 @@ shinyServer(function(input, output, session) {
         lapply(metricsList(), function(column) {
           importedSlider <- importData[[paste0('rnk', column)]]
           importedRadio <- importData[[paste0('sel', column)]]
-          generateMetricUI(column, importedSlider, importedRadio)
+          importedUtil <- importData[[paste0('util', column)]]
+          isolate(generateMetricUI(column, 
+                           importedSlider, 
+                           importedRadio,
+                           importedUtil))
         })
       )
     }
@@ -1170,7 +1243,7 @@ shinyServer(function(input, output, session) {
   rankData <- reactive({
     req(metricsList())
     print("In calculate ranked data")
-    data <- filterData()[varNum]
+    data <- filterData()[varRangeNum()]
     normData <- data.frame(t(t(data)/apply(data,2,max)))
     
     scoreData <- sapply(row.names(normData) ,function(x) 0)
@@ -1193,7 +1266,7 @@ shinyServer(function(input, output, session) {
     
     importFlags$ranking <- FALSE
     scoreData <- sort(scoreData, decreasing = TRUE)
-    filterData()[names(scoreData),]
+    filterData()[names(scoreData),varRangeNum()]
     
   })
   

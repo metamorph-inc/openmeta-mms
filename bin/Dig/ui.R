@@ -1,6 +1,5 @@
 library(shiny)
-library(plotly)
-require(shinyjs)
+library(shinyjs)
 
 # Define UI for PET Design Space Browser application
 shinyUI(fluidPage(
@@ -104,7 +103,6 @@ shinyUI(fluidPage(
                              c(),
                              multiple = TRUE),
                         actionButton("clearMetrics", "Clear Metrics")),
-                 column(8, plotlyOutput("rankPieChart")),
                  br(), br(), br()
                ),
                uiOutput("rankings"), 
