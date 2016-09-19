@@ -65,7 +65,8 @@ namespace PETBrowser
 
         public AnalysisTool(RegistryKey toolKey)
         {
-            InternalName = toolKey.Name;
+            var keyNameComponents = toolKey.Name.Split('\\');
+            InternalName = keyNameComponents[keyNameComponents.Length - 1];
 
             if (toolKey.GetValueKind("") == RegistryValueKind.String)
             {
@@ -83,15 +84,6 @@ namespace PETBrowser
             else
             {
                 throw new InvalidAnalysisToolException(string.Format("Tool {0} is missing the required ActionName key", toolKey.Name));
-            }
-
-            if (toolKey.GetValueKind("ExecutableFilePath") == RegistryValueKind.String)
-            {
-                ExecutableFilePath = (string)toolKey.GetValue("ExecutableFilePath");
-            }
-            else
-            {
-                throw new InvalidAnalysisToolException(string.Format("Tool {0} is missing the required ExecutableFilePath key", toolKey.Name));
             }
 
             if (toolKey.GetValueKind("ExecutableFilePath") == RegistryValueKind.String)

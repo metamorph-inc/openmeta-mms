@@ -701,7 +701,6 @@ namespace PETBrowser
         }
 
         private bool isContextMenuOpen = false;
-        private int attachedCount = 0;
         private void AnalysisToolsButton_Click(object sender, RoutedEventArgs e)
         {
             var source = sender as Button;
@@ -713,7 +712,6 @@ namespace PETBrowser
                 if (!isContextMenuOpen)
                 {
                     source.ContextMenu.AddHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed), true);
-                    Interlocked.Increment(ref attachedCount);
                     // If there is a drop-down assigned to this button, then position and display it 
                     source.ContextMenu.PlacementTarget = source;
                     source.ContextMenu.Placement = PlacementMode.Bottom;
@@ -730,7 +728,6 @@ namespace PETBrowser
             if (contextMenu != null)
             {
                 contextMenu.RemoveHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed));
-                Interlocked.Decrement(ref attachedCount);
             }
         }
 
@@ -745,8 +742,7 @@ namespace PETBrowser
             {
                 var highlightedDataset = (Dataset)PetGrid.SelectedItem;
                 var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset);
-                string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
-
+                string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), string.Format("{0}_{1:yyyyMMdd_HHmmss}.log", analysisTool.InternalName, DateTime.Now));
                 var exePath = ExpandAnalysisToolString(analysisTool.ExecutableFilePath, exportPath, ViewModel.Store.DataDirectory);
                 var arguments = ExpandAnalysisToolString(analysisTool.ProcessArguments, exportPath, ViewModel.Store.DataDirectory);
                 var workingDirectory = ExpandAnalysisToolString(analysisTool.WorkingDirectory, exportPath, ViewModel.Store.DataDirectory);
@@ -754,7 +750,7 @@ namespace PETBrowser
                 ProcessStartInfo psi = new ProcessStartInfo()
                 {
                     FileName = "cmd.exe",
-                    Arguments = String.Format("/S /C \"\"{0}\" {1} > \"{2}\" 2>&1\"", exePath, arguments, logPath),
+                    Arguments = string.Format("/S /C \"\"{0}\" {1} > \"{2}\" 2>&1\"", exePath, arguments, logPath),
                     CreateNoWindow = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
                     WorkingDirectory = workingDirectory,
@@ -762,6 +758,14 @@ namespace PETBrowser
                     // RedirectStandardOutput = true,
                     UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
                 };
+
+                if (analysisTool.ShowConsoleWindow)
+                {
+                    psi.Arguments = string.Format("/S /C \"\"{0}\" {1}\"", exePath, arguments, logPath);
+                    psi.CreateNoWindow = false;
+                    psi.WindowStyle = ProcessWindowStyle.Normal;
+                }
+
                 Console.WriteLine(psi.Arguments);
                 var p = new Process();
                 p.StartInfo = psi;
@@ -771,7 +775,7 @@ namespace PETBrowser
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("Error", "An error occurred while starting visualizer.", ex.Message, ex.ToString());
+                ShowErrorDialog("Error", "An error occurred while starting tool.", ex.Message, ex.ToString());
             }
         }
 

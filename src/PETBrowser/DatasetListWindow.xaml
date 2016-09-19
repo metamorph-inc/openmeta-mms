@@ -89,7 +89,7 @@
                                 <Button x:Name="AnalysisToolsButton" Margin="5,10,5,10" Padding="5,3" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" IsEnabled="{Binding DatasetLoaded}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Run Tool">
+                                            <TextBlock Text="Analyze Selected with Tool">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
                                                         <Style.Triggers>
