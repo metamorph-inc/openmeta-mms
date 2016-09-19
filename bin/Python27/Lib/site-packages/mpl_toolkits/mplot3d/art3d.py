@@ -10,8 +10,8 @@ artists into 3D versions which can be added to an Axes3D.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
-from six.moves import zip
+from matplotlib.externals import six
+from matplotlib.externals.six.moves import zip
 
 from matplotlib import lines, text as mtext, path as mpath, colors as mcolors
 from matplotlib import artist
@@ -75,6 +75,7 @@ class Text3D(mtext.Text):
         x, y = self.get_position()
         self._position3d = np.array((x, y, z))
         self._dir_vec = get_dir_vector(zdir)
+        self.stale = True
 
     def draw(self, renderer):
         proj = proj3d.proj_trans_points([self._position3d, \
@@ -89,11 +90,14 @@ class Text3D(mtext.Text):
         self.set_position((proj[0][0], proj[1][0]))
         self.set_rotation(norm_text_angle(angle))
         mtext.Text.draw(self, renderer)
+        self.stale = False
+
 
 def text_2d_to_3d(obj, z=0, zdir='z'):
     """Convert a Text to a Text3D object."""
     obj.__class__ = Text3D
     obj.set_3d_properties(z, zdir)
+
 
 class Line3D(lines.Line2D):
     '''
@@ -119,12 +123,15 @@ class Line3D(lines.Line2D):
         except TypeError:
             pass
         self._verts3d = juggle_axes(xs, ys, zs, zdir)
+        self.stale = True
 
     def draw(self, renderer):
         xs3d, ys3d, zs3d = self._verts3d
         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
         self.set_data(xs, ys)
         lines.Line2D.draw(self, renderer)
+        self.stale = False
+
 
 def line_2d_to_3d(line, zs=0, zdir='z'):
     '''
@@ -159,6 +166,37 @@ def paths_to_3d_segments(paths, zs=0, zdir='z'):
         segments.append(path_to_3d_segment(path, pathz, zdir))
     return segments
 
+def path_to_3d_segment_with_codes(path, zs=0, zdir='z'):
+    '''Convert a path to a 3D segment with path codes.'''
+
+    if not iterable(zs):
+        zs = np.ones(len(path)) * zs
+
+    seg = []
+    codes = []
+    pathsegs = path.iter_segments(simplify=False, curves=False)
+    for (((x, y), code), z) in zip(pathsegs, zs):
+        seg.append((x, y, z))
+        codes.append(code)
+    seg3d = [juggle_axes(x, y, z, zdir) for (x, y, z) in seg]
+    return seg3d, codes
+
+def paths_to_3d_segments_with_codes(paths, zs=0, zdir='z'):
+    '''
+    Convert paths from a collection object to 3D segments with path codes.
+    '''
+
+    if not iterable(zs):
+        zs = np.ones(len(paths)) * zs
+
+    segments = []
+    codes_list = []
+    for path, pathz in zip(paths, zs):
+        segs, codes = path_to_3d_segment_with_codes(path, pathz, zdir)
+        segments.append(segs)
+        codes_list.append(codes)
+    return segments, codes_list
+
 class Line3DCollection(LineCollection):
     '''
     A collection of 3D lines.
@@ -170,9 +208,10 @@ class Line3DCollection(LineCollection):
         '''
         LineCollection.__init__(self, segments, *args, **kwargs)
 
-    def set_sort_zpos(self,val):
+    def set_sort_zpos(self, val):
         '''Set the position to use for z-sorting.'''
         self._sort_zpos = val
+        self.stale = True
 
     def set_segments(self, segments):
         '''
@@ -202,11 +241,13 @@ class Line3DCollection(LineCollection):
             self.do_3d_projection(renderer)
         LineCollection.draw(self, renderer)
 
+
 def line_collection_2d_to_3d(col, zs=0, zdir='z'):
     """Convert a LineCollection to a Line3DCollection object."""
     segments3d = paths_to_3d_segments(col.get_paths(), zs, zdir)
     col.__class__ = Line3DCollection
     col.set_segments(segments3d)
+
 
 class Patch3D(Patch):
     '''
@@ -322,10 +363,10 @@ class Patch3DCollection(PatchCollection):
         PatchCollection.__init__(self, *args, **kwargs)
         self.set_3d_properties(zs, zdir)
 
-
-    def set_sort_zpos(self,val):
+    def set_sort_zpos(self, val):
         '''Set the position to use for z-sorting.'''
         self._sort_zpos = val
+        self.stale = True
 
     def set_3d_properties(self, zs, zdir):
         # Force the collection to initialize the face and edgecolors
@@ -340,6 +381,7 @@ class Patch3DCollection(PatchCollection):
         self._offsets3d = juggle_axes(xs, ys, np.atleast_1d(zs), zdir)
         self._facecolor3d = self.get_facecolor()
         self._edgecolor3d = self.get_edgecolor()
+        self.stale = True
 
     def do_3d_projection(self, renderer):
         xs, ys, zs = self._offsets3d
@@ -356,9 +398,9 @@ class Patch3DCollection(PatchCollection):
         self.set_edgecolors(ecs)
         PatchCollection.set_offsets(self, list(zip(vxs, vys)))
 
-        if vzs.size > 0 :
+        if vzs.size > 0:
             return min(vzs)
-        else :
+        else:
             return np.nan
 
 
@@ -392,6 +434,7 @@ class Path3DCollection(PathCollection):
     def set_sort_zpos(self, val):
         '''Set the position to use for z-sorting.'''
         self._sort_zpos = val
+        self.stale = True
 
     def set_3d_properties(self, zs, zdir):
         # Force the collection to initialize the face and edgecolors
@@ -406,6 +449,7 @@ class Path3DCollection(PathCollection):
         self._offsets3d = juggle_axes(xs, ys, np.atleast_1d(zs), zdir)
         self._facecolor3d = self.get_facecolor()
         self._edgecolor3d = self.get_edgecolor()
+        self.stale = True
 
     def do_3d_projection(self, renderer):
         xs, ys, zs = self._offsets3d
@@ -453,6 +497,7 @@ def patch_collection_2d_to_3d(col, zs=0, zdir='z', depthshade=True):
     col._depthshade = depthshade
     col.set_3d_properties(zs, zdir)
 
+
 class Poly3DCollection(PolyCollection):
     '''
     A collection of 3D polygons.
@@ -470,10 +515,10 @@ class Poly3DCollection(PolyCollection):
         Note that this class does a bit of magic with the _facecolors
         and _edgecolors properties.
         '''
-
-        self.set_zsort(kwargs.pop('zsort', True))
-
+        zsort = kwargs.pop('zsort', True)
         PolyCollection.__init__(self, verts, *args, **kwargs)
+        self.set_zsort(zsort)
+        self._codes3d = None
 
     _zsort_functions = {
         'average': np.average,
@@ -502,6 +547,7 @@ class Poly3DCollection(PolyCollection):
         self._zsort = zsort
         self._sort_zpos = None
         self._zsortfunc = zsortfunc
+        self.stale = True
 
     def get_vector(self, segments3d):
         """Optimize points for projection"""
@@ -531,6 +577,14 @@ class Poly3DCollection(PolyCollection):
         # 2D verts will be updated at draw time
         PolyCollection.set_verts(self, [], closed)
 
+    def set_verts_and_codes(self, verts, codes):
+        '''Sets 3D vertices with path codes'''
+        # set vertices with closed=False to prevent PolyCollection from
+        # setting path codes
+        self.set_verts(verts, closed=False)
+        # and set our own codes instead.
+        self._codes3d = codes
+
     def set_3d_properties(self):
         # Force the collection to initialize the face and edgecolors
         # just in case it is a scalarmappable with a colormap.
@@ -540,10 +594,12 @@ class Poly3DCollection(PolyCollection):
         self._facecolors3d = PolyCollection.get_facecolors(self)
         self._edgecolors3d = PolyCollection.get_edgecolors(self)
         self._alpha3d = PolyCollection.get_alpha(self)
+        self.stale = True
 
     def set_sort_zpos(self,val):
         '''Set the position to use for z-sorting.'''
         self._sort_zpos = val
+        self.stale = True
 
     def do_3d_projection(self, renderer):
         '''
@@ -555,8 +611,8 @@ class Poly3DCollection(PolyCollection):
             self._facecolors3d = self._facecolors
 
         txs, tys, tzs = proj3d.proj_transform_vec(self._vec, renderer.M)
-        xyzlist = [(txs[si:ei], tys[si:ei], tzs[si:ei]) \
-                for si, ei in self._segis]
+        xyzlist = [(txs[si:ei], tys[si:ei], tzs[si:ei])
+                   for si, ei in self._segis]
 
         # This extra fuss is to re-order face / edge colors
         cface = self._facecolors3d
@@ -570,18 +626,24 @@ class Poly3DCollection(PolyCollection):
 
         # if required sort by depth (furthest drawn first)
         if self._zsort:
-            z_segments_2d = [(self._zsortfunc(zs), list(zip(xs, ys)), fc, ec) for
-                    (xs, ys, zs), fc, ec in zip(xyzlist, cface, cedge)]
+            indices = range(len(xyzlist))
+            z_segments_2d = [(self._zsortfunc(zs), list(zip(xs, ys)), fc, ec,
+                              idx) for (xs, ys, zs), fc, ec, idx in
+                             zip(xyzlist, cface, cedge, indices)]
             z_segments_2d.sort(key=lambda x: x[0], reverse=True)
         else:
             raise ValueError("whoops")
 
-        segments_2d = [s for z, s, fc, ec in z_segments_2d]
-        PolyCollection.set_verts(self, segments_2d)
+        segments_2d = [s for z, s, fc, ec, idx in z_segments_2d]
+        if self._codes3d is not None:
+            codes = [self._codes3d[idx] for z, s, fc, ec, idx in z_segments_2d]
+            PolyCollection.set_verts_and_codes(self, segments_2d, codes)
+        else:
+            PolyCollection.set_verts(self, segments_2d)
 
-        self._facecolors2d = [fc for z, s, fc, ec in z_segments_2d]
+        self._facecolors2d = [fc for z, s, fc, ec, idx in z_segments_2d]
         if len(self._edgecolors3d) == len(cface):
-            self._edgecolors2d = [ec for z, s, fc, ec in z_segments_2d]
+            self._edgecolors2d = [ec for z, s, fc, ec, idx in z_segments_2d]
         else:
             self._edgecolors2d = self._edgecolors3d
 
@@ -631,6 +693,7 @@ class Poly3DCollection(PolyCollection):
                     self._edgecolors3d, self._alpha)
         except (AttributeError, TypeError, IndexError):
             pass
+        self.stale = True
 
     def get_facecolors(self):
         return self._facecolors2d
@@ -643,11 +706,13 @@ class Poly3DCollection(PolyCollection):
     def draw(self, renderer):
         return Collection.draw(self, renderer)
 
+
 def poly_collection_2d_to_3d(col, zs=0, zdir='z'):
     """Convert a PolyCollection to a Poly3DCollection object."""
-    segments_3d = paths_to_3d_segments(col.get_paths(), zs, zdir)
+    segments_3d, codes = paths_to_3d_segments_with_codes(col.get_paths(),
+                                                         zs, zdir)
     col.__class__ = Poly3DCollection
-    col.set_verts(segments_3d)
+    col.set_verts_and_codes(segments_3d, codes)
     col.set_3d_properties()
 
 def juggle_axes(xs, ys, zs, zdir):

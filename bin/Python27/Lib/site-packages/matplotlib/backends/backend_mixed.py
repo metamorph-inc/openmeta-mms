@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 from matplotlib._image import frombuffer
 from matplotlib.backends.backend_agg import RendererAgg
@@ -43,7 +43,6 @@ class MixedModeRenderer(object):
         self._height = height
         self.dpi = dpi
 
-        assert not vector_renderer.option_image_nocomposite()
         self._vector_renderer = vector_renderer
 
         self._raster_renderer = None
@@ -121,7 +120,6 @@ class MixedModeRenderer(object):
             if w > 0 and h > 0:
                 image = frombuffer(buffer, w, h, True)
                 image.is_grayscale = False
-                image.flipud_out()
                 gc = self._renderer.new_gc()
                 # TODO: If the mixedmode resolution differs from the figure's
                 #       dpi, the image must be scaled (dpi->_figdpi). Not all

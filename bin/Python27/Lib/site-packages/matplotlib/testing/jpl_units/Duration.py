@@ -13,13 +13,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 #
 # Place all imports before here.
 #===========================================================================
 
 #===========================================================================
-class Duration:
+class Duration(object):
    """Class Duration in development.
    """
    allowed = [ "ET", "UTC" ]

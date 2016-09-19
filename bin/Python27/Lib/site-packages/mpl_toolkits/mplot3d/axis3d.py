@@ -6,7 +6,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 import math
 import copy
@@ -80,12 +80,10 @@ class Axis(maxis.XAxis):
         # This is a temporary member variable.
         # Do not depend on this existing in future releases!
         self._axinfo = self._AXINFO[adir].copy()
-        self._axinfo.update({'label' : {'space_factor': 1.6,
-                                        'va': 'center',
+        self._axinfo.update({'label' : {'va': 'center',
                                         'ha': 'center'},
                              'tick' : {'inward_factor': 0.2,
                                        'outward_factor': 0.1},
-                             'ticklabel': {'space_factor': 0.7},
                              'axisline': {'linewidth': 0.75,
                                           'color': (0, 0, 0, 1)},
                              'grid' : {'color': (0.9, 0.9, 0.9, 1),
@@ -143,6 +141,7 @@ class Axis(maxis.XAxis):
         xys = np.asarray(xys)
         xys = xys[:,:2]
         self.pane.xy = xys
+        self.stale = True
 
     def set_pane_color(self, color):
         '''Set pane color to a RGBA tuple'''
@@ -150,6 +149,7 @@ class Axis(maxis.XAxis):
         self.pane.set_edgecolor(color)
         self.pane.set_facecolor(color)
         self.pane.set_alpha(color[-1])
+        self.stale = True
 
     def set_rotate_label(self, val):
         '''
@@ -157,6 +157,7 @@ class Axis(maxis.XAxis):
         If set to None the label will be rotated if longer than 4 chars.
         '''
         self._rotate_label = val
+        self.stale = True
 
     def get_rotate_label(self, text):
         if self._rotate_label is not None:
@@ -260,12 +261,19 @@ class Axis(maxis.XAxis):
         # edge points of the plane to display coordinates and calculate
         # an angle from that.
         # TODO: Maybe Text objects should handle this themselves?
-        dx, dy = (self.axes.transAxes.transform(peparray[0:2, 1]) -
-                  self.axes.transAxes.transform(peparray[0:2, 0]))
+        dx, dy = (self.axes.transAxes.transform([peparray[0:2, 1]]) -
+                  self.axes.transAxes.transform([peparray[0:2, 0]]))[0]
 
         lxyz = 0.5*(edgep1 + edgep2)
 
-        labeldeltas = info['label']['space_factor'] * deltas
+        # A rough estimate; points are ambiguous since 3D plots rotate
+        ax_scale = self.axes.bbox.size / self.figure.bbox.size
+        ax_inches = np.multiply(ax_scale, self.figure.get_size_inches())
+        ax_points_estimate = sum(72. * ax_inches)
+        deltas_per_point = 48. / ax_points_estimate
+        default_offset = 21.
+        labeldeltas = (self.labelpad + default_offset) * deltas_per_point\
+            * deltas
         axmask = [True, True, True]
         axmask[index] = False
         lxyz = move_from_center(lxyz, centers, labeldeltas, axmask)
@@ -394,8 +402,10 @@ class Axis(maxis.XAxis):
                     renderer.M)
 
             # Get position of label
-            labeldeltas = [info['ticklabel']['space_factor'] * x for
-                           x in deltas]
+            default_offset = 8.  # A rough estimate
+            labeldeltas = (tick.get_pad() + default_offset) * deltas_per_point\
+                * deltas
+
             axmask = [True, True, True]
             axmask[index] = False
             pos[tickdir] = edgep1[tickdir]
@@ -409,6 +419,7 @@ class Axis(maxis.XAxis):
             tick.draw(renderer)
 
         renderer.close_group('axis3d')
+        self.stale = False
 
     def get_view_interval(self):
         """return the Interval instance for this 3d axis view limits"""

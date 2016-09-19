@@ -38,7 +38,7 @@ __pkginfo__.__package__ = __name__
 __pkginfo__.version = __version__
 sys.modules['logilab.common.__pkginfo__'] = __pkginfo__
 
-STD_BLACKLIST = ('CVS', '.svn', '.hg', 'debian', 'dist', 'build')
+STD_BLACKLIST = ('CVS', '.svn', '.hg', '.git', '.tox', 'debian', 'dist', 'build')
 
 IGNORED_EXTENSIONS = ('.pyc', '.pyo', '.elc', '~', '.swp', '.orig')
 

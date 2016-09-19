@@ -6,7 +6,7 @@ font data tables for truetype and afm computer modern fonts
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 """
 from matplotlib.ft2font import FT2Font
@@ -96,7 +96,7 @@ latex_to_bakoma = {
     r'\chi'                      : ('cmmi10',  17),
     r'\psi'                      : ('cmmi10',  31),
     r'|'                         : ('cmsy10',  47),
-    r'\|'                        : ('cmsy10',  47),
+    r'\|'                        : ('cmsy10',  44),
     r'('                         : ('cmr10',  119),
     r'\leftparen'                : ('cmr10',  119),
     r'\rightparen'               : ('cmr10',   68),
@@ -1946,7 +1946,6 @@ tex2uni = {
     'boxminus'                 : 8863,
     'equiv'                    : 8801,
     'Lleftarrow'               : 8666,
-    'thinspace'                : 8201,
     'll'                       : 8810,
     'Cup'                      : 8915,
     'measeq'                   : 8798,
@@ -2169,7 +2168,6 @@ tex2uni = {
     'cdots'                    : 8943,
     'hat'                      : 770,
     'eqgtr'                    : 8925,
-    'enspace'                  : 8194,
     'psi'                      : 968,
     'frown'                    : 8994,
     'acute'                    : 769,
@@ -2281,7 +2279,7 @@ tex2uni = {
     'obar'                     : 9021,
     'supseteq'                 : 8839,
     'nu'                       : 957,
-    'AA'                       : 8491,
+    'AA'                       : 197,
     'AE'                       : 198,
     'models'                   : 8871,
     'ominus'                   : 8854,
@@ -2498,7 +2496,7 @@ stix_virtual_fonts = {
         (0x0049, 0x0049, 'it', 0x2110),  # I
         (0x004a, 0x004b, 'it', 0x1d4a5), # J-K
         (0x004c, 0x004c, 'it', 0x2112),  # L
-        (0x004d, 0x003d, 'it', 0x2133),  # M
+        (0x004d, 0x004d, 'it', 0x2133),  # M
         (0x004e, 0x0051, 'it', 0x1d4a9), # N-Q
         (0x0052, 0x0052, 'it', 0x211b),  # R
         (0x0053, 0x005a, 'it', 0x1d4ae), # S-Z

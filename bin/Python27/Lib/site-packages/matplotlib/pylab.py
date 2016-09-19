@@ -218,7 +218,7 @@ __end
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 import sys, warnings
 
@@ -253,7 +253,7 @@ from matplotlib.mlab import griddata, stineman_interp, slopes, \
 
 from matplotlib.mlab import window_hanning, window_none,  detrend, demean, \
      detrend_mean, detrend_none, detrend_linear, entropy, normpdf, \
-     find, longest_contiguous_ones, longest_ones, prepca, \
+     find, longest_contiguous_ones, longest_ones, \
      prctile, prctile_rank, \
      center_matrix, rk4, bivariate_normal, get_xyz_where, \
      get_sparse_matrix, dist, \

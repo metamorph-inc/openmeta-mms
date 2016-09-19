@@ -135,8 +135,8 @@ def update_core():
 
     project.Save()
 
-    # dumper = Dispatch("Mga.MgaDumper")
-    # dumper.DumpProject(project, "CyPhyML-core.xme")
+    dumper = Dispatch("Mga.MgaDumper")
+    dumper.DumpProject(project, "CyPhyML-core.xme")
     project.Close(True)
 
 

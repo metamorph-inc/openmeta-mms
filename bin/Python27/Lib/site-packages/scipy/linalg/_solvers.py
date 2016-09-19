@@ -20,9 +20,9 @@ __all__ = ['solve_sylvester', 'solve_lyapunov', 'solve_discrete_lyapunov',
            'solve_continuous_are', 'solve_discrete_are']
 
 
-def solve_sylvester(a,b,q):
+def solve_sylvester(a, b, q):
     """
-    Computes a solution (X) to the Sylvester equation (AX + XB = Q).
+    Computes a solution (X) to the Sylvester equation :math:`AX + XB = Q`.
 
     Parameters
     ----------
@@ -58,32 +58,35 @@ def solve_sylvester(a,b,q):
     """
 
     # Compute the Schur decomp form of a
-    r,u = schur(a, output='real')
+    r, u = schur(a, output='real')
 
     # Compute the Schur decomp of b
-    s,v = schur(b.conj().transpose(), output='real')
+    s, v = schur(b.conj().transpose(), output='real')
 
     # Construct f = u'*q*v
     f = np.dot(np.dot(u.conj().transpose(), q), v)
 
     # Call the Sylvester equation solver
-    trsyl, = get_lapack_funcs(('trsyl',), (r,s,f))
+    trsyl, = get_lapack_funcs(('trsyl',), (r, s, f))
     if trsyl is None:
-        raise RuntimeError('LAPACK implementation does not contain a proper Sylvester equation solver (TRSYL)')
+        raise RuntimeError('LAPACK implementation does not contain a proper '
+                           'Sylvester equation solver (TRSYL)')
     y, scale, info = trsyl(r, s, f, tranb='C')
 
     y = scale*y
 
     if info < 0:
-        raise LinAlgError("Illegal value encountered in the %d term" % (-info,))
+        raise LinAlgError("Illegal value encountered in "
+                          "the %d term" % (-info,))
 
     return np.dot(np.dot(u, y), v.conj().transpose())
 
 
 def solve_lyapunov(a, q):
     """
-    Solves the continuous Lyapunov equation (AX + XA^H = Q) given the values
-    of A and Q using the Bartels-Stewart algorithm.
+    Solves the continuous Lyapunov equation :math:`AX + XA^H = Q`.
+
+    Uses the Bartels-Stewart algorithm to find :math:`X`.
 
     Parameters
     ----------
@@ -147,15 +150,13 @@ def _solve_discrete_lyapunov_bilinear(a, q):
 
 def solve_discrete_lyapunov(a, q, method=None):
     """
-    Solves the discrete Lyapunov equation :math:`(A'XA-X=-Q)`.
+    Solves the discrete Lyapunov equation :math:`AXA^H - X + Q = 0`.
 
     Parameters
     ----------
-    a : (M, M) array_like
-        A square matrix
-
-    q : (M, M) array_like
-        Right-hand side square matrix
+    a, q : (M, M) array_like
+        Square matrices corresponding to A and Q in the equation
+        above respectively. Must have the same shape.
 
     method : {'direct', 'bilinear'}, optional
         Type of solver.
@@ -184,7 +185,7 @@ def solve_discrete_lyapunov(a, q, method=None):
     performance degrades rapidly for even moderately sized matrices.
 
     Method *bilinear* uses a bilinear transformation to convert the discrete
-    Lyapunov equation to a continuous Lyapunov equation :math:`(B'X+XB=-C)`
+    Lyapunov equation to a continuous Lyapunov equation :math:`(BX+XB'=-C)`
     where :math:`B=(A-I)(A+I)^{-1}` and
     :math:`C=2(A' + I)^{-1} Q (A + I)^{-1}`. The continuous equation can be
     efficiently solved since it is a special case of a Sylvester equation.
@@ -225,9 +226,14 @@ def solve_discrete_lyapunov(a, q, method=None):
 
 def solve_continuous_are(a, b, q, r):
     """
-    Solves the continuous algebraic Riccati equation, or CARE, defined
-    as (A'X + XA - XBR^-1B'X+Q=0) directly using a Schur decomposition
-    method.
+    Solves the continuous algebraic Riccati equation (CARE).
+
+    The CARE is defined as
+
+    .. math::
+        (A'X + XA - XBR^-1B'X+Q=0)
+
+    It is solved directly using a Schur decomposition method.
 
     Parameters
     ----------
@@ -264,7 +270,8 @@ def solve_continuous_are(a, b, q, r):
     try:
         g = inv(r)
     except LinAlgError:
-        raise ValueError('Matrix R in the algebraic Riccati equation solver is ill-conditioned')
+        raise ValueError('Matrix R in the algebraic Riccati equation solver '
+                         'is ill-conditioned')
 
     g = np.dot(np.dot(b, g), b.conj().transpose())
 
@@ -277,7 +284,7 @@ def solve_continuous_are(a, b, q, r):
 
     # Note: we need to sort the upper left of s to have negative real parts,
     #       while the lower right is positive real components (Laub, p. 7)
-    [s, u, sorted] = schur(z, sort='lhp')
+    s, u, _ = schur(z, sort='lhp')
 
     (m, n) = u.shape
 
@@ -290,9 +297,14 @@ def solve_continuous_are(a, b, q, r):
 
 def solve_discrete_are(a, b, q, r):
     """
-    Solves the disctrete algebraic Riccati equation, or DARE, defined as
-    (X = A'XA-(A'XB)(R+B'XB)^-1(B'XA)+Q), directly using a Schur decomposition
-    method.
+    Solves the discrete algebraic Riccati equation (DARE).
+
+    The DARE is defined as
+
+    .. math::
+        X = A'XA-(A'XB)(R+B'XB)^-1(B'XA)+Q
+
+    It is solved directly using a Schur decomposition method.
 
     Parameters
     ----------
@@ -329,14 +341,16 @@ def solve_discrete_are(a, b, q, r):
     try:
         g = inv(r)
     except LinAlgError:
-        raise ValueError('Matrix R in the algebraic Riccati equation solver is ill-conditioned')
+        raise ValueError('Matrix R in the algebraic Riccati equation solver '
+                         'is ill-conditioned')
 
     g = np.dot(np.dot(b, g), b.conj().transpose())
 
     try:
         ait = inv(a).conj().transpose()  # ait is "A inverse transpose"
     except LinAlgError:
-        raise ValueError('Matrix A in the algebraic Riccati equation solver is ill-conditioned')
+        raise ValueError('Matrix A in the algebraic Riccati equation solver '
+                         'is ill-conditioned')
 
     z11 = a+np.dot(np.dot(g, ait), q)
     z12 = -1.0*np.dot(g, ait)
@@ -347,9 +361,9 @@ def solve_discrete_are(a, b, q, r):
 
     # Note: we need to sort the upper left of s to lie within the unit circle,
     #       while the lower right is outside (Laub, p. 7)
-    [s, u, sorted] = schur(z, sort='iuc')
+    s, u, _ = schur(z, sort='iuc')
 
-    (m,n) = u.shape
+    (m, n) = u.shape
 
     u11 = u[0:m//2, 0:n//2]
     u21 = u[m//2:m, 0:n//2]

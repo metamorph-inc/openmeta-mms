@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
-from six import unichr
+from matplotlib.externals import six
+from matplotlib.externals.six import unichr
 import os
 import re
 import signal
@@ -73,8 +73,6 @@ class FigureCanvasQT(FigureCanvasQT5):
         self.figure = figure
         self.setMouseTracking(True)
         self._idle = True
-        # hide until we can test and fix
-        # self.startTimer(backend_IdleEvent.milliseconds)
         w, h = self.get_width_height()
         self.resize(w, h)
 

@@ -1381,7 +1381,7 @@ namespace MasterInterpreterTest.Projects
             // check context
             var success = CyPhyMasterInterpreterRunner.RunContextCheck(mgaFile, objectAbsPath);
 
-            Assert.True(success, "CyPhyMasterInterpreter context checker should have succeeded, but did not.");
+            Assert.True(success, "CyPhyMasterInterpreter context checker should succeed.");
         }
         [Fact]
         [Trait("Model", "MasterInterpreter")]
