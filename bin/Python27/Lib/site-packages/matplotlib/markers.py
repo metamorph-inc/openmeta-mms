@@ -79,8 +79,8 @@ that define the shape.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
-from six.moves import xrange
+from matplotlib.externals import six
+from matplotlib.externals.six.moves import xrange
 
 import numpy as np
 
@@ -145,7 +145,7 @@ class MarkerStyle(object):
     # TODO: Is this ever used as a non-constant?
     _point_size_reduction = 0.5
 
-    def __init__(self, marker=None, fillstyle='full'):
+    def __init__(self, marker=None, fillstyle=None):
         """
         MarkerStyle
 
@@ -165,6 +165,8 @@ class MarkerStyle(object):
         fillstyle : string, optional, default: 'full'
             'full', 'left", 'right', 'bottom', 'top', 'none'
         """
+        # The fillstyle has to be set here as it might be accessed by calls to
+        # _recache() in set_marker.
         self._fillstyle = fillstyle
         self.set_marker(marker)
         self.set_fillstyle(fillstyle)
@@ -211,6 +213,8 @@ class MarkerStyle(object):
         ----------
         fillstyle : string amongst known fillstyles
         """
+        if fillstyle is None:
+            fillstyle = rcParams['markers.fillstyle']
         if fillstyle not in self.fillstyles:
             raise ValueError("Unrecognized fillstyle %s"
                              % ' '.join(self.fillstyles))
@@ -244,7 +248,8 @@ class MarkerStyle(object):
                 Path(marker)
                 self._marker_function = self._set_vertices
             except ValueError:
-                raise ValueError('Unrecognized marker style {}'.format(marker))
+                raise ValueError('Unrecognized marker style'
+                                 ' {0}'.format(marker))
 
         self._marker = marker
         self._recache()
@@ -345,7 +350,7 @@ class MarkerStyle(object):
 
     def _set_circle(self, reduction=1.0):
         self._transform = Affine2D().scale(0.5 * reduction)
-        self._snap_threshold = 6.0
+        self._snap_threshold = np.inf
         fs = self.get_fillstyle()
         if not self._half_fill():
             self._path = Path.unit_circle()

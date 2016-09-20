@@ -36,15 +36,15 @@ It is pretty easy to use, and requires only built-in python libs:
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
-from six.moves import map
+from matplotlib.externals import six
+from matplotlib.externals.six.moves import map
 
 import sys
 import os
 import re
 from ._mathtext_data import uni2type1
 
-#Convert string the a python type
+# Convert string the a python type
 
 # some afm files have floats where we are expecting ints -- there is
 # probably a better way to handle this (support floats, round rather
@@ -155,13 +155,13 @@ def _parse_header(fh):
         if line.startswith(b'Comment'):
             continue
         lst = line.split(b' ', 1)
-        #print '%-s\t%-d line :: %-s' % ( fh.name, len(lst), line )
+
         key = lst[0]
         if len(lst) == 2:
             val = lst[1]
         else:
             val = b''
-        #key, val = line.split(' ', 1)
+
         try:
             d[key] = headerConverters[key](val)
         except ValueError:
@@ -169,8 +169,8 @@ def _parse_header(fh):
                   key, val, file=sys.stderr)
             continue
         except KeyError:
-            print('Found an unknown keyword in AFM header (was %s)' % key,
-                file=sys.stderr)
+            print('Found an unknown keyword in AFM header (was %r)' % key,
+                  file=sys.stderr)
             continue
         if key == b'StartCharMetrics':
             return d
@@ -194,17 +194,19 @@ def _parse_char_metrics(fh):
         line = fh.readline()
         if not line:
             break
-        line = line.rstrip()
-        if line.startswith(b'EndCharMetrics'):
+        line = line.rstrip().decode('ascii')  # Convert from byte-literal
+        if line.startswith('EndCharMetrics'):
             return ascii_d, name_d
-        vals = line.split(b';')[:4]
-        if len(vals) != 4:
+        # Split the metric line into a dictonary, keyed by metric identifiers
+        vals = filter(lambda s: len(s) > 0, line.split(';'))
+        vals = dict(map(lambda s: tuple(s.strip().split(' ', 1)), vals))
+        # There may be other metrics present, but only these are needed
+        if any([id not in vals.keys() for id in ('C', 'WX', 'N', 'B')]):
             raise RuntimeError('Bad char metrics line: %s' % line)
-        num = _to_int(vals[0].split()[1])
-        wx = _to_float(vals[1].split()[1])
-        name = vals[2].split()[1]
-        name = name.decode('ascii')
-        bbox = _to_list_of_floats(vals[3][2:])
+        num = _to_int(vals['C'])
+        wx = _to_float(vals['WX'])
+        name = vals['N']
+        bbox = _to_list_of_floats(vals['B'])
         bbox = list(map(int, bbox))
         # Workaround: If the character name is 'Euro', give it the
         # corresponding character code, according to WinAnsiEncoding (see PDF
@@ -517,7 +519,8 @@ class AFM(object):
 
         # FamilyName not specified so we'll make a guess
         name = self.get_fullname()
-        extras = br'(?i)([ -](regular|plain|italic|oblique|bold|semibold|light|ultralight|extra|condensed))+$'
+        extras = (br'(?i)([ -](regular|plain|italic|oblique|bold|semibold|'
+                  br'light|ultralight|extra|condensed))+$')
         return re.sub(extras, '', name)
 
     def get_weight(self):

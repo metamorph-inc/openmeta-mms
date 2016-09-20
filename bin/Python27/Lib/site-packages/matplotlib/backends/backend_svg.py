@@ -1,15 +1,16 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
-from six.moves import xrange
-from six import unichr
+from matplotlib.externals import six
+from matplotlib.externals.six.moves import xrange
+from matplotlib.externals.six import unichr
 
 import os, base64, tempfile, gzip, io, sys, codecs, re
 
 import numpy as np
 
 from hashlib import md5
+import uuid
 
 from matplotlib import verbose, __version__, rcParams
 from matplotlib.backend_bases import RendererBase, GraphicsContextBase,\
@@ -92,7 +93,7 @@ def escape_attrib(s):
 # @param file A file or file-like object.  This object must implement
 #    a <b>write</b> method that takes an 8-bit string.
 
-class XMLWriter:
+class XMLWriter(object):
     def __init__(self, file):
         self.__write = file.write
         if hasattr(file, "flush"):
@@ -255,7 +256,7 @@ class RendererSVG(RendererBase):
         self.width = width
         self.height = height
         self.writer = XMLWriter(svgwriter)
-        self.image_dpi = image_dpi # the actual dpi we want to rasterize stuff with
+        self.image_dpi = image_dpi  # the actual dpi we want to rasterize stuff with
 
         self._groupd = {}
         if not rcParams['svg.image_inline']:
@@ -297,7 +298,10 @@ class RendererSVG(RendererBase):
         writer = self.writer
         default_style = generate_css({
             'stroke-linejoin': 'round',
-            'stroke-linecap': 'butt'})
+            'stroke-linecap': 'butt',
+            # Disable the miter limit.  100000 seems to be close to
+            # the maximum that renderers support before breaking.
+            'stroke-miterlimit': '100000'})
         writer.start('defs')
         writer.start('style', type='text/css')
         writer.data('*{%s}\n' % default_style)
@@ -306,9 +310,14 @@ class RendererSVG(RendererBase):
 
     def _make_id(self, type, content):
         content = str(content)
+        salt = str(uuid.uuid4())
         if six.PY3:
             content = content.encode('utf8')
-        return '%s%s' % (type, md5(content).hexdigest()[:10])
+            salt = salt.encode('utf8')
+        m = md5()
+        m.update(salt)
+        m.update(content)
+        return '%s%s' % (type, m.hexdigest()[:10])
 
     def _make_flip_transform(self, transform):
         return (transform +
@@ -529,23 +538,31 @@ class RendererSVG(RendererBase):
 
     def option_image_nocomposite(self):
         """
-        if svg.image_noscale is True, compositing multiple images into one is prohibited
+        return whether to generate a composite image from multiple images on
+        a set of axes
         """
-        return rcParams['svg.image_noscale']
+        if rcParams['svg.image_noscale']:
+            return True
+        else:
+            return not rcParams['image.composite_image']
 
-    def _convert_path(self, path, transform=None, clip=None, simplify=None):
+    def _convert_path(self, path, transform=None, clip=None, simplify=None,
+                      sketch=None):
         if clip:
             clip = (0.0, 0.0, self.width, self.height)
         else:
             clip = None
-        return _path.convert_to_svg(path, transform, clip, simplify, 6)
+        return _path.convert_to_string(
+            path, transform, clip, simplify, sketch, 6,
+            [b'M', b'L', b'Q', b'C', b'z'], False).decode('ascii')
 
     def draw_path(self, gc, path, transform, rgbFace=None):
         trans_and_flip = self._make_flip_transform(transform)
         clip = (rgbFace is None and gc.get_hatch_path() is None)
         simplify = path.should_simplify and clip
         path_data = self._convert_path(
-            path, trans_and_flip, clip=clip, simplify=simplify)
+            path, trans_and_flip, clip=clip, simplify=simplify,
+            sketch=gc.get_sketch_params())
 
         attrib = {}
         attrib['style'] = self._get_style(gc, rgbFace)
@@ -817,10 +834,7 @@ class RendererSVG(RendererBase):
             self.writer.start('a', attrib={'xlink:href': url})
         if rcParams['svg.image_inline']:
             bytesio = io.BytesIO()
-            im.flipud_out()
-            rows, cols, buffer = im.as_rgba_str()
-            _png.write_png(buffer, cols, rows, bytesio)
-            im.flipud_out()
+            _png.write_png(np.array(im)[::-1], bytesio)
             oid = oid or self._make_id('image', bytesio)
             attrib['xlink:href'] = (
                 "data:image/png;base64,\n" +
@@ -829,10 +843,7 @@ class RendererSVG(RendererBase):
             self._imaged[self.basename] = self._imaged.get(self.basename,0) + 1
             filename = '%s.image%d.png'%(self.basename, self._imaged[self.basename])
             verbose.report( 'Writing image file for inclusion: %s' % filename)
-            im.flipud_out()
-            rows, cols, buffer = im.as_rgba_str()
-            _png.write_png(buffer, cols, rows, filename)
-            im.flipud_out()
+            _png.write_png(np.array(im)[::-1], filename)
             oid = oid or 'Im_' + self._make_id('image', filename)
             attrib['xlink:href'] = filename
 
@@ -1019,6 +1030,7 @@ class RendererSVG(RendererBase):
             style['font-size'] = six.text_type(fontsize) + 'px'
             style['font-family'] = six.text_type(fontfamily)
             style['font-style'] = prop.get_style().lower()
+            style['font-weight'] = six.text_type(prop.get_weight()).lower()
             attrib['style'] = generate_css(style)
 
             if mtext and (angle == 0 or mtext.get_rotation_mode() == "anchor"):
@@ -1087,7 +1099,8 @@ class RendererSVG(RendererBase):
                 style = generate_css({
                     'font-size': six.text_type(fontsize) + 'px',
                     'font-family': font.family_name,
-                    'font-style': font.style_name.lower()})
+                    'font-style': font.style_name.lower(),
+                    'font-weight': font.style_name.lower()})
                 if thetext == 32:
                     thetext = 0xa0 # non-breaking space
                 spans.setdefault(style, []).append((new_x, -new_y, thetext))

@@ -1,6 +1,6 @@
 """
-Low-level BLAS functions
-========================
+Low-level BLAS functions (:mod:`scipy.linalg.blas`)
+===================================================
 
 This module contains low-level functions from the BLAS library.
 
@@ -13,7 +13,7 @@ This module contains low-level functions from the BLAS library.
    so prefer using the higher-level routines in `scipy.linalg`.
 
 Finding functions
-=================
+-----------------
 
 .. autosummary::
    :toctree: generated/
@@ -22,123 +22,123 @@ Finding functions
    find_best_blas_type
 
 BLAS Level 1 functions
-======================
+----------------------
 
 .. autosummary::
    :toctree: generated/
 
-    caxpy
-    ccopy
-    cdotc
-    cdotu
-    crotg
-    cscal
-    csrot
-    csscal
-    cswap
-    dasum
-    daxpy
-    dcopy
-    ddot
-    dnrm2
-    drot
-    drotg
-    drotm
-    drotmg
-    dscal
-    dswap
-    dzasum
-    dznrm2
-    icamax
-    idamax
-    isamax
-    izamax
-    sasum
-    saxpy
-    scasum
-    scnrm2
-    scopy
-    sdot
-    snrm2
-    srot
-    srotg
-    srotm
-    srotmg
-    sscal
-    sswap
-    zaxpy
-    zcopy
-    zdotc
-    zdotu
-    zdrot
-    zdscal
-    zrotg
-    zscal
-    zswap
+   caxpy
+   ccopy
+   cdotc
+   cdotu
+   crotg
+   cscal
+   csrot
+   csscal
+   cswap
+   dasum
+   daxpy
+   dcopy
+   ddot
+   dnrm2
+   drot
+   drotg
+   drotm
+   drotmg
+   dscal
+   dswap
+   dzasum
+   dznrm2
+   icamax
+   idamax
+   isamax
+   izamax
+   sasum
+   saxpy
+   scasum
+   scnrm2
+   scopy
+   sdot
+   snrm2
+   srot
+   srotg
+   srotm
+   srotmg
+   sscal
+   sswap
+   zaxpy
+   zcopy
+   zdotc
+   zdotu
+   zdrot
+   zdscal
+   zrotg
+   zscal
+   zswap
 
 BLAS Level 2 functions
-======================
+----------------------
 
 .. autosummary::
    :toctree: generated/
 
-    cgemv
-    cgerc
-    cgeru
-    chemv
-    ctrmv
-    csyr
-    cher
-    cher2
-    dgemv
-    dger
-    dsymv
-    dtrmv
-    dsyr
-    dsyr2
-    sgemv
-    sger
-    ssymv
-    strmv
-    ssyr
-    ssyr2
-    zgemv
-    zgerc
-    zgeru
-    zhemv
-    ztrmv
-    zsyr
-    zher
-    zher2
+   cgemv
+   cgerc
+   cgeru
+   chemv
+   ctrmv
+   csyr
+   cher
+   cher2
+   dgemv
+   dger
+   dsymv
+   dtrmv
+   dsyr
+   dsyr2
+   sgemv
+   sger
+   ssymv
+   strmv
+   ssyr
+   ssyr2
+   zgemv
+   zgerc
+   zgeru
+   zhemv
+   ztrmv
+   zsyr
+   zher
+   zher2
 
 BLAS Level 3 functions
-======================
+----------------------
 
 .. autosummary::
    :toctree: generated/
 
-    cgemm
-    chemm
-    cherk
-    cher2k
-    csymm
-    csyrk
-    csyr2k
-    dgemm
-    dsymm
-    dsyrk
-    dsyr2k
-    sgemm
-    ssymm
-    ssyrk
-    ssyr2k
-    zgemm
-    zhemm
-    zherk
-    zher2k
-    zsymm
-    zsyrk
-    zsyr2k
+   cgemm
+   chemm
+   cherk
+   cher2k
+   csymm
+   csyrk
+   csyr2k
+   dgemm
+   dsymm
+   dsyrk
+   dsyr2k
+   sgemm
+   ssymm
+   ssyrk
+   ssyr2k
+   zgemm
+   zhemm
+   zherk
+   zher2k
+   zsymm
+   zsyrk
+   zsyr2k
 
 """
 #
@@ -164,7 +164,7 @@ from scipy.linalg._fblas import *
 del empty_module
 
 # 'd' will be default for 'i',..
-_type_conv = {'f':'s', 'd':'d', 'F':'c', 'D':'z', 'G':'z'}
+_type_conv = {'f': 's', 'd': 'd', 'F': 'c', 'D': 'z', 'G': 'z'}
 
 # some convenience alias for complex functions
 _blas_alias = {'cnrm2': 'scnrm2', 'znrm2': 'dznrm2',
@@ -214,6 +214,11 @@ def find_best_blas_type(arrays=(), dtype=None):
             prefer_fortran = True
 
     prefix = _type_conv.get(dtype.char, 'd')
+    if dtype.char == 'G':
+        # complex256 -> complex128 (i.e., C long double -> C double)
+        dtype = _np.dtype('D')
+    elif dtype.char not in 'fdFD':
+        dtype = _np.dtype('d')
 
     return prefix, dtype, prefer_fortran
 

@@ -91,7 +91,7 @@ shinyUI(fluidPage(
                            , br(), br())
         ),
         fluidRow(
-          dataTableOutput(outputId="table")
+          DT::dataTableOutput("table")
         )
       )
     ),

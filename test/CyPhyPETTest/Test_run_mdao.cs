@@ -61,4 +61,82 @@ namespace CyPhyPETTest
             }
         }
     }
+
+    public class WorkFlow_PETFixture : DynamicsTeamTest.XmeImportFixture
+    {
+        protected override string xmeFilename
+        {
+            get { return Path.Combine("..\\PET_simple_proof-of-concept", "WorkFlow_PET.xme"); }
+        }
+    }
+
+
+    public class PCC_Full_Test : IUseFixture<WorkFlow_PETFixture>
+    {
+        private string mgaFile;
+
+        [Fact]
+        public void TestPython()
+        {
+            string outputDir = "TestPython";
+            string petExperimentPath = "/@Testing/@ParametricExploration/@TestPython";
+
+            Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
+            var result = DynamicsTeamTest.CyPhyPETRunner.RunReturnFull(outputDir, mgaFile, petExperimentPath);
+
+            Assert.True(result.Item2.Success, "CyPhyPET failed.");
+            return;
+
+            string stderr = "<did not start process>";
+            int retcode = Run(result.Item2.RunCommand, result.Item1.OutputDirectory, out stderr);
+            Assert.True(0 == retcode, "run_mdao failed: " + stderr);
+        }
+
+        public void SetFixture(WorkFlow_PETFixture data)
+        {
+            mgaFile = data.mgaFile;
+        }
+
+        public int Run(string runCommand, string outputDir, out string stderr)
+        {
+            ProcessStartInfo info = new ProcessStartInfo()
+            {
+                FileName = VersionInfo.PythonVEnvExe,
+                WorkingDirectory = outputDir,
+                Arguments = "-m run_mdao mdao_config.json",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true
+            };
+
+            Process proc = new Process();
+            proc.StartInfo = info;
+
+            proc.Start();
+            string err = "";
+
+            proc.ErrorDataReceived += ((sender, e) =>
+            {
+                if (e.Data != null)
+                {
+                    try
+                    {
+                        err = err + e.Data;
+                    }
+                    catch (System.ObjectDisposedException)
+                    {
+                    }
+                }
+            });
+            proc.BeginErrorReadLine();
+            var stdout = proc.StandardOutput.ReadToEnd();
+            proc.WaitForExit();
+            stdout = stdout.Replace("\r", "");
+            stderr = err.Replace("\r", "");
+
+            return proc.ExitCode;
+
+        }
+    }
 }

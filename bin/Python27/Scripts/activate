@@ -2,9 +2,10 @@
 # you cannot run it directly
 
 deactivate () {
-    unset -f pydoc
+    unset -f pydoc >/dev/null 2>&1
 
     # reset old environment variables
+    # ! [ -z ${VAR+_} ] returns true if VAR is declared at all
     if ! [ -z "${_OLD_VIRTUAL_PATH+_}" ] ; then
         PATH="$_OLD_VIRTUAL_PATH"
         export PATH
@@ -39,7 +40,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="$(if [ "$OSTYPE" "==" "cygwin" ]; then cygpath -u 'C:\Users\kevin\Documents\meta-tonka\META\bin\Python27'; else echo '/C/Users/kevin/Documents/meta-tonka/META/bin/Python27'; fi;)"
+VIRTUAL_ENV="$(if [ "$OSTYPE" "==" "cygwin" ]; then cygpath -u 'C:\Users\kevin\Documents\meta-core\bin\Python27'; else echo '/C/Users/kevin/Documents/meta-core/bin/Python27'; fi;)"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
@@ -47,7 +48,7 @@ PATH="$VIRTUAL_ENV/Scripts:$PATH"
 export PATH
 
 # unset PYTHONHOME if set
-if ! [ -z "${PYTHONHOME+x}" ] ; then
+if ! [ -z "${PYTHONHOME+_}" ] ; then
     _OLD_VIRTUAL_PYTHONHOME="$PYTHONHOME"
     unset PYTHONHOME
 fi

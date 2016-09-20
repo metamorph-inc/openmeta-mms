@@ -70,7 +70,6 @@ mpl.figure = function(figure_id, websocket, ondownload, parent_element) {
                 fig.context.clearRect(0, 0, fig.canvas.width, fig.canvas.height);
             }
             fig.context.drawImage(fig.imageObj, 0, 0);
-            fig.waiting = false;
         };
 
     this.imageObj.onunload = function() {
@@ -401,11 +400,13 @@ mpl.figure.prototype._make_on_message_function = function(fig) {
             fig.imageObj.src = (window.URL || window.webkitURL).createObjectURL(
                 evt.data);
             fig.updated_canvas_event();
+            fig.waiting = false;
             return;
         }
         else if (typeof evt.data === 'string' && evt.data.slice(0, 21) == "data:image/png;base64") {
             fig.imageObj.src = evt.data;
             fig.updated_canvas_event();
+            fig.waiting = false;
             return;
         }
 
@@ -454,6 +455,19 @@ mpl.findpos = function(e) {
     return {"x": x, "y": y};
 };
 
+/*
+ * return a copy of an object with only non-object keys
+ * we need this to avoid circular references
+ * http://stackoverflow.com/a/24161582/3208463
+ */
+function simpleKeys (original) {
+  return Object.keys(original).reduce(function (obj, key) {
+    if (typeof original[key] !== 'object')
+        obj[key] = original[key]
+    return obj;
+  }, {});
+}
+
 mpl.figure.prototype.mouse_event = function(event, name) {
     var canvas_pos = mpl.findpos(event)
 
@@ -467,7 +481,8 @@ mpl.figure.prototype.mouse_event = function(event, name) {
     var y = canvas_pos.y;
 
     this.send_message(name, {x: x, y: y, button: event.button,
-                             step: event.step});
+                             step: event.step,
+                             guiEvent: simpleKeys(event)});
 
     /* This prevents the web browser from automatically changing to
      * the text insertion cursor when the button is pressed.  We want
@@ -507,7 +522,8 @@ mpl.figure.prototype.key_event = function(event, name) {
 
     this._key_event_extra(event, name);
 
-    this.send_message(name, {key: value});
+    this.send_message(name, {key: value,
+                             guiEvent: simpleKeys(event)});
     return false;
 }
 

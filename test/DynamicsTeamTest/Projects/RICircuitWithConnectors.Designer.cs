@@ -137,7 +137,7 @@ namespace DynamicsTeamTest.Projects
         }
 
 
-        [Fact(Skip="surrogates are unimplemented")]
+        [Fact(Skip = "Surrogates are not supported")]
         [Trait("Model", "RICircuitWithConnectors")]
         [Trait("PET", "RICircuitWithConnectors")]
         public void RI_ResponceSurface3Metrics_CA()
@@ -151,7 +151,7 @@ namespace DynamicsTeamTest.Projects
             Assert.True(result, "CyPhyPET failed.");
         }
 
-        [Fact(Skip="surrogates are unimplemented")]
+        [Fact(Skip = "Surrogates are not supported")]
         [Trait("Model", "RICircuitWithConnectors")]
         [Trait("PET", "RICircuitWithConnectors")]
         public void RI_ResponceSurface_CA()
