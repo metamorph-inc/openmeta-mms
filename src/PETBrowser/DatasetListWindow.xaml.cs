@@ -741,7 +741,7 @@ namespace PETBrowser
             try
             {
                 var highlightedDataset = (Dataset)PetGrid.SelectedItem;
-                var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset);
+                var exportPath = System.IO.Path.GetFullPath(this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset));
                 string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), string.Format("{0}_{1:yyyyMMdd_HHmmss}.log", analysisTool.InternalName, DateTime.Now));
                 var exePath = ExpandAnalysisToolString(analysisTool.ExecutableFilePath, exportPath, ViewModel.Store.DataDirectory);
                 var arguments = ExpandAnalysisToolString(analysisTool.ProcessArguments, exportPath, ViewModel.Store.DataDirectory);
