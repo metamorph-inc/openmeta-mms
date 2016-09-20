@@ -50,6 +50,35 @@ namespace PETBrowser
                     //TODO: Create this key (with defaults) if it doesn't already exist?
                 }
             }
+
+            using (var petToolsKey = Registry.CurrentUser.OpenSubKey(PetAnalysisToolsKeyName))
+            {
+                if (petToolsKey != null) //Returns null if key doesn't exist
+                {
+                    foreach (var toolKeyName in petToolsKey.GetSubKeyNames())
+                    {
+                        using (var toolKey = petToolsKey.OpenSubKey(toolKeyName))
+                        {
+                            if (toolKey != null)
+                            {
+                                try
+                                {
+                                    var tool = new AnalysisTool(toolKey);
+                                    PetAnalysisToolList.Add(tool);
+                                }
+                                catch (InvalidAnalysisToolException e)
+                                {
+                                    Trace.TraceWarning(e.Message);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //TODO: Create this key (with defaults) if it doesn't already exist?
+                }
+            }
         }
     }
 
