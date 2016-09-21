@@ -6,13 +6,19 @@ library(DT)
 #options(error = function() traceback(2))
 #options(shiny.error = function() traceback(2))
 
+
+#---------------------Global Variables-------------------------#
 palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
          "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
 
-importData <- NULL
+importData <- NULL #import session data
+
+#Initialize empty data frame for transfer functions in Ranking tab
 gX <- data.frame()
-gX <- gX[1:2,]
-row.names(gX) <- c("Values", "Scores")
+gX <- gX[1:4,]
+row.names(gX) <- c("Values", "Scores", "Slopes", "Y_ints")
+#-------------------End Global Variables-----------------------#
+
 
 shinyServer(function(input, output, session) {
   
@@ -46,7 +52,7 @@ shinyServer(function(input, output, session) {
   else
   {
     # raw = read.csv("../data.csv", fill=T)
-    # raw = read.csv("../../results/mergedPET.csv", fill=T)
+    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
     raw = iris
   }
   
@@ -1069,6 +1075,7 @@ shinyServer(function(input, output, session) {
   
   # Data Ranking Tab ---------------------
   
+  #Dynamic metrics list
   metricsList <- reactive({
     idx = NULL
     req(input$weightMetrics)
@@ -1081,13 +1088,15 @@ shinyServer(function(input, output, session) {
     idx
   })
   
+  #Event handler for "clear metrics" button
   observeEvent(input$clearMetrics, {
     updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
   })
   
-  generateMetricUI <- function(current, slider, radio, util) {
+  #UI class for each metric UI
+  generateMetricUI <- function(current, slider, radio, util, func) {
     
-    if(missing(slider) & missing(radio) & missing(util)){
+    if(missing(slider) & missing(radio) & missing(util) & missing(func)){
       sliderVal <- input[[paste0('rnk', current)]]
       if(is.null(sliderVal))
         sliderVal <- 1
@@ -1099,11 +1108,14 @@ shinyServer(function(input, output, session) {
       utilVal <- input[[paste0('util', current)]]
       if(is.null(utilVal))
         utilVal <- FALSE
+      
+      funcVal <- input[[paste0('func', current)]]
     }
     else{
       sliderVal <- slider
       radioVal <- radio
       utilVal <- util
+      funcVal <- func
     }
     
     transferCondition = toString(paste0("input.util",current," == true"))
@@ -1128,16 +1140,18 @@ shinyServer(function(input, output, session) {
       conditionalPanel(condition = transferCondition,
                        textInput(paste0('func', current),
                                  "Enter Data Points",
-                        placeholder = paste0("Value = Score | e.g. ", 
-                                             rawAbsMin()[current],
-                                             " = 1, ",
-                                             rawAbsMax()[current],
-                                             "= 0.5")),
+                                  placeholder = paste0("Value = Score | e.g. ", 
+                                    rawAbsMin()[current],
+                                    " = 1, ",
+                                    rawAbsMax()[current],
+                                    "= 0.5"),
+                                 value = funcVal),
                        utilityPlot(current)),
       br(), br(), br()
     )
   }
   
+  #Output plot of transfer function
   utilityPlot <- function(current){
     plotName <- paste0("transferPlot", current)
     f <- list(
@@ -1173,8 +1187,28 @@ shinyServer(function(input, output, session) {
     })
   }
   
+  #Calculate line slopes & intercepts of transfer function
+  processLineEquations <- function(current, data_set){
+    slopes <- NULL
+    y_ints <- NULL
+    if(length(data_set) > 1){
+      for(i in 1:(length(data_set)-1)){
+        rise <- data_set[i+1] - data_set[i]
+        run <- as.numeric(names(data_set)[i+1]) - as.numeric(names(data_set)[i])
+        current_slope <- rise/run
+        slopes <- c(slopes, current_slope)
+        b <- data_set[i] - current_slope*as.numeric(names(data_set)[i])
+        y_ints <- c(y_ints, b)
+      }
+    }
+    else{
+      slopes <- 0
+      y_ints <- data_set[1]
+    }
+    xFuncs[[toString(current)]] <<- list(names(data_set), data_set, slopes, y_ints)
+  }
   
-  
+  #Parse transfer function text input
   parseUserInputPoints <- function(current){
     xVals <- NULL
     yVals <- NULL
@@ -1186,7 +1220,8 @@ shinyServer(function(input, output, session) {
       current_val <- as.numeric(current_point[1])
       low <- rawAbsMin()[current]
       hi <- rawAbsMax()[current]
-      req(findInterval(current_val, c(low, hi), rightmost.closed = TRUE) == 1)
+      #This line below enforces range limits on transfer function
+      #req(findInterval(current_val, c(low, hi), rightmost.closed = TRUE) == 1) 
       xVals <- c(xVals, current_val)
       yVals <- c(yVals, as.numeric(current_point[2]))
     }
@@ -1198,9 +1233,10 @@ shinyServer(function(input, output, session) {
     #Flip-flop names&values of a named list
     outputVals <- sapply(names(sortedVals), as.numeric)
     names(outputVals) <- sortedVals
-    xFuncs[[toString(current)]] <<- list(names(outputVals), outputVals)
+    processLineEquations(current, outputVals)
     outputVals
   }
+  
   
   fullMetricUI <- reactive({
     if(!importFlags$ranking){
@@ -1216,21 +1252,25 @@ shinyServer(function(input, output, session) {
           importedSlider <- importData[[paste0('rnk', column)]]
           importedRadio <- importData[[paste0('sel', column)]]
           importedUtil <- importData[[paste0('util', column)]]
+          importedFunc <- importData[[paste0('func', column)]]
           isolate(generateMetricUI(column, 
                            importedSlider, 
                            importedRadio,
-                           importedUtil))
+                           importedUtil,
+                           importedFunc))
         })
       )
     }
   })
 
+  #Dynamic UI rendering for weighted metrics list
   output$rankings <- renderUI({
     req(metricsList())
     print("In render ranking sliders")
     fullMetricUI()
   })
   
+  #Process metric weights
   rankData <- reactive({
     req(metricsList())
     print("In calculate ranked data")
@@ -1252,55 +1292,58 @@ shinyServer(function(input, output, session) {
           normData[j,column] <- 1 -item + colMin
         }
       }
-      xFunc <- unlist(xFuncs[[toString(metricsList()[i])]][2])
+      xFunc <- xFuncs[[toString(metricsList()[i])]]
         if(!is.null(xFunc)){
-        normValue <- max(data[[column]])
-        transferData <- data[[column]]
-        for(t in 1:length(transferData)){
-          item <- transferData[t]
-          if(length(names(xFunc)) == 1){
-            if(input[[radioSelect]] == "Max"){
-              if(item <= as.numeric(names(xFunc)))
-                transferData[t] <- item*xFunc/normValue
-              else
-                transferData[t] <- 0
-            }
-            else{
-              if(item >= as.numeric(names(xFunc)))
-                transferData[t] <- item*xFunc/normValue
-              else
-                transferData[t] <- 0
-            }
+          normValue <- max(data[[column]])
+          transferData <- data[[column]]
+          for(t in 1:length(transferData)){
+            item <- transferData[t]
+            transferData[t] <- linearly_interpolate(item, xFunc)
           }
-          else{
-            slot <- findInterval(item,
-                                 as.numeric(names(xFunc)),
-                                 rightmost.closed = TRUE)
-            transferData[t] <- item*xFunc[slot]/normValue
-          }
+          scoreData <- scoreData + transferData
         }
-        scoreData <- scoreData + transferData
-      }
       scoreData <- scoreData + unlist(unname(weight*normData[column]))
     }
-    
     importFlags$ranking <- FALSE
     scoreData <- sort(scoreData, decreasing = TRUE)
     filterData()[names(scoreData),varRangeNum()]
-    
   })
   
+  #Score individual point by transfer function
+  linearly_interpolate <- function(current, dataset){
+    choices <- as.numeric(unlist(dataset[1]))
+    slot <- findInterval(current,
+                         choices,
+                         rightmost.closed = TRUE)
+    if(slot == 0){
+      #Points below range of transfer function
+      unlist(dataset[2])[1]
+    }
+    else if(slot > (length(choices)-1)){
+      #Points above range of transfer function
+      unlist(dataset[2])[length(choices)]
+    }
+    else{
+      slope <- unlist(dataset[3])[slot]
+      y_int <- unlist(dataset[4])[slot]
+      current*slope + y_int
+    }
+  }
+  
+  #Output ranked data table
   output$rankTable <- DT::renderDataTable({
     print("In render ranked data table")
     rankData()
   })
   
+  #Event handler for "Color by selected rows"
   observeEvent(input$colorRanked, {
     req(input$rankTable_rows_selected)
     updateTabsetPanel(session, "inTabset", selected = "Pairs Plot")
     updateSelectInput(session, "colType", selected = "Ranked")
   })
   
+  #Download handler
   output$exportPoints <- downloadHandler(
     filename = function() { paste('ranked_points-', Sys.Date(), '.csv', sep='') },
     content = function(file) { 
