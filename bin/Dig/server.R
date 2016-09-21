@@ -1,6 +1,5 @@
 library(shiny)
 library(DT)
-#library(ggplot2)
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
 #options(error = function() traceback(2))
@@ -698,12 +697,6 @@ shinyServer(function(input, output, session) {
     h4(textOutput("displayVars"), align = "center")
   })
   
-  # output$pairs_info <- renderPrint({
-  #   t(brushedPoints(pairs_data(), input$pairs_brush,
-  #                   xvar = input$display[1],
-  #                   yvar = input$display[2]))
-  # })
-  
   
   #Change to single plot when user clicks a plot on pairs matrix
   observeEvent(input$pairs_click, {
@@ -1283,48 +1276,6 @@ shinyServer(function(input, output, session) {
       importFlags$tier2 <- FALSE
     }
   })
-  
-  #This version preseves user slider settings when changing removeMissing/removeOutliers
-  # updateColorSlider2 <- observeEvent(raw_plus(), {
-  #   sliderVal <- input$colSlider
-  #   req(input$colVarNum)
-  #   if(input$stickyFilters){
-  #     if(varClass[colSliderSettings()$variable] == "numeric") {
-  #       if(sliderVal[1] < colSliderSettings()$numericMin)
-  #         sliderVal[1] <- colSliderSettings()$numericMin
-  #       if(sliderVal[2] > colSliderSettings()$numericMax)
-  #         sliderVal[2] <- colSliderSettings()$numericMax
-  #     }
-  #     else if(varClass[colSliderSettings()$variable] == "integer") {
-  #       if(sliderVal[1] < colSliderSettings()$absMin)
-  #         sliderVal[1] <- colSliderSettings()$absMin
-  #       if(sliderVal[2] > colSliderSettings()$absMax)
-  #         sliderVal[2] <- colSliderSettings()$absMax
-  #     }
-  #   }
-  #   else{
-  #         sliderVal[1] <- colSliderSettings()$lower
-  #         sliderVal[2] <- colSliderSettings()$upper
-  #   }
-  #   
-  #   if(varClass[colSliderSettings()$variable] == "numeric") {
-  #     updateSliderInput(session,
-  #                       "colSlider",
-  #                       step = colSliderSettings()$numericStep,
-  #                       min = colSliderSettings()$numericMin,
-  #                       max = colSliderSettings()$numericMax,
-  #                       value = sliderVal)
-  #   }
-  #   else if(varClass[colSliderSettings()$variable] == "integer") {
-  #     updateSliderInput(session,
-  #                       "colSlider",
-  #                       min = colSliderSettings()$absMin,
-  #                       max = colSliderSettings()$absMax,
-  #                       value = c(floor(sliderVal[1]), ceiling(sliderVal[2])))
-  #   }
-  # 
-  #   print("updateColorSlider2() done.")
-  # })
   
   updateXSlider <- observeEvent(input$updateX, {
     print("in update Xslider")
