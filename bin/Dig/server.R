@@ -1313,7 +1313,6 @@ shinyServer(function(input, output, session) {
   })
   
   output$ranges <- renderPrint({
-    print("In ranges")
     if(input$autoRange == TRUE){
       do.call(rbind, lapply(filterData(), summary))
     }
