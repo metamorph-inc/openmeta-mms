@@ -13,15 +13,15 @@ palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
 importData <- NULL #import session data
 
 #Initialize empty data frame for transfer functions in Ranking tab
-gX <- data.frame()
-gX <- gX[1:4,]
-row.names(gX) <- c("Values", "Scores", "Slopes", "Y_ints")
+xFuncs <- data.frame()
+xFuncs <- xFuncs[1:4,]
+row.names(xFuncs) <- c("Values", "Scores", "Slopes", "Y_ints")
+
 #-------------------End Global Variables-----------------------#
 
 
 shinyServer(function(input, output, session) {
   
-  xFuncs <- gX
   makeReactiveBinding("xFuncs")
 
   importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE)
@@ -916,11 +916,11 @@ shinyServer(function(input, output, session) {
     x
   }
   
-  datatable_display <- function(...){
-    df <- filterData()
-    colnames(df) <- sapply(names(df), function(x) abbreviate(unlist(strsplit(x, "[.]"))[2], 9))
-    df
-  }
+  # datatable_display <- function(...){
+  #   df <- filterData()
+  #   colnames(df) <- sapply(names(df), function(x) abbreviate(unlist(strsplit(x, "[.]"))[2], 9))
+  #   df
+  # }
   
   output$table <- DT::renderDataTable({
     print("In render data table")
