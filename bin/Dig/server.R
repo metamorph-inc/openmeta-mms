@@ -51,8 +51,8 @@ shinyServer(function(input, output, session) {
   else
   {
     # raw = read.csv("../data.csv", fill=T)
-    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    raw = iris
+    raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    # raw = iris
   }
   
   # Import/Export Session Settings -------------------------------------------
@@ -901,6 +901,8 @@ shinyServer(function(input, output, session) {
   # Data Table Tab --------------------------------------------------------------------------------
   slowFilterData <- eventReactive(input$updateDataTable, {
     filterData()
+    if(input$roundTables)
+      round_df(filterData(), input$numDecimals)
   })
   
   round_df <- function(x, digits) {
@@ -915,18 +917,20 @@ shinyServer(function(input, output, session) {
   datatable_display <- function(...){
     df <- filterData()
     colnames(df) <- sapply(names(df), function(x) abbreviate(unlist(strsplit(x, "[.]"))[2], 9))
-    df <- round_df(df, 4)
     df
   }
   
   output$table <- DT::renderDataTable({
     print("In render data table")
     if(input$autoData == TRUE){
-      filterData()
+      data <- filterData()
+      if(input$roundTables)
+        data <- round_df(filterData(), input$numDecimals)
     }
     else {
       data <- slowFilterData()
     }
+    data
   })
   
   # Data Ranking Tab ---------------------------------------------------------
@@ -1189,7 +1193,10 @@ shinyServer(function(input, output, session) {
   #Output ranked data table
   output$rankTable <- DT::renderDataTable({
     print("In render ranked data table")
-    rankData()
+    data <- rankData()
+    if(input$roundTables)
+      data <- round_df(rankData(), input$numDecimals)
+    data
   })
   
   #Event handler for "Color by selected rows"

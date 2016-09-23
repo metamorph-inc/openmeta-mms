@@ -144,6 +144,15 @@ shinyUI(fluidPage(
                   tags$div(title = "Number of standard deviations to filter data by.", 
                     sliderInput("numDevs", HTML("&sigma;:"), min = 1, max = 11, step = 0.1, value = 6))))
             ),
+            fluidRow(
+              column(4, 
+                     tags$div(title = "Rounds data in all tables to a set number of decimal places", 
+                              checkboxInput("roundTables", "Round Data Tables", value = FALSE))),
+              conditionalPanel("input.roundTables == '1'", 
+                               column(8, 
+                                      tags$div(title = "Maximum number of decimals to show in data tables.", 
+                                               sliderInput("numDecimals", HTML("123.xxx"), min = 1, max = 11, step = 1, value = 4))))
+            ),
             tags$div(title = "Sticky Filters try to preserve their settings when removing/adding outliers or missing data rows.", 
                      checkboxInput("stickyFilters", "Sticky Filters", value = TRUE)),
             hr(),
