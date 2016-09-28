@@ -785,7 +785,7 @@ namespace CyPhyPET
                 tbManifest.Steps.Insert(0, new AVM.DDP.MetaTBManifest.Step()
                 {
                     Status = AVM.DDP.MetaTBManifest.StatusEnum.UNEXECUTED,
-                    Invocation = "python.exe -m run_mdao.cad.update_parameters",
+                    Invocation = "python.exe -E -m run_mdao.cad.update_parameters",
                     Description = "Update parameters in CADAssembly.xml"
                 });
                 tbManifest.AddStep(new AVM.DDP.MetaTBManifest.Step()

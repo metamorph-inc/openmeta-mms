@@ -241,7 +241,7 @@ namespace CyPhyMasterInterpreter
         public override bool UpdateTestBenchManifestExecutionSteps(AVM.DDP.MetaTBManifest manifest)
         {
             manifest.Steps.Add(new AVM.DDP.MetaTBManifest.Step() {
-                Invocation = "python.exe -m run_mdao",
+                Invocation = "python.exe -E -m run_mdao",
                 Description = "ParametricExploration",
                 // Type = "Parametric Study",
                 Status = AVM.DDP.MetaTBManifest.StatusEnum.UNEXECUTED
