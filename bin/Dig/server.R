@@ -985,7 +985,7 @@ shinyServer(function(input, output, session) {
     
     column(3, 
       h4(varNames[current]),
-      radioButtons(paste0('sel', current), 
+      radioButtons(paste0('sel', current),
                    "Score By:",
                    choices = c("Min", "Max"),
                    selected = radioVal,
@@ -1255,6 +1255,38 @@ shinyServer(function(input, output, session) {
                               absMin, absMax, absStep)
       colSlider
     }
+  })
+  
+  # Bayesian -----------------------------------------------------------------
+  
+  #Dynamic UI rendering for weighted metrics list
+  output$bayesian <- renderUI({
+    print("In bayesian ui rendering")
+    var_types <- c("Input",
+                   "Design Variable", 
+                   "Scenario Variable",
+                   "Environment variable",
+                   "Output",
+                   "Measure of Performance",
+                   "Key System Attribute")
+    lapply(varRangeNum(), function(var) {
+      d = density(filterData()[[var]])
+      fluidRow(
+        column(4,
+          selectInput(paste0('bayes_', var),
+          label = var,
+          choices = var_types,
+          selected = var_types[2])
+        ),
+        column(8,
+          renderPlot({
+            par(mar=c(0,0,0,0))
+            plot(d, main = "")
+          })
+        ),
+        br(), br()
+      )
+    })
   })
 
   # UI Adjustments -----------------------------------------------------------
