@@ -9,6 +9,9 @@
     <File Source="..\src\PETBrowser\bin\Release\PETBrowser.exe" />
   </Component>
   <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\PETBrowser.exe.config" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
     <File Source="..\src\PETBrowser\bin\Release\CsvHelper.dll" />
   </Component>
   <Component Directory="INSTALLDIR_BIN">

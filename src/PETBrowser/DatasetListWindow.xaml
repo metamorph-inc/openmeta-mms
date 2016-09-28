@@ -3,18 +3,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         xmlns:petBrowser="clr-namespace:PETBrowser"
-        Title="Results Browser" Height="800" Width="1200" Loaded="Window_Loaded" ResizeMode="CanResizeWithGrip" Icon="CyPhyResultsViewer.ico">
+        Height="800" Width="1200" Loaded="Window_Loaded" ResizeMode="CanResizeWithGrip" Icon="CyPhyResultsViewer.ico" Closing="Window_Closing" Closed="Window_Closed">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Icons.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Icons.xaml" />
+                <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <petBrowser:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
+            <petBrowser:CountAndBoolMultiValueConverter x:Key="CountAndBoolMultiValueConverter" />
         </ResourceDictionary>
     </Window.Resources>
+    <Window.Title>
+        <MultiBinding StringFormat="Results Browser ({0}) [Port {1}]">
+            <Binding Path="ProjectPath" />
+            <Binding Path="ManagerPort" />
+        </MultiBinding>
+    </Window.Title>
     <DockPanel Background="#FFEEF5FD">
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar x:Name="toolBar" Band="1" BandIndex="1">
+                <Button x:Name="NewWindowButton" Click="NewWindowButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource NewWindowIcon}" />
+                        <TextBlock Margin="3,0,0,0">New Window</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Separator />
                 <Button x:Name="SelectResultsFolderButton" Click="SelectResultsFolderButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource FolderOpenIcon}" />
@@ -50,8 +65,8 @@
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <TabControl Padding="0">
-            <TabItem Header="PET">
+        <TabControl x:Name="TabControl" Padding="0">
+            <TabItem x:Name="PetsTab" Header="PET">
                 <Grid Margin="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -70,11 +85,75 @@
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Bottom">
                             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                <Button x:Name="button" Content="Archive Selected"  Margin="0,10,5,10" Click="button_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
+                                <Button x:Name="button" Content="Archive Selected" Margin="0,10,5,10" Click="button_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
+                                <Button x:Name="AnalysisToolsButton" Margin="5,10,5,10" Padding="5,3" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" IsEnabled="{Binding DatasetLoaded}">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Analyze Selected with Tool">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsEnabled}" Value="False" >
+                                                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <Separator Margin="5,0">
+                                                <Separator.LayoutTransform>
+                                                    <TransformGroup>
+                                                        <TransformGroup.Children>
+                                                            <TransformCollection>
+                                                                <RotateTransform Angle="90"/>
+                                                            </TransformCollection>
+                                                        </TransformGroup.Children>
+                                                    </TransformGroup>
+                                                </Separator.LayoutTransform>
+                                            </Separator>
+                                            <Path Margin="0" VerticalAlignment="Center" Width="6" Stretch="Uniform" HorizontalAlignment="Right" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z ">
+                                                <Path.Style>
+                                                    <Style TargetType="Path">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsEnabled}" Value="True" >
+                                                                <Setter Property="Fill" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsEnabled}" Value="False" >
+                                                                <Setter Property="Fill" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Path.Style>
+                                            </Path>
+                                        </StackPanel>
+                                    </Button.Content>
+                                    <Button.ContextMenu>
+                                        <ContextMenu Placement="Bottom" ItemsSource="{Binding AnalysisTools.PetAnalysisToolList}">
+                                            <ContextMenu.ItemContainerStyle>
+                                                <Style TargetType="MenuItem">
+                                                    <Setter Property="Header" Value="{Binding Path=ActionName}" />
+                                                    <EventSetter Event="Click" Handler="PetAnalysisToolRun"></EventSetter>
+                                                </Style>
+                                            </ContextMenu.ItemContainerStyle>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
                                 <Button x:Name="vizButton" Content="Open Selected in Visualizer"  Margin="5,10,10,10" Click="vizButton_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
                             </StackPanel>
                         </StackPanel>
-                        <DataGrid Name="PetGrid" ItemsSource="{Binding PetDatasets, IsAsync=True}" AutoGenerateColumns="False" FrozenColumnCount="1" RowHeight="20" MaxWidth="2560" MaxHeight="1600" SelectionMode="Single" EnableRowVirtualization="False" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal"  HeadersVisibility="Column" SelectionChanged="PetGrid_SelectionChanged">
+                        <DataGrid Name="PetGrid" ItemsSource="{Binding PetDatasets, IsAsync=True}"
+                                  AutoGenerateColumns="False"
+                                  FrozenColumnCount="1"
+                                  RowHeight="20"
+                                  MaxWidth="2560"
+                                  MaxHeight="1600"
+                                  SelectionMode="Single"
+                                  EnableRowVirtualization="False"
+                                  EnableColumnVirtualization="True"
+                                  GridLinesVisibility="Horizontal"
+                                  HeadersVisibility="Column"
+                                  SelectionChanged="PetGrid_SelectionChanged"
+                                  CellStyle="{DynamicResource GridStyle}">
                             <DataGrid.HorizontalGridLinesBrush>
                                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
                             </DataGrid.HorizontalGridLinesBrush>
@@ -102,7 +181,7 @@
                                 <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="60"/>
                                 <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
-                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*" SortDirection="Descending" /> <!-- Note: data is actually sorted by the ListCollectionView, in code-behind -->
                             </DataGrid.Columns>
 
                             <DataGrid.RowStyle>
@@ -125,7 +204,7 @@
                     <DockPanel x:Name="PetDetailsPanel" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Test Benches">
+            <TabItem x:Name="TestBenchesTab" Header="Test Benches">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -156,13 +235,14 @@
                               MaxHeight="1600" 
                               SelectionMode="Single"
                               GridLinesVisibility="Horizontal"
-                              HeadersVisibility="Column" SelectionChanged="TestBenchGrid_SelectionChanged">
+                              HeadersVisibility="Column" SelectionChanged="TestBenchGrid_SelectionChanged"
+                              CellStyle="{DynamicResource GridStyle}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="Kind" IsReadOnly="True" Width="100"/>
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="200"/>
                                 <DataGridTextColumn Binding="{Binding DesignName}" ClipboardContentBinding="{x:Null}" Header="Design" IsReadOnly="True" Width="120"/>
                                 <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
-                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*" SortDirection="Descending"/> <!-- Note: data is actually sorted by the ListCollectionView, in code-behind -->
                             </DataGrid.Columns>
                             <DataGrid.Resources>
                                 <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
@@ -177,17 +257,16 @@
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="FAILED">
-                                            <Setter Property="Background" Value="#FFFFAFAF" />
+                                            <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="OK">
-                                            <Setter Property="Background" Value="#FFAFFFAF"/>
+                                            <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
-                                            <Setter Property="Background" Value="#FFFFFFAF"/>
+                                            <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                     <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
-                                    <EventSetter Event="MouseDoubleClick" Handler="showDetails"></EventSetter>
                                 </Style>
                             </DataGrid.RowStyle>
                         </DataGrid>
@@ -195,6 +274,110 @@
                     <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
                     <DockPanel x:Name="TestBenchDetailsPanel" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" />
                 </Grid>
+            </TabItem>
+            <TabItem x:Name="JobsTab" Header="Active Jobs">
+                <DockPanel Margin="2">
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
+                            <Button x:Name="abortJobButton" Content="Abort Selected Job"  Margin="0,10,5,10" Padding="5,3" Click="abortJob_Click">
+                                <Button.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource CountAndBoolMultiValueConverter}">
+                                        <Binding Path="SelectedItems.Count" ElementName="JobGrid" />
+                                        <Binding Path="SelectedItem.AllowAbort" ElementName="JobGrid" />
+                                    </MultiBinding>
+                                </Button.IsEnabled>
+                            </Button>
+                            <Button x:Name="openJobInExplorerButton" Content="Open Selected Job in Explorer"  Margin="5,10,10,10" Padding="5,3" Click="showJobInExplorer" IsEnabled="{Binding SelectedItems.Count, ElementName=JobGrid}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <DataGrid x:Name="JobGrid"
+                              ItemsSource="{Binding JobsView, IsAsync=True}"
+                              AutoGenerateColumns="False" 
+                              RowHeight="20" 
+                              MaxWidth="2560"
+                              MaxHeight="1600" 
+                              SelectionMode="Single"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              CellStyle="{DynamicResource GridStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Title}" ClipboardContentBinding="{x:Null}" Header="Title" IsReadOnly="True" Width="200"/>
+                        <DataGridTextColumn Binding="{Binding TestBenchName}" ClipboardContentBinding="{x:Null}" Header="Test Bench Name" IsReadOnly="True" Width="200"/>
+                        <DataGridTextColumn Binding="{Binding WorkingDirectory}" ClipboardContentBinding="{x:Null}" Header="Working Directory" IsReadOnly="True" Width="200"/>
+                        <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
+                        <DataGridTextColumn Binding="{Binding RunCommand}" ClipboardContentBinding="{x:Null}" Header="Run Command" IsReadOnly="True" Width="*"/>
+                    </DataGrid.Columns>
+                    <DataGrid.Resources>
+                        <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                            <MenuItem Header="Show in Explorer" Click="showJobInExplorer" />
+                            <MenuItem Header="Abort Job" Click="abortJob_Click" IsEnabled="{Binding AllowAbort}" />
+                            <MenuItem Header="Re-run Job" Click="reRunJob_Click" IsEnabled="{Binding AllowReRun}"/>
+                        </ContextMenu>
+                    </DataGrid.Resources>
+                    <DataGrid.HorizontalGridLinesBrush>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                    </DataGrid.HorizontalGridLinesBrush>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="MouseDoubleClick" Handler="showJobInExplorer"></EventSetter>
+                            <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="Ready">
+                                    <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="QueuedLocal">
+                                    <Setter Property="Background" Value="{StaticResource QueuedBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="QueuedOnServer">
+                                    <Setter Property="Background" Value="{StaticResource QueuedBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="StartedOnServer">
+                                    <Setter Property="Background" Value="{StaticResource QueuedBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="UploadPackage">
+                                    <Setter Property="Background" Value="{StaticResource UploadDownloadBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="DownloadResults">
+                                    <Setter Property="Background" Value="{StaticResource UploadDownloadBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="PostedToServer">
+                                    <Setter Property="Background" Value="{StaticResource PostedBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="RunningOnServer">
+                                    <Setter Property="Background" Value="{StaticResource RunningBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="RunningLocal">
+                                    <Setter Property="Background" Value="{StaticResource RunningBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Succeeded">
+                                    <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="FailedAbortOnServer">
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="FailedExecution">
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="FailedToUploadServer">
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="FailedToDownload">
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="FailedAbortByUser">
+                                        <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="AbortOnServerRequested">
+                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+                </DockPanel>
             </TabItem>
         </TabControl>
     </DockPanel>

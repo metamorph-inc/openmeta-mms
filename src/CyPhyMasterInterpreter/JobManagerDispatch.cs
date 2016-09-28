@@ -6,6 +6,7 @@ using JobManager;
 using META;
 using System.IO;
 using System.Diagnostics;
+using System.Net.Sockets;
 using System.Reflection;
 
 namespace CyPhyMasterInterpreter
@@ -69,6 +70,7 @@ namespace CyPhyMasterInterpreter
             string title,
             string testbenchName,
             string workingDirectory,
+            string projectDirectory,
             ComComponent interpreter,
             Job.TypeEnum type = Job.TypeEnum.Command)
         {
@@ -76,7 +78,7 @@ namespace CyPhyMasterInterpreter
             try
             {
                 JobServer manager;
-                Job j = CreateJob(out manager);
+                Job j = CreateJob(out manager, projectDirectory);
 
                 j.RunCommand = runCommand;
                 j.Title = title;
@@ -113,12 +115,12 @@ namespace CyPhyMasterInterpreter
             }
         }
 
-        public bool EnqueueSoT(string workingDirectory)
+        public bool EnqueueSoT(string workingDirectory, string projectDirectory)
         {
             try
             {
                 JobServer manager;
-                SoT sot = CreateSoT(out manager);
+                SoT sot = CreateSoT(out manager, projectDirectory);
                 sot.WorkingDirectory = workingDirectory;
 
                 sotsToAdd.Enqueue(new KeyValuePair<JobServer, SoT>(manager, sot));
@@ -135,7 +137,7 @@ namespace CyPhyMasterInterpreter
             }
         }
 
-        private SoT CreateSoT(out JobServer manager)
+        private SoT CreateSoT(out JobServer manager, string projectDirectory)
         {
             SoT sot;
             try
@@ -145,14 +147,34 @@ namespace CyPhyMasterInterpreter
             }
             catch (System.Net.Sockets.SocketException)
             {
-                this.StartJobManager();
-                manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
-                sot = manager.CreateSoT();
+                this.StartJobManager(projectDirectory);
+
+                // Retry three times; rethrow the last socket exception if it continues to fail
+                var retryCount = 0;
+                while (true)
+                {
+                    retryCount++;
+                    try
+                    {
+                        manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
+                        sot = manager.CreateSoT();
+                        break;
+                    }
+                    catch (SocketException e)
+                    {
+                        if (retryCount > 3)
+                        {
+                            throw;
+                        }
+
+                        System.Threading.Thread.Sleep(3 * 1000);
+                    }
+                }
             }
             return sot;
         }
 
-        private Job CreateJob(out JobServer manager)
+        private Job CreateJob(out JobServer manager, string projectDirectory)
         {
             Job j;
             try
@@ -162,30 +184,51 @@ namespace CyPhyMasterInterpreter
             }
             catch (System.Net.Sockets.SocketException)
             {
-                this.StartJobManager();
-                manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
-                j = manager.CreateJob();
+                this.StartJobManager(projectDirectory);
+
+                // Retry three times; rethrow the last socket exception if it continues to fail
+                var retryCount = 0;
+                while(true)
+                {
+                    retryCount++;
+                    try
+                    {
+                        manager = (JobServer) Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
+                        j = manager.CreateJob();
+                        break;
+                    }
+                    catch (SocketException e)
+                    {
+                        if (retryCount > 3)
+                        {
+                            throw;
+                        }
+
+                        System.Threading.Thread.Sleep(3*1000);
+                    }
+                }
             }
             return j;
         }
 
-        private void StartJobManager()
+        private void StartJobManager(string projectDirectory)
         {
             // n.b. Assembly.Location is wrong with Shadow Copy enabled
             string assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            string exe = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "JobManager.exe");
+            string exe = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "PETBrowser.exe");
             if (!File.Exists(exe))
-                exe = Path.Combine(assemblyDir, "..\\..\\..\\JobManager\\JobManager\\bin\\Release\\JobManager.exe");
+                exe = Path.Combine(assemblyDir, "..\\..\\..\\PETBrowser\\bin\\Release\\PETBrowser.exe");
             if (!File.Exists(exe))
-                exe = Path.Combine(assemblyDir, "..\\..\\..\\JobManager\\JobManager\\bin\\Debug\\JobManager.exe");
+                exe = Path.Combine(assemblyDir, "..\\..\\..\\PETBrowser\\bin\\Debug\\PETBrowser.exe");
             if (File.Exists(exe))
             {
                 Process proc = new Process();
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.FileName = exe;
                 proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.WorkingDirectory = projectDirectory;
                 proc.Start();
-                proc.WaitForInputIdle(10 * 1000);
+                proc.WaitForInputIdle(20 * 1000);
                 proc.StandardOutput.ReadLine(); // matches Console.Out.WriteLine("JobManager has started"); in JobManager
                 //System.Threading.Thread.Sleep(3 * 1000);
             }

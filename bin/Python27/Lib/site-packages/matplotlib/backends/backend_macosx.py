@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 import os
 import numpy
@@ -110,10 +110,8 @@ class RendererMac(RendererBase):
         return self.gc.get_image_magnification()
 
     def draw_image(self, gc, x, y, im):
-        im.flipud_out()
         nrows, ncols, data = im.as_rgba_str()
         gc.draw_image(x, y, nrows, ncols, data)
-        im.flipud_out()
 
     def draw_tex(self, gc, x, y, s, prop, angle, ismath='TeX!', mtext=None):
         # todo, handle props, angle, origins
@@ -132,6 +130,11 @@ class RendererMac(RendererBase):
         scale = self.gc.get_image_magnification()
         ox, oy, width, height, descent, image, used_characters = \
             self.mathtext_parser.parse(s, self.dpi*scale, prop)
+        descent /= scale
+        xd = descent * numpy.sin(numpy.deg2rad(angle))
+        yd = descent * numpy.cos(numpy.deg2rad(angle))
+        x = numpy.round(x + ox + xd)
+        y = numpy.round(y + oy - yd)
         gc.draw_mathtext(x, y, angle, 255 - image.as_array())
 
     def draw_text(self, gc, x, y, s, prop, angle, ismath=False, mtext=None):
@@ -140,6 +143,11 @@ class RendererMac(RendererBase):
         else:
             family =  prop.get_family()
             weight = prop.get_weight()
+            # transform weight into string for the native backend
+            if weight >= 700:
+                weight = 'bold'
+            else:
+                weight = 'normal'
             style = prop.get_style()
             points = prop.get_size_in_points()
             size = self.points_to_pixels(points)
@@ -159,12 +167,17 @@ class RendererMac(RendererBase):
             return width, height, descent
         family =  prop.get_family()
         weight = prop.get_weight()
+        # transform weight into string for the native backend
+        if weight >= 700:
+            weight = 'bold'
+        else:
+            weight = 'normal'
         style = prop.get_style()
         points = prop.get_size_in_points()
         size = self.points_to_pixels(points)
         width, height, descent = self.gc.get_text_width_height_descent(
             six.text_type(s), family, size, weight, style)
-        return  width, height, 0.0*descent
+        return  width, height, descent
 
     def flipy(self):
         return False
@@ -301,12 +314,16 @@ class FigureCanvasMac(_macosx.FigureCanvas, FigureCanvasBase):
         self.renderer = RendererMac(figure.dpi, width, height)
         _macosx.FigureCanvas.__init__(self, width, height)
 
+    def draw_idle(self, *args, **kwargs):
+        self.invalidate()
+
     def resize(self, width, height):
         self.renderer.set_width_height(width, height)
         dpi = self.figure.dpi
         width /= dpi
         height /= dpi
         self.figure.set_size_inches(width, height)
+        FigureCanvasBase.resize_event(self)
 
     def _print_bitmap(self, filename, *args, **kwargs):
         # In backend_bases.py, print_figure changes the dpi of the figure.
@@ -378,6 +395,7 @@ class FigureManagerMac(_macosx.FigureManager, FigureManagerBase):
 
         if matplotlib.is_interactive():
             self.show()
+            self.canvas.draw_idle()
 
     def close(self):
         Gcf.destroy(self.num)

@@ -20,7 +20,9 @@ using System.Windows.Shapes;
 using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
+using JobManager;
 using Ookii.Dialogs.Wpf;
 
 namespace PETBrowser
@@ -40,6 +42,10 @@ namespace PETBrowser
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
+        private string initialWorkingDirectory;
+
+        private SingleInstanceManager instanceManager;
+
         void SetNativeEnabled(bool enabled)
         {
             var windowHandle = new WindowInteropHelper(this).Handle;
@@ -53,10 +59,77 @@ namespace PETBrowser
             set { DataContext = value; }
         }
 
-        public DatasetListWindow()
+        public DatasetListWindow() : this(null, null, ".")
         {
-            this.ViewModel = new DatasetListWindowViewModel();
-            InitializeComponent();
+        }
+
+        public DatasetListWindow(JobStore jobStore, SingleInstanceManager instanceManager, string initialWorkingDirectory)
+        {
+            try
+            {
+                this.initialWorkingDirectory = initialWorkingDirectory;
+
+                this.ViewModel = new DatasetListWindowViewModel(jobStore);
+
+                if (instanceManager == null)
+                {
+                    this.instanceManager = new SingleInstanceManager();
+                    this.instanceManager.OnCreateForWorkingDirectory += (sender, args) =>
+                    {
+                        Task.Factory.StartNew(() =>
+                        {
+                            // Try and locate a window that already contains this working directory; raise it if one exists,
+                            // rather than creating a new one.
+                            foreach (var window in Application.Current.Windows)
+                            {
+                                var datasetWindow = window as DatasetListWindow;
+                                if (datasetWindow != null && datasetWindow.Visibility == Visibility.Visible)
+                                {
+                                    try
+                                    {
+                                        var windowFullPath =
+                                            System.IO.Path.GetFullPath(datasetWindow.ViewModel.Store.DataDirectory);
+                                        var newDirectoryFullPath = System.IO.Path.GetFullPath(args.WorkingDirectory);
+
+                                        if(windowFullPath == newDirectoryFullPath) // TODO: better way to check for path equality?
+                                        {
+                                            datasetWindow.Refresh();
+                                            datasetWindow.Activate();
+                                            return;
+                                        }
+                                    }
+                                    catch (Exception)
+                                    {
+                                        //quietly fail; if GetFullPath fails on either path, we don't really care (just move on to the next window)
+                                    }
+                                }
+                            }
+
+                            var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, args.WorkingDirectory);
+                            newDatasetListWindow.Show();
+                            newDatasetListWindow.Activate();
+                        }, new CancellationToken(), TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                    };
+                }
+                else
+                {
+                    this.instanceManager = instanceManager;
+                }
+
+                InitializeComponent();
+                this.ViewModel.TrackedJobsChanged += (sender, args) =>
+                {
+                    TabControl.SelectedItem = JobsTab;
+                };
+                Console.WriteLine("Results browser window opened");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                Trace.TraceError("Error occurred while creating window:");
+                Trace.TraceError(e.ToString());
+                throw e;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -64,7 +137,7 @@ namespace PETBrowser
             PetDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
             TestBenchDetailsPanel.Children.Add(new PlaceholderDetailsPanel());
             //this.ViewModel.LoadDataset("C:\\source\\viz");
-            LoadDataset(".");
+            LoadDataset(initialWorkingDirectory);
         }
 
         private void LoadDataset(string path)
@@ -154,7 +227,7 @@ namespace PETBrowser
                     // WorkingDirectory = ,
                     // RedirectStandardError = true,
                     // RedirectStandardOutput = true,
-                    UseShellExecute = false
+                    UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
                 };
                 var p = new Process();
                 p.StartInfo = psi;
@@ -204,6 +277,11 @@ namespace PETBrowser
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Refresh();
+        }
+
+        public void Refresh()
         {
             LoadDataset(ViewModel.Store.DataDirectory);
         }
@@ -528,11 +606,195 @@ namespace PETBrowser
         {
             ViewModel.DeselectAllPets();
         }
+
+        private void reRunJob_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedJob = (JobViewModel) JobGrid.SelectedItem;
+
+            ViewModel.JobStore.ReRunJob(selectedJob.Job);
+        }
+
+        private void abortJob_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedJob = (JobViewModel)JobGrid.SelectedItem;
+
+            ViewModel.JobStore.AbortJob(selectedJob.Job);
+        }
+
+        private void showJobInExplorer(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var selectedJob = (JobViewModel)JobGrid.SelectedItem;
+                var jobDirectoryPath = selectedJob.Job.WorkingDirectory;
+
+                //Explorer doesn't accept forward slashes in paths
+                jobDirectoryPath = jobDirectoryPath.Replace("/", "\\");
+
+                Process.Start("explorer.exe", jobDirectoryPath);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
+            }
+        }
+
+        private void NewWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            string datasetPath;
+            if (ViewModel.Store != null)
+            {
+                datasetPath = ViewModel.Store.DataDirectory;
+            }
+            else
+            {
+                datasetPath = ".";
+            }
+            var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, datasetPath);
+            newDatasetListWindow.Show();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            var unfinishedJobCount = ViewModel.JobStore.UnfinishedJobCount;
+            var hasIncompleteSots = ViewModel.JobStore.HasIncompleteSots;
+
+            //Check to see if we're the last DatasetListWindow
+            var windows = Application.Current.Windows.OfType<DatasetListWindow>();
+
+            if ((unfinishedJobCount > 0 || hasIncompleteSots) && windows.Count() == 1)
+            {
+                var taskDialog = new TaskDialog
+                {
+                    WindowTitle = "Results Browser",
+                    MainInstruction = "Are you sure you want to close the Results Browser?",
+                    Content = String.Format("There are {0} unfinished jobs remaining in the queue.", unfinishedJobCount),
+                    MainIcon = TaskDialogIcon.Warning
+                };
+                taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Yes));
+                taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.No)
+                {
+                    Default = true
+                });
+                taskDialog.CenterParent = true;
+                var selectedButton = taskDialog.ShowDialog(this);
+
+                if (selectedButton.ButtonType != ButtonType.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            //Check to see if we're the last DatasetListWindow
+            var windows = Application.Current.Windows.OfType<DatasetListWindow>();
+
+            if (!windows.Any())
+            {
+                Console.WriteLine("Last window");
+
+                ViewModel.JobStore.Dispose();
+                instanceManager.Dispose();
+            }
+        }
+
+        private bool isContextMenuOpen = false;
+        private void AnalysisToolsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var source = sender as Button;
+
+            if (source != null && source.ContextMenu != null)
+            {
+                // Only open the ContextMenu when it is not already open. If it is already open,
+                // when the button is pressed the ContextMenu will lose focus and automatically close.
+                if (!isContextMenuOpen)
+                {
+                    source.ContextMenu.AddHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed), true);
+                    // If there is a drop-down assigned to this button, then position and display it 
+                    source.ContextMenu.PlacementTarget = source;
+                    source.ContextMenu.Placement = PlacementMode.Bottom;
+                    source.ContextMenu.IsOpen = true;
+                    isContextMenuOpen = true;
+                }
+            }
+        }
+
+        void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            isContextMenuOpen = false;
+            var contextMenu = sender as ContextMenu;
+            if (contextMenu != null)
+            {
+                contextMenu.RemoveHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed));
+            }
+        }
+
+        private void PetAnalysisToolRun(object sender, RoutedEventArgs e)
+        {
+            var source = (MenuItem) sender;
+
+            var analysisTool = (AnalysisTool) source.DataContext;
+            Console.WriteLine("Running analysis tool {0}", analysisTool.DisplayName);
+
+            try
+            {
+                var highlightedDataset = (Dataset)PetGrid.SelectedItem;
+                var exportPath = System.IO.Path.GetFullPath(this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset));
+                string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), string.Format("{0}_{1:yyyyMMdd_HHmmss}.log", analysisTool.InternalName, DateTime.Now));
+                var exePath = ExpandAnalysisToolString(analysisTool.ExecutableFilePath, exportPath, ViewModel.Store.DataDirectory);
+                var arguments = ExpandAnalysisToolString(analysisTool.ProcessArguments, exportPath, ViewModel.Store.DataDirectory);
+                var workingDirectory = ExpandAnalysisToolString(analysisTool.WorkingDirectory, exportPath, ViewModel.Store.DataDirectory);
+
+                ProcessStartInfo psi = new ProcessStartInfo()
+                {
+                    FileName = "cmd.exe",
+                    Arguments = string.Format("/S /C \"\"{0}\" {1} > \"{2}\" 2>&1\"", exePath, arguments, logPath),
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    WorkingDirectory = workingDirectory,
+                    // RedirectStandardError = true,
+                    // RedirectStandardOutput = true,
+                    UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
+                };
+
+                if (analysisTool.ShowConsoleWindow)
+                {
+                    psi.Arguments = string.Format("/S /C \"\"{0}\" {1}\"", exePath, arguments, logPath);
+                    psi.CreateNoWindow = false;
+                    psi.WindowStyle = ProcessWindowStyle.Normal;
+                }
+
+                Console.WriteLine(psi.Arguments);
+                var p = new Process();
+                p.StartInfo = psi;
+                p.Start();
+
+                p.Dispose();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while starting tool.", ex.Message, ex.ToString());
+            }
+        }
+
+        private static string ExpandAnalysisToolString(string input, string exportPath, string workingDirectory)
+        {
+            string result = input.Replace("%1", exportPath);
+            result = result.Replace("%2", workingDirectory);
+            //TODO: %3 should be list of all selected directories; can we get that?
+            result = result.Replace("%4", META.VersionInfo.MetaPath);
+
+            return result;
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public event EventHandler TrackedJobsChanged;
 
         public List<Dataset> PetDatasetsList { get; set; }
         public ICollectionView PetDatasets { get; set; }
@@ -541,6 +803,10 @@ namespace PETBrowser
         public ICollectionView TestBenchDatasets { get; set; }
 
         public DatasetStore Store { get; set; }
+        public JobStore JobStore { get; set; }
+        public AnalysisTools AnalysisTools { get; set; }
+
+        public ICollectionView JobsView { get; set; }
 
         public delegate void DatasetLoadFailedCallback(Exception exception);
 
@@ -556,7 +822,6 @@ namespace PETBrowser
 
             set
             {
-                Console.WriteLine("loaded = " + value);
                 PropertyChanged.ChangeAndNotify(ref _datasetLoaded, value, () => DatasetLoaded);
             }
         }
@@ -588,18 +853,62 @@ namespace PETBrowser
             set { PropertyChanged.ChangeAndNotify(ref _loadTotalCount, value, () => LoadTotalCount); }
         }
 
-        public DatasetListWindowViewModel()
+        private string _projectPath;
+
+        public string ProjectPath
+        {
+            get { return _projectPath; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _projectPath, value, () => ProjectPath); }
+        }
+
+        public int ManagerPort
+        {
+            get { return JobStore.Port; }
+        }
+
+        public DatasetListWindowViewModel(JobStore jobStore)
         {
             Store = null;
             DatasetLoaded = false;
             IsLoading = false;
             LoadProgressCount = 0;
             LoadTotalCount = 1;
+            ProjectPath = "No project loaded";
             PetDatasetsList = new List<Dataset>();
             PetDatasets = new ListCollectionView(PetDatasetsList);
+            PetDatasets.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Descending));
 
             TestBenchDatasetsList = new List<Dataset>();
             TestBenchDatasets = new ListCollectionView(TestBenchDatasetsList);
+            TestBenchDatasets.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Descending));
+
+            AnalysisTools = new AnalysisTools();
+
+            if (jobStore == null)
+            {
+                JobStore = new JobStore();
+            }
+            else
+            {
+                JobStore = jobStore;
+            }
+            JobsView = new ListCollectionView(JobStore.TrackedJobs);
+            JobStore.TrackedJobsChanged += (sender, args) =>
+            {
+                JobsView.Refresh();
+                if (TrackedJobsChanged != null)
+                {
+                    TrackedJobsChanged(this, EventArgs.Empty);
+                }
+            };
+            JobStore.JobCompleted += (sender, args) =>
+            {
+                if (DatasetLoaded)
+                {
+                    LoadDataset(Store.DataDirectory, exception => Console.WriteLine(exception));
+                }
+            };
         }
 
         public void LoadDataset(string path, DatasetLoadFailedCallback callback)
@@ -609,6 +918,7 @@ namespace PETBrowser
             IsLoading = true;
             LoadProgressCount = 0;
             LoadTotalCount = 1;
+            ProjectPath = "No project loaded";
             PetDatasetsList.Clear();
             PetDatasets.Refresh();
             TestBenchDatasetsList.Clear();
@@ -660,6 +970,7 @@ namespace PETBrowser
                     TestBenchDatasetsList.AddRange(Store.TestbenchDatasets);
                     TestBenchDatasets.Refresh();
 
+                    ProjectPath = System.IO.Path.GetFullPath(path);
                     DatasetLoaded = true;
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext()); //this should run on the UI thread
@@ -743,7 +1054,7 @@ namespace PETBrowser
             }
         }
 
-        private bool ContainsIgnoreCase(string source, string value)
+        private static bool ContainsIgnoreCase(string source, string value)
         {
             return CultureInfo.InvariantCulture.CompareInfo.IndexOf(source, value, CompareOptions.IgnoreCase) >= 0;
         }

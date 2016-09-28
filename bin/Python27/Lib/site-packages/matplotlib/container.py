@@ -1,9 +1,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 import matplotlib.cbook as cbook
+import matplotlib.artist as martist
 
 
 class Container(tuple):
@@ -31,7 +32,9 @@ class Container(tuple):
         self._remove_method = f
 
     def remove(self):
-        for c in self:
+        for c in cbook.flatten(self,
+                               scalarp=lambda x: isinstance(x,
+                                                            martist.Artist)):
             c.remove()
 
         if self._remove_method:

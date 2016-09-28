@@ -7,6 +7,13 @@
         mc:Ignorable="d"
         d:DesignWidth="600"
         d:DesignHeight="700">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -50,13 +57,13 @@
                 <Style>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Manifest.Status}" Value="FAILED">
-                            <Setter Property="Grid.Background" Value="#FFFFAFAF" />
+                            <Setter Property="Grid.Background" Value="{StaticResource FailedBrush}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Manifest.Status}" Value="OK">
-                            <Setter Property="Grid.Background" Value="#FFAFFFAF"/>
+                            <Setter Property="Grid.Background" Value="{StaticResource SuccessBrush}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Manifest.Status}" Value="UNEXECUTED">
-                            <Setter Property="Grid.Background" Value="#FFFFFFAF"/>
+                            <Setter Property="Grid.Background" Value="{StaticResource ReadyBrush}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -64,7 +71,7 @@
         </Grid>
 
         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Steps</Label>
-        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -77,35 +84,28 @@
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Status}" Value="FAILED">
-                            <Setter Property="Background" Value="#FFFFAFAF" />
+                            <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Status}" Value="OK">
-                            <Setter Property="Background" Value="#FFAFFFAF"/>
+                            <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
-                            <Setter Property="Background" Value="#FFFFFFAF"/>
+                            <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>
                         </DataTrigger>
                     </Style.Triggers>
 
                     <EventSetter Event="MouseDoubleClick" Handler="StepsRow_DoubleClick"></EventSetter>
                 </Style>
             </DataGrid.RowStyle>
-
-            <DataGrid.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
-            </DataGrid.Resources>
         </DataGrid>
 
         <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Parameters</Label>
-        <DataGrid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending" />
                 <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Range}" Header="Range" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
@@ -113,24 +113,24 @@
         </DataGrid>
 
         <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
-        <DataGrid Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending" />
                 <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
 
         <Label Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Artifacts</Label>
-        <DataGrid Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.RowStyle>
@@ -141,12 +141,12 @@
         </DataGrid>
 
         <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Visualization Artifacts</Label>
-        <DataGrid Grid.Row="9" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+        <DataGrid Grid.Row="9" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.RowStyle>

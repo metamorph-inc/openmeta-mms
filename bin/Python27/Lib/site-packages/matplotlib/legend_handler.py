@@ -27,14 +27,15 @@ derived from the base class (HandlerBase) with the following method.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
-from six.moves import zip
+from matplotlib.externals import six
+from matplotlib.externals.six.moves import zip
 
 import numpy as np
 
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 import matplotlib.collections as mcoll
+import matplotlib.colors as mcolors
 
 
 def update_from_first_child(tgt, src):
@@ -304,8 +305,11 @@ class HandlerRegularPolyCollection(HandlerNpointsYoffsets):
     def get_sizes(self, legend, orig_handle,
                  xdescent, ydescent, width, height, fontsize):
         if self._sizes is None:
-            size_max = max(orig_handle.get_sizes()) * legend.markerscale ** 2
-            size_min = min(orig_handle.get_sizes()) * legend.markerscale ** 2
+            handle_sizes = orig_handle.get_sizes()
+            if not len(handle_sizes):
+                handle_sizes = [1]
+            size_max = max(handle_sizes) * legend.markerscale ** 2
+            size_min = min(handle_sizes) * legend.markerscale ** 2
 
             numpoints = self.get_numpoints(legend)
             if numpoints < 4:
@@ -581,3 +585,38 @@ class HandlerTuple(HandlerBase):
             a_list.extend(_a_list)
 
         return a_list
+
+
+class HandlerPolyCollection(HandlerBase):
+    """
+    Handler for PolyCollection used in fill_between and stackplot.
+    """
+    def _update_prop(self, legend_handle, orig_handle):
+        def first_color(colors):
+            colors = mcolors.colorConverter.to_rgba_array(colors)
+            if len(colors):
+                return colors[0]
+            else:
+                return "none"
+        def get_first(prop_array):
+            if len(prop_array):
+                return prop_array[0]
+            else:
+                return None
+        legend_handle.set_edgecolor(first_color(orig_handle.get_edgecolor()))
+        legend_handle.set_facecolor(first_color(orig_handle.get_facecolor()))
+        legend_handle.set_fill(orig_handle.get_fill())
+        legend_handle.set_hatch(orig_handle.get_hatch())
+        legend_handle.set_linewidth(get_first(orig_handle.get_linewidths()))
+        legend_handle.set_linestyle(get_first(orig_handle.get_linestyles()))
+        legend_handle.set_transform(get_first(orig_handle.get_transforms()))
+        legend_handle.set_figure(orig_handle.get_figure())
+        legend_handle.set_alpha(orig_handle.get_alpha())
+
+    def create_artists(self, legend, orig_handle,
+                       xdescent, ydescent, width, height, fontsize, trans):
+        p = Rectangle(xy=(-xdescent, -ydescent),
+                      width=width, height=height)
+        self.update_prop(p, orig_handle, legend)
+        p.set_transform(trans)
+        return [p]

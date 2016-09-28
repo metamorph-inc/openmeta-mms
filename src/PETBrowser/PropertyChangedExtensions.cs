@@ -43,5 +43,33 @@ namespace PETBrowser
             
             return true;
         }
+
+        public static bool Notify<T>(this PropertyChangedEventHandler handler, Expression<Func<T>> memberExpression)
+        {
+            if (memberExpression == null)
+            {
+                throw new ArgumentNullException("memberExpression");
+            }
+            var body = memberExpression.Body as MemberExpression;
+            if (body == null)
+            {
+                throw new ArgumentException("Lambda must return a property.");
+            }
+
+            var vmExpression = body.Expression as ConstantExpression;
+            if (vmExpression != null)
+            {
+                LambdaExpression lambda = Expression.Lambda(vmExpression);
+                Delegate vmFunc = lambda.Compile();
+                object sender = vmFunc.DynamicInvoke();
+
+                if (handler != null)
+                {
+                    handler(sender, new PropertyChangedEventArgs(body.Member.Name));
+                }
+            }
+
+            return true;
+        }
     }
 }

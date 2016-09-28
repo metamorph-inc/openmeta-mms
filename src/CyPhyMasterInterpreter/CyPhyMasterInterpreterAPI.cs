@@ -24,31 +24,42 @@
     {
         private Action copyDashboard = new Action(() =>
         {
-            var sourceDir = VersionInfo.DashboardPath;
-            var destinationDir = Path.Combine("dashboard");
-            var manifestFilename = "manifest.json";
-
-            var manifestSrc = Path.Combine(sourceDir, manifestFilename);
-            var manifestDst = Path.Combine(destinationDir, manifestFilename);
-
-            // read both manifest files
-            if (File.Exists(manifestSrc) &&
-                File.Exists(manifestDst))
+            var mutex = new System.Threading.Mutex(false, "OpenMETA_CyPhyMasterInterpreter_dashboard");
+            mutex.WaitOne();
+            try
             {
-                // compare version number, chance to skip copy
-                var manifestSrcContent = File.ReadAllText(manifestSrc);
-                var manifestDstContent = File.ReadAllText(manifestDst);
-                var manifestSrcObject = Newtonsoft.Json.JsonConvert.DeserializeObject<DashboardManifest>(manifestSrcContent);
-                var manifestDstObject = Newtonsoft.Json.JsonConvert.DeserializeObject<DashboardManifest>(manifestDstContent);
-                if (manifestSrcObject.Version == manifestDstObject.Version)
+                var sourceDir = VersionInfo.DashboardPath;
+                var destinationDir = Path.Combine("dashboard");
+                var manifestFilename = "manifest.json";
+
+                var manifestSrc = Path.Combine(sourceDir, manifestFilename);
+                var manifestDst = Path.Combine(destinationDir, manifestFilename);
+
+                // read both manifest files
+                if (File.Exists(manifestSrc) &&
+                    File.Exists(manifestDst))
                 {
-                    // no need for update/copy
-                    return;
+                    // compare version number, chance to skip copy
+                    var manifestSrcContent = File.ReadAllText(manifestSrc);
+                    var manifestDstContent = File.ReadAllText(manifestDst);
+                    var manifestSrcObject = Newtonsoft.Json.JsonConvert.DeserializeObject<DashboardManifest>(manifestSrcContent);
+                    var manifestDstObject = Newtonsoft.Json.JsonConvert.DeserializeObject<DashboardManifest>(manifestDstContent);
+                    if (manifestSrcObject.Version == manifestDstObject.Version)
+                    {
+                        // no need for update/copy
+                        return;
+                    }
                 }
+
+                // TODO: we should put dashboard into the project directory and not into the current working directory.
+                DirectoryCopy(sourceDir, destinationDir, true);
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
+                mutex.Dispose();
             }
 
-            // TODO: we should put dashboard into the project directory and not into the current working directory.
-            DirectoryCopy(sourceDir, destinationDir, true);
         });
 
         private Dictionary<string, CyPhyGUIs.IInterpreterConfiguration> interpreterConfigurations =
@@ -352,7 +363,7 @@
 
             this.Logger.WriteDebug("Start main method for master interpreter.");
 
-            this.Logger.WriteDebug("Start copying dashboard sync.");
+            this.Logger.WriteDebug("Copying dashboard.");
             this.copyDashboard.Invoke();
 
             if (this.ProjectManifest == null)
@@ -398,9 +409,6 @@
                     Title = "Starting"
                 });
             });
-
-            this.Logger.WriteDebug("Wait for dashboard copy to finish");
-            this.Logger.WriteDebug("Dashboard copy finished");
 
             this.ExecuteInTransaction(context, () =>
             {
@@ -613,7 +621,7 @@
         public void OpenDashboardWithChrome()
         {
             string indexFileName = this.GetIndexFilename();
-            
+
             // try to get this value better HKLM + 32 vs 64bit...
             this.Logger.WriteDebug("Requested to dashboard {0} file with chrome");
 
@@ -945,72 +953,83 @@
                 throw new InvalidOperationException();
             }
 
-            // Generate python scripts if not already there
-            string export_for_dashboard_scoring = Path.GetFullPath(
-                Path.Combine(this.ProjectManifest.OutputDirectory, "export_for_dashboard_scoring.py"));
-
-            if (File.Exists(export_for_dashboard_scoring) == false)
+            var mutex = new System.Threading.Mutex(false, "OpenMETA_CyPhyMasterInterpreter_dashboard");
+            mutex.WaitOne();
+            try
             {
-                using (StreamWriter writer = new StreamWriter(export_for_dashboard_scoring))
+
+                // Generate python scripts if not already there
+                string export_for_dashboard_scoring = Path.GetFullPath(
+                    Path.Combine(this.ProjectManifest.OutputDirectory, "export_for_dashboard_scoring.py"));
+
+                if (File.Exists(export_for_dashboard_scoring) == false)
                 {
-                    writer.WriteLine(Properties.Resources.export_for_dashboard_scoring);
+                    using (StreamWriter writer = new StreamWriter(export_for_dashboard_scoring))
+                    {
+                        writer.WriteLine(Properties.Resources.export_for_dashboard_scoring);
+                    }
+                }
+
+                // Check if the "stats" directory exists; if not, make it
+                string stat_dir_path = Path.GetFullPath(
+                    Path.Combine(this.ProjectManifest.OutputDirectory, "stats"));
+
+                if (Directory.Exists(stat_dir_path) == false)
+                {
+                    Directory.CreateDirectory(stat_dir_path);
+                }
+
+                string gather_stat_json = Path.GetFullPath(
+                    Path.Combine(stat_dir_path, "gather_stat_json.py"));
+
+                if (File.Exists(gather_stat_json))
+                {
+                    File.Delete(gather_stat_json);
+                }
+
+                using (StreamWriter writer = new StreamWriter(gather_stat_json))
+                {
+                    writer.WriteLine(Properties.Resources.gather_stat_json);
+                }
+
+                // Check if the "log" folder exists; if not, create it
+                string log_folder_path = Path.GetFullPath(
+                    Path.Combine(this.ProjectManifest.OutputDirectory, "log"));
+
+                if (Directory.Exists(log_folder_path) == false)
+                {
+                    Directory.CreateDirectory(log_folder_path);
+                }
+
+                string gather_all_logfiles = Path.GetFullPath(
+                    Path.Combine(log_folder_path, "gather_all_logfiles.py"));
+
+                if (File.Exists(gather_all_logfiles))
+                {
+                    File.Delete(gather_all_logfiles);
+                }
+
+                using (StreamWriter writer = new StreamWriter(gather_all_logfiles))
+                {
+                    writer.WriteLine(Properties.Resources.gather_all_logfiles);
+                }
+
+                index_html index = new index_html();
+                index.ProjectName = Path.GetFileNameWithoutExtension(this.ProjectManifest.Project.CyPhyProjectFileName);
+                index.AvmProjectFileName = Path.GetFileName(this.ProjectManifest.m_filename);
+
+                string indexFileName = this.GetIndexFilename();
+
+                using (StreamWriter writer = new StreamWriter(indexFileName))
+                {
+                    string index_content = index.TransformText();
+                    writer.WriteLine(index_content);
                 }
             }
-
-            // Check if the "stats" directory exists; if not, make it
-            string stat_dir_path = Path.GetFullPath(
-                Path.Combine(this.ProjectManifest.OutputDirectory, "stats"));
-
-            if (Directory.Exists(stat_dir_path) == false)
+            finally
             {
-                Directory.CreateDirectory(stat_dir_path);
-            }
-
-            string gather_stat_json = Path.GetFullPath(
-                Path.Combine(stat_dir_path, "gather_stat_json.py"));
-
-            if (File.Exists(gather_stat_json))
-            {
-                File.Delete(gather_stat_json);
-            }
-
-            using (StreamWriter writer = new StreamWriter(gather_stat_json))
-            {
-                writer.WriteLine(Properties.Resources.gather_stat_json);
-            }
-
-            // Check if the "log" folder exists; if not, create it
-            string log_folder_path = Path.GetFullPath(
-                Path.Combine(this.ProjectManifest.OutputDirectory, "log"));
-
-            if (Directory.Exists(log_folder_path) == false)
-            {
-                Directory.CreateDirectory(log_folder_path);
-            }
-
-            string gather_all_logfiles = Path.GetFullPath(
-                Path.Combine(log_folder_path, "gather_all_logfiles.py"));
-
-            if (File.Exists(gather_all_logfiles))
-            {
-                File.Delete(gather_all_logfiles);
-            }
-
-            using (StreamWriter writer = new StreamWriter(gather_all_logfiles))
-            {
-                writer.WriteLine(Properties.Resources.gather_all_logfiles);
-            }
-
-            index_html index = new index_html();
-            index.ProjectName = Path.GetFileNameWithoutExtension(this.ProjectManifest.Project.CyPhyProjectFileName);
-            index.AvmProjectFileName = Path.GetFileName(this.ProjectManifest.m_filename);
-
-            string indexFileName = this.GetIndexFilename();
-
-            using (StreamWriter writer = new StreamWriter(indexFileName))
-            {
-                string index_content = index.TransformText();
-                writer.WriteLine(index_content);
+                mutex.ReleaseMutex();
+                mutex.Dispose();
             }
         }
 
@@ -1440,7 +1459,7 @@
 
         private class DashboardManifest
         {
-            [Newtonsoft.Json.JsonProperty(PropertyName="version")]
+            [Newtonsoft.Json.JsonProperty(PropertyName = "version")]
             public string Version { get; set; }
         }
     }

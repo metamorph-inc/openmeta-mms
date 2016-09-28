@@ -172,6 +172,7 @@ namespace PETBrowser
 
             var metricsList = new List<Metric>(metrics.Values);
             Metrics = new ListCollectionView(metricsList);
+            Metrics.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
         }
     }
 }

@@ -10,7 +10,7 @@ import os
 import sys
 import warnings
 from numpy.compat import basestring
-from numpy import ModuleDeprecationWarning
+import numpy as np
 
 
 def get_package_name(filepath):
@@ -57,7 +57,7 @@ def import_nose():
     """ Import nose only when needed.
     """
     fine_nose = True
-    minimum_nose_version = (0, 10, 0)
+    minimum_nose_version = (1, 0, 0)
     try:
         import nose
     except ImportError:
@@ -121,8 +121,8 @@ def run_module_suite(file_to_run=None, argv=None):
         argv = argv + [file_to_run]
 
     nose = import_nose()
-    from .noseclasses import KnownFailure
-    nose.run(argv=argv, addplugins=[KnownFailure()])
+    from .noseclasses import KnownFailurePlugin
+    nose.run(argv=argv, addplugins=[KnownFailurePlugin()])
 
 
 class NoseTester(object):
@@ -151,36 +151,37 @@ class NoseTester(object):
         The package to test. If a string, this should be the full path to
         the package. If None (default), `package` is set to the module from
         which `NoseTester` is initialized.
-    raise_warnings : str or sequence of warnings, optional
+    raise_warnings : None, str or sequence of warnings, optional
         This specifies which warnings to configure as 'raise' instead
         of 'warn' during the test execution.  Valid strings are:
 
           - "develop" : equals ``(DeprecationWarning, RuntimeWarning)``
           - "release" : equals ``()``, don't raise on any warnings.
 
-        See Notes for more details.
-
-    Notes
-    -----
-    The default for `raise_warnings` is
-    ``(DeprecationWarning, RuntimeWarning)`` for the master branch of NumPy,
-    and ``()`` for maintenance branches and released versions.  The purpose
-    of this switching behavior is to catch as many warnings as possible
-    during development, but not give problems for packaging of released
-    versions.
+        Default is "release".
+    depth : int, optional
+        If `package` is None, then this can be used to initialize from the
+        module of the caller of (the caller of (...)) the code that
+        initializes `NoseTester`. Default of 0 means the module of the
+        immediate caller; higher values are useful for utility routines that
+        want to initialize `NoseTester` objects on behalf of other code.
 
     """
-    # Stuff to exclude from tests. These are from numpy.distutils
-    excludes = ['f2py_ext',
-                'f2py_f90_ext',
-                'gen_ext',
-                'pyrex_ext',
-                'swig_ext']
+    def __init__(self, package=None, raise_warnings="release", depth=0):
+        # Back-compat: 'None' used to mean either "release" or "develop"
+        # depending on whether this was a release or develop version of
+        # numpy. Those semantics were fine for testing numpy, but not so
+        # helpful for downstream projects like scipy that use
+        # numpy.testing. (They want to set this based on whether *they* are a
+        # release or develop version, not whether numpy is.) So we continue to
+        # accept 'None' for back-compat, but it's now just an alias for the
+        # default "release".
+        if raise_warnings is None:
+            raise_warnings = "release"
 
-    def __init__(self, package=None, raise_warnings="develop"):
         package_name = None
         if package is None:
-            f = sys._getframe(1)
+            f = sys._getframe(1 + depth)
             package_path = f.f_locals.get('__file__', None)
             if package_path is None:
                 raise AssertionError
@@ -287,17 +288,14 @@ class NoseTester(object):
         import_nose()
         # compile argv
         argv = self._test_argv(label, verbose, extra_argv)
-        # bypass tests noted for exclude
-        for ename in self.excludes:
-            argv += ['--exclude', ename]
         # our way of doing coverage
         if coverage:
             argv += ['--cover-package=%s' % self.package_name, '--with-coverage',
                    '--cover-tests', '--cover-erase']
         # construct list of plugins
         import nose.plugins.builtin
-        from .noseclasses import KnownFailure, Unplugger
-        plugins = [KnownFailure()]
+        from .noseclasses import KnownFailurePlugin, Unplugger
+        plugins = [KnownFailurePlugin()]
         plugins += [p() for p in nose.plugins.builtin.plugins]
         # add doctesting if required
         doctest_argv = '--with-doctest' in argv
@@ -418,7 +416,7 @@ class NoseTester(object):
             warnings.filterwarnings('ignore', message='Not importing directory')
             warnings.filterwarnings("ignore", message="numpy.dtype size changed")
             warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
-            warnings.filterwarnings("ignore", category=ModuleDeprecationWarning)
+            warnings.filterwarnings("ignore", category=np.ModuleDeprecationWarning)
             warnings.filterwarnings("ignore", category=FutureWarning)
             # Filter out boolean '-' deprecation messages. This allows
             # older versions of scipy to test without a flood of messages.
@@ -509,3 +507,10 @@ class NoseTester(object):
         add_plugins = [Unplugger('doctest')]
 
         return nose.run(argv=argv, addplugins=add_plugins)
+
+def _numpy_tester():
+    if hasattr(np, "__version__") and ".dev0" in np.__version__:
+        mode = "develop"
+    else:
+        mode = "release"
+    return NoseTester(raise_warnings=mode, depth=1)

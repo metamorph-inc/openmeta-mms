@@ -18,10 +18,11 @@
 from textwrap import dedent
 import unittest
 
-from astroid.node_classes import Assign, Discard, YieldFrom, Name, Const
+from astroid import nodes
+from astroid.node_classes import Assign, Expr, YieldFrom, Name, Const
 from astroid.builder import AstroidBuilder
-from astroid.scoped_nodes import Class, Function
-from astroid.test_utils import require_version
+from astroid.scoped_nodes import ClassDef, FunctionDef
+from astroid.test_utils import require_version, extract_node
 
 
 class Python3TC(unittest.TestCase):
@@ -36,7 +37,7 @@ class Python3TC(unittest.TestCase):
         # Get the star node
         node = next(next(next(astroid.get_children()).get_children()).get_children())
 
-        self.assertTrue(isinstance(node.ass_type(), Assign))
+        self.assertTrue(isinstance(node.assign_type(), Assign))
 
     @require_version('3.3')
     def test_yield_from(self):
@@ -46,10 +47,10 @@ class Python3TC(unittest.TestCase):
         """)
         astroid = self.builder.string_build(body)
         func = astroid.body[0]
-        self.assertIsInstance(func, Function)
+        self.assertIsInstance(func, FunctionDef)
         yieldfrom_stmt = func.body[0]
 
-        self.assertIsInstance(yieldfrom_stmt, Discard)
+        self.assertIsInstance(yieldfrom_stmt, Expr)
         self.assertIsInstance(yieldfrom_stmt.value, YieldFrom)
         self.assertEqual(yieldfrom_stmt.as_string(),
                          'yield from iter([1, 2])')
@@ -62,7 +63,7 @@ class Python3TC(unittest.TestCase):
         """)
         astroid = self.builder.string_build(body)
         func = astroid.body[0]
-        self.assertIsInstance(func, Function)
+        self.assertIsInstance(func, FunctionDef)
         self.assertTrue(func.is_generator())
 
     @require_version('3.3')
@@ -84,7 +85,7 @@ class Python3TC(unittest.TestCase):
         klass = astroid.body[0]
 
         metaclass = klass.metaclass()
-        self.assertIsInstance(metaclass, Class)
+        self.assertIsInstance(metaclass, ClassDef)
         self.assertEqual(metaclass.name, 'type')
 
     @require_version('3.0')
@@ -101,7 +102,7 @@ class Python3TC(unittest.TestCase):
         klass = astroid.body[1]
 
         metaclass = klass.metaclass()
-        self.assertIsInstance(metaclass, Class)
+        self.assertIsInstance(metaclass, ClassDef)
         self.assertEqual(metaclass.name, 'ABCMeta')
 
     @require_version('3.0')
@@ -147,7 +148,7 @@ class Python3TC(unittest.TestCase):
         klass = astroid['SubTest']
         self.assertTrue(klass.newstyle)
         metaclass = klass.metaclass()
-        self.assertIsInstance(metaclass, Class)
+        self.assertIsInstance(metaclass, ClassDef)
         self.assertEqual(metaclass.name, 'ABCMeta')
 
     @require_version('3.0')
@@ -175,7 +176,7 @@ class Python3TC(unittest.TestCase):
             for name in names:
                 impl = astroid[name]
                 meta = impl.metaclass()
-                self.assertIsInstance(meta, Class)
+                self.assertIsInstance(meta, ClassDef)
                 self.assertEqual(meta.name, metaclass)
 
     @require_version('3.0')
@@ -212,6 +213,41 @@ class Python3TC(unittest.TestCase):
         self.assertIsInstance(func.args.annotations[1], Name)
         self.assertEqual(func.args.annotations[1].name, 'str')
         self.assertIsNone(func.returns)
+
+    @require_version('3.0')
+    def test_annotation_as_string(self):
+        code1 = dedent('''
+        def test(a, b:int=4, c=2, f:'lala'=4)->2:
+            pass''')
+        code2 = dedent('''
+        def test(a:typing.Generic[T], c:typing.Any=24)->typing.Iterable:
+            pass''')
+        for code in (code1, code2):
+            func = extract_node(code)
+            self.assertEqual(func.as_string(), code)
+
+    @require_version('3.5')
+    def test_unpacking_in_dicts(self):
+        code = "{'x': 1, **{'y': 2}}"
+        node = extract_node(code)
+        self.assertEqual(node.as_string(), code)
+        keys = [key for (key, _) in node.items]
+        self.assertIsInstance(keys[0], nodes.Const)
+        self.assertIsInstance(keys[1], nodes.DictUnpack)
+
+    @require_version('3.5')
+    def test_nested_unpacking_in_dicts(self):
+        code = "{'x': 1, **{'y': 2, **{'z': 3}}}"
+        node = extract_node(code)
+        self.assertEqual(node.as_string(), code)
+
+    @require_version('3.5')
+    def test_unpacking_in_dict_getitem(self):
+        node = extract_node('{1:2, **{2:3, 3:4}, **{5: 6}}')
+        for key, expected in ((1, 2), (2, 3), (3, 4), (5, 6)):
+            value = node.getitem(key)
+            self.assertIsInstance(value, nodes.Const)
+            self.assertEqual(value.value, expected)
 
 
 if __name__ == '__main__':

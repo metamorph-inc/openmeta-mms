@@ -36,9 +36,13 @@ namespace PETBrowser
 
             Dependencies = new ListCollectionView(Manifest.Dependencies);
             Artifacts = new ListCollectionView(Manifest.Artifacts);
+            Artifacts.SortDescriptions.Add(new SortDescription("Tag", ListSortDirection.Ascending));
             VisualizationArtifacts = new ListCollectionView(Manifest.VisualizationArtifacts);
+            VisualizationArtifacts.SortDescriptions.Add(new SortDescription("Tag", ListSortDirection.Ascending));
             Metrics = new ListCollectionView(Manifest.Metrics);
+            Metrics.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
             Parameters = new ListCollectionView(Manifest.Parameters);
+            Parameters.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
             Steps = new ListCollectionView(Manifest.Steps);
         }
     }

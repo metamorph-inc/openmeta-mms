@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -288,10 +289,15 @@ namespace PETBrowser
                     {
                         Console.WriteLine("No selected datasets; writing highlighted dataset");
                         WriteDatasetToCsv(highlightedDataset, ref headers, writer, writeNoneAsEmpty);
+
+                        if (headers == null)
+                        {
+                            throw new ArgumentException("No data exported; no valid datasets were selected to export");
+                        }
                     }
                     else
                     {
-                        throw new ArgumentException("No data exported; no datasets were selected to export");
+                        throw new ArgumentException("No data exported; no valid datasets were selected to export");
                     }
                 }
             }
@@ -316,56 +322,66 @@ namespace PETBrowser
                     csvFileName = Path.Combine(this.DataDirectory, ArchiveDirectory, folder);
                 }
 
+                Console.WriteLine("Exporting CSV {0}", csvFileName);
+
                 using (var csvFile = File.OpenText(csvFileName))
                 {
-                    var csvReader = new CsvReader(csvFile, new CsvConfiguration()
+                    try
                     {
-                        HasHeaderRecord = true
-                    });
+                        var csvReader = new CsvReader(csvFile, new CsvConfiguration()
+                        {
+                            HasHeaderRecord = true
+                        });
 
-                    while (csvReader.Read())
-                    {
-                        if (headers == null)
+                        while (csvReader.Read())
                         {
-                            Console.Out.WriteLine(csvFileName);
-                            headers = new List<string>(csvReader.FieldHeaders);
-                            headers.Sort();
-                            firstHeaderReadForFolder = false;
-                            foreach (var header in headers)
+                            if (headers == null)
                             {
-                                writer.WriteField<string>(header);
-                            }
-                            writer.NextRecord();
-                        }
-                        else
-                        {
-                            if (firstHeaderReadForFolder)
-                            {
-                                var otherHeaders = new List<string>(csvReader.FieldHeaders);
-                                otherHeaders.Sort();
-                                if (!headers.SequenceEqual(otherHeaders))
+                                Console.Out.WriteLine(csvFileName);
+                                headers = new List<string>(csvReader.FieldHeaders);
+                                headers.Sort();
+                                firstHeaderReadForFolder = false;
+                                foreach (var header in headers)
                                 {
-                                    Console.WriteLine("Headers for {0} didn't match initial headers",
-                                        csvFileName);
-                                    break;
+                                    writer.WriteField<string>(header);
                                 }
-                            }
-                        }
-
-                        foreach (var header in headers)
-                        {
-                            string fieldValue = csvReader.GetField<string>(header);
-
-                            if (writeNoneAsEmpty && fieldValue == "None")
-                            {
-                                writer.WriteField<string>("");
+                                writer.NextRecord();
                             }
                             else
                             {
-                                writer.WriteField<string>(fieldValue);
+                                if (firstHeaderReadForFolder)
+                                {
+                                    var otherHeaders = new List<string>(csvReader.FieldHeaders);
+                                    otherHeaders.Sort();
+                                    if (!headers.SequenceEqual(otherHeaders))
+                                    {
+                                        Console.WriteLine("Headers for {0} didn't match initial headers",
+                                            csvFileName);
+                                        break;
+                                    }
+                                }
                             }
+
+                            foreach (var header in headers)
+                            {
+                                string fieldValue = csvReader.GetField<string>(header);
+
+                                if (writeNoneAsEmpty && fieldValue == "None")
+                                {
+                                    writer.WriteField<string>("");
+                                }
+                                else
+                                {
+                                    writer.WriteField<string>(fieldValue);
+                                }
+                            }
+                            writer.NextRecord();
                         }
-                        writer.NextRecord();
+                    }
+                    catch (CsvReaderException e)
+                    {
+                        Console.WriteLine("Invalid CSV found at {0}", csvFileName);
+                        Trace.TraceWarning("Invalid CSV found at {0}", csvFileName);
                     }
                 }
             }

@@ -9,11 +9,6 @@ from lxml import etree as _etree # due to validator __init__ signature
 
 # some compat stuff, borrowed from lxml.html
 try:
-    bytes
-except NameError:
-    # Python < 2.6
-    bytes = str
-try:
     unicode
 except NameError:
     # Python 3
@@ -28,7 +23,7 @@ except NameError:
 __all__ = ['extract_xsd', 'extract_rng', 'iso_dsdl_include',
            'iso_abstract_expand', 'iso_svrl_for_xslt1',
            'svrl_validation_errors', 'schematron_schema_valid',
-           'stylesheet_params', 'Schematron'] 
+           'stylesheet_params', 'Schematron']
 
 
 # some namespaces
@@ -112,7 +107,7 @@ def _stylesheet_param_dict(paramsDict, kwargsDict):
             paramsDict[k] = v
     paramsDict = stylesheet_params(**paramsDict)
     return paramsDict
-    
+
 
 class Schematron(_etree._Validator):
     """An ISO Schematron validator.
@@ -120,6 +115,17 @@ class Schematron(_etree._Validator):
     Pass a root Element or an ElementTree to turn it into a validator.
     Alternatively, pass a filename as keyword argument 'file' to parse from
     the file system.
+
+    Schematron is a less well known, but very powerful schema language.
+    The main idea is to use the capabilities of XPath to put restrictions on
+    the structure and the content of XML documents.
+
+    The standard behaviour is to fail on ``failed-assert`` findings only
+    (``ASSERTS_ONLY``).  To change this, you can either pass a report filter
+    function to the ``error_finder`` parameter (e.g. ``ASSERTS_AND_REPORTS``
+    or a custom ``XPath`` object), or subclass isoschematron.Schematron for
+    complete control of the validation process.
+
     Built on the Schematron language 'reference' skeleton pure-xslt
     implementation, the validator is created as an XSLT 1.0 stylesheet using
     these steps:
@@ -137,6 +143,7 @@ class Schematron(_etree._Validator):
     For convenience, the compile-step parameter ``phase`` is also exposed as a
     keyword argument ``phase``. This takes precedence if the parameter is also
     given in the parameter dictionary.
+
     If ``store_schematron`` is set to True, the (included-and-expanded)
     schematron document tree is stored and available through the ``schematron``
     property.
@@ -146,12 +153,12 @@ class Schematron(_etree._Validator):
     report document gets stored and can be accessed as the ``validation_report``
     property.
 
-    Schematron is a less well known, but very powerful schema language.  The main
-    idea is to use the capabilities of XPath to put restrictions on the structure
-    and the content of XML documents.  Here is a simple example::
+    Here is a usage example::
 
-      >>> from lxml import isoschematron
-      >>> schematron = isoschematron.Schematron(etree.XML('''
+      >>> from lxml import etree
+      >>> from lxml.isoschematron import Schematron
+
+      >>> schematron = Schematron(etree.XML('''
       ... <schema xmlns="http://purl.oclc.org/dsdl/schematron" >
       ...   <pattern id="id_only_attribute">
       ...     <title>id is the only permitted attribute name</title>
@@ -161,8 +168,8 @@ class Schematron(_etree._Validator):
       ...       </report>
       ...     </rule>
       ...   </pattern>
-      ... </schema>
-      ... '''))
+      ... </schema>'''),
+      ... error_finder=Schematron.ASSERTS_AND_REPORTS)
 
       >>> xml = etree.XML('''
       ... <AAA name="aaa">
@@ -172,7 +179,7 @@ class Schematron(_etree._Validator):
       ... ''')
 
       >>> schematron.validate(xml)
-      0
+      False
 
       >>> xml = etree.XML('''
       ... <AAA id="aaa">
@@ -182,13 +189,19 @@ class Schematron(_etree._Validator):
       ... ''')
 
       >>> schematron.validate(xml)
-      1
+      True
     """
 
     # libxml2 error categorization for validation errors
     _domain = _etree.ErrorDomains.SCHEMATRONV
     _level = _etree.ErrorLevels.ERROR
     _error_type = _etree.ErrorTypes.SCHEMATRONV_ASSERT
+
+    # convenience definitions for common behaviours
+    ASSERTS_ONLY = svrl_validation_errors  # Default
+    ASSERTS_AND_REPORTS = _etree.XPath(
+        '//svrl:failed-assert | //svrl:successful-report',
+        namespaces={'svrl': SVRL_NS})
 
     def _extract(self, element):
         """Extract embedded schematron schema from non-schematron host schema.
@@ -203,7 +216,7 @@ class Schematron(_etree._Validator):
             # RelaxNG does not have a single unique root element
             schematron = self._extract_rng(element)
         return schematron
-    
+
     # customization points
     # etree.XSLT objects that provide the extract, include, expand, compile
     # steps
@@ -212,27 +225,31 @@ class Schematron(_etree._Validator):
     _include = iso_dsdl_include
     _expand = iso_abstract_expand
     _compile = iso_svrl_for_xslt1
-    # etree.XPath object that determines input document validity when applied to
+
+    # etree.xpath object that determines input document validity when applied to
     # the svrl result report; must return a list of result elements (empty if
     # valid)
-    _validation_errors = svrl_validation_errors
-    
+    _validation_errors = ASSERTS_ONLY
+
     def __init__(self, etree=None, file=None, include=True, expand=True,
                  include_params={}, expand_params={}, compile_params={},
                  store_schematron=False, store_xslt=False, store_report=False,
-                 phase=None):
+                 phase=None, error_finder=ASSERTS_ONLY):
         super(Schematron, self).__init__()
 
         self._store_report = store_report
         self._schematron = None
         self._validator_xslt = None
         self._validation_report = None
+        if error_finder is not self.ASSERTS_ONLY:
+            self._validation_errors = error_finder
 
         # parse schema document, may be a schematron schema or an XML Schema or
         # a RelaxNG schema with embedded schematron rules
+        root = None
         try:
             if etree is not None:
-                if isinstance(etree, _etree._Element):
+                if _etree.iselement(etree):
                     root = etree
                 else:
                     root = etree.getroot()
@@ -242,7 +259,7 @@ class Schematron(_etree._Validator):
             raise _etree.SchematronParseError(
                 "No tree or file given: %s" % sys.exc_info()[1])
         if root is None:
-             raise ValueError("Empty tree")
+            raise ValueError("Empty tree")
         if root.tag == _schematron_root:
             schematron = root
         else:
@@ -269,7 +286,7 @@ class Schematron(_etree._Validator):
         if store_xslt:
             self._validator_xslt = validator_xslt
         self._validator = _etree.XSLT(validator_xslt)
-        
+
     def __call__(self, etree):
         """Validate doc using Schematron.
 
@@ -281,7 +298,7 @@ class Schematron(_etree._Validator):
             self._validation_report = result
         errors = self._validation_errors(result)
         if errors:
-            if isinstance(etree, _etree._Element):
+            if _etree.iselement(etree):
                 fname = etree.getroottree().docinfo.URL or '<file>'
             else:
                 fname = etree.docinfo.URL or '<file>'
@@ -289,28 +306,29 @@ class Schematron(_etree._Validator):
                 # Does svrl report the line number, anywhere? Don't think so.
                 self._append_log_message(
                     domain=self._domain, type=self._error_type,
-                    level=self._level, line=0, message=_etree.tounicode(error),
+                    level=self._level, line=0,
+                    message=_etree.tostring(error, encoding='unicode'),
                     filename=fname)
             return False
         return True
 
+    @property
     def schematron(self):
         """ISO-schematron schema document (None if object has been initialized
         with store_schematron=False).
         """
         return self._schematron
-    schematron = property(schematron, doc=schematron.__doc__)
 
+    @property
     def validator_xslt(self):
         """ISO-schematron skeleton implementation XSLT validator document (None
-        if object has been initialized with store_xslt=False). 
+        if object has been initialized with store_xslt=False).
         """
         return self._validator_xslt
-    validator_xslt = property(validator_xslt, doc=validator_xslt.__doc__)
 
+    @property
     def validation_report(self):
         """ISO-schematron validation result report (None if result-storing has
         been turned off).
         """
         return self._validation_report
-    validation_report = property(validation_report, doc=validation_report.__doc__)

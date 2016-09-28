@@ -7,7 +7,7 @@ and a mixin class for adding color mapping functionality.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import six
+from matplotlib.externals import six
 
 import os
 
@@ -18,6 +18,7 @@ import matplotlib.colors as colors
 import matplotlib.cbook as cbook
 from matplotlib._cm import datad
 from matplotlib._cm import cubehelix
+from matplotlib._cm_listed import cmaps as cmaps_listed
 
 cmap_d = dict()
 
@@ -37,10 +38,10 @@ def revcmap(data):
     for key, val in six.iteritems(data):
         if six.callable(val):
             valnew = _reverser(val)
-                # This doesn't work: lambda x: val(1-x)
-                # The same "val" (the first one) is used
-                # each time, so the colors are identical
-                # and the result is shades of gray.
+            # This doesn't work: lambda x: val(1-x)
+            # The same "val" (the first one) is used
+            # each time, so the colors are identical
+            # and the result is shades of gray.
         else:
             # Flip x and exchange the y values facing x = 0 and x = 1.
             valnew = [(1.0 - x, y1, y0) for x, y0, y1 in reversed(val)]
@@ -87,7 +88,10 @@ for cmapname in list(six.iterkeys(datad)):
 for cmapname in six.iterkeys(datad):
     cmap_d[cmapname] = _generate_cmap(cmapname, LUTSIZE)
 
+cmap_d.update(cmaps_listed)
+
 locals().update(cmap_d)
+
 
 # Continue with definitions ...
 
@@ -142,9 +146,8 @@ def get_cmap(name=None, lut=None):
     returned.
 
     If *lut* is not None it must be an integer giving the number of
-    entries desired in the lookup table, and *name* must be a
-    standard mpl colormap name with a corresponding data dictionary
-    in *datad*.
+    entries desired in the lookup table, and *name* must be a standard
+    mpl colormap name.
     """
     if name is None:
         name = mpl.rcParams['image.cmap']
@@ -155,15 +158,15 @@ def get_cmap(name=None, lut=None):
     if name in cmap_d:
         if lut is None:
             return cmap_d[name]
-        elif name in datad:
-            return _generate_cmap(name, lut)
+        else:
+            return cmap_d[name]._resample(lut)
     else:
         raise ValueError(
             "Colormap %s is not recognized. Possible values are: %s"
-            % (name, ', '.join(cmap_d.keys())))
+            % (name, ', '.join(sorted(cmap_d.keys()))))
 
 
-class ScalarMappable:
+class ScalarMappable(object):
     """
     This is a mixin class to support scalar data to RGBA mapping.
     The ScalarMappable makes use of data normalization before returning
@@ -178,9 +181,10 @@ class ScalarMappable:
         norm : :class:`matplotlib.colors.Normalize` instance
             The normalizing object which scales data, typically into the
             interval ``[0, 1]``.
+            If *None*, *norm* defaults to a *colors.Normalize* object which
+            initializes its scaling based on the first data processed.
         cmap : str or :class:`~matplotlib.colors.Colormap` instance
             The colormap used to map normalized data values to RGBA colors.
-
         """
 
         self.callbacksSM = cbook.CallbackRegistry()
@@ -198,11 +202,6 @@ class ScalarMappable:
         #: The last colorbar associated with this ScalarMappable. May be None.
         self.colorbar = None
         self.update_dict = {'array': False}
-
-    @cbook.deprecated('1.3', alternative='the colorbar attribute')
-    def set_colorbar(self, im, ax):
-        """set the colorbar and axes instances associated with mappable"""
-        self.colorbar = im
 
     def to_rgba(self, x, alpha=None, bytes=False):
         """
