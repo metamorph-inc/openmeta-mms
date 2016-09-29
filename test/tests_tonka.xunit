@@ -16,5 +16,6 @@
     <assembly filename="AraRFAnalysisTest\bin\Release\AraRFAnalysisTest.dll" shadow-copy="true" />
     <assembly filename="CyPhy2CADPCBTest\bin\Release\CyPhy2CADPCBTest.dll" shadow-copy="true" />
     <assembly filename="PcbToolsTest\bin\Release\PcbToolsTest.dll" shadow-copy="true" />
+    <assembly filename="DigTest\bin\Release\DigTest.exe" shadow-copy="true" />
   </assemblies>
 </xunit>
