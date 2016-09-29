@@ -49,11 +49,10 @@ requests==2.11.0  # installer
 
 networkx==1.9.1
 requests
+# git@github.com:metamorph-inc/matlab_wrapper.git
+matlab_wrapper
+matlab_proxy
 
 pygame==1.9.2b1 # chipfit_display
 BeautifulSoup==3.2.1 # get_bom_with_eagle_xref
 pyqtgraph==0.9.10 # tonka/src/spice_viewer
-
-# git@github.com:metamorph-inc/matlab_wrapper.git
-matlab_wrapper
-matlab_proxy
