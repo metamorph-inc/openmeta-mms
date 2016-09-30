@@ -51,8 +51,8 @@ shinyServer(function(input, output, session) {
   else
   {
     # raw = read.csv("../data.csv", fill=T)
-    raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    # raw = iris
+    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    raw = iris
   }
   
   # Import/Export Session Settings -------------------------------------------
@@ -1260,8 +1260,10 @@ shinyServer(function(input, output, session) {
   # Bayesian -----------------------------------------------------------------
   
   #Dynamic UI rendering for weighted metrics list
+  
   output$bayesian <- renderUI({
     print("In bayesian ui rendering")
+    
     var_types <- c("Input",
                    "Design Variable", 
                    "Scenario Variable",
@@ -1269,25 +1271,66 @@ shinyServer(function(input, output, session) {
                    "Output",
                    "Measure of Performance",
                    "Key System Attribute")
+    
     lapply(varRangeNum(), function(var) {
-      d = density(filterData()[[var]])
+      current <- which(varNames == var)
+      gaussianCondition = toString(paste0("input.gaussian",current," == true"))
+      d <- density(filterData()[[var]])
       fluidRow(
-        column(4,
-          selectInput(paste0('bayes_', var),
-          label = var,
-          choices = var_types,
-          selected = var_types[2])
+        column(3, 
+          selectInput(
+            paste0('varType', current),
+            label = var,
+            choices = var_types,
+            selected = var_types[2]),
+          checkboxInput(
+            paste0('gaussian', current),
+            label = "Enable Gaussian",
+            value = FALSE),
+          conditionalPanel(condition = gaussianCondition,
+            fluidRow(
+              column(6, 
+                textInput(paste0('gaussian_mean', current),
+                          HTML("&mu;:"),
+                          placeholder = "Mean")
+              ),
+              column(6, 
+                textInput(paste0('gaussian_sd',current),
+                          HTML("&sigma;:"),
+                          placeholder = "SD")
+              )
+            )
+            #generateGaussian(current)
+          )
         ),
-        column(8,
+        column(7,
           renderPlot({
-            par(mar=c(0,0,0,0))
-            plot(d, main = "")
-          })
-        ),
-        br(), br()
-      )
-    })
+            #par(mar = c(0, 0, 0, 0))
+            plot(d, main = "", 
+                 xlab = "", ylab = "", 
+                 yaxt = "n", 
+                 xlim = c(unname(rawAbsMin()[var]), unname(rawAbsMax()[var])),
+                 las = 1,
+                 bty = "n",
+                 asp = 1.3)
+          }, height = 150)),
+        column(2,
+          bootstrapPage(
+            actionButton(paste0("add", var), "Add", class = "btn btn-success")
+          )
+          ))
+      })
   })
+  
+  generateGaussian <- function(current) {
+    print ("Generating gaussian from user input ")
+    sd <- input[[paste0('gaussian_sd', current)]]
+    mean <- input[[paste0('gaussian_mean', current)]]
+    req(sd)
+    req(mean)
+    gaussian <- rnorm(1000, mean, sd)
+  }
+
 
   # UI Adjustments -----------------------------------------------------------
   updateColorSlider <- observeEvent(colSliderSettings(), {

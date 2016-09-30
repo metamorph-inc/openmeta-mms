@@ -130,7 +130,7 @@ shinyUI(fluidPage(
     tabPanel("Bayesian",
         column(6, 
           wellPanel("Variables", br(), br(), 
-            uiOutput("bayesian")
+            uiOutput("bayesian", height = 200)
           )
         ),
         column(6,
