@@ -122,7 +122,10 @@ shinyUI(fluidPage(
         ),
         fluidRow(
           column(12,
-                 verbatimTextOutput("ranges")
+                 h4("Numeric Ranges", align = "center"),
+                 verbatimTextOutput("numeric_ranges"),
+                 h4("Factor Statistics", align = "center"),
+                 uiOutput("factor_ranges")
           )
         )
       )
