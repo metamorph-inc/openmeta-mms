@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+import six
+from six.moves import map
 __all__ = ['recordtype']
 
 import sys
@@ -35,7 +38,7 @@ def recordtype(typename, field_names, verbose=False, **default_kwds):
     '''
     # Parse and validate the field names.  Validation serves two purposes,
     # generating informative error messages and preventing template injection attacks.
-    if isinstance(field_names, basestring):
+    if isinstance(field_names, six.string_types):
         # names separated by whitespace and/or commas
         field_names = field_names.replace(',', ' ').split()
     field_names = tuple(map(str, field_names))
@@ -125,12 +128,12 @@ def recordtype(typename, field_names, verbose=False, **default_kwds):
     # Execute the template string in a temporary namespace
     namespace = {}
     try:
-        exec template in namespace
+        exec(template, namespace)
         if verbose: print template
-    except SyntaxError, e:
+    except SyntaxError as e:
         raise SyntaxError(e.message + ':\n' + template)
     cls = namespace[typename]
-    cls.__init__.im_func.func_defaults = init_defaults
+    cls.__init__.__func__.__defaults__ = init_defaults
     # For pickling to work, the __module__ variable needs to be set to the frame
     # where the named tuple is created.  Bypass this step in enviroments where
     # sys._getframe is not defined (Jython for example).
