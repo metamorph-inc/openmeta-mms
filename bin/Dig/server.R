@@ -485,7 +485,7 @@ shinyServer(function(input, output, session) {
   # Data processing ----------------------------------------------------------
     
   filterData <- reactive({
-    print("In filterData()")
+    print(invisible("In filterData()"))
     data <- raw_plus()
     # print(paste("Length of VarNames:", length(varNames)))
     for(column in 1:length(varNames)) {
@@ -514,7 +514,7 @@ shinyServer(function(input, output, session) {
       
       # cat("-----------", inpName, nname, rng, length(data[nname]), sep = '\n')
     }
-    print("Data Filtered")
+    print(invisible("Data Filtered"))
     data
   })
   
@@ -875,7 +875,12 @@ shinyServer(function(input, output, session) {
   
   output$exportRanges <- downloadHandler(
     filename = function() { paste('ranges-', Sys.Date(), '.csv', sep='') },
-    content = function(file) { write.csv(do.call(rbind, lapply(filterData(), summary)), file) }
+    content = function(file) { write.csv(do.call(rbind, lapply(filterData()[varRangeNum()], summary)), file) }
+    # content = function(file) { write.table(do.call(rbind, lapply(filterData(), summary)), sep = ",", append = TRUE, file)
+    #                            for(i in 1:length(varRangeFac())) {
+    #                              current <- filterData()[varRangeFac()[i]]
+    #                              write.table(do.call(rbind, lapply(current, summary)), file, sep = ",", append = TRUE)
+    #                            }}
   )
   
   output$exportPlot <- downloadHandler(
@@ -1010,6 +1015,16 @@ shinyServer(function(input, output, session) {
                                  value = funcVal),
                        utilityPlot(current)),
       br(), br(), br()
+      # ,
+      # checkboxInput(paste0('util', current),
+      #               "Add Transfer Function",
+      #               value = utilVal),
+      # conditionalPanel(condition = transferCondition,
+      #                  textInput(paste0('func', current),
+      #                            "Enter Data Points",
+      #                            placeholder = "e.g. 40 = 0.1, 50 = 0.5"),
+      #                  utilityPlot(current)),
+      # br(), br(), br()
     )
   }
   
@@ -1216,18 +1231,44 @@ shinyServer(function(input, output, session) {
   )
   
   # Ranges Table Tab --------------------------------------------------------------------------------
-  slowRangeData <- eventReactive(input$updateRanges, {
-    do.call(rbind, lapply(filterData(), summary))
-  })
-  
-  output$ranges <- renderPrint({
+  output$numeric_ranges <- renderPrint({
     if(input$autoRange == TRUE){
-      do.call(rbind, lapply(filterData(), summary))
+      do.call(rbind, lapply(filterData()[varRangeNum()], summary))
     }
     else {
-      slowRangeData()
+      slowNumericRangeData()
     }
   })
+  
+  slowNumericRangeData <- eventReactive(input$updateRanges, {
+    do.call(rbind, lapply(filterData()[varRangeNum()], summary))
+  })
+  
+  output$factor_ranges <- renderUI({
+    if(input$autoRange == TRUE){
+      printFactorStatistics()
+    }
+    else {
+      slowFactorRangeData()
+    }
+  })
+  
+  printFactorStatistics <- function(...){
+    
+    lapply(varRangeFac(), function(var) {
+      renderPrint({
+        do.call(rbind, lapply(filterData()[var], summary))
+      })
+    })
+  }
+  
+  slowFactorRangeData <- eventReactive(input$updateRanges, {
+    printFactorStatistics()
+  })
+  
+  
+  
+  # UI Adjustments -----------------------------------------------------------
 
   colSliderSettings <- reactive({
     if(input$colVarNum != ""){
@@ -1257,7 +1298,6 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  # UI Adjustments -----------------------------------------------------------
   updateColorSlider <- observeEvent(colSliderSettings(), {
     print("In updateColorSlider")
     if(input$colVarNum != ""){
