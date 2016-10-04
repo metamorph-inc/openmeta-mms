@@ -13,7 +13,7 @@ _NOTE: Will not compile under Express Edition_
 When installing, select these packages (at minimum):
 
 - Programming Languages
-  + C++
+    + C++
 
 ## Microsoft Visual Studio 2015 Update 2
 [Download](https://www.visualstudio.com/en-us/news/vs2015-update2-vs.aspx)
@@ -76,7 +76,7 @@ _NOTE: The CadQuery library must be copied into the `<FreeCAD_Install_Dir>\Mod` 
 Clone this repository to your disk.
 
 # Build
-1. Open Visual Studio Command Prompt (2015) with ”Run as administrator”. (Do not use a Visual Studio x64 command prompt)
+1. Open Visual Studio Command Prompt (2015) with ï¿½Run as administratorï¿½. (Do not use a Visual Studio x64 command prompt)
 2. From the root repository directory, run `build_both.cmd`. This may take 30 minutes to build. _(Warnings may be ignored, but there should be no errors.)_
 
 If you encounter errors, try to build once more. There may be some remaining race conditions in the build scripts.
