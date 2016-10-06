@@ -21,9 +21,15 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
   numberOfSamples = nrow(data)
   
   likelihood = rep(1, numberOfSamples)
-  for (i in 1:numberOfInputVariables) {
-    likelihoodTemp = pdfComp(distributionTypes[[i]], distributionParams[[i]], data[[i]])
-    likelihood = likelihood * likelihoodTemp
+  for (var in names(data)) {
+    if(dataDirection[[var]] == 'input') {
+      likelihoodTemp = pdfComp(distributionTypes[[var]], distributionParams[[var]], data[[var]])
+      likelihood = likelihood * likelihoodTemp
+    } else if(dataDirection[[var]] == 'output') {
+      # Intentionally left blank
+    } else {
+      stop("Invalid data direction")
+    }
   }
   
   weight = likelihood / sum(likelihood)
@@ -35,33 +41,35 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
   outputList = list()
   
   # Plot resampled samples
-  for (i in 1:numberOfInputVariables) {
-    min = min(data_new[[i]])
-    max = max(data_new[[i]])
-    
-    xpoint = seq(min, max, (max - min)/100)
-    pdfAnalytical = pdfComp(distributionTypes[[i]], distributionParams[[i]], xpoint)
-    pdfSample = density(data_new[[i]], n=100, from=min, to=max)
-    
-    result = list(xOrig = xpoint,
-                  yOrig = pdfAnalytical,
-                  xResampled = pdfSample[['x']],
-                  yResampled = pdfSample[['y']])
-    outputList[names(data)[[i]]] = result
-  }
-  
-  for (i in (numberOfInputVariables + 1):numberOfVariables) {
-    min = min(data_new[[i]])
-    max = max(data_new[[i]])
-    
-    originalPdf = density(data[[i]], n=100, from=min, to=max)
-    resampledPdf = density(data_new[[i]], n=100, from=min, to=max)
-    
-    result = list(xOrig = originalPdf[['x']],
-                  yOrig = originalPdf[['y']],
-                  xResampled = resampledPdf[['x']],
-                  yResampled = resampledPdf[['y']])
-    outputList[names(data)[[i]]] = result
+  for (var in names(data)) {
+    if(dataDirection[[var]] == 'input') {
+      min = min(data_new[[var]])
+      max = max(data_new[[var]])
+      
+      xpoint = seq(min, max, (max - min)/100)
+      pdfAnalytical = pdfComp(distributionTypes[[var]], distributionParams[[var]], xpoint)
+      pdfSample = density(data_new[[var]], n=100, from=min, to=max)
+      
+      result = list(xOrig = xpoint,
+                    yOrig = pdfAnalytical,
+                    xResampled = pdfSample[['x']],
+                    yResampled = pdfSample[['y']])
+      outputList[var] = result
+    } else if(dataDirection[[var]] == 'output') {
+      min = min(data_new[[var]])
+      max = max(data_new[[var]])
+      
+      originalPdf = density(data[[var]], n=100, from=min, to=max)
+      resampledPdf = density(data_new[[var]], n=100, from=min, to=max)
+      
+      result = list(xOrig = originalPdf[['x']],
+                    yOrig = originalPdf[['y']],
+                    xResampled = resampledPdf[['x']],
+                    yResampled = resampledPdf[['y']])
+      outputList[names(data)[[var]]] = result
+    } else {
+      stop("Invalid data direction")
+    }
   }
   
   return(outputList)
@@ -84,6 +92,8 @@ pdfComp = function(distributionType, distributionParams, data) {
     return(dnorm(data, mean=distributionParams[["mean"]], sd=distributionParams[["stdDev"]]))
   } else if(distributionType == "unif") {
     return(dunif(data, min=distributionParams[["min"]], max=distributionParams[["max"]]))
+  } else {
+    stop("Invalid distribution type")
   }
 }
 
