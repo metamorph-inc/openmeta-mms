@@ -22,10 +22,10 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
   
   likelihood = rep(1, numberOfSamples)
   for (var in names(data)) {
-    if(dataDirection[[var]] == 'input') {
+    if(dataDirection[[var]] == 'Input') {
       likelihoodTemp = pdfComp(distributionTypes[[var]], distributionParams[[var]], data[[var]])
       likelihood = likelihood * likelihoodTemp
-    } else if(dataDirection[[var]] == 'output') {
+    } else if(dataDirection[[var]] == 'Output') {
       # Intentionally left blank
     } else {
       stop("Invalid data direction")
@@ -42,7 +42,7 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
   
   # Plot resampled samples
   for (var in names(data)) {
-    if(dataDirection[[var]] == 'input') {
+    if(dataDirection[[var]] == 'Input') {
       min = min(data_new[[var]])
       max = max(data_new[[var]])
       
@@ -55,7 +55,7 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
                     xResampled = pdfSample[['x']],
                     yResampled = pdfSample[['y']])
       outputList[[var]] = result
-    } else if(dataDirection[[var]] == 'output') {
+    } else if(dataDirection[[var]] == 'Output') {
       min = min(data_new[[var]])
       max = max(data_new[[var]])
       

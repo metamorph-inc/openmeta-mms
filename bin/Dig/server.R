@@ -1,5 +1,6 @@
 library(shiny)
 library(DT)
+source('bayesian_utils.r')
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
 #options(error = function() traceback(2))
@@ -598,6 +599,57 @@ shinyServer(function(input, output, session) {
      print("Data Colored")
      data
   })
+  
+  # Reactive variables for running the bayesian analysis
+  bayesianDirection <- reactiveValues()
+  bayesianType <- reactiveValues()
+  bayesianParams <- reactiveValues()
+  
+  bayesianInitialized <- FALSE
+
+  
+  bayesianData <- reactive({
+    print("In bayesianData()")
+    
+    variables <- varRangeNum()
+    input_data <- raw_plus()[variables]
+    
+    # Real Resample
+    if (bayesianInitialized) {
+      output_data <- resampleData(input_data, bayesianDirection(), bayesianType(), bayesianParams())
+    }
+    else
+    {
+      # Surrogate Resample
+      output_data <- list()
+      data_mean <- apply(input_data, 2, mean)
+      data_sd <- apply(input_data, 2, sd)
+      
+      print(data_mean)
+      print(data_sd)
+      
+      for (i in 1:length(variables)) {
+        var <- variables[i]
+        samples <- seq(unname(rawAbsMin()[var])*0.8, unname(rawAbsMax()[var])*1.3, ((unname(rawAbsMax()[var])*1.3 - unname(rawAbsMin()[var])*0.8))/100)
+        output_data[[variables[i]]] <- list("xOrig" = samples,
+                                            "yOrig" = dnorm(samples, data_mean[var], data_sd[var]),
+                                            "xResampled" = samples,
+                                            "yResampled" = dnorm(samples, data_mean[[var]]*1.3, data_sd[[var]]*0.8))
+      }
+    }
+    
+    output_data
+  })
+  
+  
+  # generateGaussian <- function(current) {
+  #   print ("Generating gaussian from user input ")
+  #   sd <- input[[paste0('gaussian_sd', current)]]
+  #   mean <- input[[paste0('gaussian_mean', current)]]
+  #   req(sd)
+  #   req(mean)
+  #   gaussian <- rnorm(1000, mean, sd)
+  # }
 
   output$colorLegend <- renderUI({
     print("In color legend")
@@ -1261,28 +1313,30 @@ shinyServer(function(input, output, session) {
   
   #Dynamic UI rendering for weighted metrics list
   
+  
+  
   output$bayesian <- renderUI({
     print("In bayesian ui rendering")
+    data <- bayesianData()
+    var_directions <- c("Input",
+                        "Output")
+    variables <- varRangeNum()
     
-    var_types <- c("Input",
-                   "Design Variable", 
-                   "Scenario Variable",
-                   "Environment variable",
-                   "Output",
-                   "Measure of Performance",
-                   "Key System Attribute")
-    
-    lapply(varRangeNum(), function(var) {
-      current <- which(varNames == var)
+    for (i in 1:length(variables)) {
+      var <- variables[i]
+      current <- which(varNames == var) # why is this here? why not just use var?
       gaussianCondition = toString(paste0("input.gaussian",current," == true"))
-      d <- density(filterData()[[var]])
+      x_bounds <- c(min(raw_plus()[[var]], data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
+                    max(raw_plus()[[var]], data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
+      y_bounds <- c(0,max(data[[var]][["yOrig"]], data[[var]][["yResampled"]])*2)
+      
       fluidRow(
         column(3, 
           selectInput(
-            paste0('varType', current),
+            paste0('varDirection', current),
             label = var,
-            choices = var_types,
-            selected = var_types[2]),
+            choices = var_directions,
+            selected = var_directions[1]),
           checkboxInput(
             paste0('gaussian', current),
             label = "Enable Gaussian",
@@ -1297,39 +1351,54 @@ shinyServer(function(input, output, session) {
               column(6, 
                 textInput(paste0('gaussian_sd',current),
                           HTML("&sigma;:"),
-                          placeholder = "SD")
+                          placeholder = "StdDev")
               )
             )
-            #generateGaussian(current)
           )
         ),
         column(7,
           renderPlot({
-            #par(mar = c(0, 0, 0, 0))
-            plot(d, main = "", 
+            hist(raw_plus()[[var]],
+                 freq = FALSE,
+                 type = "l",
+                 main = "", 
                  xlab = "", ylab = "", 
                  yaxt = "n", 
-                 xlim = c(unname(rawAbsMin()[var]), unname(rawAbsMax()[var])),
-                 las = 1,
-                 bty = "n",
-                 asp = 1.3)
-          }, height = 150)),
+                 xlim = x_bounds,
+                 ylim = y_bounds,
+                 # las = 1,
+                 #asp = 1.3,
+                 bty = "o")
+            lines(data[[var]][["xOrig"]],
+                  data[[var]][["yOrig"]],
+                  col = "black")
+            lines(data[[var]][["xResampled"]],
+                  data[[var]][["yResampled"]],
+                  col = "green")
+          }, height = 200)),
         column(2,
           bootstrapPage(
             actionButton(paste0("add", var), "Add", class = "btn btn-success")
           )
-          ))
-      })
+        )
+      )
+      
+      bayesianDirection[[var]] <- input[[paste0('varDirection', current)]]
+      if (bayesianDirection[[var]] == "input") {
+        if(input[[paste0('gaussian', current)]]) {
+          bayesianType[[var]] <- "norm"
+          bayesianParams[[var]]$mean <- input[[paste0('gaussian_mean', current)]]
+          bayesianParams[[var]]$stdDev <- input[[paste0('gaussian_sd', current)]]
+        }
+        else {
+          bayesianType[[var]] <- "unif"
+          bayesianParams[[var]]$min <- unname(rawAbsMin()[var])
+          bayesianParams[[var]]$max <- unname(rawAbsMax()[var])
+        }
+      }
+    }
   })
-  
-  generateGaussian <- function(current) {
-    print ("Generating gaussian from user input ")
-    sd <- input[[paste0('gaussian_sd', current)]]
-    mean <- input[[paste0('gaussian_mean', current)]]
-    req(sd)
-    req(mean)
-    gaussian <- rnorm(1000, mean, sd)
-  }
+
 
 
   # UI Adjustments -----------------------------------------------------------
