@@ -30,6 +30,6 @@ distributionParams = list("modelica.jturbine"=list(mean=mean(data[,"modelica.jtu
 results = resampleData(data, dataDirections, distributionTypes, distributionParams)
 
 for(i in 1:numberOfVariables) {
-  plot(results[[i]][["xOrig"]], results[[i]][["yOrig"]], type='l', col="red", main=names(data)[[i]])
-  lines(results[[i]][["xResampled"]], results[[i]][["yResampled"]], col="green")
+  plot(results[[i]][["xOrig"]], results[[i]][["yOrig"]], type='l', col="darkslateblue", main=names(data)[[i]], ylim=range(results[[i]][["yOrig"]], results[[i]][["yResampled"]]))
+  lines(results[[i]][["xResampled"]], results[[i]][["yResampled"]], col="darkgreen")
 }
