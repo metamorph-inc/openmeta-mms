@@ -54,7 +54,7 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
                     yOrig = pdfAnalytical,
                     xResampled = pdfSample[['x']],
                     yResampled = pdfSample[['y']])
-      outputList[var] = result
+      outputList[[var]] = result
     } else if(dataDirection[[var]] == 'output') {
       min = min(data_new[[var]])
       max = max(data_new[[var]])
@@ -66,7 +66,7 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
                     yOrig = originalPdf[['y']],
                     xResampled = resampledPdf[['x']],
                     yResampled = resampledPdf[['y']])
-      outputList[names(data)[[var]]] = result
+      outputList[[var]] = result
     } else {
       stop("Invalid data direction")
     }
