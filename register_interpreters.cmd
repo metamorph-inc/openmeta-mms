@@ -55,3 +55,5 @@ if exist "src\ModelicaImporter\bin\Release\ModelicaImporter.dll" %windir%\Micros
 if exist "src\Run_PRISMATIC_toolchain\bin\Release\Run_PRISMATIC_toolchain.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\Run_PRISMATIC_toolchain\bin\Release\Run_PRISMATIC_toolchain.dll" || exit /b !ERRORLEVEL!
 if exist "src\SubTreeMerge\bin\Release\SubTreeMerge.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\SubTreeMerge\bin\Release\SubTreeMerge.dll" || exit /b !ERRORLEVEL!
 if exist "src\ShowNet\bin\Release\ShowNet.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\ShowNet\bin\Release\ShowNet.dll" || exit /b !ERRORLEVEL!
+if exist "src\AcmEditor\bin\Release\AcmEditor.exe" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\AcmEditor\bin\Release\AcmEditor.exe" || exit /b !ERRORLEVEL!
+if exist "src\CyPhyResultsViewer\bin\Release\CyPhyResultsViewer.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\CyPhyResultsViewer\bin\Release\CyPhyResultsViewer.dll" || exit /b !ERRORLEVEL!
