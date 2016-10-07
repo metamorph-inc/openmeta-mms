@@ -306,7 +306,7 @@ namespace ComponentImporterUnitTests
         public static void PerformInTransaction(this MgaProject project, MgaGateway.voidDelegate del)
         {
             var mgaGateway = new MgaGateway(project);
-            mgaGateway.PerformInTransaction(del);
+            mgaGateway.PerformInTransaction(del, abort: false);
         }
     }
 }
