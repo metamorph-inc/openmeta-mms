@@ -118,7 +118,9 @@ for vcxproj in map(os.path.basename, tonka_projects):
 # repr(open('tmp.sh').read())
 import subprocess
 import re
-for line in (l for l in subprocess.check_output('git grep HintPath.*META.src **/*.csproj').split('\n') if l):
+for line in (l for l in subprocess.check_output('git grep HintPath.*\\\\src\\\\ **/*.csproj').split('\n') if l):
+    if r'src\nuget' in line:
+        continue
     proj, dep = re.match(r'([^:]*):.*?HintPath.*\\(.*)(?:.dll|.exe)..HintPath.*', line).groups()
     proj = os.path.basename(proj)
     if dep not in 'MgaMeta CyPhyElaborateCS CyPhyML CyPhyGUIs ISIS.GME.Common'.split():
