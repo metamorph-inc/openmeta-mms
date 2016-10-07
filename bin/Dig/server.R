@@ -1315,88 +1315,103 @@ shinyServer(function(input, output, session) {
   
   
   
-  output$bayesian <- renderUI({
-    print("In bayesian ui rendering")
-    data <- bayesianData()
+  output$bayesianUI <- renderUI({
+    print("In bayesianUI()")
     var_directions <- c("Input",
                         "Output")
-    variables <- varRangeNum()
-    
-    for (i in 1:length(variables)) {
-      var <- variables[i]
-      current <- which(varNames == var) # why is this here? why not just use var?
-      gaussianCondition = toString(paste0("input.gaussian",current," == true"))
-      x_bounds <- c(min(raw_plus()[[var]], data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
-                    max(raw_plus()[[var]], data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
-      y_bounds <- c(0,max(data[[var]][["yOrig"]], data[[var]][["yResampled"]])*2)
+    lapply(varRangeNum(), function(var) {
+      # UI calculations
+      i <- which(varNames == var) # globalId
+      gaussianCondition = toString(paste0("input.gaussian",i," == true"))
       
       fluidRow(
-        column(3, 
+        column(8,
           selectInput(
-            paste0('varDirection', current),
-            label = var,
+            paste0('varDirection', i),
+            label = varRangeNum()[var],
             choices = var_directions,
             selected = var_directions[1]),
           checkboxInput(
-            paste0('gaussian', current),
+            paste0('gaussian', i),
             label = "Enable Gaussian",
             value = FALSE),
           conditionalPanel(condition = gaussianCondition,
             fluidRow(
-              column(6, 
-                textInput(paste0('gaussian_mean', current),
+              column(6,
+                textInput(paste0('gaussian_mean', i),
                           HTML("&mu;:"),
                           placeholder = "Mean")
               ),
-              column(6, 
-                textInput(paste0('gaussian_sd',current),
+              column(6,
+                textInput(paste0('gaussian_sd',i),
                           HTML("&sigma;:"),
                           placeholder = "StdDev")
               )
             )
           )
         ),
-        column(7,
-          renderPlot({
-            hist(raw_plus()[[var]],
-                 freq = FALSE,
-                 type = "l",
-                 main = "", 
-                 xlab = "", ylab = "", 
-                 yaxt = "n", 
-                 xlim = x_bounds,
-                 ylim = y_bounds,
-                 # las = 1,
-                 #asp = 1.3,
-                 bty = "o")
-            lines(data[[var]][["xOrig"]],
-                  data[[var]][["yOrig"]],
-                  col = "black")
-            lines(data[[var]][["xResampled"]],
-                  data[[var]][["yResampled"]],
-                  col = "green")
-          }, height = 200)),
-        column(2,
+        column(4,
           bootstrapPage(
             actionButton(paste0("add", var), "Add", class = "btn btn-success")
           )
         )
       )
       
-      bayesianDirection[[var]] <- input[[paste0('varDirection', current)]]
-      if (bayesianDirection[[var]] == "input") {
-        if(input[[paste0('gaussian', current)]]) {
-          bayesianType[[var]] <- "norm"
-          bayesianParams[[var]]$mean <- input[[paste0('gaussian_mean', current)]]
-          bayesianParams[[var]]$stdDev <- input[[paste0('gaussian_sd', current)]]
-        }
-        else {
-          bayesianType[[var]] <- "unif"
-          bayesianParams[[var]]$min <- unname(rawAbsMin()[var])
-          bayesianParams[[var]]$max <- unname(rawAbsMax()[var])
-        }
-      }
-    }
+      # var <- varRangeNum()[i]
+      # 
+      # bayesianDirection[[var]] <- input[[paste0('varDirection', i)]]
+      # if (bayesianDirection[[var]] == "input") {
+      #   if(input[[paste0('gaussian', i)]]) {
+      #     bayesianType[[var]] <- "norm"
+      #     bayesianParams[[var]]$mean <- input[[paste0('gaussian_mean', i)]]
+      #     bayesianParams[[var]]$stdDev <- input[[paste0('gaussian_sd', i)]]
+      #   }
+      #   else {
+      #     bayesianType[[var]] <- "unif"
+      #     bayesianParams[[var]]$min <- unname(rawAbsMin()[var])
+      #     bayesianParams[[var]]$max <- unname(rawAbsMax()[var])
+      #   }
+      # }
+      # 
+      # bayesianInitialized <- TRUE
+    })
+    #print("Done with bayesianUI()")
+  })
+  
+  output$bayesianPlots <- renderUI({
+    print("In bayesianPlots()")
+    data <- bayesianData()
+    variables <- varRangeNum()
+    
+    lapply(variables, function(var) {
+      x_bounds <- c(min(raw_plus()[[var]], data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
+                    max(raw_plus()[[var]], data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
+      y_bounds <- c(0,max(data[[var]][["yOrig"]], data[[var]][["yResampled"]])*2)
+      
+      fluidRow(
+        column(12,
+           renderPlot({
+             hist(raw_plus()[[var]],
+                  freq = FALSE,
+                  type = "l",
+                  main = "", 
+                  xlab = "", ylab = "", 
+                  yaxt = "n", 
+                  xlim = x_bounds,
+                  ylim = y_bounds,
+                  # las = 1,
+                  #asp = 1.3,
+                  bty = "o")
+             lines(data[[var]][["xOrig"]],
+                   data[[var]][["yOrig"]],
+                   col = "black")
+             lines(data[[var]][["xResampled"]],
+                   data[[var]][["yResampled"]],
+                   col = "green")
+           }, height = 200)
+        )
+      )
+    })
   })
 
 

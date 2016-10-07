@@ -132,11 +132,13 @@ shinyUI(fluidPage(
       fluidRow(
         column(6, 
           wellPanel("Variables", br(), br(), 
-            uiOutput("bayesian", height = 200)
+            uiOutput("bayesianUI", height = 200)
           )
         ),
         column(6,
-          wellPanel("Correlation")
+          wellPanel("Correlation", br(), br(),
+            uiOutput("bayesianPlots")
+          )
         )
       )
     ),
