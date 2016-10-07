@@ -18,12 +18,22 @@ xFuncs <- data.frame()
 xFuncs <- xFuncs[1:4,]
 row.names(xFuncs) <- c("Values", "Scores", "Slopes", "Y_ints")
 
+bayesianDirection <- list()
+bayesianType <- list()
+bayesianParams <- list()
+
+bayesianInitialized <- FALSE
+
 #-------------------End Global Variables-----------------------#
 
 
 shinyServer(function(input, output, session) {
   
   makeReactiveBinding("xFuncs")
+  makeReactiveBinding("bayesianInitialized")
+  makeReactiveBinding("bayesianDirection")
+  makeReactiveBinding("bayesianType")
+  makeReactiveBinding("bayesianParams")
 
   importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE)
   
@@ -601,11 +611,7 @@ shinyServer(function(input, output, session) {
   })
   
   # Reactive variables for running the bayesian analysis
-  bayesianDirection <- reactiveValues()
-  bayesianType <- reactiveValues()
-  bayesianParams <- reactiveValues()
-  
-  bayesianInitialized <- FALSE
+
 
   
   bayesianData <- reactive({
@@ -616,7 +622,7 @@ shinyServer(function(input, output, session) {
     
     # Real Resample
     if (bayesianInitialized) {
-      output_data <- resampleData(input_data, bayesianDirection(), bayesianType(), bayesianParams())
+      output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)
     }
     else
     {
@@ -637,6 +643,8 @@ shinyServer(function(input, output, session) {
                                             "yResampled" = dnorm(samples, data_mean[[var]]*1.3, data_sd[[var]]*0.8))
       }
     }
+    
+    bayesianInitialized <<- FALSE
     
     output_data
   })
@@ -1311,9 +1319,6 @@ shinyServer(function(input, output, session) {
   
   # Bayesian -----------------------------------------------------------------
   
-  #Dynamic UI rendering for weighted metrics list
-  
-  
   
   output$bayesianUI <- renderUI({
     print("In bayesianUI()")
@@ -1340,12 +1345,14 @@ shinyServer(function(input, output, session) {
               column(6,
                 textInput(paste0('gaussian_mean', i),
                           HTML("&mu;:"),
-                          placeholder = "Mean")
+                          placeholder = "Mean",
+                          value = 1)
               ),
               column(6,
                 textInput(paste0('gaussian_sd',i),
                           HTML("&sigma;:"),
-                          placeholder = "StdDev")
+                          placeholder = "StdDev",
+                          value = 1)
               )
             )
           )
@@ -1356,28 +1363,35 @@ shinyServer(function(input, output, session) {
           )
         )
       )
-      
-      # var <- varRangeNum()[i]
-      # 
-      # bayesianDirection[[var]] <- input[[paste0('varDirection', i)]]
-      # if (bayesianDirection[[var]] == "input") {
-      #   if(input[[paste0('gaussian', i)]]) {
-      #     bayesianType[[var]] <- "norm"
-      #     bayesianParams[[var]]$mean <- input[[paste0('gaussian_mean', i)]]
-      #     bayesianParams[[var]]$stdDev <- input[[paste0('gaussian_sd', i)]]
-      #   }
-      #   else {
-      #     bayesianType[[var]] <- "unif"
-      #     bayesianParams[[var]]$min <- unname(rawAbsMin()[var])
-      #     bayesianParams[[var]]$max <- unname(rawAbsMax()[var])
-      #   }
-      # }
-      # 
-      # bayesianInitialized <- TRUE
+
     })
     #print("Done with bayesianUI()")
   })
   
+  bayesianCalc <- observe({
+    for(i in 1:length(varRangeNum())){
+      var <- varRangeNum()[i]
+      global_i <- which(varNames == var)
+      dir <- input[[paste0('varDirection', global_i)]]
+      is_gaus <- input[[paste0('gaussian', global_i)]]
+      req(dir)
+      bayesianDirection[[var]] <<- input[[paste0('varDirection', global_i)]]
+      if (bayesianDirection[[var]] == "Input") {
+        if(input[[paste0('gaussian', global_i)]]) {
+          bayesianType[[var]] <<- "norm"
+          bayesianParams[[var]]$mean <<- as.numeric(input[[paste0('gaussian_mean', global_i)]])
+          bayesianParams[[var]]$stdDev <<- as.numeric(input[[paste0('gaussian_sd', global_i)]])
+        }
+        else {
+          bayesianType[[var]] <<- "unif"
+          bayesianParams[[var]]$min <<- unname(rawAbsMin()[[var]])
+          bayesianParams[[var]]$max <<- unname(rawAbsMax()[[var]])
+        }
+      }
+    }
+    bayesianInitialized <<- TRUE
+  })
+      
   output$bayesianPlots <- renderUI({
     print("In bayesianPlots()")
     data <- bayesianData()
