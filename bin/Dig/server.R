@@ -22,7 +22,7 @@ bayesianDirection <- list()
 bayesianType <- list()
 bayesianParams <- list()
 
-bayesianInitialized <- FALSE
+bayesianUIInitialized <- FALSE
 
 #-------------------End Global Variables-----------------------#
 
@@ -30,7 +30,7 @@ bayesianInitialized <- FALSE
 shinyServer(function(input, output, session) {
   
   makeReactiveBinding("xFuncs")
-  makeReactiveBinding("bayesianInitialized")
+  makeReactiveBinding("bayesianUIInitialized")
   makeReactiveBinding("bayesianDirection")
   makeReactiveBinding("bayesianType")
   makeReactiveBinding("bayesianParams")
@@ -61,9 +61,10 @@ shinyServer(function(input, output, session) {
   }
   else
   {
+    raw = read.csv("WindTurbineSim.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    raw = iris
+    # raw = iris
   }
   
   # Import/Export Session Settings -------------------------------------------
@@ -621,30 +622,31 @@ shinyServer(function(input, output, session) {
     input_data <- raw_plus()[variables]
     
     # Real Resample
-    if (bayesianInitialized) {
+    if (bayesianUIInitialized) {
       output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)
     }
     else
     {
-      # Surrogate Resample
-      output_data <- list()
-      data_mean <- apply(input_data, 2, mean)
-      data_sd <- apply(input_data, 2, sd)
-      
-      print(data_mean)
-      print(data_sd)
-      
-      for (i in 1:length(variables)) {
-        var <- variables[i]
-        samples <- seq(unname(rawAbsMin()[var])*0.8, unname(rawAbsMax()[var])*1.3, ((unname(rawAbsMax()[var])*1.3 - unname(rawAbsMin()[var])*0.8))/100)
-        output_data[[variables[i]]] <- list("xOrig" = samples,
-                                            "yOrig" = dnorm(samples, data_mean[var], data_sd[var]),
-                                            "xResampled" = samples,
-                                            "yResampled" = dnorm(samples, data_mean[[var]]*1.3, data_sd[[var]]*0.8))
-      }
+      output_data <- NULL
+      # # Surrogate Resample
+      # output_data <- list()
+      # data_mean <- apply(input_data, 2, mean)
+      # data_sd <- apply(input_data, 2, sd)
+      # 
+      # print(data_mean)
+      # print(data_sd)
+      # 
+      # for (i in 1:length(variables)) {
+      #   var <- variables[i]
+      #   samples <- seq(unname(rawAbsMin()[var])*0.8, unname(rawAbsMax()[var])*1.3, ((unname(rawAbsMax()[var])*1.3 - unname(rawAbsMin()[var])*0.8))/100)
+      #   output_data[[variables[i]]] <- list("xOrig" = samples,
+      #                                       "yOrig" = dnorm(samples, data_mean[var], data_sd[var]),
+      #                                       "xResampled" = samples,
+      #                                       "yResampled" = dnorm(samples, data_mean[[var]]*1.3, data_sd[[var]]*0.8))
+      # }
     }
     
-    bayesianInitialized <<- FALSE
+    # bayesianUIInitialized <<- FALSE
     
     output_data
   })
@@ -1324,41 +1326,45 @@ shinyServer(function(input, output, session) {
     print("In bayesianUI()")
     var_directions <- c("Input",
                         "Output")
+    data_mean <- apply(raw_plus()[varRangeNum()], 2, mean)
+    data_sd <- apply(raw_plus()[varRangeNum()], 2, sd)
+    
     lapply(varRangeNum(), function(var) {
       # UI calculations
       i <- which(varNames == var) # globalId
       gaussianCondition = toString(paste0("input.gaussian",i," == true"))
+      spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
       fluidRow(
+        hr(),
         column(8,
           selectInput(
             paste0('varDirection', i),
-            label = varRangeNum()[var],
+            label = var,
             choices = var_directions,
             selected = var_directions[1]),
           checkboxInput(
             paste0('gaussian', i),
             label = "Enable Gaussian",
             value = FALSE),
-          conditionalPanel(condition = gaussianCondition,
-            fluidRow(
-              column(6,
-                textInput(paste0('gaussian_mean', i),
-                          HTML("&mu;:"),
-                          placeholder = "Mean",
-                          value = 1)
-              ),
-              column(6,
-                textInput(paste0('gaussian_sd',i),
-                          HTML("&sigma;:"),
-                          placeholder = "StdDev",
-                          value = 1)
-              )
+          fluidRow(
+            column(6,
+              textInput(paste0('gaussian_mean', i),
+                        HTML("&mu;:"),
+                        placeholder = "Mean",
+                        value = data_mean[[var]])
+            ),
+            column(6,
+              textInput(paste0('gaussian_sd',i),
+                        HTML("&sigma;:"),
+                        placeholder = "StdDev",
+                        value = data_sd[[var]])
             )
           )
         ),
         column(4,
           bootstrapPage(
+            br(),
             actionButton(paste0("add", var), "Add", class = "btn btn-success")
           )
         )
@@ -1389,7 +1395,7 @@ shinyServer(function(input, output, session) {
         }
       }
     }
-    bayesianInitialized <<- TRUE
+    bayesianUIInitialized <<- TRUE
   })
       
   output$bayesianPlots <- renderUI({
@@ -1397,35 +1403,43 @@ shinyServer(function(input, output, session) {
     data <- bayesianData()
     variables <- varRangeNum()
     
-    lapply(variables, function(var) {
-      x_bounds <- c(min(raw_plus()[[var]], data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
-                    max(raw_plus()[[var]], data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
-      y_bounds <- c(0,max(data[[var]][["yOrig"]], data[[var]][["yResampled"]])*2)
-      
-      fluidRow(
-        column(12,
-           renderPlot({
-             hist(raw_plus()[[var]],
-                  freq = FALSE,
-                  type = "l",
-                  main = "", 
-                  xlab = "", ylab = "", 
-                  yaxt = "n", 
-                  xlim = x_bounds,
-                  ylim = y_bounds,
-                  # las = 1,
-                  #asp = 1.3,
-                  bty = "o")
-             lines(data[[var]][["xOrig"]],
-                   data[[var]][["yOrig"]],
-                   col = "black")
-             lines(data[[var]][["xResampled"]],
-                   data[[var]][["yResampled"]],
-                   col = "green")
-           }, height = 200)
+    
+    if(is.null(data)) {
+      verbatimTextOutput("Initializing...")
+    }
+    else {
+      lapply(variables, function(var) {
+        raw_plus_histo <- hist(raw_plus()[[var]], freq = FALSE)
+        x_bounds <- c(min(raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
+                      max(raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
+        y_bounds <- c(0,
+                      max(raw_plus_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
+        fluidRow(
+          column(12,
+                 renderPlot({
+                   hist(raw_plus()[[var]],
+                        freq = FALSE,
+                        col = "wheat",
+                        type = "l",
+                        main = "", 
+                        xlab = "", ylab = "", 
+                        yaxt = "n", 
+                        xlim = x_bounds,
+                        ylim = y_bounds,
+                        # las = 1,
+                        #asp = 1.3,
+                        bty = "o")
+                   lines(data[[var]][["xOrig"]],
+                         data[[var]][["yOrig"]],
+                         col = "black")
+                   lines(data[[var]][["xResampled"]],
+                         data[[var]][["yResampled"]],
+                         col = "green")
+                 }, height = 234)
+          )
         )
-      )
-    })
+      })
+    }
   })
 
 
