@@ -67,6 +67,12 @@ To install:
 
 _NOTE: The CadQuery library must be copied into the `<FreeCAD_Install_Dir>\Mod` folder to work correctly with the META tools._
 
+## EAGLE
+
+For the tests to pass, EAGLE must be installed.
+
+[Download EAGLE](https://cadsoft.io/). Version 6.5 is known to work.
+
 ## Git
 [Download msysgit](https://msysgit.github.io/)
 
