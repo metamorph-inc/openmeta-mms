@@ -52,8 +52,7 @@ namespace SchematicUnitTests
 
         public void Dispose()
         {
-            proj.Save();
-            proj.Close();
+            proj.Close(abort: true);
             proj = null;
         }
     }

@@ -58,7 +58,6 @@ namespace CyPhy2Schematic
             if (Logger == null)
                 Logger = new GMELogger(project, ComponentName);
             MgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out MgaGateway.territory);
         }
 
         private CyPhy2Schematic_Settings InitializeSettingsFromWorkflow(CyPhy2Schematic_Settings settings)
@@ -207,11 +206,6 @@ namespace CyPhy2Schematic
             }
             finally
             {
-                if (MgaGateway != null &&
-                    MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 DisposeLogger();
                 MgaGateway = null;
                 project = null;
@@ -549,11 +543,6 @@ namespace CyPhy2Schematic
             }
             finally
             {
-                if (MgaGateway != null &&
-                    MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 DisposeLogger();
                 MgaGateway = null;
                 GC.Collect();

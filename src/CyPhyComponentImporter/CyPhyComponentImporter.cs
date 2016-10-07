@@ -75,7 +75,6 @@ namespace CyPhyComponentImporter
         {
             InitializeLogger(project);
             MgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out MgaGateway.territory);
         }
 
         #region getCyPhyMLComponentDictionary Functions
@@ -170,9 +169,10 @@ namespace CyPhyComponentImporter
                 MgaGateway.PerformInTransaction(delegate
                 {
                     ImportFiles(project, projroot, FileNames);
-                }, transactiontype_enum.TRANSACTION_NON_NESTED);
+                }, transactiontype_enum.TRANSACTION_NON_NESTED, abort: false);
 
                 Logger.WriteSuccess("{0} complete", this.ComponentName);
+                return;
             }
             else
             {
@@ -718,10 +718,6 @@ namespace CyPhyComponentImporter
             finally
             {
                 DisposeLogger();
-                if (MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 project = null;
                 currentobj = null;

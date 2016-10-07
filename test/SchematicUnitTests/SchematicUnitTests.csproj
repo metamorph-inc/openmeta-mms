@@ -110,9 +110,6 @@
     <Compile Include="..\..\src\CommonFiles\MgaUtils.cs">
       <Link>MgaUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\CyPhy2Modelica_v2\MgaGateway.cs">
-      <Link>MgaGateway.cs</Link>
-    </Compile>
     <Compile Include="BoneyardTest.cs" />
     <Compile Include="ImporterTest.cs" />
     <Compile Include="InterpreterFixtureBaseClass.cs" />

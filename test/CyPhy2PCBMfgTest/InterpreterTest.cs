@@ -106,19 +106,19 @@ namespace CyPhy2PCBMfgTest
             {
                 objTestBench = project.get_ObjectByPath(pathTestbench) as MgaFCO;
                 Assert.NotNull(objTestBench);
-            });
 
-            var interpreter = new CyPhy2PCBMfg.CyPhy2PCBMfgInterpreter();
-            interpreter.Initialize(project);
-            var parameters = new InterpreterMainParameters()
-            {
-                CurrentFCO = objTestBench,
-                SelectedFCOs = null,
-                Project = project,
-                OutputDirectory = pathOutput,
-                ProjectDirectory = project.GetRootDirectoryPath()
-            };
-            interpreter.Main(parameters);
+                var interpreter = new CyPhy2PCBMfg.CyPhy2PCBMfgInterpreter();
+                interpreter.Initialize(project);
+                var parameters = new InterpreterMainParameters()
+                {
+                    CurrentFCO = objTestBench,
+                    SelectedFCOs = null,
+                    Project = project,
+                    OutputDirectory = pathOutput,
+                    ProjectDirectory = project.GetRootDirectoryPath()
+                };
+                interpreter.Main(parameters);
+            });
 
             // Check that files were copied from the design path to the output path.
             string[] copiedFileNames = 
@@ -278,8 +278,7 @@ namespace CyPhy2PCBMfgTest
         public static void PerformInTransaction(this MgaProject project, MgaGateway.voidDelegate del)
         {
             var mgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out mgaGateway.territory);
-            mgaGateway.PerformInTransaction(del);
+            mgaGateway.PerformInTransaction(del, abort: false);
         }
     }
 

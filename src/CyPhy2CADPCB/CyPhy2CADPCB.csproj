@@ -73,9 +73,6 @@
     <Reference Include="GME.MGA.Meta, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\CyPhy2Modelica_v2\MgaGateway.cs">
-      <Link>MgaGateway.cs</Link>
-    </Compile>
     <Compile Include="AbstractClasses\AraTemplateComponent.cs" />
     <Compile Include="AbstractClasses\CADModel.cs" />
     <Compile Include="AbstractClasses\Component.cs" />

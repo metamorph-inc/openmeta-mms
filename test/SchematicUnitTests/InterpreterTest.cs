@@ -851,24 +851,25 @@ namespace SchematicUnitTests
         {
             string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
-            project.PerformInTransaction(delegate
+            project.PerformInTransaction(abort: true, del: delegate
             {
                 var testObj = project.ObjectByPath["/@TestBenches|kind=Testing/@SpiceAsmModelGeneration_Complex"] as MgaFCO;
                 Assert.NotNull(testObj);
                 var tb = ISIS.GME.Dsml.CyPhyML.Classes.TestBench.Cast(testObj);
                 testObj.SetRegistryValueDisp("SpiceFidelitySettings", null);
-            }, abort: false);
 
-            string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
+                string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
 
-            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
-            Assert.DoesNotContain("RRfb", sch);
-            Assert.DoesNotContain("RRin", sch);
-            Assert.DoesNotContain("XSpicySingleOpAmp", sch);
-            Assert.DoesNotContain("SUBCKT OPAMP1", sch);
-            Assert.Contains("\n* not a real opamp", sch);
+                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+                Assert.DoesNotContain("RRfb", sch);
+                Assert.DoesNotContain("RRin", sch);
+                Assert.DoesNotContain("XSpicySingleOpAmp", sch);
+                Assert.DoesNotContain("SUBCKT OPAMP1", sch);
+                Assert.Contains("\n* not a real opamp", sch);
 
-            Assert.True(Regex.Match(sch, "\nXLevel2_SPICE \\d+ \\d+ OPAMPASM1\\s").Success);
+                Assert.True(Regex.Match(sch, "\nXLevel2_SPICE \\d+ \\d+ OPAMPASM1\\s").Success);
+            });
+
         }
 
         [Fact]
@@ -876,7 +877,7 @@ namespace SchematicUnitTests
         public void SpiceAsmModelGeneration_Complex_2()
         {
             string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
-            project.PerformInTransaction(delegate
+            project.PerformInTransaction(abort: true, del: delegate
             {
                 var testObj = project.ObjectByPath["/@TestBenches|kind=Testing/@SpiceAsmModelGeneration_Complex"] as MgaFCO;
                 Assert.NotNull(testObj);
@@ -893,18 +894,18 @@ namespace SchematicUnitTests
                 Assert.Equal(1, elements.Count);
 
                 FidelitySelectionRules.SerializeInRegistry(testObj, xpaths);
-            }, abort: false);
 
-            string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
+                string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
 
-            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
-            Assert.DoesNotContain("RRfb", sch);
-            Assert.DoesNotContain("RRin", sch);
-            Assert.DoesNotContain("XSpicySingleOpAmp", sch);
-            Assert.DoesNotContain("SUBCKT OPAMP1", sch);
-            Assert.Contains("\n.SUBCKT LEVEL4ASM2", sch);
+                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+                Assert.DoesNotContain("RRfb", sch);
+                Assert.DoesNotContain("RRin", sch);
+                Assert.DoesNotContain("XSpicySingleOpAmp", sch);
+                Assert.DoesNotContain("SUBCKT OPAMP1", sch);
+                Assert.Contains("\n.SUBCKT LEVEL4ASM2", sch);
 
-            Assert.True(Regex.Match(sch, "\nXLevel4_SPICE \\d+ \\d+ OPAMPASM2\\s").Success);
+                Assert.True(Regex.Match(sch, "\nXLevel4_SPICE \\d+ \\d+ OPAMPASM2\\s").Success);
+            });
         }
 
         [Fact]
@@ -912,7 +913,7 @@ namespace SchematicUnitTests
         public void SpiceAsmModelGeneration_Complex_SelectClassification()
         {
             string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
-            project.PerformInTransaction(delegate
+            project.PerformInTransaction(abort: true, del: delegate
             {
                 var testObj = project.ObjectByPath["/@TestBenches|kind=Testing/@SpiceAsmModelGeneration_Complex"] as MgaFCO;
                 Assert.NotNull(testObj);
@@ -942,16 +943,16 @@ namespace SchematicUnitTests
                 */
 
                 FidelitySelectionRules.SerializeInRegistry(testObj, xpaths);
-            }, abort: false);
 
-            string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
+                string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
 
-            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
-            Assert.Contains("RRfb", sch);
-            Assert.Contains("RRin", sch);
-            Assert.Contains("XSpicySingleOpAmp", sch);
-            Assert.Contains("SUBCKT OPAMP1", sch);
-            Assert.DoesNotContain("\n.SUBCKT LEVEL4ASM2", sch);
+                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+                Assert.Contains("RRfb", sch);
+                Assert.Contains("RRin", sch);
+                Assert.Contains("XSpicySingleOpAmp", sch);
+                Assert.Contains("SUBCKT OPAMP1", sch);
+                Assert.DoesNotContain("\n.SUBCKT LEVEL4ASM2", sch);
+            });
         }
 
         private string RunSpiceAsmModelGeneration_Complex(string OutputDirName)
@@ -1139,7 +1140,7 @@ namespace SchematicUnitTests
         [Fact]
         public void Elaborator_RLC_RefAsOrigin()
         {
-            project.PerformInTransaction(delegate
+            project.PerformInTransaction(abort: true, del: delegate
             {
                 string pathComponentAssembly = "/@A_ElaboratorTest|kind=ComponentAssemblies|relpos=0/CA_ElabTest_RLC_RefAsOrigin|kind=ComponentAssembly|relpos=0";
                 var objComponentAssembly = project.get_ObjectByPath(pathComponentAssembly);
@@ -1197,7 +1198,7 @@ namespace SchematicUnitTests
         [Fact]
         public void Elaborator_Exact()
         {
-            project.PerformInTransaction(delegate
+            project.PerformInTransaction(abort: true, del: delegate
             {
                 string pathComponentAssembly = "/@A_ElaboratorTest|kind=ComponentAssemblies|relpos=0/CA_ElabTest_Exact|kind=ComponentAssembly|relpos=0";
                 var objComponentAssembly = project.get_ObjectByPath(pathComponentAssembly);
@@ -1245,7 +1246,7 @@ namespace SchematicUnitTests
         [Fact]
         public void Elaborator_Range()
         {
-            project.PerformInTransaction(delegate
+            project.PerformInTransaction(abort: true, del: delegate
             {
                 string pathComponentAssembly = "/@A_ElaboratorTest|kind=ComponentAssemblies|relpos=0/CA_ElabTest_Range|kind=ComponentAssembly|relpos=0";
                 var objComponentAssembly = project.get_ObjectByPath(pathComponentAssembly);
@@ -1293,7 +1294,7 @@ namespace SchematicUnitTests
         [Fact]
         public void Elaborator_RLC_InstAsOrigin()
         {
-            project.PerformInTransaction(delegate
+            project.PerformInTransaction(abort: true, del: delegate
             {
                 string pathComponentAssembly = "/@A_ElaboratorTest|kind=ComponentAssemblies|relpos=0/CA_ElabTest_RLC_InstAsOrigin|kind=ComponentAssembly|relpos=0";
                 var objComponentAssembly = project.get_ObjectByPath(pathComponentAssembly);
@@ -2511,10 +2512,9 @@ namespace SchematicUnitTests
 
     internal static class Utils
     {
-        public static void PerformInTransaction(this MgaProject project, MgaGateway.voidDelegate del, bool abort=false)
+        public static void PerformInTransaction(this MgaProject project, MgaGateway.voidDelegate del, bool abort)
         {
             var mgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out mgaGateway.territory);
             mgaGateway.PerformInTransaction(del, abort: abort);
         }
     }

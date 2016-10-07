@@ -72,8 +72,7 @@ namespace ConnectorUnrollTest
         public static void PerformInTransaction(this MgaProject project, MgaGateway.voidDelegate del)
         {
             var mgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out mgaGateway.territory);
-            mgaGateway.PerformInTransaction(del);
+            mgaGateway.PerformInTransaction(del, abort: false);
         }
     }
 

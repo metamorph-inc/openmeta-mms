@@ -84,7 +84,6 @@ namespace CyPhyDesignExporter
             try
             {
                 MgaGateway = new MgaGateway(mainParameters.Project);
-                parameters.Project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
                 var result = new InterpreterResult() { Success = true, RunCommand = "cmd.exe /c \"\"" };
 
@@ -132,10 +131,6 @@ namespace CyPhyDesignExporter
             }
             finally
             {
-                if (MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;                
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -606,7 +601,6 @@ namespace CyPhyDesignExporter
             try
             {
                 MgaGateway = new MgaGateway(project);
-                project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
                 MgaGateway.BeginTransaction();
                 Main(project, currentobj, selectedobjs, Convert(param));
@@ -614,10 +608,6 @@ namespace CyPhyDesignExporter
             }
             finally
             {
-                if (MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 project = null;
                 currentobj = null;

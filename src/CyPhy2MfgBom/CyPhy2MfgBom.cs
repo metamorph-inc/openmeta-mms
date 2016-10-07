@@ -48,7 +48,6 @@ namespace CyPhy2MfgBom
                 Logger = new GMELogger(project, ComponentName);
 
             MgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out MgaGateway.territory);
         }
 
         #region CyPhyGUIs
@@ -304,7 +303,6 @@ namespace CyPhy2MfgBom
                     Logger = new GMELogger(project, ComponentName);
                 }
                 MgaGateway = new MgaGateway(project);
-                project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
                 this.mainParameters = new InterpreterMainParameters()
                 {
@@ -324,11 +322,6 @@ namespace CyPhy2MfgBom
             }
             finally
             {
-                if (MgaGateway != null &&
-                    MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 project = null;
                 currentobj = null;

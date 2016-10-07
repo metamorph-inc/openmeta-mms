@@ -444,7 +444,6 @@ namespace CyPhyElaborateCS
             try
             {
                 MgaGateway = new MgaGateway(project);
-                project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
                 // populate a test model
                 /*MgaGateway.PerformInTransaction(delegate
@@ -552,11 +551,6 @@ namespace CyPhyElaborateCS
                     this.Logger != null)
                 {
                     this.Logger.Dispose();
-                }
-
-                if (MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
                 }
 
                 MgaGateway = null;
