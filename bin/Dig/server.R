@@ -1008,12 +1008,16 @@ shinyServer(function(input, output, session) {
   
   output$exportRanges <- downloadHandler(
     filename = function() { paste('ranges-', Sys.Date(), '.csv', sep='') },
-    content = function(file) { write.csv(do.call(rbind, lapply(filterData()[varRangeNum()], summary)), file) }
-    # content = function(file) { write.table(do.call(rbind, lapply(filterData(), summary)), sep = ",", append = TRUE, file)
-    #                            for(i in 1:length(varRangeFac())) {
-    #                              current <- filterData()[varRangeFac()[i]]
-    #                              write.table(do.call(rbind, lapply(current, summary)), file, sep = ",", append = TRUE)
-    #                            }}
+    content = function(file) { 
+      ranges <- list()
+      ranges$numerics <- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
+      
+      for(i in 1:length(varRangeFac())){
+        var <- varRangeFac()[i]
+        ranges[[var]] <- lapply(filterData()[var], summary)
+      }
+      sapply(ranges, write.table, file = file, append = TRUE, sep = ",", col.names = T)}
+      #write.table(dataframes, file = file, append = T, sep = ",")}
   )
   
   output$exportPlot <- downloadHandler(
@@ -1292,6 +1296,8 @@ shinyServer(function(input, output, session) {
   )
   
   # Ranges Table Tab --------------------------------------------------------------------------------
+  factorRanges <- list()
+  
   output$numeric_ranges <- renderPrint({
     if(input$autoRange == TRUE){
       do.call(rbind, lapply(filterData()[varRangeNum()], summary))
@@ -1317,6 +1323,7 @@ shinyServer(function(input, output, session) {
   printFactorStatistics <- function(...){
     
     lapply(varRangeFac(), function(var) {
+      factorRanges[[var]] <- do.call(rbind, lapply(filterData()[var], summary))
       renderPrint({
         do.call(rbind, lapply(filterData()[var], summary))
       })
