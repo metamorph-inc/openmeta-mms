@@ -226,7 +226,7 @@ namespace CyPhy2PCBMfgTest
                 proc0.BeginErrorReadLine();
 
                 bool isFinished = proc0.WaitForExit(60000);   // Wait up to a minute for the workflow tests to finish.
-                Assert.True(isFinished);
+                Assert.True(isFinished, String.Format("python {0} in {1} timed out", proc0.StartInfo.Arguments, outputDirectory));
 
                 proc0.Refresh();
 
@@ -235,7 +235,7 @@ namespace CyPhy2PCBMfgTest
                     Console.WriteLine("Process exit code: {0}",
                         proc0.ExitCode);
                 }
-                Assert.True(0 == proc0.ExitCode, output.ToString() + "  " + outputDirectory + "  " + File.ReadAllText(Path.Combine(outputDirectory, "testbench_manifest.json")));    // Check that the job finished OK.
+                Assert.True(0 == proc0.ExitCode, "Testbench run failed: " + output.ToString() + "  " + outputDirectory + "  " + File.ReadAllText(Path.Combine(outputDirectory, "testbench_manifest.json")));    // Check that the job finished OK.
             }
 
             // Check that files were created in the output path.
