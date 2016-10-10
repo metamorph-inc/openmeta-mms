@@ -64,7 +64,7 @@ shinyServer(function(input, output, session) {
     raw = read.csv("WindTurbineSim.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    raw = iris
+    # raw = iris
   }
   
   # Import/Export Session Settings -------------------------------------------
@@ -1309,9 +1309,9 @@ shinyServer(function(input, output, session) {
   printFactorStatistics <- function(...){
     
     lapply(varRangeFac(), function(var) {
-      all_ranges$var <<- do.call(rbind, lapply(filterData()[var], summary))
+      all_ranges[[var]] <<- do.call(rbind, lapply(filterData()[var], summary))
       renderPrint({
-        all_ranges$var
+        all_ranges[[var]]
       })
     })
   }
