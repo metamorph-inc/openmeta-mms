@@ -1468,7 +1468,8 @@ shinyServer(function(input, output, session) {
                  renderPlot({
                    hist(raw_plus()[[var]],
                         freq = FALSE,
-                        col = "wheat",
+                        col = input$bayHistColor,
+                        border = "#C0C0C0",
                         #type = "l",
                         main = "", 
                         xlab = "", ylab = "", 
@@ -1480,11 +1481,11 @@ shinyServer(function(input, output, session) {
                         bty = "o")
                    lines(data[[var]][["xOrig"]],
                          data[[var]][["yOrig"]],
-                         col = "black")
+                         col = input$bayOrigColor, lwd=2)
                    lines(data[[var]][["xResampled"]],
                          data[[var]][["yResampled"]],
-                         col = "green")
-                 }, height = 234)
+                         col = input$bayResampledColor, lwd=2)
+                 }, height = 229)
           )
         )
       })

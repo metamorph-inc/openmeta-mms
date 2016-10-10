@@ -134,12 +134,12 @@ shinyUI(fluidPage(
       br(),
       fluidRow(
         column(6, 
-          wellPanel(h4("Variable Configuration"), br(), br(),
+          wellPanel(h4("Variable Configuration"),
             uiOutput("bayesianUI"), br()#, height = 200)
           )
         ),
         column(6,
-          wellPanel(h4("Variable Plots"), br(), br(),
+          wellPanel(h4("Variable Plots"), br(),
             uiOutput("bayesianPlots")
           )
         )
@@ -220,9 +220,15 @@ shinyUI(fluidPage(
             fluidRow(
               column(4, tags$div(title = "Color of ranked data points.",
                                  colourInput("rankColor", "Ranked", "#D13ABA")))
+            ),
+            fluidRow(
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayHistColor", "Histogram", "wheat"))),
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayOrigColor", "Original", "#000000"))),
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayResampledColor", "Resampled", "#5CC85C")))
             ),hr(),
-
-
             tags$div(title = "Return to default settings.",
                      actionButton("resetSettings", "Reset Settings")), 
             br(),
