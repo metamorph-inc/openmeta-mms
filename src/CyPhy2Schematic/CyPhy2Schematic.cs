@@ -361,7 +361,7 @@ namespace CyPhy2Schematic
                 };
                 elaborator.Initialize(project);
                 int verbosity = 128;
-                result = elaborator.RunInTransaction(project, currentobj, selectedobjs, verbosity);
+                result = elaborator.RunInTransaction(project, currentobj, selectedobjs, verbosity, mainParameters.OutputDirectory);
 
                 if (this.result.Traceability == null)
                 {
