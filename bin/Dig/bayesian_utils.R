@@ -46,9 +46,9 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
       min = min(data_new[[var]])
       max = max(data_new[[var]])
       
-      xpoint = seq(min, max, (max - min)/100)
+      xpoint = seq(min, max, (max - min)/255)
       pdfAnalytical = pdfComp(distributionTypes[[var]], distributionParams[[var]], xpoint)
-      pdfSample = density(data_new[[var]], n=100, from=min, to=max)
+      pdfSample = density(data_new[[var]], n=256, from=min, to=max)
       
       result = list(xOrig = xpoint,
                     yOrig = pdfAnalytical,
@@ -59,8 +59,8 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
       min = min(data_new[[var]])
       max = max(data_new[[var]])
       
-      originalPdf = density(data[[var]], n=100, from=min, to=max)
-      resampledPdf = density(data_new[[var]], n=100, from=min, to=max)
+      originalPdf = density(data[[var]], n=256, from=min, to=max)
+      resampledPdf = density(data_new[[var]], n=256, from=min, to=max)
       
       result = list(xOrig = originalPdf[['x']],
                     yOrig = originalPdf[['y']],
