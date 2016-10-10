@@ -64,7 +64,7 @@ shinyServer(function(input, output, session) {
     raw = read.csv("WindTurbineSim.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    # raw = iris
+    raw = iris
   }
   
   # Import/Export Session Settings -------------------------------------------
@@ -497,7 +497,7 @@ shinyServer(function(input, output, session) {
   # Data processing ----------------------------------------------------------
     
   filterData <- reactive({
-    print(invisible("In filterData()"))
+    #print("In filterData()")
     data <- raw_plus()
     # print(paste("Length of VarNames:", length(varNames)))
     for(column in 1:length(varNames)) {
@@ -526,7 +526,7 @@ shinyServer(function(input, output, session) {
       
       # cat("-----------", inpName, nname, rng, length(data[nname]), sep = '\n')
     }
-    print(invisible("Data Filtered"))
+    #print("Data Filtered")
     data
   })
   
@@ -936,19 +936,7 @@ shinyServer(function(input, output, session) {
     content = function(file) { write.csv(filterData(), file) }
   )
   
-  output$exportRanges <- downloadHandler(
-    filename = function() { paste('ranges-', Sys.Date(), '.csv', sep='') },
-    content = function(file) { 
-      ranges <- list()
-      ranges$numerics <- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
-      
-      for(i in 1:length(varRangeFac())){
-        var <- varRangeFac()[i]
-        ranges[[var]] <- lapply(filterData()[var], summary)
-      }
-      sapply(ranges, write.table, file = file, append = TRUE, sep = ",", col.names = T)}
-      #write.table(dataframes, file = file, append = T, sep = ",")}
-  )
+  
   
   output$exportPlot <- downloadHandler(
     filename = function() { paste('plot-', Sys.Date(), '.pdf', sep='') },
@@ -1298,20 +1286,35 @@ shinyServer(function(input, output, session) {
   )
   
   # Ranges Table Tab --------------------------------------------------------------------------------
-  factorRanges <- list()
+  all_ranges <- list()  #List of all ranges: 1 for all numerics and individual ones for each factor
+  
+  slowNumericRangeData <- eventReactive(input$updateRanges, {
+    all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
+  })
   
   output$numeric_ranges <- renderPrint({
     if(input$autoRange == TRUE){
-      do.call(rbind, lapply(filterData()[varRangeNum()], summary))
+      all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
     }
     else {
       slowNumericRangeData()
     }
+    all_ranges$numerics
   })
   
-  slowNumericRangeData <- eventReactive(input$updateRanges, {
-    do.call(rbind, lapply(filterData()[varRangeNum()], summary))
+  slowFactorRangeData <- eventReactive(input$updateRanges, {
+    printFactorStatistics()
   })
+  
+  printFactorStatistics <- function(...){
+    
+    lapply(varRangeFac(), function(var) {
+      all_ranges$var <<- do.call(rbind, lapply(filterData()[var], summary))
+      renderPrint({
+        all_ranges$var
+      })
+    })
+  }
   
   output$factor_ranges <- renderUI({
     if(input$autoRange == TRUE){
@@ -1322,21 +1325,14 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  printFactorStatistics <- function(...){
-    
-    lapply(varRangeFac(), function(var) {
-      factorRanges[[var]] <- do.call(rbind, lapply(filterData()[var], summary))
-      renderPrint({
-        do.call(rbind, lapply(filterData()[var], summary))
+  output$exportRanges <- downloadHandler(
+    filename = function() { paste('ranges-', Sys.Date(), '.csv', sep='') },
+    content = function(file) { 
+      lapply(names(all_ranges), function(name) {
+        write.table(all_ranges[[name]], file = file, append = T, sep = ",", col.names = NA)
       })
-    })
-  }
-  
-  slowFactorRangeData <- eventReactive(input$updateRanges, {
-    printFactorStatistics()
-  })
-  
-  
+    }
+  )
   
   # UI Adjustments -----------------------------------------------------------
 
