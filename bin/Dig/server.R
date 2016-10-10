@@ -622,6 +622,7 @@ shinyServer(function(input, output, session) {
     input_data <- raw_plus()[variables]
     
     # Real Resample
+    req(bayesianUIInitialized)
     if (bayesianUIInitialized) {
       output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)
     }
@@ -1468,7 +1469,7 @@ shinyServer(function(input, output, session) {
                    hist(raw_plus()[[var]],
                         freq = FALSE,
                         col = "wheat",
-                        type = "l",
+                        #type = "l",
                         main = "", 
                         xlab = "", ylab = "", 
                         yaxt = "n", 
