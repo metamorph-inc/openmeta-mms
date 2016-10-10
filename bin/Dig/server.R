@@ -90,6 +90,7 @@ shinyServer(function(input, output, session) {
     if(importFlags$tier1){
       print("In tier 1 upload")
       
+      
       tier1CheckBox <- c("removeMissing",
                          "removeOutliers",
                          "stickyFilters",
@@ -100,7 +101,8 @@ shinyServer(function(input, output, session) {
                          "autoInfo",
                          "autoData",
                          "autoRange",
-                         "viewAllFilters")
+                         "viewAllFilters",
+                         "bayesDispAll")
       
       tier1Selects <- c("colVarNum",
                         "display",
@@ -113,14 +115,18 @@ shinyServer(function(input, output, session) {
                         "pointSize",
                         "pointStyle",
                         "radio",
-                        "weightMetrics")
+                        "weightMetrics",
+                        "bayesDispVars")
                      
       tier1Colors <- c("normColor", 
                        "minColor", 
                        "maxColor", 
                        "midColor", 
                        "highlightColor",
-                       "rankColor")
+                       "rankColor",
+                       "bayHistColor",
+                       "bayOrigColor",
+                       "bayResampledColor")
       
       for(i in 1:length(tier1CheckBox)){
         current <- tier1CheckBox[i]
@@ -277,6 +283,7 @@ shinyServer(function(input, output, session) {
     
     isolate({
     print("Updating Panel Selections...")
+    updateSelectInput(session, 'bayesDispVars', choices = varRangeNum(), selected = varRangeNum()[1:2])
     updateSelectInput(session, "colVarFactor", choices = varRangeFac())  
     updateSelectInput(session, "colVarNum", choices = varRangeNum())#, selected = varRangeNum()[c(1)])
     updateSelectInput(session, "display", choices = varRange(), selected = varRange()[c(1,2)])
@@ -611,57 +618,6 @@ shinyServer(function(input, output, session) {
      data
   })
   
-  # Reactive variables for running the bayesian analysis
-
-
-  
-  bayesianData <- reactive({
-    print("In bayesianData()")
-    
-    variables <- varRangeNum()
-    input_data <- raw_plus()[variables]
-    
-    # Real Resample
-    req(bayesianUIInitialized)
-    if (bayesianUIInitialized) {
-      output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)
-    }
-    else
-    {
-      output_data <- NULL
-      # # Surrogate Resample
-      # output_data <- list()
-      # data_mean <- apply(input_data, 2, mean)
-      # data_sd <- apply(input_data, 2, sd)
-      # 
-      # print(data_mean)
-      # print(data_sd)
-      # 
-      # for (i in 1:length(variables)) {
-      #   var <- variables[i]
-      #   samples <- seq(unname(rawAbsMin()[var])*0.8, unname(rawAbsMax()[var])*1.3, ((unname(rawAbsMax()[var])*1.3 - unname(rawAbsMin()[var])*0.8))/100)
-      #   output_data[[variables[i]]] <- list("xOrig" = samples,
-      #                                       "yOrig" = dnorm(samples, data_mean[var], data_sd[var]),
-      #                                       "xResampled" = samples,
-      #                                       "yResampled" = dnorm(samples, data_mean[[var]]*1.3, data_sd[[var]]*0.8))
-      # }
-    }
-    
-    # bayesianUIInitialized <<- FALSE
-    
-    output_data
-  })
-  
-  
-  # generateGaussian <- function(current) {
-  #   print ("Generating gaussian from user input ")
-  #   sd <- input[[paste0('gaussian_sd', current)]]
-  #   mean <- input[[paste0('gaussian_mean', current)]]
-  #   req(sd)
-  #   req(mean)
-  #   gaussian <- rnorm(1000, mean, sd)
-  # }
-
   output$colorLegend <- renderUI({
     print("In color legend")
     if(input$colVarFactor != ""){
@@ -1365,7 +1321,66 @@ shinyServer(function(input, output, session) {
   })
   
   # Bayesian -----------------------------------------------------------------
+  # Reactive variables for running the bayesian analysis
   
+  bayesVarsList <- reactive({
+    print("Getting Variable List.")
+    idx = NULL
+    for(choice in 1:length(input$bayesDispVars)) {
+      mm <- match(input$bayesDispVars[choice],varRangeNum())
+      if(mm > 0) { idx <- c(idx,mm) }
+    }
+    print(idx)
+    idx
+  })
+  
+  bayesianData <- reactive({
+    print("In bayesianData()")
+    
+    variables <- varRangeNum()
+    input_data <- raw_plus()[variables]
+    
+    # Real Resample
+    req(bayesianUIInitialized)
+    if (bayesianUIInitialized) {
+      output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)
+    }
+    else
+    {
+      output_data <- NULL
+      # # Surrogate Resample
+      # output_data <- list()
+      # data_mean <- apply(input_data, 2, mean)
+      # data_sd <- apply(input_data, 2, sd)
+      # 
+      # print(data_mean)
+      # print(data_sd)
+      # 
+      # for (i in 1:length(variables)) {
+      #   var <- variables[i]
+      #   samples <- seq(unname(rawAbsMin()[var])*0.8, unname(rawAbsMax()[var])*1.3, ((unname(rawAbsMax()[var])*1.3 - unname(rawAbsMin()[var])*0.8))/100)
+      #   output_data[[variables[i]]] <- list("xOrig" = samples,
+      #                                       "yOrig" = dnorm(samples, data_mean[var], data_sd[var]),
+      #                                       "xResampled" = samples,
+      #                                       "yResampled" = dnorm(samples, data_mean[[var]]*1.3, data_sd[[var]]*0.8))
+      # }
+    }
+    
+    # bayesianUIInitialized <<- FALSE
+    
+    output_data
+  })
+
+  
+  
+  # generateGaussian <- function(current) {
+  #   print ("Generating gaussian from user input ")
+  #   sd <- input[[paste0('gaussian_sd', current)]]
+  #   mean <- input[[paste0('gaussian_mean', current)]]
+  #   req(sd)
+  #   req(mean)
+  #   gaussian <- rnorm(1000, mean, sd)
+  # }
   
   output$bayesianUI <- renderUI({
     print("In bayesianUI()")
@@ -1374,7 +1389,11 @@ shinyServer(function(input, output, session) {
     data_mean <- apply(raw_plus()[varRangeNum()], 2, mean)
     data_sd <- apply(raw_plus()[varRangeNum()], 2, sd)
     
-    lapply(varRangeNum(), function(var) {
+    bayesChoices <- varRangeNum()
+    if(!input$bayesDispAll)
+      bayesChoices <- varRangeNum()[bayesVarsList()]
+    
+    lapply(bayesChoices, function(var) {
       # UI calculations
       i <- which(varNames == var) # globalId
       gaussianCondition = toString(paste0("input.gaussian",i," == true"))
@@ -1416,6 +1435,7 @@ shinyServer(function(input, output, session) {
       )
 
     })
+    
     #print("Done with bayesianUI()")
   })
   
@@ -1447,6 +1467,8 @@ shinyServer(function(input, output, session) {
     print("In bayesianPlots()")
     data <- bayesianData()
     variables <- varRangeNum()
+    if(!input$bayesDispAll)
+      variables <- varRangeNum()[bayesVarsList()]
     
     
     if(is.null(data)) {
@@ -1464,7 +1486,8 @@ shinyServer(function(input, output, session) {
                  renderPlot({
                    hist(raw_plus()[[var]],
                         freq = FALSE,
-                        col = "wheat",
+                        col = input$bayHistColor,
+                        border = "#C0C0C0",
                         #type = "l",
                         main = "", 
                         xlab = "", ylab = "", 
@@ -1476,11 +1499,11 @@ shinyServer(function(input, output, session) {
                         bty = "o")
                    lines(data[[var]][["xOrig"]],
                          data[[var]][["yOrig"]],
-                         col = "black")
+                         col = input$bayOrigColor, lwd=2)
                    lines(data[[var]][["xResampled"]],
                          data[[var]][["yResampled"]],
-                         col = "green")
-                 }, height = 234)
+                         col = input$bayResampledColor, lwd=2)
+                 }, height = 229)
           )
         )
       })

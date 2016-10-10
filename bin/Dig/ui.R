@@ -133,13 +133,22 @@ shinyUI(fluidPage(
     tabPanel("Bayesian",
       br(),
       fluidRow(
+        column(4,
+          checkboxInput('bayesDispAll', "Display All Variables", value = T),
+          conditionalPanel(condition = 'input.bayesDispAll == false', 
+                           selectInput('bayesDispVars', "Bayesian Variables",
+                                       choices = c(),
+                                       multiple = T))
+        )
+      ),
+      fluidRow(
         column(6, 
-          wellPanel(h4("Variable Configuration"), br(), br(),
+          wellPanel(h4("Variable Configuration"),
             uiOutput("bayesianUI"), br()#, height = 200)
           )
         ),
         column(6,
-          wellPanel(h4("Variable Plots"), br(), br(),
+          wellPanel(h4("Variable Plots"), br(),
             uiOutput("bayesianPlots")
           )
         )
@@ -220,9 +229,15 @@ shinyUI(fluidPage(
             fluidRow(
               column(4, tags$div(title = "Color of ranked data points.",
                                  colourInput("rankColor", "Ranked", "#D13ABA")))
+            ),
+            fluidRow(
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayHistColor", "Histogram", "wheat"))),
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayOrigColor", "Original", "#000000"))),
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayResampledColor", "Resampled", "#5CC85C")))
             ),hr(),
-
-
             tags$div(title = "Return to default settings.",
                      actionButton("resetSettings", "Reset Settings")), 
             br(),
@@ -240,8 +255,8 @@ shinyUI(fluidPage(
             hr(),
             
             h4("About"),
-            p(strong("Version:"), "v1.2.10"),
-            p(strong("Date:"), "9/2/2016"),
+            p(strong("Version:"), "v1.2.11"),
+            p(strong("Date:"), "10/10/2016"),
             p(strong("Developer:"), "Metamorph Software"),
             p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )
