@@ -135,6 +135,11 @@ shinyUI(fluidPage(
       fluidRow(
         column(6, 
           wellPanel(h4("Variable Configuration"),
+            checkboxInput('bayesDispAll', "Display All Variables?", value = T),
+            conditionalPanel(condition = 'input.bayesDispAll == false', 
+                             selectInput('bayesDispVars', "Bayesian Variables",
+                                         choices = c(),
+                                         multiple = T)),
             uiOutput("bayesianUI"), br()#, height = 200)
           )
         ),
