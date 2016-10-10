@@ -133,13 +133,17 @@ shinyUI(fluidPage(
     tabPanel("Bayesian",
       br(),
       fluidRow(
+        column(4,
+          checkboxInput('bayesDispAll', "Display All Variables", value = T),
+          conditionalPanel(condition = 'input.bayesDispAll == false', 
+                           selectInput('bayesDispVars', "Bayesian Variables",
+                                       choices = c(),
+                                       multiple = T))
+        )
+      ),
+      fluidRow(
         column(6, 
           wellPanel(h4("Variable Configuration"),
-            checkboxInput('bayesDispAll', "Display All Variables?", value = T),
-            conditionalPanel(condition = 'input.bayesDispAll == false', 
-                             selectInput('bayesDispVars', "Bayesian Variables",
-                                         choices = c(),
-                                         multiple = T)),
             uiOutput("bayesianUI"), br()#, height = 200)
           )
         ),
@@ -251,8 +255,8 @@ shinyUI(fluidPage(
             hr(),
             
             h4("About"),
-            p(strong("Version:"), "v1.2.10"),
-            p(strong("Date:"), "9/2/2016"),
+            p(strong("Version:"), "v1.2.11"),
+            p(strong("Date:"), "10/10/2016"),
             p(strong("Developer:"), "Metamorph Software"),
             p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )
