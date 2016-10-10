@@ -806,7 +806,8 @@ namespace CyPhy2CADPCBTest
 
                 Assert.True(process.WaitForExit(timeout), "FreeCAD Assembler __main__.py timed out");
 
-                var msg = String.Join(Environment.NewLine, procOutput, procError);
+                var msg = String.Join(Environment.NewLine, String.Format("python {0} in {1} failed:", visualizePyPath, OutputDir),
+                    procOutput.ToString(), procError.ToString());
                 Assert.True(0 == process.ExitCode, msg);
             }
         }
@@ -936,8 +937,7 @@ namespace CyPhy2CADPCBTest
         public static void PerformInTransaction(this MgaProject project, MgaGateway.voidDelegate del)
         {
             var mgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out mgaGateway.territory);
-            mgaGateway.PerformInTransaction(del);
+            mgaGateway.PerformInTransaction(del, abort: false);
         }
     }
 }

@@ -56,7 +56,6 @@ namespace CyPhy2CADPCB
             }
 
             MgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out MgaGateway.territory);
         }
 
         private CyPhy2CADPCB_Settings InitializeSettingsFromWorkflow(CyPhy2CADPCB_Settings settings)
@@ -275,11 +274,6 @@ namespace CyPhy2CADPCB
             }
             finally
             {
-                if (MgaGateway != null &&
-                    MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 DisposeLogger();
                 MgaGateway = null;
                 GC.Collect();
@@ -707,11 +701,6 @@ namespace CyPhy2CADPCB
             }
             finally
             {
-                if (MgaGateway != null &&
-                    MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 DisposeLogger();
                 MgaGateway = null;
                 project = null;

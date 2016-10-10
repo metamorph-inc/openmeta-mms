@@ -47,7 +47,7 @@ def get_freecad_path():
                                  0, _winreg.KEY_READ | _winreg.KEY_WOW64_64KEY) as key:
                 FREECAD_PATH = _winreg.QueryValueEx(key, 'InstallLocation')[0]
         except WindowsError:
-            exitwitherror("Unable to find FreeCAD registry key!")
+            exitwitherror("Unable to find FreeCAD registry key. Is FreeCAD installed?")
 
     if FREECAD_PATH is None:
         exitwitherror('FreeCAD install location not found! \n')

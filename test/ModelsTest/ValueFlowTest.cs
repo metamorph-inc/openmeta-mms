@@ -29,7 +29,6 @@ namespace ModelsTest
             filter.Name = "ValueFlow";
 
             var mgaGateway = new MgaGateway(Project);
-            Project.CreateTerritoryWithoutSink(out mgaGateway.territory);
             mgaGateway.PerformInTransaction(delegate
             {
                 ValueFlow = Project.AllFCOs(filter)
@@ -109,7 +108,6 @@ namespace ModelsTest
         private void ModelOperation(GME.CSharp.MgaGateway.voidDelegate d)
         {
             var mgaGateway = new MgaGateway(fixture.Project);
-            fixture.Project.CreateTerritoryWithoutSink(out mgaGateway.territory);
             mgaGateway.PerformInTransaction(d);
         }
 

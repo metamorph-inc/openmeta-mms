@@ -30,6 +30,7 @@ def exitwitherror(cmd):
     logger.error(cmd)
     with open("_FAILED.txt", "a") as err:
         err.write(cmd)
+    sys.stderr.write(cmd)
     sys.exit(-1)
 
 

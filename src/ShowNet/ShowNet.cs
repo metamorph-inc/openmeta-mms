@@ -588,7 +588,6 @@ namespace ShowNet
             {
                 GMEConsole = GMEConsole.CreateFromProject(project);
                 MgaGateway = new MgaGateway(project);
-                project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
                 MgaGateway.PerformInTransaction(delegate
                 {
@@ -597,10 +596,6 @@ namespace ShowNet
             }
             finally
             {
-                if (MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 project = null;
                 currentobj = null;
