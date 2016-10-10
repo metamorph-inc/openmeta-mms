@@ -239,11 +239,11 @@
             // 
             this.chbSaveTestBenches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chbSaveTestBenches.AutoSize = true;
-            this.chbSaveTestBenches.Location = new System.Drawing.Point(15, 493);
+            this.chbSaveTestBenches.Location = new System.Drawing.Point(15, 515);
             this.chbSaveTestBenches.Name = "chbSaveTestBenches";
-            this.chbSaveTestBenches.Size = new System.Drawing.Size(136, 17);
+            this.chbSaveTestBenches.Size = new System.Drawing.Size(165, 17);
             this.chbSaveTestBenches.TabIndex = 42;
-            this.chbSaveTestBenches.Text = "Keep temporary models";
+            this.chbSaveTestBenches.Text = "Damage model for debugging";
             this.chbSaveTestBenches.UseVisualStyleBackColor = true;
             // 
             // chbOpenDashboard
@@ -261,7 +261,7 @@
             // 
             this.chbVerbose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chbVerbose.AutoSize = true;
-            this.chbVerbose.Location = new System.Drawing.Point(15, 515);
+            this.chbVerbose.Location = new System.Drawing.Point(15, 493);
             this.chbVerbose.Name = "chbVerbose";
             this.chbVerbose.Size = new System.Drawing.Size(105, 17);
             this.chbVerbose.TabIndex = 101;
