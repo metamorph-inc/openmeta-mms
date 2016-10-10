@@ -130,6 +130,21 @@ shinyUI(fluidPage(
         )
       )
     ),
+    tabPanel("Bayesian",
+      br(),
+      fluidRow(
+        column(6, 
+          wellPanel(h4("Variable Configuration"), br(), br(),
+            uiOutput("bayesianUI"), br()#, height = 200)
+          )
+        ),
+        column(6,
+          wellPanel(h4("Variable Plots"), br(), br(),
+            uiOutput("bayesianPlots")
+          )
+        )
+      )
+    ),
     tabPanel("Options",
       fluidRow(
         column(6,

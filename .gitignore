@@ -768,3 +768,5 @@ src/Release/
 src/UdmComparator/Release/
 src/ipch/
 venv/
+.Rproj.user
+.DS_Store
