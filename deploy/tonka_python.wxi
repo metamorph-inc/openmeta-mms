@@ -8,7 +8,6 @@
         <DirectoryRef Id="dir_bin_Python27_Lib_site_packages">
             <Directory Id="chipfit_display" Name="chipfit_display" />
             <Directory Id="layout_json" Name="layout_json" />
-            <Directory Id="testbenchexecutor" Name="testbenchexecutor" />
             <Directory Id="SpiceVisualizer" Name="SpiceVisualizer" />
           <Directory Id="spice_viewer" Name="spice_viewer" />
           <Directory Id="cam2gerber" Name="cam2gerber" />
@@ -23,7 +22,6 @@
         <ComponentGroup Id="tonka_python">
             <ComponentGroupRef Id="chipfit_display" />
             <ComponentGroupRef Id="layout_json" />
-            <ComponentGroupRef Id="testbenchexecutor" />
           <ComponentGroupRef Id="spice_viewer" />
           <ComponentGroupRef Id="cam2gerber" />
           <ComponentGroupRef Id="get_bom_with_eagle_xref" />
