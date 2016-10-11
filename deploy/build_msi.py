@@ -118,7 +118,6 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\ModelicaWrapperTemplates",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\chipfit_display",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\layout_json",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\testbenchexecutor",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\run_mdao",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\SpiceVisualizer")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\spice_viewer")
