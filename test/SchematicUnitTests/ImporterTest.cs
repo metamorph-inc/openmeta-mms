@@ -202,7 +202,6 @@ namespace SchematicUnitTests
             proj.EnableAutoAddOns(true);
 
             var mgaGateway = new MgaGateway(proj);
-            proj.CreateTerritoryWithoutSink(out mgaGateway.territory);
 
             var module = new CyPhyComponentAuthoring.Modules.EDAModelImport();
 

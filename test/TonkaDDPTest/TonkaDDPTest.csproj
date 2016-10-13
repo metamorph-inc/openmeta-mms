@@ -104,9 +104,6 @@
     <Compile Include="..\..\src\CommonFiles\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\CyPhy2Modelica_v2\MgaGateway.cs">
-      <Link>MgaGateway.cs</Link>
-    </Compile>
     <Compile Include="..\..\test\InterchangeTest\PyLibUtils\PyLibUtils.cs">
       <Link>PyLibUtils.cs</Link>
     </Compile>

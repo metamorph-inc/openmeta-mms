@@ -11,9 +11,9 @@ Install Windows updates until your version is current
 _NOTE: Will not compile under Express Edition_
 
 When installing, select these packages (at minimum):
-- C++
-- C#
-- Office Tools
+
+- Programming Languages
+    + C++
 
 ## Microsoft Visual Studio 2015 Update 2
 [Download](https://www.visualstudio.com/en-us/news/vs2015-update2-vs.aspx)
@@ -67,6 +67,12 @@ To install:
 
 _NOTE: The CadQuery library must be copied into the `<FreeCAD_Install_Dir>\Mod` folder to work correctly with the META tools._
 
+## EAGLE
+
+For the tests to pass, EAGLE must be installed.
+
+[Download EAGLE](https://cadsoft.io/). Version 6.5 is known to work.
+
 ## Git
 [Download msysgit](https://msysgit.github.io/)
 
@@ -76,7 +82,7 @@ _NOTE: The CadQuery library must be copied into the `<FreeCAD_Install_Dir>\Mod` 
 Clone this repository to your disk.
 
 # Build
-1. Open Visual Studio Command Prompt (2015) with ”Run as administrator”. (Do not use a Visual Studio x64 command prompt)
+1. Open Visual Studio Command Prompt (2015) with �Run as administrator�. (Do not use a Visual Studio x64 command prompt)
 2. From the root repository directory, run `build_both.cmd`. This may take 30 minutes to build. _(Warnings may be ignored, but there should be no errors.)_
 
 If you encounter errors, try to build once more. There may be some remaining race conditions in the build scripts.

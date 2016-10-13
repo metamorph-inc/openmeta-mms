@@ -282,22 +282,20 @@ namespace CyPhyPET
 
         public void GenerateDriverCode()
         {
+            this.RunCommand = "python -E -m run_mdao";
             // Generate Driver
             if (this.theDriver == DriverType.PCC)
             {
-                this.RunCommand = "python -m run_mdao";
                 this.Label = " && PCC" + JobManager.Job.LabelVersion;
                 // TODO convert this to code in python -m run_mdao
                 this.GeneratePCCScripts();
             }
             else if (this.theDriver == DriverType.Optimizer)
             {
-                this.RunCommand = "python -m run_mdao";
                 this.Label = "";
             }
             else if (this.theDriver == DriverType.ParameterStudy)
             {
-                this.RunCommand = "python -m run_mdao";
                 this.Label = "";
                 if (this.pet.Children.ParameterStudyCollection.First().Attributes.SurrogateType != CyPhyClasses.ParameterStudy.AttributesClass.SurrogateType_enum.None)
                 {

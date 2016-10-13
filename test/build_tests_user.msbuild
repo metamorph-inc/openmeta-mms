@@ -23,6 +23,6 @@
   </Target>
   
   <Target Name="All" DependsOnTargets="CyPhy-FunctionalTests">
-      <Exec Command="..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml_parallel.py functionaltests.xunit tests_cadcreo.xunit functionaltests.xunit" IgnoreStandardErrorWarningFormat="True"/>
+      <Exec Command="..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml_parallel.py functionaltests.xunit tests_cadcreo.xunit" IgnoreStandardErrorWarningFormat="True"/>
   </Target>
 </Project>

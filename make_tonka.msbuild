@@ -5,7 +5,8 @@
     <MSBuild Projects="models\SystemC\SystemC.sln" Properties="Configuration=Debug;Platform=Win32" Targets="Build"/>
     <MSBuild Projects="models\SystemC\SystemC.sln" Properties="Configuration=Release;Platform=Win32" Targets="Build"/>
     <Exec Command="bin\Python27\Scripts\python.exe src\CyPhy2SystemC\create_testbench_zip.py"/>
-    <MSBuild Projects="tonka.sln" Properties="Configuration=Release;Platform=Mixed Platforms" Targets="Build"/>
+    <Exec Command="src\.nuget\NuGet.exe restore tonka.sln"/>
+    <MSBuild Projects="tonka.sln" Properties="Configuration=Release;Platform=Mixed Platforms;VCTargetsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\;PlatformToolset=v140" Targets="Build"/>
   </Target>
   
   

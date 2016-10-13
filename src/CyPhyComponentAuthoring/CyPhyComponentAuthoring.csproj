@@ -106,7 +106,6 @@
     <Compile Include="Modules\RenameCADFile.cs" />
     <Compile Include="Modules\SystemCModelImport.cs" />
     <Compile Include="Registrar.cs" />
-    <Compile Include="MgaGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <!--$ADDITIONALFILES$-->
   </ItemGroup>

@@ -47,7 +47,6 @@ namespace CyPhy2PCBMfg
         public void Initialize(MgaProject project)
         {
             MgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out MgaGateway.territory);
         }
 
         #region CyPhyGUIs
@@ -276,7 +275,6 @@ namespace CyPhy2PCBMfg
                     Logger = new GMELogger(project, ComponentName);
                 }
                 MgaGateway = new MgaGateway(project);
-                project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
                 this.mainParameters = new InterpreterMainParameters()
                 {
@@ -294,11 +292,6 @@ namespace CyPhy2PCBMfg
             }
             finally
             {
-                if (MgaGateway != null &&
-                    MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 project = null;
                 currentobj = null;

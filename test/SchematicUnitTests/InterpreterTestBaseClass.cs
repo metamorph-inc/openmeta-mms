@@ -36,31 +36,32 @@ namespace SchematicUnitTests
             Directory.CreateDirectory(outputdirname);
             Assert.True(Directory.Exists(outputdirname), "Output directory wasn't created for some reason.");
 
-            MgaFCO testObj = null;
+            CyPhyGUIs.IInterpreterResult result = null;
             project.PerformInTransaction(delegate
             {
+                MgaFCO testObj = null;
                 testObj = project.ObjectByPath[testBenchPath] as MgaFCO;
                 Assert.NotNull(testObj);
-            });
 
-            var interpreter = new CyPhy2Schematic.CyPhy2SchematicInterpreter();
-            interpreter.Initialize(project);
+                var interpreter = new CyPhy2Schematic.CyPhy2SchematicInterpreter();
+                interpreter.Initialize(project);
 
-            var mainParameters = new CyPhyGUIs.InterpreterMainParameters()
-            {
-                config = (config == null) ? new CyPhy2Schematic.CyPhy2Schematic_Settings() { Verbose = false }
-                                          : config,
-                Project = project,
-                CurrentFCO = testObj,
-                SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs")),
-                StartModeParam = 128,
-                ConsoleMessages = false,
-                ProjectDirectory = project.GetRootDirectoryPath(),
-                OutputDirectory = outputdirname
-            };
+                var mainParameters = new CyPhyGUIs.InterpreterMainParameters()
+                {
+                    config = (config == null) ? new CyPhy2Schematic.CyPhy2Schematic_Settings() { Verbose = false }
+                                              : config,
+                    Project = project,
+                    CurrentFCO = testObj,
+                    SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs")),
+                    StartModeParam = 128,
+                    ConsoleMessages = false,
+                    ProjectDirectory = project.GetRootDirectoryPath(),
+                    OutputDirectory = outputdirname
+                };
 
-            var result = interpreter.Main(mainParameters);
-            interpreter.DisposeLogger();
+                result = interpreter.Main(mainParameters);
+                interpreter.DisposeLogger();
+            }, abort: true);
 
             return result;
         }

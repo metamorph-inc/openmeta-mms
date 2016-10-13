@@ -114,17 +114,21 @@ namespace CyPhyMasterInterpreter
                     }
                 });
 
+                bool controlWasHeld = false;
+                int VK_CONTROL = 0x11;
+                // if user held the control ignore the checker results ... for debugging purposes ONLY!
+                if ((bool)((GetKeyState(VK_CONTROL) & 0x8000) == 0x8000))
+                {
+                    controlWasHeld = true;
+                }
+                if (this.InteractiveMode == false)
+                {
+                    controlWasHeld = false;
+                }
+
                 if (sortedResults.Any(x => x.Success == false))
                 {
-                    this.Logger.WriteError("Context is invalid see messeges above. Please fix the problems.");
-
-                    bool controlWasHeld = false;
-                    int VK_CONTROL = 0x11;
-                    // if user held the control ignore the checker results ... for debugging purposes ONLY!
-                    if ((bool)((GetKeyState(VK_CONTROL) & 0x8000) == 0x8000))
-                    {
-                        controlWasHeld = true;
-                    }
+                    this.Logger.WriteError("Context is invalid see messages above. Please fix the problems.");
 
                     if (controlWasHeld == false)
                     {
@@ -147,7 +151,7 @@ namespace CyPhyMasterInterpreter
 
                 try
                 {
-                    selection = masterInterpreter.ShowConfigurationSelectionForm(currentobj as MgaModel);
+                    selection = masterInterpreter.ShowConfigurationSelectionForm(currentobj as MgaModel, enableDebugging: controlWasHeld);
                     MgaGateway.PerformInTransaction(() =>
                     {
                         this.Logger.WriteDebug("MasterExe command: CyPhyMasterExe.exe \"{0}\" \"{1}\" \"{2}\"", currentobj.Project.ProjectConnStr, GMELightObject.ShortenAbsPath(currentobj.AbsPath),
@@ -225,7 +229,6 @@ namespace CyPhyMasterInterpreter
             {
                 GMEConsole = GMEConsole.CreateFromProject(project);
                 MgaGateway = new MgaGateway(project);
-                project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
                 this.GMEConsole.Clear();
                 System.Windows.Forms.Application.DoEvents();
@@ -267,10 +270,6 @@ namespace CyPhyMasterInterpreter
                 this.Logger.Dispose();
                 System.Windows.Forms.Application.DoEvents();
 
-                if (MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 project = null;
                 currentobj = null;

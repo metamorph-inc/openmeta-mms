@@ -78,9 +78,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CyPhy2Modelica_v2\MgaGateway.cs">
-      <Link>MgaGateway.cs</Link>
-    </Compile>
     <Compile Include="ComponentConfig.cs" />
     <Compile Include="Controls\ListTagControl.xaml.cs">
       <DependentUpon>ListTagControl.xaml</DependentUpon>
@@ -89,7 +86,6 @@
       <DependentUpon>OutputMessageResult.xaml</DependentUpon>
     </Compile>
     <Compile Include="DesignConsistencyChecker.cs" />
-    <Compile Include="DesignRule\Attributes\ElaborationRequiredAttribute.cs" />
     <Compile Include="DesignRule\Attributes\ValidContextAttribute.cs" />
     <Compile Include="DesignRule\Attributes\RequiredInterpretersAttribute.cs" />
     <Compile Include="DesignRule\Attributes\TagsAttribute.cs" />

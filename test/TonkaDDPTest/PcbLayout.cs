@@ -45,7 +45,6 @@ namespace TonkaDDPTest
             proj.Open("MGA=" + Path.GetFullPath(path_MGA), out ro_mode);
             proj.EnableAutoAddOns(true);
             mgaGateway = new MgaGateway(proj);
-            proj.CreateTerritoryWithoutSink(out mgaGateway.territory);
 
             try
             {

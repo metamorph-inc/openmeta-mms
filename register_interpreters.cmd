@@ -7,6 +7,11 @@ bin\Python27\Scripts\Python.exe -c "reg = __import__('win32com.client').client.D
 bin\Python27\Scripts\Python.exe -c "reg = __import__('win32com.client').client.DispatchEx('Mga.MgaRegistrar'); [reg.UnregisterComponent(progid, 1) for progid in reg.GetAssociatedComponentsDisp('CyPhyML', 7, 1)]" || exit /b !ERRORLEVEL!
 bin\Python27\Scripts\Python.exe -c "import sys; import os.path; filename=r'generated\CyPhyML\models\CyPhyML.mta'; not os.path.isfile(filename) and sys.exit(0); reg = __import__('win32com.client').client.DispatchEx('Mga.MgaRegistrar'); reg.RegisterParadigmFromDataDisp('MGA=' + os.path.abspath(filename), 1)" || exit /b !ERRORLEVEL!
 %windir%\SysWOW64\reg add HKLM\Software\META /v META_PATH /t REG_SZ /d "%~dp0\" /f || exit /b !ERRORLEVEL!
+rem TODO: register more Decorators?
+rem not being built:
+rem meta/MaterialLibImporter
+rem src/CyPhyMasterInterpreterChecker
+if exist "src\DesignConsistencyChecker\bin\Release\DesignConsistencyChecker.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\DesignConsistencyChecker\bin\Release\DesignConsistencyChecker.dll" || exit /b !ERRORLEVEL!
 if exist "src\CyPhyComponentFidelitySelector\bin\Release\CyPhyComponentFidelitySelector.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\CyPhyComponentFidelitySelector\bin\Release\CyPhyComponentFidelitySelector.dll" || exit /b !ERRORLEVEL!
 if exist "src\CyPhyGUIs\bin\Release\CyPhyGUIs.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase /tlb "src\CyPhyGUIs\bin\Release\CyPhyGUIs.dll" || exit /b !ERRORLEVEL!
 if exist "src\bin\CPMDecorator.dll" %windir%\SysWOW64\regsvr32 /s "src\bin\CPMDecorator.dll" || exit /b !ERRORLEVEL!
@@ -55,3 +60,5 @@ if exist "src\ModelicaImporter\bin\Release\ModelicaImporter.dll" %windir%\Micros
 if exist "src\Run_PRISMATIC_toolchain\bin\Release\Run_PRISMATIC_toolchain.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\Run_PRISMATIC_toolchain\bin\Release\Run_PRISMATIC_toolchain.dll" || exit /b !ERRORLEVEL!
 if exist "src\SubTreeMerge\bin\Release\SubTreeMerge.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\SubTreeMerge\bin\Release\SubTreeMerge.dll" || exit /b !ERRORLEVEL!
 if exist "src\ShowNet\bin\Release\ShowNet.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\ShowNet\bin\Release\ShowNet.dll" || exit /b !ERRORLEVEL!
+if exist "src\AcmEditor\bin\Release\AcmEditor.exe" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\AcmEditor\bin\Release\AcmEditor.exe" || exit /b !ERRORLEVEL!
+if exist "src\CyPhyResultsViewer\bin\Release\CyPhyResultsViewer.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\CyPhyResultsViewer\bin\Release\CyPhyResultsViewer.dll" || exit /b !ERRORLEVEL!

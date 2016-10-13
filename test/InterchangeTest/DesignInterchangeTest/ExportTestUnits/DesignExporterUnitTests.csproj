@@ -112,9 +112,6 @@
     <Compile Include="..\..\..\..\src\CommonFiles\MgaUtils.cs">
       <Link>MgaUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\ComponentInterchangeTest\ImportTestUnits\MgaGateway.cs">
-      <Link>MgaGateway.cs</Link>
-    </Compile>
     <Compile Include="DesignPackage.cs" />
     <Compile Include="ExporterFixture.cs" />
     <Compile Include="DupComponentIDs.cs" />

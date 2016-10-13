@@ -77,7 +77,6 @@
     <Compile Include="..\..\src\CommonFiles\MgaUtils.cs">
       <Link>MgaUtils.cs</Link>
     </Compile>
-    <Compile Include="MgaGateway.cs" />
     <Compile Include="UnrollTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -122,7 +122,34 @@ shinyUI(fluidPage(
         ),
         fluidRow(
           column(12,
-                 verbatimTextOutput("ranges")
+                 h4("Numeric Ranges", align = "center"),
+                 verbatimTextOutput("numeric_ranges"),
+                 h4("Factor Statistics", align = "center"),
+                 uiOutput("factor_ranges")
+          )
+        )
+      )
+    ),
+    tabPanel("Bayesian",
+      br(),
+      fluidRow(
+        column(4,
+          checkboxInput('bayesDispAll', "Display All Variables", value = T),
+          conditionalPanel(condition = 'input.bayesDispAll == false', 
+                           selectInput('bayesDispVars', "Bayesian Variables",
+                                       choices = c(),
+                                       multiple = T))
+        )
+      ),
+      fluidRow(
+        column(6, 
+          wellPanel(h4("Variable Configuration"),
+            uiOutput("bayesianUI"), br()#, height = 200)
+          )
+        ),
+        column(6,
+          wellPanel(h4("Variable Plots"), br(),
+            uiOutput("bayesianPlots")
           )
         )
       )
@@ -143,6 +170,15 @@ shinyUI(fluidPage(
                 column(8, 
                   tags$div(title = "Number of standard deviations to filter data by.", 
                     sliderInput("numDevs", HTML("&sigma;:"), min = 1, max = 11, step = 0.1, value = 6))))
+            ),
+            fluidRow(
+              column(4, 
+                     tags$div(title = "Rounds data in all tables to a set number of decimal places", 
+                              checkboxInput("roundTables", "Round Data Tables", value = FALSE))),
+              conditionalPanel("input.roundTables == '1'", 
+                               column(8, 
+                                      tags$div(title = "Maximum number of decimals to show in data tables.", 
+                                               sliderInput("numDecimals", HTML("123.xxx"), min = 1, max = 11, step = 1, value = 4))))
             ),
             tags$div(title = "Sticky Filters try to preserve their settings when removing/adding outliers or missing data rows.", 
                      checkboxInput("stickyFilters", "Sticky Filters", value = TRUE)),
@@ -193,9 +229,15 @@ shinyUI(fluidPage(
             fluidRow(
               column(4, tags$div(title = "Color of ranked data points.",
                                  colourInput("rankColor", "Ranked", "#D13ABA")))
+            ),
+            fluidRow(
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayHistColor", "Histogram", "wheat"))),
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayOrigColor", "Original", "#000000"))),
+              column(4, tags$div(title = "Color of ranked data points.",
+                                 colourInput("bayResampledColor", "Resampled", "#5CC85C")))
             ),hr(),
-
-
             tags$div(title = "Return to default settings.",
                      actionButton("resetSettings", "Reset Settings")), 
             br(),
@@ -213,8 +255,8 @@ shinyUI(fluidPage(
             hr(),
             
             h4("About"),
-            p(strong("Version:"), "v1.2.10"),
-            p(strong("Date:"), "9/2/2016"),
+            p(strong("Version:"), "v1.3.0"),
+            p(strong("Date:"), "10/10/2016"),
             p(strong("Developer:"), "Metamorph Software"),
             p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )

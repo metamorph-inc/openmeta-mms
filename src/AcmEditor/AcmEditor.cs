@@ -93,7 +93,6 @@ namespace AcmEditor
                 this.project = project;
                 GMEConsole = GMEConsole.CreateFromProject(project);
                 MgaGateway = new MgaGateway(project);
-                project.CreateTerritoryWithoutSink(out MgaGateway.territory);
 
                 project.CreateAddOn(this, out addon);
                 // addOn->put_EventMask(OBJEVENT_ATTR | OBJEVENT_CONNECTED));
@@ -110,10 +109,6 @@ namespace AcmEditor
             }
             finally
             {
-                if (MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 project = null;
                 currentobj = null;

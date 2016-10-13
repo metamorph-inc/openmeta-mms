@@ -49,7 +49,6 @@ namespace CyPhy2SystemC
         {  
             GMEConsole = GMEConsole.CreateFromProject(project);
             MgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out MgaGateway.territory);       
         }
 
         /// <summary>
@@ -167,10 +166,6 @@ namespace CyPhy2SystemC
             }
             finally
             {
-                if (MgaGateway != null && MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 project = null;
                 currentobj = null;
@@ -529,11 +524,6 @@ namespace CyPhy2SystemC
             }
             finally
             {
-                if (MgaGateway != null &&
-                    MgaGateway.territory != null)
-                {
-                    MgaGateway.territory.Destroy();
-                }
                 MgaGateway = null;
                 GMEConsole = null;
                 GC.Collect();

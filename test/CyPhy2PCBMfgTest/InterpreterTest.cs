@@ -106,19 +106,19 @@ namespace CyPhy2PCBMfgTest
             {
                 objTestBench = project.get_ObjectByPath(pathTestbench) as MgaFCO;
                 Assert.NotNull(objTestBench);
-            });
 
-            var interpreter = new CyPhy2PCBMfg.CyPhy2PCBMfgInterpreter();
-            interpreter.Initialize(project);
-            var parameters = new InterpreterMainParameters()
-            {
-                CurrentFCO = objTestBench,
-                SelectedFCOs = null,
-                Project = project,
-                OutputDirectory = pathOutput,
-                ProjectDirectory = project.GetRootDirectoryPath()
-            };
-            interpreter.Main(parameters);
+                var interpreter = new CyPhy2PCBMfg.CyPhy2PCBMfgInterpreter();
+                interpreter.Initialize(project);
+                var parameters = new InterpreterMainParameters()
+                {
+                    CurrentFCO = objTestBench,
+                    SelectedFCOs = null,
+                    Project = project,
+                    OutputDirectory = pathOutput,
+                    ProjectDirectory = project.GetRootDirectoryPath()
+                };
+                interpreter.Main(parameters);
+            });
 
             // Check that files were copied from the design path to the output path.
             string[] copiedFileNames = 
@@ -226,7 +226,7 @@ namespace CyPhy2PCBMfgTest
                 proc0.BeginErrorReadLine();
 
                 bool isFinished = proc0.WaitForExit(60000);   // Wait up to a minute for the workflow tests to finish.
-                Assert.True(isFinished);
+                Assert.True(isFinished, String.Format("python {0} in {1} timed out", proc0.StartInfo.Arguments, outputDirectory));
 
                 proc0.Refresh();
 
@@ -235,7 +235,7 @@ namespace CyPhy2PCBMfgTest
                     Console.WriteLine("Process exit code: {0}",
                         proc0.ExitCode);
                 }
-                Assert.True(0 == proc0.ExitCode, output.ToString() + "  " + outputDirectory + "  " + File.ReadAllText(Path.Combine(outputDirectory, "testbench_manifest.json")));    // Check that the job finished OK.
+                Assert.True(0 == proc0.ExitCode, "Testbench run failed: " + output.ToString() + "  " + outputDirectory + "  " + File.ReadAllText(Path.Combine(outputDirectory, "testbench_manifest.json")));    // Check that the job finished OK.
             }
 
             // Check that files were created in the output path.
@@ -278,8 +278,7 @@ namespace CyPhy2PCBMfgTest
         public static void PerformInTransaction(this MgaProject project, MgaGateway.voidDelegate del)
         {
             var mgaGateway = new MgaGateway(project);
-            project.CreateTerritoryWithoutSink(out mgaGateway.territory);
-            mgaGateway.PerformInTransaction(del);
+            mgaGateway.PerformInTransaction(del, abort: false);
         }
     }
 

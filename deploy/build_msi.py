@@ -9,6 +9,7 @@ from gen_dir_wxi import add_wix_to_path, system, download_bundle_deps, Commented
 import gen_analysis_tool_wxi
 import glob
 import subprocess
+import re
 
 import xml.etree.ElementTree as ET
 import xml.etree.ElementTree as ElementTree
@@ -21,7 +22,6 @@ os.environ['PATH'] = os.environ['PATH'].replace('"', '')
 
 def get_nuget_packages():
     import vc_info
-    packages = None
     from xml.etree import ElementTree
     cad_packages = ElementTree.parse(r'CAD_Installs\packages.config')
     destination_files = [ r'CAD_Installs\Proe ISIS Extensions\bin\CADCreoParametricCreateAssembly.exe',
@@ -73,12 +73,25 @@ def bin_mods():
 
     ElementTree.ElementTree(tree).write(output_filename, xml_declaration=True, encoding='utf-8')
 
+def generate_license_rtf():
+    with open('../license.rtf', 'wb') as rtf:
+        txt = open('../license.txt').read()
+        txt = re.sub('\\n(?!\\n)', '', txt.replace('\r', ''))
+        rtf.write('{\\rtf1\n')
+        rtf.write(txt.replace('\r', '').replace('\n', '\\par\n'))
+        rtf.write('\n}')
+
+
 def build_msi():
     get_nuget_packages()
 
+    generate_license_rtf()
+
     add_wix_to_path()
+
     def get_wixobj(file):
         return os.path.splitext(file)[0] + ".wixobj"
+
     def adjacent_file(file):
         return os.path.join(os.path.dirname(__file__), file)
 
@@ -94,6 +107,7 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\py_modelica_exporter\py_modelica_exporter",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\cad_library\cad_library",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\run_mdao",)
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\testbenchexecutor",)
     gen_dir_wxi.gen_dir_from_vc(r"..\meta\DesignDataPackage\lib\python", "DesignDataPackage_python.wxi", "DesignDataPackage_python")
     gen_dir_wxi.main(r"CAD_Installs\Proe ISIS Extensions", "Proe_ISIS_Extensions_x64.wxi", "Proe_ISIS_Extensions_x64", diskId='4') # do not call gen_dir_from_vc, it would exclude CADCreoCreateAssembly.exe
     gen_dir_wxi.gen_dir_from_vc(r"..\WebGME",)
@@ -104,7 +118,6 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\ModelicaWrapperTemplates",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\chipfit_display",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\layout_json",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\testbenchexecutor",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\run_mdao",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\SpiceVisualizer")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\spice_viewer")
@@ -220,7 +233,6 @@ def build_msi():
     defines.append(('GUIDSTRCYPHYML', cyphy_versions[0]))
     defines.append(('VERSIONSTRCYPHYML', cyphy_versions[1]))
 
-
     version = '14.13.'
     if 'M' in svnversion:
         version = version + '1'
@@ -235,6 +247,7 @@ def build_msi():
     from multiprocessing.pool import ThreadPool
     pool = ThreadPool()
     pool_exceptions = []
+
     def candle(source):
         try:
             arch = [ '-arch', ('x86' if source.find('x64') == -1 else 'x64') ]
