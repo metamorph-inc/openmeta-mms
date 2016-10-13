@@ -311,11 +311,36 @@ namespace PETBrowser
             {
                 bool firstHeaderReadForFolder = true;
 
+                string DSConfig = "";
+
+                string testbenchManifestFilePath;
                 string csvFileName;
                 if (d.Kind == Dataset.DatasetKind.PetResult)
                 {
+                    testbenchManifestFilePath = Path.Combine(DataDirectory, ResultsDirectory, folder);
                     csvFileName = Path.Combine(this.DataDirectory, ResultsDirectory,
                         folder.Replace("testbench_manifest.json", "output.csv"));
+
+                    // Try to get the DSConfig to append to 'mergedPET.csv'
+                    try
+                    {
+                        using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
+                        using (var jsonReader = new JsonTextReader(testbenchManifestFile))
+                        {
+                            var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
+                            
+                            DSConfig = (string)manifestJson["DesignName"];
+                            
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        //Don't adjust configuration name if we don't find a corresponding testbenchmanifest in its results folder
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        //Don't adjust configuration name if we don't find its directory
+                    }
                 }
                 else
                 {
@@ -339,6 +364,7 @@ namespace PETBrowser
                             {
                                 Console.Out.WriteLine(csvFileName);
                                 headers = new List<string>(csvReader.FieldHeaders);
+                                headers.Add("DSConfig");
                                 headers.Sort();
                                 firstHeaderReadForFolder = false;
                                 foreach (var header in headers)
@@ -352,6 +378,7 @@ namespace PETBrowser
                                 if (firstHeaderReadForFolder)
                                 {
                                     var otherHeaders = new List<string>(csvReader.FieldHeaders);
+                                    otherHeaders.Add("DSConfig");
                                     otherHeaders.Sort();
                                     if (!headers.SequenceEqual(otherHeaders))
                                     {
@@ -364,15 +391,22 @@ namespace PETBrowser
 
                             foreach (var header in headers)
                             {
-                                string fieldValue = csvReader.GetField<string>(header);
-
-                                if (writeNoneAsEmpty && fieldValue == "None")
+                                if (header != "DSConfig")
                                 {
-                                    writer.WriteField<string>("");
+                                    string fieldValue = csvReader.GetField<string>(header);
+
+                                    if (writeNoneAsEmpty && fieldValue == "None")
+                                    {
+                                        writer.WriteField<string>("");
+                                    }
+                                    else
+                                    {
+                                        writer.WriteField<string>(fieldValue);
+                                    }
                                 }
                                 else
                                 {
-                                    writer.WriteField<string>(fieldValue);
+                                    writer.WriteField<string>(DSConfig);
                                 }
                             }
                             writer.NextRecord();
