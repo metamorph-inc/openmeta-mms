@@ -311,7 +311,8 @@ namespace PETBrowser
             {
                 bool firstHeaderReadForFolder = true;
 
-                string DSConfig = "";
+                string DSConfig = "Unknown";
+                bool DSConfigPresent = false;
 
                 string testbenchManifestFilePath;
                 string csvFileName;
@@ -360,11 +361,20 @@ namespace PETBrowser
 
                         while (csvReader.Read())
                         {
+                            // Is this the first dataset being written to the CSV?
                             if (headers == null)
                             {
+                                // Yes. Let's setup the authority on what variables should be present.
                                 Console.Out.WriteLine(csvFileName);
                                 headers = new List<string>(csvReader.FieldHeaders);
-                                headers.Add("DSConfig");
+                                if(headers.Contains("DSConfig"))
+                                {
+                                    DSConfigPresent = true;
+                                }
+                                else
+                                {
+                                    headers.Add("DSConfig");
+                                }
                                 headers.Sort();
                                 firstHeaderReadForFolder = false;
                                 foreach (var header in headers)
@@ -375,10 +385,18 @@ namespace PETBrowser
                             }
                             else
                             {
+                                // No. Let's see if the headers match up.
                                 if (firstHeaderReadForFolder)
                                 {
                                     var otherHeaders = new List<string>(csvReader.FieldHeaders);
-                                    otherHeaders.Add("DSConfig");
+                                    if (otherHeaders.Contains("DSConfig"))
+                                    {
+                                        DSConfigPresent = true;
+                                    }
+                                    else
+                                    {
+                                        otherHeaders.Add("DSConfig");
+                                    }
                                     otherHeaders.Sort();
                                     if (!headers.SequenceEqual(otherHeaders))
                                     {
@@ -391,7 +409,11 @@ namespace PETBrowser
 
                             foreach (var header in headers)
                             {
-                                if (header != "DSConfig")
+                                if (header == "DSConfig" && !DSConfigPresent)
+                                {
+                                    writer.WriteField<string>(DSConfig);
+                                }
+                                else
                                 {
                                     string fieldValue = csvReader.GetField<string>(header);
 
@@ -403,10 +425,6 @@ namespace PETBrowser
                                     {
                                         writer.WriteField<string>(fieldValue);
                                     }
-                                }
-                                else
-                                {
-                                    writer.WriteField<string>(DSConfig);
                                 }
                             }
                             writer.NextRecord();
