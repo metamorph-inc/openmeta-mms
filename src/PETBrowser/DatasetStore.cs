@@ -311,8 +311,8 @@ namespace PETBrowser
             {
                 bool firstHeaderReadForFolder = true;
 
-                string DSConfig = "Unknown";
-                bool DSConfigPresent = false;
+                string DesignName = "Unknown";
+                bool DesignNamePresent = false;
 
                 string testbenchManifestFilePath;
                 string csvFileName;
@@ -322,7 +322,7 @@ namespace PETBrowser
                     csvFileName = Path.Combine(this.DataDirectory, ResultsDirectory,
                         folder.Replace("testbench_manifest.json", "output.csv"));
 
-                    // Try to get the DSConfig to append to 'mergedPET.csv'
+                    // Try to get the DesignName to append to 'mergedPET.csv'
                     try
                     {
                         using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
@@ -330,7 +330,7 @@ namespace PETBrowser
                         {
                             var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
                             
-                            DSConfig = (string)manifestJson["DesignName"];
+                            DesignName = (string)manifestJson["DesignName"];
                             
                         }
                     }
@@ -367,13 +367,13 @@ namespace PETBrowser
                                 // Yes. Let's setup the authority on what variables should be present.
                                 Console.Out.WriteLine(csvFileName);
                                 headers = new List<string>(csvReader.FieldHeaders);
-                                if(headers.Contains("DSConfig"))
+                                if(headers.Contains("DesignName"))
                                 {
-                                    DSConfigPresent = true;
+                                    DesignNamePresent = true;
                                 }
                                 else
                                 {
-                                    headers.Add("DSConfig");
+                                    headers.Add("DesignName");
                                 }
                                 headers.Sort();
                                 firstHeaderReadForFolder = false;
@@ -389,13 +389,13 @@ namespace PETBrowser
                                 if (firstHeaderReadForFolder)
                                 {
                                     var otherHeaders = new List<string>(csvReader.FieldHeaders);
-                                    if (otherHeaders.Contains("DSConfig"))
+                                    if (otherHeaders.Contains("DesignName"))
                                     {
-                                        DSConfigPresent = true;
+                                        DesignNamePresent = true;
                                     }
                                     else
                                     {
-                                        otherHeaders.Add("DSConfig");
+                                        otherHeaders.Add("DesignName");
                                     }
                                     otherHeaders.Sort();
                                     if (!headers.SequenceEqual(otherHeaders))
@@ -409,9 +409,9 @@ namespace PETBrowser
 
                             foreach (var header in headers)
                             {
-                                if (header == "DSConfig" && !DSConfigPresent)
+                                if (header == "DesignName" && !DesignNamePresent)
                                 {
-                                    writer.WriteField<string>(DSConfig);
+                                    writer.WriteField<string>(DesignName);
                                 }
                                 else
                                 {
