@@ -18,6 +18,8 @@ xFuncs <- data.frame()
 xFuncs <- xFuncs[1:4,]
 row.names(xFuncs) <- c("Values", "Scores", "Slopes", "Y_ints")
 
+suggestRanges <- list()
+
 bayesianDirection <- list()
 bayesianType <- list()
 bayesianParams <- list()
@@ -30,6 +32,7 @@ bayesianUIInitialized <- FALSE
 shinyServer(function(input, output, session) {
   
   makeReactiveBinding("xFuncs")
+  makeReactiveBinding("suggestRanges")
   makeReactiveBinding("bayesianUIInitialized")
   makeReactiveBinding("bayesianDirection")
   makeReactiveBinding("bayesianType")
@@ -1258,13 +1261,87 @@ shinyServer(function(input, output, session) {
     all_ranges$numerics
   })
   
+  output$original_numeric_ranges <- renderPrint({
+    do.call(rbind, lapply(raw[varRangeNum()], summary))
+  })
+  
+  output$new_numeric_ranges <- renderUI({
+    lapply(varRangeNum(), function(var){
+      global_index = which(varRange() == var)
+      fluidRow(
+        column(4,
+          h6(var)
+        ),
+        column(3,
+          textInput(paste0('newMin', global_index),
+                    NULL,
+                    placeholder = "Enter min")
+        ),
+        column(3,
+          textInput(paste0('newMax', global_index),
+                    NULL,
+                    placeholder = "Enter max")
+        ),
+        column(2,
+          actionButton(paste0('applySuggestedRange', global_index), 'Suggest', class = "btn btn-link")
+        )
+      )
+    })
+  })
+  
+  updateRangeButtons <- observe({
+    req(input$tabsetPanel == "Ranges")
+    for(i in 1:length(varRangeNum())){
+      global_index = which(varRange == varRangeNum()[i])
+      req(input[[paste0('applySuggestedRange', global_index)]])
+      suggestRanges[[global_index]] <<- input[[paste0('applySuggestedRange', global_index)]]
+    }
+  })
+  
+  # updateRanges <- reactive({
+  #   req(varRangeNum())
+  #   for(i in 1:length(varRangeNum())){
+  #     var <- varRangeNum()[i]
+  #     global_i <- which(varRange() == var)
+  #     if(input[[paste0('applySuggestedRange', global_i)]]){
+  #       updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
+  #       updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+  #     }
+  #   }
+  # })
+  
+  suggestRange <- observeEvent(suggestRanges, {
+    req(suggestRanges)
+    for(i in 1:length(varRangeNum())){
+      current <- suggestRanges[i]
+      if(current == 1){
+        var <- varRangeNum()[i]
+        global_i <- which(varRange() == var)
+        updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
+        updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+      }
+    }
+  })
+  
+  # suggestRange <- observe({
+  #   for(i in 1:length(varRangeNum())){
+  #     var <- varRangeNum()[i]
+  #     global_i <- which(varRange() == var)
+  #     eventReactive(input[[paste0('applySuggestedRange', global_i)]], {
+  #       updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
+  #       updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+  #     })
+  #   }
+  # })
+
+  
   slowFactorRangeData <- eventReactive(input$updateRanges, {
     printFactorStatistics()
   })
   
   printFactorStatistics <- function(...){
     
-    lapply(varRangeFac(), function(var) {
+    lapply(varRangeFac(), function(vafr) {
       all_ranges[[var]] <<- do.call(rbind, lapply(filterData()[var], summary))
       renderPrint({
         all_ranges[[var]]

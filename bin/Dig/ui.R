@@ -121,12 +121,22 @@ shinyUI(fluidPage(
           downloadButton('exportRanges', 'Download Ranges'), br(), br())
         ),
         fluidRow(
-          column(12,
-                 h4("Numeric Ranges", align = "center"),
-                 verbatimTextOutput("numeric_ranges"),
-                 h4("Factor Statistics", align = "center"),
-                 uiOutput("factor_ranges")
+          column(4,
+                 h4("OLD Numeric Ranges", align = "center"),
+                 verbatimTextOutput("original_numeric_ranges")
+          ),
+          column(4,
+                 h4("Suggested Numeric Ranges", align = "center"),
+                 verbatimTextOutput("numeric_ranges")
+          ),
+          column(4,
+                 h4("New Numeric Ranges", align = "center"),
+                 uiOutput("new_numeric_ranges")
           )
+        ),
+        fluidRow(
+          h4("Factor Statistics", align = "center"),
+          uiOutput("factor_ranges")
         )
       )
     ),
