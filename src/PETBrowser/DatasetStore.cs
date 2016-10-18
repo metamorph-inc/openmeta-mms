@@ -313,8 +313,8 @@ namespace PETBrowser
             {
                 bool firstHeaderReadForFolder = true;
 
-                string DesignName = "Unknown";
-                bool DesignNamePresent = false;
+                string CfgID = "Unknown";
+                bool CfgIDPresent = false;
 
                 string testbenchManifestFilePath;
                 string csvFileName;
@@ -324,7 +324,7 @@ namespace PETBrowser
                     csvFileName = Path.Combine(this.DataDirectory, ResultsDirectory,
                         folder.Replace("testbench_manifest.json", "output.csv"));
 
-                    // Try to get the DesignName to append to 'mergedPET.csv'
+                    // Try to get the CfgID to append to 'mergedPET.csv'
                     try
                     {
                         using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
@@ -332,7 +332,7 @@ namespace PETBrowser
                         {
                             var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
 
-                            DesignName = (string)manifestJson["DesignName"];
+                            CfgID = (string)manifestJson["CfgID"];
 
                         }
                     }
@@ -369,13 +369,13 @@ namespace PETBrowser
                                 // Yes. Let's setup the authority on what variables should be present.
                                 Console.Out.WriteLine(csvFileName);
                                 headers = new List<string>(csvReader.FieldHeaders);
-                                if (headers.Contains("DesignName"))
+                                if (headers.Contains("CfgID"))
                                 {
-                                    DesignNamePresent = true;
+                                    CfgIDPresent = true;
                                 }
                                 else
                                 {
-                                    headers.Add("DesignName");
+                                    headers.Add("CfgID");
                                 }
                                 headers.Sort();
                                 firstHeaderReadForFolder = false;
@@ -391,13 +391,13 @@ namespace PETBrowser
                                 if (firstHeaderReadForFolder)
                                 {
                                     var otherHeaders = new List<string>(csvReader.FieldHeaders);
-                                    if (otherHeaders.Contains("DesignName"))
+                                    if (otherHeaders.Contains("CfgID"))
                                     {
-                                        DesignNamePresent = true;
+                                        CfgIDPresent = true;
                                     }
                                     else
                                     {
-                                        otherHeaders.Add("DesignName");
+                                        otherHeaders.Add("CfgID");
                                     }
                                     otherHeaders.Sort();
                                     if (!headers.SequenceEqual(otherHeaders))
@@ -411,9 +411,9 @@ namespace PETBrowser
 
                             foreach (var header in headers)
                             {
-                                if (header == "DesignName" && !DesignNamePresent)
+                                if (header == "CfgID" && !CfgIDPresent)
                                 {
-                                    writer.WriteField<string>(DesignName);
+                                    writer.WriteField<string>(CfgID);
                                 }
                                 else
                                 {
