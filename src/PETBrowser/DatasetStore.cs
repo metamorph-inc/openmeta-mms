@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
 using META;
+using AVM.DDP;
 
 namespace PETBrowser
 {
@@ -313,8 +314,9 @@ namespace PETBrowser
             {
                 bool firstHeaderReadForFolder = true;
 
-                string CfgID = "Unknown";
-                bool CfgIDPresent = false;
+                var addedHeaders = new Dictionary<string, string>();
+                var headersPresent = new Dictionary<string, bool>();
+                addedHeaders["CfgID"] = "Unknown";
 
                 string testbenchManifestFilePath;
                 string csvFileName;
@@ -324,16 +326,26 @@ namespace PETBrowser
                     csvFileName = Path.Combine(this.DataDirectory, ResultsDirectory,
                         folder.Replace("testbench_manifest.json", "output.csv"));
 
-                    // Try to get the CfgID to append to 'mergedPET.csv'
+                    // Try to get the CfgID and alternatives to append to 'mergedPET.csv'
                     try
                     {
-                        using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
-                        using (var jsonReader = new JsonTextReader(testbenchManifestFile))
+                        var Manifest = MetaTBManifest.Deserialize(testbenchManifestFilePath);
+
+                        if (Manifest.CfgID != null)
+                            addedHeaders["CfgID"] = Manifest.CfgID;
+
+                        if (Manifest.Design != null)
                         {
-                            var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
-
-                            CfgID = (string)manifestJson["CfgID"];
-
+                            var AlternativeContainers = Manifest.Design.Children.Where(a => a.Type == "Alternative");
+                            foreach (var AlternativeContainer in AlternativeContainers)
+                            {
+                                var Choices = AlternativeContainer.Children.Where(a => a.Selected == true);
+                                foreach (var Choice in Choices)
+                                {
+                                    Console.WriteLine(Choice.Name);
+                                    addedHeaders[AlternativeContainer.Name] = Choice.Name;
+                                }
+                            }
                         }
                     }
                     catch (FileNotFoundException)
@@ -352,6 +364,10 @@ namespace PETBrowser
 
                 Console.WriteLine("Exporting CSV {0}", csvFileName);
 
+                //Assume the added columns don't exist in the data we're reading from 
+                foreach (var header in addedHeaders)
+                    headersPresent[header.Key] = false;
+
                 using (var csvFile = File.OpenText(csvFileName))
                 {
                     try
@@ -369,13 +385,16 @@ namespace PETBrowser
                                 // Yes. Let's setup the authority on what variables should be present.
                                 Console.Out.WriteLine(csvFileName);
                                 headers = new List<string>(csvReader.FieldHeaders);
-                                if (headers.Contains("CfgID"))
+                                foreach (var addedHeader in addedHeaders)
                                 {
-                                    CfgIDPresent = true;
-                                }
-                                else
-                                {
-                                    headers.Add("CfgID");
+                                    if (headers.Contains(addedHeader.Key))
+                                    {
+                                        headersPresent[addedHeader.Key] = true;
+                                    }
+                                    else
+                                    {
+                                        headers.Add(addedHeader.Key);
+                                    }
                                 }
                                 headers.Sort();
                                 firstHeaderReadForFolder = false;
@@ -391,13 +410,16 @@ namespace PETBrowser
                                 if (firstHeaderReadForFolder)
                                 {
                                     var otherHeaders = new List<string>(csvReader.FieldHeaders);
-                                    if (otherHeaders.Contains("CfgID"))
+                                    foreach (var addedHeader in addedHeaders)
                                     {
-                                        CfgIDPresent = true;
-                                    }
-                                    else
-                                    {
-                                        otherHeaders.Add("CfgID");
+                                        if (otherHeaders.Contains(addedHeader.Key))
+                                        {
+                                            headersPresent[addedHeader.Key] = true;
+                                        }
+                                        else
+                                        {
+                                            otherHeaders.Add(addedHeader.Key);
+                                        }
                                     }
                                     otherHeaders.Sort();
                                     if (!headers.SequenceEqual(otherHeaders))
@@ -411,9 +433,9 @@ namespace PETBrowser
 
                             foreach (var header in headers)
                             {
-                                if (header == "CfgID" && !CfgIDPresent)
+                                if (addedHeaders.ContainsKey(header) && !headersPresent[header])
                                 {
-                                    writer.WriteField<string>(CfgID);
+                                    writer.WriteField<string>(addedHeaders[header]);
                                 }
                                 else
                                 {
