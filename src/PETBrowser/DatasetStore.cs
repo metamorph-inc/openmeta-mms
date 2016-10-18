@@ -57,7 +57,7 @@ namespace PETBrowser
             using (var metadataFile = File.OpenText(metadataPath))
             {
                 var serializer = new JsonSerializer();
-                this.Metadata = (ResultsMetadata) serializer.Deserialize(metadataFile, typeof(ResultsMetadata));
+                this.Metadata = (ResultsMetadata)serializer.Deserialize(metadataFile, typeof(ResultsMetadata));
             }
 
             var totalResultsCount = this.Metadata.Results.Count;
@@ -79,16 +79,16 @@ namespace PETBrowser
                         using (var mdaoFile = File.OpenText(mdaoName))
                         using (var jsonReader = new JsonTextReader(mdaoFile))
                         {
-                            var mdaoJson = (JObject) JToken.ReadFrom(jsonReader);
+                            var mdaoJson = (JObject)JToken.ReadFrom(jsonReader);
 
-                            names.AddRange(((JObject) mdaoJson["components"]).Properties().Select(property => property.Name));
+                            names.AddRange(((JObject)mdaoJson["components"]).Properties().Select(property => property.Name));
                         }
                         var nameBuilder = new StringBuilder();
                         nameBuilder.Append("[");
                         nameBuilder.Append(string.Join(",", names));
                         nameBuilder.Append("]");
                         var name = nameBuilder.ToString();
-                    
+
                         datasets[time] = new Dataset(Dataset.DatasetKind.PetResult, time, name);
                     }
 
@@ -108,13 +108,13 @@ namespace PETBrowser
                         using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
                         using (var jsonReader = new JsonTextReader(testbenchManifestFile))
                         {
-                            var manifestJson = (JObject) JToken.ReadFrom(jsonReader);
+                            var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
 
-                            var testBenchName = (string) manifestJson["TestBench"];
+                            var testBenchName = (string)manifestJson["TestBench"];
 
                             var newDataset = new Dataset(Dataset.DatasetKind.TestBenchResult, time, testBenchName);
-                            newDataset.Status = (string) manifestJson["Status"];
-                            newDataset.DesignName = (string) manifestJson["DesignName"];
+                            newDataset.Status = (string)manifestJson["Status"];
+                            newDataset.DesignName = (string)manifestJson["DesignName"];
 
                             newDataset.Count++;
                             newDataset.Folders.Add(folder);
@@ -225,7 +225,7 @@ namespace PETBrowser
                     MoveFolderToDeleted(subdirectory);
                     deletedCount++;
 
-                    if (deletedCount%ProgressUpdateInterval == 0)
+                    if (deletedCount % ProgressUpdateInterval == 0)
                     {
                         callback(deletedCount, totalCount);
                     }
@@ -250,8 +250,10 @@ namespace PETBrowser
         public string ExportSelectedDatasetsToViz(Dataset highlightedDataset, bool highlightedDatasetOnly = false)
         {
             var exportPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mergedPET.csv");
+            var mappingPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mappingPET.csv");
 
             WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset, highlightedDatasetOnly);
+            WriteSelectedMappingToCsv(mappingPath, highlightedDataset, highlightedDatasetOnly);
 
             return exportPath;
         }
@@ -329,9 +331,9 @@ namespace PETBrowser
                         using (var jsonReader = new JsonTextReader(testbenchManifestFile))
                         {
                             var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
-                            
+
                             DesignName = (string)manifestJson["DesignName"];
-                            
+
                         }
                     }
                     catch (FileNotFoundException)
@@ -367,7 +369,7 @@ namespace PETBrowser
                                 // Yes. Let's setup the authority on what variables should be present.
                                 Console.Out.WriteLine(csvFileName);
                                 headers = new List<string>(csvReader.FieldHeaders);
-                                if(headers.Contains("DesignName"))
+                                if (headers.Contains("DesignName"))
                                 {
                                     DesignNamePresent = true;
                                 }
@@ -437,6 +439,123 @@ namespace PETBrowser
                     }
                 }
             }
+        }
+
+        private void WriteSelectedMappingToCsv(string csvPath, Dataset highlightedDataset, bool highlightedDatasetOnly = false)
+        {
+            Console.WriteLine("Searching for Mapping");
+
+            using (var outputCsvFile = File.CreateText(csvPath))
+            {
+                var writer = new CsvWriter(outputCsvFile);
+
+                // Try writing the mapping for one of the selected datasets
+                if (!highlightedDatasetOnly)
+                {
+                    foreach (var d in ResultDatasets)
+                    {
+                        if (d.Selected)
+                        {
+                            if (WriteMappingToCsv(d, writer))
+                                return;
+                        }
+                    }
+                }
+
+                // No selected datasets; if we have a highlighted dataset, write the mapping for the highlighted dataset instead
+                if (highlightedDataset != null)
+                {
+                    Console.WriteLine("No selected datasets; writing mapping for highlighted dataset");
+                    if (WriteMappingToCsv(highlightedDataset, writer))
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    // 'mappingPET.csv' will be empty
+                }
+            }
+        }
+
+        private bool WriteMappingToCsv(Dataset d, CsvWriter writer)
+        {
+            Console.WriteLine(d.Name);
+
+            List<string> names = new List<string>();
+            List<string> rangeMins = new List<string>();
+            List<string> rangeMaxs = new List<string>();
+
+            foreach (var folder in d.Folders)
+            {
+                string mdaoName;
+                if (d.Kind == Dataset.DatasetKind.PetResult)
+                {
+                    mdaoName = Path.Combine(this.DataDirectory, ResultsDirectory,
+                        folder.Replace("testbench_manifest", "mdao_config"));
+
+                    
+                    // Try to get the mapping to export to 'mappingPET.csv'
+                    try
+                    {
+                        
+                        // Parse the mdaoConfig file to get the mapping
+                        using (var mdaoFile = File.OpenText(mdaoName))
+                        using (var jsonReader = new JsonTextReader(mdaoFile))
+                        {
+                            //Console.WriteLine("Attempting to open {0}", mdaoName);
+                            //Console.WriteLine("Using jsonReader: {0}", jsonReader);
+                            
+                            var mdaoJson = (JObject)JToken.ReadFrom(jsonReader);
+
+                            foreach (var singleDriver in ((JObject)mdaoJson["drivers"]))
+                            {
+                                //Console.WriteLine(singleDriver.ToString());
+                                foreach (var variable in (JObject)(((JObject)singleDriver.Value)["designVariables"]))
+                                {
+                                    //Console.WriteLine(variable.ToString());
+                                    
+                                    names.Add(variable.Key);
+                                    rangeMins.Add((string)((JObject)variable.Value)["RangeMin"]);
+                                    rangeMaxs.Add((string)((JObject)variable.Value)["RangeMax"]);
+                                }
+                            }
+
+                            //Console.WriteLine("Names: {0}", names.Count);
+                            //Console.WriteLine("rangeMins: {0}", rangeMins.Count);
+                            //Console.WriteLine("rangeMaxs: {0}", rangeMaxs.Count);
+
+                            var lists = new List<List<string>>();
+                            lists.Add(names);
+                            lists.Add(rangeMins);
+                            lists.Add(rangeMaxs);
+
+                            foreach (var row in lists)
+                            {
+                                foreach (var item in row)
+                                {
+                                    if (item != null)
+                                        writer.WriteField<string>(item);
+                                    else
+                                        writer.WriteField<string>("N/A");
+                                }
+                                writer.NextRecord();
+                            }
+                            
+                            return true;
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        //Don't grab mapping if we don't find a corresponding mdao config file in its results folder
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        //Don't grab mapping if we don't find a corresponding mdao config file in its results folder
+                    }
+                }
+            }
+            return false;
         }
     }
 
