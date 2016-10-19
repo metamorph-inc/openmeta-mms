@@ -84,6 +84,16 @@ namespace AVM.DDP
             public string Directory { get; set; }
         }
 
+        public class DesignType
+        {
+            public string Name { get; set; }
+            public string Type { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public List<DesignType> Children { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public bool? Selected { get; set; }
+        }
+
         [JsonConverter(typeof(StringEnumConverter))]
         public StatusEnum Status { get; set; }
 
@@ -93,12 +103,17 @@ namespace AVM.DDP
         public string Created { get; set; }
         public string DesignID { get; set; }
         public string DesignName { get; set; }
+        public string CfgID { get; set; }
         public List<Metric> Metrics { get; set; }
         public List<Parameter> Parameters { get; set; }
         public List<Step> Steps { get; set; }
         public string TestBench { get; set; }
-        public int TierLevel { get; set; }
-        public bool CopyTestResults { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int? TierLevel { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool? CopyTestResults { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DesignType Design { get; set; }
 
         public MetaTBManifest()
         {         
@@ -115,6 +130,7 @@ namespace AVM.DDP
             this.Created = other.Created;
             this.DesignID = other.DesignID;
             this.DesignName = other.DesignName;
+            this.CfgID = other.CfgID;
             this.TestBench = other.TestBench;
             this.TierLevel = other.TierLevel;
             this.CopyTestResults = other.CopyTestResults;
@@ -277,7 +293,7 @@ namespace AVM.DDP
                 }
             }
 
-            this.CopyTestResults = testBench.Attributes.CopyResults;
+            // this.CopyTestResults = testBench.Attributes.CopyResults;
 
             this.DesignID = designID;
         }
