@@ -121,18 +121,36 @@ shinyUI(fluidPage(
           downloadButton('exportRanges', 'Download Ranges'), br(), br())
         ),
         fluidRow(
-          column(4,
-                 h4("OLD Numeric Ranges", align = "center"),
-                 verbatimTextOutput("original_numeric_ranges")
-          ),
-          column(4,
-                 h4("Suggested Numeric Ranges", align = "center"),
-                 verbatimTextOutput("numeric_ranges")
-          ),
-          column(4,
-                 h4("New Numeric Ranges", align = "center"),
-                 uiOutput("new_numeric_ranges")
+          column(12,
+                 h4("Numeric Ranges", align = "center"),
+                 fluidRow(
+                   column(2, h5(strong("Variable Name:"))),
+                   column(1, h5(strong("Original Min:"))),
+                   column(1, h5(strong("Original Max:"))),
+                   column(1, h5(strong("Applied Min:"))),
+                   column(1, h5(strong("Applied Max:"))),
+                   column(2, h5(strong("New Min:"))),
+                   column(2, h5(strong("New Max:"))),
+                   column(2)
+                 ),
+                 uiOutput("original_numeric_ranges")
           )
+          # column(3,
+          #        h4("Suggested Numeric Ranges"),
+          #        fluidRow(
+          #          column(6, h5("Min:")),
+          #          column(6, h5("Max:"))
+          #        ),
+          #        uiOutput("numeric_ranges")
+          # ),
+          # column(5,
+          #        h4("New Numeric Ranges"),
+          #        fluidRow(
+          #          column(6, h5("Min:")),
+          #          column(6, h5("Max:"))
+          #        ),
+          #        uiOutput("new_numeric_ranges")
+          # )
         ),
         fluidRow(
           h4("Factor Statistics", align = "center"),
