@@ -118,7 +118,8 @@ shinyUI(fluidPage(
         fluidRow(
           column(6, conditionalPanel(condition = "input.autoRange == false",
                            actionButton("updateRanges", "Update Ranges"), br(), br()),
-          downloadButton('exportRanges', 'Download Ranges'), br(), br())
+          downloadButton('downloadRanges', 'Download Ranges'),
+          actionButton('exportRanges', 'Export Ranges'), br(), br())
         ),
         fluidRow(
           column(12,

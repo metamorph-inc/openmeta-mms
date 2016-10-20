@@ -1310,22 +1310,29 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  
-  output$exportRanges <- downloadHandler(
-    filename = function() { paste('ranges-', Sys.Date(), '.csv', sep='') },
-    content = function(file) { 
-      cnms <- c("Variable Name", "Min", "Max")
-      data <- NULL
-      for(i in 1:length(varRangeNum())){
-        var = varRangeNum()[i]
-        global_i = which(varRange() == var)
-        data <- rbind(data, c(var, input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
-      }
-      ranges_df <- as.data.frame(data)
-      colnames(ranges_df) <- cnms
-      write.csv(ranges_df, file = file)
+  observeEvent(input$exportRanges, {
+    if (nzchar(Sys.getenv('DIG_INPUT_CSV'))) {
+      exportRangesFunction(gsub("merged", "ranges", Sys.getenv('DIG_INPUT_CSV')))
     }
+  })
+  
+  output$downloadRanges <- downloadHandler(
+    filename = function() {paste('ranges-', Sys.Date(), '.csv', sep='')},
+    content = exportRangesFunction
   )
+  
+  exportRangesFunction <- function(file) { 
+    cnms <- c("Variable Name", "Min", "Max")
+    data <- NULL
+    for(i in 1:length(varRangeNum())){
+      var = varRangeNum()[i]
+      global_i = which(varRange() == var)
+      data <- rbind(data, c(var, input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
+    }
+    ranges_df <- as.data.frame(data)
+    colnames(ranges_df) <- cnms
+    write.csv(ranges_df, file = file, row.names=F)
+  }
   
   # UI Adjustments -----------------------------------------------------------
 
