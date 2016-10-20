@@ -353,16 +353,19 @@ namespace PETBrowser
                             }
                             foreach (var Decision in Decisions)
                             {
-                                var Choices = Decision.Children.Where(a => a.Selected == true);
-                                if (Choices == null)
+                                var Choices = Decision.Children.Where(a => DesignTypeIsSelected(a) == true);
+                                if (Choices.Count() == 0)
                                 {
                                     addedHeaders[Decision.Name] = "None";
                                 }
-                                foreach (var Choice in Choices)
+                                else
                                 {
-                                    Console.WriteLine("DesignType: {0} ({1}): {2}", Decision.Name, Decision.Type, Choice.Name);
-                                    addedHeaders[Decision.Name] = Choice.Name;
+                                    foreach (var Choice in Choices)
+                                    {
+                                        addedHeaders[Decision.Name] = Choice.Name;
+                                    }
                                 }
+                                //Console.WriteLine("DesignType: {0} ({1}): {2}", Decision.Name, Decision.Type, addedHeaders[Decision.Name]);
                             }
                         }
                     }
@@ -488,7 +491,26 @@ namespace PETBrowser
                 return (new[] { e }).Concat(e.Children.SelectMany(c => FlattenDesignType(c)));
             }
             return (new[] { e });
-        } 
+        }
+
+        private bool DesignTypeIsSelected(MetaTBManifest.DesignType e)
+        {
+            if (e.Selected == true)
+            {
+                return true;
+            }
+            if (e.Children != null)
+            {
+                foreach (var child in e.Children)
+                {
+                    if (DesignTypeIsSelected(child))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
         private void WriteSelectedMappingToCsv(string csvPath, Dataset highlightedDataset, bool highlightedDatasetOnly = false)
         {
