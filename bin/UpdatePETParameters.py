@@ -1,9 +1,11 @@
 ﻿
 import sys
 import os
-#sys.path.append(r"C:\Program Files\ISIS\Udm\bin")
-#if os.environ.has_key("UDM_PATH"):
-#    sys.path.append(os.path.join(os.environ["UDM_PATH"], "bin"))
+import os.path
+import csv
+# sys.path.append(r"C:\Program Files\ISIS\Udm\bin")
+# if os.environ.has_key("UDM_PATH"):
+#     sys.path.append(os.path.join(os.environ["UDM_PATH"], "bin"))
 import _winreg as winreg
 with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"Software\META") as software_meta:
     meta_path, _ = winreg.QueryValueEx(software_meta, "META_PATH")
@@ -57,9 +59,22 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
     for desVar in designVariables:
         var_dict[desVar.attr('name')] = desVar.Range
 
-    # TODO: some sort of plugin?
-    for k in var_dict:
-        var_dict[k] = '0,10'
+    project_dir = os.path.dirname(focusObject.convert_udm2gme().Project.ProjectConnStr[len("MGA="):])
+    try:
+        csvfile = open(os.path.join(project_dir, "results", "rangesPET.csv"), "rb")
+    except IOError as e:
+        if e.errno == 2:
+            raise CyPhyPython.ErrorMessageException("Produce the file results/rangesPET.csv first.")
+        raise
+    with csvfile:
+        csvreader = iter(csv.reader(csvfile))
+        header = next(csvreader)
+
+        for row in csvreader:
+
+            def lookup(name):
+                return row[header.index(name)]
+            var_dict[lookup("DesignVariable")] = "{},{}".format(lookup("Min"), lookup("Max"))
 
     gmeCopy = focusObject.convert_udm2gme().ParentFolder.CopyFCODisp(focusObject.convert_udm2gme())
     gmeCopy.Name = gmeCopy.Name + "_Refined"
@@ -67,7 +82,12 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
     parameterStudy = [c for c in focusObject.children() if c.type.name == "ParameterStudy"][0]
     designVariables = [c for c in parameterStudy.children() if c.type.name == "DesignVariable"]
     for desVar in designVariables:
-        desVar.Range = var_dict[desVar.attr('name')]
+        if desVar.name not in var_dict:
+            # probably it is an output
+            # log("Couldn't find Design Variable '{}' in model".format(desVar.name))
+            continue
+        # log("{}.Range = {}".format(desVar.name, var_dict[desVar.name]))
+        desVar.Range = var_dict[desVar.name]
 
     gme = [c for c in gmeCopy.Project.Clients if c.Name == "GME.Application"]
     if gme:
