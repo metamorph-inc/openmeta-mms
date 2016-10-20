@@ -313,10 +313,17 @@ namespace PETBrowser
             foreach (var folder in d.Folders)
             {
                 bool firstHeaderReadForFolder = true;
+                bool documentAlternatives = false;
+                bool documentOptionals = false;
+                bool documentCfdID = false;
 
                 var addedHeaders = new Dictionary<string, string>();
                 var headersPresent = new Dictionary<string, bool>();
-                addedHeaders["CfgID"] = "Unknown";
+
+                if (documentCfdID)
+                {
+                    addedHeaders["CfgID"] = "Unknown";
+                }
 
                 string testbenchManifestFilePath;
                 string csvFileName;
@@ -331,12 +338,22 @@ namespace PETBrowser
                     {
                         var Manifest = MetaTBManifest.Deserialize(testbenchManifestFilePath);
 
-                        if (Manifest.CfgID != null)
+                        if (documentCfdID & Manifest.CfgID != null)
+                        {
                             addedHeaders["CfgID"] = Manifest.CfgID;
+                        }
 
                         if (Manifest.Design != null)
                         {
                             var Decisions = FlattenDesignType(Manifest.Design).Where(a => a.Type == "Alternative" | a.Type == "Optional");
+                            if (!documentAlternatives)
+                            {
+                                Decisions = Decisions.Where(a => a.Type != "Alternative");
+                            }
+                            if (!documentOptionals)
+                            {
+                                Decisions = Decisions.Where(a => a.Type != "Optional");
+                            }
                             foreach (var Decision in Decisions)
                             {
                                 var Choices = Decision.Children.Where(a => a.Selected == true);
@@ -346,7 +363,7 @@ namespace PETBrowser
                                 }
                                 foreach (var Choice in Choices)
                                 {
-                                    Console.WriteLine(Choice.Name);
+                                    Console.WriteLine("DesignType: {0} ({1}): {2}", Decision.Name, Decision.Type, Choice.Name);
                                     addedHeaders[Decision.Name] = Choice.Name;
                                 }
                             }
