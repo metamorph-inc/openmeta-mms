@@ -119,39 +119,24 @@ shinyUI(fluidPage(
           column(6, conditionalPanel(condition = "input.autoRange == false",
                            actionButton("updateRanges", "Update Ranges"), br(), br()),
           downloadButton('downloadRanges', 'Download Ranges'),
-          actionButton('exportRanges', 'Export Ranges'), br(), br())
+          actionButton('exportRanges', 'Export Ranges'), br())
         ),
         fluidRow(
           column(12,
                  h4("Numeric Ranges", align = "center"),
                  fluidRow(
                    column(2, h5(strong("Variable Name:"))),
-                   column(1, h5(strong("Original Min:"))),
-                   column(1, h5(strong("Original Max:"))),
-                   column(1, h5(strong("Applied Min:"))),
-                   column(1, h5(strong("Applied Max:"))),
-                   column(2, h5(strong("New Min:"))),
-                   column(2, h5(strong("New Max:"))),
-                   column(2)
-                 ),
+                   column(1, actionButton('applyAllOriginal', 'Original')),
+                   column(1, h5(strong("Minimum:"))),
+                   column(1, h5(strong("Maximum:"))),
+                   column(1, actionButton('applyAllRefined', 'Refined')),
+                   column(1, h5(strong("Minimum:"))),
+                   column(1, h5(strong("Maximum:"))),
+                   column(2, h5(strong("New Minimum:"))),
+                   column(2, h5(strong("New Maximum:")))
+                 ), br(),
                  uiOutput("original_numeric_ranges")
           )
-          # column(3,
-          #        h4("Suggested Numeric Ranges"),
-          #        fluidRow(
-          #          column(6, h5("Min:")),
-          #          column(6, h5("Max:"))
-          #        ),
-          #        uiOutput("numeric_ranges")
-          # ),
-          # column(5,
-          #        h4("New Numeric Ranges"),
-          #        fluidRow(
-          #          column(6, h5("Min:")),
-          #          column(6, h5("Max:"))
-          #        ),
-          #        uiOutput("new_numeric_ranges")
-          # )
         ),
         fluidRow(
           h4("Factor Statistics", align = "center"),

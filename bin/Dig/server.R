@@ -1253,11 +1253,13 @@ shinyServer(function(input, output, session) {
     lapply(varRangeNum(), function(var){
       global_index = which(varRange() == var)
       fluidRow(
-        column(2, h6(strong(var))),
-        column(1, h6(sprintf("%.3e", min(raw[var])))),
-        column(1, h6(sprintf("%.3e", min(raw[var])))),
-        column(1, h6(sprintf("%.3e", min(filterData()[var])))),
-        column(1, h6(sprintf("%.3e", min(filterData()[var])))),
+        column(2, h5(strong(var))),
+        column(1, actionButton(paste0('applyOriginalRange', global_index), 'Apply')),
+        column(1, h5(sprintf("%.3e", min(raw_plus()[var])))),
+        column(1, h5(sprintf("%.3e", max(raw_plus()[var])))),
+        column(1, actionButton(paste0('applyRefinedRange', global_index), 'Apply')),
+        column(1, h5(sprintf("%.3e", min(filterData()[var])))),
+        column(1, h5(sprintf("%.3e", max(filterData()[var])))),
         column(2,
                textInput(paste0('newMin', global_index),
                          NULL,
@@ -1268,22 +1270,44 @@ shinyServer(function(input, output, session) {
                          NULL,
                          placeholder = "Enter max")
         ),
-        column(2,
-                actionButton(paste0('applySuggestedRange', global_index), 'Suggest', class = "btn btn-link")
-                #suggestRanges[[global_index]] <<- input[[paste0('applySuggestedRange', global_index)]]    
-        ),
         hr()
       )
     })
   })
   
-  reactToSuggestButtons <- observe({
+  reactToApplyOriginalButtons <- observe({
     lapply(varRangeNum(), function(var) {
       global_i = which(varRange() == var)
-      observeEvent(input[[paste0('applySuggestedRange', global_i)]], {
+      observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
+        updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
+        updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
+      })
+    })
+  })
+  
+  reactToApplyRefinedButtons <- observe({
+    lapply(varRangeNum(), function(var) {
+      global_i = which(varRange() == var)
+      observeEvent(input[[paste0('applyRefinedRange', global_i)]], {
         updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
         updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
       })
+    })
+  })
+  
+  observeEvent(input$applyAllOriginal, {
+    lapply(varRangeNum(), function(var) {
+      global_i = which(varRange() == var)
+      updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
+      updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
+    })
+  })
+  
+  observeEvent(input$applyAllRefined, {
+    lapply(varRangeNum(), function(var) {
+      global_i = which(varRange() == var)
+      updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
+      updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
     })
   })
   
