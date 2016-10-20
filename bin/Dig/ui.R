@@ -118,15 +118,29 @@ shinyUI(fluidPage(
         fluidRow(
           column(6, conditionalPanel(condition = "input.autoRange == false",
                            actionButton("updateRanges", "Update Ranges"), br(), br()),
-          downloadButton('exportRanges', 'Download Ranges'), br(), br())
+          downloadButton('downloadRanges', 'Download Ranges'),
+          actionButton('exportRanges', 'Export Ranges'), br())
         ),
         fluidRow(
           column(12,
                  h4("Numeric Ranges", align = "center"),
-                 verbatimTextOutput("numeric_ranges"),
-                 h4("Factor Statistics", align = "center"),
-                 uiOutput("factor_ranges")
+                 fluidRow(
+                   column(2, h5(strong("Variable Name:"))),
+                   column(1, actionButton('applyAllOriginal', 'Original')),
+                   column(1, h5(strong("Minimum:"))),
+                   column(1, h5(strong("Maximum:"))),
+                   column(1, actionButton('applyAllRefined', 'Refined')),
+                   column(1, h5(strong("Minimum:"))),
+                   column(1, h5(strong("Maximum:"))),
+                   column(2, h5(strong("New Minimum:"))),
+                   column(2, h5(strong("New Maximum:")))
+                 ), br(),
+                 uiOutput("original_numeric_ranges")
           )
+        ),
+        fluidRow(
+          h4("Factor Statistics", align = "center"),
+          uiOutput("factor_ranges")
         )
       )
     ),

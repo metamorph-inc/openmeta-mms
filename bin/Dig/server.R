@@ -1248,14 +1248,67 @@ shinyServer(function(input, output, session) {
     all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
   })
   
-  output$numeric_ranges <- renderPrint({
-    if(input$autoRange == TRUE){
-      all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
-    }
-    else {
-      slowNumericRangeData()
-    }
-    all_ranges$numerics
+  output$original_numeric_ranges <- renderUI({
+    #do.call(rbind, lapply(raw[varRangeNum()], summary))
+    lapply(varRangeNum(), function(var){
+      global_index = which(varRange() == var)
+      fluidRow(
+        column(2, h5(strong(var))),
+        column(1, actionButton(paste0('applyOriginalRange', global_index), 'Apply')),
+        column(1, h5(sprintf("%.3e", min(raw_plus()[var])))),
+        column(1, h5(sprintf("%.3e", max(raw_plus()[var])))),
+        column(1, actionButton(paste0('applyRefinedRange', global_index), 'Apply')),
+        column(1, h5(sprintf("%.3e", min(filterData()[var])))),
+        column(1, h5(sprintf("%.3e", max(filterData()[var])))),
+        column(2,
+               textInput(paste0('newMin', global_index),
+                         NULL,
+                         placeholder = "Enter min")
+        ),
+        column(2,
+               textInput(paste0('newMax', global_index),
+                         NULL,
+                         placeholder = "Enter max")
+        ),
+        hr()
+      )
+    })
+  })
+  
+  reactToApplyOriginalButtons <- observe({
+    lapply(varRangeNum(), function(var) {
+      global_i = which(varRange() == var)
+      observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
+        updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
+        updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
+      })
+    })
+  })
+  
+  reactToApplyRefinedButtons <- observe({
+    lapply(varRangeNum(), function(var) {
+      global_i = which(varRange() == var)
+      observeEvent(input[[paste0('applyRefinedRange', global_i)]], {
+        updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
+        updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+      })
+    })
+  })
+  
+  observeEvent(input$applyAllOriginal, {
+    lapply(varRangeNum(), function(var) {
+      global_i = which(varRange() == var)
+      updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
+      updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
+    })
+  })
+  
+  observeEvent(input$applyAllRefined, {
+    lapply(varRangeNum(), function(var) {
+      global_i = which(varRange() == var)
+      updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
+      updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+    })
   })
   
   slowFactorRangeData <- eventReactive(input$updateRanges, {
@@ -1264,7 +1317,7 @@ shinyServer(function(input, output, session) {
   
   printFactorStatistics <- function(...){
     
-    lapply(varRangeFac(), function(var) {
+    lapply(varRangeFac(), function(vafr) {
       all_ranges[[var]] <<- do.call(rbind, lapply(filterData()[var], summary))
       renderPrint({
         all_ranges[[var]]
@@ -1281,14 +1334,29 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  output$exportRanges <- downloadHandler(
-    filename = function() { paste('ranges-', Sys.Date(), '.csv', sep='') },
-    content = function(file) { 
-      lapply(names(all_ranges), function(name) {
-        write.table(all_ranges[[name]], file = file, append = T, sep = ",", col.names = NA)
-      })
+  observeEvent(input$exportRanges, {
+    if (nzchar(Sys.getenv('DIG_INPUT_CSV'))) {
+      exportRangesFunction(gsub("merged", "ranges", Sys.getenv('DIG_INPUT_CSV')))
     }
+  })
+  
+  output$downloadRanges <- downloadHandler(
+    filename = function() {paste('ranges-', Sys.Date(), '.csv', sep='')},
+    content = exportRangesFunction
   )
+  
+  exportRangesFunction <- function(file) { 
+    cnms <- c("DesignVariable", "Min", "Max")
+    data <- NULL
+    for(i in 1:length(varRangeNum())){
+      var = varRangeNum()[i]
+      global_i = which(varRange() == var)
+      data <- rbind(data, c(var, input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
+    }
+    ranges_df <- as.data.frame(data)
+    colnames(ranges_df) <- cnms
+    write.csv(ranges_df, file = file, row.names=F)
+  }
   
   # UI Adjustments -----------------------------------------------------------
 
