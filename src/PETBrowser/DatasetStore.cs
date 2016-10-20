@@ -336,14 +336,18 @@ namespace PETBrowser
 
                         if (Manifest.Design != null)
                         {
-                            var AlternativeContainers = Manifest.Design.Children.Where(a => a.Type == "Alternative");
-                            foreach (var AlternativeContainer in AlternativeContainers)
+                            var Decisions = FlattenDesignType(Manifest.Design).Where(a => a.Type == "Alternative" | a.Type == "Optional");
+                            foreach (var Decision in Decisions)
                             {
-                                var Choices = AlternativeContainer.Children.Where(a => a.Selected == true);
+                                var Choices = Decision.Children.Where(a => a.Selected == true);
+                                if (Choices == null)
+                                {
+                                    addedHeaders[Decision.Name] = "None";
+                                }
                                 foreach (var Choice in Choices)
                                 {
                                     Console.WriteLine(Choice.Name);
-                                    addedHeaders[AlternativeContainer.Name] = Choice.Name;
+                                    addedHeaders[Decision.Name] = Choice.Name;
                                 }
                             }
                         }
@@ -462,6 +466,15 @@ namespace PETBrowser
                 }
             }
         }
+
+        private IEnumerable<MetaTBManifest.DesignType> FlattenDesignType(MetaTBManifest.DesignType e)
+        {
+            if(e.Type != "Component")
+            {
+                return (new[] { e }).Concat(e.Children.SelectMany(c => FlattenDesignType(c)));
+            }
+            return (new[] { e });
+        } 
 
         private void WriteSelectedMappingToCsv(string csvPath, Dataset highlightedDataset, bool highlightedDatasetOnly = false)
         {
