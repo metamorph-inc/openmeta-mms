@@ -74,7 +74,7 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
 
             def lookup(name):
                 return row[header.index(name)]
-            var_dict[lookup("Variable Name")] = "{},{}".format(lookup("Min"), lookup("Max"))
+            var_dict[lookup("DesignVariable")] = "{},{}".format(lookup("Min"), lookup("Max"))
 
     gmeCopy = focusObject.convert_udm2gme().ParentFolder.CopyFCODisp(focusObject.convert_udm2gme())
     gmeCopy.Name = gmeCopy.Name + "_Refined"
