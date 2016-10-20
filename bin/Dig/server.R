@@ -1346,7 +1346,7 @@ shinyServer(function(input, output, session) {
   )
   
   exportRangesFunction <- function(file) { 
-    cnms <- c("Variable Name", "Min", "Max")
+    cnms <- c("DesignVariable", "Min", "Max")
     data <- NULL
     for(i in 1:length(varRangeNum())){
       var = varRangeNum()[i]
