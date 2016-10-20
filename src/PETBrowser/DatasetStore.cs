@@ -248,18 +248,18 @@ namespace PETBrowser
             WriteSelectedDatasetsToCsv(archivePath, false, highlightedDataset);
         }
 
-        public string ExportSelectedDatasetsToViz(Dataset highlightedDataset, bool highlightedDatasetOnly = false)
+        public string ExportSelectedDatasetsToViz(Dataset highlightedDataset, bool highlightedDatasetOnly = false, bool documentCfdID = false, bool documentAlternatives = false, bool documentOptionals = false)
         {
             var exportPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mergedPET.csv");
             var mappingPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mappingPET.csv");
 
-            WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset, highlightedDatasetOnly);
+            WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset, highlightedDatasetOnly, documentCfdID, documentAlternatives, documentOptionals);
             WriteSelectedMappingToCsv(mappingPath, highlightedDataset, highlightedDatasetOnly);
 
             return exportPath;
         }
 
-        private void WriteSelectedDatasetsToCsv(string csvPath, bool writeNoneAsEmpty, Dataset highlightedDataset, bool highlightedDatasetOnly = false)
+        private void WriteSelectedDatasetsToCsv(string csvPath, bool writeNoneAsEmpty, Dataset highlightedDataset, bool highlightedDatasetOnly = false, bool documentCfdID = false, bool documentAlternatives = false, bool documentOptionals = false)
         {
             List<string> headers = null;
 
@@ -272,7 +272,7 @@ namespace PETBrowser
                     {
                         if (d.Selected)
                         {
-                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty, documentCfdID, documentAlternatives, documentOptionals);
                         }
                     }
 
@@ -280,7 +280,7 @@ namespace PETBrowser
                     {
                         if (d.Selected)
                         {
-                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty, documentCfdID, documentAlternatives, documentOptionals);
                         }
                     }
                 }
@@ -291,7 +291,7 @@ namespace PETBrowser
                     if (highlightedDataset != null)
                     {
                         Console.WriteLine("No selected datasets; writing highlighted dataset");
-                        WriteDatasetToCsv(highlightedDataset, ref headers, writer, writeNoneAsEmpty);
+                        WriteDatasetToCsv(highlightedDataset, ref headers, writer, writeNoneAsEmpty, documentCfdID, documentAlternatives, documentOptionals);
 
                         if (headers == null)
                         {
@@ -306,16 +306,13 @@ namespace PETBrowser
             }
         }
 
-        private void WriteDatasetToCsv(Dataset d, ref List<string> headers, CsvWriter writer, bool writeNoneAsEmpty)
+        private void WriteDatasetToCsv(Dataset d, ref List<string> headers, CsvWriter writer, bool writeNoneAsEmpty, bool documentCfdID, bool documentAlternatives, bool documentOptionals)
         {
             Console.WriteLine(d.Name);
 
             foreach (var folder in d.Folders)
             {
                 bool firstHeaderReadForFolder = true;
-                bool documentAlternatives = false;
-                bool documentOptionals = false;
-                bool documentCfdID = false;
 
                 var addedHeaders = new Dictionary<string, string>();
                 var headersPresent = new Dictionary<string, bool>();

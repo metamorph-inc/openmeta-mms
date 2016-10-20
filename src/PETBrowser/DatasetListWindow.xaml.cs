@@ -214,26 +214,31 @@ namespace PETBrowser
         {
             try
             {
-                var highlightedDataset = (Dataset) PetGrid.SelectedItem;
-                var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset);
-                string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
+                var vis = new VisualizerDialog();
 
-                ProcessStartInfo psi = new ProcessStartInfo()
+                if (vis.ShowDialog() == true)
                 {
-                    FileName = "cmd.exe",
-                    Arguments = String.Format("/S /C \"\"{0}\" \"{1}\" > \"{2}\" 2>&1\"", System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath, logPath),
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    // WorkingDirectory = ,
-                    // RedirectStandardError = true,
-                    // RedirectStandardOutput = true,
-                    UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
-                };
-                var p = new Process();
-                p.StartInfo = psi;
-                p.Start();
+                    var highlightedDataset = (Dataset)PetGrid.SelectedItem;
+                    var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset, false, vis.CfgID, vis.Alternatives, vis.Optionals);
+                    string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
 
-                p.Dispose();
+                    ProcessStartInfo psi = new ProcessStartInfo()
+                    {
+                        FileName = "cmd.exe",
+                        Arguments = String.Format("/S /C \"\"{0}\" \"{1}\" > \"{2}\" 2>&1\"", System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath, logPath),
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        // WorkingDirectory = ,
+                        // RedirectStandardError = true,
+                        // RedirectStandardOutput = true,
+                        UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
+                    };
+                    var p = new Process();
+                    p.StartInfo = psi;
+                    p.Start();
+
+                    p.Dispose();
+                }
             }
             catch (Exception ex)
             {
