@@ -64,7 +64,7 @@ shinyServer(function(input, output, session) {
     raw = read.csv("WindTurbineSim.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    # raw = iris
+    raw = iris
   }
   
   # Import/Export Session Settings -------------------------------------------
@@ -1058,6 +1058,7 @@ shinyServer(function(input, output, session) {
     renderPlot({
       plotPoints <- parseUserInputPoints(current)
       req(plotPoints)
+      par(mar = c(4.5,4.5,1,1))
       p <- plot(x = unlist(lapply(names(plotPoints), as.numeric)),
                 y = unname(plotPoints),
                 xlab = varNames[current],
@@ -1072,7 +1073,7 @@ shinyServer(function(input, output, session) {
         }
       }
       p
-    })
+    }, height = 150)
   }
   
   #Calculate line slopes & intercepts of transfer function
@@ -1218,6 +1219,31 @@ shinyServer(function(input, output, session) {
     }
   }
   
+  slowRankData <- eventReactive(input$applyRanking, {
+    rankData()
+  })
+  
+  output$dataTable <- DT::renderDataTable({
+    processDataTable()
+  })
+  
+  processDataTable <- reactive({
+    if(input$activateRanking){
+      if(input$autoRanking)
+        data <- rankData()
+      else
+        data <- slowRankData()
+    }
+    else{
+      data <- filterData()
+    }
+    if(input$roundTables)
+      data <- round_df(data, input$numDecimals)
+    if(input$transpose)
+      data <- t(data)
+    data
+  })
+  
   #Output ranked data table
   output$rankTable <- DT::renderDataTable({
     print("In render ranked data table")
@@ -1316,8 +1342,7 @@ shinyServer(function(input, output, session) {
   })
   
   printFactorStatistics <- function(...){
-    
-    lapply(varRangeFac(), function(vafr) {
+    lapply(varRangeFac(), function(var) {
       all_ranges[[var]] <<- do.call(rbind, lapply(filterData()[var], summary))
       renderPrint({
         all_ranges[[var]]

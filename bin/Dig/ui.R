@@ -83,34 +83,41 @@ shinyUI(fluidPage(
         )
       )
     ),
+    # tabPanel("Data Table",
+    #   wellPanel(
+    #     fluidRow(
+    #       conditionalPanel(condition = "input.autoData == false", 
+    #                        actionButton("updateDataTable", "Update Data Table")
+    #                        , br(), br())
+    #     ),
+    #     fluidRow(
+    #       DT::dataTableOutput("table")
+    #     )
+    #   )
+    # ),
     tabPanel("Data Table",
-      wellPanel(
-        fluidRow(
-          conditionalPanel(condition = "input.autoData == false", 
-                           actionButton("updateDataTable", "Update Data Table")
-                           , br(), br())
-        ),
-        fluidRow(
-          DT::dataTableOutput("table")
-        )
-      )
-    ),
-    tabPanel("Data Ranking",
              wellPanel(
-               fluidRow(
-                 column(4, selectInput("weightMetrics",
-                             "Select Weighted Metrics:",
-                             c(),
-                             multiple = TRUE),
-                        actionButton("clearMetrics", "Clear Metrics")),
-                 br(), br(), br()
-               ),
-               uiOutput("rankings"), 
-               downloadButton("exportPoints", "Export Selected Points"), 
-               actionButton("colorRanked", "Color by Selected Rows"), 
-               br(), hr(),
-               h4(strong("Ranked Data"), align = "center"),
-               DT::dataTableOutput("rankTable")
+               column(4, checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE)),
+               conditionalPanel(condition = "input.activateRanking == true",
+                 conditionalPanel(condition = "input.autoRanking == false",
+                                  actionButton("applyRanking", "Apply Ranking"),
+                                  br(), br()),
+                 fluidRow(
+                   column(4, 
+                          actionButton("clearMetrics", "Clear Metrics"),
+                          selectInput("weightMetrics",
+                               "Select Weighted Metrics:",
+                               c(),
+                               multiple = TRUE),
+                    br(), br())
+                 ),
+                 uiOutput("rankings")), 
+                 downloadButton("exportPoints", "Export Selected Points"), 
+                 actionButton("colorRanked", "Color by Selected Rows"), 
+                 br(), hr(),
+                 h4(strong("Data Table"), align = "center"),
+                 checkboxInput("transpose", "Transpose Table", value = FALSE), br(), br(),
+                 DT::dataTableOutput("dataTable")
              )
     ),
     tabPanel("Ranges",
@@ -217,10 +224,10 @@ shinyUI(fluidPage(
             h4("Automatic Refresh"),
             tags$div(title = "Automatically updates info pane on pairs plot tab.",
                      checkboxInput("autoInfo", "Info Pane", value = TRUE)),
-            tags$div(title = "Automatically updates Data Table tab.",
-                     checkboxInput("autoData", "Data Table Tab", value = TRUE)),
+            tags$div(title = "Automatically updates ranking settings on Data Table tab.",
+                     checkboxInput("autoRanking", "Data Ranking", value = TRUE)),
             tags$div(title = "Automatically updates Ranges Tab.",
-                     checkboxInput("autoRange", "Ranges Tab", value = TRUE)),
+                     checkboxInput("autoRange", "Ranges", value = TRUE)),
             hr(),
 
             h4("Color Options"),
