@@ -102,7 +102,9 @@ shinyServer(function(input, output, session) {
                          "autoData",
                          "autoRange",
                          "viewAllFilters",
-                         "bayesDispAll")
+                         "bayesDispAll",
+                         "activateRanking",
+                         "transpose")
       
       tier1Selects <- c("colVarNum",
                         "display",
@@ -172,7 +174,10 @@ shinyServer(function(input, output, session) {
           else {
             if(varClass[column] == "numeric" | varClass[column] == "integer") {
               rng <- as.numeric(unlist(strsplit(toString(importData[[current]]), ", ")))
-              updateSliderInput(session, current, value = rng)
+              if(grepl("new", current))
+                updateSelectInput(session, current, selected = rng)
+              else
+                updateSliderInput(session, current, value = rng)
             }
           }
         }
@@ -609,7 +614,7 @@ shinyServer(function(input, output, session) {
          }
          else {
            if (input$colType == "Ranked"){
-             data[input$rankTable_rows_selected, "color"] <- input$rankColor
+             data[input$dataTable_rows_selected, "color"] <- input$rankColor
            }
          }
        }
@@ -1246,17 +1251,17 @@ shinyServer(function(input, output, session) {
   })
   
   #Output ranked data table
-  output$rankTable <- DT::renderDataTable({
-    print("In render ranked data table")
-    data <- rankData()
-    if(input$roundTables)
-      data <- round_df(rankData(), input$numDecimals)
-    data
-  })
+  # output$rankTable <- DT::renderDataTable({
+  #   print("In render ranked data table")
+  #   data <- rankData()
+  #   if(input$roundTables)
+  #     data <- round_df(rankData(), input$numDecimals)
+  #   data
+  # })
   
   #Event handler for "Color by selected rows"
   observeEvent(input$colorRanked, {
-    req(input$rankTable_rows_selected)
+    req(input$dataTable_rows_selected)
     updateTabsetPanel(session, "inTabset", selected = "Pairs Plot")
     updateSelectInput(session, "colType", selected = "Ranked")
   })
@@ -1265,7 +1270,11 @@ shinyServer(function(input, output, session) {
   output$exportPoints <- downloadHandler(
     filename = function() { paste('ranked_points-', Sys.Date(), '.csv', sep='') },
     content = function(file) { 
-      write.csv(filterData()[input$rankTable_rows_selected, ], file) }
+      if(input$activateRanking)
+        write.csv(rankData()[input$dataTable_rows_selected, ], file)
+      else
+        write.csv(filterData()[input$dataTable_rows_selected, ], file) 
+      }
   )
   
   # Ranges Table Tab --------------------------------------------------------------------------------
