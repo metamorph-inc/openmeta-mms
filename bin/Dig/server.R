@@ -942,13 +942,14 @@ shinyServer(function(input, output, session) {
     print("In render data table")
     if(input$autoData == TRUE){
       data <- filterData()
-      if(input$roundTables)
-        data <- round_df(filterData(), input$numDecimals)
     }
     else {
       data <- slowFilterData()
     }
-    data
+    if(input$roundTables)
+      data <- round_df(filterData(), input$numDecimals)
+    #data
+    DT::datatable(data, options = list(scrollX = T))
   })
   
   # Data Ranking Tab ---------------------------------------------------------
@@ -1569,6 +1570,7 @@ shinyServer(function(input, output, session) {
     }
     else {
       lapply(variables, function(var) {
+        par(mar = rep(2, 4))
         raw_plus_histo <- hist(raw_plus()[[var]], freq = FALSE)
         x_bounds <- c(min(raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
                       max(raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))

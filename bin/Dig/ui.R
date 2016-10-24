@@ -97,7 +97,7 @@ shinyUI(fluidPage(
     # ),
     tabPanel("Data Table",
              wellPanel(
-               column(4, checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE)),
+               checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE),
                conditionalPanel(condition = "input.activateRanking == true",
                  conditionalPanel(condition = "input.autoRanking == false",
                                   actionButton("applyRanking", "Apply Ranking"),
@@ -116,10 +116,11 @@ shinyUI(fluidPage(
                  actionButton("colorRanked", "Color by Selected Rows"), 
                  br(), hr(),
                  h4(strong("Data Table"), align = "center"),
-                 checkboxInput("transpose", "Transpose Table", value = FALSE), br(), br(),
-                 DT::dataTableOutput("dataTable")
-             )
-    ),
+                 checkboxInput("transpose", "Transpose Table", value = FALSE), 
+                 br(), br()
+             ),
+             wellPanel(DT::dataTableOutput("dataTable"), style = "overflow-x:scroll; max-width = 1000px")
+    ), 
     tabPanel("Ranges",
      wellPanel(
         fluidRow(
