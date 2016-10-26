@@ -145,11 +145,11 @@ shinyUI(fluidPage(
                  ), br(),
                  uiOutput("original_numeric_ranges")
           )
-        ),
-        fluidRow(
-          h4("Factor Statistics", align = "center"),
-          uiOutput("factor_ranges")
         )
+        # , fluidRow(
+        #   h4("Factor Statistics", align = "center"),
+        #   uiOutput("factor_ranges")
+        # )
       )
     ),
     tabPanel("Bayesian",

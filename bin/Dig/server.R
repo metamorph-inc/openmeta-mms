@@ -58,7 +58,7 @@ shinyServer(function(input, output, session) {
   else if (nzchar(Sys.getenv('DIG_INPUT_CSV')))
   {
     raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
-    raw_ranges = read.csv(Sys.getenv('DIG_MAP_CSV'), fill = T)
+    raw_ranges = read.csv(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV')), fill = T)
   }
   else
   {
@@ -1313,7 +1313,7 @@ shinyServer(function(input, output, session) {
   output$original_numeric_ranges <- renderUI({
     
     #do.call(rbind, lapply(raw[varRangeNum()], summary))
-    lapply(varRangeNum(), function(var){
+    lapply(colnames(raw_ranges), function(var){
       
       global_index = which(varRange() == var)
       
@@ -1322,7 +1322,7 @@ shinyServer(function(input, output, session) {
       if(!is.null(raw_ranges) & var %in% colnames(raw_ranges)){
         original_min <- unlist(unname(raw_ranges[var]))[1]
         original_max <- unlist(unname(raw_ranges[var]))[2]
-        if(!is.numeric(original_min) | !is.numeric(original_max) | original_max == original_min){
+        if(!is.numeric(original_min) | !is.numeric(original_max)){
           original_min <- min(raw_plus()[var])
           original_max <- max(raw_plus()[var])
         }
@@ -1524,7 +1524,6 @@ shinyServer(function(input, output, session) {
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
       #Defaults
-      this_direction <- var_directions[1]
       this_gaussian <- FALSE
       this_gauss_mean <- data_mean[[var]]
       this_sd <- data_sd[[var]]
@@ -1538,14 +1537,10 @@ shinyServer(function(input, output, session) {
       }
       
       #From mappingPET.csv
-      if(!is.null(raw_ranges) & var %in% colnames(raw_ranges)){ 
-        original_min <- unlist(unname(raw_ranges[var]))[1]
-        original_max <- unlist(unname(raw_ranges[var]))[2]
-        if(is.numeric(original_min) & is.numeric(original_max) & original_max != original_min)
-          this_direction <- "Input"
-        else
-          this_direction <- "Output"
-      }
+      if(!is.null(raw_ranges) & var %in% colnames(raw_ranges)) 
+        this_direction <- "Input"
+      else
+        this_direction <- "Output"
       
       fluidRow(
         hr(),
