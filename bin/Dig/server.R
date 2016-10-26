@@ -58,13 +58,15 @@ shinyServer(function(input, output, session) {
   else if (nzchar(Sys.getenv('DIG_INPUT_CSV')))
   {
     raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
+    raw_ranges = read.csv(Sys.getenv('DIG_MAP_CSV'), fill = T)
   }
   else
   {
-    raw = read.csv("WindTurbineSim.csv", fill=T)
-    # raw = read.csv("../data.csv", fill=T)
-    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    raw = iris
+    #raw = read.csv("WindTurbineSim.csv", fill=T)
+    #raw = read.csv("../data.csv", fill=T)
+    raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    raw_ranges = read.csv("../../../results/mappingPET.csv", fill=T)
+    #raw = iris
   }
   
   # Import/Export Session Settings -------------------------------------------
@@ -95,9 +97,6 @@ shinyServer(function(input, output, session) {
     importFlags$tier1 <- TRUE
   })
   
-
-  
-  
   tier1Import <- observeEvent(importFlags$tier1, {
     if(importFlags$tier1){
       print("In tier 1 upload")
@@ -115,7 +114,8 @@ shinyServer(function(input, output, session) {
                          "autoRange",
                          "viewAllFilters",
                          "activateRanking",
-                         "transpose")
+                         "transpose",
+                         "bayesDispAll")
       
       tier1Selects <- c("colVarNum",
                         "display",
@@ -128,7 +128,8 @@ shinyServer(function(input, output, session) {
                         "pointSize",
                         "pointStyle",
                         "radio",
-                        "weightMetrics")
+                        "weightMetrics",
+                        "bayesDispVars")
                      
       tier1Colors <- c("normColor", 
                        "minColor", 
@@ -410,6 +411,10 @@ shinyServer(function(input, output, session) {
   generateEnumUI <- function(current) {
     items <- names(table(raw_plus()[varNames[current]]))
     
+    for(i in 1:length(items)){
+      items[i] <- paste0(i, '. ', items[i])
+    }
+    
     selectVal <- input[[paste0('inp', current)]]
     if(is.null(selectVal) | !input$stickyFilters)
       selectVal <- items
@@ -546,6 +551,8 @@ shinyServer(function(input, output, session) {
           if (varClass[column]=="factor") {
             # print(paste(varNames[column],class(rng)))
             # print(paste(rng))
+            rng <- unlist(lapply(rng, function(factor){
+              sub("[0-9]+. ","", factor)}))
             inRange <- (data[[nname]] %in% rng)
           }
         }
@@ -1310,6 +1317,17 @@ shinyServer(function(input, output, session) {
       
       global_index = which(varRange() == var)
       
+      original_min <- min(raw_plus()[var])
+      original_max <- max(raw_plus()[var])
+      if(!is.null(raw_ranges) & var %in% colnames(raw_ranges)){
+        original_min <- unlist(unname(raw_ranges[var]))[1]
+        original_max <- unlist(unname(raw_ranges[var]))[2]
+        if(!is.numeric(original_min) | !is.numeric(original_max) | original_max == original_min){
+          original_min <- min(raw_plus()[var])
+          original_max <- max(raw_plus()[var])
+        }
+      }
+      
       min_input <- NULL
       max_input <- NULL
       if(importFlags$ranges){
@@ -1318,12 +1336,11 @@ shinyServer(function(input, output, session) {
         NULL #This makes sure nothing appears in the UI
       }
       
-      
       fluidRow(
         column(2, h5(strong(var))),
         column(1, actionButton(paste0('applyOriginalRange', global_index), 'Apply')),
-        column(1, h5(sprintf("%.3e", min(raw_plus()[var])))),
-        column(1, h5(sprintf("%.3e", max(raw_plus()[var])))),
+        column(1, h5(sprintf("%.3e", original_min))),
+        column(1, h5(sprintf("%.3e", original_max))),
         column(1, actionButton(paste0('applyRefinedRange', global_index), 'Apply')),
         column(1, h5(sprintf("%.3e", min(filterData()[var])))),
         column(1, h5(sprintf("%.3e", max(filterData()[var])))),
@@ -1505,15 +1522,29 @@ shinyServer(function(input, output, session) {
       global_i <- which(varNames == var) # globalId
       #gaussianCondition = toString(paste0("input.gaussian",i," == true"))
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
+      
+      #Defaults
       this_direction <- var_directions[1]
       this_gaussian <- FALSE
       this_gauss_mean <- data_mean[[var]]
       this_sd <- data_sd[[var]]
-      if(importFlags$bayesian){
+      
+      #Import Session
+      if(importFlags$bayesian){ 
         this_direction <- importData[[paste0('varDirection', global_i)]]
         this_gaussian <- importData[[paste0('gaussian', global_i)]]
         this_gauss_mean <- importData[[paste0('gaussian_mean', global_i)]]
         this_sd <- importData[[paste0('gaussian_sd',global_i)]]
+      }
+      
+      #From mappingPET.csv
+      if(!is.null(raw_ranges) & var %in% colnames(raw_ranges)){ 
+        original_min <- unlist(unname(raw_ranges[var]))[1]
+        original_max <- unlist(unname(raw_ranges[var]))[2]
+        if(is.numeric(original_min) & is.numeric(original_max) & original_max != original_min)
+          this_direction <- "Input"
+        else
+          this_direction <- "Output"
       }
       
       fluidRow(
