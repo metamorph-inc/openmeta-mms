@@ -35,7 +35,7 @@ shinyServer(function(input, output, session) {
   makeReactiveBinding("bayesianType")
   makeReactiveBinding("bayesianParams")
 
-  importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE)
+  importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE, ranges = FALSE, bayesian = FALSE)
   
   session$onSessionEnded(function() {
     stopApp()
@@ -79,14 +79,26 @@ shinyServer(function(input, output, session) {
     pathname;
   }
   
+  resetImportFlags <- function(...){
+    importFlags$tier1 <- F
+    importFlags$tier2 <- F
+    importFlags$ranking <- F
+    importFlags$ranges <- F
+    importFlags$bayesian <- F
+  }
+  
   initImport <- observeEvent(input$importSession, {
+    print("in import session")
     file <- fileChoose()
     req(file)
     importData <<- read.csv(file, header = TRUE, strip.white = TRUE)
     importFlags$tier1 <- TRUE
   })
   
-  tier1Flush <- observeEvent(importFlags$tier1, {
+
+  
+  
+  tier1Import <- observeEvent(importFlags$tier1, {
     if(importFlags$tier1){
       print("In tier 1 upload")
       
@@ -102,7 +114,6 @@ shinyServer(function(input, output, session) {
                          "autoData",
                          "autoRange",
                          "viewAllFilters",
-                         "bayesDispAll",
                          "activateRanking",
                          "transpose")
       
@@ -117,8 +128,7 @@ shinyServer(function(input, output, session) {
                         "pointSize",
                         "pointStyle",
                         "radio",
-                        "weightMetrics",
-                        "bayesDispVars")
+                        "weightMetrics")
                      
       tier1Colors <- c("normColor", 
                        "minColor", 
@@ -152,7 +162,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  tier2Flush <- observeEvent(importFlags$tier2, {
+  tier2Import <- observeEvent(importFlags$tier2, {
     if(importFlags$tier2){
       print("In tier 2 upload - updating colslider/sliders")
       
@@ -174,9 +184,9 @@ shinyServer(function(input, output, session) {
           else {
             if(varClass[column] == "numeric" | varClass[column] == "integer") {
               rng <- as.numeric(unlist(strsplit(toString(importData[[current]]), ", ")))
-              if(grepl("new", current))
-                updateSelectInput(session, current, selected = rng)
-              else
+              #if(grepl("new", current))
+              #  updateSelectInput(session, current, selected = rng)
+              #else
                 updateSliderInput(session, current, value = rng)
             }
           }
@@ -232,6 +242,13 @@ shinyServer(function(input, output, session) {
         data <- subset(data, a)
       }
     }
+    
+    # importFlags$tier1 <- F
+    # importFlags$tier2 <- F
+    # importFlags$ranking <- F
+    # importFlags$ranges <- F
+    # importFlags$bayesian <- F
+    
     data
   })
 
@@ -826,6 +843,8 @@ shinyServer(function(input, output, session) {
       importFlags$tier1 <- FALSE
       importFlags$tier2 <- TRUE
       importFlags$ranking <- TRUE
+      importFlags$ranges <- TRUE
+      importFlags$bayesian <- TRUE
     }
     table
 })
@@ -1285,9 +1304,21 @@ shinyServer(function(input, output, session) {
   })
   
   output$original_numeric_ranges <- renderUI({
+    
     #do.call(rbind, lapply(raw[varRangeNum()], summary))
     lapply(varRangeNum(), function(var){
+      
       global_index = which(varRange() == var)
+      
+      min_input <- NULL
+      max_input <- NULL
+      if(importFlags$ranges){
+        max_input <- importData[[paste0('newMax', global_index)]]
+        min_input <- importData[[paste0('newMin', global_index)]]
+        NULL #This makes sure nothing appears in the UI
+      }
+      
+      
       fluidRow(
         column(2, h5(strong(var))),
         column(1, actionButton(paste0('applyOriginalRange', global_index), 'Apply')),
@@ -1299,12 +1330,14 @@ shinyServer(function(input, output, session) {
         column(2,
                textInput(paste0('newMin', global_index),
                          NULL,
-                         placeholder = "Enter min")
+                         placeholder = "Enter min",
+                         value = min_input)
         ),
         column(2,
                textInput(paste0('newMax', global_index),
                          NULL,
-                         placeholder = "Enter max")
+                         placeholder = "Enter max",
+                         value = max_input)
         ),
         hr()
       )
@@ -1393,36 +1426,6 @@ shinyServer(function(input, output, session) {
     write.csv(ranges_df, file = file, row.names=F)
   }
   
-  # UI Adjustments -----------------------------------------------------------
-
-  colSliderSettings <- reactive({
-    if(input$colVarNum != ""){
-      print("In colSlider settings")
-      variable <- input$colVarNum
-      raw_data <- raw_plus()
-      isolate({
-      data <- filterData()
-        min <- min(data[[variable]], na.rm=TRUE)
-        max <- max(data[[variable]], na.rm=TRUE)
-        thirtythree <- quantile(data[[variable]], 0.33, na.rm=TRUE)
-        sixtysix <- quantile(data[[variable]], 0.66, na.rm=TRUE)
-        absMin <- as.numeric(unname(rawAbsMin()[variable]))
-        absMax <- as.numeric(unname(rawAbsMax()[variable]))
-        absStep <- max((max-min)*0.01, abs(min)*0.001, abs(max)*0.001)
-        numericMin <- signif(absMin-absStep*10, digits = 4)
-        numericMax <- signif(absMax+absStep*10, digits = 4)
-        numericStep <- signif(absStep, digits = 4)
-        lower <- unname(thirtythree)
-        upper <- unname(sixtysix)
-      })
-      print("colSlider settings complete")
-      colSlider <- data.frame(variable, min, max, lower, upper, 
-                              numericMin, numericMax, numericStep,
-                              absMin, absMax, absStep)
-      colSlider
-    }
-  })
-  
   # Bayesian -----------------------------------------------------------------
   # Reactive variables for running the bayesian analysis
   
@@ -1470,7 +1473,6 @@ shinyServer(function(input, output, session) {
     }
     
     # bayesianUIInitialized <<- FALSE
-    
     output_data
   })
 
@@ -1485,6 +1487,8 @@ shinyServer(function(input, output, session) {
   #   gaussian <- rnorm(1000, mean, sd)
   # }
   
+
+  
   output$bayesianUI <- renderUI({
     print("In bayesianUI()")
     var_directions <- c("Input",
@@ -1498,47 +1502,57 @@ shinyServer(function(input, output, session) {
     
     lapply(bayesChoices, function(var) {
       # UI calculations
-      i <- which(varNames == var) # globalId
-      gaussianCondition = toString(paste0("input.gaussian",i," == true"))
-      spacefilCondition = toString(paste0("input.gaussian",i," == false"))
+      global_i <- which(varNames == var) # globalId
+      #gaussianCondition = toString(paste0("input.gaussian",i," == true"))
+      #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
+      this_direction <- var_directions[1]
+      this_gaussian <- FALSE
+      this_gauss_mean <- data_mean[[var]]
+      this_sd <- data_sd[[var]]
+      if(importFlags$bayesian){
+        this_direction <- importData[[paste0('varDirection', global_i)]]
+        this_gaussian <- importData[[paste0('gaussian', global_i)]]
+        this_gauss_mean <- importData[[paste0('gaussian_mean', global_i)]]
+        this_sd <- importData[[paste0('gaussian_sd',global_i)]]
+      }
       
       fluidRow(
         hr(),
         column(8,
-          selectInput(
-            paste0('varDirection', i),
-            label = var,
-            choices = var_directions,
-            selected = var_directions[1]),
-          checkboxInput(
-            paste0('gaussian', i),
-            label = "Enable Gaussian",
-            value = FALSE),
-          fluidRow(
-            column(6,
-              textInput(paste0('gaussian_mean', i),
-                        HTML("&mu;:"),
-                        placeholder = "Mean",
-                        value = data_mean[[var]])
-            ),
-            column(6,
-              textInput(paste0('gaussian_sd',i),
-                        HTML("&sigma;:"),
-                        placeholder = "StdDev",
-                        value = data_sd[[var]])
-            )
-          )
+               
+               selectInput(
+                 paste0('varDirection', global_i),
+                 label = var,
+                 choices = var_directions,
+                 selected = this_direction),
+               checkboxInput(
+                 paste0('gaussian', global_i),
+                 label = "Enable Gaussian",
+                 value = this_gaussian),
+               fluidRow(
+                 column(6,
+                        textInput(paste0('gaussian_mean', global_i),
+                                  HTML("&mu;:"),
+                                  placeholder = "Mean",
+                                  value = this_gauss_mean)
+                 ),
+                 column(6,
+                        textInput(paste0('gaussian_sd',global_i),
+                                  HTML("&sigma;:"),
+                                  placeholder = "StdDev",
+                                  value = this_sd)
+                 )
+               )
         ),
         column(4,
-          bootstrapPage(
-            br(),
-            actionButton(paste0("add", var), "Add", class = "btn btn-success")
-          )
+               bootstrapPage(
+                 br(),
+                 actionButton(paste0("add", var), "Add", class = "btn btn-success")
+               )
         )
       )
-
+      
     })
-    
     #print("Done with bayesianUI()")
   })
   
@@ -1614,7 +1628,35 @@ shinyServer(function(input, output, session) {
     }
   })
 
-
+  # UI Adjustments -----------------------------------------------------------
+  
+  colSliderSettings <- reactive({
+    if(input$colVarNum != ""){
+      print("In colSlider settings")
+      variable <- input$colVarNum
+      raw_data <- raw_plus()
+      isolate({
+        data <- filterData()
+        min <- min(data[[variable]], na.rm=TRUE)
+        max <- max(data[[variable]], na.rm=TRUE)
+        thirtythree <- quantile(data[[variable]], 0.33, na.rm=TRUE)
+        sixtysix <- quantile(data[[variable]], 0.66, na.rm=TRUE)
+        absMin <- as.numeric(unname(rawAbsMin()[variable]))
+        absMax <- as.numeric(unname(rawAbsMax()[variable]))
+        absStep <- max((max-min)*0.01, abs(min)*0.001, abs(max)*0.001)
+        numericMin <- signif(absMin-absStep*10, digits = 4)
+        numericMax <- signif(absMax+absStep*10, digits = 4)
+        numericStep <- signif(absStep, digits = 4)
+        lower <- unname(thirtythree)
+        upper <- unname(sixtysix)
+      })
+      print("colSlider settings complete")
+      colSlider <- data.frame(variable, min, max, lower, upper, 
+                              numericMin, numericMax, numericStep,
+                              absMin, absMax, absStep)
+      colSlider
+    }
+  })
 
   updateColorSlider <- observeEvent(colSliderSettings(), {
     print("In updateColorSlider")
@@ -1641,6 +1683,8 @@ shinyServer(function(input, output, session) {
     }
     if(importFlags$tier2){
       importFlags$tier2 <- FALSE
+      importFlags$ranges <- TRUE
+      importFlags$bayesian <- TRUE
     }
   })
   
