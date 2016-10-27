@@ -1,10 +1,10 @@
 library(shiny)
 library(shinyjs)
 
-# Define UI for PET Design Space Browser application
+# Define UI for Visualizer
 shinyUI(fluidPage(
   #  Application title
-  titlePanel("PET Design Space Browser"),
+  titlePanel("Visualizer"),
   #verbatimTextOutput("debug"),
   tabsetPanel(
     tabPanel("Pairs Plot",
@@ -83,22 +83,11 @@ shinyUI(fluidPage(
         )
       )
     ),
-    # tabPanel("Data Table",
-    #   wellPanel(
-    #     fluidRow(
-    #       conditionalPanel(condition = "input.autoData == false", 
-    #                        actionButton("updateDataTable", "Update Data Table")
-    #                        , br(), br())
-    #     ),
-    #     fluidRow(
-    #       DT::dataTableOutput("table")
-    #     )
-    #   )
-    # ),
     tabPanel("Data Table",
+      br(),
       wellPanel(
-        style = "overflow-x:scroll; max-width = 1000px",
-        DT::dataTableOutput("dataTable"), 
+        style = "overflow-x:auto",
+        DT::dataTableOutput("dataTable"),
         downloadButton("exportPoints", "Export Selected Points"), 
         actionButton("colorRanked", "Color by Selected Rows")
         #checkboxInput("transpose", "Transpose Table", value = FALSE)
@@ -107,6 +96,7 @@ shinyUI(fluidPage(
       checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE),
       conditionalPanel(condition = "input.activateRanking == true",
         wellPanel(
+          # h4("Ranking Configuration"),
           conditionalPanel(condition = "input.autoRanking == false",
             actionButton("applyRanking", "Apply Ranking"),
             br(), br()
@@ -129,34 +119,40 @@ shinyUI(fluidPage(
       )
     ), 
     tabPanel("Ranges",
-     wellPanel(
-        fluidRow(
-          column(6, conditionalPanel(condition = "input.autoRange == false",
-                           actionButton("updateRanges", "Update Ranges"), br(), br()),
-          downloadButton('downloadRanges', 'Download Ranges'),
-          actionButton('exportRanges', 'Export Ranges'), br())
-        ),
-        fluidRow(
-          column(12,
-                 h4("Numeric Ranges", align = "center"),
-                 fluidRow(
-                   column(2, h5(strong("Variable Name:"))),
-                   column(1, actionButton('applyAllOriginal', 'Original')),
-                   column(1, h5(strong("Minimum:"))),
-                   column(1, h5(strong("Maximum:"))),
-                   column(1, actionButton('applyAllRefined', 'Refined')),
-                   column(1, h5(strong("Minimum:"))),
-                   column(1, h5(strong("Maximum:"))),
-                   column(2, h5(strong("New Minimum:"))),
-                   column(2, h5(strong("New Maximum:")))
-                 ), br(),
-                 uiOutput("original_numeric_ranges")
+      br(),
+      conditionalPanel(condition = "output.mappingPresent == true",
+        wellPanel(
+          fluidRow(
+            column(6, conditionalPanel(condition = "input.autoRange == false",
+                             actionButton("updateRanges", "Update Ranges"), br(), br()),
+            downloadButton('downloadRanges', 'Download Ranges'),
+            actionButton('exportRanges', 'Export Ranges'), br())
+          ),
+          fluidRow(
+            column(12,
+                   h4("Numeric Ranges", align = "center"),
+                   fluidRow(
+                     column(2, h5(strong("Variable Name:"))),
+                     column(1, actionButton('applyAllOriginal', 'Original')),
+                     column(1, h5(strong("Minimum:"))),
+                     column(1, h5(strong("Maximum:"))),
+                     column(1, actionButton('applyAllRefined', 'Refined')),
+                     column(1, h5(strong("Minimum:"))),
+                     column(1, h5(strong("Maximum:"))),
+                     column(2, h5(strong("New Minimum:"))),
+                     column(2, h5(strong("New Maximum:")))
+                   ), br(),
+                   uiOutput("original_numeric_ranges")
+            )
           )
+          # , fluidRow(
+          #   h4("Factor Statistics", align = "center"),
+          #   uiOutput("factor_ranges")
+          # )
         )
-        # , fluidRow(
-        #   h4("Factor Statistics", align = "center"),
-        #   uiOutput("factor_ranges")
-        # )
+      ),
+      conditionalPanel(condition = "output.mappingPresent == false",
+        verbatimTextOutput("noMappingMessage")
       )
     ),
     tabPanel("Bayesian",
@@ -290,24 +286,23 @@ shinyUI(fluidPage(
             p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )
         ),
-      column(9))
+        column(6)
+      )
     ),
-  id = "inTabset"),
-  h3("Filter Data:"),
-  fluidRow(
-    column(3,
-      tags$div(title = "Activate to show filters for all dataset variables.",
-               checkboxInput("viewAllFilters", "View All Filters", value = FALSE)),
-      tags$div(title = "Return visible sliders to default state.",
-               actionButton("resetSliders", "Reset Visible Filters"))
-    ),
-    br(), br(), br(), br(), br()
+    id = "inTabset"
   ),
-  uiOutput("filters"),
-  h3("Constants:"),
-  uiOutput("constants")
-  
-  
-  
-)
-)
+  hr(),
+  h3("Filter Data:"),
+  wellPanel(
+    tags$div(title = "Activate to show filters for all dataset variables.",
+             checkboxInput("viewAllFilters", "View All Filters", value = FALSE)),
+    tags$div(title = "Return visible sliders to default state.",
+             actionButton("resetSliders", "Reset Visible Filters")),
+    hr(),
+    uiOutput("filters")
+  ),
+  conditionalPanel("output.constantsPresent",
+    h3("Constants:"),
+    uiOutput("constants")
+  )
+))

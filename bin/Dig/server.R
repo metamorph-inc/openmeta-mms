@@ -62,6 +62,8 @@ shinyServer(function(input, output, session) {
   }
   else
   {
+    mapping = NULL
+    
     # Needed setup for regression testing:
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
@@ -72,10 +74,21 @@ shinyServer(function(input, output, session) {
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
-    # mapping = null
     # raw = iris
-    # mapping = null
   }
+  
+  output$mappingPresent <- reactive({
+    if (is.null(mapping))
+      answer <- F
+    else
+      answer <- T
+    print(paste("mappingPresent:",answer))
+    answer
+  })
+  
+  outputOptions(output, "mappingPresent", suspendWhenHidden=FALSE)
+  
+  output$noMappingMessage <- renderText(paste("No mapping file was found."))
   
   # Import/Export Session Settings -------------------------------------------
   
@@ -398,7 +411,7 @@ shinyServer(function(input, output, session) {
     }
     
     isolate({
-      wellPanel(
+      div(
         fluidRow(
           lapply(facVars, function(column) {
               generateEnumUI(column)
@@ -507,7 +520,11 @@ shinyServer(function(input, output, session) {
     )
   })
   
+  output$constantsPresent <- reactive({
+    present <-T # TODO: Fix this to actually detect constants
+  })
   
+  outputOptions(output, "constantsPresent", suspendWhenHidden=FALSE)
   
   observeEvent(input$resetSliders, {
     print("In resetDefaultSliders()")
@@ -738,9 +755,9 @@ shinyServer(function(input, output, session) {
             "No data points fit the current filtering scheme")
       }
       if (length(input$display) < 2) {
-        output$displayError <- 
-          renderText(
-            "Please select two or more display variables.")
+        output$displayError <-renderUI(
+          HTML("<br/>Please select two or more Display Variables.")
+        )
       }
     }
   })
