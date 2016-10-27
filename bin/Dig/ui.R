@@ -96,30 +96,37 @@ shinyUI(fluidPage(
     #   )
     # ),
     tabPanel("Data Table",
-             wellPanel(
-               checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE),
-               conditionalPanel(condition = "input.activateRanking == true",
-                 conditionalPanel(condition = "input.autoRanking == false",
-                                  actionButton("applyRanking", "Apply Ranking"),
-                                  br(), br()),
-                 fluidRow(
-                   column(4, 
-                          actionButton("clearMetrics", "Clear Metrics"),
-                          selectInput("weightMetrics",
-                               "Select Weighted Metrics:",
-                               c(),
-                               multiple = TRUE),
-                    br(), br())
-                 ),
-                 uiOutput("rankings")), 
-                 downloadButton("exportPoints", "Export Selected Points"), 
-                 actionButton("colorRanked", "Color by Selected Rows"), 
-                 br(), hr(),
-                 h4(strong("Data Table"), align = "center"),
-                 checkboxInput("transpose", "Transpose Table", value = FALSE), 
-                 br(), br()
-             ),
-             wellPanel(DT::dataTableOutput("dataTable"), style = "overflow-x:scroll; max-width = 1000px")
+      wellPanel(
+        style = "overflow-x:scroll; max-width = 1000px",
+        DT::dataTableOutput("dataTable"), 
+        downloadButton("exportPoints", "Export Selected Points"), 
+        actionButton("colorRanked", "Color by Selected Rows")
+        #checkboxInput("transpose", "Transpose Table", value = FALSE)
+        
+      ),
+      checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE),
+      conditionalPanel(condition = "input.activateRanking == true",
+        wellPanel(
+          conditionalPanel(condition = "input.autoRanking == false",
+            actionButton("applyRanking", "Apply Ranking"),
+            br(), br()
+          ),
+          fluidRow(
+            column(4, 
+              selectInput("weightMetrics",
+                          "Ranking Metrics:",
+                          c(),
+                          multiple = TRUE),
+              actionButton("clearMetrics", "Clear Metrics")
+            )
+          ),
+          conditionalPanel(condition = "input.weightMetrics != null",
+                           hr()),
+          uiOutput("rankings")#, 
+          #br(), hr(), 
+          #br()
+        )
+      )
     ), 
     tabPanel("Ranges",
      wellPanel(

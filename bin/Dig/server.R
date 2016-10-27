@@ -58,14 +58,14 @@ shinyServer(function(input, output, session) {
   else if (nzchar(Sys.getenv('DIG_INPUT_CSV')))
   {
     raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
-    raw_ranges = read.csv(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV')), fill = T)
+    mapping = read.csv(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV')), fill = T)
   }
   else
   {
     #raw = read.csv("WindTurbineSim.csv", fill=T)
     #raw = read.csv("../data.csv", fill=T)
     raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    raw_ranges = read.csv("../../../results/mappingPET.csv", fill=T)
+    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     #raw = iris
   }
   
@@ -1271,8 +1271,8 @@ shinyServer(function(input, output, session) {
     }
     if(input$roundTables)
       data <- round_df(data, input$numDecimals)
-    if(input$transpose)
-      data <- t(data)
+    #if(input$transpose)
+    #  data <- t(data)
     data
   })
   
@@ -1313,15 +1313,15 @@ shinyServer(function(input, output, session) {
   output$original_numeric_ranges <- renderUI({
     
     #do.call(rbind, lapply(raw[varRangeNum()], summary))
-    lapply(colnames(raw_ranges), function(var){
+    lapply(colnames(mapping), function(var){
       
       global_index = which(varRange() == var)
       
       original_min <- min(raw_plus()[var])
       original_max <- max(raw_plus()[var])
-      if(!is.null(raw_ranges) & var %in% colnames(raw_ranges)){
-        original_min <- unlist(unname(raw_ranges[var]))[1]
-        original_max <- unlist(unname(raw_ranges[var]))[2]
+      if(!is.null(mapping) & var %in% colnames(mapping)){
+        original_min <- unlist(unname(mapping[var]))[1]
+        original_max <- unlist(unname(mapping[var]))[2]
         if(!is.numeric(original_min) | !is.numeric(original_max)){
           original_min <- min(raw_plus()[var])
           original_max <- max(raw_plus()[var])
@@ -1537,7 +1537,7 @@ shinyServer(function(input, output, session) {
       }
       
       #From mappingPET.csv
-      if(!is.null(raw_ranges) & var %in% colnames(raw_ranges)) 
+      if(!is.null(mapping) & var %in% colnames(mapping)) 
         this_direction <- "Input"
       else
         this_direction <- "Output"
