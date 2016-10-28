@@ -233,7 +233,23 @@ shinyUI(fluidPage(
             tags$div(title = "Automatically updates Ranges Tab.",
                      checkboxInput("autoRange", "Ranges", value = TRUE)),
             hr(),
-
+            
+            h4("About"),
+            p(strong("Version:"), "v1.5.0"),
+            p(strong("Date:"), "10/24/2016"),
+            p(strong("Developer:"), "Metamorph Software"),
+            p(strong("Support:"), "tthomas@metamorphsoftware.com")
+          )
+        ),
+        column(6,
+          br(),
+          wellPanel(
+            column(4),
+            column(4,tags$div(title = "Return to default settings.",
+                              actionButton("resetSettings", "Reset All Settings")) 
+            ),
+            br(),
+            hr(),
             h4("Color Options"),
             fluidRow(
               column(4, tags$div(title = "Default color of data points.",
@@ -263,11 +279,8 @@ shinyUI(fluidPage(
               column(4, tags$div(title = "Color of ranked data points.",
                                  colourInput("bayResampledColor", "Resampled", "#5CC85C")))
             ),hr(),
-            tags$div(title = "Return to default settings.",
-                     actionButton("resetSettings", "Reset Settings")), 
-            br(),
-            hr(),
             
+
             h4("Session Options"),
             strong("Save Session"),
             textInput("sessionName", NULL, placeholder = "Enter a filename..."),
@@ -276,14 +289,7 @@ shinyUI(fluidPage(
             br(), br(),
             strong("Load Session"), br(),
             tags$div(title = "Load a saved session.",
-                     actionButton('importSession', 'Choose File')),
-            hr(),
-            
-            h4("About"),
-            p(strong("Version:"), "v1.5.0"),
-            p(strong("Date:"), "10/24/2016"),
-            p(strong("Developer:"), "Metamorph Software"),
-            p(strong("Support:"), "tthomas@metamorphsoftware.com")
+                     actionButton('importSession', 'Choose File'))
           )
         ),
         column(6)
