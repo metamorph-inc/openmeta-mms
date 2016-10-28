@@ -35,6 +35,7 @@ shinyServer(function(input, output, session) {
   makeReactiveBinding("bayesianType")
   makeReactiveBinding("bayesianParams")
 
+  uiElements <- reactiveValues(constants = FALSE)
   importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE, ranges = FALSE, bayesian = FALSE)
   
   session$onSessionEnded(function() {
@@ -504,14 +505,21 @@ shinyServer(function(input, output, session) {
           max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
           min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
           diff <- (max-min)
-          if (diff == 0) {column(2, p(strong(paste0(varNames[column],":")), min))}
-        } else {
+          if (diff == 0) { 
+            uiElements$constants <- T
+            column(2, p(strong(paste0(varNames[column],":")), min))}
+          } 
+        else {
           if (varClass[column] == "integer") {
             max <- as.integer(unname(rawAbsMax()[varNames[column]]))
             min <- as.integer(unname(rawAbsMin()[varNames[column]]))
-            if (min == max) {column(2, p(strong(paste0(varNames[column],":")), min))}
-          } else {
+            if (min == max) { 
+              uiElements$constants <- T
+              column(2, p(strong(paste0(varNames[column],":")), min))}
+            } 
+          else {
             if (varClass[column] == "factor" & length(names(table(raw_plus()[varNames[column]]))) == 1) {
+              uiElements$constants <- T
               column(2, p(strong(paste0(varNames[column],":")), names(table(raw_plus()[varNames[column]]))))
             }
           }
@@ -521,7 +529,7 @@ shinyServer(function(input, output, session) {
   })
   
   output$constantsPresent <- reactive({
-    present <-T # TODO: Fix this to actually detect constants
+    present <-uiElements$constants # TODO: Fix this to actually detect constants
   })
   
   outputOptions(output, "constantsPresent", suspendWhenHidden=FALSE)
