@@ -58,8 +58,10 @@ shinyServer(function(input, output, session) {
   }
   else if (nzchar(Sys.getenv('DIG_INPUT_CSV')))
   {
+    mapping = NULL
     raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
-    mapping = read.csv(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV')), fill = T)
+    if(file.exists(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV'))))
+      mapping = read.csv(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV')), fill = T)
   }
   else
   {
@@ -68,11 +70,12 @@ shinyServer(function(input, output, session) {
     # Needed setup for regression testing:
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
-    #raw = read.csv("WindTurbineSim.csv", fill=T)
-    #mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
+    raw = read.csv("WindTurbineSim.csv", fill=T)
+    if(file.exists("WindTurbineSimMapping.csv"))
+      mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
     
     # Useful test setups:
-    raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = iris
