@@ -23,7 +23,6 @@ bayesianType <- list()
 bayesianParams <- list()
 
 bayesianUIInitialized <- FALSE
-
 #-------------------End Global Variables-----------------------#
 
 
@@ -70,13 +69,13 @@ shinyServer(function(input, output, session) {
     # Needed setup for regression testing:
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
-    raw = read.csv("WindTurbineSim.csv", fill=T)
-    if(file.exists("WindTurbineSimMapping.csv"))
-      mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
+    # raw = read.csv("WindTurbineSim.csv", fill=T)
+    # if(file.exists("WindTurbineSimMapping.csv"))
+    #   mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
     
     # Useful test setups:
-    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
+    raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = iris
   }
@@ -1361,87 +1360,147 @@ shinyServer(function(input, output, session) {
   output$original_numeric_ranges <- renderUI({
     
     #do.call(rbind, lapply(raw[varRangeNum()], summary))
-    lapply(colnames(mapping), function(var){
+    lapply(rownames(mapping), function(row){
       
-      global_index = which(varRange() == var)
+      var = levels(droplevels(mapping[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ", "))
       
-      original_min <- min(raw_plus()[var])
-      original_max <- max(raw_plus()[var])
-      if(!is.null(mapping) & var %in% colnames(mapping)){
-        original_min <- unlist(unname(mapping[var]))[1]
-        original_max <- unlist(unname(mapping[var]))[2]
-        if(!is.numeric(original_min) | !is.numeric(original_max)){
-          original_min <- min(raw_plus()[var])
-          original_max <- max(raw_plus()[var])
+      if(type == "Numeric"){
+        global_index = which(varNames == var)
+        
+        # original_min <- min(raw_plus()[var])
+        # original_max <- max(raw_plus()[var])
+        # if(!is.null(mapping)){
+        original_min <- as.numeric(selection[1])
+        original_max <- as.numeric(selection[2])
+        # }
+        
+        min_input <- NULL
+        max_input <- NULL
+        if(importFlags$ranges){
+          max_input <- importData[[paste0('newMax', global_index)]]
+          min_input <- importData[[paste0('newMin', global_index)]]
+          NULL #This makes sure nothing appears in the UI
         }
+        
+        fluidRow(
+          column(2, h5(strong(var))),
+          column(1, actionButton(paste0('applyOriginalRange', global_index), 'Apply')),
+          column(1, h5(sprintf("%.3e", original_min))),
+          column(1, h5(sprintf("%.3e", original_max))),
+          column(1, actionButton(paste0('applyRefinedRange', global_index), 'Apply')),
+          column(1, h5(sprintf("%.3e", min(filterData()[var])))),
+          column(1, h5(sprintf("%.3e", max(filterData()[var])))),
+          column(2,
+                 textInput(paste0('newMin', global_index),
+                           NULL,
+                           placeholder = "Enter min",
+                           value = min_input)
+          ),
+          column(2,
+                 textInput(paste0('newMax', global_index),
+                           NULL,
+                           placeholder = "Enter max",
+                           value = max_input)
+          ),
+          hr()
+        )
       }
+    })
+  })
+  
+  output$original_enumeration_ranges <- renderUI({
+    
+    #do.call(rbind, lapply(raw[varRangeNum()], summary))
+    lapply(rownames(mapping), function(row){
       
-      min_input <- NULL
-      max_input <- NULL
-      if(importFlags$ranges){
-        max_input <- importData[[paste0('newMax', global_index)]]
-        min_input <- importData[[paste0('newMin', global_index)]]
-        NULL #This makes sure nothing appears in the UI
+      var = levels(droplevels(mapping[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+      selection = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"])))
+      
+      if(type == "Enumeration"){
+        global_index = which(varNames == var)
+        
+        original <- selection
+        
+        input_selection <- NULL
+        if(importFlags$ranges){
+          input_selection <- importData[[paste0('newSelection', global_index)]]
+          NULL #This makes sure nothing appears in the UI
+        }
+        
+        fluidRow(
+          column(2, h5(strong(var))),
+          column(1, actionButton(paste0('applyOriginalSelection', global_index), 'Apply')),
+          column(2, h5(original)),
+          column(1, actionButton(paste0('applyRefinedSelection', global_index), 'Apply')),
+          column(2, h5(toString(unique(filterData()[var])[,1]))),
+          column(4,
+                 textInput(paste0('newSelection', global_index),
+                           NULL,
+                           placeholder = "Enter selection",
+                           value = input_selection)
+          ),
+          hr()
+        )
       }
-      
-      fluidRow(
-        column(2, h5(strong(var))),
-        column(1, actionButton(paste0('applyOriginalRange', global_index), 'Apply')),
-        column(1, h5(sprintf("%.3e", original_min))),
-        column(1, h5(sprintf("%.3e", original_max))),
-        column(1, actionButton(paste0('applyRefinedRange', global_index), 'Apply')),
-        column(1, h5(sprintf("%.3e", min(filterData()[var])))),
-        column(1, h5(sprintf("%.3e", max(filterData()[var])))),
-        column(2,
-               textInput(paste0('newMin', global_index),
-                         NULL,
-                         placeholder = "Enter min",
-                         value = min_input)
-        ),
-        column(2,
-               textInput(paste0('newMax', global_index),
-                         NULL,
-                         placeholder = "Enter max",
-                         value = max_input)
-        ),
-        hr()
-      )
     })
   })
   
   reactToApplyOriginalButtons <- observe({
-    lapply(varRangeNum(), function(var) {
-      global_i = which(varRange() == var)
+    lapply(varNum, function(var) {
+      global_i = which(varNames == var)
       observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
         updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
         updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
       })
     })
+    lapply(varFac, function(var) {
+      global_i = which(varNames == var)
+      observeEvent(input[[paste0('applyOriginalSelection', global_i)]], {
+        updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(raw_plus()[var])[,1]))
+      })
+    })
   })
   
   reactToApplyRefinedButtons <- observe({
-    lapply(varRangeNum(), function(var) {
-      global_i = which(varRange() == var)
+    lapply(varNum, function(var) {
+      global_i = which(varNames == var)
       observeEvent(input[[paste0('applyRefinedRange', global_i)]], {
         updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
         updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
       })
     })
+    lapply(varFac, function(var) {
+      global_i = which(varNames == var)
+      observeEvent(input[[paste0('applyRefinedSelection', global_i)]], {
+        updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(filterData()[var])[,1]))
+      })
+    })
   })
   
   observeEvent(input$applyAllOriginal, {
-    lapply(varRangeNum(), function(var) {
-      global_i = which(varRange() == var)
+    lapply(varNum, function(var) {
+      global_i = which(varNames == var)
       updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
       updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
+    })
+    lapply(varFac, function(var) {
+      global_i = which(varNames == var)
+      updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(raw_plus()[var])[,1]))
     })
   })
   
   observeEvent(input$applyAllRefined, {
-    lapply(varRangeNum(), function(var) {
-      global_i = which(varRange() == var)
+    lapply(varNum, function(var) {
+      global_i = which(varNames == var)
       updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
       updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+    })
+    lapply(varFac, function(var) {
+      global_i = which(varNames == var)
+      updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(filterData()[var])[,1]))
     })
   })
   
@@ -1466,7 +1525,7 @@ shinyServer(function(input, output, session) {
       slowFactorRangeData()
     }
   })
-  
+
   observeEvent(input$exportRanges, {
     if (nzchar(Sys.getenv('DIG_INPUT_CSV'))) {
       exportRangesFunction(gsub("merged", "ranges", Sys.getenv('DIG_INPUT_CSV')))

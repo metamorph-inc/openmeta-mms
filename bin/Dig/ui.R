@@ -144,7 +144,22 @@ shinyUI(fluidPage(
                    ), br(),
                    uiOutput("original_numeric_ranges")
             )
+          ),
+          fluidRow(
+            column(12,
+                   h4("Enumerated Ranges", align = "center"),
+                   fluidRow(
+                     column(2, h5(strong("Variable Name:"))),
+                     column(1),
+                     column(2, h5(strong("Selection:"))),
+                     column(1),
+                     column(2, h5(strong("Selection:"))),
+                     column(4, h5(strong("New Selection:")))
+                   ), br(),
+                   uiOutput("original_enumeration_ranges")
+            )
           )
+          
           # , fluidRow(
           #   h4("Factor Statistics", align = "center"),
           #   uiOutput("factor_ranges")
