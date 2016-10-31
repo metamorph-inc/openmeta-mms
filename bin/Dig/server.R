@@ -68,11 +68,11 @@ shinyServer(function(input, output, session) {
     # Needed setup for regression testing:
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
-    raw = read.csv("WindTurbineSim.csv", fill=T)
-    mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
+    #raw = read.csv("WindTurbineSim.csv", fill=T)
+    #mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
     
     # Useful test setups:
-    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = iris
@@ -352,6 +352,8 @@ shinyServer(function(input, output, session) {
     # Processing
     updateCheckboxInput(session, "removeMissing", value = TRUE)
     updateCheckboxInput(session, "removeOutliers", value = FALSE)
+    updateCheckboxInput(session, "roundTables", value = FALSE)
+    updateCheckboxInput(session, "stickyFilters", value = TRUE)
     
     # Render
     updateCheckboxInput(session, "autoRender", value = TRUE)
@@ -362,9 +364,9 @@ shinyServer(function(input, output, session) {
     updateRadioButtons(session, "pointStyle", selected = "1")
     updateRadioButtons(session, "pointSize", selected = "1")
     
-    # Automatically update
+    # Automatically Refresh
     updateCheckboxInput(session, "autoInfo", value = TRUE)
-    updateCheckboxInput(session, "autoData", value = TRUE)
+    updateCheckboxInput(session, "autoRanking", value = TRUE)
     updateCheckboxInput(session, "autoRange", value = TRUE)
     
     # Color
@@ -373,11 +375,21 @@ shinyServer(function(input, output, session) {
     updateColourInput(session, "midColor", "In Between", "#F1C40F")
     updateColourInput(session, "minColor", "Best", "#2ECC71")
     updateColourInput(session, "highlightColor", "Highlighted", "#377EB8")
+    updateColourInput(session, "rankColor", "Ranked", "#D13ABA")
+    updateColourInput(session, "bayHistColor", "Histogram", "wheat")
+    updateColourInput(session, "bayOrigColor", "Original", "#000000")
+    updateColourInput(session, "bayResampledColor", "Resampled", "#5CC85C")
   })
 
   print(paste("Finished Preprocessing the Data ----------------------------------------------------"))
   
   # Filters (Enumerations, Sliders) and Constants ----------------------------
+  
+  output$displayFilters <- reactive({
+    display <- !(input$inTabset == "Options" | input$inTabset == "Bayesian")
+  })
+  
+  outputOptions(output, "displayFilters", suspendWhenHidden=FALSE)
   
   output$filters <- renderUI({
     req(input$display)

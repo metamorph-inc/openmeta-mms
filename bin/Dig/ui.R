@@ -199,7 +199,7 @@ shinyUI(fluidPage(
             fluidRow(
               column(4, 
                      tags$div(title = "Rounds data in all tables to a set number of decimal places", 
-                              checkboxInput("roundTables", "Round Data Tables", value = FALSE))),
+                              checkboxInput("roundTables", "Decimals Displayed", value = FALSE))),
               conditionalPanel("input.roundTables == '1'", 
                                column(8, 
                                       tags$div(title = "Maximum number of decimals to show in data tables.", 
@@ -297,18 +297,20 @@ shinyUI(fluidPage(
     ),
     id = "inTabset"
   ),
-  hr(),
-  h3("Filter Data:"),
-  wellPanel(
-    tags$div(title = "Activate to show filters for all dataset variables.",
-             checkboxInput("viewAllFilters", "View All Filters", value = FALSE)),
-    tags$div(title = "Return visible sliders to default state.",
-             actionButton("resetSliders", "Reset Visible Filters")),
+  conditionalPanel("output.displayFilters",
     hr(),
-    uiOutput("filters")
-  ),
-  conditionalPanel("output.constantsPresent",
-    h3("Constants:"),
-    uiOutput("constants")
+    h3("Filter Data:"),
+    wellPanel(
+      tags$div(title = "Activate to show filters for all dataset variables.",
+               checkboxInput("viewAllFilters", "View All Filters", value = FALSE)),
+      tags$div(title = "Return visible sliders to default state.",
+               actionButton("resetSliders", "Reset Visible Filters")),
+      hr(),
+      uiOutput("filters")
+    ),
+    conditionalPanel("output.constantsPresent",
+      h3("Constants:"),
+      uiOutput("constants")
+    )
   )
 ))
