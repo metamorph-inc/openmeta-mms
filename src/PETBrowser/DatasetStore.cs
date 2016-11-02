@@ -543,12 +543,10 @@ namespace PETBrowser
                         return;
                     }
                 }
-                else
-                {
-                    // 'mappingPET.csv' will be absent from ./results/
-                    File.Delete(csvPath);
-                }
             }
+
+            // 'mappingPET.csv' will be removed/absent from ./results/
+            File.Delete(csvPath);
         }
 
         private bool WriteMappingToCsv(Dataset d, CsvWriter writer)
