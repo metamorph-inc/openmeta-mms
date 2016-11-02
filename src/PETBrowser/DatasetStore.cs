@@ -516,7 +516,7 @@ namespace PETBrowser
         private void WriteSelectedMappingToCsv(string csvPath, Dataset highlightedDataset, bool highlightedDatasetOnly = false)
         {
             Console.WriteLine("Searching for Mapping");
-
+            
             using (var outputCsvFile = File.CreateText(csvPath))
             {
                 var writer = new CsvWriter(outputCsvFile);
@@ -545,7 +545,8 @@ namespace PETBrowser
                 }
                 else
                 {
-                    // 'mappingPET.csv' will be empty
+                    // 'mappingPET.csv' will be absent from ./results/
+                    File.Delete(csvPath);
                 }
             }
         }
