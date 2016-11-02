@@ -1077,9 +1077,9 @@ shinyServer(function(input, output, session) {
     
     transferCondition = toString(paste0("input.util",current," == true"))
     
-    
+    varName <- varNames[current]
     column(3, 
-      h4(varNames[current]),
+      h4(varName),
       radioButtons(paste0('sel', current),
                    "Score By:",
                    choices = c("Min", "Max"),
@@ -1098,9 +1098,9 @@ shinyServer(function(input, output, session) {
                        textInput(paste0('func', current),
                                  "Enter Data Points",
                                   placeholder = paste0("Value = Score | e.g. ", 
-                                    rawAbsMin()[current],
+                                    rawAbsMin()[[varName]],
                                     " = 1, ",
-                                    rawAbsMax()[current],
+                                    rawAbsMax()[[varName]],
                                     "= 0.5"),
                                  value = funcVal),
                        utilityPlot(current)),
@@ -1186,12 +1186,18 @@ shinyServer(function(input, output, session) {
       current_point <- unlist(strsplit(points[i], "="))
       req(length(current_point) == 2)
       current_val <- as.numeric(current_point[1])
-      low <- rawAbsMin()[current]
-      hi <- rawAbsMax()[current]
+      low <- 0
+      hi <- 1
       #This line below enforces range limits on transfer function
       #req(findInterval(current_val, c(low, hi), rightmost.closed = TRUE) == 1) 
-      xVals <- c(xVals, current_val)
-      yVals <- c(yVals, as.numeric(current_point[2]))
+      xVal <- current_val
+      yVal <- as.numeric(current_point[2])
+      if(yVal < low)
+        yVal = low
+      else if(yVal > hi)
+        yVal = hi
+      xVals <- c(xVals, xVal)
+      yVals <- c(yVals, yVal)
     }
     #Sort list by 'xVals' (while paired with yVals)
     unsortedVals <- xVals
@@ -1249,19 +1255,25 @@ shinyServer(function(input, output, session) {
     
     for(i in 1:length(metricsList())) {
       column <- varNames[metricsList()[i]]
-      rnkName <- paste0("rnk", toString(metricsList()[i]))
-      weight <- input[[rnkName]]
-      req(weight)
-      radioSelect <- paste0("sel", toString(metricsList()[i]))
-      if(input[[radioSelect]] == "Min"){
-        colMin <- min(normData[column])
-        for(j in 1:length(unlist(normData[column]))) {
-          item <- normData[j,column]
-          normData[j,column] <- 1 -item + colMin
-        }
-      }
+      
       xFunc <- xFuncs[[toString(metricsList()[i])]]
-        if(!is.null(xFunc)){
+      txActive <- input[[paste0('util', column)]]
+      if(!is.null(xFunc)){
+        if(txActive <- FALSE){
+          rnkName <- paste0("rnk", toString(metricsList()[i]))
+          weight <- input[[rnkName]]
+          req(weight)
+          radioSelect <- paste0("sel", toString(metricsList()[i]))
+          if(input[[radioSelect]] == "Min"){
+            colMin <- min(normData[column])
+            for(j in 1:length(unlist(normData[column]))) {
+              item <- normData[j,column]
+              normData[j,column] <- 1 -item + colMin
+            }
+          }
+          scoreData <- scoreData + unlist(unname(weight*normData[column]))
+        }
+        else{
           normValue <- max(data[[column]])
           transferData <- data[[column]]
           for(t in 1:length(transferData)){
@@ -1270,11 +1282,33 @@ shinyServer(function(input, output, session) {
           }
           scoreData <- scoreData + transferData
         }
-      scoreData <- scoreData + unlist(unname(weight*normData[column]))
+      }
+      else{
+        rnkName <- paste0("rnk", toString(metricsList()[i]))
+        weight <- input[[rnkName]]
+        req(weight)
+        radioSelect <- paste0("sel", toString(metricsList()[i]))
+        if(input[[radioSelect]] == "Min"){
+          colMin <- min(normData[column])
+          for(j in 1:length(unlist(normData[column]))) {
+            item <- normData[j,column]
+            normData[j,column] <- 1 -item + colMin
+          }
+        }
+        scoreData <- scoreData + unlist(unname(weight*normData[column]))
+      }
+      
     }
     importFlags$ranking <- FALSE
     scoreData <- sort(scoreData, decreasing = TRUE)
-    filterData()[names(scoreData),varRangeNum()]
+    score <- scoreData
+    rank <- seq(length(score))
+    
+    data <- filterData()[names(scoreData), ]
+    data <- cbind(rank, score, data)
+    data
+    
+    
   })
   
   #Score individual point by transfer function
@@ -1307,7 +1341,7 @@ shinyServer(function(input, output, session) {
   })
   
   processDataTable <- reactive({
-    if(input$activateRanking){
+    if(input$activateRanking & length(input$weightMetrics) > 0){
       if(input$autoRanking)
         data <- rankData()
       else
