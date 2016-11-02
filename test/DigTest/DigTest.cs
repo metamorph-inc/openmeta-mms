@@ -39,7 +39,7 @@ namespace DigTest
                     IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
                     Assert.True(wait.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
 
-                    Assert.Equal("PET Design Space Browser", driver.Title);
+                    Assert.Equal("Visualizer", driver.Title);
 
                     IWait<IWebDriver> wait3 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                     Assert.True(wait3.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Total Points: 120")));
