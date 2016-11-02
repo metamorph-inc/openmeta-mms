@@ -128,36 +128,47 @@ shinyUI(fluidPage(
             downloadButton('downloadRanges', 'Download Ranges'),
             actionButton('exportRanges', 'Export Ranges'), br())
           ),
-          fluidRow(
-            column(12,
-                   h4("Numeric Ranges", align = "center"),
-                   fluidRow(
-                     column(2, h5(strong("Variable Name:"))),
-                     column(1, actionButton('applyAllOriginal', 'Original')),
-                     column(1, h5(strong("Minimum:"))),
-                     column(1, h5(strong("Maximum:"))),
-                     column(1, actionButton('applyAllRefined', 'Refined')),
-                     column(1, h5(strong("Minimum:"))),
-                     column(1, h5(strong("Maximum:"))),
-                     column(2, h5(strong("New Minimum:"))),
-                     column(2, h5(strong("New Maximum:")))
-                   ), br(),
-                   uiOutput("original_numeric_ranges")
+          conditionalPanel(condition = "output.numericMapping == true",
+            fluidRow(
+              column(12,
+                     h4("Numeric Ranges", align = "center"),
+                     fluidRow(
+                       column(2, h5(strong("Variable Name:"))),
+                       column(1, actionButton('applyAllOriginal', 'Original')),
+                       column(1, h5(strong("Minimum:"))),
+                       column(1, h5(strong("Maximum:"))),
+                       column(1, actionButton('applyAllRefined', 'Refined')),
+                       column(1, h5(strong("Minimum:"))),
+                       column(1, h5(strong("Maximum:"))),
+                       column(2, h5(strong("New Minimum:"))),
+                       column(2, h5(strong("New Maximum:")))
+                     ), br(),
+                     uiOutput("original_numeric_ranges")
+              )
             )
           ),
-          fluidRow(
-            column(12,
-                   h4("Enumerated Ranges", align = "center"),
-                   fluidRow(
-                     column(2, h5(strong("Variable Name:"))),
-                     column(1),
-                     column(2, h5(strong("Selection:"))),
-                     column(1),
-                     column(2, h5(strong("Selection:"))),
-                     column(4, h5(strong("New Selection:")))
-                   ), br(),
-                   uiOutput("original_enumeration_ranges")
-            )
+          conditionalPanel(condition = "output.enumerationMapping == true",
+              fluidRow(
+                column(12,
+                       h4("Enumerated Ranges", align = "center"),
+                       fluidRow(
+                         column(2, h5(strong("Variable Name:"))),
+                         conditionalPanel(condition = "output.numericMapping == false",
+                           column(1, actionButton('applyAllOriginal', 'Original')),
+                           column(2, h5(strong("Selection:"))),
+                           column(1, actionButton('applyAllRefined', 'Refined'))
+                         ),
+                         conditionalPanel(condition = "output.numericMapping == true",
+                           column(1),
+                           column(2, h5(strong("Selection:"))),
+                           column(1)
+                         ),
+                         column(2, h5(strong("Selection:"))),
+                         column(4, h5(strong("New Selection:")))
+                       ), br(),
+                       uiOutput("original_enumeration_ranges")
+                )
+              )
           )
           
           # , fluidRow(

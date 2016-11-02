@@ -89,7 +89,25 @@ shinyServer(function(input, output, session) {
     answer
   })
   
+  output$numericMapping <- reactive({
+    if("Numeric" %in% mapping[["Type"]])
+      answer <- T
+    else
+      answer <- F
+    answer
+  })
+  
+  output$enumerationMapping <- reactive({
+    if("Enumeration" %in% mapping[["Type"]])
+      answer <- T
+    else
+      answer <- F
+    answer
+  })
+  
   outputOptions(output, "mappingPresent", suspendWhenHidden=FALSE)
+  outputOptions(output, "numericMapping", suspendWhenHidden=FALSE)
+  outputOptions(output, "enumerationMapping", suspendWhenHidden=FALSE)
   
   output$noMappingMessage <- renderText(paste("No mapping file was found."))
   
