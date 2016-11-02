@@ -1538,12 +1538,18 @@ shinyServer(function(input, output, session) {
   )
   
   exportRangesFunction <- function(file) { 
-    cnms <- c("DesignVariable", "Min", "Max")
+    cnms <- c("VarName", "Type", "Selection")
     data <- NULL
-    for(i in 1:length(varRangeNum())){
-      var = varRangeNum()[i]
-      global_i = which(varRange() == var)
-      data <- rbind(data, c(var, input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
+    for(i in 1:length(rownames(mapping))){
+      var = levels(droplevels(mapping[i, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[i, "Type"])))
+      global_i = which(varNames == var)
+      if(type == "Numeric")
+        selection = toString(c(input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
+      else
+        selection = input[[paste0('newSelection', global_i)]]
+      
+      data <- rbind(data, c(var, type, selection))
     }
     ranges_df <- as.data.frame(data)
     colnames(ranges_df) <- cnms
