@@ -1364,7 +1364,7 @@ shinyServer(function(input, output, session) {
       
       var = levels(droplevels(mapping[row, "VarName"]))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ", "))
+      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
       
       if(type == "Numeric"){
         global_index = which(varNames == var)
@@ -1553,6 +1553,7 @@ shinyServer(function(input, output, session) {
     }
     ranges_df <- as.data.frame(data)
     colnames(ranges_df) <- cnms
+    ranges_df <- apply(ranges_df,2,function(x)gsub('\\s+', '',x))
     write.csv(ranges_df, file = file, row.names=F)
   }
   
