@@ -59,7 +59,7 @@ namespace PETBrowser
             using (var metadataFile = File.OpenText(metadataPath))
             {
                 var serializer = new JsonSerializer();
-                this.Metadata = (ResultsMetadata) serializer.Deserialize(metadataFile, typeof(ResultsMetadata));
+                this.Metadata = (ResultsMetadata)serializer.Deserialize(metadataFile, typeof(ResultsMetadata));
             }
 
             var totalResultsCount = this.Metadata.Results.Count;
@@ -81,16 +81,16 @@ namespace PETBrowser
                         using (var mdaoFile = File.OpenText(mdaoName))
                         using (var jsonReader = new JsonTextReader(mdaoFile))
                         {
-                            var mdaoJson = (JObject) JToken.ReadFrom(jsonReader);
+                            var mdaoJson = (JObject)JToken.ReadFrom(jsonReader);
 
-                            names.AddRange(((JObject) mdaoJson["components"]).Properties().Select(property => property.Name));
+                            names.AddRange(((JObject)mdaoJson["components"]).Properties().Select(property => property.Name));
                         }
                         var nameBuilder = new StringBuilder();
                         nameBuilder.Append("[");
                         nameBuilder.Append(string.Join(",", names));
                         nameBuilder.Append("]");
                         var name = nameBuilder.ToString();
-                    
+
                         datasets[time] = new Dataset(Dataset.DatasetKind.PetResult, time, name);
                     }
 
@@ -110,13 +110,13 @@ namespace PETBrowser
                         using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
                         using (var jsonReader = new JsonTextReader(testbenchManifestFile))
                         {
-                            var manifestJson = (JObject) JToken.ReadFrom(jsonReader);
+                            var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
 
-                            var testBenchName = (string) manifestJson["TestBench"];
+                            var testBenchName = (string)manifestJson["TestBench"];
 
                             var newDataset = new Dataset(Dataset.DatasetKind.TestBenchResult, time, testBenchName);
-                            newDataset.Status = (string) manifestJson["Status"];
-                            newDataset.DesignName = (string) manifestJson["DesignName"];
+                            newDataset.Status = (string)manifestJson["Status"];
+                            newDataset.DesignName = (string)manifestJson["DesignName"];
 
                             newDataset.Count++;
                             newDataset.Folders.Add(folder);
@@ -227,7 +227,7 @@ namespace PETBrowser
                     MoveFolderToDeleted(subdirectory);
                     deletedCount++;
 
-                    if (deletedCount%ProgressUpdateInterval == 0)
+                    if (deletedCount % ProgressUpdateInterval == 0)
                     {
                         callback(deletedCount, totalCount);
                     }
@@ -249,16 +249,18 @@ namespace PETBrowser
             WriteSelectedDatasetsToCsv(archivePath, false, highlightedDataset);
         }
 
-        public string ExportSelectedDatasetsToViz(Dataset highlightedDataset, bool highlightedDatasetOnly = false)
+        public string ExportSelectedDatasetsToViz(Dataset highlightedDataset, bool highlightedDatasetOnly = false, bool documentCfdID = false, bool documentAlternatives = false, bool documentOptionals = false)
         {
             var exportPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mergedPET.csv");
+            var mappingPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mappingPET.csv");
 
-            WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset, highlightedDatasetOnly);
+            WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset, highlightedDatasetOnly, documentCfdID, documentAlternatives, documentOptionals);
+            WriteSelectedMappingToCsv(mappingPath, highlightedDataset, highlightedDatasetOnly);
 
             return exportPath;
         }
 
-        private void WriteSelectedDatasetsToCsv(string csvPath, bool writeNoneAsEmpty, Dataset highlightedDataset, bool highlightedDatasetOnly = false)
+        private void WriteSelectedDatasetsToCsv(string csvPath, bool writeNoneAsEmpty, Dataset highlightedDataset, bool highlightedDatasetOnly = false, bool documentCfdID = false, bool documentAlternatives = false, bool documentOptionals = false)
         {
             List<string> headers = null;
 
@@ -271,7 +273,7 @@ namespace PETBrowser
                     {
                         if (d.Selected)
                         {
-                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty, documentCfdID, documentAlternatives, documentOptionals);
                         }
                     }
 
@@ -279,7 +281,7 @@ namespace PETBrowser
                     {
                         if (d.Selected)
                         {
-                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty);
+                            WriteDatasetToCsv(d, ref headers, writer, writeNoneAsEmpty, documentCfdID, documentAlternatives, documentOptionals);
                         }
                     }
                 }
@@ -290,7 +292,7 @@ namespace PETBrowser
                     if (highlightedDataset != null)
                     {
                         Console.WriteLine("No selected datasets; writing highlighted dataset");
-                        WriteDatasetToCsv(highlightedDataset, ref headers, writer, writeNoneAsEmpty);
+                        WriteDatasetToCsv(highlightedDataset, ref headers, writer, writeNoneAsEmpty, documentCfdID, documentAlternatives, documentOptionals);
 
                         if (headers == null)
                         {
@@ -305,7 +307,7 @@ namespace PETBrowser
             }
         }
 
-        private void WriteDatasetToCsv(Dataset d, ref List<string> headers, CsvWriter writer, bool writeNoneAsEmpty)
+        private void WriteDatasetToCsv(Dataset d, ref List<string> headers, CsvWriter writer, bool writeNoneAsEmpty, bool documentCfdID, bool documentAlternatives, bool documentOptionals)
         {
             Console.WriteLine(d.Name);
 
@@ -313,8 +315,13 @@ namespace PETBrowser
             {
                 bool firstHeaderReadForFolder = true;
 
-                string DesignName = "Unknown";
-                bool DesignNamePresent = false;
+                var addedHeaders = new Dictionary<string, string>();
+                var headersPresent = new Dictionary<string, bool>();
+
+                if (documentCfdID)
+                {
+                    addedHeaders["CfgID"] = "Unknown";
+                }
 
                 string testbenchManifestFilePath;
                 string csvFileName;
@@ -324,16 +331,43 @@ namespace PETBrowser
                     csvFileName = Path.Combine(this.DataDirectory, ResultsDirectory,
                         folder.Replace("testbench_manifest.json", "output.csv"));
 
-                    // Try to get the DesignName to append to 'mergedPET.csv'
+                    // Try to get the CfgID and alternatives to append to 'mergedPET.csv'
                     try
                     {
-                        using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
-                        using (var jsonReader = new JsonTextReader(testbenchManifestFile))
+                        var Manifest = MetaTBManifest.Deserialize(testbenchManifestFilePath);
+
+                        if (documentCfdID & Manifest.CfgID != null)
                         {
-                            var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
-                            
-                            DesignName = (string)manifestJson["DesignName"];
-                            
+                            addedHeaders["CfgID"] = Manifest.CfgID;
+                        }
+
+                        if (Manifest.Design != null)
+                        {
+                            var Decisions = FlattenDesignType(Manifest.Design).Where(a => a.Type == "Alternative" | a.Type == "Optional");
+                            if (!documentAlternatives)
+                            {
+                                Decisions = Decisions.Where(a => a.Type != "Alternative");
+                            }
+                            if (!documentOptionals)
+                            {
+                                Decisions = Decisions.Where(a => a.Type != "Optional");
+                            }
+                            foreach (var Decision in Decisions)
+                            {
+                                var Choices = Decision.Children.Where(a => DesignTypeIsSelected(a) == true);
+                                if (Choices.Count() == 0)
+                                {
+                                    addedHeaders[Decision.Name] = "None";
+                                }
+                                else
+                                {
+                                    foreach (var Choice in Choices)
+                                    {
+                                        addedHeaders[Decision.Name] = Choice.Name;
+                                    }
+                                }
+                                //Console.WriteLine("DesignType: {0} ({1}): {2}", Decision.Name, Decision.Type, addedHeaders[Decision.Name]);
+                            }
                         }
                     }
                     catch (FileNotFoundException)
@@ -352,6 +386,10 @@ namespace PETBrowser
 
                 Console.WriteLine("Exporting CSV {0}", csvFileName);
 
+                //Assume the added columns don't exist in the data we're reading from 
+                foreach (var header in addedHeaders)
+                    headersPresent[header.Key] = false;
+
                 using (var csvFile = File.OpenText(csvFileName))
                 {
                     try
@@ -369,13 +407,16 @@ namespace PETBrowser
                                 // Yes. Let's setup the authority on what variables should be present.
                                 Console.Out.WriteLine(csvFileName);
                                 headers = new List<string>(csvReader.FieldHeaders);
-                                if(headers.Contains("DesignName"))
+                                foreach (var addedHeader in addedHeaders)
                                 {
-                                    DesignNamePresent = true;
-                                }
-                                else
-                                {
-                                    headers.Add("DesignName");
+                                    if (headers.Contains(addedHeader.Key))
+                                    {
+                                        headersPresent[addedHeader.Key] = true;
+                                    }
+                                    else
+                                    {
+                                        headers.Add(addedHeader.Key);
+                                    }
                                 }
                                 headers.Sort();
                                 firstHeaderReadForFolder = false;
@@ -391,13 +432,16 @@ namespace PETBrowser
                                 if (firstHeaderReadForFolder)
                                 {
                                     var otherHeaders = new List<string>(csvReader.FieldHeaders);
-                                    if (otherHeaders.Contains("DesignName"))
+                                    foreach (var addedHeader in addedHeaders)
                                     {
-                                        DesignNamePresent = true;
-                                    }
-                                    else
-                                    {
-                                        otherHeaders.Add("DesignName");
+                                        if (otherHeaders.Contains(addedHeader.Key))
+                                        {
+                                            headersPresent[addedHeader.Key] = true;
+                                        }
+                                        else
+                                        {
+                                            otherHeaders.Add(addedHeader.Key);
+                                        }
                                     }
                                     otherHeaders.Sort();
                                     if (!headers.SequenceEqual(otherHeaders))
@@ -411,9 +455,9 @@ namespace PETBrowser
 
                             foreach (var header in headers)
                             {
-                                if (header == "DesignName" && !DesignNamePresent)
+                                if (addedHeaders.ContainsKey(header) && !headersPresent[header])
                                 {
-                                    writer.WriteField<string>(DesignName);
+                                    writer.WriteField<string>(addedHeaders[header]);
                                 }
                                 else
                                 {
@@ -530,13 +574,12 @@ namespace PETBrowser
                     // Try to get the mapping to export to 'mappingPET.csv'
                     try
                     {
-                        // Parse the mdaoConfig file to get the mapping
+                       // Parse the mdaoConfig file to get the mapping
                         using (var mdaoFile = File.OpenText(mdaoName))
                         using (var jsonReader = new JsonTextReader(mdaoFile))
                         {
                             //Console.WriteLine("Attempting to open {0}", mdaoName);
                             //Console.WriteLine("Using jsonReader: {0}", jsonReader);
-
                             var mdaoJson = (JObject)JToken.ReadFrom(jsonReader);
 
                             foreach (var singleDriver in ((JObject)mdaoJson["drivers"]))
@@ -567,9 +610,7 @@ namespace PETBrowser
                             //Console.WriteLine("Names: {0}", names.Count);
                             //Console.WriteLine("rangeMins: {0}", rangeMins.Count);
                             //Console.WriteLine("rangeMaxs: {0}", rangeMaxs.Count);
-
-                                writer.NextRecord();
-
+                            
                             return true;
                         }
                     }
