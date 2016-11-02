@@ -71,10 +71,15 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
         header = next(csvreader)
 
         for row in csvreader:
+            if not row:
+                continue
 
             def lookup(name):
                 return row[header.index(name)]
-            var_dict[lookup("DesignVariable")] = "{},{}".format(lookup("Min"), lookup("Max"))
+            if lookup("Type") == "Enumeration":
+                var_dict[lookup("VarName")] = lookup("Selection").replace(";", ",")
+            else:
+                var_dict[lookup("VarName")] = lookup("Selection")
 
     gmeCopy = focusObject.convert_udm2gme().ParentFolder.CopyFCODisp(focusObject.convert_udm2gme())
     gmeCopy.Name = gmeCopy.Name + "_Refined"

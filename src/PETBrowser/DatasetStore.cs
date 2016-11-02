@@ -12,6 +12,8 @@ using Newtonsoft.Json.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
 using META;
+using AVM.DDP;
+using System.Text.RegularExpressions;
 
 namespace PETBrowser
 {
@@ -437,6 +439,151 @@ namespace PETBrowser
                     }
                 }
             }
+        }
+
+        private IEnumerable<MetaTBManifest.DesignType> FlattenDesignType(MetaTBManifest.DesignType e)
+        {
+            if(e.Type != "Component")
+            {
+                return (new[] { e }).Concat(e.Children.SelectMany(c => FlattenDesignType(c)));
+            }
+            return (new[] { e });
+        }
+
+        private bool DesignTypeIsSelected(MetaTBManifest.DesignType e)
+        {
+            if (e.Selected == true)
+            {
+                return true;
+            }
+            if (e.Children != null)
+            {
+                foreach (var child in e.Children)
+                {
+                    if (DesignTypeIsSelected(child))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void WriteSelectedMappingToCsv(string csvPath, Dataset highlightedDataset, bool highlightedDatasetOnly = false)
+        {
+            Console.WriteLine("Searching for Mapping");
+
+            using (var outputCsvFile = File.CreateText(csvPath))
+            {
+                var writer = new CsvWriter(outputCsvFile);
+
+                // Try writing the mapping for one of the selected datasets
+                if (!highlightedDatasetOnly)
+                {
+                    foreach (var d in ResultDatasets)
+                    {
+                        if (d.Selected)
+                        {
+                            if (WriteMappingToCsv(d, writer))
+                                return;
+                        }
+                    }
+                }
+
+                // No selected datasets; if we have a highlighted dataset, write the mapping for the highlighted dataset instead
+                if (highlightedDataset != null)
+                {
+                    Console.WriteLine("No selected datasets; writing mapping for highlighted dataset");
+                    if (WriteMappingToCsv(highlightedDataset, writer))
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    // 'mappingPET.csv' will be empty
+                }
+            }
+        }
+
+        private bool WriteMappingToCsv(Dataset d, CsvWriter writer)
+        {
+            Console.WriteLine(d.Name);
+
+            writer.WriteField("VarName");
+            writer.WriteField("Type");
+            writer.WriteField("Selection");
+            writer.NextRecord();
+
+            List<string> names = new List<string>();
+            List<string> rangeMins = new List<string>();
+            List<string> rangeMaxs = new List<string>();
+
+            foreach (var folder in d.Folders)
+            {
+                string mdaoName;
+                if (d.Kind == Dataset.DatasetKind.PetResult)
+                {
+                    mdaoName = Path.Combine(this.DataDirectory, ResultsDirectory,
+                        Regex.Replace(folder, "testbench_manifest\\.json$", "mdao_config.json"));
+
+                    // Try to get the mapping to export to 'mappingPET.csv'
+                    try
+                    {
+                        // Parse the mdaoConfig file to get the mapping
+                        using (var mdaoFile = File.OpenText(mdaoName))
+                        using (var jsonReader = new JsonTextReader(mdaoFile))
+                        {
+                            //Console.WriteLine("Attempting to open {0}", mdaoName);
+                            //Console.WriteLine("Using jsonReader: {0}", jsonReader);
+
+                            var mdaoJson = (JObject)JToken.ReadFrom(jsonReader);
+
+                            foreach (var singleDriver in ((JObject)mdaoJson["drivers"]))
+                            {
+                                //Console.WriteLine(singleDriver.ToString());
+                                foreach (var variable in (JObject)(((JObject)singleDriver.Value)["designVariables"]))
+                                {
+                                    writer.WriteField(variable.Key);
+
+                                    if ((string)variable.Value["type"] == "enum")
+                                    {
+                                        writer.WriteField("Enumeration");
+                                        writer.WriteField(String.Join(",",
+                                            Enumerable.Select<JToken, string>(
+                                            ((JArray)(variable.Value)["items"]).Children(), (x => x.ToString()))));
+                                    }
+                                    else
+                                    {
+                                        //Console.WriteLine(variable.ToString());
+                                        writer.WriteField("Numeric");
+                                        writer.WriteField((string)((JObject)variable.Value)["RangeMin"] + "," +
+                                            (string)((JObject)variable.Value)["RangeMax"]);
+                                    }
+                                    writer.NextRecord();
+                                }
+                            }
+
+                            //Console.WriteLine("Names: {0}", names.Count);
+                            //Console.WriteLine("rangeMins: {0}", rangeMins.Count);
+                            //Console.WriteLine("rangeMaxs: {0}", rangeMaxs.Count);
+
+                                writer.NextRecord();
+
+                            return true;
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        //Don't grab mapping if we don't find a corresponding mdao config file in its results folder
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        //Don't grab mapping if we don't find a corresponding mdao config file in its results folder
+                    }
+                }
+            }
+            return false;
         }
     }
 
