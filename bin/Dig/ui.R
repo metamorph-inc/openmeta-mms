@@ -134,10 +134,10 @@ shinyUI(fluidPage(
                      h4("Numeric Ranges", align = "center"),
                      fluidRow(
                        column(2, h5(strong("Variable Name:"))),
-                       column(1, actionButton('applyAllOriginal', 'Original')),
+                       column(1, actionButton('applyAllOriginalNumeric', 'Original')),
                        column(1, h5(strong("Minimum:"))),
                        column(1, h5(strong("Maximum:"))),
-                       column(1, actionButton('applyAllRefined', 'Refined')),
+                       column(1, actionButton('applyAllRefinedNumeric', 'Refined')),
                        column(1, h5(strong("Minimum:"))),
                        column(1, h5(strong("Maximum:"))),
                        column(2, h5(strong("New Minimum:"))),
@@ -153,16 +153,9 @@ shinyUI(fluidPage(
                        h4("Enumerated Ranges", align = "center"),
                        fluidRow(
                          column(2, h5(strong("Variable Name:"))),
-                         conditionalPanel(condition = "output.numericMapping == false",
-                           column(1, actionButton('applyAllOriginal', 'Original')),
-                           column(2, h5(strong("Selection:"))),
-                           column(1, actionButton('applyAllRefined', 'Refined'))
-                         ),
-                         conditionalPanel(condition = "output.numericMapping == true",
-                           column(1),
-                           column(2, h5(strong("Selection:"))),
-                           column(1)
-                         ),
+                         column(1, actionButton('applyAllOriginalEnum', 'Original')),
+                         column(2, h5(strong("Selection:"))),
+                         column(1, actionButton('applyAllRefinedEnum', 'Refined')),
                          column(2, h5(strong("Selection:"))),
                          column(4, h5(strong("New Selection:")))
                        ), br(),

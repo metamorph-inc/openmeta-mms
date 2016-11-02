@@ -1469,7 +1469,7 @@ shinyServer(function(input, output, session) {
       
       var = levels(droplevels(mapping[row, "VarName"]))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      selection = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"])))
+      selection = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
       
       if(type == "Enumeration"){
         global_index = which(varNames == var)
@@ -1532,24 +1532,30 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  observeEvent(input$applyAllOriginal, {
+  observeEvent(input$applyAllOriginalNumeric, {
     lapply(varNum, function(var) {
       global_i = which(varNames == var)
       updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
       updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
     })
+  })
+  
+  observeEvent(input$applyAllRefinedNumeric, {
+    lapply(varNum, function(var) {
+      global_i = which(varNames == var)
+      updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
+      updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+    })
+  })
+  
+  observeEvent(input$applyAllOriginalEnum, {
     lapply(varFac, function(var) {
       global_i = which(varNames == var)
       updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(raw_plus()[var])[,1]))
     })
   })
   
-  observeEvent(input$applyAllRefined, {
-    lapply(varNum, function(var) {
-      global_i = which(varNames == var)
-      updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
-      updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
-    })
+  observeEvent(input$applyAllRefinedEnum, {
     lapply(varFac, function(var) {
       global_i = which(varNames == var)
       updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(filterData()[var])[,1]))
