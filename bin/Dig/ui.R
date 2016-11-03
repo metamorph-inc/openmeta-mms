@@ -321,7 +321,7 @@ shinyUI(fluidPage(
     h3("Filter Data:"),
     wellPanel(
       tags$div(title = "Activate to show filters for all dataset variables.",
-               checkboxInput("viewAllFilters", "View All Filters", value = FALSE)),
+               checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
       tags$div(title = "Return visible sliders to default state.",
                actionButton("resetSliders", "Reset Visible Filters")),
       hr(),
