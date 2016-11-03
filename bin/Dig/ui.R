@@ -203,6 +203,10 @@ shinyUI(fluidPage(
         column(6,
           br(),
           wellPanel(
+            tags$div(title = "Return to default settings.",
+                     actionButton("resetSettings", "Reset All Settings") 
+            ),
+            hr(),
             h4("Data Processing Options"),
             tags$div(title = "Removes data points that have missing attributes.",
                      checkboxInput("removeMissing", "Remove Incomplete Rows", value = TRUE)), 
@@ -222,7 +226,7 @@ shinyUI(fluidPage(
               conditionalPanel("input.roundTables == '1'", 
                                column(8, 
                                       tags$div(title = "Maximum number of decimals to show in data tables.", 
-                                               sliderInput("numDecimals", HTML("123.xxx"), min = 1, max = 11, step = 1, value = 4))))
+                                               sliderInput("numDecimals", "Decimal Places", min = 1, max = 11, step = 1, value = 4))))
             ),
             tags$div(title = "Sticky Filters try to preserve their settings when removing/adding outliers or missing data rows.", 
                      checkboxInput("stickyFilters", "Sticky Filters", value = TRUE)),
@@ -250,25 +254,12 @@ shinyUI(fluidPage(
             tags$div(title = "Automatically updates ranking settings on Data Table tab.",
                      checkboxInput("autoRanking", "Data Ranking", value = TRUE)),
             tags$div(title = "Automatically updates Ranges Tab.",
-                     checkboxInput("autoRange", "Ranges", value = TRUE)),
-            hr(),
-            
-            h4("About"),
-            p(strong("Version:"), "v1.5.0"),
-            p(strong("Date:"), "10/24/2016"),
-            p(strong("Developer:"), "Metamorph Software"),
-            p(strong("Support:"), "tthomas@metamorphsoftware.com")
+                     checkboxInput("autoRange", "Ranges", value = TRUE))
           )
         ),
         column(6,
           br(),
           wellPanel(
-            column(4),
-            column(4,tags$div(title = "Return to default settings.",
-                              actionButton("resetSettings", "Reset All Settings")) 
-            ),
-            br(),
-            hr(),
             h4("Color Options"),
             fluidRow(
               column(4, tags$div(title = "Default color of data points.",
@@ -297,9 +288,12 @@ shinyUI(fluidPage(
                                  colourInput("bayOrigColor", "Original", "#000000"))),
               column(4, tags$div(title = "Color of ranked data points.",
                                  colourInput("bayResampledColor", "Resampled", "#5CC85C")))
-            ),hr(),
-            
-
+            )
+          )
+        ),
+        column(6,
+          br(),
+          wellPanel(
             h4("Session Options"),
             strong("Save Session"),
             textInput("sessionName", NULL, placeholder = "Enter a filename..."),
@@ -310,8 +304,18 @@ shinyUI(fluidPage(
             tags$div(title = "Load a saved session.",
                      actionButton('importSession', 'Choose File'))
           )
-        ),
-        column(6)
+        )
+      ),
+      fluidRow(
+        column(6,
+          wellPanel(
+            h4("About"),
+            p(strong("Version:"), "v1.6.0"),
+            p(strong("Date:"), "11/3/2016"),
+            p(strong("Developer:"), "Metamorph Software"),
+            p(strong("Support:"), "tthomas@metamorphsoftware.com")
+          )
+        )
       )
     ),
     id = "inTabset"
