@@ -13,6 +13,8 @@ palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
 
 importData <- NULL #import session data
 
+EnumerationMaxDisplay = 3
+
 #Initialize empty data frame for transfer functions in Ranking tab
 xFuncs <- data.frame()
 xFuncs <- xFuncs[1:4,]
@@ -48,6 +50,8 @@ shinyServer(function(input, output, session) {
   # output$debug <- renderText({
   #   paste(names(query), query, sep = "=", collapse=", ")
   # })
+  
+  mapping = NULL
 
   if (!is.null(query[['csvfilename']])) {
     print("In read raw")
@@ -57,15 +61,12 @@ shinyServer(function(input, output, session) {
   }
   else if (nzchar(Sys.getenv('DIG_INPUT_CSV')))
   {
-    mapping = NULL
     raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
     if(file.exists(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV'))))
       mapping = read.csv(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV')), fill = T)
   }
   else
   {
-    mapping = NULL
-    
     # Needed setup for regression testing:
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
@@ -74,8 +75,8 @@ shinyServer(function(input, output, session) {
       mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
     
     # Useful test setups:
-    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
+    raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = iris
   }
@@ -1123,18 +1124,42 @@ shinyServer(function(input, output, session) {
                                  value = funcVal),
                        utilityPlot(current)),
       br(), br(), br()
-      # ,
-      # checkboxInput(paste0('util', current),
-      #               "Add Transfer Function",
-      #               value = utilVal),
-      # conditionalPanel(condition = transferCondition,
-      #                  textInput(paste0('func', current),
-      #                            "Enter Data Points",
-      #                            placeholder = "e.g. 40 = 0.1, 50 = 0.5"),
-      #                  utilityPlot(current)),
-      # br(), br(), br()
     )
   }
+  
+  fullMetricUI <- reactive({
+    if(!importFlags$ranking){
+      fluidRow(
+        lapply(metricsList(), function(column) {
+          isolate(generateMetricUI(column))
+        })
+      )
+    }
+    else{
+      fluidRow(
+        lapply(metricsList(), function(column) {
+          importedSlider <- importData[[paste0('rnk', column)]]
+          importedRadio <- importData[[paste0('sel', column)]]
+          importedUtil <- importData[[paste0('util', column)]]
+          importedFunc <- importData[[paste0('func', column)]]
+          isolate(generateMetricUI(column, 
+                                   importedSlider, 
+                                   importedRadio,
+                                   importedUtil,
+                                   importedFunc))
+        })
+      )
+    }
+  })
+  
+  # reactToActivateTransferFunctions <- observe({
+  #   lapply(metricsList(), function(column) {
+  #     observeEvent(input[[paste0('util', column)]], {
+  #       if(!input[[paste0('util', column)]])
+  #         xFuncs[[toString(column)]] <<- NULL
+  #     })
+  #   })
+  # })
   
   #Output plot of transfer function
   utilityPlot <- function(current){
@@ -1173,6 +1198,8 @@ shinyServer(function(input, output, session) {
     }, height = 150)
   }
   
+  
+  
   #Calculate line slopes & intercepts of transfer function
   processLineEquations <- function(current, data_set){
     slopes <- NULL
@@ -1202,7 +1229,8 @@ shinyServer(function(input, output, session) {
     points <- unlist(strsplit(raw_text, ","))
     for(i in 1:length(points)){
       current_point <- unlist(strsplit(points[i], "="))
-      req(length(current_point) == 2)
+      if(length(current_point) != 2)
+        break
       current_val <- as.numeric(current_point[1])
       low <- 0
       hi <- 1
@@ -1217,43 +1245,28 @@ shinyServer(function(input, output, session) {
       xVals <- c(xVals, xVal)
       yVals <- c(yVals, yVal)
     }
-    #Sort list by 'xVals' (while paired with yVals)
-    unsortedVals <- xVals
-    names(unsortedVals) <- yVals
-    sortedVals <- sort(unsortedVals)
     
-    #Flip-flop names&values of a named list
-    outputVals <- sapply(names(sortedVals), as.numeric)
-    names(outputVals) <- sortedVals
-    processLineEquations(current, outputVals)
+    if(is.null(xVals) | is.null(yVals)){
+      xFuncs[[toString(current)]] <<- NULL
+      outputVals <- NULL
+    }
+    else{
+      #Sort list by 'xVals' (while paired with yVals)
+      unsortedVals <- xVals
+      names(unsortedVals) <- yVals
+      sortedVals <- sort(unsortedVals)
+      
+      #Flip-flop names&values of a named list
+      outputVals <- sapply(names(sortedVals), as.numeric)
+      names(outputVals) <- sortedVals
+      processLineEquations(current, outputVals)
+    }
+      
     outputVals
   }
   
   
-  fullMetricUI <- reactive({
-    if(!importFlags$ranking){
-      fluidRow(
-        lapply(metricsList(), function(column) {
-          isolate(generateMetricUI(column))
-        })
-      )
-    }
-    else{
-      fluidRow(
-        lapply(metricsList(), function(column) {
-          importedSlider <- importData[[paste0('rnk', column)]]
-          importedRadio <- importData[[paste0('sel', column)]]
-          importedUtil <- importData[[paste0('util', column)]]
-          importedFunc <- importData[[paste0('func', column)]]
-          isolate(generateMetricUI(column, 
-                           importedSlider, 
-                           importedRadio,
-                           importedUtil,
-                           importedFunc))
-        })
-      )
-    }
-  })
+  
 
   #Dynamic UI rendering for weighted metrics list
   output$rankings <- renderUI({
@@ -1273,38 +1286,24 @@ shinyServer(function(input, output, session) {
     
     for(i in 1:length(metricsList())) {
       column <- varNames[metricsList()[i]]
+      rnkName <- paste0("rnk", toString(metricsList()[i]))
+      weight <- input[[rnkName]]
+      req(weight)
       
       xFunc <- xFuncs[[toString(metricsList()[i])]]
-      txActive <- input[[paste0('util', column)]]
-      if(!is.null(xFunc)){
-        if(txActive <- FALSE){
-          rnkName <- paste0("rnk", toString(metricsList()[i]))
-          weight <- input[[rnkName]]
-          req(weight)
-          radioSelect <- paste0("sel", toString(metricsList()[i]))
-          if(input[[radioSelect]] == "Min"){
-            colMin <- min(normData[column])
-            for(j in 1:length(unlist(normData[column]))) {
-              item <- normData[j,column]
-              normData[j,column] <- 1 -item + colMin
-            }
-          }
-          scoreData <- scoreData + unlist(unname(weight*normData[column]))
+      txActive <- input[[paste0('util', metricsList()[i])]]
+      if(is.null(txActive))
+        txActive <- TRUE
+      if(!is.null(xFunc) & txActive){
+        normValue <- max(data[[column]])
+        transferData <- data[[column]]
+        for(t in 1:length(transferData)){
+          item <- transferData[t]
+          transferData[t] <- linearly_interpolate(item, xFunc)
         }
-        else{
-          normValue <- max(data[[column]])
-          transferData <- data[[column]]
-          for(t in 1:length(transferData)){
-            item <- transferData[t]
-            transferData[t] <- linearly_interpolate(item, xFunc)
-          }
-          scoreData <- scoreData + transferData
-        }
+        scoreData <- scoreData + transferData*weight
       }
       else{
-        rnkName <- paste0("rnk", toString(metricsList()[i]))
-        weight <- input[[rnkName]]
-        req(weight)
         radioSelect <- paste0("sel", toString(metricsList()[i]))
         if(input[[radioSelect]] == "Min"){
           colMin <- min(normData[column])
@@ -1315,8 +1314,9 @@ shinyServer(function(input, output, session) {
         }
         scoreData <- scoreData + unlist(unname(weight*normData[column]))
       }
-      
     }
+    scoreData <- scoreData/max(scoreData)
+    
     importFlags$ranking <- FALSE
     scoreData <- sort(scoreData, decreasing = TRUE)
     score <- scoreData
@@ -1411,7 +1411,6 @@ shinyServer(function(input, output, session) {
   
   output$original_numeric_ranges <- renderUI({
     
-    #do.call(rbind, lapply(raw[varRangeNum()], summary))
     lapply(rownames(mapping), function(row){
       
       var = levels(droplevels(mapping[row, "VarName"]))
@@ -1421,12 +1420,8 @@ shinyServer(function(input, output, session) {
       if(type == "Numeric"){
         global_index = which(varNames == var)
         
-        # original_min <- min(raw_plus()[var])
-        # original_max <- max(raw_plus()[var])
-        # if(!is.null(mapping)){
         original_min <- as.numeric(selection[1])
         original_max <- as.numeric(selection[2])
-        # }
         
         min_input <- NULL
         max_input <- NULL
@@ -1436,14 +1431,25 @@ shinyServer(function(input, output, session) {
           NULL #This makes sure nothing appears in the UI
         }
         
+        
+        refined <- filterData()[var]
+        if(dim(refined)[1] == 0){
+          min_refined <- "No data available in table"
+          max_refined <- "No data available in table"
+        }
+        else{
+          min_refined <- sprintf("%.3e", min(filterData()[var]))
+          max_refined <- sprintf("%.3e", max(filterData()[var]))
+        }
+        
         fluidRow(
           column(2, h5(strong(var))),
           column(1, actionButton(paste0('applyOriginalRange', global_index), 'Apply')),
           column(1, h5(sprintf("%.3e", original_min))),
           column(1, h5(sprintf("%.3e", original_max))),
           column(1, actionButton(paste0('applyRefinedRange', global_index), 'Apply')),
-          column(1, h5(sprintf("%.3e", min(filterData()[var])))),
-          column(1, h5(sprintf("%.3e", max(filterData()[var])))),
+          column(1, h5(min_refined)),
+          column(1, h5(max_refined)),
           column(2,
                  textInput(paste0('newMin', global_index),
                            NULL,
@@ -1464,7 +1470,6 @@ shinyServer(function(input, output, session) {
   
   output$original_enumeration_ranges <- renderUI({
     
-    #do.call(rbind, lapply(raw[varRangeNum()], summary))
     lapply(rownames(mapping), function(row){
       
       var = levels(droplevels(mapping[row, "VarName"]))
@@ -1475,6 +1480,14 @@ shinyServer(function(input, output, session) {
         global_index = which(varNames == var)
         
         original <- selection
+        if(length(unlist(strsplit(original, ","))) > EnumerationMaxDisplay)
+          original = paste0("List of ", length(unlist(strsplit(original, ","))), " Enumerations.")
+        
+        refined <- toString(unique(filterData()[var])[,1])
+        if(length(unlist(strsplit(refined, ","))) > EnumerationMaxDisplay)
+          refined = paste0("List of ", length(unlist(strsplit(refined, ","))), " Enumerations.")
+        if(refined == "")
+          refined = "No data available in table"
         
         input_selection <- NULL
         if(importFlags$ranges){
@@ -1487,7 +1500,7 @@ shinyServer(function(input, output, session) {
           column(1, actionButton(paste0('applyOriginalSelection', global_index), 'Apply')),
           column(2, h5(original)),
           column(1, actionButton(paste0('applyRefinedSelection', global_index), 'Apply')),
-          column(2, h5(toString(unique(filterData()[var])[,1]))),
+          column(2, h5(refined)),
           column(4,
                  textInput(paste0('newSelection', global_index),
                            NULL,
@@ -1500,21 +1513,55 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  # Pull values from Mapping File
+  
   reactToApplyOriginalButtons <- observe({
-    lapply(varNum, function(var) {
+    lapply(rownames(mapping), function(row) {
+      var = levels(droplevels(mapping[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
       global_i = which(varNames == var)
-      observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
-        updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
-        updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
-      })
-    })
-    lapply(varFac, function(var) {
-      global_i = which(varNames == var)
-      observeEvent(input[[paste0('applyOriginalSelection', global_i)]], {
-        updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(raw_plus()[var])[,1]))
-      })
+      if(type == "Numeric"){
+        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+        observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
+          updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
+          updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
+        })
+      }
+      else if(type == "Enumeration"){
+        original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+        observeEvent(input[[paste0('applyOriginalSelection', global_i)]], {
+          updateTextInput(session, paste0('newSelection', global_i), value = original)
+        })
+      }
     })
   })
+  
+  observeEvent(input$applyAllOriginalNumeric, {
+    lapply(rownames(mapping), function(row) {
+      var = levels(droplevels(mapping[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+      global_i = which(varNames == var)
+      if(type == "Numeric"){
+        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+        updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
+        updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
+      }
+    })
+  })
+  
+  observeEvent(input$applyAllOriginalEnum, {
+    lapply(rownames(mapping), function(row) {
+      var = levels(droplevels(mapping[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+      global_i = which(varNames == var)
+      if(type == "Enumeration"){
+        original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+        updateTextInput(session, paste0('newSelection', global_i), value = original)
+      }
+    })
+  })
+  
+  # Pull values from filterData
   
   reactToApplyRefinedButtons <- observe({
     lapply(varNum, function(var) {
@@ -1532,26 +1579,11 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  observeEvent(input$applyAllOriginalNumeric, {
-    lapply(varNum, function(var) {
-      global_i = which(varNames == var)
-      updateTextInput(session, paste0('newMin', global_i), value = min(raw_plus()[var]))
-      updateTextInput(session, paste0('newMax', global_i), value = max(raw_plus()[var]))
-    })
-  })
-  
   observeEvent(input$applyAllRefinedNumeric, {
     lapply(varNum, function(var) {
       global_i = which(varNames == var)
       updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
       updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
-    })
-  })
-  
-  observeEvent(input$applyAllOriginalEnum, {
-    lapply(varFac, function(var) {
-      global_i = which(varNames == var)
-      updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(raw_plus()[var])[,1]))
     })
   })
   
@@ -1859,7 +1891,7 @@ shinyServer(function(input, output, session) {
   updateColorSlider <- observeEvent(colSliderSettings(), {
     print("In updateColorSlider")
     if(input$colVarNum != ""){
-      if(varClass[[colSliderSettings()$variable]] == "numeric") {
+      if(varClass[[toString(colSliderSettings()$variable)]] == "numeric") {
         updateSliderInput(session,
                           "colSlider",
                           step = colSliderSettings()$numericStep,
