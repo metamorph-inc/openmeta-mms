@@ -75,8 +75,8 @@ shinyServer(function(input, output, session) {
       mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
     
     # Useful test setups:
-    raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
+    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = iris
   }
