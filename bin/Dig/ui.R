@@ -174,36 +174,29 @@ shinyUI(fluidPage(
         verbatimTextOutput("noMappingMessage")
       )
     ),
-    tabPanel("Bayesian", 
-      tabsetPanel(
-        tabPanel("Configuration",
-          br(),
-          fluidRow(
-            column(4,
-              checkboxInput('bayesDispAll', "Display All Variables", value = T),
-              conditionalPanel(condition = 'input.bayesDispAll == false', 
-                               selectInput('bayesDispVars', "Bayesian Variables",
-                                           choices = c(),
-                                           multiple = T))
-            )
-          ),
-          fluidRow(
-            column(6, 
-              wellPanel(h4("Variable Configuration"),
-                uiOutput("bayesianUI"), br()#, height = 200)
-              )
-            ),
-            column(6,
-              wellPanel(h4("Variable Plots"), br(),
-                uiOutput("bayesianPlots")
-              )
-            )
+    tabPanel("Bayesian",
+      br(),
+      fluidRow(
+        column(4,
+          checkboxInput('bayesDispAll', "Display All Variables", value = T),
+          conditionalPanel(condition = 'input.bayesDispAll == false', 
+                           selectInput('bayesDispVars', "Bayesian Variables",
+                                       choices = c(),
+                                       multiple = T))
+        )
+      ),
+      fluidRow(
+        column(6, 
+          wellPanel(h4("Variable Configuration"),
+            uiOutput("bayesianUI"), br()#, height = 200)
           )
         ),
-        tabPanel("Correction"),
-        tabPanel("Forward UQ"),
-        tabPanel("Backward UQ")
-        , id = "Bayesian")
+        column(6,
+          wellPanel(h4("Variable Plots"), br(),
+            uiOutput("bayesianPlots")
+          )
+        )
+      )
     ),
     tabPanel("Options",
       fluidRow(
