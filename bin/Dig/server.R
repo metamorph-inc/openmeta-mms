@@ -1678,16 +1678,19 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "bayesianDesignConfigChoice", choices = levels(raw_plus()[[input$bayesianDesignConfigVar]]))
   })
   
+  filtered_raw_plus <- reactive({
+    data <- raw_plus()
+    if(input$bayesianDesignConfigsPresent & !is.na(input$bayesianDesignConfigVar) & !is.na(input$bayesianDesignConfigChoice)) {
+      data <- subset(data, data[[paste0(input$bayesianDesignConfigVar)]] == input$bayesianDesignConfigChoice)
+    }
+    data
+  })
+      
   bayesianData <- reactive({
     print("In bayesianData()")
     
     variables <- varRangeNum()
-    filtered_raw_plus <- raw_plus()
-    if(input$bayesianDesignConfigsPresent & !is.na(input$bayesianDesignConfigVar) & !is.na(input$bayesianDesignConfigChoice)) {
-      filtered_raw_plus <- subset(raw_plus(), raw_plus()[[paste0(input$bayesianDesignConfigVar)]] == input$bayesianDesignConfigChoice)
-    }
-       
-    input_data <- filtered_raw_plus[variables]
+    input_data <- filtered_raw_plus()[variables]
     
     # Real Resample
     req(bayesianUIInitialized)
@@ -1705,8 +1708,8 @@ shinyServer(function(input, output, session) {
     print("In bayesianUI()")
     var_directions <- c("Input",
                         "Output")
-    data_mean <- apply(raw_plus()[varRangeNum()], 2, mean)
-    data_sd <- apply(raw_plus()[varRangeNum()], 2, function(x) {sd(x)/2})
+    data_mean <- apply(filtered_raw_plus()[varRangeNum()], 2, mean)
+    data_sd <- apply(filtered_raw_plus()[varRangeNum()], 2, function(x) {sd(x)/2})
     
     bayesChoices <- varRangeNum()
     if(!input$bayesianDisplayAll)
@@ -1815,15 +1818,15 @@ shinyServer(function(input, output, session) {
     else {
       lapply(variables, function(var) {
         par(mar = rep(2, 4))
-        raw_plus_histo <- hist(raw_plus()[[var]], freq = FALSE)
-        x_bounds <- c(min(raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
-                      max(raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
+        filtered_raw_plus_histo <- hist(filtered_raw_plus()[[var]], freq = FALSE)
+        x_bounds <- c(min(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
+                      max(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
-                      max(raw_plus_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
+                      max(filtered_raw_plus_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
         fluidRow(
           column(12,
                  renderPlot({
-                   hist(raw_plus()[[var]],
+                   hist(filtered_raw_plus()[[var]],
                         freq = FALSE,
                         col = input$bayHistColor,
                         border = "#C0C0C0",
