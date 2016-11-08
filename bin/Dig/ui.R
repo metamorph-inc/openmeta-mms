@@ -175,13 +175,19 @@ shinyUI(fluidPage(
       )
     ),
     tabPanel("Bayesian", 
+      br(),
       tabsetPanel(
         tabPanel("Configuration",
           br(),
           fluidRow(
             column(4,
-              checkboxInput('bayesDispAll', "Display All Variables", value = T),
-              conditionalPanel(condition = 'input.bayesDispAll == false', 
+              checkboxInput('bayesianDesignConfigsPresent', "Multiple Design Configurations Present", value = F),
+              conditionalPanel(condition = 'input.bayesianDesignConfigsPresent == true', 
+                               selectInput('bayesDesignConfigVars', "Design Configuration Identifier",
+                                           choices = c(),
+                                           multiple = F)),
+              checkboxInput('bayesianDisplayAll', "Display All Variables", value = T),
+              conditionalPanel(condition = 'input.bayesianDisplayAll == false', 
                                selectInput('bayesDispVars', "Bayesian Variables",
                                            choices = c(),
                                            multiple = T))
@@ -200,10 +206,11 @@ shinyUI(fluidPage(
             )
           )
         ),
-        tabPanel("Correction"),
         tabPanel("Forward UQ"),
-        tabPanel("Backward UQ")
-        , id = "Bayesian")
+        tabPanel("Backward UQ"),
+        tabPanel("Design Ranking"),
+        id = "Bayesian"
+      )
     ),
     tabPanel("Options",
       fluidRow(

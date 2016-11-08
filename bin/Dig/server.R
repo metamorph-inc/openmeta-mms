@@ -70,15 +70,23 @@ shinyServer(function(input, output, session) {
     # Needed setup for regression testing:
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
-    raw = read.csv("WindTurbineSim.csv", fill=T)
-    if(file.exists("WindTurbineSimMapping.csv"))
-      mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
+    
     
     # Useful test setups:
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = iris
+    
+    # For testing with WindTurbine Data
+    # raw = read.csv("WindTurbineSim.csv", fill=T)
+    # if(file.exists("WindTurbineSimMapping.csv"))
+    #   mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
+    
+    # For testing with BladeMDA DoE Optimization Under Uncertainty Data
+    raw = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty.csv", fill=T)
+    if(file.exists("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv"))
+      mapping = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv", fill=T)
   }
   
   output$mappingPresent <- reactive({
@@ -158,7 +166,7 @@ shinyServer(function(input, output, session) {
                          "viewAllFilters",
                          "activateRanking",
                          "transpose",
-                         "bayesDispAll")
+                         "bayesianDisplayAll")
       
       tier1Selects <- c("colVarNum",
                         "display",
@@ -1661,6 +1669,10 @@ shinyServer(function(input, output, session) {
     idx
   })
   
+  observeEvent(input$bayesianDesignConfigsPresent, {
+    updateSelectInput(session, "bayesDesignConfigVars", choices = varRangeFac())
+  })
+  
   bayesianData <- reactive({
     print("In bayesianData()")
     
@@ -1718,7 +1730,7 @@ shinyServer(function(input, output, session) {
     data_sd <- apply(raw_plus()[varRangeNum()], 2, sd)
     
     bayesChoices <- varRangeNum()
-    if(!input$bayesDispAll)
+    if(!input$bayesianDisplayAll)
       bayesChoices <- varRangeNum()[bayesVarsList()]
     
     lapply(bayesChoices, function(var) {
@@ -1814,7 +1826,7 @@ shinyServer(function(input, output, session) {
     print("In bayesianPlots()")
     data <- bayesianData()
     variables <- varRangeNum()
-    if(!input$bayesDispAll)
+    if(!input$bayesianDisplayAll)
       variables <- varRangeNum()[bayesVarsList()]
     
     
