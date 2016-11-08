@@ -7,6 +7,16 @@ Follow these configuration instructions, in order, to set up your machine to bui
 ## Windows x64 (7 SP1, 8.1, 10 or Server equivalent)
 Install Windows updates until your version is current
 
+## Microsoft Visual Studio 2010 (Professional or above)
+_NOTE: Will not compile under Express Edition_
+
+When installing, select these packages (at minimum):
+- C++
+- C#
+
+## Visual Studio Service Pack 1 (SP1)
+[download it here](http://www.microsoft.com/en-us/download/details.aspx?id=23691)
+
 ## Microsoft Visual Studio 2015 (Community or above)
 _NOTE: Will not compile under Express Edition_
 
