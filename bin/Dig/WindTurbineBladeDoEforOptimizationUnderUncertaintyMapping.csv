@@ -1,0 +1,7 @@
+VarName,Type,Selection
+DesignID,CfgID,""
+IN_ElemCount,Numeric,"5,60"
+IN_E11,Numeric,"26100,31900"
+IN_E22,Numeric,"9180,11220"
+IN_Root_AvgCapMaterialThickness,Numeric,"77,97"
+IN_Tip_AvgCapMaterialThickness,Numeric,"20,30"
