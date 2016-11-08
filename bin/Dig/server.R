@@ -1722,7 +1722,7 @@ shinyServer(function(input, output, session) {
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
       #Defaults
-      this_gaussian <- FALSE
+      this_gaussian <- TRUE
       this_gauss_mean <- data_mean[[var]]
       this_sd <- data_sd[[var]]
       
@@ -1845,12 +1845,28 @@ shinyServer(function(input, output, session) {
                    lines(data[[var]][["xResampled"]],
                          data[[var]][["yResampled"]],
                          col = input$bayResampledColor, lwd=2)
+                   box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
                  }, height = 229)
           )
         )
       })
     }
   })
+  
+  boxColor <- function (var) {
+    if (bayesianDirection[[var]] == "Input")
+    {
+      "gold"
+    }
+    else if (bayesianDirection[[var]] == "Output")
+    {
+      "deepskyblue"
+    }
+    else
+    {
+      "black"
+    }
+  }
 
   # UI Adjustments -----------------------------------------------------------
   
