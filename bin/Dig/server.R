@@ -180,7 +180,7 @@ shinyServer(function(input, output, session) {
                         "pointStyle",
                         "radio",
                         "weightMetrics",
-                        "bayesDispVars")
+                        "bayesianDisplayVars")
                      
       tier1Colors <- c("normColor", 
                        "minColor", 
@@ -357,7 +357,7 @@ shinyServer(function(input, output, session) {
     
     isolate({
     print("Updating Panel Selections...")
-    updateSelectInput(session, 'bayesDispVars', choices = varRangeNum(), selected = varRangeNum()[1:2])
+    updateSelectInput(session, 'bayesianDisplayVars', choices = varRangeNum(), selected = varRangeNum()[1:2])
     updateSelectInput(session, "colVarFactor", choices = varRangeFac())  
     updateSelectInput(session, "colVarNum", choices = varRangeNum())#, selected = varRangeNum()[c(1)])
     updateSelectInput(session, "display", choices = varRange(), selected = varRange()[c(1,2)])
@@ -1661,8 +1661,8 @@ shinyServer(function(input, output, session) {
   bayesVarsList <- reactive({
     print("Getting Variable List.")
     idx = NULL
-    for(choice in 1:length(input$bayesDispVars)) {
-      mm <- match(input$bayesDispVars[choice],varRangeNum())
+    for(choice in 1:length(input$bayesianDisplayVars)) {
+      mm <- match(input$bayesianDisplayVars[choice],varRangeNum())
       if(mm > 0) { idx <- c(idx,mm) }
     }
     print(idx)
@@ -1670,14 +1670,24 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$bayesianDesignConfigsPresent, {
-    updateSelectInput(session, "bayesDesignConfigVars", choices = varRangeFac())
+    updateSelectInput(session, "bayesianDesignConfigVar", choices = varRangeFac())
+  })
+  
+  observeEvent(input$bayesianDesignConfigVar, {
+    print(paste(input$bayesianDesignConfigVar))
+    updateSelectInput(session, "bayesianDesignConfigChoice", choices = levels(raw_plus()[[input$bayesianDesignConfigVar]]))
   })
   
   bayesianData <- reactive({
     print("In bayesianData()")
     
     variables <- varRangeNum()
-    input_data <- raw_plus()[variables]
+    filtered_raw_plus <- raw_plus()
+    if(input$bayesianDesignConfigsPresent & !is.na(input$bayesianDesignConfigVar) & !is.na(input$bayesianDesignConfigChoice)) {
+      filtered_raw_plus <- subset(raw_plus(), raw_plus()[[paste0(input$bayesianDesignConfigVar)]] == input$bayesianDesignConfigChoice)
+    }
+       
+    input_data <- filtered_raw_plus[variables]
     
     # Real Resample
     req(bayesianUIInitialized)
@@ -1687,47 +1697,16 @@ shinyServer(function(input, output, session) {
     else
     {
       output_data <- NULL
-      # # Surrogate Resample
-      # output_data <- list()
-      # data_mean <- apply(input_data, 2, mean)
-      # data_sd <- apply(input_data, 2, sd)
-      # 
-      # print(data_mean)
-      # print(data_sd)
-      # 
-      # for (i in 1:length(variables)) {
-      #   var <- variables[i]
-      #   samples <- seq(unname(rawAbsMin()[var])*0.8, unname(rawAbsMax()[var])*1.3, ((unname(rawAbsMax()[var])*1.3 - unname(rawAbsMin()[var])*0.8))/100)
-      #   output_data[[variables[i]]] <- list("xOrig" = samples,
-      #                                       "yOrig" = dnorm(samples, data_mean[var], data_sd[var]),
-      #                                       "xResampled" = samples,
-      #                                       "yResampled" = dnorm(samples, data_mean[[var]]*1.3, data_sd[[var]]*0.8))
-      # }
     }
-    
-    # bayesianUIInitialized <<- FALSE
     output_data
   })
-
-  
-  
-  # generateGaussian <- function(current) {
-  #   print ("Generating gaussian from user input ")
-  #   sd <- input[[paste0('gaussian_sd', current)]]
-  #   mean <- input[[paste0('gaussian_mean', current)]]
-  #   req(sd)
-  #   req(mean)
-  #   gaussian <- rnorm(1000, mean, sd)
-  # }
-  
-
   
   output$bayesianUI <- renderUI({
     print("In bayesianUI()")
     var_directions <- c("Input",
                         "Output")
     data_mean <- apply(raw_plus()[varRangeNum()], 2, mean)
-    data_sd <- apply(raw_plus()[varRangeNum()], 2, sd)
+    data_sd <- apply(raw_plus()[varRangeNum()], 2, function(x) {sd(x)/2})
     
     bayesChoices <- varRangeNum()
     if(!input$bayesianDisplayAll)

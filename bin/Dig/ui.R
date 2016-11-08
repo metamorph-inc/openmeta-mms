@@ -180,17 +180,37 @@ shinyUI(fluidPage(
         tabPanel("Configuration",
           br(),
           fluidRow(
-            column(4,
-              checkboxInput('bayesianDesignConfigsPresent', "Multiple Design Configurations Present", value = F),
-              conditionalPanel(condition = 'input.bayesianDesignConfigsPresent == true', 
-                               selectInput('bayesDesignConfigVars', "Design Configuration Identifier",
-                                           choices = c(),
-                                           multiple = F)),
+            column(3,
+              checkboxInput('bayesianDesignConfigsPresent', "Multiple Design Configurations Present", value = F)
+            )
+          ),
+          fluidRow(
+            conditionalPanel(condition = 'input.bayesianDesignConfigsPresent == true',
+              column(3,
+                selectInput('bayesianDesignConfigVar', "Design Configuration Identifier",
+                  choices = c(),
+                  multiple = F)
+              )
+            ),
+            conditionalPanel(condition = 'input.bayesianDesignConfigsPresent == true & input.bayesianDesignConfigVar != null',
+              column(3,
+                selectInput('bayesianDesignConfigChoice', "Selection",
+                  choices = c(),
+                  multiple = F)
+              )
+            )
+          ),
+          fluidRow(
+            column(3,
               checkboxInput('bayesianDisplayAll', "Display All Variables", value = T),
               conditionalPanel(condition = 'input.bayesianDisplayAll == false', 
-                               selectInput('bayesDispVars', "Bayesian Variables",
-                                           choices = c(),
-                                           multiple = T))
+                selectInput(
+                  'bayesianDisplayVars',
+                  "Bayesian Variables",
+                  choices = c(),
+                  multiple = T
+                )
+              )
             )
           ),
           fluidRow(
