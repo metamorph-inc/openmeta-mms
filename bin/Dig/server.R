@@ -645,7 +645,7 @@ shinyServer(function(input, output, session) {
     data <- filterData()
     data$color <- character(nrow(data))
     data$color <- input$normColor
-     if (input$colType == "Max/Min") {
+    if (input$colType == "Max/Min") {
       name <- input$colVarNum
       bottom <- input$colSlider[1]
       top <- input$colSlider[2]
@@ -658,67 +658,59 @@ shinyServer(function(input, output, session) {
         data$color[data[[name]] < bottom] <- input$minColor
         data$color[data[[name]] > top] <- input$maxColor
       }
-     } 
-     else {
-       if (input$colType == "Discrete") {
-         varList = names(table(raw_plus()[input$colVarFactor]))
-         for(i in 1:length(varList)){
-           data$color[(data[[input$colVarFactor]] == varList[i])] <- palette()[i]
-         }
-       }
-       else {
-         if (input$colType == "Highlighted") {
-           if (!is.null(input$plot_brush)){
-             if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
-               xRange <- FALSE
-               yRange <- FALSE
-             }
-             else{
-               if(varClass[input$xInput] == "factor"){
-                 lower <- ceiling(input$plot_brush$xmin)
-                 upper <- floor(input$plot_brush$xmax)
-                 xRange <- FALSE
-                 for (i in lower:upper){
-                   xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
-                 }
-                 if (lower > upper){
-                   xRange <- FALSE
-                 }
-               }
-               else {
-                 xUpper <- data[input$xInput] < input$plot_brush$xmax
-                 xLower <- data[input$xInput] > input$plot_brush$xmin
-                 xRange <- xUpper & xLower
-               }
-               if(varClass[input$yInput] == "factor"){
-                 lower <- ceiling(input$plot_brush$ymin)
-                 upper <- floor(input$plot_brush$ymax)
-                 yRange <- FALSE
-                 for (i in lower:upper){
-                   yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
-                 }                 
-                 if (lower > upper){
-                   yRange <- FALSE
-                 }
-               }
-               else{
-                 yUpper <- data[input$yInput] < input$plot_brush$ymax
-                 yLower <- data[input$yInput] > input$plot_brush$ymin
-                 yRange <- yUpper & yLower
-               }
-             }
-             data$color[xRange & yRange] <- input$highlightColor #light blue
-           }
-         }
-         else {
-           if (input$colType == "Ranked"){
-             data[input$dataTable_rows_selected, "color"] <- input$rankColor
-           }
-         }
-       }
-     }
-     print("Data Colored")
-     data
+    } 
+    else if (input$colType == "Discrete") {
+      varList = names(table(raw_plus()[input$colVarFactor]))
+      for(i in 1:length(varList)){
+       data$color[(data[[input$colVarFactor]] == varList[i])] <- palette()[i]
+      }
+    }
+    else if (input$colType == "Highlighted") {
+      if (!is.null(input$plot_brush)){
+        if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
+          xRange <- FALSE
+          yRange <- FALSE
+        }
+        else if(varClass[input$xInput] == "factor"){
+          lower <- ceiling(input$plot_brush$xmin)
+          upper <- floor(input$plot_brush$xmax)
+          xRange <- FALSE
+          for (i in lower:upper){
+            xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
+          }
+          if (lower > upper){
+            xRange <- FALSE
+          }
+        }
+        else {
+          xUpper <- data[input$xInput] < input$plot_brush$xmax
+          xLower <- data[input$xInput] > input$plot_brush$xmin
+          xRange <- xUpper & xLower
+        }
+        if(varClass[input$yInput] == "factor"){
+          lower <- ceiling(input$plot_brush$ymin)
+          upper <- floor(input$plot_brush$ymax)
+          yRange <- FALSE
+          for (i in lower:upper){
+            yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
+          }                 
+          if (lower > upper){
+            yRange <- FALSE
+          }
+        }
+        else{
+          yUpper <- data[input$yInput] < input$plot_brush$ymax
+          yLower <- data[input$yInput] > input$plot_brush$ymin
+          yRange <- yUpper & yLower
+        }
+        data$color[xRange & yRange] <- input$highlightColor #light blue
+      }
+    }
+    else if (input$colType == "Ranked"){
+      data[input$rankTable_rows_selected, "color"] <- input$rankColor
+    }
+    print("Data Colored")
+    data
   })
   
   output$colorLegend <- renderUI({
