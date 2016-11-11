@@ -51,7 +51,7 @@ shinyUI(fluidPage(
         ),
         column(9,
             uiOutput("displayError"),   
-            uiOutput("filterError"),
+            uiOutput("filterError"), 
             uiOutput("pairsDisplay")
         )
       )
@@ -143,7 +143,7 @@ shinyUI(fluidPage(
                        column(2, h5(strong("New Minimum:"))),
                        column(2, h5(strong("New Maximum:")))
                      ), br(),
-                     uiOutput("original_numeric_ranges")
+                     uiOutput("rangesNumeric")
               )
             )
           ),
@@ -159,7 +159,7 @@ shinyUI(fluidPage(
                          column(2, h5(strong("Selection:"))),
                          column(4, h5(strong("New Selection:")))
                        ), br(),
-                       uiOutput("original_enumeration_ranges")
+                       uiOutput("rangesEnum")
                 )
               )
           )

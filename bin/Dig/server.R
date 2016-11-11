@@ -789,29 +789,27 @@ shinyServer(function(input, output, session) {
       pairsTrendline()
       print("Plot Rendered.")
     }
-    else {
+    else { 
       if (nrow(filterData()) == 0) {
-        output$filterError <- 
-          renderText(
-            "No data points fit the current filtering scheme")
+        output$filterError <- renderText(
+            "<br/>No data points fit the current filtering scheme.")
       }
       if (length(input$display) < 2) {
-        output$displayError <-renderUI(
-          HTML("<br/>Please select two or more Display Variables.")
-        )
+        output$displayError <- renderText(
+          "<br/>Please select two or more Display Variables.")
       }
     }
   })
   
-  output$filterError <- renderUI({
-    print("In filter error")
-    h4(textOutput("filterVars"), align = "center")
-  })
-  
-  output$displayError <- renderUI({
-    print("In display error")
-    h4(textOutput("displayVars"), align = "center")
-  })
+  # output$filterError <- renderUI({
+  #   print("In filter error")
+  #   h4(textOutput("filterVars"), align = "center")
+  # })
+  # 
+  # output$displayError <- renderUI({
+  #   print("In display error")
+  #   h4(textOutput("displayVars"), align = "center")
+  # })
   
   
   #Change to single plot when user clicks a plot on pairs matrix
@@ -886,14 +884,15 @@ shinyServer(function(input, output, session) {
   })
   
   slowVarsList <- eventReactive(input$renderPlot, {
-    print("Getting Variable List.")
-    idx = 0
-    for(choice in 1:length(input$display)) {
-      mm <- match(input$display[choice],varNames)
-      if(mm > 0) { idx <- c(idx,mm) }
-    }
-    print(idx)
-    idx
+    varsList()
+    # print("Getting Variable List.")
+    # idx = 0
+    # for(choice in 1:length(input$display)) {
+    #   mm <- match(input$display[choice],varNames)
+    #   if(mm > 0) { idx <- c(idx,mm) }
+    # }
+    # print(idx)
+    # idx
   })
   
   slowData <- eventReactive(input$renderPlot, {
@@ -933,7 +932,7 @@ shinyServer(function(input, output, session) {
                          input$normColor)))
     if (input$colType == 'Max/Min') {
       paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
+             "\nCurrent Points: ", nrow(colorData()),
              "\nColored Points: ", sum(tb[[input$minColor]], tb[[input$midColor]], tb[[input$maxColor]], tb[[input$normColor]]),
              "\nWorst Points: ", tb[[input$maxColor]],
              "\nIn Between Points: ", tb[[input$midColor]],
@@ -944,7 +943,7 @@ shinyServer(function(input, output, session) {
       tb <- table(factor(colorData()$color, palette()))
       d_vars <- names(table(raw_plus()[input$colVarFactor]))
       output_string <- paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
+             "\nCurrent Points: ", nrow(colorData()),
              "\nColored Points: ", sum(tb[[palette()[1]]], 
                                        tb[[palette()[2]]], 
                                        tb[[palette()[3]]], 
@@ -962,19 +961,19 @@ shinyServer(function(input, output, session) {
     }
     else if(input$colType == 'Highlighted') {
       paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
+             "\nCurrent Points: ", nrow(colorData()),
              "\nHighlighted Points: ", tb[[input$highlightColor]]
       )
     }
     else if(input$colType == 'Ranked') {
       paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
+             "\nCurrent Points: ", nrow(colorData()),
              "\nRanked Points: ", tb[[input$rankColor]]
       )
     }
     else{
       paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
+             "\nCurrent Points: ", nrow(colorData()),
              "\nColored Points: ", tb[[input$normColor]]
       )
     }
@@ -1409,7 +1408,7 @@ shinyServer(function(input, output, session) {
     all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
   })
   
-  output$original_numeric_ranges <- renderUI({
+  output$rangesNumeric <- renderUI({
     
     lapply(rownames(mapping), function(row){
       
@@ -1468,7 +1467,7 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  output$original_enumeration_ranges <- renderUI({
+  output$rangesEnum <- renderUI({
     
     lapply(rownames(mapping), function(row){
       
@@ -1899,7 +1898,7 @@ shinyServer(function(input, output, session) {
                           max = colSliderSettings()$numericMax,
                           value = c(colSliderSettings()$lower, colSliderSettings()$upper))
       }
-      else if(varClass[[colSliderSettings()$variable]] == "integer") {
+      else if(varClass[[toString(colSliderSettings()$variable)]] == "integer") {
         updateSliderInput(session,
                           "colSlider",
                           min = colSliderSettings()$absMin,
