@@ -21,7 +21,33 @@ forwardUq = function(originalData, resampledData, rho, observations, observation
   
   yPred = forwardUqImpl(originalData, xStandard, rho, observationsIndex)
   
-  return(yPred)
+  result = list()
+  
+  postIndexes = 1:nrow(rho)
+  postIndexes = postIndexes[! postIndexes %in% observationsIndex]
+  
+  uPoints = seq(0.001, 0.999, 0.001)
+  for (i in length(observations)) {
+    observationResult = list()
+    for (j in length(postIndexes)) {
+      tempResult = list()
+      originalIndex = postIndexes[j]
+      originalName = names(originalData)[[originalIndex]]
+      
+      condMu = yPred[i, j, 1]
+      condSigma = yPred[i, j, 2]
+      tempResult$postPoints = densityInversecdf(data[originalIndex], uPoints)
+      pdfPostPoints = dnorm(qnorm(uPoints, mean=condMu, sd=condSigma), mean=condMu, sd=condSigma)
+      postFunction = approxfun(tempResult$postPoints, pdfPostPoints, yleft=0, yright=0)
+      area = integrate(postFunction, min(tempResult$postPoints), max(tempResult$postPoints))$value
+      tempResult$postPdf = pdfPostPoints / area
+      observationResult[originalName] = tempResult
+    }resul
+    result[i] = observationResult
+  }
+  
+  
+  return(result)
 }
 
 backwardUq = function(originalData, resampledData, rho, observations, observationsIndex) {
