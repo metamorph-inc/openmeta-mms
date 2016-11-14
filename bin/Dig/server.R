@@ -1,5 +1,6 @@
 library(shiny)
 library(DT)
+library(topsis)
 source('bayesian_utils.r')
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
@@ -1049,58 +1050,68 @@ shinyServer(function(input, output, session) {
     transferCondition = toString(paste0("input.util",current," == true"))
     
     varName <- varNames[current]
-    column(3, 
-      h4(varName),
-      radioButtons(paste0('sel', current),
-                   "Score By:",
-                   choices = c("Min", "Max"),
-                   selected = radioVal,
-                   inline = TRUE),
-      sliderInput(paste0('rnk', current),
-                  "Weight:",
-                  step = 0.01,
-                  min = 0,
-                  max = 1,
-                  value = sliderVal),
-      checkboxInput(paste0('util', current),
-                    "Add Transfer Function",
-                    value = utilVal),
-      conditionalPanel(condition = transferCondition,
-                       textInput(paste0('func', current),
-                                 "Enter Data Points",
-                                  placeholder = paste0("Value = Score | e.g. ", 
-                                    rawAbsMin()[[varName]],
-                                    " = 1, ",
-                                    rawAbsMax()[[varName]],
-                                    "= 0.5"),
-                                 value = funcVal),
-                       utilityPlot(current)),
-      br(), br(), br()
+    fluidRow(
+      column(4, h5(varName)),
+      column(2, radioButtons(paste0('sel', current),
+                             NULL,
+                             choices = c("Min", "Max"),
+                             selected = radioVal,
+                             inline = TRUE)),
+      column(6, sliderInput(paste0('rnk', current),
+                            NULL,
+                            step = 0.01,
+                            min = 0,
+                            max = 1,
+                            value = sliderVal))
     )
+    # column(3, 
+    #   h4(varName),
+    #   radioButtons(paste0('sel', current),
+    #                "Score By:",
+    #                choices = c("Min", "Max"),
+    #                selected = radioVal,
+    #                inline = TRUE),
+    #   sliderInput(paste0('rnk', current),
+    #               "Weight:",
+    #               step = 0.01,
+    #               min = 0,
+    #               max = 1,
+    #               value = sliderVal),
+    #   checkboxInput(paste0('util', current),
+    #                 "Add Transfer Function",
+    #                 value = utilVal),
+    #   conditionalPanel(condition = transferCondition,
+    #                    textInput(paste0('func', current),
+    #                              "Enter Data Points",
+    #                               placeholder = paste0("Value = Score | e.g. ", 
+    #                                 rawAbsMin()[[varName]],
+    #                                 " = 1, ",
+    #                                 rawAbsMax()[[varName]],
+    #                                 "= 0.5"),
+    #                              value = funcVal),
+    #                    utilityPlot(current)),
+    #   br(), br(), br()
+    # )
   }
   
   fullMetricUI <- reactive({
     if(!importFlags$ranking){
-      fluidRow(
-        lapply(metricsList(), function(column) {
-          isolate(generateMetricUI(column))
-        })
-      )
+      lapply(metricsList(), function(column) {
+        isolate(generateMetricUI(column))
+      })
     }
     else{
-      fluidRow(
-        lapply(metricsList(), function(column) {
-          importedSlider <- importData[[paste0('rnk', column)]]
-          importedRadio <- importData[[paste0('sel', column)]]
-          importedUtil <- importData[[paste0('util', column)]]
-          importedFunc <- importData[[paste0('func', column)]]
-          isolate(generateMetricUI(column, 
-                                   importedSlider, 
-                                   importedRadio,
-                                   importedUtil,
-                                   importedFunc))
-        })
-      )
+      lapply(metricsList(), function(column) {
+        importedSlider <- importData[[paste0('rnk', column)]]
+        importedRadio <- importData[[paste0('sel', column)]]
+        importedUtil <- importData[[paste0('util', column)]]
+        importedFunc <- importData[[paste0('func', column)]]
+        isolate(generateMetricUI(column, 
+                                 importedSlider, 
+                                 importedRadio,
+                                 importedUtil,
+                                 importedFunc))
+      })
     }
   })
   
@@ -1306,10 +1317,38 @@ shinyServer(function(input, output, session) {
     rankData()
   })
   
+  topsisData <- reactive({
+    req(metricsList())
+    print("In calculate topsis data")
+    data <- filterData()[varRangeNum()]
+    weights <- NULL
+    impacts <- NULL
+    for(i in 1:length(varRangeNum())){
+      global_index <- match(varRangeNum()[i], varNames)
+      if(!is.null(input[[paste0("rnk", global_index)]])){
+        weights <- c(weights, input[[paste0("rnk", global_index)]])
+        impacts <- c(impacts, input[[paste0("sel", global_index)]])
+      }
+      else{
+        weights <- c(weights, 0.01)
+        impacts <- c(impacts, '+')
+      }
+    }
+    impacts[impacts == "Max"] <- '+'
+    impacts[impacts == "Min"] <- '-'
+    t <- topsis(as.matrix(data), weights, impacts)
+    sorted_topsis <- t[order(t$rank),]
+    rank <- sorted_topsis$rank
+    score <- sorted_topsis$score
+    output_data <- filterData()[sorted_topsis$alt.row,]
+    output_data <- cbind(rank, score, output_data)
+    output_data
+  })
+  
   output$dataTable <- DT::renderDataTable({
     if(length(input$weightMetrics) > 0){
       if(input$autoRanking)
-        data <- rankData()
+        data <- topsisData()
       else
         data <- slowRankData()
     }

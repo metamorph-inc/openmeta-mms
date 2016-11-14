@@ -94,10 +94,8 @@ shinyUI(fluidPage(
         #checkboxInput("transpose", "Transpose Table", value = FALSE)
         
       ),
-      
       conditionalPanel(condition = "input.activateRanking == true",
         wellPanel(
-          # h4("Ranking Configuration"),
           conditionalPanel(condition = "input.autoRanking == false",
             actionButton("applyRanking", "Apply Ranking"),
             br(), br()
@@ -113,6 +111,11 @@ shinyUI(fluidPage(
           ),
           conditionalPanel(condition = "input.weightMetrics != null",
                            hr()),
+          fluidRow(
+            column(4, strong(h4("Variable Name"))),
+            column(2, strong(h4("Ranking Mode"))),
+            column(6, strong(h4("Weight Amount")))
+          ),
           uiOutput("rankings")#, 
           #br(), hr(), 
           #br()
