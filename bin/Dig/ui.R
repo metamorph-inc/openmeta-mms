@@ -52,7 +52,7 @@ shinyUI(fluidPage(
         column(9,
             uiOutput("displayError"),   
             uiOutput("filterError"), 
-            uiOutput("pairsDisplay")
+            plotOutput("pairsPlot", dblclick = "pairs_click", height = 700)
         )
       )
     ),
@@ -85,6 +85,7 @@ shinyUI(fluidPage(
     ),
     tabPanel("Data Table",
       br(),
+      checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE),
       wellPanel(
         style = "overflow-x:auto",
         DT::dataTableOutput("dataTable"),
@@ -93,7 +94,7 @@ shinyUI(fluidPage(
         #checkboxInput("transpose", "Transpose Table", value = FALSE)
         
       ),
-      checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE),
+      
       conditionalPanel(condition = "input.activateRanking == true",
         wellPanel(
           # h4("Ranking Configuration"),
