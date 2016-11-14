@@ -102,3 +102,103 @@ pdfComp = function(distributionType, distributionParams, data) {
 genDist = function(distribution, length) {
   sample.int(length(distribution), size=length, replace=TRUE, prob=distribution)
 }
+
+#' Computes the kernel density probability density function and evaluates it at
+#' the specified points.
+#' 
+#' @param data The data to compute the kernel density function over
+#' @param pointsToEvaluate The points at which to evaulate the PDF
+#'   
+#' @return A vector containing the Y values of the probability distribution 
+#'   function, evaluated at pointsToEvaluate
+densityPdf = function(data, pointsToEvaluate) {
+  min = min(data)
+  max = max(data)
+  pdf = density(data, n=2048, from=min, to=max)
+  pdfFunction = approxfun(pdf$x, pdf$y, yleft=0, yright=0)
+  
+  return(sapply(pointsToEvaluate, pdfFunction))
+}
+
+#' Computes the kernel density cumulative density function and evaluates it at
+#' the specified points.
+#' 
+#' @param data The data to compute the kernel density function over
+#' @param pointsToEvaluate The points at which to evaulate the PDF
+#'   
+#' @return A vector containing the Y values of the cumulative distribution 
+#'   function, evaluated at pointsToEvaluate
+densityCdf = function(data, pointsToEvaluate) {
+  min = min(data)
+  max = max(data)
+  pdf = density(data, n=2048, from=min, to=max)
+  pdfFunction = approxfun(pdf$x, pdf$y, yleft=0, yright=0)
+  integrationPoints = seq(min, max, (max-min)/2047)
+  cdfPoints = sapply(integrationPoints, function(val) { integrate(pdfFunction, min(data), val, subdivisions=1000)$value })
+  cdfFunction = approxfun(integrationPoints, cdfPoints, yleft=0, yright=1.0)
+  
+  cdfValues = cdfFunction(pointsToEvaluate)
+  # Clamp values between 0 and 1, since our integration and approximation
+  # occasionally gives us a slightly out-of-range value (numerical integration
+  # isn't too accurate) and CDF values must be between 0 and 1.
+  cdfValues[cdfValues < 0.0000001] = 0.0000001
+  cdfValues[cdfValues > 0.9999999] = 0.9999999
+  return(cdfValues)
+}
+
+#' Computes the kernel density inverse cumulative density function and evaluates
+#' it at the specified points.
+#' 
+#' @param data The data to compute the kernel density function over
+#' @param pointsToEvaluate The points at which to evaulate the PDF
+#'   
+#' @return A vector containing the Y values of the inverse cumulative
+#'   distribution function, evaluated at pointsToEvaluate
+densityInverseCdf = function(data, pointsToEvaluate) {
+  min = min(data)
+  max = max(data)
+  pdf = density(data, n=2048, from=min, to=max)
+  pdfFunction = approxfun(pdf$x, pdf$y, yleft=0, yright=0)
+  cdfFunction = function(x) {
+    if(x <= min) {
+      return(0)
+    } else if(x >= max) {
+      return(1)
+    } else {
+      integrate(pdfFunction, min, x, subdivisions=1000)$value
+    }
+  }
+  
+  inverseCdfFunction = function(q) {
+    uniroot(function(x) { cdfFunction(x) - q }, lower=min, upper=max)$root
+  }
+  
+  return(sapply(pointsToEvaluate, inverseCdfFunction))
+}
+
+#' Converts xObs into standard normal variables using the distribution in x
+x2u = function(x, xObs) {
+  numberOfVariables = length(x)
+  
+  result = makeEmptyDataFrame(nrow(xObs))
+  result["temp"] = NULL
+  for (i in 1:numberOfVariables) {
+    cdfValues = densityCdf(x[[i]], xObs[[i]])
+    normalizedValues = qnorm(cdfValues, mean=0, sd=1)
+    result[names(x)[i]] = normalizedValues
+  }
+  return(result)
+}
+
+#' Creates an empty (zero column) data frame with the specified number of rows.
+#' 
+#' @param numberOfRows Number of rows the data frame should initially contain
+#'   
+#' @return An empty data frame, with the specified number of rows and zero
+#'   columns
+makeEmptyDataFrame = function(numberOfRows) {
+  result = data.frame(temp=1:numberOfRows)
+  result["temp"] = NULL
+  
+  return(result)
+}
