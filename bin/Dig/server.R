@@ -1913,8 +1913,11 @@ shinyServer(function(input, output, session) {
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
       
-      #insert real call here...
-      value <- runif(1)
+      value <- integrateData(bayesianData()[[name]][["xResampled"]],
+                             bayesianData()[[name]][["yResampled"]],
+                             min(bayesianData()[[name]][["xResampled"]]),
+                             as.numeric(threshold))
+      
       print(paste("Query: ",name, direction, threshold, value))
       
       if (direction == "Above") {
@@ -1924,6 +1927,7 @@ shinyServer(function(input, output, session) {
     }
     print("Probabilites Calculated.")
   })
+  
   # UI Adjustments -----------------------------------------------------------
   
   colSliderSettings <- reactive({

@@ -224,5 +224,5 @@ makeEmptyDataFrame = function(numberOfRows) {
 integrateData = function(x, y, lowerBound, upperBound, yLeft = 0, yRight = 0, subdivisions = 1000) {
   curveFunction = approxfun(x, y, yleft=yLeft, yright=yRight)
   
-  area = integrate(curveFunction, lowerBound, upperBound, subdivisions=subdivisions)
+  area = (integrate(curveFunction, lowerBound, upperBound, subdivisions=subdivisions))$value
 }
