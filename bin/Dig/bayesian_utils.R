@@ -202,3 +202,27 @@ makeEmptyDataFrame = function(numberOfRows) {
   
   return(result)
 }
+
+
+
+#' Integrates under the curve specified by x and y, using linear interpolation
+#' between points.
+#' 
+#' @param x numeric vector representing the x coordinates of the curve to
+#'   integrate under
+#' @param y numeric vector representing the y coordinates of the curve to
+#'   integrate under (should be same length as x)
+#' @param lowerBound The lower bound for integration
+#' @param upperBound The upper bound for integration
+#' @param yLeft For the original (pre-integration) curve, the value of y for
+#'   values of x < min(x)
+#' @param yRight For the original (pre-integration) curve, the value of y for
+#'   values of x > max(x)
+#' @param subdivisions Maximum number of subdivisions to use for integration
+#'   
+#' @return The area under the specified curve, between lowerBound and upperBound
+integrateData = function(x, y, lowerBound, upperBound, yLeft = 0, yRight = 0, subdivisions = 1000) {
+  curveFunction = approxfun(x, y, yleft=yLeft, yright=yRight)
+  
+  area = integrate(curveFunction, lowerBound, upperBound, subdivisions=subdivisions)
+}
