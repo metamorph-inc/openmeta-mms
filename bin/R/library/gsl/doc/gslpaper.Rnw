@@ -1,0 +1,297 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+\documentclass[nojss]{jss}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% just as usual
+\author{Robin K. S. Hankin}
+\title{Special functions in \proglang{R}: introducing the \pkg{gsl} package}
+%\VignetteIndexEntry{A vignette for the gsl package}
+%% for pretty printing and a nice hypersummary also set:
+%% \Plainauthor{Achim Zeileis, Second Author} %% comma-separated
+\Plaintitle{Special functions in R: introducing the gsl package}
+\Shorttitle{The \pkg{gsl} package}
+
+\Abstract{
+  
+  This vignette introduces the \pkg{gsl} package of \proglang{R} utilities
+  for accessing the functions of the Gnu Scientific Library.
+
+  An earlier version of this document was published
+  as~\cite{hankin2006}.
+}
+
+
+\Keywords{\proglang{R}, special functions}
+\Plainkeywords{R, special functions}
+
+\Address{
+  Robin K. S. Hankin\\
+  Auckland University of Technology\\
+  AUT Tower\\
+  Wakefield Street\\
+  Auckland\\
+  New Zealand\\
+  E-mail: \email{hankin.robin@gmail.com}
+}
+
+%% need no \usepackage{Sweave.sty}
+\SweaveOpts{echo=FALSE}
+\begin{document}
+
+\section{Introduction}
+
+The Gnu Scientific Library (GSL) is a collection of numerical routines
+for scientific computing~\citep{galassi2005}.  The routines are
+written in \proglang{C} and constitute a library for \proglang{C}
+programmers; the source code is distributed under the GNU General
+Public License.  One stated aim of the GSL development effort is the
+development of wrappers for high level languages.
+
+The \proglang{R} programming language~\citep{rcore2008} is an
+environment for statistical computation and graphics.  It consists of
+a language and a run-time environment with graphics and other
+features.
+
+Here I introduce \pkg{gsl}, an \proglang{R} package that allows direct
+access to many GSL functions, including all the special functions,
+from within an \proglang{R} session.  The package is available on
+CRAN, \url{http://www.cran.r-project.org/}; the GSL is available at
+\url{http://www.gnu.org/software/gsl/}.
+
+\section{Package design philosophy}
+
+The package splits into two parts: the special functions, written by
+the author; and the \pkg{rng} and \pkg{qrng} functionality, written by
+Duncan Murdoch.  These two parts are very different in implementation,
+yet follow a common desideratum, namely that the package be a
+transparent port of the GSL library.  The package thus has the
+advantage of being easy to compare with the GSL, and easy to update
+verifiably.
+
+In this paper, the Airy functions are used to illustrate the package.
+They are typical of the package's capabilities and coding, and are
+relatively simple to understand, having only a single real argument.
+A brief definition, and an application in physics, is given in the
+appendix.
+
+The package is organized into units that correspond to the GSL header
+file.  Thus all the Airy functions are defined in a single header
+file, \code{gsl\_sf\_airy.h}.  The package thus contains a
+corresponding \proglang{C} file, \code{airy.c}; an \proglang{R} file \code{airy.R},
+and a documentation file \code{Airy.Rd}.  These three files together
+encapsulate the functionality defined in \code{gsl\_sf\_airy.h} in the
+context of an \proglang{R} package.  This structure makes it demonstrable that
+the GSL has been systematically and completely wrapped.
+
+Functions are named such that one can identify a function in the GSL
+manual, and the corresponding \proglang{R} command will be the same
+but with the prefix\footnote{Some functions, such as
+  \code{gsl\_sf\_sin()}, retain the prefix to avoid conflicts.  A full
+  list is given in \code{Misc.Rd}.} and, if present, the
+``\code{\_e}'' suffix, removed.  In the case of the special functions,
+the prefix is ``\code{gsl\_sf\_}''.  Thus, GSL function
+\code{gsl\_sf\_airy\_Ai\_e()} of header file \code{gsl\_sf\_airy.h} is
+called, via intermediate \proglang{C} routine \code{airy\_Ai\_e()}, by
+\proglang{R} function \code{airy\_Ai()}.  Documentation is provided
+for every function defined in \code{gsl\_sf\_airy.h} under
+\code{Airy.Rd}.
+
+The \pkg{gsl} package is not intended to add any numerical
+functionality to the GSL, although here and there I have implemented
+slight extensions such as the Jacobian elliptic functions whose \proglang{R}
+ports take a complex argument.
+
+\subsection{Package documentation}
+
+The \pkg{gsl} package is unusual in that its documentation consists
+almost entirely of pointers to the GSL reference
+manual~\citep{galassi2005}, and~\citet{abramowitz1965}.  This follows
+from the transparent wrapper philosophy.  In any case, the GSL
+reference manual would strictly dominate the \code{Rd} files of the
+\pkg{gsl} package.
+
+\section[Package gsl in use]{Package \pkg{gsl} in use}
+
+<<echo=TRUE,print=FALSE>>=
+<<results=hide>>=
+library(gsl)
+@ 
+
+Most functions in the package are straightforwardly and transparently
+executable:
+<<echo=TRUE,print=TRUE>>=
+airy_Ai(1:3)
+@ 
+
+The online helpfiles include many examples that reproduce graphs and
+tables that appear in \citeauthor{abramowitz1965}.  This constitutes a
+useful check on the routines.  For example, figures~\ref{airyfig_A}
+and~\ref{airyfig_B} show an approximate reproduction of their
+figures~10.6 and~10.7 (page~446).
+
+
+
+\begin{figure}[htbp]
+  \begin{center}
+<<fig=TRUE>>=
+x <- seq(from=0,to=10,len=100)
+plot(c(0,11),c(-1,1),type="n",main="Fig 10.6, p446",xlab="",ylab="",yaxt="n",xaxt="n",frame=FALSE)
+axis(1,pos=0,at=c(0,2,4,6,8,10),labels=c("","2","4","6","8","10"))
+axis(2,pos=0)
+lines(x,airy_Ai       ( x),type="l",lty=1)
+lines(x,airy_Ai       (-x),type="l",lty=2)
+lines(x,airy_Ai_deriv ( x),type="l",lty=3)
+lines(x,airy_Ai_deriv (-x),type="l",lty=4)
+text(1,0.6     ,"Ai(-x)" )
+text(0.85,0.33 ,"Ai(x)"  )
+text(1.08,-0.26,"Ai'(x)" )
+text(10.5,0.4  ,"Ai'(-x)")
+arrows(10, 0, 11, 0,angle=11)
+text(11,-0.1,"x")
+@
+\caption{Functions~$\mathrm{Ai}(\pm x)$ \label{airyfig_A}
+  and~$\mathrm{Ai}'(\pm x)$ as plotted in the helpfile for
+  \code{airy\_Ai()} and appearing on page~446
+  of~\citet{abramowitz1965}}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+<<fig=TRUE>>=
+x <- seq(from=0,to=10,len=100)
+plot(c(0,10),c(-1,2.2),type="n",main="Fig 10.7, p446",xlab="",ylab="",yaxt="n",xaxt="n",frame=FALSE)
+axis(1,pos=0,at=c(0,1:9),labels=c("","1","2","3","4","5","6","7","8","9"))
+axis(2,pos=0)
+lines(x,airy_Bi       ( x),type="l",lty=1)
+lines(x,airy_Bi       (-x),type="l",lty=2)
+lines(x,airy_Bi_deriv ( x),type="l",lty=3)
+lines(x,airy_Bi_deriv (-x),type="l",lty=4)
+text(0.15,1.44     ,"Bi(x)",pos=4)
+text(1,0.90 ,"Bi'(x)",pos=4)
+text(2.25,0.56,"Bi'(-x)")
+text(0.7,-0.55,"Bi'(-x)",pos=4)
+arrows(9, 0, 10, 0, angle=11)
+text(10,-0.1,"x")
+@
+\caption{Functions~$\mathrm{Bi}(\pm x)$ \label{airyfig_B}
+  and~$\mathrm{Bi}'(\pm x)$ \citep{abramowitz1965}}
+  \end{center}
+\end{figure}
+
+\section{Summary}
+The \pkg{gsl} package is a transparent \proglang{R} wrapper for the Gnu
+Scientific Library.  It gives access to all the special functions, and
+the quasi-random sequence generation routines.  Notation follows the
+GSL as closely as reasonably practicable; many graphs and tables
+appearing in \citeauthor{abramowitz1965} are reproduced by the
+examples in the helpfiles.
+
+
+\subsubsection*{Acknowledgments}
+I would like to acknowledge the many stimulating and helpful comments
+made by the \proglang{R}-help list over the years.
+
+
+\bibliography{gsl}
+
+\section*{Appendix: The Airy function and an application in quantum mechanics}
+
+The Airy function may not be familiar to some readers; here, I give a
+brief introduction to it and illustrate the \pkg{gsl} package in use
+in a physical context.  The standard reference is~\citet{vallee2004}.
+
+For real argument~$x$, the Airy function is defined by the integral
+\begin{equation}
+\mathrm{Ai}(x)=\frac{1}{\pi}\int_0^\infty
+\cos\left(t^3/3+xt\right)\,dt\end{equation}
+and obeys the differential equation~$y''=xy$ (the other solution is
+denoted~$\mathrm{Bi}(x)$). 
+
+In the field of quantum mechanics, one often considers the problem of
+a particle confined to a potential well that has a well-specified
+form.   Here, I consider a potential of the form
+\begin{equation}\label{potential}
+V(r) = \left\{\begin{array}{ll}
+r & \mbox{if~$r>0$}\\
+\infty & \mbox{if~$r\leq 0$}\\
+\end{array}
+\right.
+\end{equation}
+
+Under such circumstances, the energy spectrum is discrete and the
+energy~$E_n$ corresponds to the $n^{\rm th}$ quantum state, denoted by
+$\psi_n$.  If the mass of the particle is~$m$, it is governed by the
+Schr\"{o}dinger equation
+
+\begin{equation}
+\frac{d^2\psi_n(r)}{dr^2} + \frac{2m}{\hbar^2}\left(E_n-r\right)\psi_n(r)=0
+\end{equation}
+
+Changing variables to
+$\xi=\left(E_n-e\right)\left(2m/\hbar\right)^{1/3}$ yields the Airy
+equation, viz
+\begin{equation}
+\frac{d^2\psi_n}{d\xi^2}+\xi\psi_n=0\end{equation}
+with solution
+\begin{equation}
+\psi_n(\xi)=N\mathrm{Ai}\left(-\xi\right)
+\end{equation}
+where $N$ is a normalizing constant
+(the~$\mathrm{Bi}\left(\cdot\right)$ term is omitted as it tends
+to infinity with increasing~$r$).  Demanding that~$\psi_n(0)=0$ gives
+\[
+E_n=-a_{n+1}\left(\hbar^2/2m\right)^{1/3}
+\]
+where~$a_n$ is the $n^{\rm th}$ root of the~$\mathrm{Ai}$
+function [\code{Airy\_zero\_Ai()} in the package]; the off-by-one
+mismatch is due to the convention that the ground state is
+conventionally labelled state zero, not state~1.  Thus, for example,
+$E_2=\mbox{\Sexpr{-round(airy_zero_Ai(3),4)}}\left(\hbar^2/2m\right)^{1/3}$.
+
+The normalization factor~$N$ is determined by requiring that
+$\int_0^\infty\psi^*\psi\,dr=1$ (physically, the particle is known to be
+somewhere with~$r>0$).  It can be shown that
+\[
+N=\frac{\left(2m/\hbar\right)^{1/6}}{\mathrm{Ai}'\left(a_n\right)}\]
+[the denominator is given by function \code{airy\_zero\_Ai\_deriv()}
+  in the package] and the full solution is thus given by
+
+\begin{equation}
+\psi_n(r)=\frac{\left(2m/\hbar\right)^{1/6}}
+{\mathrm{Ai}'\left(a_n\right)}
+\mathrm{Ai}\left[
+\left(\frac{2m}{\hbar}\right)^{1/3}\left(r-E_n\right)\right].
+\end{equation}
+
+Figure~\ref{qm} shows the first six energy levels and the
+corresponding wave functions.
+
+
+\begin{figure}[htbp]
+  \begin{center}
+<<fig=TRUE>>=
+f <- function(r,n){ 
+-airy_Ai(r+airy_zero_Ai(n+1))/airy_zero_Ai_deriv(n+1)}
+plot(c(0,10),c(0,10),type="l",yaxt="n",xaxt="n",frame=FALSE,xlab="r",ylab="V(r)")
+axis(1,pos=0)
+axis(2,pos=0)
+
+x <- seq(from=0,to=10,len=400)
+for(i in 0:5){
+  jj <- -airy_zero_Ai(i+1)
+  lines(x=c(0,jj),y=c(jj,jj))
+  lines(x=c(jj,10),y=c(jj,jj),col="gray",lty=2)
+  points(x,(i+1)*(-1)^i*f(x,i)+jj,type="l")
+}
+@
+\caption{First six energy levels of a particle\label{qm} in a
+  potential well (diagonal line) given by equation~\ref{potential}}
+  \end{center}
+\end{figure}
+
+\end{document}

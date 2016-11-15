@@ -1,0 +1,639 @@
+\documentclass[article,nojss]{jss}
+%% NOTA BENE: More definitions --> further down
+%%%%%%%%%%%%
+%
+\author{Martin M\"achler \\ ETH Zurich%
+  \\ June 2014 {\tiny (\LaTeX'ed \today)}}%---- for now
+\title{Spearman's Rho for the AMH Copula: \\ a Beautiful Formula}
+% \def\mythanks{a version of this paper, for \pkg{nacopula} 0.4\_4, has been published
+%     in JSS, \url{http://www.jstatsoft.org/v39/i09}.}
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Martin M\"achler} %% comma-separated
+\Shorttitle{Spearman's Rho for AMH -- Beautiful}
+%
+% The "Name" on CRAN web page:
+%\VignetteIndexEntry{Rho_AMH_beautiful}
+%\VignetteDepends{MASS}
+%\VignetteDepends{copula}
+%\VignetteDepends{sfsmisc}
+\SweaveOpts{engine=R,strip.white=true,keep.source=TRUE}
+%FF Quite a bit faster with*OUT* pdfCrop ing:
+%FF \SweaveOpts{eps=FALSE,pdf=TRUE, width=7,height=5}
+\SweaveOpts{eps=FALSE,pdf=FALSE, grdevice=pdfCrop, width=7,height=5} % use pdfcrop to crop .pdf
+
+%% an abstract and keywords
+\Abstract{
+  We derive a beautiful series expansion for Spearman's rho, $\rho(\theta)$ of the
+  Ali-Mikhail-Haq (AMH) copula with paramater $\theta$ which is also called
+  $\alpha$ or $\theta$.  Further, via experiments we determine the cutoffs
+  to be used for practically fast and accurate computation of $\rho(\theta)$ for
+  all $\theta \in [-1,1]$.
+}
+
+\Keywords{Archimedean copulas, Spearman's rho}
+%% at least one keyword must be supplied
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+%% \Volume{13}
+%% \Issue{9}
+%% \Month{September}
+%% \Year{2004}
+%% \Submitdate{2004-09-29}
+%% \Acceptdate{2004-09-29}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+	Martin M\"achler\\
+	Seminar f\"ur Statistik, HG G~16\\
+	ETH Zurich\\
+	8092 Zurich, Switzerland\\
+	E-mail: \email{maechler@stat.math.ethz.ch}\\
+	URL: \url{http://stat.ethz.ch/people/maechler}
+}
+%% It is also possible to add a telephone and fax number
+%% before the e-mail in the following format:
+%% Telephone: +43/1/31336-5053
+%% Fax: +43/1/31336-734
+
+%% for those who use Sweave please include the following line (with % symbols):
+%% MM: this is "substituted" by  jss.cls:
+%% need no \usepackage{Sweave.sty}
+
+%% Marius' packages
+\usepackage[american]{babel}%for American English
+\usepackage{microtype}%for character protrusion and font expansion (only with pdflatex)
+\usepackage{amsmath}%sophisticated mathematical formulas with amstex (includes \text{})
+\usepackage{mathtools}%fix amsmath deficiencies
+\usepackage{amssymb}%sophisticated mathematical symbols with amstex (includes \mathbb{})
+\usepackage{bm}%for bold math symbols: \bm (= bold math)
+%NON-STANDARD:\RequirePackage{bbm}%only for indicator functions
+\usepackage{enumitem}%for automatic numbering of new enumerate environments
+\usepackage[
+  format=hang,
+  % NOT for JSS: labelsep=space,
+  justification=justified,
+  singlelinecheck=false%,
+  % NOT for JSS: labelfont=bf
+]{caption}%for captions
+
+% This is already in jss above -- but withOUT the  fontsize=\small part !!
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontsize=\small,fontshape=sl}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontsize=\small}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{fontsize=\small,fontshape=sl}
+%% makes space between Sinput and Soutput smaller:
+\fvset{listparameters={\setlength{\topsep}{0pt}}}% !! quite an effect!
+%%
+
+\long\def\symbolfootnote[#1]#2{\begingroup%
+  \def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup}
+%% and \symbolfootnote[1]{footnote} to get an * , 2: dagger, 3: double dagger...
+%
+\renewcommand*{\th}{\theta}%<------------------ just for readability !!
+%^^            ===
+\newcommand*{\R}{\proglang{R}}%{\textsf{R}}
+%% Marius' commands
+%% \newcommand*{\eps}{\varepsilon}
+%% %NON-STANDARD{bbm}:\newcommand*{\I}{\mathbbm{1}}
+%% \newcommand*{\I}{\mathbf{1}}
+%% \newcommand*{\IK}{\mathbb{K}}
+\newcommand*{\IN}{\mathbb{N}}
+\newcommand*{\IR}{\mathbb{R}}
+%% \newcommand*{\IC}{\mathbb{C}}
+%% \newcommand*{\IP}{\Prob}
+%% \newcommand*{\IE}{\E}
+%% \newcommand*{\V}{\operatorname*{V}}
+\newcommand*{\abs}{\operatorname*{abs}}
+%% \renewcommand*{\S}{\operatorname*{S}}
+%% \newcommand*{\tS}{\operatorname*{\tilde{S}}}
+%% \newcommand*{\ran}{\operatorname*{ran}}
+\newcommand*{\sgn}{\operatorname*{sgn}}
+\newcommand*{\sign}{\operatorname*{sign}}
+%% \newcommand*{\vp}{\varphi}
+%% \newcommand*{\vpi}{{\varphi^{-1}}}
+%% \newcommand*{\vppi}{{\varphi^{[-1]}}}
+%% \newcommand*{\psiD}{\psi^\prime}
+\newcommand*{\psii}{{\psi^{-1}}}
+%% \newcommand*{\psiis}[1]{{\psi_{#1}^{-1}}}
+%% \renewcommand*{\L}{\mathcal{L}}
+%% \newcommand*{\LS}{\mathcal{LS}}
+%% \newcommand*{\LSi}{\LS^{-1}}
+\newcommand{\tr}{\ensuremath{^\mathsf{T}}}% or  ^{\intercal}
+%% \renewcommand*{\O}{\mathcal{O}}
+%% \newcommand*{\Geo}{\operatorname*{Geo}}
+%% \newcommand*{\Exp}{\operatorname*{Exp}}
+%% \newcommand*{\Sibuya}{\operatorname*{Sibuya}}
+%% \newcommand*{\Log}{\operatorname*{Log}}
+%% \newcommand*{\U}{\operatorname*{U}}
+%% \newcommand*{\B}{\operatorname*{B}}
+%% \newcommand*{\NB}{\operatorname*{NB}}
+%% \newcommand*{\N}{\operatorname*{N}}
+%% \newcommand*{\Var}{\operatorname*{Var}}
+%% \newcommand*{\Cov}{\operatorname*{Cov}}
+%% \newcommand*{\Cor}{\operatorname*{Cor}}
+\newcommand*{\Li}{\mathrm{Li}}% operatorname gives wrong \Li_2 in displaymath
+\hyphenation{Ar-chi-me-dean}
+
+%% journal specific aliases
+\newcommand*{\setcapwidth}[1]{}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+%% include your article here, just as usual
+%% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
+% \section[About Java]{About \proglang{Java}}
+%% Note: If there is markup in \(sub)section, then it has to be escape as above.
+%% Note: These are explained in '?RweaveLatex' :
+<<preliminaries, echo=FALSE, results=hide>>=
+## Custom graphics device (for cropping .pdf):
+pdfCrop <- function(name, width, height, ...) {
+    f <- paste0(name, ".pdf")
+    grDevices::pdf(f, width=width, height=height, onefile=FALSE)
+    assign(".pdfCrop.name", f, envir=globalenv())
+}
+pdfCrop.off <- function() { # used automagically
+    grDevices::dev.off() # closing the pdf device
+    f <- get(".pdfCrop.name", envir=globalenv())
+    system(paste("pdfcrop --pdftexcmd pdftex", f, f, "1>/dev/null 2>&1"),
+           intern=FALSE) # crop the file (relies on PATH)
+}
+op.orig <-
+options(width = 70, useFancyQuotes = FALSE,
+        ## SweaveHooks= list(fig=function() par(mar=c(5.1, 4.1, 1.1, 2.1))),
+        prompt="> ",  continue="   ")
+## JSS: prompt="R> ", continue=">  ")
+Sys.setenv(LANGUAGE = "en")
+if(.Platform$OS.type != "windows")
+  Sys.setlocale("LC_MESSAGES","C")
+## if(Sys.getenv("USER") == "maechler")# take CRAN's version, not development one:
+##    require("copula", lib="~/R/Pkgs/CRAN_lib")
+require("copula")
+@
+\section{Introduction}
+%% Copy-Paste, abridged from ./nacopula-pkg.Rnw  -- which I cite
+A \textit{copula} is a multivariate distribution function with standard
+uniform univariate margins. Standard references for an introduction
+are \citet{joe1997} or \citet{nelsen2007}.
+
+\citet{sklar1959} shows that for any multivariate
+distribution function $H$ with margins $F_j$, $j\in\{1,\dots,d\}$, there exists
+a copula $C$ such that
+\begin{align}
+  H(x_1,\dots,x_d)=C(F_1(x_1),\dots,F_d(x_d)),\ \bm{x}\in\IR^d.\label{sklar}
+\end{align}
+Conversely, given a copula $C$ and arbitrary univariate distribution functions $F_j$,
+$j\in\{1,\dots,d\}$, $H$ defined by (\ref{sklar}) is a distribution function
+with marginals $F_j$, $j\in\{1,\dots,d\}$.
+
+\section{Archimedean copulas}
+An \textit{Archimedean generator}, or simply \textit{generator}, is a
+continuous, decreasing function $\psi:[0,\infty]\to[0,1]$ which satisfies
+$\psi(0)=1$, $\psi(\infty):=\lim_{t\to\infty}\psi(t)=0$, and which is strictly
+decreasing on $[0,\inf\{t:\psi(t)=0\}]$. A $d$-dimensional copula is called
+\textit{Archimedean} if it is of the form
+\begin{align}
+  C(\bm{u};\psi)=\psi(\psii(u_1)+\dots+\psii(u_d)),\ \bm{u}\in[0,1]^d,\label{ac}
+\end{align}
+for some generator $\psi$ with inverse $\psii:[0,1]\to[0,\infty]$, where
+$\psii(0)=\inf\{t:\psi(t)=0\}$.
+A necessary and sufficient condition for
+an Archimedean generator $\psi$ to generate a proper copula in all
+dimensions $d$ is that $\psi$ is \textit{completely monotone}, i.e.,
+$(-1)^k\psi^{(k)}(t)\ge 0$ for all $t \in (0,\infty)$ and $k \in \IN_0$.
+%
+See \citet{Hofert:Maechler:2010:JSSOBK:v39i09} and its references, for
+considerably more details.
+
+\subsection{The Ali-Mikhail-Haq (AMH) copulas}
+An Ali-Mikhail-Haq (AMH) copula with parameter
+$\th$, $\th \in [-1,1)$ (where the right boundary, $\th = 1$ can
+sometimes be considered valid) % FIXME
+has generator
+\begin{align}
+  \psi_{\mathrm{AMH}}(t, \th) =  \frac{1 - \th}{\exp(t) - \th}.\label{psi}
+\end{align}
+For, $\th=0$, clearly $\psi(t) = \exp(-t)$, corresponds to independence.
+Both ``rank based'' association measures or correlations,
+Kendall's $\tau$ and Spearman's $\rho$,
+are montone in $\th$, and hence have the same sign as $\th$.
+
+Kendall's tau is equal to
+\begin{align}
+  \tau_\th = 1-\frac{2((1-\th)^2\log(1-\th) + \th)}{3\th^2}, \label{tau-AMH}
+\end{align}
+for $\th \in [0, 1)$, $\tau$ is in $[0, \frac 1 3)$. The formula (\ref{tau-AMH})
+needs care when $\th$ is close to zero, and we provide \code{tauAMH()}
+in the \pkg{copula} package, using a Taylor series for small $|\th|$,
+see \code{help(tauAMH)}.
+
+\section[Spearman's Rho for AMH]{Spearman's Rho ($\rho$) for AMH}
+\subsection{The beautiful formula}
+\citet[ex.~5.10, p. 172]{nelsen2007} \ % Nelsen (2006, p.172)
+provides the following formula for Spearman's $\rho$ for the AMH copula,
+\begin{align}
+  \rho(\th) = \frac{12 (1 + \th)}{\th^2} \cdot \mathrm{dilog}(1-\th)
+  - \frac{24 (1 - \th)}{\th^2} \cdot \log(1-\th)
+  - \frac{3 (\th + 12)}{\th},
+      \label{rho-Nelsen}
+\end{align}
+where his ``dilogarithm'' $\mathrm{dilog}(x) = \Li_2(1-x) = \mathtt{polylog}(1-x, 2)$,
+and $\Li_2(x)$ is the usual definition of the dilogarithm (also called
+``Spence's function''),
+\begin{align}
+ \Li_2(z) = -\int_0^z \frac{\ln(1-u)}{u}\, \mathrm{d}u
+          = \sum_{k=1}^\infty \frac{z^k}{k^2}, \ \ z \in\mathbb{C} \setminus [1,\infty), \label{Li2}
+\end{align}
+%% e.g. in Wikipedia
+where the infinite sum is only applicable for $|z| < 1$.
+
+With the boundaries for $\th \in \{-1,1\}$, this leads to a range of
+$\rho$ in the interval
+$\left[33 - 48 \log 2, 4 \pi^2 - 39\right]$ or approximately $[-0.2711, 0.4784]$.
+
+It is clear that formula (\ref{rho-Nelsen}) cannot be used for
+$\th=0$ and further inspection reveals that it also heavily suffers
+from cancellation for $|\th| \ll 1$.
+
+In order to compute $\rho$ accurately for all values of $\th$, we look
+at the Taylor series of the respective terms in (\ref{rho-Nelsen}) and will
+find a beautiful infinite series formula for $\rho(\th)$.
+\begin{align}
+  \rho(\th) &= \frac{12 (1 + \th)}{\th^2} \cdot \Li_2(\th)
+                  - \frac{24 (1 - \th)}{\th^2} \cdot \log(1-\th)
+                  - \frac{3 (\th + 12)}{\th} \notag\\
+  &= 3/\th \cdot \bigl(4 (1 + \th)/\th \cdot \Li_2(\th) - 8(1 - \th)/\th \cdot \log(1-\th) - (\th + 12)\bigr) \notag\\
+  &= \frac{3}{\th} \cdot r(\th), \ \ \text{ where }\label{rhoa-ra}\\
+  r(\th) &:= 4 (1 + \frac 1 \th) \cdot \Li_2(\th) - 8(\frac 1 \th - 1) \cdot \log(1-\th) - (\th + 12).
+  \label{def-ra}
+\end{align}
+Now, we plug in the Taylor series of both
+$\Li_2(\th)= \sum_{k=1}^\infty\frac{\th^k}{k^2}$, hence
+\begin{align}
+  r_1(\th) := (1 + \frac 1 \th) \cdot \Li_2(\th) &= \Li_2(\th) + \frac 1 \th \cdot \Li_2(\th) =
+    \sum_{k=1}^\infty\frac{\th^k}{k^2} + \sum_{k=1}^\infty\frac{\th^{k-1}}{k^2} =\notag\\
+  &= 1 + \sum_{k=1}^\infty\frac{k^2 + (k+1)^2}{k^2 (k+1)^2} \th^k, \label{ra-term-1}
+\end{align}
+and $\log(1-\th) = \th +\frac{\th^2}2+\frac{\th^3}3+\ldots = \sum_{k=1}^\infty \frac{\th^k}{k}$,  hence
+\begin{align}
+  r_2(\th) := (1 - \frac 1 \th)\log(1-\th) = \sum_{k=1}^\infty \frac{\th^k}{k} -
+                                        \sum_{k=1}^\infty \frac{\th^{k-1}}{k}
+                           = -1 + \sum_{k=1}^\infty \frac{\th^k}{k(k+1)}.
+                         \label{ra-term-2}
+\end{align}
+Consequently, first from (\ref{def-ra}), then plugging in (\ref{ra-term-1})
+and  (\ref{ra-term-2}),
+\begin{align}
+  r(\th) &= 4 r_1(\th) - 8 r_2(\th) - (12 + \th) =\notag\\
+         &=(4\cdot 1 - 8(-1) - 12) + (4\cdot \frac 5 4 - 8\cdot \frac 1 2 - 1)\th +
+  \sum_{k=2}^\infty \biggl(\frac{4(k^2 + (k+1)^2)}{k^2 (k+1)^2} - \frac{8}{k(k+1)}\biggr) \th^k = \notag\\
+  &=0+0\cdot \th +          \sum_{k=2}^\infty \frac{4(k^2 + (k+1)^2) - 8k(k+1)}{k^2 (k+1)^2}\th^k=\notag\\
+  &=\phantom{0+0\cdot\th+{}}\sum_{k=2}^\infty \frac{4(2k^2 +2k +1)^2 - 8k(k+1)}{k^2 (k+1)^2}\th^k=\notag\\
+  &= \sum_{k=2}^\infty \frac{4}{k^2 (k+1)^2}\th^k
+   = \sum_{k=2}^\infty \frac{\th^k}{{\binom{k+1}{2}}^2},
+\end{align}
+a beautiful formula with reciprocal binomial coefficients, and
+finally, as $\rho(\th) = \frac{3}{\th} \cdot r(\th)$ (\ref{rhoa-ra}) from the above,
+\begin{align}
+  \rho(\th) = \sum_{k=1}^\infty \frac{3}{{\binom{k+2}{2}}^2} \cdot \th^k
+          = \frac{\th}{3} + \frac{\th^2}{12} +\frac{3\th^3}{100}  +\frac{\th^4}{75} + \dots
+          \label{rho-series}
+\end{align}
+the ``beautiful formula'' for Spearman's $\rho$ of an AMH copula with
+parameter $\th$.  Compare this compact formula
+\begin{align*}
+  \boxed{\rho(\th) = \sum_{k=1}^\infty \frac{3 \th^k}{{\binom{k+2}{2}}^2}}
+\end{align*}
+with the original three term formula (\ref{rho-Nelsen}) which involves
+$\mathrm{dilog}()$ and $\log()$, to understand why I call it \emph{beautiful}.
+Note further that the ``beautiful formula'' clearly shows the approximate
+linearity of $\rho(\th)$ for small $|\th|$.
+Note that the first few coefficients $a_k$ in
+$\rho(\th) = \sum_{k=1}^\infty a_k \th^k$ are
+<<ak-frac1, eval=FALSE, echo=FALSE>>=
+require(sfsmisc) #--> mat2tex(), mult.fig(), eaxis()
+k <- 1:9; ak <- MASS::fractions(12/((k+1)*(k+2))^2)
+<<ak-frac2, eval=FALSE, echo=FALSE>>=
+rbind(k = k, `$a_k$` = as.character(ak))
+@
+<<ak-frac-show, eval=FALSE>>=
+<<ak-frac1>>
+<<ak-frac2>>
+@
+<<ak-frac-do, echo=FALSE, results=tex>>=
+<<ak-frac1>>
+mat2tex(
+<<ak-frac2>>
+      , stdout())
+@
+
+\subsection[Accurate and efficient R implementation of rho for AMH]{%
+  Accurate and efficient \R{} implementation of $\rho_{\mathrm{AMH}}$}
+
+In the following \R{} code, we use \texttt{a} as short form for the copula parameter
+$\th$ (which is also called $\alpha$ in the literature):
+<<def-rhos>>=
+##' Version 1:  Direct formula from Nelsen:
+.rhoAmh.1 <- function(a) {
+  Li2 <- gsl::dilog(a)
+  12 * (1 + a) / a^2 * Li2 - 24 * (1 - a) / a^2 * log1p(- a) - 3 * (a + 12) / a
+}
+.rhoAmh.1b <- function(a) {
+  Li2 <- gsl::dilog(a)
+  ## factored out 3/a from version 1:
+  3/a * (4 * (1 + a) / a * Li2 - 8 * (1 - a) / a * log1p(- a) - (a + 12))
+}
+
+##' Version 2:
+.rhoAmh.2 <- function(a, e.sml = 1e-11) {
+  stopifnot(length(a) <= 1)
+  if(abs(a) < e.sml) { ## if |a| << 1, do better than the direct formula:
+      a*(1/3 + a*(1/12 + a*(3/100 + a/75)))
+  } else { ## regular a
+      Li2 <- gsl::dilog(a)
+      3/a * (4 * (1 + 1/a) * Li2 - 8 * (1/a - 1) * log1p(- a) - (a + 12))
+  }
+}
+
+##' Series version with N terms:
+rhoAmh.T <- function(a, N) {
+    stopifnot(length(N) == 1, N == as.integer(N), N >= 1)
+    if(N <= 4)
+        switch(N,
+               a/3,
+               a/3*(1 + a/4),
+               a*(1/3 + a*(1/12 + a* 3/100)),
+               a*(1/3 + a*(1/12 + a*(3/100 + a/75))))
+    else { ## N >= 5
+        n <- N:1 #--> sum smallest to largest
+        if(is(a, "mpfr")) ## so all computations work in high precision
+            n <- mpfr(n, precBits=max(.getPrec(a)))
+        cf <- ## 3/choose(n+2, 2)^2
+            3/((n+1)*(n+2)/2)^2
+        a2n <- outer(n,a, function(x,y) y^x) ## a2n[i,j] := a[j] ^ n[i]
+        colSums(cf * a2n)
+    }
+}
+@
+
+Now, the first graphical exploration, notably of the original Nelsen formula,
+\code{.rhoAmh.1()} and its variant very slight improvement \code{.rhoAmh.1b()}
+<<first-curve, fig=TRUE>>=
+r1  <- curve( .rhoAmh.1 (x),  1e-20, .1, log="x", n=1025)
+r1b <- curve( .rhoAmh.1b(x), n=1025, add=TRUE, col=2)
+r2 <-  curve( Vectorize(.rhoAmh.2)(x), n=1025, add=TRUE,
+             col=adjustcolor("blue4",1/4), lwd = 5)
+tab <- cbind(as.data.frame(r1), y.b = r1b$y, y2 = r2$y)
+@
+\\
+expose the big problems (y-values between -400'000 and 200'000 where
+$|\rho()| < 1$ is known!). Investingating \code{tab} shows that \code{1b}
+is very slightly better than \code{1}, but looking closer, e.g. also with
+ \code{curve(.rhoAmh.1(x),  1e-20, .1, log="x", n=1025, ylim=c(-1,1)*.1)},
+shows that Nelsen's direct formula is
+really unusable for $|\theta| < 10^{-11}$ approximately.
+%% then also, that '2' is not ok, either:
+
+So, \code{.rhoAmh.2()} using a 4-terms series approximation for $|\theta|<$\code{e.sml}
+is much better, but it is still not good enough, as is revealed by
+drawing it once with its default cutoff \code{e.sml}$= 10^{-11}$
+and then in red with a higher cutoff $10^{-6}$ (and in log-log and
+regular y-axis scale):
+<<more-curves, fig=TRUE, height=6>>=
+if(require("sfsmisc")) {
+    myAxes <- function(sides) for(s in sides) eaxis(s)
+} else {
+    myAxes <- function(sides) for(s in sides)  axis(s)
+}
+rhoAcurve <- function(k, ..., log = "",
+                      ylab = substitute({rho^"*"}[2](x,KK), list(KK=k)))
+    curve(Vectorize(.rhoAmh.2)(x, k), n=1025, ylab=ylab, log=log,
+          xaxt = if(grepl("x", log, fixed=TRUE)) "n" else "s",
+          yaxt = if(grepl("y", log, fixed=TRUE)) "n" else "s", ...)
+
+e.s <- eval(formals(.rhoAmh.2)$e.sml); t0 <- e.s * .99999
+op <- sfsmisc::mult.fig(2, marP = -c(1.4,1,1,1))$old.par
+rhoAcurve(e.s, 1e-18, 1e-1, log = "xy", ylab=""); myAxes(1:2)
+lines(t0, .rhoAmh.2(t0), type="h", lty=3, lwd = 3/4)
+rhoAcurve(1e-6, add=TRUE, col=adjustcolor(2, 1/3), lwd=4)
+rhoAcurve(1e-6, 1e-18, 1, log="x", col="tomato"); myAxes(1)
+par(op)
+@
+
+So the default cutoff ($10^{-11}$) is too small, as the
+explicit (Nelsen) formula breaks down between the cutoff and $~\approx 10^{-7}$.
+Hence we are aiming for a cutoff $> 10^{-7}$, momentarily $= 10^{-6}$, and
+zoom into its neighborhood:
+<<curve4, fig=TRUE>>=
+rhoAcurve(1e-6, 1e-7, 1e-5, log = "y", col="tomato"); myAxes(2)
+abline(v=1e-6, lty=3, lwd=1/2)
+@
+
+Use still a larger cutoff:
+<<curve5, fig=TRUE, height=6>>=
+cc <- 1e-4 ; op <- mult.fig(2, marP= -c(1,0,1,1))$old.par
+rhoAcurve(cc, 1e-6, 1e-3, log = "xy", col="tomato",ylab=""); myAxes(1:2)
+abline(v=cc, lty=3, lwd=1/2)
+## zoom in extremely:
+rhoAcurve(cc, cc*(1-1e-4), cc*(1+1e-4), col="tomato")
+abline(v=cc, lty=3, lwd=1/2);          par(op)
+@
+
+Still larger cutoff:
+<<curve7, fig=TRUE>>=
+cc <- 1e-3
+rhoAcurve(cc, cc*(1-2^-20), cc*(1+2^-20), log="y",yaxt="s", col="tomato")
+abline(v=cc, lty=3, lwd=1/2)
+rhoAcurve(cc*10, add=TRUE, col=adjustcolor(1,.25), lwd=3)
+@
+
+Still larger \dots
+<<curve8, fig=TRUE>>=
+cc <- 0.01
+rhoAcurve(cc, cc*(1-2^-20), cc*(1+2^-20), log="y",yaxt="s", col="tomato")
+abline(v=cc, lty=3, lwd=1/2)
+rhoAcurve(cc*10, add=TRUE, col=adjustcolor(1,.25),lwd=5)
+@
+
+And ``visibly'', it still seems perfect.
+This would suggest that a 4-terms approximation is to be preferred to the
+direct formula for $|\theta < 10^{-3}|$, possibly even $|\theta <
+10^{-2}|$.  We will determine the best $k$-terms series approximation for
+different cutoffs for $k=1,2,3,4,5$, in the following.
+Looking at the series approximations (first order up to 6-th order) a first time,
+<<Taylor-curves-1, fig=TRUE>>=
+a <- 2^seq(-30,-1, by = 1/32)# 0 < a <= 0.5
+rhoA.T <-  vapply(1:6, rhoAmh.T, a=a, numeric(length(a)))
+op <- mult.fig(mfcol=c(1,3), mgp=c(2.5,.8,0))$old.par
+matplot(a, rhoA.T, type="l")
+matplot(a, rhoA.T, type="l", log="y", yaxt="n")   ; myAxes(2)
+matplot(a, rhoA.T, type="l", log="xy", axes=FALSE); myAxes(1:2);box()
+par(op)
+@
+
+Now, rather look at the \emph{relative} approximation error of the
+different Taylor series approximations:
+<<Taylor-curves-2, fig=TRUE>>=
+rhoA.true <- rhoAmh.T(a,50)
+chk.w.mpfr <- FALSE ## Sys.info()[["user"]] == "maechler"
+if(chk.w.mpfr) {
+    require(Rmpfr)## get the "really" "true" values:
+    print(system.time(rhA.mp  <- rhoAmh.T(mpfr(a, prec=256), 50))) ## 3.95 sec (lynne)
+    print(system.time(rhA.mp1 <- rhoAmh.T(mpfr(a, prec=256), 60))) ## 4.54 sec
+    stopifnot(all.equal(rhA.mp, rhoA.true, tol = 1e-15))
+        print(all.equal(rhA.mp, rhoA.true, tol = 1e-20)) ## 6.99415....e-17 [64bit, lynne]
+    ## see if the 50 terms have converged:
+    print( all.equal(rhA.mp, rhA.mp1, tol = 1e-30) )
+    ## "Mean relative difference: 2.4958....e-22"
+    ## ==> 50 terms seem way enough for double prec
+}
+matplot(a, 1 - rhoA.T / rhoA.true, type="l", log="y")
+@
+
+We rather provide a function for \emph{visualizing} the {relative}
+approximation errors of the different Taylor series approximations in a
+flexible way:
+<<def-plot-relE>>=
+pl.relE.rhoAMH <- function(N.max, N.inf = 50, N.min = 1, l2a.lim = c(-30, -1),
+                           n.p.u = 2^round(log2(1000 / diff(l2a.lim))),
+                           cut.rA2 = 1e-7,
+                           colX = adjustcolor("midnightblue", 0.5), ...)
+{
+    stopifnot(length(l2a.lim) >= 2, l2a.lim < 0, n.p.u >= 1,
+              N.max >= N.min, N.min >= 1, N.inf > N.max + 4,
+              (N3 <- c(N.min, N.max, N.inf)) == as.integer(N3))
+    a <- 2^seq(l2a.lim[1], l2a.lim[2], by = 1/n.p.u)
+    N.s <- N.min:N.max
+    rhoA.true <- rhoAmh.T(a, N.inf)
+    rhoA.T <- vapply(N.s, rhoAmh.T, a=a, numeric(length(a))) # matrix
+    rhoA.v2 <- Vectorize(.rhoAmh.2)(a, cut.rA2) # "Li2()+direct" below
+
+    ## matplot() compatible colors and lty's
+    cols <- palette()[1 + (N.s-1) %% 6]
+    ltys <- (1:5)    [1 + (N.s-1) %% 5]
+    matplot(a, 1 - rhoA.T / rhoA.true, type="l", log="xy",
+            col=cols, lty=ltys, axes=FALSE, frame=TRUE, ...)
+    myAxes(1:2)
+    lines(a, 1 - rhoA.v2 / rhoA.true, col= colX, lwd=3)
+    legend("topleft", c(paste0("N=",N.s), "Li2()+direct"),
+           col=c(cols, colX), lty=c(ltys, 1), lwd=c(rep(1,length(N.s)), 3),
+           cex=.75, bty="n")
+    invisible(list(a=a, rhoA.T=rhoA.T, rhoA.v2 = rhoA.v2))
+}
+@
+
+Note that the ``\textsf{Li2()+direct}'' comparison is only for
+$a=\theta > 10^{-7}$, as that is used as cutoff per default,
+\code{cut.rA2 = 1e-7}.
+And now look at the ``very nice'' pictures, using \code{l2a}$= \log_2(a)$
+to choose the range of $a = \theta$:
+<<relE-curves-1-2, fig=TRUE, height=7>>=
+op <- mult.fig(2, marP=-c(1.5,1.5,2,1))$old.par
+pl.relE.rhoAMH(4, l2a=c(-53,-1), ylab="")
+pl.relE.rhoAMH(6,                ylab="")
+@
+
+Successively zooming in ``to the right'', to larger $a$, first, with range
+$2^{-12} - 2^{-3}$, and up to 12 terms, then zooming into range
+$2^{-8}- 2^{-.5}$, and using 20,
+<<relE-curves-3-4, fig=TRUE, height=7.5>>=
+mult.fig(2, marP=-c(1.5,1.5,2,1))
+pl.relE.rhoAMH(12, l2a=c(-12, -3),            ylab="")
+pl.relE.rhoAMH(20, l2a=c(-8, -.5), N.min = 4, ylab="")
+@
+
+The next one is ``just for fun'', to see if there is consistency when
+$N \to N_\infty$, i.e., our \texttt{N.inf = 50}, and not shown here:
+<<relE-curves-5>>=
+par(op); pl.relE.rhoAMH(40, l2a=c(-5, -.5), N.min = 10)
+@
+
+The following plots are now used to read off the final cutoff used for the
+(hidden) \code{.rhoAmhCopula()} function in package \pkg{copula} which underlies
+\code{rho(amhCopula(.))}:
+<<relE-C-1, fig=TRUE>>=
+pl.relE.rhoAMH(6)
+abline(v=1e-4, col="gray", lty=2)#-> N=2 cutoff
+abline(v=2e-3, col="gray", lty=2)#-> N=3 cutoff
+<<relE-C-2, fig=TRUE>>=
+pl.relE.rhoAMH(12, l2a=c(-12, -3))
+abline(v= 2e-3, col="gray", lty=2)#-> N=3 cutoff
+abline(v= 7e-3, col="gray", lty=2)#-> N=4 cutoff
+abline(v=16e-3, col="gray", lty=2)#-> N=5 cutoff
+@
+
+Consequently, the implementation in \pkg{copula} is
+<<rhoAmh-def-show,eval=FALSE>>=
+copula ::: .rhoAmhCopula
+@
+<<rhoAmh-def-do, echo=FALSE>>=
+rhoA <- copula ::: .rhoAmhCopula; environment(rhoA) <- environment()
+rhoA
+@
+
+visualized on its full range $[-1,1]$,
+<<remnant-fig, fig=TRUE, width=6, height=6>>=
+rhoAMH <- Vectorize(copula:::.rhoAmhCopula)
+curve(rhoAMH, n=1025, -1, 1, ylim= c(-1,1), xlab = quote(theta),
+      ylab="", col="tomato", lwd=2, las=1)
+abline(0, 1/3, lty=2, col=(adjustcolor(c2 <- "orange2", 2/3)))
+curve(x/3*(1+x/4), lty=2, col=(adjustcolor(c3 <- "blue", 1/2)),
+      -1.1,1.1, add=TRUE); x. <- .65
+text(.4 , .3 , quote(rho[plain(AMH)](theta)),col="tomato")
+text(.88, .23, quote(y == theta/3), col=c2)
+text(.7,  .05, quote(y == theta/3*(1+theta/4)), col=adjustcolor(c3, 1/2))
+segments(.55, .10, x., x./3*(1+x./4), lty="82", col=adjustcolor(c3, 1/2))
+abline(h=0,v=0, lty=3); rect(-1,-1,1,1, lty=3)
+@
+
+Finally, we may add some simple tests, that the \pkg{copula} package's
+\texttt{rho(<amhCopula>, *)} did not fulfill because of the notorious cancellations,
+previously. Note that in fact, we are only looking at very small (positive)
+$\th$, and checking that already the \emph{first} two order series approximations,
+\begin{align}
+  \rho_{\mathrm{AMH}}(\th) \approx \frac{\th}{3}(1 + \frac{\th}{4}) \approx \th/3
+\end{align}
+are all already good approximations or very accurate, depending on $|\theta|$:
+<<regression-tests>>=
+t0 <- seq(-1,1, by=2^-8)[1:512]
+t1 <- seq(-1/2, 1/2, by = 2^-8)
+th <- 10^-(6:99); i <- -(1:9)
+rth <- rhoAMH(th)
+stopifnot(all.equal(rhoAMH(1), 4*pi^2 - 39, tol = 8e-15),# <- gave NaN
+          all.equal(rhoAMH(t0), t0/3 * (1 + t0/4), tol = 0.06),
+          all.equal(rhoAMH(t1), t1/3 * (1 + t1/4), tol = 1/85),
+          all.equal(rth,      th / 3 * (1 + th/4), tol = 1e-15),
+          all.equal(rth,      th / 3, tol = 1e-6),
+          all.equal(rth[i], th[i]/ 3, tol = 6e-16))
+th <- 10^-(16:307)
+stopifnot(all.equal(th/3, rhoAMH(th), tol=4e-16),
+          rho(amhCopula(0, use.indepC="FALSE")) == 0)
+@
+
+%\medskip
+%\section{Conclusion}
+\subsection*{Session Information}
+<<sessionInfo, results=tex>>=
+toLatex(sessionInfo(), locale=FALSE)
+@
+%%
+%% packageDescription("copula")[c("Version", "LastChanged")]
+%% Now,  packageDescription("copula")[c("Date", "Revision")]  is too long,
+%% ----> we "cheat" as follows:
+<<copula-version, eval=FALSE>>=
+my.strsplit(  packageDescription("copula")[["Date"]]  )
+@
+<<copula-version,echo=FALSE>>=
+pd <- gsub("\\$", '', packageDescription("copula")[["Date"]])
+p2 <- strsplit(sub("^Date: +", '', pd),"\n")[[1]][2:1]
+cat(p2[1], "-- ", sub(" *, *$", '', p2[2]), "\n", sep="")
+<<finalizing, echo=FALSE>>=
+options(op.orig)
+@
+
+
+\bibliography{nacopula}
+
+\end{document}

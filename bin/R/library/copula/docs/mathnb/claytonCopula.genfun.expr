@@ -1,0 +1,1 @@
+List(-(alpha*u**(-1 - alpha)),alpha*(1 + alpha)*u**(-2 - alpha))

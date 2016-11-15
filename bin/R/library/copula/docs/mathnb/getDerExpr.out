@@ -1,0 +1,43 @@
+Mathematica 6.0 for Linux x86 (64-bit)
+Copyright 1988-2008 Wolfram Research, Inc.
+
+In[1]:= 
+Out[1]= {stdout}
+
+In[2]:= 
+In[2]:= 
+Syntax::sntxf: " *)" cannot be followed by ";".
+
+In[2]:= 
+In[2]:= myGetDer[cname_, m_] := Module[
+  {Cdf, CdfDerWrtArg, CdfDerWrtPar, 
+   Pdf, PdfDerWrtArgOverPdf, PdfDerWrtParOverPdf},
+  Cdf = ToExpression[ReadList[cname <> "Copula.cdf.expr", "String"]];
+  CdfDerWrtArg = Table[Simplify[D[Cdf[[i]], u1]], {i, 1, m}];
+  CdfDerWrtPar = Table[Simplify[D[Cdf[[i]], alpha]], {i, 1, m}];
+  Export[cname <> "Copula.cdfDerWrtArg.expr", FortranForm /@ CdfDerWrtArg, "Table"];
+  Export[cname <> "Copula.cdfDerWrtPar.expr", FortranForm /@ CdfDerWrtPar, "Table"]; 
+  Pdf = ToExpression[ReadList[cname <> "Copula.pdf.expr", "String"]];
+  PdfDerWrtArgOverPdf = Table[Simplify[Simplify[D[Pdf[[i]], u1]] / Pdf[[i]]], {i, 1, m}];
+  Export[cname <> "Copula.pdfDerWrtArgOverPdf.expr", FortranForm /@ PdfDerWrtArgOverPdf, "Table"];
+  PdfDerWrtParOverPdf = Table[Simplify[Simplify[D[Pdf[[i]], alpha]] / Pdf[[i]]], {i, 1, m}];
+  Export[cname <> "Copula.pdfDerWrtParOverPdf.expr", FortranForm /@ PdfDerWrtParOverPdf, "Table"];  
+  True;
+  ];
+
+In[3]:= 
+In[3]:= myGetDer["clayton", 4];
+
+In[4]:= myGetDer["gumbel", 4];
+
+In[5]:= myGetDer["frank", 4];
+
+Simplify::time: 
+   Time spent on a transformation exceeded 300
+     seconds, and the transformation was aborted. Increasing the value of
+     TimeConstraint option may improve the result of simplification.
+
+In[6]:= 
+In[6]:= 
+In[6]:= 
+In[6]:= 
