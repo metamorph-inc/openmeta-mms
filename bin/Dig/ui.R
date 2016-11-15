@@ -227,7 +227,27 @@ shinyUI(fluidPage(
           )
         ),
         tabPanel("Forward UQ"),
-        tabPanel("Design Ranking"),
+        tabPanel("Design Ranking",
+          br(),
+          actionButton('runProbability', 'Compute Probabilities'),
+          br(), br(),
+          h4("Weights"),
+          wellPanel(
+            fluidRow(
+              column(1, h5(strong("ID:"))),
+              column(1, h5(strong("Source:"))),
+              column(3, h5(strong("Description:"))),
+              column(2, h5(strong("Goal:"))),
+              column(2, h5(strong("Distance:"))),
+              column(3, h5(strong("Weight:")))
+            ), br(),
+            uiOutput("probabilityWeightUI")
+          ),
+          h4("Rankings"),
+          wellPanel(
+            DT::dataTableOutput("probabilityTable")
+          )
+        ),
         id = "bayesianTabset"
       ),
       conditionalPanel("output.displayQueries",
@@ -236,11 +256,11 @@ shinyUI(fluidPage(
         wellPanel(
           fluidRow(
             column(1, actionButton('addProbability', 'Add')),
-            column(2, h5(strong("Variable Name:"))),
+            column(3, h5(strong("Variable Name:"))),
             column(2, h5(strong("Direction:"))),
             column(2, h5(strong("Threshold:"))),
             column(2, h5(strong("Value:"))),
-            column(3)
+            column(2)
           ), br(),
           tags$div(id = 'probabilityUI'),
           hr(),

@@ -1876,11 +1876,11 @@ shinyServer(function(input, output, session) {
       ui = tags$div(
         fluidRow(
           column(1, actionButton(paste0('removeProbability', id), 'Delete')),
-          column(2, selectInput(paste0('queryName', id), NULL, choices = varRangeNum(), selected = varRangeNum()[[1]])),
+          column(3, selectInput(paste0('queryName', id), NULL, choices = varRangeNum(), selected = varRangeNum()[[1]])),
           column(2, selectInput(paste0('queryDirection', id), NULL, choices = c("Above", "Below")), selected = "Above"),
           column(2, textInput(paste0('queryThreshold', id), NULL)),
           column(2, uiOutput(paste0('queryValue', id))),
-          column(3)
+          column(2)
         ),
         id = paste0('probabilityQuery', id)
       )
@@ -1927,6 +1927,46 @@ shinyServer(function(input, output, session) {
     }
     print("Probabilites Calculated.")
   })
+  
+  # Design Ranking -----------------------------------------------------------
+  
+  runFullProbability <- observeEvent(input$runProbability, {
+    lapply(levels(raw_plus()[[paste0(input$bayesianDesignConfigVar)]]), function(config) {
+      print(paste(config))
+      data <- raw_plus()
+      configData <- subset(data, data[[paste0(input$bayesianDesignConfigVar)]] == config)
+      configData <- configData[varRangeNum()]
+      output_data <- resampleData(configData, bayesianDirection, bayesianType, bayesianParams)
+      print(output_data)
+    })
+  })
+  
+  output$probabilityWeightUI <- renderUI({
+    lapply(probabilityQueries$rows, function(id) {
+      name <- input[[paste0('queryName', id)]]
+      direction <- input[[paste0('queryDirection', id)]]
+      threshold <-input[[paste0('queryThreshold', id)]]
+      
+      fluidRow(
+        column(1, paste0("Query", id)),
+        column(1, paste0("Config")),
+        column(3, paste(name, direction, threshold)),
+        column(2, textInput(paste0("probGoal", id), NULL)),
+        column(2, selectInput(paste0("probDir", id), NULL, choices = c("Minimize", "Maximize"), selected = "Minimize")),
+        column(3, sliderInput(paste0("probWeight", id), NULL, 0, 1, 1, step = 0.05))
+      )
+    })
+  })
+  
+  # weighedProbabilityData <- reactive ({
+  #   runFullProbability()
+  # })
+  
+  # output$probabilityTable <- DT::renderDataTable({
+  #   runFullProbability
+  # })
+  
+  
   
   # UI Adjustments -----------------------------------------------------------
   
