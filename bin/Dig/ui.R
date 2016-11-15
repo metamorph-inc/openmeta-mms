@@ -227,9 +227,25 @@ shinyUI(fluidPage(
           )
         ),
         tabPanel("Forward UQ"),
-        tabPanel("Backward UQ"),
         tabPanel("Design Ranking"),
-        id = "Bayesian"
+        id = "bayesianTabset"
+      ),
+      conditionalPanel("output.displayQueries",
+        hr(),
+        h4("Probabality Queries:"),
+        wellPanel(
+          fluidRow(
+            column(1, actionButton('addProbability', 'Add')),
+            column(2, h5(strong("Variable Name:"))),
+            column(2, h5(strong("Direction:"))),
+            column(2, h5(strong("Threshold:"))),
+            column(2, h5(strong("Value:"))),
+            column(3)
+          ), br(),
+          tags$div(id = 'probabilityUI'),
+          hr(),
+          actionButton('runProbabilityQueries', 'Evaluate')
+        )
       )
     ),
     tabPanel("Options",

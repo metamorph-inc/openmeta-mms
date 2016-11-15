@@ -1,6 +1,7 @@
 library(shiny)
 library(DT)
 source('bayesian_utils.r')
+#source('uq.r')
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
 #options(error = function() traceback(2))
@@ -1795,7 +1796,7 @@ shinyServer(function(input, output, session) {
     }
     bayesianUIInitialized <<- TRUE
   })
-      
+  
   output$bayesianPlots <- renderUI({
     print("In bayesianPlots()")
     data <- bayesianData()
@@ -1859,7 +1860,70 @@ shinyServer(function(input, output, session) {
       "black"
     }
   }
-
+  
+  output$displayQueries <- reactive({
+    display <- !(input$bayesianTabset == "Design Ranking")
+  })
+  
+  outputOptions(output, "displayQueries", suspendWhenHidden=FALSE)
+  
+  probabilityQueries <- reactiveValues(rows = c())
+  
+  observeEvent(input$addProbability, {
+    id <- input$addProbability
+    insertUI(
+      selector = '#probabilityUI',
+      ui = tags$div(
+        fluidRow(
+          column(1, actionButton(paste0('removeProbability', id), 'Delete')),
+          column(2, selectInput(paste0('queryName', id), NULL, choices = varRangeNum(), selected = varRangeNum()[[1]])),
+          column(2, selectInput(paste0('queryDirection', id), NULL, choices = c("Above", "Below")), selected = "Above"),
+          column(2, textInput(paste0('queryThreshold', id), NULL)),
+          column(2, uiOutput(paste0('queryValue', id))),
+          column(3)
+        ),
+        id = paste0('probabilityQuery', id)
+      )
+    )
+    probabilityQueries$rows <<- c(probabilityQueries$rows, toString(id))
+  })
+  
+  removeProbability <- observe({
+    lapply(probabilityQueries$rows, function(id) {
+      observeEvent(input[[paste0('removeProbability', id)]], {
+        removeUI(
+          ## pass in appropriate div id
+          selector = paste0('#probabilityQuery', id)
+        )
+        probabilityQueries$rows <<- probabilityQueries$rows[sapply(probabilityQueries$rows, function(x) {x!=id})]
+      })
+    })
+  })
+  
+  bayesianInputs <- reactive({
+    inputs <- sapply(varRangeNum(), function(var) {bayesianDirection[[var]] == "Input"})
+    subset(varRangeNum(), inputs)
+  })
+  
+  runQueries <- observeEvent(input$runProbabilityQueries, {
+    print("Started Calculating Probabilities.")
+    for(i in 1:length(probabilityQueries$rows)){
+      id <- probabilityQueries$rows[i]
+      name <- input[[paste0('queryName', id)]]
+      direction <- input[[paste0('queryDirection', id)]]
+      threshold <-input[[paste0('queryThreshold', id)]]
+      
+      #insert real call here...
+      value <- runif(1)
+      print(paste("Query: ",name, direction, threshold, value))
+      
+      if (direction == "Above") {
+        value <- (1-value)
+      }
+      output[[paste0('queryValue', probabilityQueries$rows[i])]] <- renderText(toString(value))
+    }
+    print("Probabilites Calculated.")
+  })
   # UI Adjustments -----------------------------------------------------------
   
   colSliderSettings <- reactive({
