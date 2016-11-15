@@ -1,0 +1,803 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Multivariate Dependence with Copulas</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Multivariate Dependence with Copulas
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;copula&rsquo; version 0.999-15</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+<li><a href="../demo">Code demos</a>.  Use <a href="../../utils/help/demo">demo()</a> to run them.</li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="# "> </a>
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#J">J</a>
+<a href="#K">K</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#O">O</a>
+<a href="#P">P</a>
+<a href="#Q">Q</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#U">U</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+<a href="#X">X</a>
+<a href="#misc">misc</a>
+</p>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="copula-package.html">copula-package</a></td>
+<td>Multivariate Dependence Modeling with Copulas</td></tr>
+</table>
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="generator-methods.html">A</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">A-method</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">A-methods</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="math-fun.html">A..Z</a></td>
+<td>Sinc, Zolotarev's, and Other Mathematical Utility Functions</td></tr>
+<tr><td style="width: 25%;"><a href="absdpsiMC.html">absdPsiMC</a></td>
+<td>Absolute Value of Generator Derivatives via Monte Carlo</td></tr>
+<tr><td style="width: 25%;"><a href="acopula-class.html">acopula</a></td>
+<td>Class "acopula" of Archimedean Copula Families</td></tr>
+<tr><td style="width: 25%;"><a href="acopula-class.html">acopula-class</a></td>
+<td>Class "acopula" of Archimedean Copula Families</td></tr>
+<tr><td style="width: 25%;"><a href="copFamilies.html">acopula-families</a></td>
+<td>Specific Archimedean Copula Families ("acopula" Objects)</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">Afun</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">AfunDer</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="allComp.html">allComp</a></td>
+<td>All Components of a (Inner or Outer) Nested Archimedean Copula</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula.html">amhCopula</a></td>
+<td>Construction of Archimedean Copula Class Object</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula-class.html">amhCopula-class</a></td>
+<td>Class "archmCopula"</td></tr>
+<tr><td style="width: 25%;"><a href="An.html">An</a></td>
+<td>Nonparametric Rank-based Estimators of the Pickands Dependence Function</td></tr>
+<tr><td style="width: 25%;"><a href="An.html">An.biv</a></td>
+<td>Nonparametric Rank-based Estimators of the Pickands Dependence Function</td></tr>
+<tr><td style="width: 25%;"><a href="An.html">Anfun</a></td>
+<td>Nonparametric Rank-based Estimators of the Pickands Dependence Function</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula.html">archmCopula</a></td>
+<td>Construction of Archimedean Copula Class Object</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula-class.html">archmCopula-class</a></td>
+<td>Class "archmCopula"</td></tr>
+<tr><td style="width: 25%;"><a href="asymCopula-class.html">asym2Copula-class</a></td>
+<td>Class '"khoudrajiCopula"' and its Subclasses</td></tr>
+<tr><td style="width: 25%;"><a href="asymCopula.html">asymCopula</a></td>
+<td>Construction of copulas using Khoudraji's device</td></tr>
+<tr><td style="width: 25%;"><a href="asymCopula-class.html">asymCopula-class</a></td>
+<td>Class '"khoudrajiCopula"' and its Subclasses</td></tr>
+<tr><td style="width: 25%;"><a href="asymCopula.html">asymExplicitCopula</a></td>
+<td>Construction of copulas using Khoudraji's device</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="Bernoulli.html">Bernoulli</a></td>
+<td>Compute Bernoulli Numbers</td></tr>
+<tr><td style="width: 25%;"><a href="Bernoulli.html">Bernoulli.all</a></td>
+<td>Compute Bernoulli Numbers</td></tr>
+<tr><td style="width: 25%;"><a href="beta.Blomqvist.html">beta.</a></td>
+<td>Sample and Population Version of Blomqvist's Beta for Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="beta.Blomqvist.html">beta.hat</a></td>
+<td>Sample and Population Version of Blomqvist's Beta for Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="beta.Blomqvist.html">betan</a></td>
+<td>Sample and Population Version of Blomqvist's Beta for Archimedean Copulas</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="empcop.html">C.n</a></td>
+<td>The Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="cCopula.html">cacopula</a></td>
+<td>Conditional Copula Function and Its Inverse</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">calibKendallsTau</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">calibSpearmansRho</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="cCopula.html">cCopula</a></td>
+<td>Conditional Copula Function and Its Inverse</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula.html">claytonCopula</a></td>
+<td>Construction of Archimedean Copula Class Object</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula-class.html">claytonCopula-class</a></td>
+<td>Class "archmCopula"</td></tr>
+<tr><td style="width: 25%;"><a href="cloud2-methods.html">cloud2</a></td>
+<td>Cloud Plot Methods ('cloud2') in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="cloud2-methods.html">cloud2-method</a></td>
+<td>Cloud Plot Methods ('cloud2') in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="cloud2-methods.html">cloud2-methods</a></td>
+<td>Cloud Plot Methods ('cloud2') in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="empcop.html">Cn</a></td>
+<td>The Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="fitMvdc.html">coef.fittedMV</a></td>
+<td>Estimation of Multivariate Models Defined via Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="coeffG.html">coeffG</a></td>
+<td>Coefficients of Polynomial used for Gumbel Copula</td></tr>
+<tr><td style="width: 25%;"><a href="contour-methods.html">contour-method</a></td>
+<td>Methods for Contour Plots in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="contour-methods.html">contour-methods</a></td>
+<td>Methods for Contour Plots in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="contourplot2-methods.html">contourplot2</a></td>
+<td>Contour Plot Methods 'contourplot2' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="contourplot2-methods.html">contourplot2-method</a></td>
+<td>Contour Plot Methods 'contourplot2' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="contourplot2-methods.html">contourplot2-methods</a></td>
+<td>Contour Plot Methods 'contourplot2' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="copFamilies.html">copAMH</a></td>
+<td>Specific Archimedean Copula Families ("acopula" Objects)</td></tr>
+<tr><td style="width: 25%;"><a href="copFamilies.html">copClayton</a></td>
+<td>Specific Archimedean Copula Families ("acopula" Objects)</td></tr>
+<tr><td style="width: 25%;"><a href="copFamilies.html">copFrank</a></td>
+<td>Specific Archimedean Copula Families ("acopula" Objects)</td></tr>
+<tr><td style="width: 25%;"><a href="copFamilies.html">copGumbel</a></td>
+<td>Specific Archimedean Copula Families ("acopula" Objects)</td></tr>
+<tr><td style="width: 25%;"><a href="copFamilies.html">copJoe</a></td>
+<td>Specific Archimedean Copula Families ("acopula" Objects)</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">Copula</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="copula-class.html">Copula-class</a></td>
+<td>Mother Classes "Copula", etc of all Copulas in the Package</td></tr>
+<tr><td style="width: 25%;"><a href="copula-class.html">copula-class</a></td>
+<td>Mother Classes "Copula", etc of all Copulas in the Package</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="generator-methods.html">dAdu</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">dAdu-method</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">dAdu-methods</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="empcop.html">dCn</a></td>
+<td>The Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">dCopula</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">dcopula</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">dCopula-method</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="dnacopula.html">dCopula-method</a></td>
+<td>Density Evaluation for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="dDiag.html">dDiag</a></td>
+<td>Density of the Diagonal of (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="polylog.html">debye1</a></td>
+<td>Polylogarithm Li_s(z) and Debye Functions</td></tr>
+<tr><td style="width: 25%;"><a href="polylog.html">debye2</a></td>
+<td>Polylogarithm Li_s(z) and Debye Functions</td></tr>
+<tr><td style="width: 25%;"><a href="indepTest.html">dependogram</a></td>
+<td>Test Independence of Continuous Random Variables via Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="copula-class.html">dim-method</a></td>
+<td>Mother Classes "Copula", etc of all Copulas in the Package</td></tr>
+<tr><td style="width: 25%;"><a href="mvdc-class.html">dim-method</a></td>
+<td>Class "mvdc"</td></tr>
+<tr><td style="width: 25%;"><a href="nacopula-class.html">dim-method</a></td>
+<td>Class "nacopula" of Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">diPsi</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">diPsi-method</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">diPsi-methods</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="K.html">dK</a></td>
+<td>Kendall Distribution Function for Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Mvdc.html">dMvdc</a></td>
+<td>Multivariate Distributions Constructed from Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Mvdc.html">dmvdc</a></td>
+<td>Multivariate Distributions Constructed from Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="dnacopula.html">dnacopula</a></td>
+<td>Density Evaluation for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Sibuya.html">dSibuya</a></td>
+<td>Sibuya Distribution - Sampling and Probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="Sibuya.html">dsumSibuya</a></td>
+<td>Sibuya Distribution - Sampling and Probabilities</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="estim-misc.html">ebeta</a></td>
+<td>Various Estimators for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="estim-misc.html">edmle</a></td>
+<td>Various Estimators for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="ellipCopula.html">ellipCopula</a></td>
+<td>Construction of Elliptical Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ellipCopula-class.html">ellipCopula-class</a></td>
+<td>Class "ellipCopula" of Elliptical Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="emde.html">emde</a></td>
+<td>Minimum Distance Estimators for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="emle.html">emle</a></td>
+<td>Maximum Likelihood Estimators for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="enacopula.html">enacopula</a></td>
+<td>Estimation Procedures for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="estim-misc.html">etau</a></td>
+<td>Various Estimators for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Stirling.html">Eulerian</a></td>
+<td>Eulerian and Stirling Numbers of First and Second Kind</td></tr>
+<tr><td style="width: 25%;"><a href="Stirling.html">Eulerian.all</a></td>
+<td>Eulerian and Stirling Numbers of First and Second Kind</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula.html">evCopula</a></td>
+<td>Construction of Extreme-Value Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula-class.html">evCopula-class</a></td>
+<td>Classes Representing Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="evTestA.html">evTestA</a></td>
+<td>Bivariate Test of Extreme-Value Dependence Based on Pickands' Dependence Function</td></tr>
+<tr><td style="width: 25%;"><a href="evTestC.html">evTestC</a></td>
+<td>Large-sample Test of Multivariate Extreme-Value Dependence</td></tr>
+<tr><td style="width: 25%;"><a href="evTestK.html">evTestK</a></td>
+<td>Bivariate Test of Extreme-Value Dependence Based on Kendall's Process</td></tr>
+<tr><td style="width: 25%;"><a href="exchEVTest.html">exchEVTest</a></td>
+<td>Test of Exchangeability for Certain Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="exchTest.html">exchTest</a></td>
+<td>Test of Exchangeability for a Bivariate Copula</td></tr>
+<tr><td style="width: 25%;"><a href="matrix_tools.html">extremePairs</a></td>
+<td>Tools to Work with Matrices</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="empcop.html">F.n</a></td>
+<td>The Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="fgmCopula.html">fgmCopula</a></td>
+<td>Construction of a fgmCopula Class Object</td></tr>
+<tr><td style="width: 25%;"><a href="fgmCopula-class.html">fgmCopula-class</a></td>
+<td>Class "fgmCopula"</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula.html">fitCopula</a></td>
+<td>Fitting Copulas to Data - Copula Parameter Estimation</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula-class.html">fitCopula-class</a></td>
+<td>Classes of Fitted Multivariate Models: Copula, Mvdc</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula.html">fitCopula-method</a></td>
+<td>Fitting Copulas to Data - Copula Parameter Estimation</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula.html">fitCopula-methods</a></td>
+<td>Fitting Copulas to Data - Copula Parameter Estimation</td></tr>
+<tr><td style="width: 25%;"><a href="fitLambda.html">fitLambda</a></td>
+<td>Non-parametric Estimators of the Matrix of Tail-Dependence Coefficients</td></tr>
+<tr><td style="width: 25%;"><a href="fitMvdc.html">fitMvdc</a></td>
+<td>Estimation of Multivariate Models Defined via Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula-class.html">fitMvdc-class</a></td>
+<td>Classes of Fitted Multivariate Models: Copula, Mvdc</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula-class.html">fittedMV-class</a></td>
+<td>Classes of Fitted Multivariate Models: Copula, Mvdc</td></tr>
+<tr><td style="width: 25%;"><a href="fixedPar.html">fixedParam&lt;-</a></td>
+<td>Fix a Subset of a Copula Parameter Vector</td></tr>
+<tr><td style="width: 25%;"><a href="fixedPar.html">fixParam</a></td>
+<td>Fix a Subset of a Copula Parameter Vector</td></tr>
+<tr><td style="width: 25%;"><a href="interval-class.html">format-method</a></td>
+<td>Class "interval" of Simple Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula.html">frankCopula</a></td>
+<td>Construction of Archimedean Copula Class Object</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula-class.html">frankCopula-class</a></td>
+<td>Class "archmCopula"</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="evCopula.html">galambosCopula</a></td>
+<td>Construction of Extreme-Value Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula-class.html">galambosCopula-class</a></td>
+<td>Classes Representing Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="gasoil.html">gasoil</a></td>
+<td>Daily Crude Oil and Natural Gas Prices from 2003 to 2006</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">genFun</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">genFunDer1</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">genFunDer2</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">genInv</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="getAcop.html">getAcop</a></td>
+<td>Get "acopula" Family Object by Name</td></tr>
+<tr><td style="width: 25%;"><a href="getAcop.html">getAname</a></td>
+<td>Get "acopula" Family Object by Name</td></tr>
+<tr><td style="width: 25%;"><a href="matrix_tools.html">getSigma</a></td>
+<td>Tools to Work with Matrices</td></tr>
+<tr><td style="width: 25%;"><a href="gnacopula.html">gnacopula</a></td>
+<td>Goodness-of-fit Testing for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="gofOtherTstat.html">gofBTstat</a></td>
+<td>Various Goodness-of-fit Test Statistics</td></tr>
+<tr><td style="width: 25%;"><a href="gofCopula.html">gofCopula</a></td>
+<td>Goodness-of-fit Tests for Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="gofCopula.html">gofCopula-method</a></td>
+<td>Goodness-of-fit Tests for Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="gofCopula.html">gofCopula-methods</a></td>
+<td>Goodness-of-fit Tests for Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="gofEVCopula.html">gofEVCopula</a></td>
+<td>Goodness-of-fit Tests for Bivariate Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="gofCopula.html">gofMB</a></td>
+<td>Goodness-of-fit Tests for Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="gofCopula.html">gofPB</a></td>
+<td>Goodness-of-fit Tests for Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="gofTstat.html">gofTstat</a></td>
+<td>Goodness-of-fit Test Statistics</td></tr>
+<tr><td style="width: 25%;"><a href="ggraph-tools.html">gpviTest</a></td>
+<td>Computations for Graphical GOF Test via Pairwise Rosenblatt Transforms</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula.html">gumbelCopula</a></td>
+<td>Construction of Archimedean Copula Class Object</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula-class.html">gumbelCopula-class</a></td>
+<td>Class "archmCopula"</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="htrafo.html">htrafo</a></td>
+<td>GOF Testing Transformation of Hering and Hofert</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula.html">huslerReissCopula</a></td>
+<td>Construction of Extreme-Value Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula-class.html">huslerReissCopula-class</a></td>
+<td>Classes Representing Extreme-Value Copulas</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="indepCopula.html">indepCopula</a></td>
+<td>Construction of Independence Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="indepCopula-class.html">indepCopula-class</a></td>
+<td>Class "indepCopula"</td></tr>
+<tr><td style="width: 25%;"><a href="indepTest.html">indepTest</a></td>
+<td>Test Independence of Continuous Random Variables via Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="indepTest.html">indepTestSim</a></td>
+<td>Test Independence of Continuous Random Variables via Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="acopula-class.html">initialize-method</a></td>
+<td>Class "acopula" of Archimedean Copula Families</td></tr>
+<tr><td style="width: 25%;"><a href="initOpt.html">initOpt</a></td>
+<td>Initial Interval or Value for Parameter Estimation of Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="interval.html">interval</a></td>
+<td>Construct Simple "interval" Object</td></tr>
+<tr><td style="width: 25%;"><a href="interval-class.html">interval-class</a></td>
+<td>Class "interval" of Simple Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">iPsi</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">iPsi-method</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">iPsi-methods</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">iRho</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">iRho-method</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">iRho-methods</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">iTau</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">iTau-method</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">iTau-methods</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+</table>
+
+<h2><a name="J">-- J --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="archmCopula.html">joeCopula</a></td>
+<td>Construction of Archimedean Copula Class Object</td></tr>
+<tr><td style="width: 25%;"><a href="archmCopula-class.html">joeCopula-class</a></td>
+<td>Class "archmCopula"</td></tr>
+</table>
+
+<h2><a name="K">-- K --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="K.html">K</a></td>
+<td>Kendall Distribution Function for Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">kendallsTau</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="asymCopula-class.html">khoudrajiBivCopula-class</a></td>
+<td>Class '"khoudrajiCopula"' and its Subclasses</td></tr>
+<tr><td style="width: 25%;"><a href="asymCopula.html">khoudrajiCopula</a></td>
+<td>Construction of copulas using Khoudraji's device</td></tr>
+<tr><td style="width: 25%;"><a href="asymCopula-class.html">khoudrajiCopula-class</a></td>
+<td>Class '"khoudrajiCopula"' and its Subclasses</td></tr>
+<tr><td style="width: 25%;"><a href="asymCopula-class.html">khoudrajiExplicitCopula-class</a></td>
+<td>Class '"khoudrajiCopula"' and its Subclasses</td></tr>
+<tr><td style="width: 25%;"><a href="K.html">Kn</a></td>
+<td>Kendall Distribution Function for Archimedean Copulas</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="assocMeasures.html">lambda</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">lambda-method</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">lambda-methods</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="log1mexp.html">log1mexp</a></td>
+<td>Compute f(a) = log(1 +/- exp(-a)) Numerically Optimally</td></tr>
+<tr><td style="width: 25%;"><a href="log1mexp.html">log1pexp</a></td>
+<td>Compute f(a) = log(1 +/- exp(-a)) Numerically Optimally</td></tr>
+<tr><td style="width: 25%;"><a href="fitMvdc.html">logLik.fittedMV</a></td>
+<td>Estimation of Multivariate Models Defined via Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula.html">loglikCopula</a></td>
+<td>Fitting Copulas to Data - Copula Parameter Estimation</td></tr>
+<tr><td style="width: 25%;"><a href="fitMvdc.html">loglikMvdc</a></td>
+<td>Estimation of Multivariate Models Defined via Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="loss.html">loss</a></td>
+<td>LOSS and ALAE Insurance Data</td></tr>
+<tr><td style="width: 25%;"><a href="SMI.12.html">lSMI</a></td>
+<td>SMI Data - 141 Days in Winter 2011/2012</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="interval-class.html">maybeInterval-class</a></td>
+<td>Class "interval" of Simple Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="multIndepTest.html">multIndepTest</a></td>
+<td>Independence Test Among Continuous Random Vectors Based on the Empirical Copula Process</td></tr>
+<tr><td style="width: 25%;"><a href="multSerialIndepTest.html">multSerialIndepTest</a></td>
+<td>Serial Independence Test for Multivariate Time Series via Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="Mvdc.html">Mvdc</a></td>
+<td>Multivariate Distributions Constructed from Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Mvdc.html">mvdc</a></td>
+<td>Multivariate Distributions Constructed from Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="mvdc-class.html">mvdc-class</a></td>
+<td>Class "mvdc"</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="onacopula.html">nac2list</a></td>
+<td>Constructing (Outer) Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="nacTiming.html">nacFrail.time</a></td>
+<td>Timing for Sampling Frailties of Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="onacopula.html">nacopula</a></td>
+<td>Constructing (Outer) Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="nacopula-class.html">nacopula-class</a></td>
+<td>Class "nacopula" of Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="nacPairthetas.html">nacPairthetas</a></td>
+<td>Pairwise Thetas of Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="nesdepth.html">nesdepth</a></td>
+<td>Nesting Depth of a Nested Archimedean Copula ("nacopula")</td></tr>
+<tr><td style="width: 25%;"><a href="ellipCopula.html">normalCopula</a></td>
+<td>Construction of Elliptical Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ellipCopula-class.html">normalCopula-class</a></td>
+<td>Class "ellipCopula" of Elliptical Copulas</td></tr>
+</table>
+
+<h2><a name="O">-- O --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="onacopula.html">onacopula</a></td>
+<td>Constructing (Outer) Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="onacopula.html">onacopulaL</a></td>
+<td>Constructing (Outer) Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="opower.html">opower</a></td>
+<td>Outer Power Transformation of Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="nacopula-class.html">outer_nacopula-class</a></td>
+<td>Class "nacopula" of Nested Archimedean Copulas</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="matrix_tools.html">P2p</a></td>
+<td>Tools to Work with Matrices</td></tr>
+<tr><td style="width: 25%;"><a href="matrix_tools.html">p2P</a></td>
+<td>Tools to Work with Matrices</td></tr>
+<tr><td style="width: 25%;"><a href="acR.html">pacR</a></td>
+<td>Distribution of the Radial Part of an Archimedean Copula</td></tr>
+<tr><td style="width: 25%;"><a href="pairs2.html">pairs2</a></td>
+<td>Scatter-Plot Matrix ('pairs') for Copula Distributions with Nice Defaults</td></tr>
+<tr><td style="width: 25%;"><a href="pairsRosenblatt.html">pairsColList</a></td>
+<td>Plots for Graphical GOF Test via Pairwise Rosenblatt Transforms</td></tr>
+<tr><td style="width: 25%;"><a href="pairsRosenblatt.html">pairsRosenblatt</a></td>
+<td>Plots for Graphical GOF Test via Pairwise Rosenblatt Transforms</td></tr>
+<tr><td style="width: 25%;"><a href="ggraph-tools.html">pairwiseCcop</a></td>
+<td>Computations for Graphical GOF Test via Pairwise Rosenblatt Transforms</td></tr>
+<tr><td style="width: 25%;"><a href="ggraph-tools.html">pairwiseIndepTest</a></td>
+<td>Computations for Graphical GOF Test via Pairwise Rosenblatt Transforms</td></tr>
+<tr><td style="width: 25%;"><a href="copula-class.html">parCopula-class</a></td>
+<td>Mother Classes "Copula", etc of all Copulas in the Package</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">pCopula</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">pcopula</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">pCopula-method</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="pnacopula.html">pCopula-method</a></td>
+<td>Evaluation of (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="persp-methods.html">persp-method</a></td>
+<td>Methods for Function 'persp' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="persp-methods.html">persp-methods</a></td>
+<td>Methods for Function 'persp' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="K.html">pK</a></td>
+<td>Kendall Distribution Function for Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="plackettCopula.html">plackettCopula</a></td>
+<td>Construction of a Plackett Copula Class Object</td></tr>
+<tr><td style="width: 25%;"><a href="copula-class.html">plackettCopula-class</a></td>
+<td>Mother Classes "Copula", etc of all Copulas in the Package</td></tr>
+<tr><td style="width: 25%;"><a href="plot-methods.html">plot-method</a></td>
+<td>Methods for 'plot' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="plot-methods.html">plot-methods</a></td>
+<td>Methods for 'plot' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="Mvdc.html">pMvdc</a></td>
+<td>Multivariate Distributions Constructed from Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Mvdc.html">pmvdc</a></td>
+<td>Multivariate Distributions Constructed from Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="pnacopula.html">pnacopula</a></td>
+<td>Evaluation of (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="pobs.html">pobs</a></td>
+<td>Pseudo-Observations</td></tr>
+<tr><td style="width: 25%;"><a href="polylog.html">polylog</a></td>
+<td>Polylogarithm Li_s(z) and Debye Functions</td></tr>
+<tr><td style="width: 25%;"><a href="polynEval.html">polynEval</a></td>
+<td>Evaluate Polynomials</td></tr>
+<tr><td style="width: 25%;"><a href="printNacopula.html">printNacopula</a></td>
+<td>Print Compact Overview of a Nested Archimedean Copula ("nacopula")</td></tr>
+<tr><td style="width: 25%;"><a href="prob.html">prob</a></td>
+<td>Computing Probabilities of Hypercubes</td></tr>
+<tr><td style="width: 25%;"><a href="prob.html">prob-method</a></td>
+<td>Computing Probabilities of Hypercubes</td></tr>
+<tr><td style="width: 25%;"><a href="prob.html">prob-methods</a></td>
+<td>Computing Probabilities of Hypercubes</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">psi</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">psi-method</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="generator-methods.html">psi-methods</a></td>
+<td>Generator Functions for Archimedean and Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Sibuya.html">pSibuya</a></td>
+<td>Sibuya Distribution - Sampling and Probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="absdpsiMC.html">psiDabsMC</a></td>
+<td>Absolute Value of Generator Derivatives via Monte Carlo</td></tr>
+<tr><td style="width: 25%;"><a href="ggraph-tools.html">pviTest</a></td>
+<td>Computations for Graphical GOF Test via Pairwise Rosenblatt Transforms</td></tr>
+</table>
+
+<h2><a name="Q">-- Q --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="acR.html">qacR</a></td>
+<td>Distribution of the Radial Part of an Archimedean Copula</td></tr>
+<tr><td style="width: 25%;"><a href="K.html">qK</a></td>
+<td>Kendall Distribution Function for Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="qqplot2.html">qqplot2</a></td>
+<td>Q-Q Plot with Rugs and Pointwise Asymptotic Confidence Intervals</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="Copula.html">rCopula</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">rcopula</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="Copula.html">rCopula-method</a></td>
+<td>Density, Evaluation, and Random Number Generation for Copula Functions</td></tr>
+<tr><td style="width: 25%;"><a href="rdj.html">rdj</a></td>
+<td>Daily Returns of Three Stocks in the Dow Jones</td></tr>
+<tr><td style="width: 25%;"><a href="retstable.html">retstable</a></td>
+<td>Sampling Exponentially Tilted Stable Distributions</td></tr>
+<tr><td style="width: 25%;"><a href="retstable.html">retstableR</a></td>
+<td>Sampling Exponentially Tilted Stable Distributions</td></tr>
+<tr><td style="width: 25%;"><a href="rF01FrankJoe.html">rF01Frank</a></td>
+<td>Sample Univariate Distributions Involved in Nested Frank and Joe Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="rF01FrankJoe.html">rF01Joe</a></td>
+<td>Sample Univariate Distributions Involved in Nested Frank and Joe Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="rFFrankJoe.html">rFFrank</a></td>
+<td>Sampling Distribution F for Frank and Joe</td></tr>
+<tr><td style="width: 25%;"><a href="rFFrankJoe.html">rFJoe</a></td>
+<td>Sampling Distribution F for Frank and Joe</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">rho</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">rho-method</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">rho-methods</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="K.html">rK</a></td>
+<td>Kendall Distribution Function for Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="rlog.html">rlog</a></td>
+<td>Sampling Logarithmic Distributions</td></tr>
+<tr><td style="width: 25%;"><a href="rlog.html">rlogR</a></td>
+<td>Sampling Logarithmic Distributions</td></tr>
+<tr><td style="width: 25%;"><a href="Mvdc.html">rMvdc</a></td>
+<td>Multivariate Distributions Constructed from Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Mvdc.html">rmvdc</a></td>
+<td>Multivariate Distributions Constructed from Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="rnacModel.html">rnacModel</a></td>
+<td>Random nacopula Model</td></tr>
+<tr><td style="width: 25%;"><a href="rnacopula.html">rnacopula</a></td>
+<td>Sampling Nested Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="rnchild.html">rnchild</a></td>
+<td>Sampling Child 'nacopula's</td></tr>
+<tr><td style="width: 25%;"><a href="rotCopula.html">rotCopula</a></td>
+<td>Construction and Class of "Rotated" Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="rotCopula.html">rotCopula-class</a></td>
+<td>Construction and Class of "Rotated" Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="Sibuya.html">rSibuya</a></td>
+<td>Sibuya Distribution - Sampling and Probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="Sibuya.html">rSibuyaR</a></td>
+<td>Sibuya Distribution - Sampling and Probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="RSpobs.html">RSpobs</a></td>
+<td>Pseudo-Observations of Radial and Uniform Part of Elliptical and Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="rstable1.html">rstable</a></td>
+<td>Random numbers from (Skew) Stable Distributions</td></tr>
+<tr><td style="width: 25%;"><a href="rstable1.html">rstable1</a></td>
+<td>Random numbers from (Skew) Stable Distributions</td></tr>
+<tr><td style="width: 25%;"><a href="cCopula.html">rtrafo</a></td>
+<td>Conditional Copula Function and Its Inverse</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="safeUroot.html">safeUroot</a></td>
+<td>One-dimensional Root (Zero) Finding - Extra "Safety" for Convenience</td></tr>
+<tr><td style="width: 25%;"><a href="serialIndepTest.html">serialIndepTest</a></td>
+<td>Serial Independence Test for Continuous Time Series Via Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="serialIndepTest.html">serialIndepTestSim</a></td>
+<td>Serial Independence Test for Continuous Time Series Via Empirical Copula</td></tr>
+<tr><td style="width: 25%;"><a href="setTheta.html">setTheta</a></td>
+<td>Specify the Parameter(s) of a Copula</td></tr>
+<tr><td style="width: 25%;"><a href="setTheta.html">setTheta-method</a></td>
+<td>Specify the Parameter(s) of a Copula</td></tr>
+<tr><td style="width: 25%;"><a href="acopula-class.html">show-method</a></td>
+<td>Class "acopula" of Archimedean Copula Families</td></tr>
+<tr><td style="width: 25%;"><a href="interval-class.html">show-method</a></td>
+<td>Class "interval" of Simple Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="mvdc-class.html">show-method</a></td>
+<td>Class "mvdc"</td></tr>
+<tr><td style="width: 25%;"><a href="printNacopula.html">show-method</a></td>
+<td>Print Compact Overview of a Nested Archimedean Copula ("nacopula")</td></tr>
+<tr><td style="width: 25%;"><a href="show-methods.html">show-method</a></td>
+<td>Methods for 'show' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="show-methods.html">show-methods</a></td>
+<td>Methods for 'show' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="Sibuya.html">Sibuya</a></td>
+<td>Sibuya Distribution - Sampling and Probabilities</td></tr>
+<tr><td style="width: 25%;"><a href="math-fun.html">sinc</a></td>
+<td>Sinc, Zolotarev's, and Other Mathematical Utility Functions</td></tr>
+<tr><td style="width: 25%;"><a href="SMI.12.html">SMI.12</a></td>
+<td>SMI Data - 141 Days in Winter 2011/2012</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">spearmansRho</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="splom2-methods.html">splom2</a></td>
+<td>Methods for Scatter Plot Matrix 'splom2' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="splom2-methods.html">splom2-method</a></td>
+<td>Methods for Scatter Plot Matrix 'splom2' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="splom2-methods.html">splom2-methods</a></td>
+<td>Methods for Scatter Plot Matrix 'splom2' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="Stirling.html">Stirling1</a></td>
+<td>Eulerian and Stirling Numbers of First and Second Kind</td></tr>
+<tr><td style="width: 25%;"><a href="Stirling.html">Stirling1.all</a></td>
+<td>Eulerian and Stirling Numbers of First and Second Kind</td></tr>
+<tr><td style="width: 25%;"><a href="Stirling.html">Stirling2</a></td>
+<td>Eulerian and Stirling Numbers of First and Second Kind</td></tr>
+<tr><td style="width: 25%;"><a href="Stirling.html">Stirling2.all</a></td>
+<td>Eulerian and Stirling Numbers of First and Second Kind</td></tr>
+<tr><td style="width: 25%;"><a href="interval-class.html">Summary-method</a></td>
+<td>Class "interval" of Simple Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula-class.html">summary-method</a></td>
+<td>Classes of Fitted Multivariate Models: Copula, Mvdc</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula-class.html">summaryFitCopula-class</a></td>
+<td>Classes of Fitted Multivariate Models: Copula, Mvdc</td></tr>
+<tr><td style="width: 25%;"><a href="fitCopula-class.html">summaryFitMvdc-class</a></td>
+<td>Classes of Fitted Multivariate Models: Copula, Mvdc</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="assocMeasures.html">tailIndex</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">tau</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">tau-method</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="assocMeasures.html">tau-methods</a></td>
+<td>Dependence Measures for Bivariate Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="tauAMH.html">tauAMH</a></td>
+<td>Ali-Mikhail-Haq ("AMH")'s and Joe's Kendall's Tau</td></tr>
+<tr><td style="width: 25%;"><a href="tauAMH.html">tauJoe</a></td>
+<td>Ali-Mikhail-Haq ("AMH")'s and Joe's Kendall's Tau</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula.html">tawnCopula</a></td>
+<td>Construction of Extreme-Value Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula-class.html">tawnCopula-class</a></td>
+<td>Classes Representing Extreme-Value Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="ellipCopula.html">tCopula</a></td>
+<td>Construction of Elliptical Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ellipCopula-class.html">tCopula-class</a></td>
+<td>Class "ellipCopula" of Elliptical Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula.html">tevCopula</a></td>
+<td>Construction of Extreme-Value Copula Class Objects</td></tr>
+<tr><td style="width: 25%;"><a href="evCopula-class.html">tevCopula-class</a></td>
+<td>Classes Representing Extreme-Value Copulas</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="uranium.html">uranium</a></td>
+<td>Uranium Exploration Dataset of Cook &amp; Johnson (1986)</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="fitMvdc.html">vcov.fittedMV</a></td>
+<td>Estimation of Multivariate Models Defined via Copulas</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="wireframe2-methods.html">wireframe2</a></td>
+<td>Perspective Plots - 'wireframe2' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="wireframe2-methods.html">wireframe2-method</a></td>
+<td>Perspective Plots - 'wireframe2' in Package 'copula'</td></tr>
+<tr><td style="width: 25%;"><a href="wireframe2-methods.html">wireframe2-methods</a></td>
+<td>Perspective Plots - 'wireframe2' in Package 'copula'</td></tr>
+</table>
+
+<h2><a name="X">-- X --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="copula-class.html">xcopula-class</a></td>
+<td>Mother Classes "Copula", etc of all Copulas in the Package</td></tr>
+<tr><td style="width: 25%;"><a href="xvCopula.html">xvCopula</a></td>
+<td>Model (copula) selection based on 'k'-fold cross-validation</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="interval-class.html">%in%-method</a></td>
+<td>Class "interval" of Simple Intervals</td></tr>
+<tr><td style="width: 25%;"><a href="getAcop.html">.ac.classNames</a></td>
+<td>Get "acopula" Family Object by Name</td></tr>
+<tr><td style="width: 25%;"><a href="getAcop.html">.ac.longNames</a></td>
+<td>Get "acopula" Family Object by Name</td></tr>
+<tr><td style="width: 25%;"><a href="getAcop.html">.ac.objNames</a></td>
+<td>Get "acopula" Family Object by Name</td></tr>
+<tr><td style="width: 25%;"><a href="getAcop.html">.ac.shortNames</a></td>
+<td>Get "acopula" Family Object by Name</td></tr>
+<tr><td style="width: 25%;"><a href="emle.html">.emle</a></td>
+<td>Maximum Likelihood Estimators for (Nested) Archimedean Copulas</td></tr>
+<tr><td style="width: 25%;"><a href="pairsCond.html">.pairsCond</a></td>
+<td>Pairs Plot of a cu.u Object (Internal Use)</td></tr>
+</table>
+</body></html>

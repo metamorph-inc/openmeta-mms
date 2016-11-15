@@ -1,0 +1,3 @@
+ADGofTest-package       Implementation of the Anderson-Darling goodness
+                        of fit test.
+ad.test                 Anderson-Darling GoF test
