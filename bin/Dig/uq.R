@@ -42,7 +42,7 @@ forwardUq = function(originalData, resampledData, rho, observations, observation
       area = integrate(postFunction, min(tempResult$postPoints), max(tempResult$postPoints))$value
       tempResult$postPdf = pdfPostPoints / area
       observationResult[originalName] = tempResult
-    }resul
+    }
     result[i] = observationResult
   }
   
