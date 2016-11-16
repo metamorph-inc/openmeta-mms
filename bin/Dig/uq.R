@@ -16,6 +16,22 @@ buildGuassianCopula = function(resampledData) {
 }
 
 #' Performs forward uncertainty quantification
+#' 
+#' @param originalData A data frame containing the original (non-resampled) data
+#' @param resampledData A data frame containing the resampled data (output from 
+#'   resampleData)
+#' @param rho The correlation matrix (output from buildGaussianCopula)
+#' @param observations A data frame containing constraint values (for input 
+#'   variables) to use for uncertainty quantification
+#' @param observationsIndex A vector containing, for each variable in 
+#'   observations, the index corresponding to that variable in originalData and 
+#'   resampledData.
+#'   
+#' @return A list containing the result of forward UQ for each observation in
+#'   observations. Each entry in this list is itself a list, indexed by the
+#'   variables *not* in observationsIndex (the output variables); these contain,
+#'   for each variable, a postPoints vector and a postPdf vector that make up
+#'   the posterior probability distribution computed.
 forwardUq = function(originalData, resampledData, rho, observations, observationsIndex) {
   xStandard = x2u(data[observationsIndex])
   
@@ -36,7 +52,7 @@ forwardUq = function(originalData, resampledData, rho, observations, observation
       
       condMu = yPred[i, j, 1]
       condSigma = yPred[i, j, 2]
-      tempResult$postPoints = densityInversecdf(data[originalIndex], uPoints)
+      tempResult$postPoints = densityInverseCdf(data[originalIndex], uPoints)
       pdfPostPoints = dnorm(qnorm(uPoints, mean=condMu, sd=condSigma), mean=condMu, sd=condSigma)
       postFunction = approxfun(tempResult$postPoints, pdfPostPoints, yleft=0, yright=0)
       area = integrate(postFunction, min(tempResult$postPoints), max(tempResult$postPoints))$value
