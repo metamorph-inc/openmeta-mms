@@ -157,7 +157,7 @@ shinyServer(function(input, output, session) {
                          "autoData",
                          "autoRange",
                          "viewAllFilters",
-                         "activateRanking",
+                         
                          "transpose",
                          "bayesDispAll")
       
@@ -172,6 +172,7 @@ shinyServer(function(input, output, session) {
                         "pointSize",
                         "pointStyle",
                         "radio",
+                        "activateRanking",
                         "weightMetrics",
                         "bayesDispVars")
                      
@@ -1018,7 +1019,7 @@ shinyServer(function(input, output, session) {
   
   #Event handler for "clear metrics" button
   observe({
-    if(input$clearMetrics | !input$activateRanking)
+    if(input$clearMetrics | input$activateRanking == "Unranked")
       updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
   })
   
@@ -1047,54 +1048,68 @@ shinyServer(function(input, output, session) {
       funcVal <- func
     }
     
-    transferCondition = toString(paste0("input.util",current," == true"))
+    if(input$activateRanking == 'TOPSIS')
+      topsisMetricUI(current, radioVal, sliderVal)
+    else if(input$activateRanking == 'Simple Metric w/ TxFx')
+      simpleMetricUI(current, radioVal, sliderVal, utilVal, funcVal)
+  }
+  
+  topsisMetricUI <- function(current, radioVal, sliderVal) {
     
     varName <- varNames[current]
+    
     fluidRow(
-      column(4, h5(varName)),
+      column(3, h5(varName)),
       column(2, radioButtons(paste0('sel', current),
                              NULL,
                              choices = c("Min", "Max"),
                              selected = radioVal,
                              inline = TRUE)),
-      column(6, sliderInput(paste0('rnk', current),
+      column(7, sliderInput(paste0('rnk', current),
                             NULL,
                             step = 0.01,
                             min = 0,
                             max = 1,
                             value = sliderVal))
     )
-    # column(3, 
-    #   h4(varName),
-    #   radioButtons(paste0('sel', current),
-    #                "Score By:",
-    #                choices = c("Min", "Max"),
-    #                selected = radioVal,
-    #                inline = TRUE),
-    #   sliderInput(paste0('rnk', current),
-    #               "Weight:",
-    #               step = 0.01,
-    #               min = 0,
-    #               max = 1,
-    #               value = sliderVal),
-    #   checkboxInput(paste0('util', current),
-    #                 "Add Transfer Function",
-    #                 value = utilVal),
-    #   conditionalPanel(condition = transferCondition,
-    #                    textInput(paste0('func', current),
-    #                              "Enter Data Points",
-    #                               placeholder = paste0("Value = Score | e.g. ", 
-    #                                 rawAbsMin()[[varName]],
-    #                                 " = 1, ",
-    #                                 rawAbsMax()[[varName]],
-    #                                 "= 0.5"),
-    #                              value = funcVal),
-    #                    utilityPlot(current)),
-    #   br(), br(), br()
-    # )
+  }
+  
+  simpleMetricUI <- function(current, radioVal, sliderVal, utilVal, funcVal) {
+    
+    varName <- varNames[current]
+    transferCondition = toString(paste0("input.util",current," == true"))
+    
+    fluidRow(
+      column(3, h5(varName)),
+      column(2, radioButtons(paste0('sel', current),
+                             NULL,
+                             choices = c("Min", "Max"),
+                             selected = radioVal,
+                             inline = TRUE)),
+      column(3, sliderInput(paste0('rnk', current),
+                            NULL,
+                            step = 0.01,
+                            min = 0,
+                            max = 1,
+                            value = sliderVal)),
+      column(1, checkboxInput(paste0('util', current),
+                    "Add Transfer Function",
+                    value = utilVal)),
+      column(3, conditionalPanel(condition = transferCondition,
+                       textInput(paste0('func', current),
+                                 "Enter Data Points",
+                                  placeholder = paste0("Value = Score | e.g. ",
+                                    rawAbsMin()[[varName]],
+                                    " = 1, ",
+                                    rawAbsMax()[[varName]],
+                                    "= 0.5"),
+                                 value = funcVal),
+                       utilityPlot(current)))
+    )
   }
   
   fullMetricUI <- reactive({
+    a <- input$activateRanking # Force reaction
     if(!importFlags$ranking){
       lapply(metricsList(), function(column) {
         isolate(generateMetricUI(column))
@@ -1316,7 +1331,7 @@ shinyServer(function(input, output, session) {
   slowRankData <- eventReactive(input$applyRanking, {
     rankData()
   })
-  
+ 
   topsisData <- reactive({
     req(metricsList())
     print("In calculate topsis data")
@@ -1345,12 +1360,24 @@ shinyServer(function(input, output, session) {
     output_data
   })
   
+  slowTopsisData <- eventReactive(input$applyRanking, {
+    topsisData()
+  })
+  
   output$dataTable <- DT::renderDataTable({
     if(length(input$weightMetrics) > 0){
-      if(input$autoRanking)
-        data <- topsisData()
-      else
-        data <- slowRankData()
+      if(input$activateRanking == 'TOPSIS'){
+        if(input$autoRanking)
+          data <- topsisData()
+        else
+          data <- slowTopsisData()
+      }
+      else{
+          if(input$autoRanking)
+            data <- rankData()
+          else
+            data <- slowRankData()
+      }
     }
     else{
       data <- filterData()
@@ -1373,7 +1400,7 @@ shinyServer(function(input, output, session) {
   output$exportPoints <- downloadHandler(
     filename = function() { paste('ranked_points-', Sys.Date(), '.csv', sep='') },
     content = function(file) { 
-      if(input$activateRanking)
+      if(input$activateRanking != "Unranked")
         write.csv(rankData()[input$dataTable_rows_selected, ], file)
       else
         write.csv(filterData()[input$dataTable_rows_selected, ], file) 
