@@ -1,0 +1,14 @@
+Package: topsis
+Type: Package
+Title: TOPSIS method for multiple-criteria decision making (MCDM)
+Version: 1.0
+Date: 2013-09-24
+Author: Mahmoud Mosalman Yazdi
+Maintainer: Mahmoud Mosalman Yazdi <m.mosalman@gmail.com>
+Description: Evaluation of alternatives based on multiple criteria using TOPSIS method.
+License: GPL-2
+Packaged: 2013-09-30 17:28:07 UTC; mahmoud
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2013-09-30 20:15:19
+Built: R 3.2.5; ; 2016-11-02 14:15:13 UTC; windows
