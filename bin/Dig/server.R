@@ -1,5 +1,6 @@
 library(shiny)
 library(DT)
+library(topsis)
 source('bayesian_utils.r')
 #source('uq.r')
 #options(shiny.trace=TRUE)
@@ -1876,7 +1877,7 @@ shinyServer(function(input, output, session) {
       ui = tags$div(
         fluidRow(
           column(1, actionButton(paste0('removeProbability', id), 'Delete')),
-          column(3, selectInput(paste0('queryName', id), NULL, choices = varRangeNum(), selected = varRangeNum()[[1]])),
+          column(3, selectInput(paste0('queryVariable', id), NULL, choices = varRangeNum(), selected = varRangeNum()[[1]])),
           column(2, selectInput(paste0('queryDirection', id), NULL, choices = c("Above", "Below")), selected = "Above"),
           column(2, textInput(paste0('queryThreshold', id), NULL)),
           column(2, textOutput(paste0('queryValue', id))),
@@ -1909,7 +1910,7 @@ shinyServer(function(input, output, session) {
     print("Started Calculating Probabilities.")
     lapply(1:length(probabilityQueries$rows), function(i) {
       id <- probabilityQueries$rows[i]
-      name <- input[[paste0('queryName', id)]]
+      name <- input[[paste0('queryVariable', id)]]
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
       
@@ -1948,7 +1949,7 @@ shinyServer(function(input, output, session) {
       answers <- c(paste0(config))
       for(j in 1:length(probabilityQueries$rows)) {
         id <- probabilityQueries$rows[j]
-        name <- input[[paste0('queryName', id)]]
+        name <- input[[paste0('queryVariable', id)]]
         direction <- input[[paste0('queryDirection', id)]]
         threshold <-input[[paste0('queryThreshold', id)]]
         value <- integrateData(resampledData[[name]][["xResampled"]],
@@ -1966,60 +1967,54 @@ shinyServer(function(input, output, session) {
     data
   })
   
-  topsisProbability <- reactive({
-    configNames <- runFullProbability()[,1]
-    decision <- runFullProbability()[,-1]
-    weights <- NULL
-    impacts <- NULL
-    for(i in 1:length(probabilityQueries$rows)) {
-      id <- probabilityQueries$rows[i]
-      if(input[[paste0("probDir", id)]] == "Maximize")
-        impacts <- c(impacts, '+')
-      else
-        impacts <- c(impacts, '-')
-      weights <- c(weights, as.numeric(input[[paste0("probWeight", id)]]))
-      decision[i] <- as.numeric(decision[i])
-    }
-    
-    topsisData <- topsis(as.matrix(decision), weights, impacts)
-    sorted_topsis <- topsisData[order(topsisData$rank),]
-    rank <- sorted_topsis$rank
-    score <- sorted_topsis$score
-    outputData <- cbind(configNames[sorted_topsis$alt.row], rank, score)
-    
-  })
-  
-  output$probabilityTable <- DT::renderDataTable({
-    topsisProbability()
-  })
-  
   output$probabilityWeightUI <- renderUI({
     lapply(probabilityQueries$rows, function(id) {
-      name <- input[[paste0('queryName', id)]]
+      variable <- input[[paste0('queryVariable', id)]]
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
       
       fluidRow(
         column(1, paste0("Query", id)),
         column(1, paste0("Config")),
-        column(3, paste(name, direction, threshold)),
-        column(2, textInput(paste0("probGoal", id), NULL, value ="1")),
-        column(2, selectInput(paste0("probDir", id), NULL, choices = c("Minimize", "Maximize"), selected = "Minimize")),
+        column(3, paste(variable, tolower(direction), threshold)),
+        column(4, selectInput(paste0("probImpact", id), NULL, choices = c("Positive", "Negative"), selected = "Positive")),
         column(3, sliderInput(paste0("probWeight", id), NULL, 0, 1, 1, step = 0.05))
       )
     })
   })
   
-  # weighedProbabilityData <- reactive ({
-  #   data <- runFullProbability()
-  #   
-  # })
+  topsisProbability <- reactive({
+    outputData <- runFullProbability()
+    decisions <- data.matrix(outputData[,-1])
+    weights <- NULL
+    impacts <- NULL
+    for(i in 1:length(probabilityQueries$rows)) {
+      id <- probabilityQueries$rows[i]
+      if(input[[paste0("probImpact", id)]] == "Positive")
+        impacts <- c(impacts, '+')
+      else
+        impacts <- c(impacts, '-')
+      weights <- c(weights, as.numeric(input[[paste0("probWeight", id)]]))
+    }
+    
+    if(ncol(decisions)>1) {
+      topsisData <- topsis(decisions, weights, impacts)
+      outputData <- cbind(topsisData[,-1], outputData)
+    }
+    else {
+      if (impacts[1] == "+") {
+        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[rev(order(outputData[[paste0("Query", probabilityQueries$rows[1])]])),])
+      }
+      else {
+        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[order(outputData[[paste0("-Query", probabilityQueries$rows[1])]]),])
+      }
+    }
+    outputData
+  })
   
-  # output$probabilityTable <- DT::renderDataTable({
-  #   runFullProbability
-  # })
-  
-  
+  output$probabilityTable <- DT::renderDataTable({
+    topsisProbability()
+  })
   
   # UI Adjustments -----------------------------------------------------------
   

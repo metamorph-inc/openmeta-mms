@@ -237,8 +237,7 @@ shinyUI(fluidPage(
               column(1, h5(strong("ID:"))),
               column(1, h5(strong("Source:"))),
               column(3, h5(strong("Description:"))),
-              column(2, h5(strong("Goal:"))),
-              column(2, h5(strong("Distance:"))),
+              column(4, h5(strong("Impact:"))),
               column(3, h5(strong("Weight:")))
             ), br(),
             uiOutput("probabilityWeightUI")
