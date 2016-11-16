@@ -7,7 +7,7 @@
 #' @param distributionTypes A list containing the desired distribution types of 
 #'   the input data.  Should only contain entries for input variables.
 #' @param distributionParams A list containing arameters for the distributions 
-#'   of input data.  See \code{pdfComp}'s documentation for the contents of each
+#'   of input data.  See \code{presuldfComp}'s documentation for the contents of each
 #'   entry in this list.
 #'   
 #' @returns A list with two elements:  'dist': A list containing, for each

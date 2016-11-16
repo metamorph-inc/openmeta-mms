@@ -1,5 +1,5 @@
-source("bayesian_utils.R")
-source("uq.R")
+debugSource("bayesian_utils.R")
+debugSource("uq.R")
 
 # Load data
 data_all = read.csv("WindTurbineSim.csv")
@@ -38,4 +38,9 @@ for(i in 1:numberOfVariables) {
 }
 
 rho = buildGuassianCopula(resampledData)
+
+obsIndex = c(1,2,3)
+observations = data[nrow(data), 1:3]
+
+result = forwardUq(data, resampledData, rho, observations, obsIndex)
 

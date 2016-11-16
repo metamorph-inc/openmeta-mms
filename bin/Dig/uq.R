@@ -33,7 +33,7 @@ buildGuassianCopula = function(resampledData) {
 #'   for each variable, a postPoints vector and a postPdf vector that make up
 #'   the posterior probability distribution computed.
 forwardUq = function(originalData, resampledData, rho, observations, observationsIndex) {
-  xStandard = x2u(data[observationsIndex])
+  xStandard = x2u(data[observationsIndex], observations)
   
   yPred = forwardUqImpl(originalData, xStandard, rho, observationsIndex)
   
@@ -43,23 +43,23 @@ forwardUq = function(originalData, resampledData, rho, observations, observation
   postIndexes = postIndexes[! postIndexes %in% observationsIndex]
   
   uPoints = seq(0.001, 0.999, 0.001)
-  for (i in length(observations)) {
+  for (i in 1:nrow(observations)) {
     observationResult = list()
-    for (j in length(postIndexes)) {
+    for (j in 1:length(postIndexes)) {
       tempResult = list()
       originalIndex = postIndexes[j]
       originalName = names(originalData)[[originalIndex]]
       
       condMu = yPred[i, j, 1]
       condSigma = yPred[i, j, 2]
-      tempResult$postPoints = densityInverseCdf(data[originalIndex], uPoints)
+      tempResult$postPoints = densityInverseCdf(data[[originalIndex]], uPoints)
       pdfPostPoints = dnorm(qnorm(uPoints, mean=condMu, sd=condSigma), mean=condMu, sd=condSigma)
       postFunction = approxfun(tempResult$postPoints, pdfPostPoints, yleft=0, yright=0)
       area = integrate(postFunction, min(tempResult$postPoints), max(tempResult$postPoints))$value
       tempResult$postPdf = pdfPostPoints / area
-      observationResult[originalName] = tempResult
+      observationResult[[originalName]] = tempResult
     }
-    result[i] = observationResult
+    result[[i]] = observationResult
   }
   
   
