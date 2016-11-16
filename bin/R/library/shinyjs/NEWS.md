@@ -1,8 +1,38 @@
+# shinyjs 0.8
+
+2016-11-03
+
+- added `runcodeUI()` and `runcodeServer()` functions that you can add to your app in order to run arbitrary R code interactively
+- added `showLog()` function which lets you redirect all JavaScript logging statements to the R console, to make it easier and quicker to debug apps without having to open the JS console (#88)
+- `onclick` and `onevent` now support callback functions, and the JavaScript Event object is passed to the callback (#92)
+- the `reset()` function now works on file inputs
+- added `alert()` as an alias for `info()`
+
+# shinyjs 0.7
+
+2016-08-20
+
+- All the colourpicker/colourInput related functions are now deprecated because I've made a more appropriate package for them [`colourpicker`](https://github.com/daattali/colourpicker) 
+- Use updated colourpicker JS library that fixes bugs with new jquery version
+- Add reset support for `passwordInput` and `textAreaInput` (#78)
+
+# shinyjs 0.6.2
+
+2016-07-25
+
+- Improved UI of demo shiny apps and added social media meta tags and github fork ribbons
+
+# shinyjs 0.6.1
+
+2016-05-09
+
+- Added `selector` argument to `html()` function
+
 # shinyjs 0.6
 
 2016-04-24
 
-- `info()` fuction: don't include surrounding quotations if not necessary (#59)
+- `info()` function: don't include surrounding quotations if not necessary (#59)
 - added documentation for how to use `shinyjs` in HTML templates 
 
 # shinyjs 0.5.3

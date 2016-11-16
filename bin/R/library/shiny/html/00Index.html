@@ -11,11 +11,9 @@
 <div style="text-align: center;">
 <a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
 <a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
-</div><h2>Documentation for package &lsquo;shiny&rsquo; version 0.13.2</h2>
+</div><h2>Documentation for package &lsquo;shiny&rsquo; version 0.14.2</h2>
 
 <ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
-<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
-<li><a href="../NEWS">Package NEWS</a>.</li>
 </ul>
 
 <h2>Help Pages</h2>
@@ -82,6 +80,8 @@
 <table width="100%">
 <tr><td style="width: 25%;"><a href="bootstrapPage.html">basicPage</a></td>
 <td>Create a Bootstrap page</td></tr>
+<tr><td style="width: 25%;"><a href="bookmarkButton.html">bookmarkButton</a></td>
+<td>Create a button for bookmarking/sharing</td></tr>
 <tr><td style="width: 25%;"><a href="bootstrapLib.html">bootstrapLib</a></td>
 <td>Bootstrap libraries</td></tr>
 <tr><td style="width: 25%;"><a href="bootstrapPage.html">bootstrapPage</a></td>
@@ -149,8 +149,12 @@
 <table width="100%">
 <tr><td style="width: 25%;"><a href="builder.html">em</a></td>
 <td>HTML Builder Functions</td></tr>
+<tr><td style="width: 25%;"><a href="enableBookmarking.html">enableBookmarking</a></td>
+<td>Enable bookmarking for a Shiny application</td></tr>
 <tr><td style="width: 25%;"><a href="observeEvent.html">eventReactive</a></td>
 <td>Event handler</td></tr>
+<tr><td style="width: 25%;"><a href="exportTestValues.html">exportTestValues</a></td>
+<td>Register expressions for export in test mode</td></tr>
 <tr><td style="width: 25%;"><a href="exprToFunction.html">exprToFunction</a></td>
 <td>Convert an expression to a function</td></tr>
 </table>
@@ -178,6 +182,8 @@
 <td>Create a page with fluid layout</td></tr>
 <tr><td style="width: 25%;"><a href="fluidPage.html">fluidRow</a></td>
 <td>Create a page with fluid layout</td></tr>
+<tr><td style="width: 25%;"><a href="freezeReactiveValue.html">freezeReactiveValue</a></td>
+<td>Freeze a reactive value</td></tr>
 </table>
 
 <h2><a name="G">-- G --</a></h2>
@@ -185,6 +191,8 @@
 <table width="100%">
 <tr><td style="width: 25%;"><a href="domains.html">getDefaultReactiveDomain</a></td>
 <td>Reactive domains</td></tr>
+<tr><td style="width: 25%;"><a href="shinyOptions.html">getShinyOption</a></td>
+<td>Get or set Shiny options</td></tr>
 </table>
 
 <h2><a name="H">-- H --</a></h2>
@@ -243,6 +251,8 @@
 <td>Reporting progress (functional API)</td></tr>
 <tr><td style="width: 25%;"><a href="inputPanel.html">inputPanel</a></td>
 <td>Input panel</td></tr>
+<tr><td style="width: 25%;"><a href="insertUI.html">insertUI</a></td>
+<td>Insert UI objects</td></tr>
 <tr><td style="width: 25%;"><a href="installExprFunction.html">installExprFunction</a></td>
 <td>Install an expression as a function</td></tr>
 <tr><td style="width: 25%;"><a href="invalidateLater.html">invalidateLater</a></td>
@@ -257,6 +267,8 @@
 <td>Include content only once</td></tr>
 <tr><td style="width: 25%;"><a href="isolate.html">isolate</a></td>
 <td>Create a non-reactive scope for an expression</td></tr>
+<tr><td style="width: 25%;"><a href="req.html">isTruthy</a></td>
+<td>Check for required values</td></tr>
 </table>
 
 <h2><a name="K">-- K --</a></h2>
@@ -289,6 +301,10 @@
 <td>Mark a function as a render function</td></tr>
 <tr><td style="width: 25%;"><a href="maskReactiveContext.html">maskReactiveContext</a></td>
 <td>Evaluate an expression without a reactive context</td></tr>
+<tr><td style="width: 25%;"><a href="modalButton.html">modalButton</a></td>
+<td>Create a button for a modal dialog</td></tr>
+<tr><td style="width: 25%;"><a href="modalDialog.html">modalDialog</a></td>
+<td>Create a modal dialog UI</td></tr>
 </table>
 
 <h2><a name="N">-- N --</a></h2>
@@ -319,8 +335,22 @@
 <td>Create a reactive observer</td></tr>
 <tr><td style="width: 25%;"><a href="observeEvent.html">observeEvent</a></td>
 <td>Event handler</td></tr>
+<tr><td style="width: 25%;"><a href="onBookmark.html">onBookmark</a></td>
+<td>Add callbacks for Shiny session bookmarking events</td></tr>
+<tr><td style="width: 25%;"><a href="onBookmark.html">onBookmarked</a></td>
+<td>Add callbacks for Shiny session bookmarking events</td></tr>
+<tr><td style="width: 25%;"><a href="onFlush.html">onFlush</a></td>
+<td>Add callbacks for Shiny session events</td></tr>
+<tr><td style="width: 25%;"><a href="onFlush.html">onFlushed</a></td>
+<td>Add callbacks for Shiny session events</td></tr>
 <tr><td style="width: 25%;"><a href="domains.html">onReactiveDomainEnded</a></td>
 <td>Reactive domains</td></tr>
+<tr><td style="width: 25%;"><a href="onBookmark.html">onRestore</a></td>
+<td>Add callbacks for Shiny session bookmarking events</td></tr>
+<tr><td style="width: 25%;"><a href="onBookmark.html">onRestored</a></td>
+<td>Add callbacks for Shiny session bookmarking events</td></tr>
+<tr><td style="width: 25%;"><a href="onFlush.html">onSessionEnded</a></td>
+<td>Add callbacks for Shiny session events</td></tr>
 <tr><td style="width: 25%;"><a href="outputOptions.html">outputOptions</a></td>
 <td>Set options for an output object.</td></tr>
 </table>
@@ -381,6 +411,12 @@
 <td>Register an Input Handler</td></tr>
 <tr><td style="width: 25%;"><a href="removeInputHandler.html">removeInputHandler</a></td>
 <td>Deregister an Input Handler</td></tr>
+<tr><td style="width: 25%;"><a href="showModal.html">removeModal</a></td>
+<td>Show or remove a modal dialog</td></tr>
+<tr><td style="width: 25%;"><a href="showNotification.html">removeNotification</a></td>
+<td>Show or remove a notification</td></tr>
+<tr><td style="width: 25%;"><a href="removeUI.html">removeUI</a></td>
+<td>Remove UI objects</td></tr>
 <tr><td style="width: 25%;"><a href="renderDataTable.html">renderDataTable</a></td>
 <td>Table output with the JavaScript library DataTables</td></tr>
 <tr><td style="width: 25%;"><a href="renderImage.html">renderImage</a></td>
@@ -399,6 +435,8 @@
 <td>Make a random number generator repeatable</td></tr>
 <tr><td style="width: 25%;"><a href="req.html">req</a></td>
 <td>Check for required values</td></tr>
+<tr><td style="width: 25%;"><a href="restoreInput.html">restoreInput</a></td>
+<td>Restore an input value</td></tr>
 <tr><td style="width: 25%;"><a href="runApp.html">runApp</a></td>
 <td>Run Shiny Application</td></tr>
 <tr><td style="width: 25%;"><a href="runExample.html">runExample</a></td>
@@ -416,6 +454,8 @@
 <h2><a name="S">-- S --</a></h2>
 
 <table width="100%">
+<tr><td style="width: 25%;"><a href="safeError.html">safeError</a></td>
+<td>Declare an error safe for the user to see</td></tr>
 <tr><td style="width: 25%;"><a href="selectInput.html">selectInput</a></td>
 <td>Create a select list input control</td></tr>
 <tr><td style="width: 25%;"><a href="selectInput.html">selectizeInput</a></td>
@@ -424,6 +464,8 @@
 <td>Collect information about the Shiny Server environment</td></tr>
 <tr><td style="width: 25%;"><a href="session.html">session</a></td>
 <td>Session object</td></tr>
+<tr><td style="width: 25%;"><a href="setBookmarkExclude.html">setBookmarkExclude</a></td>
+<td>Exclude inputs from bookmarking</td></tr>
 <tr><td style="width: 25%;"><a href="withProgress.html">setProgress</a></td>
 <td>Reporting progress (functional API)</td></tr>
 <tr><td style="width: 25%;"><a href="shiny-package.html">shiny</a></td>
@@ -436,10 +478,18 @@
 <td>Create a Shiny app object</td></tr>
 <tr><td style="width: 25%;"><a href="shinyApp.html">shinyAppFile</a></td>
 <td>Create a Shiny app object</td></tr>
+<tr><td style="width: 25%;"><a href="shinyOptions.html">shinyOptions</a></td>
+<td>Get or set Shiny options</td></tr>
 <tr><td style="width: 25%;"><a href="shinyServer.html">shinyServer</a></td>
 <td>Define Server Functionality</td></tr>
 <tr><td style="width: 25%;"><a href="shinyUI.html">shinyUI</a></td>
 <td>Create a Shiny UI handler</td></tr>
+<tr><td style="width: 25%;"><a href="showBookmarkUrlModal.html">showBookmarkUrlModal</a></td>
+<td>Display a modal dialog for bookmarking</td></tr>
+<tr><td style="width: 25%;"><a href="showModal.html">showModal</a></td>
+<td>Show or remove a modal dialog</td></tr>
+<tr><td style="width: 25%;"><a href="showNotification.html">showNotification</a></td>
+<td>Show or remove a notification</td></tr>
 <tr><td style="width: 25%;"><a href="showReactLog.html">showReactLog</a></td>
 <td>Reactive Log Visualizer</td></tr>
 <tr><td style="width: 25%;"><a href="sidebarLayout.html">sidebarLayout</a></td>
@@ -487,6 +537,8 @@
 <td>HTML Builder Functions</td></tr>
 <tr><td style="width: 25%;"><a href="tag.html">tagSetChildren</a></td>
 <td>HTML Tag Object</td></tr>
+<tr><td style="width: 25%;"><a href="textAreaInput.html">textAreaInput</a></td>
+<td>Create a textarea input control</td></tr>
 <tr><td style="width: 25%;"><a href="textInput.html">textInput</a></td>
 <td>Create a text input control</td></tr>
 <tr><td style="width: 25%;"><a href="textOutput.html">textOutput</a></td>
@@ -500,6 +552,8 @@
 <table width="100%">
 <tr><td style="width: 25%;"><a href="htmlOutput.html">uiOutput</a></td>
 <td>Create an HTML output element</td></tr>
+<tr><td style="width: 25%;"><a href="updateActionButton.html">updateActionButton</a></td>
+<td>Change the label or icon of an action button on the client</td></tr>
 <tr><td style="width: 25%;"><a href="updateCheckboxGroupInput.html">updateCheckboxGroupInput</a></td>
 <td>Change the value of a checkbox group input on the client</td></tr>
 <tr><td style="width: 25%;"><a href="updateCheckboxInput.html">updateCheckboxInput</a></td>
@@ -514,6 +568,8 @@
 <td>Change the selected tab on the client</td></tr>
 <tr><td style="width: 25%;"><a href="updateNumericInput.html">updateNumericInput</a></td>
 <td>Change the value of a number input on the client</td></tr>
+<tr><td style="width: 25%;"><a href="updateQueryString.html">updateQueryString</a></td>
+<td>Update URL in browser's location bar</td></tr>
 <tr><td style="width: 25%;"><a href="updateRadioButtons.html">updateRadioButtons</a></td>
 <td>Change the value of a radio input on the client</td></tr>
 <tr><td style="width: 25%;"><a href="updateSelectInput.html">updateSelectInput</a></td>
@@ -524,8 +580,12 @@
 <td>Change the value of a slider input on the client</td></tr>
 <tr><td style="width: 25%;"><a href="updateTabsetPanel.html">updateTabsetPanel</a></td>
 <td>Change the selected tab on the client</td></tr>
+<tr><td style="width: 25%;"><a href="updateTextAreaInput.html">updateTextAreaInput</a></td>
+<td>Change the value of a textarea input on the client</td></tr>
 <tr><td style="width: 25%;"><a href="updateTextInput.html">updateTextInput</a></td>
 <td>Change the value of a text input on the client</td></tr>
+<tr><td style="width: 25%;"><a href="urlModal.html">urlModal</a></td>
+<td>Generate a modal dialog that displays a URL</td></tr>
 </table>
 
 <h2><a name="V">-- V --</a></h2>

@@ -1,5 +1,6 @@
 shinyjs-package	shinyjs
 addClass	classFuncs
+alert	messageFuncs
 classFuncs	classFuncs
 colourInput	colourInput
 colourPicker	colourPicker
@@ -20,10 +21,14 @@ onclick	onevent
 onevent	onevent
 removeClass	classFuncs
 reset	reset
+runcode	runcode
+runcodeServer	runcode
+runcodeUI	runcode
 runExample	runExample
 runjs	runjs
 shinyjs	shinyjs
 show	visibilityFuncs
+showLog	showLog
 stateFuncs	stateFuncs
 toggle	visibilityFuncs
 toggleClass	classFuncs

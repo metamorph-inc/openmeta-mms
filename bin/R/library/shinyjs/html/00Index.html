@@ -1,19 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head><title>R: Perform Common JavaScript Operations in Shiny Apps using Plain R
-Code</title>
+<head><title>R: Easily Improve the User Experience of Your Shiny Apps in Seconds</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
-<h1> Perform Common JavaScript Operations in Shiny Apps using Plain R
-Code
+<h1> Easily Improve the User Experience of Your Shiny Apps in Seconds
 <img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]" />
 </h1>
 <hr/>
 <div style="text-align: center;">
 <a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
 <a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
-</div><h2>Documentation for package &lsquo;shinyjs&rsquo; version 0.6</h2>
+</div><h2>Documentation for package &lsquo;shinyjs&rsquo; version 0.8</h2>
 
 <ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
 <li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
@@ -27,12 +25,14 @@ Code
 <td>shinyjs</td></tr>
 <tr><td style="width: 25%;"><a href="classFuncs.html">addClass</a></td>
 <td>Add/remove CSS class</td></tr>
+<tr><td style="width: 25%;"><a href="messageFuncs.html">alert</a></td>
+<td>Show a message</td></tr>
 <tr><td style="width: 25%;"><a href="classFuncs.html">classFuncs</a></td>
 <td>Add/remove CSS class</td></tr>
 <tr><td style="width: 25%;"><a href="colourInput.html">colourInput</a></td>
-<td>Create a colour input control</td></tr>
+<td>Create a colour input control (DEPRECATED)</td></tr>
 <tr><td style="width: 25%;"><a href="colourPicker.html">colourPicker</a></td>
-<td>Colour picker gadget</td></tr>
+<td>Colour picker gadget (DEPRECATED)</td></tr>
 <tr><td style="width: 25%;"><a href="delay.html">delay</a></td>
 <td>Execute R code after a specified number of milliseconds has elapsed</td></tr>
 <tr><td style="width: 25%;"><a href="stateFuncs.html">disable</a></td>
@@ -65,6 +65,12 @@ Code
 <td>Add/remove CSS class</td></tr>
 <tr><td style="width: 25%;"><a href="reset.html">reset</a></td>
 <td>Reset input elements to their original values</td></tr>
+<tr><td style="width: 25%;"><a href="runcode.html">runcode</a></td>
+<td>Construct to let you run arbitrary R code live in a Shiny app</td></tr>
+<tr><td style="width: 25%;"><a href="runcode.html">runcodeServer</a></td>
+<td>Construct to let you run arbitrary R code live in a Shiny app</td></tr>
+<tr><td style="width: 25%;"><a href="runcode.html">runcodeUI</a></td>
+<td>Construct to let you run arbitrary R code live in a Shiny app</td></tr>
 <tr><td style="width: 25%;"><a href="runExample.html">runExample</a></td>
 <td>Run shinyjs examples</td></tr>
 <tr><td style="width: 25%;"><a href="runjs.html">runjs</a></td>
@@ -73,6 +79,8 @@ Code
 <td>shinyjs</td></tr>
 <tr><td style="width: 25%;"><a href="visibilityFuncs.html">show</a></td>
 <td>Display/hide an element</td></tr>
+<tr><td style="width: 25%;"><a href="showLog.html">showLog</a></td>
+<td>Print any JavaScript console.log messages in the R console</td></tr>
 <tr><td style="width: 25%;"><a href="stateFuncs.html">stateFuncs</a></td>
 <td>Enable/disable an input element</td></tr>
 <tr><td style="width: 25%;"><a href="visibilityFuncs.html">toggle</a></td>
