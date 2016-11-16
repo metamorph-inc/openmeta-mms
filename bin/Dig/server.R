@@ -1930,7 +1930,7 @@ shinyServer(function(input, output, session) {
   
   # Design Ranking -----------------------------------------------------------
   
-  runFullProbability <- observeEvent(input$runProbability, {
+  runFullProbability <- eventReactive(input$runProbability, {
     data <- data.frame(Config = character(0), stringsAsFactors=FALSE)
     print(data)
     for(i in 1:length(probabilityQueries$rows)) {
@@ -1963,6 +1963,34 @@ shinyServer(function(input, output, session) {
       data[nrow(data)+1,] <- answers
     }
     print(data)
+    data
+  })
+  
+  topsisProbability <- reactive({
+    configNames <- runFullProbability()[,1]
+    decision <- runFullProbability()[,-1]
+    weights <- NULL
+    impacts <- NULL
+    for(i in 1:length(probabilityQueries$rows)) {
+      id <- probabilityQueries$rows[i]
+      if(input[[paste0("probDir", id)]] == "Maximize")
+        impacts <- c(impacts, '+')
+      else
+        impacts <- c(impacts, '-')
+      weights <- c(weights, as.numeric(input[[paste0("probWeight", id)]]))
+      decision[i] <- as.numeric(decision[i])
+    }
+    
+    topsisData <- topsis(as.matrix(decision), weights, impacts)
+    sorted_topsis <- topsisData[order(topsisData$rank),]
+    rank <- sorted_topsis$rank
+    score <- sorted_topsis$score
+    outputData <- cbind(configNames[sorted_topsis$alt.row], rank, score)
+    
+  })
+  
+  output$probabilityTable <- DT::renderDataTable({
+    topsisProbability()
   })
   
   output$probabilityWeightUI <- renderUI({
