@@ -1689,7 +1689,7 @@ shinyServer(function(input, output, session) {
     # Real Resample
     req(bayesianUIInitialized)
     if (bayesianUIInitialized) {
-      output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)
+      output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)$dist
     }
     else
     {
@@ -1945,7 +1945,7 @@ shinyServer(function(input, output, session) {
       print(paste(config))
       configData <- subset(raw_plus(), raw_plus()[[paste0(input$bayesianDesignConfigVar)]] == config)
       configData <- configData[varRangeNum()]
-      resampledData <- resampleData(configData, bayesianDirection, bayesianType, bayesianParams)
+      resampledData <- resampleData(configData, bayesianDirection, bayesianType, bayesianParams)$dist
       answers <- c(paste0(config))
       for(j in 1:length(probabilityQueries$rows)) {
         id <- probabilityQueries$rows[j]

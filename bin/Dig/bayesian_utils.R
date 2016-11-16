@@ -2,17 +2,19 @@
 #' distributionParams.
 #' 
 #' @param data The dataframe to resample.
-#' @param dataDirection A list containing, for each variable in data, whether
+#' @param dataDirection A list containing, for each variable in data, whether 
 #'   the variable is an input or output variable.
-#' @param distributionTypes A list containing the desired distribution types of
+#' @param distributionTypes A list containing the desired distribution types of 
 #'   the input data.  Should only contain entries for input variables.
-#' @param distributionParams A list containing arameters for the distributions
+#' @param distributionParams A list containing arameters for the distributions 
 #'   of input data.  See \code{pdfComp}'s documentation for the contents of each
 #'   entry in this list.
-#'
-#' @returns A list containing, for each variable, xOrig/yOrig (the chosen
-#'   distribution for input variables, and the original distribution for
-#'   output variables) and xResampled/yResampled (the resampled distribution).
+#'   
+#' @returns A list with two elements:  'dist': A list containing, for each
+#'   variable, xOrig/yOrig (the chosen distribution for input variables, and the
+#'   original distribution for output variables) and xResampled/yResampled (the
+#'   resampled distribution). 'resampledData': a data frame containing the
+#'   actual resampled data.
 resampleData = function(data, dataDirection, distributionTypes, distributionParams) {
   numberOfVariables = ncol(data)
   
@@ -38,7 +40,7 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
   resampleIndices = genDist(weight, numberOfSamples)
   data_new = data[resampleIndices, ]
   
-  outputList = list()
+  distList = list()
   
   # Plot resampled samples
   for (var in names(data)) {
@@ -54,7 +56,7 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
                     yOrig = pdfAnalytical,
                     xResampled = pdfSample[['x']],
                     yResampled = pdfSample[['y']])
-      outputList[[var]] = result
+      distList[[var]] = result
     } else if(dataDirection[[var]] == 'Output') {
       min = min(data_new[[var]])
       max = max(data_new[[var]])
@@ -66,11 +68,15 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
                     yOrig = originalPdf[['y']],
                     xResampled = resampledPdf[['x']],
                     yResampled = resampledPdf[['y']])
-      outputList[[var]] = result
+      distList[[var]] = result
     } else {
       stop("Invalid data direction")
     }
   }
+  
+  outputList = list()
+  outputList$dist = distList
+  outputList$resampledData = data_new
   
   return(outputList)
 }
