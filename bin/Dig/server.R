@@ -1879,7 +1879,7 @@ shinyServer(function(input, output, session) {
           column(3, selectInput(paste0('queryName', id), NULL, choices = varRangeNum(), selected = varRangeNum()[[1]])),
           column(2, selectInput(paste0('queryDirection', id), NULL, choices = c("Above", "Below")), selected = "Above"),
           column(2, textInput(paste0('queryThreshold', id), NULL)),
-          column(2, uiOutput(paste0('queryValue', id))),
+          column(2, textOutput(paste0('queryValue', id))),
           column(2)
         ),
         id = paste0('probabilityQuery', id)
@@ -1907,7 +1907,7 @@ shinyServer(function(input, output, session) {
   
   runQueries <- observeEvent(input$runProbabilityQueries, {
     print("Started Calculating Probabilities.")
-    for(i in 1:length(probabilityQueries$rows)){
+    lapply(1:length(probabilityQueries$rows), function(i) {
       id <- probabilityQueries$rows[i]
       name <- input[[paste0('queryName', id)]]
       direction <- input[[paste0('queryDirection', id)]]
@@ -1923,8 +1923,8 @@ shinyServer(function(input, output, session) {
       if (direction == "Above") {
         value <- (1-value)
       }
-      output[[paste0('queryValue', probabilityQueries$rows[i])]] <- renderText(toString(value))
-    }
+      output[[paste0('queryValue', id)]] <- renderText(toString(value))
+    })
     print("Probabilites Calculated.")
   })
   
