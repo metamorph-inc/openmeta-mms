@@ -1931,14 +1931,38 @@ shinyServer(function(input, output, session) {
   # Design Ranking -----------------------------------------------------------
   
   runFullProbability <- observeEvent(input$runProbability, {
-    lapply(levels(raw_plus()[[paste0(input$bayesianDesignConfigVar)]]), function(config) {
+    data <- data.frame(Config = character(0), stringsAsFactors=FALSE)
+    print(data)
+    for(i in 1:length(probabilityQueries$rows)) {
+      id <- probabilityQueries$rows[i]
+      data[[paste0('Query', id)]] <- numeric(0)
+    }
+    configs <- levels(raw_plus()[[paste0(input$bayesianDesignConfigVar)]])
+    print(data)
+    for (i in 1:length(configs)) {
+      config <- configs[i]
       print(paste(config))
-      data <- raw_plus()
-      configData <- subset(data, data[[paste0(input$bayesianDesignConfigVar)]] == config)
+      configData <- subset(raw_plus(), raw_plus()[[paste0(input$bayesianDesignConfigVar)]] == config)
       configData <- configData[varRangeNum()]
-      output_data <- resampleData(configData, bayesianDirection, bayesianType, bayesianParams)
-      print(output_data)
-    })
+      resampledData <- resampleData(configData, bayesianDirection, bayesianType, bayesianParams)
+      answers <- c(paste0(config))
+      for(j in 1:length(probabilityQueries$rows)) {
+        id <- probabilityQueries$rows[j]
+        name <- input[[paste0('queryName', id)]]
+        direction <- input[[paste0('queryDirection', id)]]
+        threshold <-input[[paste0('queryThreshold', id)]]
+        value <- integrateData(resampledData[[name]][["xResampled"]],
+                               resampledData[[name]][["yResampled"]],
+                               min(resampledData[[name]][["xResampled"]]),
+                               as.numeric(threshold))
+        if (direction == "Above") {
+          value <- (1-value)
+        }
+        answers <- c(answers, value)
+      }
+      data[nrow(data)+1,] <- answers
+    }
+    print(data)
   })
   
   output$probabilityWeightUI <- renderUI({
@@ -1951,7 +1975,7 @@ shinyServer(function(input, output, session) {
         column(1, paste0("Query", id)),
         column(1, paste0("Config")),
         column(3, paste(name, direction, threshold)),
-        column(2, textInput(paste0("probGoal", id), NULL)),
+        column(2, textInput(paste0("probGoal", id), NULL, value ="1")),
         column(2, selectInput(paste0("probDir", id), NULL, choices = c("Minimize", "Maximize"), selected = "Minimize")),
         column(3, sliderInput(paste0("probWeight", id), NULL, 0, 1, 1, step = 0.05))
       )
@@ -1959,7 +1983,8 @@ shinyServer(function(input, output, session) {
   })
   
   # weighedProbabilityData <- reactive ({
-  #   runFullProbability()
+  #   data <- runFullProbability()
+  #   
   # })
   
   # output$probabilityTable <- DT::renderDataTable({
