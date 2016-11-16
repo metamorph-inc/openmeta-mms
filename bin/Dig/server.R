@@ -1982,8 +1982,10 @@ shinyServer(function(input, output, session) {
     }
     
     topsisData <- topsis(as.matrix(decision), weights, impacts)
-    
-    outputData <- c(configNames, topsisData)
+    sorted_topsis <- topsisData[order(topsisData$rank),]
+    rank <- sorted_topsis$rank
+    score <- sorted_topsis$score
+    outputData <- cbind(configNames[sorted_topsis$alt.row], rank, score)
     
   })
   
