@@ -33,7 +33,7 @@ buildGuassianCopula = function(resampledData) {
 #'   for each variable, a postPoints vector and a postPdf vector that make up
 #'   the posterior probability distribution computed.
 forwardUq = function(originalData, resampledData, rho, observations, observationsIndex) {
-  xStandard = x2u(data[observationsIndex], observations)
+  xStandard = x2u(originalData[observationsIndex], observations)
   
   yPred = forwardUqImpl(originalData, xStandard, rho, observationsIndex)
   
@@ -52,7 +52,7 @@ forwardUq = function(originalData, resampledData, rho, observations, observation
       
       condMu = yPred[i, j, 1]
       condSigma = yPred[i, j, 2]
-      tempResult$postPoints = densityInverseCdf(data[[originalIndex]], uPoints)
+      tempResult$postPoints = densityInverseCdf(originalData[[originalIndex]], uPoints)
       pdfPostPoints = dnorm(qnorm(uPoints, mean=condMu, sd=condSigma), mean=condMu, sd=condSigma)
       postFunction = approxfun(tempResult$postPoints, pdfPostPoints, yleft=0, yright=0)
       area = integrate(postFunction, min(tempResult$postPoints), max(tempResult$postPoints))$value
@@ -74,7 +74,7 @@ backwardUq = function(originalData, resampledData, rho, observations, observatio
   for (i in observationsIndex) {
     yObsU[names(originalData)[i]] = densityCdf(originalData[[i]], observations[[i]])
   }
-  yObsStd = x2u(data[observationsIndex], observations[observationsIndex])
+  yObsStd = x2u(originalData[observationsIndex], observations[observationsIndex])
   
   result = backwardUqImpl(nCali, originalData, nObs, yObsU, yObsStd, rho, obsIndex)
 }

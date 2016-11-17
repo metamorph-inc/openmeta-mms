@@ -184,7 +184,7 @@ densityInverseCdf = function(data, pointsToEvaluate) {
 
 #' Converts xObs into standard normal variables using the distribution in x
 x2u = function(x, xObs) {
-  numberOfVariables = length(x)
+  numberOfVariables = ncol(x)
   
   result = makeEmptyDataFrame(nrow(xObs))
   result["temp"] = NULL
