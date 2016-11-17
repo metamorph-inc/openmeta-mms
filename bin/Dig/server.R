@@ -1839,6 +1839,11 @@ shinyServer(function(input, output, session) {
                    lines(data[[var]][["xResampled"]],
                          data[[var]][["yResampled"]],
                          col = input$bayResampledColor, lwd=2)
+                   if (!is.null(forwardUQData()) & !is.null(forwardUQData()[[var]])) {
+                     lines(forwardUQData()[[var]]$postPoints,
+                           forwardUQData()[[var]]$postPdf,
+                           col="orange", lwd=2)
+                   }
                    box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
                  }, height = 229)
           )
@@ -1951,11 +1956,21 @@ shinyServer(function(input, output, session) {
   })
   
   forwardUQData <- eventReactive(input$runFUQ, {
-    print("Started Forward UQ.")
+    numberOfInputs <- 0
+    for (i in 1:length(bayesianInputs())) {
+      if (input[[paste0("fuqConstraintEnable", i)]]) {
+        numberOfInputs <- numberOfInputs + 1
+      }
+    }
     
-    result <- processForwardUQ(filtered_raw_plus()[varRangeNum()], bayesianData(), bayesianInputs())
+    results <- NULL
+    if (numberOfInputs > 0) {
+      print("Started Forward UQ.")
+      results <- processForwardUQ(filtered_raw_plus()[varRangeNum()], bayesianData(), bayesianInputs())
+      print("Completed Forward UQ.")
+    }
     
-    print("Completed Forward UQ.")
+    results
   })
   
   processForwardUQ <- function(originalData, bayesianData, bayesianInputs) {
@@ -1986,9 +2001,9 @@ shinyServer(function(input, output, session) {
     }
     observations <- as.data.frame(observations)
     
-    forwardUq(originalDataTrimmed, resampledDataTrimmed, rhoTrimmed, observations, observationsIndex)
-    
     print("Finished Processing ForwardUQ.")
+    
+    results <- forwardUq(originalDataTrimmed, resampledDataTrimmed, rhoTrimmed, observations, observationsIndex)[[1]]
   }
     
   
