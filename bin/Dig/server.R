@@ -2,7 +2,7 @@ library(shiny)
 library(DT)
 library(topsis)
 source('bayesian_utils.r')
-#source('uq.r')
+source('uq.r')
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
 #options(error = function() traceback(2))
@@ -417,7 +417,7 @@ shinyServer(function(input, output, session) {
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
   output$displayFilters <- reactive({
-    display <- !(input$inTabset == "Options" | input$inTabset == "Bayesian")
+    display <- !(input$inTabset == "Options" | input$inTabset == "Uncertainty Quantification")
   })
   
   outputOptions(output, "displayFilters", suspendWhenHidden=FALSE)
@@ -1689,7 +1689,7 @@ shinyServer(function(input, output, session) {
     # Real Resample
     req(bayesianUIInitialized)
     if (bayesianUIInitialized) {
-      output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)$dist
+      output_data <- resampleData(input_data, bayesianDirection, bayesianType, bayesianParams)
     }
     else
     {
@@ -1800,7 +1800,7 @@ shinyServer(function(input, output, session) {
   
   output$bayesianPlots <- renderUI({
     print("In bayesianPlots()")
-    data <- bayesianData()
+    data <- bayesianData()$dist
     variables <- varRangeNum()
     if(!input$bayesianDisplayAll)
       variables <- varRangeNum()[bayesVarsList()]
@@ -1862,6 +1862,8 @@ shinyServer(function(input, output, session) {
     }
   }
   
+  # Uncertainty Quantification Footer -----------------------------------------
+  
   output$displayQueries <- reactive({
     display <- !(input$bayesianTabset == "Design Ranking")
   })
@@ -1906,6 +1908,11 @@ shinyServer(function(input, output, session) {
     subset(varRangeNum(), inputs)
   })
   
+  bayesianOutputs <- reactive({
+    inputs <- sapply(varRangeNum(), function(var) {bayesianDirection[[var]] == "Output"})
+    subset(varRangeNum(), inputs)
+  })
+  
   runQueries <- observeEvent(input$runProbabilityQueries, {
     print("Started Calculating Probabilities.")
     lapply(1:length(probabilityQueries$rows), function(i) {
@@ -1913,10 +1920,11 @@ shinyServer(function(input, output, session) {
       name <- input[[paste0('queryVariable', id)]]
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
+      data <- bayesianData()$dist[[name]]
       
-      value <- integrateData(bayesianData()[[name]][["xResampled"]],
-                             bayesianData()[[name]][["yResampled"]],
-                             min(bayesianData()[[name]][["xResampled"]]),
+      value <- integrateData(data$xResampled,
+                             data$yResampled,
+                             min(data$xResampled),
                              as.numeric(threshold))
       
       print(paste("Query: ",name, direction, threshold, value))
@@ -1927,6 +1935,68 @@ shinyServer(function(input, output, session) {
       output[[paste0('queryValue', id)]] <- renderText(toString(value))
     })
     print("Probabilites Calculated.")
+  })
+  
+  # Forward UQ ---------------------------------------------------------------
+  
+  output$fuqConstraintsUI <- renderUI({
+    lapply(bayesianInputs(), function(input) {
+      id <- which(bayesianInputs() == input)
+      fluidRow(
+        column(2, checkboxInput(paste0("fuqConstraintEnable", id), NULL)),
+        column(6, paste(input)),
+        column(4, textInput(paste0("fuqConstraintValue", id), NULL, value = toString(apply(filtered_raw_plus()[input], 2, mean))))
+      )
+    })
+  })
+  
+  forwardUQData <- eventReactive(input$runFUQ, {
+    print("Started Forward UQ.")
+    
+    result <- processForwardUQ(filtered_raw_plus()[varRangeNum()], bayesianData(), bayesianInputs())
+    
+    print("Completed Forward UQ.")
+  })
+  
+  processForwardUQ <- function(originalData, bayesianData, bayesianInputs) {
+    
+    resampledData <- bayesianData$resampledData
+    rho <- buildGuassianCopula(resampledData)
+    
+    constrainedInputs <- c()
+    columnsToRemove <- c()
+    for (i in 1:length(bayesianInputs)) {
+      if (input[[paste0("fuqConstraintEnable", i)]]) {
+        constrainedInputs <- c(constrainedInputs, bayesianInputs[i])
+      }
+      else {
+        columnsToRemove <- c(columnsToRemove, which(names(originalData) == bayesianInputs[i]))
+      }
+    }
+    
+    originalDataTrimmed <- originalData[,-columnsToRemove]
+    resampledDataTrimmed <- resampledData[,-columnsToRemove]
+    rhoTrimmed <- rho[-columnsToRemove,-columnsToRemove]
+    
+    observations <- list()
+    observationsIndex <- c()
+    for (i in 1:length(constrainedInputs)) {
+      observations[[paste(constrainedInputs[i])]] = as.numeric(input[[paste0("fuqConstraintValue", which(bayesianInputs == constrainedInputs[i]))]])
+      observationsIndex <- c(observationsIndex, which(names(originalDataTrimmed) == constrainedInputs[i]))
+    }
+    observations <- as.data.frame(observations)
+    
+    forwardUq(originalDataTrimmed, resampledDataTrimmed, rhoTrimmed, observations, observationsIndex)
+    
+    print("Finished Processing ForwardUQ.")
+  }
+    
+  
+  output$fuqPlots <- renderUI({
+    data <- forwardUQData()
+    lapply(bayesianOutputs(), function(output) {
+      renderText(paste("Forward UQ plots for", output, "here."))
+    })
   })
   
   # Design Ranking -----------------------------------------------------------
