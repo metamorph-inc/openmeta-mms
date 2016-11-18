@@ -224,28 +224,30 @@ shinyUI(fluidPage(
                 uiOutput("bayesianPlots")
               )
             )
-          )
+          ),
+          actionButton('runFUQ', 'Run Forward UQ')
         ),
-        tabPanel("Forward UQ",
-          br(),
-          h4("Constraints:"),
-          fluidRow(
-            column(6,
-              wellPanel(
-                fluidRow(
-                  column(2, h5(strong("Enable"))),
-                  column(6, h5(strong("Variable:"))),
-                  column(4, h5(strong("Value:")))
-                ),
-                uiOutput("fuqConstraintsUI")
-              )
-            ), column(6)
-          ), br(),
-          actionButton('runFUQ', 'Run Forward UQ'),
-          br(),
-          hr(),
-          uiOutput("fuqPlots")
-        ),
+        # --------REMOVE THIS SECTION---------------
+        # tabPanel("Forward UQ",
+        #   br(),
+        #   h4("Constraints:"),
+        #   fluidRow(
+        #     column(6,
+        #       wellPanel(
+        #         fluidRow(
+        #           column(2, h5(strong("Enable"))),
+        #           column(6, h5(strong("Variable:"))),
+        #           column(4, h5(strong("Value:")))
+        #         ),
+        #         uiOutput("fuqConstraintsUI")
+        #       )
+        #     ), column(6)
+        #   ), br(),
+        #   # actionButton('runFUQ', 'Run Forward UQ'),
+        #   br(),
+        #   hr(),
+        #   uiOutput("fuqPlots")
+        # ),
         tabPanel("Design Ranking",
           br(),
           actionButton('runProbability', 'Compute Probabilities'),

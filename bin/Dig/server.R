@@ -81,7 +81,7 @@ shinyServer(function(input, output, session) {
     # raw = iris
     
     # For testing with WindTurbine Data
-    # raw = read.csv("WindTurbineSim.csv", fill=T)
+    #raw = read.csv("WindTurbineSim.csv", fill=T)
     # if(file.exists("WindTurbineSimMapping.csv"))
     #   mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
     
@@ -1733,43 +1733,54 @@ shinyServer(function(input, output, session) {
         this_direction <- "Input"
       else
         this_direction <- "Output"
-      
+
       fluidRow(
-        hr(),
-        column(8,
-               
-               selectInput(
-                 paste0('varDirection', global_i),
-                 label = var,
-                 choices = var_directions,
-                 selected = this_direction),
-               checkboxInput(
-                 paste0('gaussian', global_i),
-                 label = "Enable Gaussian",
-                 value = this_gaussian),
-               fluidRow(
-                 column(6,
-                        textInput(paste0('gaussian_mean', global_i),
-                                  HTML("&mu;:"),
-                                  placeholder = "Mean",
-                                  value = this_gauss_mean)
-                 ),
-                 column(6,
-                        textInput(paste0('gaussian_sd',global_i),
-                                  HTML("&sigma;:"),
-                                  placeholder = "StdDev",
-                                  value = this_sd)
+        # Type select
+        fluidRow(
+          hr(),
+          column(8,
+                 
+                 selectInput(
+                   paste0('varDirection', global_i),
+                   label = var,
+                   choices = var_directions,
+                   selected = this_direction)
+          ),
+          column(4,
+                 bootstrapPage(
+                   br(),
+                   actionButton(paste0("add", var), "Add", class = "btn btn-success")
                  )
-               )
+          )
         ),
-        column(4,
-               bootstrapPage(
-                 br(),
-                 actionButton(paste0("add", var), "Add", class = "btn btn-success")
-               )
+        # Gaussian
+        fluidRow(
+          column(4, 
+                 checkboxInput(
+                  paste0('gaussian', global_i),
+                  label = "Enable Gaussian",
+                  value = this_gaussian)
+          ),
+          column(4,
+                 textInput(paste0('gaussian_mean', global_i),
+                          HTML("&mu;:"),
+                          placeholder = "Mean",
+                          value = this_gauss_mean)
+          ),
+          column(4,
+                 textInput(paste0('gaussian_sd',global_i),
+                          HTML("&sigma;:"),
+                          placeholder = "StdDev",
+                          value = this_sd)
+          )
+        ),
+        # Constraint
+        fluidRow(
+          column(4, checkboxInput(paste0("fuqConstraintEnable", global_i), "Enable Constraint")),
+          column(8, textInput(paste0("fuqConstraintValue", global_i), NULL, value = this_gauss_mean))
+          
         )
       )
-      
     })
     #print("Done with bayesianUI()")
   })
@@ -1944,21 +1955,23 @@ shinyServer(function(input, output, session) {
   
   # Forward UQ ---------------------------------------------------------------
   
-  output$fuqConstraintsUI <- renderUI({
-    lapply(bayesianInputs(), function(input) {
-      id <- which(bayesianInputs() == input)
-      fluidRow(
-        column(2, checkboxInput(paste0("fuqConstraintEnable", id), NULL)),
-        column(6, paste(input)),
-        column(4, textInput(paste0("fuqConstraintValue", id), NULL, value = toString(apply(filtered_raw_plus()[input], 2, mean))))
-      )
-    })
-  })
+  #-----------REMOVE ME---------------------
+  # output$fuqConstraintsUI <- renderUI({
+  #   lapply(bayesianInputs(), function(input) {
+  #     id <- which(bayesianInputs() == input)
+  #     # fluidRow(
+  #     #   column(2, checkboxInput(paste0("fuqConstraintEnable", id), NULL)),
+  #     #   column(6, paste(input)),
+  #     #   column(4, textInput(paste0("fuqConstraintValue", id), NULL, value = toString(apply(filtered_raw_plus()[input], 2, mean))))
+  #     # )
+  #   })
+  # })
   
   forwardUQData <- eventReactive(input$runFUQ, {
     numberOfInputs <- 0
     for (i in 1:length(bayesianInputs())) {
-      if (input[[paste0("fuqConstraintEnable", i)]]) {
+      global_i = which(bayesianInputs()[i] == varNames)
+      if (input[[paste0("fuqConstraintEnable", global_i)]]) {
         numberOfInputs <- numberOfInputs + 1
       }
     }
@@ -1981,7 +1994,8 @@ shinyServer(function(input, output, session) {
     constrainedInputs <- c()
     columnsToRemove <- c()
     for (i in 1:length(bayesianInputs)) {
-      if (input[[paste0("fuqConstraintEnable", i)]]) {
+      global_i = which(bayesianInputs[i] == varNames)
+      if (input[[paste0("fuqConstraintEnable", global_i)]]) {
         constrainedInputs <- c(constrainedInputs, bayesianInputs[i])
       }
       else {
@@ -1996,7 +2010,7 @@ shinyServer(function(input, output, session) {
     observations <- list()
     observationsIndex <- c()
     for (i in 1:length(constrainedInputs)) {
-      observations[[paste(constrainedInputs[i])]] = as.numeric(input[[paste0("fuqConstraintValue", which(bayesianInputs == constrainedInputs[i]))]])
+      observations[[paste(constrainedInputs[i])]] = as.numeric(input[[paste0("fuqConstraintValue", which(constrainedInputs[i] == varNames))]])
       observationsIndex <- c(observationsIndex, which(names(originalDataTrimmed) == constrainedInputs[i]))
     }
     observations <- as.data.frame(observations)
@@ -2006,13 +2020,13 @@ shinyServer(function(input, output, session) {
     results <- forwardUq(originalDataTrimmed, resampledDataTrimmed, rhoTrimmed, observations, observationsIndex)[[1]]
   }
     
-  
-  output$fuqPlots <- renderUI({
-    data <- forwardUQData()
-    lapply(bayesianOutputs(), function(output) {
-      renderText(paste("Forward UQ plots for", output, "here."))
-    })
-  })
+  #-------------REMOVE ME------------------------
+  # output$fuqPlots <- renderUI({
+  #   data <- forwardUQData()
+  #   lapply(bayesianOutputs(), function(output) {
+  #     renderText(paste("Forward UQ plots for", output, "here."))
+  #   })
+  # })
   
   # Design Ranking -----------------------------------------------------------
   
