@@ -1,0 +1,10 @@
+PyTables is a package for managing hierarchical datasets and
+designed to efficently cope with extremely large amounts of
+data. PyTables is built on top of the HDF5 library and the
+NumPy package and features an object-oriented interface
+that, combined with C-code generated from Cython sources,
+makes of it a fast, yet extremely easy to use tool for
+interactively save and retrieve large amounts of data.
+
+
+

@@ -1,0 +1,23 @@
+Metadata-Version: 2.0
+Name: ViTables
+Version: 2.1
+Summary: A viewer for PyTables package
+Home-page: http://www.vitables.org
+Author: Vicent Mas
+Author-email: uvemas@gmail.com
+License: GPLv3, see the LICENSE.txt file for detailed info
+Platform: Unix
+Platform: MacOSX
+Platform: Windows
+Classifier: Development Status :: 2.1
+Classifier: Environment :: Desktop
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python
+
+ViTables is a GUI for PyTables (a hierarchical database
+package designed to efficently manage very large amounts of
+data) . It allows to open arbitrarely large PyTables and HDF5
+files and browse their data and metadata in a variety of ways.
+
+
+

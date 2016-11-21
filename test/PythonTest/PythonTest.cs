@@ -77,6 +77,8 @@ namespace PythonTest
                     "spice_viewer",
                     "matlab_wrapper",
                     "matlab_proxy",
+                    "tables",
+                    "vitables",
             };
 
             foreach (var test in module_names.Select(moduleName =>
