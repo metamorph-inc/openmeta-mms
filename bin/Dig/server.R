@@ -1754,36 +1754,41 @@ shinyServer(function(input, output, session) {
           )
         ),
         # Gaussian
-        fluidRow(
-          column(4, 
-                 checkboxInput(
-                  paste0('gaussian', global_i),
-                  label = "Enable Gaussian",
-                  value = this_gaussian)
-          ),
-          conditionalPanel(condition = toString(paste0('input.gaussian', global_i, ' == true')),
-            column(4,
-                   textInput(paste0('gaussian_mean', global_i),
-                            HTML("&mu;:"),
-                            placeholder = "Mean",
-                            value = this_gauss_mean)
-            ),
-            column(4,
-                   textInput(paste0('gaussian_sd',global_i),
-                            HTML("&sigma;:"),
-                            placeholder = "StdDev",
-                            value = this_sd)
-            )
-          )
+        conditionalPanel(condition = toString(paste0('input.varDirection', global_i, " == 'Output'")),
+          br(), br(), br(), br(), br(), br()
         ),
-        # Constraint
-        fluidRow(
-          column(4, checkboxInput(paste0("fuqConstraintEnable", global_i), "Enable Constraint")),
-          conditionalPanel(condition = toString(paste0('input.fuqConstraintEnable', global_i, ' == true')),
-            column(4, textInput(paste0("fuqConstraintValue", global_i), NULL, value = data_mean[[var]])),
-            column(4)
+        conditionalPanel(condition = toString(paste0('input.varDirection', global_i, " == 'Input'")),
+          fluidRow(
+            column(4, 
+                   checkboxInput(
+                    paste0('gaussian', global_i),
+                    label = "Enable Gaussian",
+                    value = this_gaussian)
+            ),
+            #conditionalPanel(condition = toString(paste0('input.gaussian', global_i, ' == true')),
+              column(4,
+                     textInput(paste0('gaussian_mean', global_i),
+                              HTML("&mu;:"),
+                              placeholder = "Mean",
+                              value = this_gauss_mean)
+              ),
+              column(4,
+                     textInput(paste0('gaussian_sd',global_i),
+                              HTML("&sigma;:"),
+                              placeholder = "StdDev",
+                              value = this_sd)
+              )
+          #  )
+          ),
+          # Constraint
+          fluidRow(
+            column(4, checkboxInput(paste0("fuqConstraintEnable", global_i), "Enable Constraint")),
+          #  conditionalPanel(condition = toString(paste0('input.fuqConstraintEnable', global_i, ' == true')),
+              column(4, textInput(paste0("fuqConstraintValue", global_i), NULL, value = data_mean[[var]])),
+              column(4)
+          #  )
+            
           )
-          
         )
       )
     })
