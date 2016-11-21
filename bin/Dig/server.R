@@ -1761,23 +1761,28 @@ shinyServer(function(input, output, session) {
                   label = "Enable Gaussian",
                   value = this_gaussian)
           ),
-          column(4,
-                 textInput(paste0('gaussian_mean', global_i),
-                          HTML("&mu;:"),
-                          placeholder = "Mean",
-                          value = this_gauss_mean)
-          ),
-          column(4,
-                 textInput(paste0('gaussian_sd',global_i),
-                          HTML("&sigma;:"),
-                          placeholder = "StdDev",
-                          value = this_sd)
+          conditionalPanel(condition = toString(paste0('input.gaussian', global_i, ' == true')),
+            column(4,
+                   textInput(paste0('gaussian_mean', global_i),
+                            HTML("&mu;:"),
+                            placeholder = "Mean",
+                            value = this_gauss_mean)
+            ),
+            column(4,
+                   textInput(paste0('gaussian_sd',global_i),
+                            HTML("&sigma;:"),
+                            placeholder = "StdDev",
+                            value = this_sd)
+            )
           )
         ),
         # Constraint
         fluidRow(
           column(4, checkboxInput(paste0("fuqConstraintEnable", global_i), "Enable Constraint")),
-          column(8, textInput(paste0("fuqConstraintValue", global_i), NULL, value = this_gauss_mean))
+          conditionalPanel(condition = toString(paste0('input.fuqConstraintEnable', global_i, ' == true')),
+            column(4, textInput(paste0("fuqConstraintValue", global_i), NULL, value = data_mean[[var]])),
+            column(4)
+          )
           
         )
       )
@@ -1856,7 +1861,7 @@ shinyServer(function(input, output, session) {
                            col="orange", lwd=2)
                    }
                    box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
-                 }, height = 229)
+                 }, height = 243)
           )
         )
       })
@@ -1967,23 +1972,26 @@ shinyServer(function(input, output, session) {
   #   })
   # })
   
-  forwardUQData <- eventReactive(input$runFUQ, {
-    numberOfInputs <- 0
-    for (i in 1:length(bayesianInputs())) {
-      global_i = which(bayesianInputs()[i] == varNames)
-      if (input[[paste0("fuqConstraintEnable", global_i)]]) {
-        numberOfInputs <- numberOfInputs + 1
-      }
+  forwardUQData <- reactive({
+    temp_results <- NULL
+    if(input$runFUQ){
+      isolate({
+        numberOfInputs <- 0
+        for (i in 1:length(bayesianInputs())) {
+          global_i = which(bayesianInputs()[i] == varNames)
+          if (input[[paste0("fuqConstraintEnable", global_i)]]) {
+            numberOfInputs <- numberOfInputs + 1
+          }
+        }
+        
+        if (numberOfInputs > 0) {
+          print("Started Forward UQ.")
+          temp_results <- processForwardUQ(filtered_raw_plus()[varRangeNum()], bayesianData(), bayesianInputs())
+          print("Completed Forward UQ.")
+        }
+      })
     }
-    
-    results <- NULL
-    if (numberOfInputs > 0) {
-      print("Started Forward UQ.")
-      results <- processForwardUQ(filtered_raw_plus()[varRangeNum()], bayesianData(), bayesianInputs())
-      print("Completed Forward UQ.")
-    }
-    
-    results
+    results <- temp_results
   })
   
   processForwardUQ <- function(originalData, bayesianData, bayesianInputs) {
@@ -2003,9 +2011,16 @@ shinyServer(function(input, output, session) {
       }
     }
     
-    originalDataTrimmed <- originalData[,-columnsToRemove]
-    resampledDataTrimmed <- resampledData[,-columnsToRemove]
-    rhoTrimmed <- rho[-columnsToRemove,-columnsToRemove]
+    if(!is.null(columnsToRemove)){
+      originalDataTrimmed <- originalData[,-columnsToRemove]
+      resampledDataTrimmed <- resampledData[,-columnsToRemove]
+      rhoTrimmed <- rho[-columnsToRemove,-columnsToRemove]
+    }
+    else{
+      originalDataTrimmed <- originalData
+      resampledDataTrimmed <- resampledData
+      rhoTrimmed <- rho
+    }
     
     observations <- list()
     observationsIndex <- c()
