@@ -69,15 +69,16 @@ shinyServer(function(input, output, session) {
     # Needed setup for regression testing:
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
-    raw = read.csv("WindTurbineSim.csv", fill=T)
-    if(file.exists("WindTurbineSimMapping.csv"))
-      mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
+    # raw = read.csv("WindTurbineSim.csv", fill=T)
+    # if(file.exists("WindTurbineSimMapping.csv"))
+    #   mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
     
     # Useful test setups:
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
-    # raw = iris
+    raw = iris
+    mapping = read.csv("iris_mapping.csv", fill = T)
   }
   
   output$mappingPresent <- reactive({
