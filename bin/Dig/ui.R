@@ -51,8 +51,8 @@ shinyUI(fluidPage(
         ),
         column(9,
             uiOutput("displayError"),   
-            uiOutput("filterError"),
-            uiOutput("pairsDisplay")
+            uiOutput("filterError"), 
+            plotOutput("pairsPlot", dblclick = "pairs_click", height = 700)
         )
       )
     ),
@@ -85,6 +85,7 @@ shinyUI(fluidPage(
     ),
     tabPanel("Data Table",
       br(),
+      radioButtons("activateRanking", "Output Preference", choices = c("Unranked", "TOPSIS", "Simple Metric w/ TxFx"), selected = "Unranked"),
       wellPanel(
         style = "overflow-x:auto",
         DT::dataTableOutput("dataTable"),
@@ -93,10 +94,8 @@ shinyUI(fluidPage(
         #checkboxInput("transpose", "Transpose Table", value = FALSE)
         
       ),
-      checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE),
-      conditionalPanel(condition = "input.activateRanking == true",
+      conditionalPanel(condition = "input.activateRanking != 'Unranked'",
         wellPanel(
-          # h4("Ranking Configuration"),
           conditionalPanel(condition = "input.autoRanking == false",
             actionButton("applyRanking", "Apply Ranking"),
             br(), br()
@@ -112,6 +111,15 @@ shinyUI(fluidPage(
           ),
           conditionalPanel(condition = "input.weightMetrics != null",
                            hr()),
+          fluidRow(
+            column(3, strong(h4("Variable Name"))),
+            column(2, strong(h4("Ranking Mode"))),
+            conditionalPanel(condition = "input.activateRanking == 'TOPSIS'",
+              column(7, strong(h4("Weight Amount")))),
+            conditionalPanel(condition = "input.activateRanking == 'Simple Metric w/ TxFx'",
+              column(3, strong(h4("Weight Amount"))),
+              column(4, strong(h4("Transfer Function"))))
+          ),
           uiOutput("rankings")#, 
           #br(), hr(), 
           #br()
@@ -143,7 +151,7 @@ shinyUI(fluidPage(
                        column(2, h5(strong("New Minimum:"))),
                        column(2, h5(strong("New Maximum:")))
                      ), br(),
-                     uiOutput("original_numeric_ranges")
+                     uiOutput("rangesNumeric")
               )
             )
           ),
@@ -159,7 +167,7 @@ shinyUI(fluidPage(
                          column(2, h5(strong("Selection:"))),
                          column(4, h5(strong("New Selection:")))
                        ), br(),
-                       uiOutput("original_enumeration_ranges")
+                       uiOutput("rangesEnum")
                 )
               )
           )

@@ -9,6 +9,9 @@ source('uq.r')
 #options(shiny.error = function() traceback(2))
 
 
+
+
+
 #---------------------Global Variables-------------------------#
 palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
          "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
@@ -73,10 +76,9 @@ shinyServer(function(input, output, session) {
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
     
-    
     # Useful test setups:
-    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
+    raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = iris
     
@@ -166,7 +168,7 @@ shinyServer(function(input, output, session) {
                          "autoData",
                          "autoRange",
                          "viewAllFilters",
-                         "activateRanking",
+                         
                          "transpose",
                          "bayesianDisplayAll")
       
@@ -181,6 +183,7 @@ shinyServer(function(input, output, session) {
                         "pointSize",
                         "pointStyle",
                         "radio",
+                        "activateRanking",
                         "weightMetrics",
                         "bayesianDisplayVars")
                      
@@ -354,6 +357,14 @@ shinyServer(function(input, output, session) {
     answer
   })
   
+  varConstant <- reactive({
+    print(paste("varConstant:"))
+    answer <- subset(varNames, !(varNames %in% varRange()))
+    if(length(answer) > 0)
+      uiElements$constants <- T
+    print(paste(answer))
+    answer
+  })
 
   observe({
     
@@ -446,19 +457,18 @@ shinyServer(function(input, output, session) {
     
     for(i in 1:length(vars)){
       current <- vars[i]
-      if(varClass[current] == "factor")
-        facVars <- c(facVars, current)
-      else if(varClass[current] == "integer")
-        intVars <- c(intVars, current)
-      else if(varClass[current] == "numeric")
-        numVars <- c(numVars, current)
+      switch(varClass[current],
+             "factor" = {facVars <- c(facVars, current)},
+             "integer" = {intVars <- c(intVars, current)},
+             "numeric" = {numVars <- c(numVars, current)}
+      )
     }
     
     isolate({
       div(
         fluidRow(
           lapply(facVars, function(column) {
-              generateEnumUI(column)
+            generateEnumUI(column)
           })
         ),
         fluidRow(
@@ -538,35 +548,17 @@ shinyServer(function(input, output, session) {
     
   }
   
-  
   output$constants <- renderUI({
     print("In render constants")
+    
     fluidRow(
-      lapply(1:length(varNames), function(column) {
-        # print(paste(column, varNames[column], varClass[column]))
-        if(varClass[column] == "numeric") {
-          max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
-          min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
-          diff <- (max-min)
-          if (diff == 0) { 
-            uiElements$constants <- T
-            column(2, p(strong(paste0(varNames[column],":")), min))}
-          } 
-        else {
-          if (varClass[column] == "integer") {
-            max <- as.integer(unname(rawAbsMax()[varNames[column]]))
-            min <- as.integer(unname(rawAbsMin()[varNames[column]]))
-            if (min == max) { 
-              uiElements$constants <- T
-              column(2, p(strong(paste0(varNames[column],":")), min))}
-            } 
-          else {
-            if (varClass[column] == "factor" & length(names(table(raw_plus()[varNames[column]]))) == 1) {
-              uiElements$constants <- T
-              column(2, p(strong(paste0(varNames[column],":")), names(table(raw_plus()[varNames[column]]))))
-            }
-          }
-        }
+      lapply(varConstant(), function(column) {
+        
+        switch(varClass[column],
+               "numeric" = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
+               "integer" =  column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
+               "factor"  = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column])))
+        )
       })
     )
   })
@@ -579,66 +571,58 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$resetSliders, {
     print("In resetDefaultSliders()")
-    for(column in 1:length(varNames)) {
-      if(varClass[column] == "numeric") {
-        max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
-        min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
-        diff <- (max-min)
-        if (diff != 0) {
-          step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
-          updateSliderInput(session, paste0('inp', column), value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
-        }
-      } else {
-        if(varClass[column] == "integer") {
-          max <- as.integer(unname(rawAbsMax()[varNames[column]]))
-          min <- as.integer(unname(rawAbsMin()[varNames[column]]))
-          if(min != max) {
-            updateSliderInput(session, paste0('inp', column), value = c(min, max))
-          }
-        } else {
-          if(varClass[column] == "factor") {
-            updateSelectInput(session, paste0('inp', column), selected = names(table(raw_plus()[varNames[column]])))
-          }
-        }
-      }
+    for(column in 1:length(varNames)){
+      switch(varClass[column],
+             "numeric" = 
+             {
+               max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
+               min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
+               diff <- (max-min)
+               if (diff != 0) {
+                 step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
+                 updateSliderInput(session, paste0('inp', column), value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
+               }
+             },
+             "integer" = 
+             {
+               max <- as.integer(unname(rawAbsMax()[varNames[column]]))
+               min <- as.integer(unname(rawAbsMin()[varNames[column]]))
+               if(min != max) {
+                 updateSliderInput(session, paste0('inp', column), value = c(min, max))
+               }
+             },
+             "factor"  = updateSelectInput(session, paste0('inp', column), selected = names(table(raw_plus()[varNames[column]])))
+      )
     }
   })
   
   # Data processing ----------------------------------------------------------
     
   filterData <- reactive({
-    #print("In filterData()")
+    print("In filterData()")
     data <- raw_plus()
-    # print(paste("Length of VarNames:", length(varNames)))
     for(column in 1:length(varNames)) {
       inpName=paste("inp",toString(column),sep="")
       nname = varNames[column]
       rng = input[[inpName]]
-      # print(paste("column: ", column, "Checking", nname, "rng", rng[1], "(", rawAbsMin()[column], ",", rawAbsMax()[column], ")", rng[2]))
       if(length(rng) != 0) {
         if((varClass[column]=="numeric" | varClass[column]=="integer")) {
-          #print(paste("Filtering", nname, "between", rng[1], "and", rng[2]))
           isolate({
             above <- (data[[nname]] >= rng[1])
             below <- (data[[nname]] <= rng[2])
             inRange <- above & below
           })
-        } else {
-          if (varClass[column]=="factor") {
-            # print(paste(varNames[column],class(rng)))
-            # print(paste(rng))
+        } 
+        else if (varClass[column]=="factor") {
             rng <- unlist(lapply(rng, function(factor){
               sub("[0-9]+. ","", factor)}))
             inRange <- (data[[nname]] %in% rng)
-          }
         }
         inRange <- inRange | is.na(data[[nname]])
         data <- subset(data, inRange)
       }
-      
-      # cat("-----------", inpName, nname, rng, length(data[nname]), sep = '\n')
     }
-    #print("Data Filtered")
+    print("Data Filtered")
     data
   })
   
@@ -647,70 +631,79 @@ shinyServer(function(input, output, session) {
     data <- filterData()
     data$color <- character(nrow(data))
     data$color <- input$normColor
-    if (input$colType == "Max/Min") {
-      name <- input$colVarNum
-      bottom <- input$colSlider[1]
-      top <- input$colSlider[2]
-      print(paste("Coloring Data:", name, bottom, top))
-      data$color[(data[[name]] >= bottom) & (data[[name]] <= top)] <- input$midColor
-      if (input$radio == "max") {
-        data$color[data[[name]] < bottom] <- input$maxColor
-        data$color[data[[name]] > top] <- input$minColor
-      } else {
-        data$color[data[[name]] < bottom] <- input$minColor
-        data$color[data[[name]] > top] <- input$maxColor
-      }
-    } 
-    else if (input$colType == "Discrete") {
-      varList = names(table(raw_plus()[input$colVarFactor]))
-      for(i in 1:length(varList)){
-       data$color[(data[[input$colVarFactor]] == varList[i])] <- palette()[i]
-      }
-    }
-    else if (input$colType == "Highlighted") {
-      if (!is.null(input$plot_brush)){
-        if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
-          xRange <- FALSE
-          yRange <- FALSE
-        }
-        else if(varClass[input$xInput] == "factor"){
-          lower <- ceiling(input$plot_brush$xmin)
-          upper <- floor(input$plot_brush$xmax)
-          xRange <- FALSE
-          for (i in lower:upper){
-            xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
-          }
-          if (lower > upper){
-            xRange <- FALSE
-          }
-        }
-        else {
-          xUpper <- data[input$xInput] < input$plot_brush$xmax
-          xLower <- data[input$xInput] > input$plot_brush$xmin
-          xRange <- xUpper & xLower
-        }
-        if(varClass[input$yInput] == "factor"){
-          lower <- ceiling(input$plot_brush$ymin)
-          upper <- floor(input$plot_brush$ymax)
-          yRange <- FALSE
-          for (i in lower:upper){
-            yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
-          }                 
-          if (lower > upper){
-            yRange <- FALSE
-          }
-        }
-        else{
-          yUpper <- data[input$yInput] < input$plot_brush$ymax
-          yLower <- data[input$yInput] > input$plot_brush$ymin
-          yRange <- yUpper & yLower
-        }
-        data$color[xRange & yRange] <- input$highlightColor #light blue
-      }
-    }
-    else if (input$colType == "Ranked"){
-      data[input$rankTable_rows_selected, "color"] <- input$rankColor
-    }
+
+    colorType = input$colType
+    
+    switch(colorType,
+           "Max/Min" = 
+           {
+             name <- input$colVarNum
+             bottom <- input$colSlider[1]
+             top <- input$colSlider[2]
+             print(paste("Coloring Data:", name, bottom, top))
+             data$color[(data[[name]] >= bottom) & (data[[name]] <= top)] <- input$midColor
+             if (input$radio == "max") {
+               data$color[data[[name]] < bottom] <- input$maxColor
+               data$color[data[[name]] > top] <- input$minColor
+             } 
+             else {
+               data$color[data[[name]] < bottom] <- input$minColor
+               data$color[data[[name]] > top] <- input$maxColor
+             }
+           },
+           "Discrete" = 
+           {
+             varList = names(table(raw_plus()[input$colVarFactor]))
+             for(i in 1:length(varList)){
+               data$color[(data[[input$colVarFactor]] == varList[i])] <- palette()[i]
+             }
+           },
+           "Highlighted" = 
+           {
+             if (!is.null(input$plot_brush)){
+               if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
+                 xRange <- FALSE
+                 yRange <- FALSE
+               }
+               else{
+                 if(varClass[input$xInput] == "factor"){
+                   lower <- ceiling(input$plot_brush$xmin)
+                   upper <- floor(input$plot_brush$xmax)
+                   xRange <- FALSE
+                   for (i in lower:upper){
+                     xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
+                   }
+                   if (lower > upper){
+                     xRange <- FALSE
+                   }
+                 }
+                 else {
+                   xUpper <- data[input$xInput] < input$plot_brush$xmax
+                   xLower <- data[input$xInput] > input$plot_brush$xmin
+                   xRange <- xUpper & xLower
+                 }
+                 if(varClass[input$yInput] == "factor"){
+                   lower <- ceiling(input$plot_brush$ymin)
+                   upper <- floor(input$plot_brush$ymax)
+                   yRange <- FALSE
+                   for (i in lower:upper){
+                     yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
+                   }                 
+                   if (lower > upper){
+                     yRange <- FALSE
+                   }
+                 }
+                 else{
+                   yUpper <- data[input$yInput] < input$plot_brush$ymax
+                   yLower <- data[input$yInput] > input$plot_brush$ymin
+                   yRange <- yUpper & yLower
+                 }
+               }
+             }
+             data$color[xRange & yRange] <- input$highlightColor #light blue
+           },
+           "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
+    )
     print("Data Colored")
     data
   })
@@ -752,9 +745,7 @@ shinyServer(function(input, output, session) {
     vars
   })
   
-  pairsTrendline <- function(...){
-    print("In pairs trendline")
-    
+  pairsSetup <- function(...){
     if(input$upperPanel) {
       if(input$trendLines) {
         p <- pairs(pairs_data()[pairs_vars()], lower.panel = panel.smooth, upper.panel = panel.smooth, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
@@ -771,13 +762,8 @@ shinyServer(function(input, output, session) {
         p <- pairs(pairs_data()[pairs_vars()], upper.panel = NULL, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
       }
     }
-    
+    p
   }
-  
-  output$pairsDisplay <- renderUI({
-    print("In pairs display")
-    plotOutput("pairsPlot", dblclick = "pairs_click", height=700)
-  })
   
   output$pairsPlot <- renderPlot({
     
@@ -788,33 +774,22 @@ shinyServer(function(input, output, session) {
     
     if (length(input$display) >= 2 & nrow(filterData()) > 0) {
       print("Rendering Plot.")
-      pairsTrendline()
+      
+      pairsSetup()
+      
       print("Plot Rendered.")
     }
-    else {
+    else { 
       if (nrow(filterData()) == 0) {
-        output$filterError <- 
-          renderText(
-            "No data points fit the current filtering scheme")
+        output$filterError <- renderText(
+            "<br/>No data points fit the current filtering scheme.")
       }
       if (length(input$display) < 2) {
-        output$displayError <-renderUI(
-          HTML("<br/>Please select two or more Display Variables.")
-        )
+        output$displayError <- renderText(
+          "<br/>Please select two or more Display Variables.")
       }
     }
   })
-  
-  output$filterError <- renderUI({
-    print("In filter error")
-    h4(textOutput("filterVars"), align = "center")
-  })
-  
-  output$displayError <- renderUI({
-    print("In display error")
-    h4(textOutput("displayVars"), align = "center")
-  })
-  
   
   #Change to single plot when user clicks a plot on pairs matrix
   observeEvent(input$pairs_click, {
@@ -833,16 +808,19 @@ shinyServer(function(input, output, session) {
       plot <- 0.9
       buffer <- 0.1
     }
-    if(num_vars > 11){
+    else if(num_vars > 11){
       margin <- -0.5
+      plot <- 0.9
       buffer <- 0.2
     }
-    if(num_vars > 12){
+    else if(num_vars > 12){
       buffer <- 0.15
+      plot <- 0.9
       margin <- -0.6
     }
-    if(num_vars > 18){
+    else if(num_vars > 18){
       margin <- -1.51
+      plot <- 0.9
       buffer <- 0.25
     }
     xlimits <- c(margin, plot+margin)
@@ -888,14 +866,7 @@ shinyServer(function(input, output, session) {
   })
   
   slowVarsList <- eventReactive(input$renderPlot, {
-    print("Getting Variable List.")
-    idx = 0
-    for(choice in 1:length(input$display)) {
-      mm <- match(input$display[choice],varNames)
-      if(mm > 0) { idx <- c(idx,mm) }
-    }
-    print(idx)
-    idx
+    varsList()
   })
   
   slowData <- eventReactive(input$renderPlot, {
@@ -906,7 +877,7 @@ shinyServer(function(input, output, session) {
     print("In render stats")
     if(nrow(filterData()) > 0){
       if(input$autoInfo == TRUE){
-        table <- infoTable()
+        table <- infoTable(input$colType)
       }
       else {
         table <- slowInfoTable()
@@ -924,7 +895,7 @@ shinyServer(function(input, output, session) {
     table
 })
 
-  infoTable <- function(...){
+  infoTable <- function(colorType){
     print("In info table")
     tb <- table(factor(colorData()$color, 
                        c(input$midColor, 
@@ -933,57 +904,49 @@ shinyServer(function(input, output, session) {
                          input$rankColor,
                          input$maxColor, 
                          input$normColor)))
-    if (input$colType == 'Max/Min') {
-      paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nColored Points: ", sum(tb[[input$minColor]], tb[[input$midColor]], tb[[input$maxColor]], tb[[input$normColor]]),
-             "\nWorst Points: ", tb[[input$maxColor]],
-             "\nIn Between Points: ", tb[[input$midColor]],
-             "\nBest Points: ", tb[[input$minColor]]
-      )
-    } 
-    else if(input$colType == 'Discrete') {
-      tb <- table(factor(colorData()$color, palette()))
-      d_vars <- names(table(raw_plus()[input$colVarFactor]))
-      output_string <- paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nColored Points: ", sum(tb[[palette()[1]]], 
-                                       tb[[palette()[2]]], 
-                                       tb[[palette()[3]]], 
-                                       tb[[palette()[4]]], 
-                                       tb[[palette()[5]]], 
-                                       tb[[palette()[6]]], 
-                                       tb[[palette()[7]]], 
-                                       tb[[palette()[8]]], 
-                                       tb[[palette()[9]]]))
-      for(i in 1:length(d_vars)){
+    switch(colorType,
+           "Max/Min" = paste0("Total Points: ", nrow(raw),
+                              "\nCurrent Points: ", nrow(colorData()),
+                              "\nColored Points: ", sum(tb[[input$minColor]], tb[[input$midColor]], tb[[input$maxColor]], tb[[input$normColor]]),
+                              "\nWorst Points: ", tb[[input$maxColor]],
+                              "\nIn Between Points: ", tb[[input$midColor]],
+                              "\nBest Points: ", tb[[input$minColor]]
+           ),
+           "Discrete" = {tb <- table(factor(colorData()$color, palette()))
+           d_vars <- names(table(raw_plus()[input$colVarFactor]))
+           output_string <- paste0("Total Points: ", nrow(raw),
+                                   "\nCurrent Points: ", nrow(colorData()),
+                                   "\nColored Points: ", sum(tb[[palette()[1]]], 
+                                                             tb[[palette()[2]]], 
+                                                             tb[[palette()[3]]], 
+                                                             tb[[palette()[4]]], 
+                                                             tb[[palette()[5]]], 
+                                                             tb[[palette()[6]]], 
+                                                             tb[[palette()[7]]], 
+                                                             tb[[palette()[8]]], 
+                                                             tb[[palette()[9]]]))
+           for(i in 1:length(d_vars)){
              output_string <- paste0(output_string, 
                                      "\n", d_vars[i]," Points: ", tb[[palette()[i]]])
-      }
-      output_string
-    }
-    else if(input$colType == 'Highlighted') {
-      paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nHighlighted Points: ", tb[[input$highlightColor]]
-      )
-    }
-    else if(input$colType == 'Ranked') {
-      paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nRanked Points: ", tb[[input$rankColor]]
-      )
-    }
-    else{
-      paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nColored Points: ", tb[[input$normColor]]
-      )
-    }
+           }
+           output_string},
+           "Highlighted" = paste0("Total Points: ", nrow(raw),
+                                  "\nCurrent Points: ", nrow(colorData()),
+                                  "\nHighlighted Points: ", tb[[input$highlightColor]]
+           ),
+           "Ranked" = paste0("Total Points: ", nrow(raw),
+                             "\nCurrent Points: ", nrow(colorData()),
+                             "\nRanked Points: ", tb[[input$rankColor]]
+           ),
+           paste0("Total Points: ", nrow(raw),
+                  "\nCurrent Points: ", nrow(colorData()),
+                  "\nColored Points: ", tb[[input$normColor]]
+           )
+    )
   }
   
   slowInfoTable <- eventReactive(input$updateStats, {
-    infoTable()
+    infoTable(input$colType)
   })
 
   output$exportData <- downloadHandler(
@@ -1067,8 +1030,9 @@ shinyServer(function(input, output, session) {
   })
   
   #Event handler for "clear metrics" button
-  observeEvent(input$clearMetrics, {
-    updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
+  observe({
+    if(input$clearMetrics | input$activateRanking == "Unranked")
+      updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
   })
   
   #UI class for each metric UI
@@ -1096,61 +1060,85 @@ shinyServer(function(input, output, session) {
       funcVal <- func
     }
     
-    transferCondition = toString(paste0("input.util",current," == true"))
+    if(input$activateRanking == 'TOPSIS')
+      topsisMetricUI(current, radioVal, sliderVal)
+    else if(input$activateRanking == 'Simple Metric w/ TxFx')
+      simpleMetricUI(current, radioVal, sliderVal, utilVal, funcVal)
+  }
+  
+  topsisMetricUI <- function(current, radioVal, sliderVal) {
     
     varName <- varNames[current]
-    column(3, 
-      h4(varName),
-      radioButtons(paste0('sel', current),
-                   "Score By:",
-                   choices = c("Min", "Max"),
-                   selected = radioVal,
-                   inline = TRUE),
-      sliderInput(paste0('rnk', current),
-                  "Weight:",
-                  step = 0.01,
-                  min = 0,
-                  max = 1,
-                  value = sliderVal),
-      checkboxInput(paste0('util', current),
+    
+    fluidRow(
+      column(3, h5(varName)),
+      column(2, radioButtons(paste0('sel', current),
+                             NULL,
+                             choices = c("Min", "Max"),
+                             selected = radioVal,
+                             inline = TRUE)),
+      column(7, sliderInput(paste0('rnk', current),
+                            NULL,
+                            step = 0.01,
+                            min = 0,
+                            max = 1,
+                            value = sliderVal))
+    )
+  }
+  
+  simpleMetricUI <- function(current, radioVal, sliderVal, utilVal, funcVal) {
+    
+    varName <- varNames[current]
+    transferCondition = toString(paste0("input.util",current," == true"))
+    
+    fluidRow(
+      column(3, h5(varName)),
+      column(2, radioButtons(paste0('sel', current),
+                             NULL,
+                             choices = c("Min", "Max"),
+                             selected = radioVal,
+                             inline = TRUE)),
+      column(3, sliderInput(paste0('rnk', current),
+                            NULL,
+                            step = 0.01,
+                            min = 0,
+                            max = 1,
+                            value = sliderVal)),
+      column(1, checkboxInput(paste0('util', current),
                     "Add Transfer Function",
-                    value = utilVal),
-      conditionalPanel(condition = transferCondition,
+                    value = utilVal)),
+      column(3, conditionalPanel(condition = transferCondition,
                        textInput(paste0('func', current),
                                  "Enter Data Points",
-                                  placeholder = paste0("Value = Score | e.g. ", 
+                                  placeholder = paste0("Value = Score | e.g. ",
                                     rawAbsMin()[[varName]],
                                     " = 1, ",
                                     rawAbsMax()[[varName]],
                                     "= 0.5"),
                                  value = funcVal),
-                       utilityPlot(current)),
-      br(), br(), br()
+                       utilityPlot(current)))
     )
   }
   
   fullMetricUI <- reactive({
+    a <- input$activateRanking # Force reaction
     if(!importFlags$ranking){
-      fluidRow(
-        lapply(metricsList(), function(column) {
-          isolate(generateMetricUI(column))
-        })
-      )
+      lapply(metricsList(), function(column) {
+        isolate(generateMetricUI(column))
+      })
     }
     else{
-      fluidRow(
-        lapply(metricsList(), function(column) {
-          importedSlider <- importData[[paste0('rnk', column)]]
-          importedRadio <- importData[[paste0('sel', column)]]
-          importedUtil <- importData[[paste0('util', column)]]
-          importedFunc <- importData[[paste0('func', column)]]
-          isolate(generateMetricUI(column, 
-                                   importedSlider, 
-                                   importedRadio,
-                                   importedUtil,
-                                   importedFunc))
-        })
-      )
+      lapply(metricsList(), function(column) {
+        importedSlider <- importData[[paste0('rnk', column)]]
+        importedRadio <- importData[[paste0('sel', column)]]
+        importedUtil <- importData[[paste0('util', column)]]
+        importedFunc <- importData[[paste0('func', column)]]
+        isolate(generateMetricUI(column, 
+                                 importedSlider, 
+                                 importedRadio,
+                                 importedUtil,
+                                 importedFunc))
+      })
     }
   })
   
@@ -1276,6 +1264,7 @@ shinyServer(function(input, output, session) {
     print("In render ranking sliders")
     fullMetricUI()
   })
+
   
   #Process metric weights
   rankData <- reactive({
@@ -1328,7 +1317,6 @@ shinyServer(function(input, output, session) {
     data <- cbind(rank, score, data)
     data
     
-    
   })
   
   #Score individual point by transfer function
@@ -1355,17 +1343,53 @@ shinyServer(function(input, output, session) {
   slowRankData <- eventReactive(input$applyRanking, {
     rankData()
   })
-  
-  output$dataTable <- DT::renderDataTable({
-    processDataTable()
+ 
+  topsisData <- reactive({
+    req(metricsList())
+    print("In calculate topsis data")
+    data <- filterData()[varRangeNum()]
+    weights <- NULL
+    impacts <- NULL
+    for(i in 1:length(varRangeNum())){
+      global_index <- match(varRangeNum()[i], varNames)
+      if(!is.null(input[[paste0("rnk", global_index)]])){
+        weights <- c(weights, input[[paste0("rnk", global_index)]])
+        impacts <- c(impacts, input[[paste0("sel", global_index)]])
+      }
+      else{
+        weights <- c(weights, 0.01)
+        impacts <- c(impacts, '+')
+      }
+    }
+    impacts[impacts == "Max"] <- '+'
+    impacts[impacts == "Min"] <- '-'
+    t <- topsis(as.matrix(data), weights, impacts)
+    sorted_topsis <- t[order(t$rank),]
+    rank <- sorted_topsis$rank
+    score <- sorted_topsis$score
+    output_data <- filterData()[sorted_topsis$alt.row,]
+    output_data <- cbind(rank, score, output_data)
+    output_data
   })
   
-  processDataTable <- reactive({
-    if(input$activateRanking & length(input$weightMetrics) > 0){
-      if(input$autoRanking)
-        data <- rankData()
-      else
-        data <- slowRankData()
+  slowTopsisData <- eventReactive(input$applyRanking, {
+    topsisData()
+  })
+  
+  output$dataTable <- DT::renderDataTable({
+    if(length(input$weightMetrics) > 0){
+      if(input$activateRanking == 'TOPSIS'){
+        if(input$autoRanking)
+          data <- topsisData()
+        else
+          data <- slowTopsisData()
+      }
+      else{
+          if(input$autoRanking)
+            data <- rankData()
+          else
+            data <- slowRankData()
+      }
     }
     else{
       data <- filterData()
@@ -1376,15 +1400,6 @@ shinyServer(function(input, output, session) {
     #  data <- t(data)
     data
   })
-  
-  #Output ranked data table
-  # output$rankTable <- DT::renderDataTable({
-  #   print("In render ranked data table")
-  #   data <- rankData()
-  #   if(input$roundTables)
-  #     data <- round_df(rankData(), input$numDecimals)
-  #   data
-  # })
   
   #Event handler for "Color by selected rows"
   observeEvent(input$colorRanked, {
@@ -1397,7 +1412,7 @@ shinyServer(function(input, output, session) {
   output$exportPoints <- downloadHandler(
     filename = function() { paste('ranked_points-', Sys.Date(), '.csv', sep='') },
     content = function(file) { 
-      if(input$activateRanking)
+      if(input$activateRanking != "Unranked")
         write.csv(rankData()[input$dataTable_rows_selected, ], file)
       else
         write.csv(filterData()[input$dataTable_rows_selected, ], file) 
@@ -1411,7 +1426,7 @@ shinyServer(function(input, output, session) {
     all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
   })
   
-  output$original_numeric_ranges <- renderUI({
+  output$rangesNumeric <- renderUI({
     
     lapply(rownames(mapping), function(row){
       
@@ -1470,7 +1485,7 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  output$original_enumeration_ranges <- renderUI({
+  output$rangesEnum <- renderUI({
     
     lapply(rownames(mapping), function(row){
       
@@ -1521,18 +1536,18 @@ shinyServer(function(input, output, session) {
     lapply(rownames(mapping), function(row) {
       var = levels(droplevels(mapping[row, "VarName"]))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      global_i = which(varNames == var)
+      global_index = which(varNames == var)
       if(type == "Numeric"){
         original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
-        observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
-          updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
-          updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
+        observeEvent(input[[paste0('applyOriginalRange', global_index)]], {
+          updateTextInput(session, paste0('newMin', global_index), value = as.numeric(original[1]))
+          updateTextInput(session, paste0('newMax', global_index), value = as.numeric(original[2]))
         })
       }
       else if(type == "Enumeration"){
         original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
-        observeEvent(input[[paste0('applyOriginalSelection', global_i)]], {
-          updateTextInput(session, paste0('newSelection', global_i), value = original)
+        observeEvent(input[[paste0('applyOriginalSelection', global_index)]], {
+          updateTextInput(session, paste0('newSelection', global_index), value = original)
         })
       }
     })
@@ -1542,11 +1557,11 @@ shinyServer(function(input, output, session) {
     lapply(rownames(mapping), function(row) {
       var = levels(droplevels(mapping[row, "VarName"]))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      global_i = which(varNames == var)
+      global_index = which(varNames == var)
       if(type == "Numeric"){
         original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
-        updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
-        updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
+        updateTextInput(session, paste0('newMin', global_index), value = as.numeric(original[1]))
+        updateTextInput(session, paste0('newMax', global_index), value = as.numeric(original[2]))
       }
     })
   })
@@ -1555,10 +1570,10 @@ shinyServer(function(input, output, session) {
     lapply(rownames(mapping), function(row) {
       var = levels(droplevels(mapping[row, "VarName"]))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      global_i = which(varNames == var)
+      global_index = which(varNames == var)
       if(type == "Enumeration"){
         original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
-        updateTextInput(session, paste0('newSelection', global_i), value = original)
+        updateTextInput(session, paste0('newSelection', global_index), value = original)
       }
     })
   })
@@ -1567,32 +1582,32 @@ shinyServer(function(input, output, session) {
   
   reactToApplyRefinedButtons <- observe({
     lapply(varNum, function(var) {
-      global_i = which(varNames == var)
-      observeEvent(input[[paste0('applyRefinedRange', global_i)]], {
-        updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
-        updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+      global_index = which(varNames == var)
+      observeEvent(input[[paste0('applyRefinedRange', global_index)]], {
+        updateTextInput(session, paste0('newMin', global_index), value = min(filterData()[var]))
+        updateTextInput(session, paste0('newMax', global_index), value = max(filterData()[var]))
       })
     })
     lapply(varFac, function(var) {
-      global_i = which(varNames == var)
-      observeEvent(input[[paste0('applyRefinedSelection', global_i)]], {
-        updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(filterData()[var])[,1]))
+      global_index = which(varNames == var)
+      observeEvent(input[[paste0('applyRefinedSelection', global_index)]], {
+        updateTextInput(session, paste0('newSelection', global_index), value = toString(unique(filterData()[var])[,1]))
       })
     })
   })
   
   observeEvent(input$applyAllRefinedNumeric, {
     lapply(varNum, function(var) {
-      global_i = which(varNames == var)
-      updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
-      updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+      global_index = which(varNames == var)
+      updateTextInput(session, paste0('newMin', global_index), value = min(filterData()[var]))
+      updateTextInput(session, paste0('newMax', global_index), value = max(filterData()[var]))
     })
   })
   
   observeEvent(input$applyAllRefinedEnum, {
     lapply(varFac, function(var) {
-      global_i = which(varNames == var)
-      updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(filterData()[var])[,1]))
+      global_index = which(varNames == var)
+      updateTextInput(session, paste0('newSelection', global_index), value = toString(unique(filterData()[var])[,1]))
     })
   })
   
@@ -1635,11 +1650,11 @@ shinyServer(function(input, output, session) {
     for(i in 1:length(rownames(mapping))){
       var = levels(droplevels(mapping[i, "VarName"]))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[i, "Type"])))
-      global_i = which(varNames == var)
+      global_index = which(varNames == var)
       if(type == "Numeric")
-        selection = toString(c(input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
+        selection = toString(c(input[[paste0('newMin', global_index)]], input[[paste0('newMax', global_index)]]))
       else
-        selection = input[[paste0('newSelection', global_i)]]
+        selection = input[[paste0('newSelection', global_index)]]
       
       data <- rbind(data, c(var, type, selection))
     }
@@ -1711,7 +1726,7 @@ shinyServer(function(input, output, session) {
     
     lapply(bayesChoices, function(var) {
       # UI calculations
-      global_i <- which(varNames == var) # globalId
+      global_index <- which(varNames == var) # globalId
       #gaussianCondition = toString(paste0("input.gaussian",i," == true"))
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
@@ -1722,10 +1737,10 @@ shinyServer(function(input, output, session) {
       
       #Import Session
       if(importFlags$bayesian){ 
-        this_direction <- importData[[paste0('varDirection', global_i)]]
-        this_gaussian <- importData[[paste0('gaussian', global_i)]]
-        this_gauss_mean <- importData[[paste0('gaussian_mean', global_i)]]
-        this_sd <- importData[[paste0('gaussian_sd',global_i)]]
+        this_direction <- importData[[paste0('varDirection', global_index)]]
+        this_gaussian <- importData[[paste0('gaussian', global_index)]]
+        this_gauss_mean <- importData[[paste0('gaussian_mean', global_index)]]
+        this_sd <- importData[[paste0('gaussian_sd',global_index)]]
       }
       
       #From mappingPET.csv
@@ -1741,7 +1756,7 @@ shinyServer(function(input, output, session) {
           column(8,
                  
                  selectInput(
-                   paste0('varDirection', global_i),
+                   paste0('varDirection', global_index),
                    label = var,
                    choices = var_directions,
                    selected = this_direction)
@@ -1753,27 +1768,27 @@ shinyServer(function(input, output, session) {
                  )
           )
         ),
-        # Gaussian
-        conditionalPanel(condition = toString(paste0('input.varDirection', global_i, " == 'Output'")),
+        conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Output'")),
           br(), br(), br(), br(), br(), br()
         ),
-        conditionalPanel(condition = toString(paste0('input.varDirection', global_i, " == 'Input'")),
+        conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Input'")),
+          # Gaussia
           fluidRow(
             column(4, 
                    checkboxInput(
-                    paste0('gaussian', global_i),
+                    paste0('gaussian', global_index),
                     label = "Enable Gaussian",
                     value = this_gaussian)
             ),
-            #conditionalPanel(condition = toString(paste0('input.gaussian', global_i, ' == true')),
+            #conditionalPanel(condition = toString(paste0('input.gaussian', global_index, ' == true')),
               column(4,
-                     textInput(paste0('gaussian_mean', global_i),
+                     textInput(paste0('gaussian_mean', global_index),
                               HTML("&mu;:"),
                               placeholder = "Mean",
                               value = this_gauss_mean)
               ),
               column(4,
-                     textInput(paste0('gaussian_sd',global_i),
+                     textInput(paste0('gaussian_sd',global_index),
                               HTML("&sigma;:"),
                               placeholder = "StdDev",
                               value = this_sd)
@@ -1782,9 +1797,9 @@ shinyServer(function(input, output, session) {
           ),
           # Constraint
           fluidRow(
-            column(4, checkboxInput(paste0("fuqConstraintEnable", global_i), "Enable Constraint")),
-          #  conditionalPanel(condition = toString(paste0('input.fuqConstraintEnable', global_i, ' == true')),
-              column(4, textInput(paste0("fuqConstraintValue", global_i), NULL, value = data_mean[[var]])),
+            column(4, checkboxInput(paste0("fuqConstraintEnable", global_index), "Enable Constraint")),
+          #  conditionalPanel(condition = toString(paste0('input.fuqConstraintEnable', global_index, ' == true')),
+              column(4, textInput(paste0("fuqConstraintValue", global_index), NULL, value = data_mean[[var]])),
               column(4)
           #  )
             
@@ -1798,16 +1813,16 @@ shinyServer(function(input, output, session) {
   bayesianCalc <- observe({
     for(i in 1:length(varRangeNum())){
       var <- varRangeNum()[i]
-      global_i <- which(varNames == var)
-      dir <- input[[paste0('varDirection', global_i)]]
-      is_gaus <- input[[paste0('gaussian', global_i)]]
+      global_index <- which(varNames == var)
+      dir <- input[[paste0('varDirection', global_index)]]
+      is_gaus <- input[[paste0('gaussian', global_index)]]
       req(dir)
-      bayesianDirection[[var]] <<- input[[paste0('varDirection', global_i)]]
+      bayesianDirection[[var]] <<- input[[paste0('varDirection', global_index)]]
       if (bayesianDirection[[var]] == "Input") {
-        if(input[[paste0('gaussian', global_i)]]) {
+        if(input[[paste0('gaussian', global_index)]]) {
           bayesianType[[var]] <<- "norm"
-          bayesianParams[[var]]$mean <<- as.numeric(input[[paste0('gaussian_mean', global_i)]])
-          bayesianParams[[var]]$stdDev <<- as.numeric(input[[paste0('gaussian_sd', global_i)]])
+          bayesianParams[[var]]$mean <<- as.numeric(input[[paste0('gaussian_mean', global_index)]])
+          bayesianParams[[var]]$stdDev <<- as.numeric(input[[paste0('gaussian_sd', global_index)]])
         }
         else {
           bayesianType[[var]] <<- "unif"
@@ -1825,7 +1840,6 @@ shinyServer(function(input, output, session) {
     variables <- varRangeNum()
     if(!input$bayesianDisplayAll)
       variables <- varRangeNum()[bayesVarsList()]
-    
     
     if(is.null(data)) {
       verbatimTextOutput("Initializing...")
@@ -2176,7 +2190,7 @@ shinyServer(function(input, output, session) {
                           max = colSliderSettings()$numericMax,
                           value = c(colSliderSettings()$lower, colSliderSettings()$upper))
       }
-      else if(varClass[[colSliderSettings()$variable]] == "integer") {
+      else if(varClass[[toString(colSliderSettings()$variable)]] == "integer") {
         updateSliderInput(session,
                           "colSlider",
                           min = colSliderSettings()$absMin,
