@@ -226,7 +226,7 @@ namespace CyPhyMetaLink
                 GC.WaitForPendingFinalizers();
             }
         }
-        
+
 
         private void LinkComponent(CyPhyML.Component component, MgaFCO selectedCADModel)
         {
@@ -276,12 +276,19 @@ namespace CyPhyMetaLink
             return;
         }
 
-        private string GetJavaInstallationPath()
+        public static string GetJavaInstallationPath()
         {
-            String javaKey = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
+
+            foreach (var javaKey in new[] {
+                new { key = "SOFTWARE\\JavaSoft\\Java Runtime Environment", view = RegistryView.Registry64 },
+                new { key = "SOFTWARE\\JavaSoft\\Java Runtime Environment", view = RegistryView.Registry32 },
+                new { key = "SOFTWARE\\JavaSoft\\Java Development Kit", view = RegistryView.Registry64 },
+                new { key = "SOFTWARE\\JavaSoft\\Java Development Kit", view = RegistryView.Registry32 },
+            })
+            {
             try
             {
-                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(javaKey))
+                    using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, javaKey.view).OpenSubKey(javaKey.key))
                 {
                     String currentVersion = baseKey.GetValue("CurrentVersion").ToString();
                     using (var homeKey = baseKey.OpenSubKey(currentVersion))
@@ -292,19 +299,8 @@ namespace CyPhyMetaLink
             {
                 // no 64-bit Java was found. Will try 64-bit
             }
-            try
-            {
-                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(javaKey))
-                {
-                    String currentVersion = baseKey.GetValue("CurrentVersion").ToString();
-                    using (var homeKey = baseKey.OpenSubKey(currentVersion))
-                        return homeKey.GetValue("JavaHome").ToString();
-                }
             }
-            catch (Exception)
-            {
-                // no success with 32-bit version either, will return null
-            }
+
             return null;
         }
 
@@ -412,7 +408,9 @@ namespace CyPhyMetaLink
             {
                 topasm = Run(project, currentobj, param);
                 if (topasm != null)
+                {
                     propagateAddon.AssemblyID = topasm.Guid.ToString();
+                }
             });
 
             if (topasm == null)
@@ -533,13 +531,19 @@ namespace CyPhyMetaLink
         public object get_ComponentParameter(string Name)
         {
             if (Name == "type")
+            {
                 return "csharp";
+            }
 
             if (Name == "path")
+            {
                 return GetType().Assembly.Location;
+            }
 
             if (Name == "fullname")
+            {
                 return GetType().FullName;
+            }
 
             object value;
             if (componentParameters != null && componentParameters.TryGetValue(Name, out value))
@@ -593,7 +597,6 @@ namespace CyPhyMetaLink
         public static void GMERegister(Type t)
         {
             Registrar.RegisterInterpreter();
-
         }
 
         [ComUnregisterFunctionAttribute]
@@ -630,7 +633,9 @@ namespace CyPhyMetaLink
 
 #if DEBUG
             if (topasm != null)
+            {
                 GMEConsole.Out.WriteLine("TopAsm:" + topasm.Name);
+            }
 #endif
 
             ProjectDirectory = Path.GetDirectoryName(currentobj.Project.ProjectConnStr.Substring("MGA=".Length));
@@ -643,7 +648,9 @@ namespace CyPhyMetaLink
                 InstanceId = (CyPhyMetaLinkAddon.IdCounter++).ToString()
             };
             if (!Directory.Exists(cdata.WorkingDir))
+            {
                 Directory.CreateDirectory(cdata.WorkingDir);
+            }
 
             // [3]
             DialogResult ok = DialogResult.Cancel;
@@ -656,7 +663,9 @@ namespace CyPhyMetaLink
                     cdata.AuxDir = mf.AuxiliaryDir;
 
                     if (ok != DialogResult.OK)
+                    {
                         return null;
+                    }
                 }
             }
 
@@ -666,6 +675,5 @@ namespace CyPhyMetaLink
         }
 
         string ProjectDirectory;
-
     }
 }
