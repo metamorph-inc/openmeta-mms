@@ -1,0 +1,6 @@
+VarName,Type,Selection
+Species,Factor,"setosa,versicolor,virginica"
+Sepal.Length,Numeric,"5,7.5"
+Petal.Length,Numeric,"2,4.9"
+Petal.Width,Numeric,"0.7,2.1"
+Sepal.Width,Numeric,"1.9,3.4"
