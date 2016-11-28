@@ -1960,6 +1960,7 @@ shinyServer(function(input, output, session) {
       name <- input[[paste0('queryVariable', id)]]
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
+      req(threshold)
       data <- bayesianData()$dist[[name]]
       
       value <- integrateData(data$xResampled,
@@ -2085,6 +2086,7 @@ shinyServer(function(input, output, session) {
         name <- input[[paste0('queryVariable', id)]]
         direction <- input[[paste0('queryDirection', id)]]
         threshold <-input[[paste0('queryThreshold', id)]]
+        req(threshold)
         value <- integrateData(resampledData[[name]][["xResampled"]],
                                resampledData[[name]][["yResampled"]],
                                min(resampledData[[name]][["xResampled"]]),
@@ -2139,7 +2141,7 @@ shinyServer(function(input, output, session) {
         outputData <- cbind("Rank" = 1:nrow(decisions), outputData[rev(order(outputData[[paste0("Query", probabilityQueries$rows[1])]])),])
       }
       else {
-        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[order(outputData[[paste0("-Query", probabilityQueries$rows[1])]]),])
+        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[order(outputData[[paste0("Query", probabilityQueries$rows[1])]]),])
       }
     }
     outputData
