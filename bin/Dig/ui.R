@@ -280,7 +280,7 @@ shinyUI(fluidPage(
       ),
       conditionalPanel("output.displayQueries",
         hr(),
-        h4("Probabality Queries:"),
+        h4("Probability Queries:"),
         wellPanel(
           fluidRow(
             column(1, actionButton('addProbability', 'Add')),
