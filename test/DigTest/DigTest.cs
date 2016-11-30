@@ -34,7 +34,9 @@ namespace DigTest
             {
                 try
                 {
-                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "deploy/CAD_Installs/Proe ISIS Extensions/docs/examples/compute_metrics_ptc/ComputeMetricsExample.csv"));
+                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "deploy/CAD_Installs/Proe ISIS Extensions/docs/examples/compute_metrics_ptc/ComputeMetricsExamplemapping.csv"));
+                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "deploy/CAD_Installs/Proe ISIS Extensions/docs/examples/compute_metrics_ptc/ComputeMetricsExamplemerged.csv"));
+
                     driver.Navigate().GoToUrl(wrapper.url);
                     IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
                     Assert.True(wait.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
