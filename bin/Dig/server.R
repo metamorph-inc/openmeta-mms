@@ -75,11 +75,14 @@ shinyServer(function(input, output, session) {
     #   mapping = read.csv("WindTurbineSimMapping.csv", fill=T)
     
     # Useful test setups:
-    raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
-    # raw = read.csv("../data.csv", fill=T)
+    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
+
     raw = iris
     mapping = read.csv("iris_mapping.csv", fill = T)
+    
+    raw = read.csv("ComputeMetricsExample.csv", fill = T)
+    mapping = read.csv("ComputeMetricsExamplemapping.csv", fill = T)
   }
   
   output$mappingPresent <- reactive({
@@ -1414,9 +1417,9 @@ shinyServer(function(input, output, session) {
     
     lapply(rownames(mapping), function(row){
       
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+      var = mapping[row, "VarName"]
+      type = gsub("^\\s+|\\s+$", "", mapping[row, "Type"])
+      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", mapping[row, "Selection"]), ","))
       
       if(type == "Numeric"){
         global_index = which(varNames == var)
@@ -1439,8 +1442,8 @@ shinyServer(function(input, output, session) {
           max_refined <- "No data available in table"
         }
         else{
-          min_refined <- sprintf("%.3e", min(filterData()[var]))
-          max_refined <- sprintf("%.3e", max(filterData()[var]))
+          min_refined <- sprintf("%.3e", min(filterData()[levels(var)[var == levels(var)]]))
+          max_refined <- sprintf("%.3e", max(filterData()[levels(var)[var == levels(var)]]))
         }
         
         fluidRow(
@@ -1473,9 +1476,9 @@ shinyServer(function(input, output, session) {
     
     lapply(rownames(mapping), function(row){
       
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      selection = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+      var = mapping[row, "VarName"]
+      type = gsub("^\\s+|\\s+$", "", mapping[row, "Type"])
+      selection = gsub(",", ", ", mapping[row, "Selection"])
       
       if(type == "Enumeration"){
         global_index = which(varNames == var)
@@ -1518,18 +1521,18 @@ shinyServer(function(input, output, session) {
   
   reactToApplyOriginalButtons <- observe({
     lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+      var = mapping[row, "VarName"]
+      type = gsub("^\\s+|\\s+$", "", mapping[row, "Type"])
       global_i = which(varNames == var)
       if(type == "Numeric"){
-        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", mapping[row, "Selection"]), ","))
         observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
           updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
           updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
         })
       }
       else if(type == "Enumeration"){
-        original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+        original = gsub(",", ", ", mapping[row, "Selection"])
         observeEvent(input[[paste0('applyOriginalSelection', global_i)]], {
           updateTextInput(session, paste0('newSelection', global_i), value = original)
         })
@@ -1539,11 +1542,11 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$applyAllOriginalNumeric, {
     lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+      var = mapping[row, "VarName"]
+      type = gsub("^\\s+|\\s+$", "", mapping[row, "Type"])
       global_i = which(varNames == var)
       if(type == "Numeric"){
-        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", mapping[row, "Selection"]), ","))
         updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
         updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
       }
@@ -1552,11 +1555,11 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$applyAllOriginalEnum, {
     lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+      var = mapping[row, "VarName"]
+      type = gsub("^\\s+|\\s+$", "", mapping[row, "Type"])
       global_i = which(varNames == var)
       if(type == "Enumeration"){
-        original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+        original = gsub(",", ", ", mapping[row, "Selection"])
         updateTextInput(session, paste0('newSelection', global_i), value = original)
       }
     })
@@ -1632,8 +1635,8 @@ shinyServer(function(input, output, session) {
     cnms <- c("VarName", "Type", "Selection")
     data <- NULL
     for(i in 1:length(rownames(mapping))){
-      var = levels(droplevels(mapping[i, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[i, "Type"])))
+      var = mapping[i, "VarName"]
+      type = gsub("^\\s+|\\s+$", "", mapping[i, "Type"])
       global_i = which(varNames == var)
       if(type == "Numeric")
         selection = toString(c(input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
