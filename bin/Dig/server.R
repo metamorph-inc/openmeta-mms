@@ -81,8 +81,8 @@ shinyServer(function(input, output, session) {
     raw = iris
     mapping = read.csv("iris_mapping.csv", fill = T)
     
-    raw = read.csv("ComputeMetricsExample.csv", fill = T)
-    mapping = read.csv("ComputeMetricsExamplemapping.csv", fill = T)
+    # raw = read.csv("ComputeMetricsExample.csv", fill = T)
+    # mapping = read.csv("ComputeMetricsExamplemapping.csv", fill = T)
   }
   
   output$mappingPresent <- reactive({
