@@ -34,7 +34,7 @@ namespace DigTest
             {
                 try
                 {
-                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "deploy/CAD_Installs/Proe ISIS Extensions/docs/examples/compute_metrics_ptc/ComputeMetricsExamplemapping.csv"));
+                    //wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "deploy/CAD_Installs/Proe ISIS Extensions/docs/examples/compute_metrics_ptc/ComputeMetricsExamplemapping.csv"));
                     wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "deploy/CAD_Installs/Proe ISIS Extensions/docs/examples/compute_metrics_ptc/ComputeMetricsExamplemerged.csv"));
 
                     driver.Navigate().GoToUrl(wrapper.url);
