@@ -2,6 +2,7 @@
 ''''set -e
 # dirty hack so `bash merge.py` and `python merge.py` both do something
 set -x
+git checkout metarefs
 ../../bin/Python27/Scripts/python merge.py "$@"
 ../../bin/Python27/Scripts/python add_folder_treeIcons.py
 ../../bin/Python27/Scripts/python add_folder_treeIcons.py
@@ -69,7 +70,7 @@ or self.parent().kindName() = "PythonWrapper"
         },
 
     "/@6_Testing|kind=SheetFolder|relpos=0/@3_PET_TBS|kind=ParadigmSheet|relpos=0/@Range":
-        {"Help": """A single number (e.g. 1.5), a comma-separated range (e.g. 1.5,3), or a list of enum values (e.g. "item one","item two" or 1.5,3)""",
+        {"Help": """A single number (e.g. 1.5), a comma-separated range (e.g. 1.5,3), or a list of enum values (e.g. "item one";"item two" or 1.5;3)""",
          "FieldDefault": ""},
     }
 
@@ -187,9 +188,10 @@ def update_cyphy(version):
         libs.sort(key=lambda lib: lib.ID)
         original_lib, copy_lib = libs
 
-        original_lib_relid = original_lib.RelID
-        original_lib.RefreshLibrary(original_lib.LibraryName)
-        original_lib = project.RootFolder.ChildObjectByRelID(original_lib_relid)
+        # RefreshLibrary fails because xme import reassigns the GUIDs
+        # original_lib_relid = original_lib.RelID
+        # original_lib.RefreshLibrary(original_lib.LibraryName)
+        # original_lib = project.RootFolder.ChildObjectByRelID(original_lib_relid)
         switch_lib(from_=copy_lib, to=original_lib)
         copy_lib.DestroyObject()
         metaint_currentobj = project.RootFolder.GetObjectByPathDisp("/@Ports")

@@ -74,6 +74,7 @@
 //model[@name='LTLSPEC_Requirement'] 33411
 //model[@name='MATLABWrapper'] 60078
 //model[@name='ManufacturingModel'] 59154
+//model[@name='MaterialContents'] 60172
 //model[@name='Matrix'] 59159
 //model[@name='MechanicalJoin'] 59163
 //model[@name='ModelicaConnector'] 59175
@@ -167,6 +168,8 @@
 //atom[@name='GeometryForwarder'] 56842
 //atom[@name='GlobalLayoutConstraintException'] 56843
 //atom[@name='GluedJoin'] 56846
+//atom[@name='HillCriteria'] 60173
+//atom[@name='HoffmanCriteria'] 60174
 //atom[@name='HydrostaticsSolverSettings'] 56854
 //atom[@name='ITAR'] 56857
 //atom[@name='InputRangeGuarantee'] 56860
@@ -182,11 +185,14 @@
 //atom[@name='ManufacturingModelMetric'] 56891
 //atom[@name='Mass'] 56894
 //atom[@name='Material'] 30690
+//atom[@name='MaterialLayer'] 60175
 //atom[@name='MaxHorizonalVelocity'] 56895
 //atom[@name='MaxVerticalJump'] 56896
 //atom[@name='MaxVerticalVelocity'] 56897
 //atom[@name='MaximumDisplacement'] 56898
+//atom[@name='MaximumFailureCriteria'] 60176
 //atom[@name='MaximumTemperature'] 56899
+//atom[@name='MeshParameters'] 60177
 //atom[@name='MetricConstraint'] 56900
 //atom[@name='MinimumTemperature'] 56903
 //atom[@name='MisesStress'] 56904
@@ -235,6 +241,7 @@
 //atom[@name='TotalKills'] 57030
 //atom[@name='TotalPerforations'] 57031
 //atom[@name='TotalShots'] 57032
+//atom[@name='TsaiWuCriteria'] 60178
 //atom[@name='VTC_Signal'] 30907
 //atom[@name='WaveResistanceSolverSettings'] 57033
 //atom[@name='WeldedJoin'] 57041
@@ -321,6 +328,7 @@
 //connection[@name='ConnectorComposition'] 57071
 //connection[@name='ConstraintMapping'] 57072
 //connection[@name='Contact'] 57073
+//connection[@name='ContentsToGeometry'] 60179
 //connection[@name='Cylinder2Forwarder'] 57074
 //connection[@name='Displacement2Geometry'] 57075
 //connection[@name='DriveParameter'] 57076
@@ -518,6 +526,7 @@
 //model[@name='CADTestBench']/role[@name='ForceLoadParam'] 57573
 //model[@name='CADTestBench']/role[@name='ForceLoadParam2Geometry'] 57574
 //model[@name='CADTestBench']/role[@name='InterfaceGeometry'] 57575
+//model[@name='CADTestBench']/role[@name='MeshParameters'] 60180
 //model[@name='CADTestBench']/role[@name='Metric'] 57576
 //model[@name='CADTestBench']/role[@name='MetricConstraint'] 57577
 //model[@name='CADTestBench']/role[@name='MetricConstraintBinding'] 57578
@@ -645,6 +654,7 @@
 //model[@name='Component']/role[@name='Connector'] 57919
 //model[@name='Component']/role[@name='ConnectorComposition'] 57920
 //model[@name='Component']/role[@name='Constant'] 57921
+//model[@name='Component']/role[@name='ContentsToGeometry'] 60181
 //model[@name='Component']/role[@name='CoordinateSystem'] 57922
 //model[@name='Component']/role[@name='CustomFormula'] 57923
 //model[@name='Component']/role[@name='CustomGeometry'] 57924
@@ -671,6 +681,7 @@
 //model[@name='Component']/role[@name='InterfaceGeometry'] 57939
 //model[@name='Component']/role[@name='ManufacturingModel'] 57940
 //model[@name='Component']/role[@name='ManufacturingParameterPortMap'] 57941
+//model[@name='Component']/role[@name='MaterialContents'] 60182
 //model[@name='Component']/role[@name='MaterialRef'] 57942
 //model[@name='Component']/role[@name='Metric'] 57943
 //model[@name='Component']/role[@name='ModelicaConnector'] 57944
@@ -935,11 +946,13 @@
 //model[@name='ExcelWrapper']/role[@name='Parameter'] 60071
 //model[@name='Extrusion']/role[@name='AxisDatumForwarder'] 58938
 //model[@name='Extrusion']/role[@name='CoordinateSystemDatumForwarder'] 58939
+//model[@name='Extrusion']/role[@name='Direction_Reference_Point'] 60183
 //model[@name='Extrusion']/role[@name='ExtrusionGeometry'] 58942
 //model[@name='Extrusion']/role[@name='ExtrusionHeight'] 58940
 //model[@name='Extrusion']/role[@name='PointDatumForwarder'] 58941
 //model[@name='Extrusion']/role[@name='PortComposition'] 58943
 //model[@name='Extrusion']/role[@name='SurfaceDatumForwarder'] 58944
+//model[@name='Face']/role[@name='Direction_Reference_Point'] 60184
 //model[@name='Face']/role[@name='ReferencePoint'] 58957
 //model[@name='Face']/role[@name='ReferenceSurface'] 58958
 //model[@name='FaultModeModel']/role[@name='Mode'] 58969
@@ -1008,6 +1021,9 @@
 //model[@name='MATLABWrapper']/role[@name='Parameter'] 60094
 //model[@name='ManufacturingModel']/role[@name='ManufacturingModelMetric'] 59155
 //model[@name='ManufacturingModel']/role[@name='ManufacturingModelParameter'] 59156
+//model[@name='MaterialContents']/role[@name='End_Direction'] 60185
+//model[@name='MaterialContents']/role[@name='MaterialLayer'] 60186
+//model[@name='MaterialContents']/role[@name='Start_Direction'] 60187
 //model[@name='Matrix']/role[@name='OrderMap'] 59160
 //model[@name='Matrix']/role[@name='TypeRef'] 59161
 //model[@name='MechanicalJoin']/role[@name='Fastener'] 59172
@@ -1057,6 +1073,7 @@
 //model[@name='PatternBased_Requirement']/role[@name='RequirementParameter'] 33633
 //model[@name='PatternBased_Requirement']/role[@name='VTC_BusPortInterface'] 33634
 //model[@name='PatternBased_Requirement']/role[@name='VTC_Signal'] 33635
+//model[@name='Polygon']/role[@name='Direction_Reference_Point'] 60188
 //model[@name='Polygon']/role[@name='OrdinalPoint'] 59278
 //model[@name='PostProcessing']/role[@name='PPInput'] 59282
 //model[@name='PostProcessing']/role[@name='PPOutput'] 59283
@@ -1087,9 +1104,13 @@
 //model[@name='String']/role[@name='TypeRef'] 59331
 //model[@name='StructuralFEAComputation']/role[@name='BearingStress'] 59334
 //model[@name='StructuralFEAComputation']/role[@name='FactorOfSafety'] 59335
+//model[@name='StructuralFEAComputation']/role[@name='HillCriteria'] 60189
+//model[@name='StructuralFEAComputation']/role[@name='HoffmanCriteria'] 60190
 //model[@name='StructuralFEAComputation']/role[@name='MaximumDisplacement'] 59336
+//model[@name='StructuralFEAComputation']/role[@name='MaximumFailureCriteria'] 60191
 //model[@name='StructuralFEAComputation']/role[@name='MisesStress'] 59337
 //model[@name='StructuralFEAComputation']/role[@name='ShearStress'] 59338
+//model[@name='StructuralFEAComputation']/role[@name='TsaiWuCriteria'] 60192
 //model[@name='SystemCModel']/role[@name='SystemCParameter'] 35163
 //model[@name='SystemCModel']/role[@name='SystemCPort'] 35164
 //model[@name='TaxonomySheet']/role[@name='CompatibleWith'] 59350
@@ -1356,6 +1377,7 @@
 //model[@name='LTLSPEC_Requirement']/aspect[@name='Aspect'] 59153
 //model[@name='MATLABWrapper']/aspect[@name='ValueFlowAspect'] 60101
 //model[@name='ManufacturingModel']/aspect[@name='ManufacturingAspect'] 33425
+//model[@name='MaterialContents']/aspect[@name='ContentsAspect'] 60193
 //model[@name='Matrix']/aspect[@name='TypeAspect'] 33431
 //model[@name='MechanicalJoin']/aspect[@name='Aspect'] 59173
 //model[@name='ModelicaConnector']/aspect[@name='Aspect'] 59183
@@ -1461,6 +1483,10 @@
 //folder[@name='RootFolder']/attrdef[@name='IntervalMethod'] 56684
 //folder[@name='RootFolder']/attrdef[@name='IsProminent'] 56685
 //folder[@name='RootFolder']/attrdef[@name='JointFreedomType'] 56686
+//folder[@name='RootFolder']/attrdef[@name='LayerID'] 60194
+//folder[@name='RootFolder']/attrdef[@name='LayerMaterial'] 60195
+//folder[@name='RootFolder']/attrdef[@name='LayerOrientation'] 60196
+//folder[@name='RootFolder']/attrdef[@name='LayerThickness'] 60197
 //folder[@name='RootFolder']/attrdef[@name='LimitType'] 56687
 //folder[@name='RootFolder']/attrdef[@name='MaxSize'] 56688
 //folder[@name='RootFolder']/attrdef[@name='MaxValue'] 56689
@@ -1638,6 +1664,11 @@
 //atom[@name='ManufacturingModelMetric']/attrdef[@name='Notes'] 56893
 //atom[@name='Material']/attrdef[@name='MaterialID'] 30691
 //atom[@name='Material']/attrdef[@name='Name'] 30692
+//atom[@name='MaterialLayer']/attrdef[@name='DropOrder'] 60198
+//atom[@name='MeshParameters']/attrdef[@name='Match_Face_Proximity_Tol'] 60199
+//atom[@name='MeshParameters']/attrdef[@name='Max_Curv_Delta_Divide_Edge_Len'] 60200
+//atom[@name='MeshParameters']/attrdef[@name='Max_Global_Length'] 60201
+//atom[@name='MeshParameters']/attrdef[@name='Ratio_Min_Edge_To_Max_Edge'] 60202
 //atom[@name='MetricConstraint']/attrdef[@name='TargetType'] 56901
 //atom[@name='MetricConstraint']/attrdef[@name='TargetValue'] 56902
 //atom[@name='Mode']/attrdef[@name='Behavior'] 56907
@@ -1900,6 +1931,7 @@
 //model[@name='CADModel']/attrdef[@name='FilePathWithinResource'] 30010
 //model[@name='CADModel']/attrdef[@name='FileType'] 57521
 //model[@name='CADModel']/attrdef[@name='Notes'] 30011
+//model[@name='CADTestBench']/attrdef[@name='ElementType'] 60203
 //model[@name='CADTestBench']/attrdef[@name='InfiniteCycle'] 57543
 //model[@name='CADTestBench']/attrdef[@name='MaxAdaptiveIterations'] 57544
 //model[@name='CADTestBench']/attrdef[@name='MaximumElementSize'] 57545
@@ -1967,9 +1999,11 @@
 //model[@name='Extrusion']/attrdef[@name='BoundaryQualifier'] 58935
 //model[@name='Extrusion']/attrdef[@name='GeometryModifier'] 58936
 //model[@name='Extrusion']/attrdef[@name='InclusionSemantics'] 58937
+//model[@name='Extrusion']/attrdef[@name='NormalDirection'] 60204
 //model[@name='Face']/attrdef[@name='BoundaryQualifier'] 58954
 //model[@name='Face']/attrdef[@name='GeometryModifier'] 58955
 //model[@name='Face']/attrdef[@name='InclusionSemantics'] 58956
+//model[@name='Face']/attrdef[@name='NormalDirection'] 60205
 //model[@name='FastenerInterface']/attrdef[@name='Description'] 58965
 //model[@name='FastenerInterface']/attrdef[@name='OverrideSemantics'] 58966
 //model[@name='FaultModeModel']/attrdef[@name='Author'] 26683
@@ -1999,6 +2033,9 @@
 //model[@name='ManufacturingModel']/attrdef[@name='Author'] 30040
 //model[@name='ManufacturingModel']/attrdef[@name='FilePathWithinResource'] 30041
 //model[@name='ManufacturingModel']/attrdef[@name='Notes'] 30042
+//model[@name='MaterialContents']/attrdef[@name='MaterialLayupDirection'] 60206
+//model[@name='MaterialContents']/attrdef[@name='Position'] 60207
+//model[@name='MaterialContents']/attrdef[@name='PositionOffset'] 60208
 //model[@name='MechanicalJoin']/attrdef[@name='Description'] 59164
 //model[@name='MechanicalJoin']/attrdef[@name='FasteningMethod'] 59165
 //model[@name='MechanicalJoin']/attrdef[@name='FasteningQuantity'] 59166
@@ -2026,6 +2063,7 @@
 //model[@name='Polygon']/attrdef[@name='BoundaryQualifier'] 59275
 //model[@name='Polygon']/attrdef[@name='GeometryModifier'] 59276
 //model[@name='Polygon']/attrdef[@name='InclusionSemantics'] 59277
+//model[@name='Polygon']/attrdef[@name='NormalDirection'] 60209
 //model[@name='PrismaticCode']/attrdef[@name='Source'] 59292
 //model[@name='ProbabilisticCTL_Requirement']/attrdef[@name='Description'] 59295
 //model[@name='PropertyTGBA_Requirement']/attrdef[@name='No_Acceptance_sets'] 33678
@@ -2264,6 +2302,7 @@
 //model[@name='CADTestBench']/aspect[@name='All']/part[@role='ForceLoadParam'] 57641
 //model[@name='CADTestBench']/aspect[@name='All']/part[@role='ForceLoadParam2Geometry'] 57642
 //model[@name='CADTestBench']/aspect[@name='All']/part[@role='InterfaceGeometry'] 57643
+//model[@name='CADTestBench']/aspect[@name='All']/part[@role='MeshParameters'] 60210
 //model[@name='CADTestBench']/aspect[@name='All']/part[@role='Metric'] 57644
 //model[@name='CADTestBench']/aspect[@name='All']/part[@role='MetricConstraint'] 57645
 //model[@name='CADTestBench']/aspect[@name='All']/part[@role='MetricConstraintBinding'] 57646
@@ -2358,6 +2397,7 @@
 //model[@name='CADTestBench']/aspect[@name='StructuralAspect']/part[@role='ForceLoadParam'] 57759
 //model[@name='CADTestBench']/aspect[@name='StructuralAspect']/part[@role='ForceLoadParam2Geometry'] 57760
 //model[@name='CADTestBench']/aspect[@name='StructuralAspect']/part[@role='InterfaceGeometry'] 57761
+//model[@name='CADTestBench']/aspect[@name='StructuralAspect']/part[@role='MeshParameters'] 60211
 //model[@name='CADTestBench']/aspect[@name='StructuralAspect']/part[@role='Pin2Cylinder'] 57762
 //model[@name='CADTestBench']/aspect[@name='StructuralAspect']/part[@role='PinConstraint'] 57763
 //model[@name='CADTestBench']/aspect[@name='StructuralAspect']/part[@role='Polygon'] 57764
@@ -2604,6 +2644,7 @@
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='Connector'] 58043
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='ConnectorComposition'] 58044
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='Constant'] 58045
+//model[@name='Component']/aspect[@name='SolidModeling']/part[@role='ContentsToGeometry'] 60212
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='CoordinateSystem'] 58046
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='CustomFormula'] 58047
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='CustomGeometry'] 58048
@@ -2612,6 +2653,7 @@
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='Face'] 58051
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='FeatureMap'] 58052
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='InterfaceGeometry'] 58053
+//model[@name='Component']/aspect[@name='SolidModeling']/part[@role='MaterialContents'] 60213
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='MaterialRef'] 58054
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='Metric'] 58055
 //model[@name='Component']/aspect[@name='SolidModeling']/part[@role='OrdinalPoint'] 58056
@@ -3356,11 +3398,13 @@
 //model[@name='ExcelWrapper']/aspect[@name='ValueFlowAspect']/part[@role='Parameter'] 60076
 //model[@name='Extrusion']/aspect[@name='Aspect']/part[@role='AxisDatumForwarder'] 58946
 //model[@name='Extrusion']/aspect[@name='Aspect']/part[@role='CoordinateSystemDatumForwarder'] 58947
+//model[@name='Extrusion']/aspect[@name='Aspect']/part[@role='Direction_Reference_Point'] 60214
 //model[@name='Extrusion']/aspect[@name='Aspect']/part[@role='ExtrusionGeometry'] 58948
 //model[@name='Extrusion']/aspect[@name='Aspect']/part[@role='ExtrusionHeight'] 58949
 //model[@name='Extrusion']/aspect[@name='Aspect']/part[@role='PointDatumForwarder'] 58950
 //model[@name='Extrusion']/aspect[@name='Aspect']/part[@role='PortComposition'] 58951
 //model[@name='Extrusion']/aspect[@name='Aspect']/part[@role='SurfaceDatumForwarder'] 58952
+//model[@name='Face']/aspect[@name='Aspect']/part[@role='Direction_Reference_Point'] 60215
 //model[@name='Face']/aspect[@name='Aspect']/part[@role='ReferencePoint'] 58960
 //model[@name='Face']/aspect[@name='Aspect']/part[@role='ReferenceSurface'] 58961
 //model[@name='FaultModeModel']/aspect[@name='BehaviorModelsAspect']/part[@role='Mode'] 58970
@@ -3465,6 +3509,9 @@
 //model[@name='MATLABWrapper']/aspect[@name='ValueFlowAspect']/part[@role='Parameter'] 60151
 //model[@name='ManufacturingModel']/aspect[@name='ManufacturingAspect']/part[@role='ManufacturingModelMetric'] 59157
 //model[@name='ManufacturingModel']/aspect[@name='ManufacturingAspect']/part[@role='ManufacturingModelParameter'] 59158
+//model[@name='MaterialContents']/aspect[@name='ContentsAspect']/part[@role='End_Direction'] 60216
+//model[@name='MaterialContents']/aspect[@name='ContentsAspect']/part[@role='MaterialLayer'] 60217
+//model[@name='MaterialContents']/aspect[@name='ContentsAspect']/part[@role='Start_Direction'] 60218
 //model[@name='Matrix']/aspect[@name='TypeAspect']/part[@role='TypeRef'] 59162
 //model[@name='MechanicalJoin']/aspect[@name='Aspect']/part[@role='Fastener'] 59174
 //model[@name='ModelicaConnector']/aspect[@name='Aspect']/part[@role='ModelicaParameter'] 59184
@@ -3513,6 +3560,7 @@
 //model[@name='PatternBased_Requirement']/aspect[@name='Aspect']/part[@role='RequirementParameter'] 33639
 //model[@name='PatternBased_Requirement']/aspect[@name='Aspect']/part[@role='VTC_BusPortInterface'] 33640
 //model[@name='PatternBased_Requirement']/aspect[@name='Aspect']/part[@role='VTC_Signal'] 33641
+//model[@name='Polygon']/aspect[@name='Aspect']/part[@role='Direction_Reference_Point'] 60219
 //model[@name='Polygon']/aspect[@name='Aspect']/part[@role='OrdinalPoint'] 59280
 //model[@name='PostProcessing']/aspect[@name='Aspect']/part[@role='PPInput'] 59285
 //model[@name='PostProcessing']/aspect[@name='Aspect']/part[@role='PPOutput'] 59286
@@ -3543,9 +3591,13 @@
 //model[@name='String']/aspect[@name='TypeAspect']/part[@role='TypeRef'] 59332
 //model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='BearingStress'] 59340
 //model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='FactorOfSafety'] 59341
+//model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='HillCriteria'] 60220
+//model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='HoffmanCriteria'] 60221
 //model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='MaximumDisplacement'] 59342
+//model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='MaximumFailureCriteria'] 60222
 //model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='MisesStress'] 59343
 //model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='ShearStress'] 59344
+//model[@name='StructuralFEAComputation']/aspect[@name='Aspect']/part[@role='TsaiWuCriteria'] 60223
 //model[@name='SystemCModel']/aspect[@name='Aspect']/part[@role='SystemCParameter'] 35166
 //model[@name='SystemCModel']/aspect[@name='Aspect']/part[@role='SystemCPort'] 35167
 //model[@name='TaxonomySheet']/aspect[@name='TaxonomyAspect']/part[@role='CompatibleWith'] 59354

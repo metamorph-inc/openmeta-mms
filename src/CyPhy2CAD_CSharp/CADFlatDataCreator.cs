@@ -279,7 +279,7 @@ namespace CyPhy2CAD_CSharp
             };
 
             List<Tuple<DataRep.Datum, DataRep.Datum>> constraintPairs = new List<Tuple<DataRep.Datum,DataRep.Datum>>();
-            bool result = DataRep.StructuralInterfaceConstraint.MatchStructuralInterfaceDatums(a, b, constraintPairs);
+            bool result = DataRep.StructuralInterfaceConstraint.MatchStructuralInterfaceDatums(a, b, constraintPairs, Traceability);
             edge.ConstraintPairs.AddRange(constraintPairs);
 
             // TODO: Add more checking for this
@@ -350,8 +350,9 @@ namespace CyPhy2CAD_CSharp
             foreach (var tip in testBench.Children.TestInjectionPointCollection)
             {
                 if (tip.Referred != null)
-                {
+                {                  
                     string tipKind = tip.Referred.TIPRefBase.Kind;
+                    Logger.Instance.AddLogMessage("Test Injection Point kind is: [" + tipKind + "]", Severity.Info);
                     if (tipKind == "Component")
                     {
                         CyPhy.Component component = tip.Referred.Component;

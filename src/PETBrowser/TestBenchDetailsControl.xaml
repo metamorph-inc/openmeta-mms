@@ -14,26 +14,10 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,4">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -41,119 +25,132 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Test Bench" Text="{Binding Manifest.TestBench}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
-            <TextBox Grid.Row="0" Grid.Column="1"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
-            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
-            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,3" ToolTip="Design ID" Text="{Binding Manifest.DesignID}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#BF000000" />
-            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" >
-                <Border.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
-                </Border.BorderBrush>
-            </Border>
-            <Grid.Style>
-                <Style>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Manifest.Status}" Value="FAILED">
-                            <Setter Property="Grid.Background" Value="{StaticResource FailedBrush}" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Manifest.Status}" Value="OK">
-                            <Setter Property="Grid.Background" Value="{StaticResource SuccessBrush}"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Manifest.Status}" Value="UNEXECUTED">
-                            <Setter Property="Grid.Background" Value="{StaticResource ReadyBrush}"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Test Bench" Text="{Binding Manifest.TestBench}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
+                <TextBox Grid.Row="0" Grid.Column="1"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
+                <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
+                <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,3" ToolTip="Design ID" Text="{Binding Manifest.DesignID}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#BF000000" />
+                <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" >
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                    </Border.BorderBrush>
+                </Border>
+                <Grid.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Manifest.Status}" Value="FAILED">
+                                <Setter Property="Grid.Background" Value="{StaticResource FailedBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Manifest.Status}" Value="OK">
+                                <Setter Property="Grid.Background" Value="{StaticResource SuccessBrush}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Manifest.Status}" Value="UNEXECUTED">
+                                <Setter Property="Grid.Background" Value="{StaticResource ReadyBrush}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+
+            <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3">Steps</Label>
+            <DataGrid Grid.Row="1" Grid.Column="1" Margin="4" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" MinHeight="55" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
+                <DataGrid.HorizontalGridLinesBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                </DataGrid.HorizontalGridLinesBrush>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Invocation}" Header="Invocation" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Status}" Header="Status" IsReadOnly="True" />
+                </DataGrid.Columns>
+
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Status}" Value="FAILED">
+                                <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Status}" Value="OK">
+                                <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
+                                <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+
+                        <EventSetter Event="MouseDoubleClick" Handler="StepsRow_DoubleClick"></EventSetter>
+                    </Style>
+                </DataGrid.RowStyle>
+            </DataGrid>
+
+            <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3">Parameters</Label>
+            <DataGrid Grid.Row="2" Grid.Column="1" Margin="4" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" MinHeight="55" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
+                <DataGrid.HorizontalGridLinesBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                </DataGrid.HorizontalGridLinesBrush>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending" />
+                    <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Range}" Header="Range" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3">Metrics</Label>
+            <DataGrid Grid.Row="3" Grid.Column="1" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" MinHeight="55" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
+                <DataGrid.HorizontalGridLinesBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                </DataGrid.HorizontalGridLinesBrush>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending" />
+                    <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3">Artifacts</Label>
+            <DataGrid Grid.Row="4" Grid.Column="1" Margin="4" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" MinHeight="55" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
+                <DataGrid.HorizontalGridLinesBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                </DataGrid.HorizontalGridLinesBrush>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
+                </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="ArtifactsRow_DoubleClick"></EventSetter>
+                    </Style>
+                </DataGrid.RowStyle>
+            </DataGrid>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3" Text="Visualization&#xD;&#xA;Artifacts" TextAlignment="Right"/>
+            <DataGrid Grid.Row="5" Grid.Column="1" Margin="4" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" MinHeight="55" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
+                <DataGrid.HorizontalGridLinesBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                </DataGrid.HorizontalGridLinesBrush>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
+                </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="ArtifactsRow_DoubleClick"></EventSetter>
+                    </Style>
+                </DataGrid.RowStyle>
+            </DataGrid>
         </Grid>
-
-        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Steps</Label>
-        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
-            <DataGrid.HorizontalGridLinesBrush>
-                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
-            </DataGrid.HorizontalGridLinesBrush>
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Invocation}" Header="Invocation" IsReadOnly="True" />
-                <DataGridTextColumn Binding="{Binding Status}" Header="Status" IsReadOnly="True" />
-            </DataGrid.Columns>
-
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Status}" Value="FAILED">
-                            <Setter Property="Background" Value="{StaticResource FailedBrush}" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="OK">
-                            <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="UNEXECUTED">
-                            <Setter Property="Background" Value="{StaticResource ReadyBrush}"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-
-                    <EventSetter Event="MouseDoubleClick" Handler="StepsRow_DoubleClick"></EventSetter>
-                </Style>
-            </DataGrid.RowStyle>
-        </DataGrid>
-
-        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Parameters</Label>
-        <DataGrid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
-            <DataGrid.HorizontalGridLinesBrush>
-                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
-            </DataGrid.HorizontalGridLinesBrush>
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending" />
-                <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
-                <DataGridTextColumn Binding="{Binding Range}" Header="Range" IsReadOnly="True" />
-                <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
-        <DataGrid Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
-            <DataGrid.HorizontalGridLinesBrush>
-                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
-            </DataGrid.HorizontalGridLinesBrush>
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending" />
-                <DataGridTextColumn Binding="{Binding Value}" Header="Value" IsReadOnly="True" />
-                <DataGridTextColumn Binding="{Binding Unit}" Header="Unit" IsReadOnly="True" />
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <Label Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Artifacts</Label>
-        <DataGrid Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Artifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
-            <DataGrid.HorizontalGridLinesBrush>
-                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
-            </DataGrid.HorizontalGridLinesBrush>
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
-            </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <EventSetter Event="MouseDoubleClick" Handler="ArtifactsRow_DoubleClick"></EventSetter>
-                </Style>
-            </DataGrid.RowStyle>
-        </DataGrid>
-
-        <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Visualization Artifacts</Label>
-        <DataGrid Grid.Row="9" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding VisualizationArtifacts}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{DynamicResource GridStyle}">
-            <DataGrid.HorizontalGridLinesBrush>
-                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
-            </DataGrid.HorizontalGridLinesBrush>
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Tag}" Header="Tag" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Location}" Header="Filename" IsReadOnly="True"></DataGridTextColumn>
-            </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <EventSetter Event="MouseDoubleClick" Handler="ArtifactsRow_DoubleClick"></EventSetter>
-                </Style>
-            </DataGrid.RowStyle>
-        </DataGrid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>
