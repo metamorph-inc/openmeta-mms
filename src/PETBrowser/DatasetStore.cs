@@ -390,7 +390,7 @@ namespace PETBrowser
                 foreach (var header in addedHeaders)
                     headersPresent[header.Key] = false;
 
-                using (var csvFile = File.OpenText(csvFileName))
+                using (var csvFile = new StreamReader(File.Open(csvFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
                 {
                     try
                     {

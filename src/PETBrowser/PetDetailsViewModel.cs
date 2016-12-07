@@ -107,7 +107,7 @@ namespace PETBrowser
                     var csvFileName = Path.Combine(ResultsDirectory,
                         folder.Replace("testbench_manifest.json", "output.csv"));
 
-                    using (var csvFile = File.OpenText(csvFileName))
+                    using (var csvFile = new StreamReader(File.Open(csvFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
                     {
                         var csvReader = new CsvReader(csvFile, new CsvConfiguration()
                         {
@@ -163,9 +163,10 @@ namespace PETBrowser
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     //Silently ignore CSV files that don't exist or can't be read
+                    Console.WriteLine(e);
                 }
                 
             }
