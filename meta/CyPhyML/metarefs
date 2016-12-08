@@ -266,6 +266,7 @@
 //reference[@name='Fastened'] 57168
 //reference[@name='Fastener'] 57169
 //reference[@name='Force'] 57173
+//reference[@name='IntermediateVariable'] 60224
 //reference[@name='ManufacturingModelParameter'] 57177
 //reference[@name='MaterialRef'] 57181
 //reference[@name='Metric'] 57182
@@ -330,6 +331,7 @@
 //connection[@name='Contact'] 57073
 //connection[@name='ContentsToGeometry'] 60179
 //connection[@name='Cylinder2Forwarder'] 57074
+//connection[@name='DesignVariableConstraintMapping'] 60225
 //connection[@name='Displacement2Geometry'] 57075
 //connection[@name='DriveParameter'] 57076
 //connection[@name='EDAModelParameterMap'] 37946
@@ -349,6 +351,7 @@
 //connection[@name='Geometry2Forwarder'] 57090
 //connection[@name='Implies'] 57091
 //connection[@name='InterfaceGeometry'] 57092
+//connection[@name='IntermediateVariableMapping'] 60226
 //connection[@name='KinematicJointDefinition'] 57093
 //connection[@name='KinematicRotationalLimit'] 57094
 //connection[@name='KinematicRotationalLimitReference'] 57095
@@ -1040,6 +1043,7 @@
 //model[@name='Not_operator']/role[@name='Or_operator'] 59202
 //model[@name='Not_operator']/role[@name='PropertyConstraintRef'] 59203
 //model[@name='Optimizer']/role[@name='DesignVariable'] 59214
+//model[@name='Optimizer']/role[@name='IntermediateVariable'] 60227
 //model[@name='Optimizer']/role[@name='Objective'] 59215
 //model[@name='Optimizer']/role[@name='OptimizerConstraint'] 59216
 //model[@name='Or_operator']/role[@name='And_operator'] 59221
@@ -1056,8 +1060,10 @@
 //model[@name='ParameterStudy']/role[@name='DesignVariable'] 59248
 //model[@name='ParameterStudy']/role[@name='Objective'] 59249
 //model[@name='ParametricExploration']/role[@name='ConstraintMapping'] 59253
+//model[@name='ParametricExploration']/role[@name='DesignVariableConstraintMapping'] 60228
 //model[@name='ParametricExploration']/role[@name='DriveParameter'] 59254
 //model[@name='ParametricExploration']/role[@name='ExcelWrapper'] 60072
+//model[@name='ParametricExploration']/role[@name='IntermediateVariableMapping'] 60229
 //model[@name='ParametricExploration']/role[@name='MATLABWrapper'] 60095
 //model[@name='ParametricExploration']/role[@name='ObjectiveMapping'] 59255
 //model[@name='ParametricExploration']/role[@name='Optimizer'] 59256
@@ -3527,6 +3533,7 @@
 //model[@name='Not_operator']/aspect[@name='Aspect']/part[@role='Or_operator'] 59209
 //model[@name='Not_operator']/aspect[@name='Aspect']/part[@role='PropertyConstraintRef'] 59210
 //model[@name='Optimizer']/aspect[@name='TestBenchCompositionAspect']/part[@role='DesignVariable'] 59217
+//model[@name='Optimizer']/aspect[@name='TestBenchCompositionAspect']/part[@role='IntermediateVariable'] 60230
 //model[@name='Optimizer']/aspect[@name='TestBenchCompositionAspect']/part[@role='Objective'] 59218
 //model[@name='Optimizer']/aspect[@name='TestBenchCompositionAspect']/part[@role='OptimizerConstraint'] 59219
 //model[@name='Or_operator']/aspect[@name='Aspect']/part[@role='And_operator'] 59228
@@ -3543,8 +3550,10 @@
 //model[@name='ParameterStudy']/aspect[@name='TestBenchCompositionAspect']/part[@role='DesignVariable'] 59250
 //model[@name='ParameterStudy']/aspect[@name='TestBenchCompositionAspect']/part[@role='Objective'] 59251
 //model[@name='ParametricExploration']/aspect[@name='TestBenchCompositionAspect']/part[@role='ConstraintMapping'] 59263
+//model[@name='ParametricExploration']/aspect[@name='TestBenchCompositionAspect']/part[@role='DesignVariableConstraintMapping'] 60231
 //model[@name='ParametricExploration']/aspect[@name='TestBenchCompositionAspect']/part[@role='DriveParameter'] 59264
 //model[@name='ParametricExploration']/aspect[@name='TestBenchCompositionAspect']/part[@role='ExcelWrapper'] 60077
+//model[@name='ParametricExploration']/aspect[@name='TestBenchCompositionAspect']/part[@role='IntermediateVariableMapping'] 60232
 //model[@name='ParametricExploration']/aspect[@name='TestBenchCompositionAspect']/part[@role='MATLABWrapper'] 60152
 //model[@name='ParametricExploration']/aspect[@name='TestBenchCompositionAspect']/part[@role='ObjectiveMapping'] 59265
 //model[@name='ParametricExploration']/aspect[@name='TestBenchCompositionAspect']/part[@role='Optimizer'] 59266

@@ -17858,7 +17858,7 @@
 maxiter = 100</value>
 									</attribute>
 									<attribute kind="OptimizationFunction">
-										<value>CONMIN</value>
+										<value>COBYLA</value>
 									</attribute>
 									<reference id="id-0067-0000009b" kind="Objective" role="Objective" guid="{e0334e3f-25f7-4164-9b35-634204e0b35f}" relid="0x4">
 										<name>MaxSpeed</name>
