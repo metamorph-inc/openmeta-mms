@@ -93,13 +93,13 @@ shinyServer(function(input, output, session) {
   objectiveNames <- NULL
   
   if(petConfigPresent) {
-    designVariableNames <- names(petConfig$drivers$ParameterStudy$designVariables)
-    numericDesignVariables <- lapply(petConfig$drivers$ParameterStudy$designVariables, function(x) {"RangeMax" %in% names(x)})
-    enumeratedDesignVariables <- lapply(petConfig$drivers$ParameterStudy$designVariables, function(x) {"type" %in% names(x)})
+    designVariableNames <- names(petConfig$drivers[[1]]$designVariables)
+    numericDesignVariables <- lapply(petConfig$drivers[[1]]$designVariables, function(x) {"RangeMax" %in% names(x)})
+    enumeratedDesignVariables <- lapply(petConfig$drivers[[1]]$designVariables, function(x) {"type" %in% names(x)})
     dvTypes <- unlist(lapply(numericDesignVariables, function(x) { if(x) "Numeric" else "Enumeration"}))
-    dvSelections <- unlist(lapply(petConfig$drivers$ParameterStudy$designVariables, function(x) {if("type" %in% names(x) && x$type == "enum") paste0(unlist(x$items), collapse=",") else paste0(c(x$RangeMin, x$RangeMax), collapse=",")}))
+    dvSelections <- unlist(lapply(petConfig$drivers[[1]]$designVariables, function(x) {if("type" %in% names(x) && x$type == "enum") paste0(unlist(x$items), collapse=",") else paste0(c(x$RangeMin, x$RangeMax), collapse=",")}))
     designVariables <- data.frame(VarName=designVariableNames, Type=dvTypes, Selection=dvSelections)
-    objectiveNames <- names(petConfig$drivers$ParameterStudy$objectives)
+    objectiveNames <- names(petConfig$drivers[[1]]$objectives)
   }
     
   
@@ -1652,7 +1652,7 @@ shinyServer(function(input, output, session) {
       }
       dv
     }
-    petConfigRefined$drivers$ParameterStudy$designVariables <- Map(reassignDV, petConfigRefined$drivers$ParameterStudy$designVariables, names(petConfigRefined$drivers$ParameterStudy$designVariables))
+    petConfigRefined$drivers[[1]]$designVariables <- Map(reassignDV, petConfigRefined$drivers[[1]]$designVariables, names(petConfigRefined$drivers[[1]]$designVariables))
     write(toJSON(petConfigRefined, pretty = TRUE, auto_unbox = TRUE), file = file)
   }
   
