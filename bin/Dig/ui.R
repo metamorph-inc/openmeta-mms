@@ -118,20 +118,16 @@ shinyUI(fluidPage(
         )
       )
     ), 
-    tabPanel("Ranges",
+    tabPanel("PET Details",
       br(),
       conditionalPanel(condition = "output.petConfigPresent == true",
         wellPanel(
-          fluidRow(
-            column(6, conditionalPanel(condition = "input.autoRange == false",
-                             actionButton("updateRanges", "Update Ranges"), br(), br()),
-            downloadButton('downloadRanges', 'Download Ranges'),
-            actionButton('exportRanges', 'Export Ranges'), br())
-          ),
+          h4("Driver Configuration"),
+          uiOutput("petDriverConfig"), hr(),
           conditionalPanel(condition = "output.numericDesignVariables == true",
             fluidRow(
               column(12,
-                     h4("Numeric Ranges", align = "center"),
+                     h4("Numeric Ranges"),
                      fluidRow(
                        column(2, h5(strong("Variable Name:"))),
                        column(1, actionButton('applyAllOriginalNumeric', 'Original')),
@@ -148,26 +144,34 @@ shinyUI(fluidPage(
             )
           ),
           conditionalPanel(condition = "output.enumerationDesignVariables == true",
-              fluidRow(
-                column(12,
-                       h4("Enumerated Ranges", align = "center"),
-                       fluidRow(
-                         column(2, h5(strong("Variable Name:"))),
-                         column(1, actionButton('applyAllOriginalEnum', 'Original')),
-                         column(2, h5(strong("Selection:"))),
-                         column(1, actionButton('applyAllRefinedEnum', 'Refined')),
-                         column(2, h5(strong("Selection:"))),
-                         column(4, h5(strong("New Selection:")))
-                       ), br(),
-                       uiOutput("original_enumeration_ranges")
-                )
+            fluidRow(
+              column(12,
+                     h4("Enumerated Ranges"),
+                     fluidRow(
+                       column(2, h5(strong("Variable Name:"))),
+                       column(1, actionButton('applyAllOriginalEnum', 'Original')),
+                       column(2, h5(strong("Selection:"))),
+                       column(1, actionButton('applyAllRefinedEnum', 'Refined')),
+                       column(2, h5(strong("Selection:"))),
+                       column(4, h5(strong("New Selection:")))
+                     ), br(),
+                     uiOutput("original_enumeration_ranges")
               )
-          )
+            )
+          ),
           
           # , fluidRow(
           #   h4("Factor Statistics", align = "center"),
           #   uiOutput("factor_ranges")
           # )
+          hr(),
+          fluidRow(
+            column(6, conditionalPanel(condition = "input.autoRange == false",
+                                       actionButton("updateRanges", "Update Ranges"), br(), br()),
+            uiOutput("petRename"),
+            downloadButton('downloadRanges', 'Download \'pet_config_refined.json\''), br(), br(),
+            actionButton('runRanges', 'Execute New PET'), br())
+          )
         )
       ),
       conditionalPanel(condition = "output.petConfigPresent == false",
@@ -310,8 +314,8 @@ shinyUI(fluidPage(
         column(6,
           wellPanel(
             h4("About"),
-            p(strong("Version:"), "v1.6.0"),
-            p(strong("Date:"), "11/3/2016"),
+            p(strong("Version:"), "v1.7.0"),
+            p(strong("Date:"), "12/9/2016"),
             p(strong("Developer:"), "Metamorph Software"),
             p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )

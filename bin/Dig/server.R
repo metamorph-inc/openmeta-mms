@@ -86,6 +86,7 @@ shinyServer(function(input, output, session) {
   
   petConfigPresent <- !is.null(petConfig)
   
+  # Process PET Configuration File ('pet_config.json') -----------------------
   designVariableNames <- NULL
   numericDesignVariables <- FALSE
   enumeratedDesignVariables <- FALSE
@@ -100,6 +101,8 @@ shinyServer(function(input, output, session) {
     dvSelections <- unlist(lapply(petConfig$drivers[[1]]$designVariables, function(x) {if("type" %in% names(x) && x$type == "enum") paste0(unlist(x$items), collapse=",") else paste0(c(x$RangeMin, x$RangeMax), collapse=",")}))
     designVariables <- data.frame(VarName=designVariableNames, Type=dvTypes, Selection=dvSelections)
     objectiveNames <- names(petConfig$drivers[[1]]$objectives)
+    petConfigNumSamples <- unlist(strsplit(as.character(petConfig$drivers[[1]]$details$Code),'='))[2]
+    petConfigSamplingMethod <- petConfig$drivers[[1]]$details$DOEType
   }
     
   
@@ -1421,6 +1424,24 @@ shinyServer(function(input, output, session) {
     all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
   })
   
+  output$petDriverConfig <- renderUI({
+    fluidRow(
+      column(3, selectInput("petSamplingMethod", "Sampling Method:", choices = c("Full Factorial", "Uniform", "Central Composite", "Opt Latin Hypercube"), selected = petConfigSamplingMethod)),
+      column(3, textInput("petNumSamples", "Num. of Samples:", value = petConfigNumSamples))
+    )
+  })
+  
+  output$petRename <- renderUI({
+    fluidRow(
+      column(6,
+        textInput("newPetName", "New PET Name:", value = "OldName_Refined")
+      )
+    )
+  })
+  
+  
+  
+  
   output$original_numeric_ranges <- renderUI({
     
     lapply(rownames(designVariables), function(row){
@@ -1628,9 +1649,11 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  observeEvent(input$exportRanges, {
+  observeEvent(input$runRanges, {
     if (nzchar(Sys.getenv('DIG_INPUT_CSV'))) {
-      exportRangesFunction(gsub("mergedPET.csv", "pet_config_refined.json", Sys.getenv('DIG_INPUT_CSV')))
+      petConfigRefinedFilename <- gsub("mergedPET.csv", "pet_config_refined.json", Sys.getenv('DIG_INPUT_CSV'))
+      exportRangesFunction(petConfigRefinedFilename)
+      system2("meta_path\\bin\\Python27\\Scripts\\python.exe", c("meta_path\\bin\\UpdatePETParameters.py","--new-name","NewPETRefined"))
     }
   })
   
@@ -1641,6 +1664,7 @@ shinyServer(function(input, output, session) {
   
   exportRangesFunction <- function(file) { 
     petConfigRefined <- petConfig
+    
     reassignDV <- function(dv, name) {
       global_i = which(varNames == name)
       if("type" %in% names(dv) && dv$type == "enum") {
@@ -1653,6 +1677,10 @@ shinyServer(function(input, output, session) {
       dv
     }
     petConfigRefined$drivers[[1]]$designVariables <- Map(reassignDV, petConfigRefined$drivers[[1]]$designVariables, names(petConfigRefined$drivers[[1]]$designVariables))
+    
+    petConfigRefined$drivers[[1]]$details$Code <- paste0("num_samples=", input$petNumSamples)
+    petConfigRefined$drivers[[1]]$details$DOEType <- input$petSamplingMethod
+    
     write(toJSON(petConfigRefined, pretty = TRUE, auto_unbox = TRUE), file = file)
   }
   
