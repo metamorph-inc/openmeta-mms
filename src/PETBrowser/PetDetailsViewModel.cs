@@ -9,6 +9,7 @@ using AVM.DDP;
 using CsvHelper;
 using CsvHelper.Configuration;
 using META;
+using Newtonsoft.Json;
 
 namespace PETBrowser
 {
@@ -16,25 +17,35 @@ namespace PETBrowser
     {
         public class Metric
         {
-            public enum MetricKind
+            public enum MetricDataType
             {
                 Number,
                 String
             }
+
+            public enum MetricKind
+            {
+                DesignVariable,
+                Objective,
+                Constraint,
+                IntermediateVariable,
+                Unknown
+            }
             public string Name { get; set; }
+            public MetricDataType DataType { get; set; }
             public MetricKind Kind { get; set; }
             public double Min { get; set; }
 
             public string MinFormatted
             {
-                get { return Kind == MetricKind.Number ? Min.ToString() : "N/A"; }
+                get { return DataType == MetricDataType.Number ? Min.ToString() : "N/A"; }
             }
 
             public double Max { get; set; }
 
             public string MaxFormatted
             {
-                get { return Kind == MetricKind.Number ? Max.ToString(): "N/A"; }
+                get { return DataType == MetricDataType.Number ? Max.ToString(): "N/A"; }
             }
             public double Sum { get; set; }
             public int Count { get; set; }
@@ -42,7 +53,7 @@ namespace PETBrowser
             public string AverageFormatted
             {
                 get {
-                    if (Kind == MetricKind.String || Count == 0)
+                    if (DataType == MetricDataType.String || Count == 0)
                     {
                         return "N/A";
                     }
@@ -56,7 +67,8 @@ namespace PETBrowser
             public Metric(string name)
             {
                 Name = name;
-                Kind = MetricKind.Number;
+                DataType = MetricDataType.Number;
+                Kind = MetricKind.Unknown;
                 Min = double.MaxValue;
                 Max = double.MinValue;
                 Sum = 0;
@@ -101,6 +113,47 @@ namespace PETBrowser
             Dictionary<string, Metric> metrics = new Dictionary<string, Metric>();
             foreach (var folder in DetailsDataset.Folders)
             {
+                Dictionary<string, Metric.MetricKind> metricKinds = new Dictionary<string, Metric.MetricKind>();
+
+                try
+                {
+                    var jsonFileName = Path.Combine(ResultsDirectory,
+                        folder.Replace("testbench_manifest.json", "mdao_config.json"));
+
+                    using (var reader = File.OpenText(jsonFileName))
+                    {
+                        var serializer = new JsonSerializer();
+                        var mdaoConfig = (PETConfig) serializer.Deserialize(reader, typeof(PETConfig));
+
+                        foreach (var driver in mdaoConfig.drivers)
+                        {
+                            foreach (var designVar in driver.Value.designVariables)
+                            {
+                                metricKinds[designVar.Key] = Metric.MetricKind.DesignVariable;
+                            }
+
+                            foreach (var objective in driver.Value.objectives)
+                            {
+                                metricKinds[objective.Key] = Metric.MetricKind.Objective;
+                            }
+
+                            foreach (var constraint in driver.Value.constraints)
+                            {
+                                metricKinds[constraint.Key] = Metric.MetricKind.Constraint;
+                            }
+
+                            foreach (var intermediateVar in driver.Value.intermediateVariables)
+                            {
+                                metricKinds[intermediateVar.Key] = Metric.MetricKind.IntermediateVariable;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    //Silently ignore mdao_config files that don't exist or can't be read
+                    Console.WriteLine(e);
+                }
 
                 try
                 {
@@ -130,11 +183,16 @@ namespace PETBrowser
                                     if (!metrics.ContainsKey(header))
                                     {
                                         metrics[header] = new Metric(header);
+
+                                        if (metricKinds.ContainsKey(header))
+                                        {
+                                            metrics[header].Kind = metricKinds[header];
+                                        }
                                     }
 
                                     var thisMetric = metrics[header];
 
-                                    if (thisMetric.Kind == Metric.MetricKind.Number)
+                                    if (thisMetric.DataType == Metric.MetricDataType.Number)
                                     {
                                         double doubleValue = 0;
                                         var isDouble = double.TryParse(fieldValue, out doubleValue);
@@ -155,7 +213,7 @@ namespace PETBrowser
                                         }
                                         else
                                         {
-                                            thisMetric.Kind = Metric.MetricKind.String;
+                                            thisMetric.DataType = Metric.MetricDataType.String;
                                         }
                                     }
                                 }
@@ -173,6 +231,8 @@ namespace PETBrowser
 
             var metricsList = new List<Metric>(metrics.Values);
             Metrics = new ListCollectionView(metricsList);
+            Metrics.GroupDescriptions.Add(new PropertyGroupDescription("Kind"));
+            Metrics.SortDescriptions.Add(new SortDescription("Kind", ListSortDirection.Ascending));
             Metrics.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
         }
     }

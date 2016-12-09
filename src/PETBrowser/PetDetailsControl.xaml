@@ -71,11 +71,38 @@
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Kind}" Header="Kind" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding DataType}" Header="Type" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding MinFormatted, Mode=OneWay}" Header="Min" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding MaxFormatted, Mode=OneWay}" Header="Max" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding AverageFormatted, Mode=OneWay}" Header="Average" IsReadOnly="True"></DataGridTextColumn>
             </DataGrid.Columns>
+            <DataGrid.GroupStyle>
+                <!-- Style for groups at top level. -->
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Margin" Value="0,0,0,0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Expander IsExpanded="True" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                                            <Expander.Header>
+                                                <DockPanel>
+                                                    <TextBlock FontWeight="Bold" Text="{Binding Path=Name}" Margin="5,0,0,0" Width="100"/>
+                                                    <TextBlock FontWeight="Bold" Text="{Binding Path=ItemCount}"/>
+                                                </DockPanel>
+                                            </Expander.Header>
+                                            <Expander.Content>
+                                                <ItemsPresenter />
+                                            </Expander.Content>
+                                        </Expander>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
         </DataGrid>
     </Grid>
 </UserControl>

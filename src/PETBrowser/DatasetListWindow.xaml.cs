@@ -297,7 +297,7 @@ namespace PETBrowser
             {
                 var selectedDataset = (Dataset) PetGrid.SelectedItem;
 
-                /*if (selectedDataset.Kind == Dataset.DatasetKind.PetResult)
+                /*if (selectedDataset.DataType == Dataset.DatasetKind.PetResult)
                 {
                     var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
                         DatasetStore.ResultsDirectory);
