@@ -49,5 +49,14 @@ namespace AVM.DDP
         }
         public Dictionary<string, Component> components;
         public Dictionary<string, Driver> drivers;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string GeneratedConfigurationModel;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> SelectedConfigurations;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string PETName;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string MgaFilename;
     }
 }
