@@ -364,18 +364,32 @@ void Main(const std::string& meta_path, CComPtr<IMgaProject> project, CComPtr<IM
 			"reload(site)\n"
 			"import sitecustomize\n"
 			"reload(sitecustomize)\n"
-
-			// pythoncom.py calls LoadLibrary("pythoncom27.dll"), which will load via %PATH%
-			// e.g. Anaconda's pythoncom27.dll doesn't include the correct SxS activation info, so trying to load it results in "An application has made an attempt to load the C runtime library incorrectly."
-			// load our pythoncom27.dll with an explicit path
-			"import imp, os.path\n"
-			"import afxres\n"
-			// FIXME: would this be better : pkg_resources.resource_filename('win32api', 'pythoncom27.dll')
-			"imp.load_dynamic('pythoncom', os.path.join(os.path.dirname(afxres.__file__), 'pythoncom" CYPHY_PYTHON_VERSION ".dll'))\n"
+			"import site\n"
+			"import os.path\n"
 			, Py_file_input, main_namespace, main_namespace, NULL);
 		if (ret == NULL && PyErr_Occurred())
 		{
 			throw python_error(GetPythonError());
+		}
+	}
+	{
+		const char* pythoncomname = "pythoncom" CYPHY_PYTHON_VERSION ".dll";
+		HMODULE pythoncom = GetModuleHandleA(pythoncomname);
+		if (pythoncom == nullptr) {
+			PyObject_RAII ret = PyRun_StringFlags(
+				// pythoncom.py calls LoadLibrary("pythoncom27.dll"), which will load via %PATH%
+				// Anaconda's pythoncom27.dll (for one) doesn't include the correct SxS activation info, so trying to load it results in "An application has made an attempt to load the C runtime library incorrectly."
+				// load our pythoncom27.dll(which we know works) with an explicit path
+
+				"import imp\n"
+				"import afxres\n"
+				// FIXME: would this be better : pkg_resources.resource_filename('win32api', 'pythoncom27.dll')
+				"imp.load_dynamic('pythoncom', os.path.join(os.path.dirname(afxres.__file__), 'pythoncom" CYPHY_PYTHON_VERSION ".dll'))\n"
+				, Py_file_input, main_namespace, main_namespace, NULL);
+			if (ret == NULL && PyErr_Occurred())
+			{
+				throw python_error(GetPythonError());
+			}
 		}
 	}
 	PyObject_RAII pyRootObject;
@@ -511,20 +525,27 @@ void Main(const std::string& meta_path, CComPtr<IMgaProject> project, CComPtr<IM
 		{
 			throw *invokeError.get();
 		}
-		char* params[] = { "runCommand", "labels", NULL };
-		for (char** param = params; *param; param++)
-		{
-			PyObject* pyParam = PyDict_GetItemString(parameters, *param);
-			if (pyParam)
+		PyObject *key, *value;
+		Py_ssize_t pos = 0;
+
+		while (PyDict_Next(parameters, &pos, &key, &value)) {
+			_bstr_t paramName;
+			if (PyString_Check(key)) {
+				paramName = _bstr_t(PyString_AsString(key));
+			}
+			else if (PyUnicode_Check(key)) {
+				paramName = _bstr_t(PyUnicode_AsUnicode(key));
+			}
+			else {
+				continue;
+			}
+			if (PyString_Check(value))
 			{
-				if (PyString_Check(pyParam))
-				{
-					componentParameters[_bstr_t(*param)] = _bstr_t(PyString_AsString(pyParam));
-				}
-				if (PyUnicode_Check(pyParam))
-				{
-					componentParameters[_bstr_t(*param)] = _bstr_t(PyUnicode_AsUnicode(pyParam));
-				}
+				componentParameters[paramName] = _bstr_t(PyString_AsString(value));
+			}
+			if (PyUnicode_Check(value))
+			{
+				componentParameters[paramName] = _bstr_t(PyUnicode_AsUnicode(value));
 			}
 		}
 	}
