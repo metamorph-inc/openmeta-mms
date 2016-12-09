@@ -542,6 +542,7 @@ namespace PETBrowser
                             {
                                 if (mergedConfig.SelectedConfigurations == null)
                                 {
+                                    mergedConfig.SelectedConfigurations = new List<string>();
                                 }
                                 mergedConfig.SelectedConfigurations.AddRange(selectedConfigurations);
                             }
