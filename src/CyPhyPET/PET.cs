@@ -47,6 +47,13 @@ namespace CyPhyPET
             this.Logger = logger;
             this.pet = CyPhyClasses.ParametricExploration.Cast(parameters.CurrentFCO);
             this.outputDirectory = parameters.OutputDirectory;
+            config.MgaFilename = parameters.CurrentFCO.Project.ProjectConnStr.Substring("MGA=".Length);
+            if (parameters.SelectedConfig != null)
+            {
+                config.SelectedConfigurations = new string[] { parameters.SelectedConfig }.ToList();
+            }
+            config.GeneratedConfigurationModel = parameters.GeneratedConfigurationModel;
+            config.PETName = parameters.OriginalCurrentFCOName;
             this.PCCPropertyInputDistributions = new Dictionary<string, string>();
             // Determine type of driver of the Parametric Exploration
             if (this.pet.Children.PCCDriverCollection.Count() == 1)
