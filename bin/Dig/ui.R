@@ -120,7 +120,7 @@ shinyUI(fluidPage(
     ), 
     tabPanel("Ranges",
       br(),
-      conditionalPanel(condition = "output.mappingPresent == true",
+      conditionalPanel(condition = "output.petConfigPresent == true",
         wellPanel(
           fluidRow(
             column(6, conditionalPanel(condition = "input.autoRange == false",
@@ -128,7 +128,7 @@ shinyUI(fluidPage(
             downloadButton('downloadRanges', 'Download Ranges'),
             actionButton('exportRanges', 'Export Ranges'), br())
           ),
-          conditionalPanel(condition = "output.numericMapping == true",
+          conditionalPanel(condition = "output.numericDesignVariables == true",
             fluidRow(
               column(12,
                      h4("Numeric Ranges", align = "center"),
@@ -147,7 +147,7 @@ shinyUI(fluidPage(
               )
             )
           ),
-          conditionalPanel(condition = "output.enumerationMapping == true",
+          conditionalPanel(condition = "output.enumerationDesignVariables == true",
               fluidRow(
                 column(12,
                        h4("Enumerated Ranges", align = "center"),
@@ -170,8 +170,8 @@ shinyUI(fluidPage(
           # )
         )
       ),
-      conditionalPanel(condition = "output.mappingPresent == false",
-        verbatimTextOutput("noMappingMessage")
+      conditionalPanel(condition = "output.petConfigPresent == false",
+        verbatimTextOutput("noPetConfigMessage")
       )
     ),
     tabPanel("Bayesian",
