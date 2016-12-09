@@ -42,6 +42,40 @@ namespace CyPhyPET
             drivers = new Dictionary<string, PETConfig.Driver>()
         };
 
+        public static IEnumerable<IMgaObject> getAncestors(IMgaFCO fco, IMgaObject stopAt = null)
+        {
+            if (fco.ParentModel != null)
+            {
+                IMgaModel parent = fco.ParentModel;
+                while (parent != null && (stopAt == null || parent.ID != stopAt.ID))
+                {
+                    yield return parent;
+                    if (parent.ParentModel == null)
+                    {
+                        break;
+                    }
+                    parent = parent.ParentModel;
+                }
+                fco = parent;
+            }
+            IMgaFolder folder = fco.ParentFolder;
+            while (folder != null && (stopAt == null || folder.ID != stopAt.ID))
+            {
+                yield return folder;
+                folder = folder.ParentFolder;
+            }
+        }
+
+        public static IEnumerable<IMgaObject> getAncestorsAndSelf(IMgaFCO fco, IMgaObject stopAt = null)
+        {
+            yield return fco;
+            foreach (var parent in getAncestors(fco, stopAt))
+            {
+                yield return parent;
+            }
+
+        }
+
         public PET(CyPhyGUIs.IInterpreterMainParameters parameters, CyPhyGUIs.GMELogger logger)
         {
             this.Logger = logger;
@@ -53,7 +87,8 @@ namespace CyPhyPET
                 config.SelectedConfigurations = new string[] { parameters.SelectedConfig }.ToList();
             }
             config.GeneratedConfigurationModel = parameters.GeneratedConfigurationModel;
-            config.PETName = parameters.OriginalCurrentFCOName;
+            config.PETName = "/" + string.Join("/", getAncestors(parameters.CurrentFCO, stopAt: parameters.CurrentFCO.Project.RootFolder).Skip(1) // HACK: MI inserts a "Temporary" folder
+                .getTracedObjectOrSelf(parameters.GetTraceability()).Select(obj => obj.Name).Reverse()) + "/" + parameters.OriginalCurrentFCOName;
             this.PCCPropertyInputDistributions = new Dictionary<string, string>();
             // Determine type of driver of the Parametric Exploration
             if (this.pet.Children.PCCDriverCollection.Count() == 1)
@@ -72,7 +107,7 @@ namespace CyPhyPET
 
                 foreach (var intermediateVar in optimizer.Children.IntermediateVariableCollection)
                 {
-                    var sourcePath = GetSourcePath(null, (MgaFCO) intermediateVar.Impl);
+                    var sourcePath = GetSourcePath(null, (MgaFCO)intermediateVar.Impl);
                     if (sourcePath != null)
                     {
                         var intermVar = new PETConfig.Parameter();
@@ -793,5 +828,24 @@ namespace CyPhyPET
         }
 
         #endregion
+    }
+
+    public static class Extensions
+    {
+        public static IEnumerable<IMgaObject> getTracedObjectOrSelf(this IEnumerable<IMgaObject> enumerable, CyPhyCOMInterfaces.IMgaTraceability traceability)
+        {
+            foreach (var obj in enumerable)
+            {
+                string originalID;
+                if (traceability != null && traceability.TryGetMappedObject(obj.ID, out originalID))
+                {
+                    yield return obj.Project.GetObjectByID(originalID);
+                }
+                else
+                {
+                    yield return obj;
+                }
+            }
+        }
     }
 }
