@@ -225,7 +225,7 @@ namespace PETBrowser
                     ProcessStartInfo psi = new ProcessStartInfo()
                     {
                         FileName = "cmd.exe",
-                        Arguments = String.Format("/S /C \"\"{0}\" \"{1}\" > \"{2}\" 2>&1\"", System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath, logPath),
+                        Arguments = String.Format("/S /C \"\"{0}\" \"{1}\" \"{2}\" > \"{3}\" 2>&1\"", System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath, META.VersionInfo.MetaPath, logPath),
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden,
                         // WorkingDirectory = ,
