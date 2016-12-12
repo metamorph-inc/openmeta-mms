@@ -1557,8 +1557,8 @@ shinyServer(function(input, output, session) {
     if(originalCount > EnumerationMaxDisplay)
       original = paste0("List of ", originalCount, " Configurations.")
     
-    refined <- paste0(levels(filterData()$CfgID), collapse=",")
-    refinedCount <- length(levels(filterData()$CfgID))
+    refined <- paste0(unique(filterData()$CfgID), collapse=",")
+    refinedCount <- length(unique(filterData()$CfgID))
     if(refinedCount > EnumerationMaxDisplay)
       refined = paste0("List of ", refinedCount, " Configurations.")
     if(refined == "")
@@ -1591,7 +1591,7 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$applyRefinedCfgIDs, {
-    refined <- paste0(levels(filterData()$CfgID), collapse=",")
+    refined <- paste0(unique(filterData()$CfgID), collapse=",")
     updateTextInput(session, 'newCfgIDs', value = refined)
   })
   
@@ -1700,10 +1700,19 @@ shinyServer(function(input, output, session) {
 
   observeEvent(input$runRanges, {
     if (nzchar(Sys.getenv('DIG_INPUT_CSV'))) {
-      petConfigRefinedFilename <- gsub("mergedPET.csv", "pet_config_refined.json", Sys.getenv('DIG_INPUT_CSV'))
+      resultsDirectory <- dirname(Sys.getenv('DIG_INPUT_CSV'))
+      projectDirectory <- dirname(resultsDirectory)
+      petConfigRefinedFilename <- file.path(resultsDirectory, "pet_config_refined.json")
       exportRangesFunction(petConfigRefinedFilename)
-      print(paste("New PET Name:", input$newPetName))
-      system2("..\\Python27\\Scripts\\python.exe", args = c("..\\UpdatePETParameters.py", "--new-name", paste0("\"",input$newPetName,"\"")), stdout = "UpdatePETParameters_stdout.log", stderr = "UpdatePETParameters_stderr.log", wait = FALSE)
+      system2("..\\Python27\\Scripts\\python.exe",
+              args = c("..\\UpdatePETParameters.py",
+                       "--pet-config",
+                       petConfigRefinedFilename,
+                       "--new-name",
+                       paste0("\"",input$newPetName,"\"")),
+              stdout = file.path(resultsDirectory, "UpdatePETParameters_stdout.log"),
+              stderr = file.path(resultsDirectory, "UpdatePETParameters_stderr.log"),
+              wait = FALSE)
     }
   })
   
@@ -1729,8 +1738,6 @@ shinyServer(function(input, output, session) {
     
     petConfigRefined$drivers[[1]]$details$Code <- paste0("num_samples=", input$petNumSamples)
     petConfigRefined$drivers[[1]]$details$DOEType <- input$petSamplingMethod
-    
-    petConfigRefined$PETName <- input$newPetName
     
     selectedConfigurations <- strsplit(input$newCfgIDs, ",")
     if(length(unlist(selectedConfigurations)) > 1)
