@@ -152,6 +152,7 @@ if __name__ == '__main__':
 
         parser = argparse.ArgumentParser(description='Re-run a PET with updated parameters.')
         parser.add_argument('--new-name')
+        parser.add_argument('pet_config')
         command_line_args = parser.parse_args()
 
         from win32com.client import DispatchEx
@@ -159,7 +160,7 @@ if __name__ == '__main__':
         from pywintypes import com_error
         import json
         # with open(sys.argv[1]) as input_json:
-        with open("results/pet_config_refined.json") as input_json:
+        with open(command_line_args.pet_config) as input_json:
             args = json.load(input_json)
         project = Dispatch("Mga.MgaProject")
         project.Open("MGA=" + os.path.abspath(args["MgaFilename"]))
