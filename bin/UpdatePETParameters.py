@@ -3,6 +3,7 @@ import sys
 import os
 import os.path
 import json
+import collections
 import imp
 # taken from CyPhyPython:
 #  pythoncom.py calls LoadLibrary("pythoncom27.dll"), which will load via %PATH%
@@ -54,7 +55,7 @@ def start_pdb():
 
 
 # This is the entry point
-def invoke(focusObject, rootObject, componentParameters, **kwargs):
+def invoke(focusObject, rootObject, componentParameters, udmProject, **kwargs):
     if focusObject is not None and focusObject.type.name == "ParameterStudy":
         focusObject = focusObject.parent
     if focusObject is None or focusObject.type.name != "ParametricExploration":
@@ -67,27 +68,62 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
     designVariables = [c for c in parameterStudy.children() if c.type.name == "DesignVariable"]
     var_dict = {}
     for desVar in designVariables:
-        var_dict[desVar.attr('name')] = desVar.Range
+        var_dict[desVar.attr("name")] = desVar.Range
 
     project_dir = os.path.dirname(focusObject.convert_udm2gme().Project.ProjectConnStr[len("MGA="):])
     try:
-        with open(os.path.join(project_dir, "results", "pet_config.json"), "rb") as input_json:
+        with open(os.path.join(project_dir, "results", "pet_config_refined.json"), "rb") as input_json:
             args = json.load(input_json)
     except IOError as e:
         if e.errno == 2:
-            raise CyPhyPython.ErrorMessageException("Produce the file results/pet_config.json first.")
+            raise CyPhyPython.ErrorMessageException("Produce the file results/pet_config_refined.json first.")
         raise
 
     for varName, var in args["drivers"].values()[0]["designVariables"].iteritems():
         if var.get("type") == "enum":
-            var_dict[varName] = ';'.join(map(json.dumps, var["items"]))
+            var_dict[varName] = ";".join(map(json.dumps, var["items"]))
         else:
-            var_dict[varName] = repr(var["RangeMin"]) + ',' + repr(var["RangeMax"])
+            var_dict[varName] = repr(var["RangeMin"]) + "," + repr(var["RangeMax"])
     # TODO: optimizer constraints
 
-    gmeCopy = focusObject.convert_udm2gme().ParentFolder.CopyFCODisp(focusObject.convert_udm2gme())
-    gmeCopy.Name = componentParameters.get("NewPETName", gmeCopy.Name + "_Refined")
-    focusObject = [c for c in focusObject.parent.children() if udm.UdmId2GmeId(c.id) == gmeCopy.ID][0]
+    testing_and_pets = {}
+    queue = collections.deque()
+
+    def get_path(folder):
+        ret = tuple()
+        while folder != folder.Project.RootFolder:
+            ret = (folder.Name,) + ret
+            folder = folder.ParentFolder
+        return ret
+
+    # create copy of PET as specified in NewPETName (if present) re-use Testing and ParametricExplorationFolder
+    # FIXME: this code doesn't handle more than one missing folder
+    mga_project = focusObject.convert_udm2gme().Project
+    queue.append(mga_project.RootFolder)
+    while queue:
+        folder = queue.pop()
+        testing_and_pets[get_path(folder)] = folder
+        for child_folder in (f for f in folder.ChildFolders if f.MetaBase.Name in ("ParametricExplorationFolder", "Testing")):
+            queue.append(child_folder)
+
+    new_name = componentParameters.get("NewPETName", "/" + "/".join(get_path(focusObject.convert_udm2gme().ParentFolder)) + "/" + focusObject.name + "_Refined")
+    new_folders = tuple(new_name.split("/")[1:-1])
+    pet_folder, testing_folder = None, None
+    for i in range(len(new_folders), 0, -1):
+        pet_folder = testing_and_pets.get(new_folders[:i])
+        if pet_folder is not None and pet_folder.MetaBase.Name == "ParametricExplorationFolder":
+            break
+        else:
+            pet_folder = None
+        testing_folder = testing_and_pets.get(new_folders[:i-1])
+        if testing_folder is not None and testing_folder.MetaBase.Name in ("ParametricExplorationFolder", "Testing"):
+            pet_folder = testing_folder.CreateFolder(mga_project.RootMeta.RootFolder.GetDefinedFolderByNameDisp("ParametricExplorationFolder", True))
+            pet_folder.Name = new_name.split("/")[-2]
+            break
+
+    gmeCopy = pet_folder.CopyFCODisp(focusObject.convert_udm2gme())
+    gmeCopy.Name = new_name.split("/")[-1]
+    focusObject = udmProject.convert_gme2udm(gmeCopy)
     parameterStudy = [c for c in focusObject.children() if c.type.name == "ParameterStudy"][0]
     designVariables = [c for c in parameterStudy.children() if c.type.name == "DesignVariable"]
     for desVar in designVariables:
@@ -123,7 +159,7 @@ if __name__ == '__main__':
         from pywintypes import com_error
         import json
         # with open(sys.argv[1]) as input_json:
-        with open("results/pet_config.json") as input_json:
+        with open("results/pet_config_refined.json") as input_json:
             args = json.load(input_json)
         project = Dispatch("Mga.MgaProject")
         project.Open("MGA=" + os.path.abspath(args["MgaFilename"]))
@@ -195,7 +231,7 @@ if __name__ == '__main__':
         # master.Initialize(project._oleobj_.QueryInterface(pythoncom.IID_IUnknown))
         results = master.RunInTransactionWithConfigLight(config_light)
 
-        project.Save("MGA=debug.mga", True)
+        project.Save("MGA=PET_debug.mga", True)
         project.Close(True)
 
         # print(cyPhyPython.ComponentParameter())
