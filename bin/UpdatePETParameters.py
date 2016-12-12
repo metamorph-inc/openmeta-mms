@@ -72,7 +72,8 @@ def invoke(focusObject, rootObject, componentParameters, udmProject, **kwargs):
 
     project_dir = os.path.dirname(focusObject.convert_udm2gme().Project.ProjectConnStr[len("MGA="):])
     try:
-        with open(os.path.join(project_dir, "results", "pet_config_refined.json"), "rb") as input_json:
+        pet_config_filename = componentParameters.get("pet_config_filename", os.path.join(project_dir, "results", "pet_config_refined.json"))
+        with open(pet_config_filename, "rb") as input_json:
             args = json.load(input_json)
     except IOError as e:
         if e.errno == 2:
@@ -152,7 +153,7 @@ if __name__ == '__main__':
 
         parser = argparse.ArgumentParser(description='Re-run a PET with updated parameters.')
         parser.add_argument('--new-name')
-        parser.add_argument('pet_config')
+        parser.add_argument('--pet-config')
         command_line_args = parser.parse_args()
 
         from win32com.client import DispatchEx
@@ -184,6 +185,7 @@ if __name__ == '__main__':
         DISPATCH_PROPERTYGET = 0x2
         DISPATCH_PROPERTYPUT = 0x4
         cyPhyPython._oleobj_.Invoke(invoke_id, 0, DISPATCH_PROPERTYPUT, 0, 'script_file', os.path.basename(__file__))
+        cyPhyPython._oleobj_.Invoke(invoke_id, 0, DISPATCH_PROPERTYPUT, 0, 'pet_config_filename', command_line_args.pet_config)
         cyPhyPython._oleobj_.Invoke(invoke_id, 0, DISPATCH_PROPERTYPUT, 0, 'NewPETName', command_line_args.new_name)
         cyPhyPython.InvokeEx(project, pet, Dispatch("Mga.MgaFCOs"), 128)
 
