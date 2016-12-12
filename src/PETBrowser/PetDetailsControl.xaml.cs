@@ -61,5 +61,21 @@ namespace PETBrowser
             //    "Error loading datasets", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        private void MgaFilename_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                var mgaPath = this.ViewModel.MgaFilePath;
+
+                //Explorer doesn't accept forward slashes in paths
+                mgaPath = mgaPath.Replace("/", "\\");
+
+                Process.Start("explorer.exe", "/select,\"" + mgaPath + "\"");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
+            }
+        }
     }
 }

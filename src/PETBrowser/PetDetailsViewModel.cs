@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -78,6 +79,8 @@ namespace PETBrowser
 
         public Dataset DetailsDataset { get; set; }
         public MetaTBManifest Manifest { get; set; }
+        public string MgaFilename { get; set; }
+        public string MgaFilePath { get; set; }
         public int RecordCount { get; set; }
         public ICollectionView Metrics { get; set; }
         private string ResultsDirectory { get; set; }
@@ -96,10 +99,39 @@ namespace PETBrowser
             DetailsDataset = dataset;
             ResultsDirectory = resultsDirectory;
             RecordCount = 0;
+            MgaFilename = "";
+            MgaFilePath = "";
             if (DetailsDataset.Kind == Dataset.DatasetKind.PetResult)
             {
                 var datasetPath = System.IO.Path.Combine(resultsDirectory, DetailsDataset.Folders[0]);
                 Manifest = MetaTBManifest.Deserialize(datasetPath);
+
+                try
+                {
+                    var jsonFileName = Path.Combine(ResultsDirectory,
+                        DetailsDataset.Folders[0].Replace("testbench_manifest.json", "mdao_config.json"));
+
+                    using (var reader = File.OpenText(jsonFileName))
+                    {
+                        var serializer = new JsonSerializer();
+                        var mdaoConfig = (PETConfig) serializer.Deserialize(reader, typeof(PETConfig));
+
+                        if (!string.IsNullOrEmpty(mdaoConfig.MgaFilename))
+                        {
+                            MgaFilePath = mdaoConfig.MgaFilename;
+                            MgaFilename = Path.GetFileName(MgaFilePath);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occurred reading mdao_config.json: ");
+                    Console.WriteLine(e);
+
+                    Trace.TraceError("Error occurred reading mdao_config.json: ");
+                    Trace.TraceError(e.ToString());
+                }
+
                 ComputeStatistics();
             }
             else
