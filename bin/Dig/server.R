@@ -103,6 +103,10 @@ shinyServer(function(input, output, session) {
     objectiveNames <- names(petConfig$drivers[[1]]$objectives)
     petConfigNumSamples <- unlist(strsplit(as.character(petConfig$drivers[[1]]$details$Code),'='))[2]
     petConfigSamplingMethod <- petConfig$drivers[[1]]$details$DOEType
+    petGeneratedConfigurationModel <- petConfig$GeneratedConfigurationModel
+    petSelectedConfigurations <- petConfig$SelectedConfigurations
+    petName <- petConfig$PETName
+    petMgaName <- petConfig$MgaFilename
   }
     
   
@@ -1433,14 +1437,14 @@ shinyServer(function(input, output, session) {
   
   output$petRename <- renderUI({
     fluidRow(
-      column(6,
-        textInput("newPetName", "New PET Name:", value = "OldName_Refined")
-      )
+      column(12, h5(strong("Generated Configuration Model: ")), textOutput("generatedConfigurationModelText")),
+      column(12, h5(strong("Current PET Name: ")), textOutput("currentPetNameText"), br()),
+      column(12, textInput("newPetName", "New PET Name:", value = paste0(petName, "_Refined")))
     )
   })
   
-  
-  
+  output$generatedConfigurationModelText <- renderText(petGeneratedConfigurationModel)
+  output$currentPetNameText <- renderText(petName)
   
   output$original_numeric_ranges <- renderUI({
     
@@ -1544,6 +1548,51 @@ shinyServer(function(input, output, session) {
         )
       }
     })
+  })
+  
+  output$original_configuration_ranges <- renderUI({
+    
+    original <- paste0(petSelectedConfigurations, collapse=",")
+    originalCount <- length(petSelectedConfigurations)
+    if(originalCount > EnumerationMaxDisplay)
+      original = paste0("List of ", originalCount, " Configurations.")
+    
+    refined <- paste0(levels(filterData()$CfgID), collapse=",")
+    refinedCount <- length(levels(filterData()$CfgID))
+    if(refinedCount > EnumerationMaxDisplay)
+      refined = paste0("List of ", refinedCount, " Configurations.")
+    if(refined == "")
+      refined = "No configurations available."
+    
+    input_selection <- NULL
+    # if(importFlags$ranges){
+    #   input_selection <- importData[[paste0('newSelection', global_index
+    #   NULL #This makes sure nothing appears in the UI
+    # }
+    
+    fluidRow(
+      column(2, h5(strong("Configuration Name(s)"))),
+      column(1, actionButton('applyOriginalCfgIDs', 'Apply')),
+      column(2, h5(original)),
+      column(1, actionButton('applyRefinedCfgIDs', 'Apply')),
+      column(2, h5(refined)),
+      column(4,
+             textInput('newCfgIDs',
+                       NULL,
+                       placeholder = "Enter selection",
+                       value = input_selection)
+      )
+    )
+  })
+  
+  observeEvent(input$applyOriginalCfgIDs, {
+    original <- paste0(petSelectedConfigurations, collapse=",")
+    updateTextInput(session, 'newCfgIDs', value = original)
+  })
+  
+  observeEvent(input$applyRefinedCfgIDs, {
+    refined <- paste0(levels(filterData()$CfgID), collapse=",")
+    updateTextInput(session, 'newCfgIDs', value = refined)
   })
   
   # Pull values from petConfig.json File
@@ -1653,7 +1702,8 @@ shinyServer(function(input, output, session) {
     if (nzchar(Sys.getenv('DIG_INPUT_CSV'))) {
       petConfigRefinedFilename <- gsub("mergedPET.csv", "pet_config_refined.json", Sys.getenv('DIG_INPUT_CSV'))
       exportRangesFunction(petConfigRefinedFilename)
-      system2("meta_path\\bin\\Python27\\Scripts\\python.exe", c("meta_path\\bin\\UpdatePETParameters.py","--new-name","NewPETRefined"))
+      print(paste("New PET Name:", input$newPetName))
+      system2("..\\Python27\\Scripts\\python.exe", args = c("..\\UpdatePETParameters.py", "--new-name", paste0("\"",input$newPetName,"\"")), stdout = "UpdatePETParameters_stdout.log", stderr = "UpdatePETParameters_stderr.log", wait = FALSE)
     }
   })
   
@@ -1670,7 +1720,6 @@ shinyServer(function(input, output, session) {
       if("type" %in% names(dv) && dv$type == "enum") {
         dv$items <- unlist(strsplit(input[[paste0('newSelection', global_i)]], ","))
       } else {
-        print(paste("Class:",class(input[[paste0('newMin', global_i)]]),"Value:", input[[paste0('newMin', global_i)]]))
         dv$RangeMin <- as.numeric(input[[paste0('newMin', global_i)]])
         dv$RangeMax <- as.numeric(input[[paste0('newMax', global_i)]])
       }
@@ -1680,6 +1729,14 @@ shinyServer(function(input, output, session) {
     
     petConfigRefined$drivers[[1]]$details$Code <- paste0("num_samples=", input$petNumSamples)
     petConfigRefined$drivers[[1]]$details$DOEType <- input$petSamplingMethod
+    
+    petConfigRefined$PETName <- input$newPetName
+    
+    selectedConfigurations <- strsplit(input$newCfgIDs, ",")
+    if(length(unlist(selectedConfigurations)) > 1)
+      selectedConfigurations <- unlist(selectedConfigurations)
+    petConfigRefined$SelectedConfigurations <- selectedConfigurations
+    
     
     write(toJSON(petConfigRefined, pretty = TRUE, auto_unbox = TRUE), file = file)
   }

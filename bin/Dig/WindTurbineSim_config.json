@@ -3,22 +3,13 @@
     "TestWindTurbine": {
       "parameters": {
         "JTurbine": {
-          "source": [
-            "ParameterStudy",
-            "modelica.jturbine"
-          ]
+          "source": ["ParameterStudy", "modelica.jturbine"]
         },
         "Ratio": {
-          "source": [
-            "ParameterStudy",
-            "modelica.ratio"
-          ]
+          "source": ["ParameterStudy", "modelica.ratio"]
         },
         "Rho": {
-          "source": [
-            "ParameterStudy",
-            "modelica.rho"
-          ]
+          "source": ["ParameterStudy", "modelica.rho"]
         }
       },
       "unknowns": {
@@ -49,16 +40,10 @@
       },
       "objectives": {
         "Settle": {
-          "source": [
-            "TestWindTurbine",
-            "PowerOutput"
-          ]
+          "source": ["TestWindTurbine", "PowerOutput"]
         },
         "CoupAmp": {
-          "source": [
-            "TestWindTurbine",
-            "IntegratedEnergy"
-          ]
+          "source": ["TestWindTurbine", "IntegratedEnergy"]
         }
       },
       "details": {
@@ -67,5 +52,9 @@
         "DOEType": "Uniform"
       }
     }
-  }
+  },
+  "GeneratedConfigurationModel": "Exported-Configurations-at--04-15--20-46-05",
+  "SelectedConfigurations": ["cfg1"],
+  "PETName": "/Testing/Parametric Studies/WindTurbinePET",
+  "MgaFilename": "C:\\Users\\Tim\\Documents\\wind-turbine\\WindTurbine.mga"
 }

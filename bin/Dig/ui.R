@@ -124,6 +124,20 @@ shinyUI(fluidPage(
         wellPanel(
           h4("Driver Configuration"),
           uiOutput("petDriverConfig"), hr(),
+          fluidRow(
+            column(12,
+                   h4("Design Configurations"),
+                   fluidRow(
+                     column(2),
+                     column(1, h5(strong('Original'))),
+                     column(2, h5(strong("Selection:"))),
+                     column(1, h5(strong('Refined'))),
+                     column(2, h5(strong("Selection:"))),
+                     column(4, h5(strong("New Selection:")))
+                   ), br(),
+                   uiOutput("original_configuration_ranges")
+            )
+          ), hr(),
           conditionalPanel(condition = "output.numericDesignVariables == true",
             fluidRow(
               column(12,
@@ -159,7 +173,6 @@ shinyUI(fluidPage(
               )
             )
           ),
-          
           # , fluidRow(
           #   h4("Factor Statistics", align = "center"),
           #   uiOutput("factor_ranges")
