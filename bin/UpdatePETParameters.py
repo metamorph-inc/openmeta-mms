@@ -169,6 +169,8 @@ if __name__ == '__main__':
         project.BeginTransactionInNewTerr()
         try:
             pet = project.RootFolder.GetObjectByPathDisp(args["PETName"].replace("/", "/@"))
+            if pet is None:
+                raise ValueError("Couldn't find PET '{}'".format(args["PETName"]))
         finally:
             project.CommitTransaction()
 
@@ -234,8 +236,8 @@ if __name__ == '__main__':
         # master.Initialize(project._oleobj_.QueryInterface(pythoncom.IID_IUnknown))
         results = master.RunInTransactionWithConfigLight(config_light)
 
-        project.Save("MGA=PET_debug.mga", True)
-        project.Close(True)
+        project.Save(project.ProjectConnStr + "_PET_debug.mga", True)
+        project.Close(False)
 
         # print(cyPhyPython.ComponentParameter())
 
