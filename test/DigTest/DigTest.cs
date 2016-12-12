@@ -95,15 +95,17 @@ namespace DigTest
                     /*                             RANGES TAB                              */
 
                     driver.FindElement(By.CssSelector("a[data-value=\"Ranges\"]")).Click();
-                    driver.FindElement(By.CssSelector("button[id=\"applyAllOriginalNumeric\"]")).Click();
+
+                    //driver.Wait (By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Displayed;
+
+                    driver.FindElement(By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
                     IWait<IWebDriver> wait9 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
                     Assert.Equal("80", wait9.Until(driver1 => driver.FindElement(By.Id("newMin2")).GetAttribute("value")));
+
                     
-
-                    driver.FindElement(By.CssSelector("button[id=\"applyAllRefinedNumeric\"]")).Click();
+                    driver.FindElement(By.CssSelector("button#applyAllRefinedNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
                     IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
-                    Assert.Equal("119.999261733", wait10.Until(driver1 => driver.FindElement(By.Id("newMax2")).GetAttribute("value")));
-
+                    Assert.True(wait10.Until(driver1 => driver.FindElement(By.Id("newMax3")).GetAttribute("value") == "1.4999909657"));
 
 
 
