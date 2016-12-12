@@ -81,6 +81,7 @@ namespace PETBrowser
         public MetaTBManifest Manifest { get; set; }
         public string MgaFilename { get; set; }
         public string MgaFilePath { get; set; }
+        public string PetPath { get; set; }
         public int RecordCount { get; set; }
         public ICollectionView Metrics { get; set; }
         private string ResultsDirectory { get; set; }
@@ -101,6 +102,7 @@ namespace PETBrowser
             RecordCount = 0;
             MgaFilename = "";
             MgaFilePath = "";
+            PetPath = "";
             if (DetailsDataset.Kind == Dataset.DatasetKind.PetResult)
             {
                 var datasetPath = System.IO.Path.Combine(resultsDirectory, DetailsDataset.Folders[0]);
@@ -120,6 +122,11 @@ namespace PETBrowser
                         {
                             MgaFilePath = mdaoConfig.MgaFilename;
                             MgaFilename = Path.GetFileName(MgaFilePath);
+                        }
+
+                        if (!string.IsNullOrEmpty(mdaoConfig.PETName))
+                        {
+                            PetPath = mdaoConfig.PETName;
                         }
                     }
                 }

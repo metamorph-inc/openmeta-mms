@@ -85,7 +85,8 @@ namespace PETBrowser
 
                             if (!string.IsNullOrEmpty(mdaoConfig.PETName))
                             {
-                                name = mdaoConfig.PETName;
+                                var splitName = mdaoConfig.PETName.Split('/');
+                                name = splitName.Last();
                             }
                             else
                             {
