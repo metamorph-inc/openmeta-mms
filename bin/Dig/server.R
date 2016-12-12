@@ -1727,7 +1727,12 @@ shinyServer(function(input, output, session) {
     reassignDV <- function(dv, name) {
       global_i = which(varNames == name)
       if("type" %in% names(dv) && dv$type == "enum") {
-        dv$items <- unlist(strsplit(input[[paste0('newSelection', global_i)]], ","))
+        selection <- strsplit(input[[paste0('newSelection', global_i)]], ",")
+        if (length(unlist(selection)) > 1) {
+          dv$items <- unlist(selection)
+        } else {
+          dv$items <- selection
+        }
       } else {
         dv$RangeMin <- as.numeric(input[[paste0('newMin', global_i)]])
         dv$RangeMax <- as.numeric(input[[paste0('newMax', global_i)]])
