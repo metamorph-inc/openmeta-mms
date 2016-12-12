@@ -76,22 +76,35 @@ namespace PETBrowser
                 {
                     if (!datasets.ContainsKey(time))
                     {
-                        var names = new List<string>();
-
                         using (var mdaoFile = File.OpenText(mdaoName))
-                        using (var jsonReader = new JsonTextReader(mdaoFile))
                         {
-                            var mdaoJson = (JObject)JToken.ReadFrom(jsonReader);
+                            var serializer = new JsonSerializer();
+                            var mdaoConfig = (PETConfig) serializer.Deserialize(mdaoFile, typeof(PETConfig));
 
-                            names.AddRange(((JObject)mdaoJson["components"]).Properties().Select(property => property.Name));
+                            var name = "";
+
+                            if (!string.IsNullOrEmpty(mdaoConfig.PETName))
+                            {
+                                name = mdaoConfig.PETName;
+                            }
+                            else
+                            {
+                                //Fall back to list of components when we don't have the PET name available in
+                                //mdao_config.json (older PET runs from before we added it to the config file)
+                                var names = new List<string>();
+
+                                names.AddRange(mdaoConfig.components.Keys);
+
+                                var nameBuilder = new StringBuilder();
+                                nameBuilder.Append("[");
+                                nameBuilder.Append(string.Join(",", names));
+                                nameBuilder.Append("]");
+                                name = nameBuilder.ToString();
+                            }
+
+                            datasets[time] = new Dataset(Dataset.DatasetKind.PetResult, time, name);
                         }
-                        var nameBuilder = new StringBuilder();
-                        nameBuilder.Append("[");
-                        nameBuilder.Append(string.Join(",", names));
-                        nameBuilder.Append("]");
-                        var name = nameBuilder.ToString();
-
-                        datasets[time] = new Dataset(Dataset.DatasetKind.PetResult, time, name);
+                        
                     }
 
                     var thisDataset = datasets[time];
