@@ -433,5 +433,8 @@ shinyUI(fluidPage(
       h3("Constants:"),
       uiOutput("constants")
     )
+  ),
+  tags$head(tags$style("
+    .uqVar{height:250px;}")
   )
 ))

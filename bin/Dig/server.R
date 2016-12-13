@@ -77,8 +77,8 @@ shinyServer(function(input, output, session) {
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
     
     # Useful test setups:
-    raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
+    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    # mapping = read.csv("../../../results/mappingPET.csv", fill=T)
     # raw = read.csv("../data.csv", fill=T)
     # raw = iris
     
@@ -1749,7 +1749,7 @@ shinyServer(function(input, output, session) {
       else
         this_direction <- "Output"
 
-      fluidRow(
+      fluidRow(class = "uqVar", column(12,
         # Type select
         fluidRow(
           hr(),
@@ -1761,18 +1761,18 @@ shinyServer(function(input, output, session) {
                    choices = var_directions,
                    selected = this_direction)
           ),
-          column(4,
-                 bootstrapPage(
-                   br(),
-                   actionButton(paste0("add", var), "Add", class = "btn btn-success")
-                 )
+          column(4# ,
+                 # bootstrapPage(
+                 #   br(),
+                 #   actionButton(paste0("add", var), "Add", class = "btn btn-success")
+                 # )
           )
         ),
-        conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Output'")),
-          br(), br(), br(), br(), br(), br()
-        ),
+        # conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Output'")),
+        #   br(), br(), br(), br(), br(), br()
+        # ),
         conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Input'")),
-          # Gaussia
+          # Gaussian
           fluidRow(
             column(4, 
                    checkboxInput(
@@ -1805,7 +1805,7 @@ shinyServer(function(input, output, session) {
             
           )
         )
-      )
+      ))
     })
     #print("Done with bayesianUI()")
   })
@@ -1852,7 +1852,7 @@ shinyServer(function(input, output, session) {
                       max(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
                       max(filtered_raw_plus_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
-        fluidRow(
+        fluidRow(class = "uqVar",
           column(12,
                  renderPlot({
                    hist(filtered_raw_plus()[[var]],
@@ -1880,7 +1880,7 @@ shinyServer(function(input, output, session) {
                            col="orange", lwd=2)
                    }
                    box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
-                 }, height = 243)
+                 }, height = 248)
           )
         )
       })
