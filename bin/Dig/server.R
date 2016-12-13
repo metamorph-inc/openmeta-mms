@@ -1430,19 +1430,21 @@ shinyServer(function(input, output, session) {
   
   output$petDriverConfig <- renderUI({
     fluidRow(
-      column(3, selectInput("petSamplingMethod", "Sampling Method:", choices = c("Full Factorial", "Uniform", "Central Composite", "Opt Latin Hypercube"), selected = petConfigSamplingMethod)),
-      column(3, textInput("petNumSamples", "Num. of Samples:", value = petConfigNumSamples))
+      column(3, selectInput("petSamplingMethod", "New Sampling Method:", choices = c("Full Factorial", "Uniform", "Central Composite", "Opt Latin Hypercube"), selected = petConfigSamplingMethod)),
+      column(3, textInput("petNumSamples", "New Number of Samples:", value = petConfigNumSamples))
     )
   })
   
   output$petRename <- renderUI({
     fluidRow(
-      column(12, h5(strong("Generated Configuration Model: ")), textOutput("generatedConfigurationModelText")),
-      column(12, h5(strong("Current PET Name: ")), textOutput("currentPetNameText"), br()),
+      column(12, h5(strong("Original MGA Filename: ")), textOutput("mgaFilenameText")),
+      column(12, h5(strong("Original PET Name: ")), textOutput("currentPetNameText"), br()),
       column(12, textInput("newPetName", "New PET Name:", value = paste0(petName, "_Refined")))
     )
   })
   
+  output$originalDriverSettings <- renderText(paste(petConfigSamplingMethod," sampling with 'num_samples=", petConfigNumSamples,"' yielded ", nrow(raw), " points.", sep = ""))
+  output$mgaFilenameText <- renderText(petMgaName)
   output$generatedConfigurationModelText <- renderText(petGeneratedConfigurationModel)
   output$currentPetNameText <- renderText(petName)
   

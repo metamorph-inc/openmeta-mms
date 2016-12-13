@@ -123,10 +123,17 @@ shinyUI(fluidPage(
       conditionalPanel(condition = "output.petConfigPresent == true",
         wellPanel(
           h4("Driver Configuration"),
+          fluidRow(
+            column(6,
+                   h5(strong('Original Driver Settings: ')),
+                   textOutput("originalDriverSettings"))
+          ), br(),
           uiOutput("petDriverConfig"), hr(),
           fluidRow(
             column(12,
                    h4("Design Configurations"),
+                   h5(strong("Generated Configuration Model: ")),
+                   textOutput("generatedConfigurationModelText"),
                    fluidRow(
                      column(2),
                      column(1, h5(strong('Original'))),
@@ -179,10 +186,12 @@ shinyUI(fluidPage(
           # )
           hr(),
           fluidRow(
-            column(6, conditionalPanel(condition = "input.autoRange == false",
-                                       actionButton("updateRanges", "Update Ranges"), br(), br()),
+            column(6,
+            # conditionalPanel(condition = "input.autoRange == false",
+            #                            actionButton("updateRanges", "Update Ranges"), br(), br()),
+            h4("PET Name"),
             uiOutput("petRename"),
-            downloadButton('downloadRanges', 'Download \'pet_config_refined.json\''), br(), br(),
+            # downloadButton('downloadRanges', 'Download \'pet_config_refined.json\''), br(), br(),
             actionButton('runRanges', 'Execute New PET'), br())
           )
         )
