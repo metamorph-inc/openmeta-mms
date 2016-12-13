@@ -86,6 +86,10 @@ namespace CyPhyPET
             {
                 config.SelectedConfigurations = new string[] { parameters.SelectedConfig }.ToList();
             }
+            else
+            {
+                config.SelectedConfigurations = new string[] { parameters.OriginalCurrentFCOName }.ToList();
+            }
             config.GeneratedConfigurationModel = parameters.GeneratedConfigurationModel;
             config.PETName = "/" + string.Join("/", getAncestors(parameters.CurrentFCO, stopAt: parameters.CurrentFCO.Project.RootFolder).Skip(1) // HACK: MI inserts a "Temporary" folder
                 .getTracedObjectOrSelf(parameters.GetTraceability()).Select(obj => obj.Name).Reverse()) + "/" + parameters.OriginalCurrentFCOName;
