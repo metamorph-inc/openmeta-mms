@@ -35,7 +35,7 @@ namespace DigTest
             {
                 try
                 {
-                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/WindTurbineSimmerged.csv"));
+                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/WindTurbineSim_mergedPET.csv"));
 
                     driver.Navigate().GoToUrl(wrapper.url);
                     IWait<IWebDriver> wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
@@ -94,7 +94,7 @@ namespace DigTest
 
                     /*                             RANGES TAB                              */
 
-                    driver.FindElement(By.CssSelector("a[data-value=\"Ranges\"]")).Click();
+                    driver.FindElement(By.CssSelector("a[data-value=\"PET Details\"]")).Click();
 
                     //driver.Wait (By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Displayed;
 
@@ -105,7 +105,7 @@ namespace DigTest
                     
                     driver.FindElement(By.CssSelector("button#applyAllRefinedNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
                     IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
-                    Assert.True(wait10.Until(driver1 => driver.FindElement(By.Id("newMax3")).GetAttribute("value") == "1.4999909657"));
+                    Assert.True(wait10.Until(driver1 => driver.FindElement(By.Id("newMax3")).GetAttribute("value") == "1.499990966"));
 
 
 
