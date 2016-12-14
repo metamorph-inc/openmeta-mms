@@ -73,8 +73,8 @@ shinyServer(function(input, output, session) {
     # raw = read.csv("RegressionTesting_data.csv", fill=T)
     # petConfig = read.csv("RegressionTesting_config.json")
     
-    raw = read.csv("WindTurbineSim_data.csv", fill=T)
-    petConfig = fromJSON("WindTurbineSim_config.json")
+    raw = read.csv("WindTurbineSim_mergedPET.csv", fill=T)
+    petConfig = fromJSON("WindTurbineSim_pet_config.json")
     
     # Useful test setups:
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
