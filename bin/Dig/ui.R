@@ -118,7 +118,7 @@ shinyUI(fluidPage(
         )
       )
     ), 
-    tabPanel("PET Details",
+    tabPanel("PET Refinement",
       br(),
       conditionalPanel(condition = "output.petConfigPresent == true",
         wellPanel(
@@ -189,7 +189,7 @@ shinyUI(fluidPage(
             column(6,
             # conditionalPanel(condition = "input.autoRange == false",
             #                            actionButton("updateRanges", "Update Ranges"), br(), br()),
-            h4("PET Name"),
+            h4("PET Details"),
             uiOutput("petRename"),
             # downloadButton('downloadRanges', 'Download \'pet_config_refined.json\''), br(), br(),
             actionButton('runRanges', 'Execute New PET'), br())
