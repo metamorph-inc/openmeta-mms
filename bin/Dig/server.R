@@ -161,8 +161,10 @@ shinyServer(function(input, output, session) {
   
   initImport <- observeEvent(input$importSession, {
     print("in import session")
-    if(is.null(input$loadSessionName))
+    if(input$loadSessionName == ""){
       path <- fileChoose()
+      req(path)
+    }
     else
       path <- input$loadSessionName
     req(file.exists(path))

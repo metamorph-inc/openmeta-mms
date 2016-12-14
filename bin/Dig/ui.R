@@ -420,14 +420,19 @@ shinyUI(fluidPage(
           wellPanel(
             h4("Session Options"),
             strong("Save Session"),
-            textInput("sessionName", NULL, placeholder = "Enter a filename..."),
-            tags$div(title = "Download current settings of visualizer.",
-                     downloadButton("exportSession", "Download")),
-            br(), br(),
+            fluidRow(
+              column(2, tags$div(title = "Download current settings of visualizer.",
+                                 downloadButton("exportSession", "Download"))),
+              column(10, textInput("sessionName", NULL, placeholder = "[Optional] Enter a filename..."))
+            ),
+            br(), 
             strong("Load Session"), br(),
-            tags$div(title = "Load a saved session.",
-                     actionButton('importSession', 'Choose File')),
-            textInput("loadSessionName", NULL, placeholder = "Enter a file path to open...")
+            fluidRow(
+              column(2, tags$div(title = "Load a saved session.",
+                                 actionButton('importSession', 'Upload File'))),
+              column(10, textInput("loadSessionName", NULL, placeholder = "[Optional] Enter a specific file path..."))
+            ),
+            code("NOTE: This feature does not save the results of analysis performed in the 'Uncertainty Quantification' tab.")
           )
         )
       ),
