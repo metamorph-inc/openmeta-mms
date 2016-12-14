@@ -435,8 +435,8 @@ shinyUI(fluidPage(
         column(6,
           wellPanel(
             h4("About"),
-            p(strong("Version:"), "v1.7.0"),
-            p(strong("Date:"), "12/9/2016"),
+            p(strong("Version:"), "v1.8.0"),
+            p(strong("Date:"), "12/16/2016"),
             p(strong("Developer:"), "Metamorph Software"),
             p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )
