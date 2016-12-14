@@ -152,9 +152,9 @@ namespace DigTest
 
                     /*  Rank data table by modelica.jturbine, select first data point, and color */
                     driver.FindElement(By.CssSelector("a[data-value=\"Data Table\"]")).Click();
-                    IWebElement activateRanking = driver.FindElement(By.CssSelector("input#activateRanking"));
+                    IWebElement activateSimpleRanking = driver.FindElement(By.CssSelector("input[value=\"Simple Metric w/ TxFx\"]"));
                     Thread.Sleep(50);
-                    activateRanking.Click();
+                    activateSimpleRanking.Click();
 
                     driver.FindElement(By.CssSelector("div[class=\"selectize-input items not-full has-options\"]")).Click();
                     IWait<IWebDriver> wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
@@ -203,15 +203,18 @@ namespace DigTest
                     // Save Current Session
                     driver.FindElement(By.Id("sessionName")).Click();
                     driver.FindElement(By.Id("sessionName")).SendKeys("DigTestSettings");
+                    Thread.Sleep(50); // Wait for text field to populate
                     driver.FindElement(By.Id("exportSession")).Click();
 
                     // Change data coloring to Max/Min in pairs tab
                     driver.FindElement(By.CssSelector("a[data-value=\"Pairs Plot\"]")).Click();
                     RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click());
                     RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click());
-                    driver.FindElement(By.CssSelector("a[data-value=\"Options\"]")).Click();
 
                     // Load earlier session
+                    driver.FindElement(By.CssSelector("a[data-value=\"Options\"]")).Click();
+                    IWait<IWebDriver> option_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
+                    Assert.True(option_wait0.Until(driver1 => driver.FindElement(By.Id("loadSessionName")).Displayed));
                     driver.FindElement(By.Id("loadSessionName")).Click();
                     driver.FindElement(By.Id("loadSessionName")).SendKeys(path);
                     driver.FindElement(By.Id("importSession")).Click();

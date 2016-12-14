@@ -721,8 +721,8 @@ shinyServer(function(input, output, session) {
                    yRange <- yUpper & yLower
                  }
                }
+               data$color[xRange & yRange] <- input$highlightColor #light blue
              }
-             data$color[xRange & yRange] <- input$highlightColor #light blue
            },
            "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
     )
