@@ -81,7 +81,7 @@ shinyServer(function(input, output, session) {
     # Useful test setups:
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # petConfig = fromJSON("../../../results/pet_config.json", fill=T)
-    
+
     # For testing with BladeMDA DoE Optimization Under Uncertainty Data
     # raw = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty.csv", fill=T)
     # if(file.exists("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv"))
@@ -1858,7 +1858,7 @@ shinyServer(function(input, output, session) {
       else
         this_direction <- "Output"
 
-      fluidRow(
+      fluidRow(class = "uqVar", column(12,
         # Type select
         fluidRow(
           hr(),
@@ -1870,18 +1870,18 @@ shinyServer(function(input, output, session) {
                    choices = var_directions,
                    selected = this_direction)
           ),
-          column(4,
-                 bootstrapPage(
-                   br(),
-                   actionButton(paste0("add", var), "Add", class = "btn btn-success")
-                 )
+          column(4# ,
+                 # bootstrapPage(
+                 #   br(),
+                 #   actionButton(paste0("add", var), "Add", class = "btn btn-success")
+                 # )
           )
         ),
-        conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Output'")),
-          br(), br(), br(), br(), br(), br()
-        ),
+        # conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Output'")),
+        #   br(), br(), br(), br(), br(), br()
+        # ),
         conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Input'")),
-          # Gaussia
+          # Gaussian
           fluidRow(
             column(4, 
                    checkboxInput(
@@ -1914,7 +1914,7 @@ shinyServer(function(input, output, session) {
             
           )
         )
-      )
+      ))
     })
     #print("Done with bayesianUI()")
   })
@@ -1961,7 +1961,7 @@ shinyServer(function(input, output, session) {
                       max(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
                       max(filtered_raw_plus_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
-        fluidRow(
+        fluidRow(class = "uqVar",
           column(12,
                  renderPlot({
                    hist(filtered_raw_plus()[[var]],
@@ -1989,7 +1989,7 @@ shinyServer(function(input, output, session) {
                            col="orange", lwd=2)
                    }
                    box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
-                 }, height = 243)
+                 }, height = 248)
           )
         )
       })
@@ -2069,6 +2069,7 @@ shinyServer(function(input, output, session) {
       name <- input[[paste0('queryVariable', id)]]
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
+      req(threshold)
       data <- bayesianData()$dist[[name]]
       
       value <- integrateData(data$xResampled,
@@ -2194,6 +2195,7 @@ shinyServer(function(input, output, session) {
         name <- input[[paste0('queryVariable', id)]]
         direction <- input[[paste0('queryDirection', id)]]
         threshold <-input[[paste0('queryThreshold', id)]]
+        req(threshold)
         value <- integrateData(resampledData[[name]][["xResampled"]],
                                resampledData[[name]][["yResampled"]],
                                min(resampledData[[name]][["xResampled"]]),
@@ -2248,7 +2250,7 @@ shinyServer(function(input, output, session) {
         outputData <- cbind("Rank" = 1:nrow(decisions), outputData[rev(order(outputData[[paste0("Query", probabilityQueries$rows[1])]])),])
       }
       else {
-        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[order(outputData[[paste0("-Query", probabilityQueries$rows[1])]]),])
+        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[order(outputData[[paste0("Query", probabilityQueries$rows[1])]]),])
       }
     }
     outputData
