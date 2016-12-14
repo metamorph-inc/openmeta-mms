@@ -9,7 +9,7 @@ git checkout metarefs
 cat metarefs_new > metarefs
 exit 0
 
-bash merge.py --version 14.13-t5
+bash merge.py --version 14.13-t12
 '''
 import argparse
 from win32com.client.dynamic import Dispatch
@@ -127,6 +127,7 @@ def import_xme(project, filename):
 
 
 def update_core():
+    subprocess.check_call('git checkout --theirs CyPhyML-core.xme', shell=True)
     project = Dispatch("Mga.MgaProject")
     project.Create("MGA=" + "CyPhyML-core.mga", "MetaGME")
     import_xme(project, "CyPhyML-core.xme")
@@ -170,7 +171,7 @@ def switch_lib(from_, to):
 
 
 def update_cyphy(version):
-    subprocess.check_call('git show {}:./CyPhyML.xme > CyPhyML.xme'.format('meta-core/master'), shell=True)
+    subprocess.check_call('git checkout --theirs ./CyPhyML.xme', shell=True)
     project = Dispatch("Mga.MgaProject")
     project.Create("MGA=" + "CyPhyML.mga", "MetaGME")
     import_xme(project, "CyPhyML.xme")

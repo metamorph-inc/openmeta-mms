@@ -76,22 +76,36 @@ namespace PETBrowser
                 {
                     if (!datasets.ContainsKey(time))
                     {
-                        var names = new List<string>();
-
                         using (var mdaoFile = File.OpenText(mdaoName))
-                        using (var jsonReader = new JsonTextReader(mdaoFile))
                         {
-                            var mdaoJson = (JObject)JToken.ReadFrom(jsonReader);
+                            var serializer = new JsonSerializer();
+                            var mdaoConfig = (PETConfig) serializer.Deserialize(mdaoFile, typeof(PETConfig));
 
-                            names.AddRange(((JObject)mdaoJson["components"]).Properties().Select(property => property.Name));
+                            var name = "";
+
+                            if (!string.IsNullOrEmpty(mdaoConfig.PETName))
+                            {
+                                var splitName = mdaoConfig.PETName.Split('/');
+                                name = splitName.Last();
+                            }
+                            else
+                            {
+                                //Fall back to list of components when we don't have the PET name available in
+                                //mdao_config.json (older PET runs from before we added it to the config file)
+                                var names = new List<string>();
+
+                                names.AddRange(mdaoConfig.components.Keys);
+
+                                var nameBuilder = new StringBuilder();
+                                nameBuilder.Append("[");
+                                nameBuilder.Append(string.Join(",", names));
+                                nameBuilder.Append("]");
+                                name = nameBuilder.ToString();
+                            }
+
+                            datasets[time] = new Dataset(Dataset.DatasetKind.PetResult, time, name);
                         }
-                        var nameBuilder = new StringBuilder();
-                        nameBuilder.Append("[");
-                        nameBuilder.Append(string.Join(",", names));
-                        nameBuilder.Append("]");
-                        var name = nameBuilder.ToString();
-
-                        datasets[time] = new Dataset(Dataset.DatasetKind.PetResult, time, name);
+                        
                     }
 
                     var thisDataset = datasets[time];
@@ -253,9 +267,11 @@ namespace PETBrowser
         {
             var exportPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mergedPET.csv");
             var mappingPath = Path.Combine(this.DataDirectory, ResultsDirectory, "mappingPET.csv");
+            var mergedPetConfigPath = Path.Combine(this.DataDirectory, ResultsDirectory, "pet_config.json");
 
             WriteSelectedDatasetsToCsv(exportPath, true, highlightedDataset, highlightedDatasetOnly, documentCfdID, documentAlternatives, documentOptionals);
             WriteSelectedMappingToCsv(mappingPath, highlightedDataset, highlightedDatasetOnly);
+            WriteSummarizedPetConfig(mergedPetConfigPath, highlightedDataset, highlightedDatasetOnly);
 
             return exportPath;
         }
@@ -390,7 +406,7 @@ namespace PETBrowser
                 foreach (var header in addedHeaders)
                     headersPresent[header.Key] = false;
 
-                using (var csvFile = File.OpenText(csvFileName))
+                using (var csvFile = new StreamReader(File.Open(csvFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
                 {
                     try
                     {
@@ -481,6 +497,85 @@ namespace PETBrowser
                         Console.WriteLine("Invalid CSV found at {0}", csvFileName);
                         Trace.TraceWarning("Invalid CSV found at {0}", csvFileName);
                     }
+                }
+            }
+        }
+
+        private void WriteSummarizedPetConfig(string mergedPetConfigPath, Dataset highlightedDataset,
+            bool highlightedDatasetOnly = false)
+        {
+            //Compute the list of mdao_configs to summarize
+            List<string> petConfigPaths = new List<string>();
+            if (!highlightedDatasetOnly)
+            {
+                foreach (var d in ResultDatasets)
+                {
+                    if (d.Selected)
+                    {
+                        foreach (var folder in d.Folders)
+                        {
+                            petConfigPaths.Add(Path.Combine(this.DataDirectory, ResultsDirectory,
+                                folder.Replace("testbench_manifest.json", "mdao_config.json")));
+                        }
+                    }
+                }
+            }
+            
+            //If we haven't found any selected objects, use the highlighted dataset (also, check to make sure
+            //there aren't archives selected)
+            if (petConfigPaths.Count == 0 &&
+                (highlightedDatasetOnly || ArchiveDatasets.TrueForAll(dataset => !dataset.Selected)))
+            {
+                foreach (var folder in highlightedDataset.Folders)
+                {
+                    petConfigPaths.Add(Path.Combine(this.DataDirectory, ResultsDirectory,
+                        folder.Replace("testbench_manifest.json", "mdao_config.json")));
+                }
+            }
+
+            PETConfig mergedConfig = null;
+
+            foreach (var path in petConfigPaths)
+            {
+                try
+                {
+                    using (var configReader = File.OpenText(path))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        var petConfig = (PETConfig) serializer.Deserialize(configReader, typeof(PETConfig));
+
+                        if (mergedConfig == null)
+                        {
+                            //Assume all mdao_configs are the same; we just use the first one as our merged config
+                            mergedConfig = petConfig;
+                        }
+                        else
+                        {
+                            var selectedConfigurations = petConfig.SelectedConfigurations;
+                            if (selectedConfigurations != null)
+                            {
+                                if (mergedConfig.SelectedConfigurations == null)
+                                {
+                                    mergedConfig.SelectedConfigurations = new List<string>();
+                                }
+                                mergedConfig.SelectedConfigurations.AddRange(selectedConfigurations);
+                            }
+                        }
+                    }
+                }
+                catch (JsonException e)
+                {
+                    Console.WriteLine("Invalid JSON found at {0}", path);
+                    Trace.TraceWarning("Invalid JSON found at {0}", path);
+                }
+            }
+
+            if (mergedConfig != null)
+            {
+                using (var writer = File.CreateText(mergedPetConfigPath))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Serialize(writer, mergedConfig);
                 }
             }
         }

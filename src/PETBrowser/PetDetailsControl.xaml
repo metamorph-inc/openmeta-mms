@@ -36,13 +36,14 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Test Bench" Text="{Binding DetailsDataset.Name}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
-            <TextBox Grid.Row="0" Grid.Column="1"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
-            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
+            <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,0" ToolTip="Test Bench" Text="{Binding DetailsDataset.Name}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="18" FontWeight="Bold" />
+            <TextBox Grid.Row="0" Grid.Column="1"  IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1,4,0" ToolTip="Design Name" Text="{Binding Manifest.DesignName}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="16" />
+            <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="PET Path" Text="{Binding PetPath}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
             <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" Text="{Binding RecordCount, Mode=OneWay, StringFormat={}{0} records}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
-            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,3" ToolTip="Design ID" Text="{Binding Manifest.DesignID}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#BF000000" />
-            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1,4,3" Text="{Binding DetailsDataset.Count, Mode=OneWay, StringFormat={}{0} runs}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
-            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" >
+            <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1" ToolTip="Created Time" Text="{Binding CreatedTime, Mode=OneTime}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" />
+            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,1" Text="{Binding DetailsDataset.Count, Mode=OneWay, StringFormat={}{0} configurations}" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Foreground="#BF000000" />
+            <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,1,4,3" ToolTip="MGA Filename" Text="{Binding MgaFilename}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#BF000000" TextDecorations="Underline" Cursor="Hand" PreviewMouseLeftButtonDown="MgaFilename_Clicked" />
+            <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" >
                 <Border.BorderBrush>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
                 </Border.BorderBrush>
@@ -71,11 +72,38 @@
             </DataGrid.HorizontalGridLinesBrush>
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True" SortDirection="Ascending"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Kind}" Header="Kind" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding DataType}" Header="Type" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding MinFormatted, Mode=OneWay}" Header="Min" IsReadOnly="True"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding MaxFormatted, Mode=OneWay}" Header="Max" IsReadOnly="True"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding AverageFormatted, Mode=OneWay}" Header="Average" IsReadOnly="True"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding MaxFormatted, Mode=OneWay}" Header="Max" IsReadOnly="True"></DataGridTextColumn>
             </DataGrid.Columns>
+            <DataGrid.GroupStyle>
+                <!-- Style for groups at top level. -->
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Margin" Value="0,0,0,0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Expander IsExpanded="True">
+                                            <Expander.Header>
+                                                <DockPanel>
+                                                    <TextBlock FontWeight="Bold" Text="{Binding Path=Name}" Margin="5,0,0,0" Width="100"/>
+                                                    <TextBlock Text="{Binding Path=ItemCount}"/>
+                                                </DockPanel>
+                                            </Expander.Header>
+                                            <Expander.Content>
+                                                <ItemsPresenter />
+                                            </Expander.Content>
+                                        </Expander>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
         </DataGrid>
     </Grid>
 </UserControl>

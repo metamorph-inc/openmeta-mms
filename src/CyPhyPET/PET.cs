@@ -17,43 +17,7 @@ namespace CyPhyPET
     using GME.MGA;
     using Newtonsoft.Json;
     using System.Globalization;
-
-    public class PETConfig
-    {
-        public class Parameter
-        {
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public string[] source;
-        }
-        public class Component
-        {
-            public Dictionary<string, Parameter> parameters;
-            public Dictionary<string, Parameter> unknowns;
-            public Dictionary<string, string> details;
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public string type;
-        }
-        public class DesignVariable
-        {
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public string type;
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public double? RangeMin;
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public double? RangeMax;
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public List<object> items;
-        }
-        public class Driver
-        {
-            public string type;
-            public Dictionary<string, DesignVariable> designVariables;
-            public Dictionary<string, Parameter> objectives;
-            public Dictionary<string, object> details;
-        }
-        public Dictionary<string, Component> components;
-        public Dictionary<string, Driver> drivers;
-    }
+    using AVM.DDP;
 
     public class PET
     {
@@ -78,11 +42,57 @@ namespace CyPhyPET
             drivers = new Dictionary<string, PETConfig.Driver>()
         };
 
+        public static IEnumerable<IMgaObject> getAncestors(IMgaFCO fco, IMgaObject stopAt = null)
+        {
+            if (fco.ParentModel != null)
+            {
+                IMgaModel parent = fco.ParentModel;
+                while (parent != null && (stopAt == null || parent.ID != stopAt.ID))
+                {
+                    yield return parent;
+                    if (parent.ParentModel == null)
+                    {
+                        break;
+                    }
+                    parent = parent.ParentModel;
+                }
+                fco = parent;
+            }
+            IMgaFolder folder = fco.ParentFolder;
+            while (folder != null && (stopAt == null || folder.ID != stopAt.ID))
+            {
+                yield return folder;
+                folder = folder.ParentFolder;
+            }
+        }
+
+        public static IEnumerable<IMgaObject> getAncestorsAndSelf(IMgaFCO fco, IMgaObject stopAt = null)
+        {
+            yield return fco;
+            foreach (var parent in getAncestors(fco, stopAt))
+            {
+                yield return parent;
+            }
+
+        }
+
         public PET(CyPhyGUIs.IInterpreterMainParameters parameters, CyPhyGUIs.GMELogger logger)
         {
             this.Logger = logger;
             this.pet = CyPhyClasses.ParametricExploration.Cast(parameters.CurrentFCO);
             this.outputDirectory = parameters.OutputDirectory;
+            config.MgaFilename = parameters.CurrentFCO.Project.ProjectConnStr.Substring("MGA=".Length);
+            if (parameters.SelectedConfig != null)
+            {
+                config.SelectedConfigurations = new string[] { parameters.SelectedConfig }.ToList();
+            }
+            else
+            {
+                config.SelectedConfigurations = new string[] { parameters.OriginalCurrentFCOName }.ToList();
+            }
+            config.GeneratedConfigurationModel = parameters.GeneratedConfigurationModel;
+            config.PETName = "/" + string.Join("/", getAncestors(parameters.CurrentFCO, stopAt: parameters.CurrentFCO.Project.RootFolder).Skip(1) // HACK: MI inserts a "Temporary" folder
+                .getTracedObjectOrSelf(parameters.GetTraceability()).Select(obj => obj.Name).Reverse()) + "/" + parameters.OriginalCurrentFCOName;
             this.PCCPropertyInputDistributions = new Dictionary<string, string>();
             // Determine type of driver of the Parametric Exploration
             if (this.pet.Children.PCCDriverCollection.Count() == 1)
@@ -99,9 +109,67 @@ namespace CyPhyPET
                 var config = AddConfigurationForMDAODriver(optimizer);
                 config.type = "optimizer";
 
+                foreach (var intermediateVar in optimizer.Children.IntermediateVariableCollection)
+                {
+                    var sourcePath = GetSourcePath(null, (MgaFCO)intermediateVar.Impl);
+                    if (sourcePath != null)
+                    {
+                        var intermVar = new PETConfig.Parameter();
+                        intermVar.source = sourcePath;
+
+                        config.intermediateVariables.Add(intermediateVar.Name, intermVar);
+                    }
+                }
+
                 foreach (var constraint in optimizer.Children.OptimizerConstraintCollection)
                 {
-                    // TODO
+                    var sourcePath = GetSourcePath(null, (MgaFCO)constraint.Impl);
+                    if (sourcePath != null)
+                    {
+                        var cons = new PETConfig.Constraint();
+                        cons.source = sourcePath;
+
+                        if (!string.IsNullOrWhiteSpace(constraint.Attributes.MinValue))
+                        {
+                            double minValue;
+                            if (double.TryParse(constraint.Attributes.MinValue,
+                                NumberStyles.Float | NumberStyles.AllowThousands,
+                                CultureInfo.InvariantCulture, out minValue))
+                            {
+                                cons.RangeMin = minValue;
+                            }
+                            else
+                            {
+                                throw new ApplicationException(String.Format("Cannot parse Constraint MinValue '{0}'",
+                                    constraint.Attributes.MinValue));
+                            }
+                        }
+                        else
+                        {
+                            cons.RangeMin = null;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(constraint.Attributes.MaxValue))
+                        {
+                            double maxValue;
+                            if (double.TryParse(constraint.Attributes.MaxValue,
+                                NumberStyles.Float | NumberStyles.AllowThousands,
+                                CultureInfo.InvariantCulture, out maxValue))
+                            {
+                                cons.RangeMax = maxValue;
+                            }
+                            else
+                            {
+                                throw new ApplicationException(String.Format("Cannot parse Constraint MaxValue '{0}'",
+                                    constraint.Attributes.MaxValue));
+                            }
+                        }
+                        else
+                        {
+                            cons.RangeMax = null;
+                        }
+                        config.constraints.Add(constraint.Name, cons);
+                    }
                 }
 
             }
@@ -124,6 +192,8 @@ namespace CyPhyPET
             {
                 designVariables = new Dictionary<string, PETConfig.DesignVariable>(),
                 objectives = new Dictionary<string, PETConfig.Parameter>(),
+                constraints = new Dictionary<string, PETConfig.Constraint>(),
+                intermediateVariables = new Dictionary<string, PETConfig.Parameter>(),
                 details = new Dictionary<string, object>()
             };
             this.config.drivers.Add(driver.Name, config);
@@ -131,63 +201,66 @@ namespace CyPhyPET
             {
                 var configVariable = new PETConfig.DesignVariable();
                 config.designVariables.Add(designVariable.Name, configVariable);
-                if (designVariable.Attributes.Range.Contains(","))
+
+                var range = designVariable.Attributes.Range;
+                var oneValue = new System.Text.RegularExpressions.Regex(
+                    // start with previous match. match number or string
+                    "\\G(" +
+                    // number:
+                    // TODO: scientific notation?
+                    // TODO: a la NumberStyles.AllowThousands?
+                    "[+-]?(?:\\d*[.])?\\d+" + "|" +
+                    // string: match \ escape sequence, or anything but \ or "
+                    "\"(?:\\\\(?:\\\\|\"|/|b|f|n|r|t|u\\d{4})|[^\\\\\"])*\"" +
+                    // match ends with ; or end of string
+                    ")(?:;|$)");
+                /*
+                Print(oneValue.Matches("12;"));
+                Print(oneValue.Matches("12.2;"));
+                Print(oneValue.Matches("\"\""));
+                Print(oneValue.Matches("\";asdf;asd\""));
+                Print(oneValue.Matches("\"\\\"\"")); // \"
+                Print(oneValue.Matches("\"\\\\\"")); // \\
+                Print(oneValue.Matches("\"\\n\"")); // \n
+                Print(oneValue.Matches("\"\\n\";\"\";\"asdf\""));
+                Print(oneValue.Matches("\"\\\"")); // \ => false
+                Print(oneValue.Matches("\"\"\"")); // " => false
+                */
+                MatchCollection matches = oneValue.Matches(range);
+                if (matches.Count > 0)
                 {
-                    var range = designVariable.Attributes.Range.Split(new char[] { ',' });
-                    if (range.Length == 2)
-                    {
-                        configVariable.RangeMin = Double.Parse(range[0], CultureInfo.InvariantCulture);
-                        configVariable.RangeMax = Double.Parse(range[1], CultureInfo.InvariantCulture);
-                    }
-                }
-                else if (designVariable.Attributes.Range.Contains(";"))
-                {
-                    var range = designVariable.Attributes.Range;
-                    var oneValue = new System.Text.RegularExpressions.Regex(
-                        // start with previous match. match number or string
-                        "\\G(" +
-                        // number:
-                        "[+-]?(?:\\d*[.])?\\d+" + "|" +
-                        // string: match \ escape sequence, or anything but \ or "
-                        "\"(?:\\\\(?:\\\\|\"|/|b|f|n|r|t|u\\d{4})|[^\\\\\"])*\"" +
-                        // match ends with ; or end of string
-                        ")(?:;|$)");
-                    /*
-                    Print(oneValue.Matches("12;"));
-                    Print(oneValue.Matches("12.2;"));
-                    Print(oneValue.Matches("\"\""));
-                    Print(oneValue.Matches("\";asdf;asd\""));
-                    Print(oneValue.Matches("\"\\\"\"")); // \"
-                    Print(oneValue.Matches("\"\\\\\"")); // \\
-                    Print(oneValue.Matches("\"\\n\"")); // \n
-                    Print(oneValue.Matches("\"\\n\";\"\";\"asdf\""));
-                    Print(oneValue.Matches("\"\\\"")); // \ => false
-                    Print(oneValue.Matches("\"\"\"")); // " => false
-                    */
-                    MatchCollection matches = oneValue.Matches(range);
-                    if (matches.Count == 0)
-                    {
-                        throw new ApplicationException(String.Format("DesignVariable {0} has invalid Range {1}", designVariable.Name, range));
-                    }
-                    configVariable.items = matches.Cast<Match>().Select(x => x.Groups[1].Value).Select(x =>
+                    var items = matches.Cast<Match>().Select(x => x.Groups[1].Value).Select(x =>
                         x[0] == '"' ? (string)JsonConvert.DeserializeObject(x) :
                             (object)Double.Parse(x, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture)
                         ).ToList();
-                    configVariable.type = "enum";
-                }
-                else
-                {
-                    double singlePoint;
-                    if (Double.TryParse(designVariable.Attributes.Range, NumberStyles.Float | NumberStyles.AllowThousands,
-                            CultureInfo.InvariantCulture, out singlePoint))
+                    // special-case: a single number produces a double range
+                    if (matches.Count == 1 && matches[0].Groups[1].Value[0] != '"')
                     {
-                        configVariable.RangeMin = singlePoint;
-                        configVariable.RangeMax = singlePoint;
+                        configVariable.RangeMin = (double)items[0];
+                        configVariable.RangeMax = (double)items[0];
                     }
                     else
                     {
-                        throw new ApplicationException(String.Format("Cannot parse Design Variable Range '{0}'", designVariable.Attributes.Range));
+                        configVariable.items = items;
+                        configVariable.type = "enum";
                     }
+                }
+                else if (designVariable.Attributes.Range.Contains(","))
+                {
+                    var range_split = designVariable.Attributes.Range.Split(new char[] { ',' });
+                    if (range_split.Length == 2)
+                    {
+                        configVariable.RangeMin = Double.Parse(range_split[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
+                        configVariable.RangeMax = Double.Parse(range_split[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
+                    }
+                }
+                else
+                {
+                    throw new ApplicationException(String.Format("Cannot parse Design Variable Range '{0}'. ", designVariable.Attributes.Range) +
+                        "Double ranges are specified by an un-quoted value or two un-quoted values separated by commas. " +
+                        "Enumerations are specified by one double-quoted value or two or more double-quoted values separated by semicolons. " +
+                        "E.g.: '2.0,2.5' or '\"Low\";\"Medium\";\"High\"'"
+                        );
                 }
             }
             foreach (var objective in driver.Children.ObjectiveCollection)
@@ -762,5 +835,24 @@ namespace CyPhyPET
         }
 
         #endregion
+    }
+
+    public static class Extensions
+    {
+        public static IEnumerable<IMgaObject> getTracedObjectOrSelf(this IEnumerable<IMgaObject> enumerable, CyPhyCOMInterfaces.IMgaTraceability traceability)
+        {
+            foreach (var obj in enumerable)
+            {
+                string originalID;
+                if (traceability != null && traceability.TryGetMappedObject(obj.ID, out originalID))
+                {
+                    yield return obj.Project.GetObjectByID(originalID);
+                }
+                else
+                {
+                    yield return obj;
+                }
+            }
+        }
     }
 }
