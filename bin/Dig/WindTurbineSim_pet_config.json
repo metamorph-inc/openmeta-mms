@@ -1,0 +1,60 @@
+{
+  "components": {
+    "TestWindTurbine": {
+      "parameters": {
+        "JTurbine": {
+          "source": ["ParameterStudy", "modelica.jturbine"]
+        },
+        "Ratio": {
+          "source": ["ParameterStudy", "modelica.ratio"]
+        },
+        "Rho": {
+          "source": ["ParameterStudy", "modelica.rho"]
+        }
+      },
+      "unknowns": {
+        "PowerOutput": {},
+        "IntegratedEnergy": {}
+      },
+      "details": {
+        "directory": "TestBench_TestWindTurbine"
+      }
+    }
+  },
+  "drivers": {
+    "ParameterStudy": {
+      "type": "parameterStudy",
+      "designVariables": {
+        "modelica.jturbine": {
+          "RangeMin": 9000000.0,
+          "RangeMax": 170000000.0
+        },
+        "modelica.ratio": {
+          "RangeMin": 80.0,
+          "RangeMax": 120.0
+        },
+        "modelica.rho": {
+          "RangeMin": 1.0,
+          "RangeMax": 1.5
+        }
+      },
+      "objectives": {
+        "Settle": {
+          "source": ["TestWindTurbine", "PowerOutput"]
+        },
+        "CoupAmp": {
+          "source": ["TestWindTurbine", "IntegratedEnergy"]
+        }
+      },
+      "details": {
+        "Code": "num_samples=5000",
+        "SurrogateType": "None",
+        "DOEType": "Uniform"
+      }
+    }
+  },
+  "GeneratedConfigurationModel": "Exported-Configurations-at--04-15--20-46-05",
+  "SelectedConfigurations": ["cfg1"],
+  "PETName": "/Testing/Parametric Studies/WindTurbinePET",
+  "MgaFilename": "C:\\Users\\Tim\\Documents\\wind-turbine\\WindTurbine.mga"
+}

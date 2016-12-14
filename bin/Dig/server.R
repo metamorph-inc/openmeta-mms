@@ -1,5 +1,6 @@
 library(shiny)
 library(DT)
+library(jsonlite)
 source('bayesian_utils.r')
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
@@ -51,7 +52,7 @@ shinyServer(function(input, output, session) {
   #   paste(names(query), query, sep = "=", collapse=", ")
   # })
   
-  mapping = NULL
+  petConfig = NULL
 
   if (!is.null(query[['csvfilename']])) {
     print("In read raw")
@@ -62,56 +63,71 @@ shinyServer(function(input, output, session) {
   else if (nzchar(Sys.getenv('DIG_INPUT_CSV')))
   {
     raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
-    if(file.exists(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV'))))
-      mapping = read.csv(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV')), fill = T)
+    petConfigFilename = gsub("mergedPET.csv", "pet_config.json", Sys.getenv('DIG_INPUT_CSV'))
+    if(file.exists(petConfigFilename))
+      petConfig = fromJSON(petConfigFilename)
   }
   else
   {
     # Needed setup for regression testing:
-    # raw = read.csv("RegressionTestingDataset.csv", fill=T)
-    # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
-    raw = read.csv("WindTurbineSimmerged.csv", fill=T)
-    if(file.exists("WindTurbineSimmapping.csv"))
-      mapping = read.csv("WindTurbineSimmapping.csv", fill=T)
+    # raw = read.csv("RegressionTesting_data.csv", fill=T)
+    # petConfig = read.csv("RegressionTesting_config.json")
+    
+    raw = read.csv("WindTurbineSim_data.csv", fill=T)
+    petConfig = fromJSON("WindTurbineSim_config.json")
     
     # Useful test setups:
-    raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
-    # raw = read.csv("../data.csv", fill=T)
-    raw = iris
-    mapping = read.csv("iris_mapping.csv", fill = T)
+    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    # petConfig = fromJSON("../../../results/pet_config.json", fill=T)
+    
+    # raw = iris
+    # petConfig = read.csv("iris_config.json", fill = T)
   }
   
-  output$mappingPresent <- reactive({
-    if (is.null(mapping))
-      answer <- F
-    else
-      answer <- T
-    print(paste("mappingPresent:",answer))
-    answer
+  petConfigPresent <- !is.null(petConfig)
+  
+  # Process PET Configuration File ('pet_config.json') -----------------------
+  designVariableNames <- NULL
+  numericDesignVariables <- FALSE
+  enumeratedDesignVariables <- FALSE
+  designVariables <- NULL
+  objectiveNames <- NULL
+  
+  if(petConfigPresent) {
+    designVariableNames <- names(petConfig$drivers[[1]]$designVariables)
+    numericDesignVariables <- lapply(petConfig$drivers[[1]]$designVariables, function(x) {"RangeMax" %in% names(x)})
+    enumeratedDesignVariables <- lapply(petConfig$drivers[[1]]$designVariables, function(x) {"type" %in% names(x)})
+    dvTypes <- unlist(lapply(numericDesignVariables, function(x) { if(x) "Numeric" else "Enumeration"}))
+    dvSelections <- unlist(lapply(petConfig$drivers[[1]]$designVariables, function(x) {if("type" %in% names(x) && x$type == "enum") paste0(unlist(x$items), collapse=",") else paste0(c(x$RangeMin, x$RangeMax), collapse=",")}))
+    designVariables <- data.frame(VarName=designVariableNames, Type=dvTypes, Selection=dvSelections)
+    objectiveNames <- names(petConfig$drivers[[1]]$objectives)
+    petConfigNumSamples <- unlist(strsplit(as.character(petConfig$drivers[[1]]$details$Code),'='))[2]
+    petConfigSamplingMethod <- petConfig$drivers[[1]]$details$DOEType
+    petGeneratedConfigurationModel <- petConfig$GeneratedConfigurationModel
+    petSelectedConfigurations <- petConfig$SelectedConfigurations
+    petName <- petConfig$PETName
+    petMgaName <- petConfig$MgaFilename
+  }
+    
+  
+  output$petConfigPresent <- reactive({
+    print(paste("petConfigPresent:",petConfigPresent))
+    petConfigPresent
   })
   
-  output$numericMapping <- reactive({
-    if("Numeric" %in% mapping[["Type"]])
-      answer <- T
-    else
-      answer <- F
-    answer
+  output$numericDesignVariables <- reactive({
+    TRUE %in% numericDesignVariables
   })
   
-  output$enumerationMapping <- reactive({
-    if("Enumeration" %in% mapping[["Type"]])
-      answer <- T
-    else
-      answer <- F
-    answer
+  output$enumerationDesignVariables <- reactive({
+    TRUE %in% enumeratedDesignVariables
   })
   
-  outputOptions(output, "mappingPresent", suspendWhenHidden=FALSE)
-  outputOptions(output, "numericMapping", suspendWhenHidden=FALSE)
-  outputOptions(output, "enumerationMapping", suspendWhenHidden=FALSE)
+  outputOptions(output, "petConfigPresent", suspendWhenHidden=FALSE)
+  outputOptions(output, "numericDesignVariables", suspendWhenHidden=FALSE)
+  outputOptions(output, "enumerationDesignVariables", suspendWhenHidden=FALSE)
   
-  output$noMappingMessage <- renderText(paste("No mapping file was found."))
+  output$noPetConfigMessage <- renderText(paste("No pet_config.json file was found."))
   
   # Import/Export Session Settings -------------------------------------------
   
@@ -298,6 +314,8 @@ shinyServer(function(input, output, session) {
   })
 
   # Pre-processing -----------------------------------------------------------
+  
+  if(is.null(petConfig))
   
   print("Starting Preprocessing of the Data -----------------------------------------")
   
@@ -1410,13 +1428,33 @@ shinyServer(function(input, output, session) {
     all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
   })
   
+  output$petDriverConfig <- renderUI({
+    fluidRow(
+      column(3, selectInput("petSamplingMethod", "New Sampling Method:", choices = c("Full Factorial", "Uniform", "Central Composite", "Opt Latin Hypercube"), selected = petConfigSamplingMethod)),
+      column(3, textInput("petNumSamples", "New Number of Samples:", value = petConfigNumSamples))
+    )
+  })
+  
+  output$petRename <- renderUI({
+    fluidRow(
+      column(12, h5(strong("Original MGA Filename: ")), textOutput("mgaFilenameText")),
+      column(12, h5(strong("Original PET Name: ")), textOutput("currentPetNameText"), br()),
+      column(12, textInput("newPetName", "New PET Name:", value = paste0(petName, "_Refined")))
+    )
+  })
+  
+  output$originalDriverSettings <- renderText(paste(petConfigSamplingMethod," sampling with 'num_samples=", petConfigNumSamples,"' yielded ", nrow(raw), " points.", sep = ""))
+  output$mgaFilenameText <- renderText(petMgaName)
+  output$generatedConfigurationModelText <- renderText(petGeneratedConfigurationModel)
+  output$currentPetNameText <- renderText(petName)
+  
   output$original_numeric_ranges <- renderUI({
     
-    lapply(rownames(mapping), function(row){
+    lapply(rownames(designVariables), function(row){
       
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
+      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Selection"]))), ","))
       
       if(type == "Numeric"){
         global_index = which(varNames == var)
@@ -1471,11 +1509,11 @@ shinyServer(function(input, output, session) {
   
   output$original_enumeration_ranges <- renderUI({
     
-    lapply(rownames(mapping), function(row){
+    lapply(rownames(designVariables), function(row){
       
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      selection = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
+      selection = gsub(",", ", ", levels(droplevels(designVariables[row, "Selection"])))
       
       if(type == "Enumeration"){
         global_index = which(varNames == var)
@@ -1514,22 +1552,67 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  # Pull values from Mapping File
+  output$original_configuration_ranges <- renderUI({
+    
+    original <- paste0(petSelectedConfigurations, collapse=",")
+    originalCount <- length(petSelectedConfigurations)
+    if(originalCount > EnumerationMaxDisplay)
+      original = paste0("List of ", originalCount, " Configurations.")
+    
+    refined <- paste0(unique(filterData()$CfgID), collapse=",")
+    refinedCount <- length(unique(filterData()$CfgID))
+    if(refinedCount > EnumerationMaxDisplay)
+      refined = paste0("List of ", refinedCount, " Configurations.")
+    if(refined == "")
+      refined = "No configurations available."
+    
+    input_selection <- NULL
+    # if(importFlags$ranges){
+    #   input_selection <- importData[[paste0('newSelection', global_index
+    #   NULL #This makes sure nothing appears in the UI
+    # }
+    
+    fluidRow(
+      column(2, h5(strong("Configuration Name(s)"))),
+      column(1, actionButton('applyOriginalCfgIDs', 'Apply')),
+      column(2, h5(original)),
+      column(1, actionButton('applyRefinedCfgIDs', 'Apply')),
+      column(2, h5(refined)),
+      column(4,
+             textInput('newCfgIDs',
+                       NULL,
+                       placeholder = "Enter selection",
+                       value = input_selection)
+      )
+    )
+  })
+  
+  observeEvent(input$applyOriginalCfgIDs, {
+    original <- paste0(petSelectedConfigurations, collapse=",")
+    updateTextInput(session, 'newCfgIDs', value = original)
+  })
+  
+  observeEvent(input$applyRefinedCfgIDs, {
+    refined <- paste0(unique(filterData()$CfgID), collapse=",")
+    updateTextInput(session, 'newCfgIDs', value = refined)
+  })
+  
+  # Pull values from petConfig.json File
   
   reactToApplyOriginalButtons <- observe({
-    lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+    lapply(rownames(designVariables), function(row) {
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       global_i = which(varNames == var)
       if(type == "Numeric"){
-        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Selection"]))), ","))
         observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
           updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
           updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
         })
       }
       else if(type == "Enumeration"){
-        original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+        original = gsub(",", ", ", levels(droplevels(designVariables[row, "Selection"])))
         observeEvent(input[[paste0('applyOriginalSelection', global_i)]], {
           updateTextInput(session, paste0('newSelection', global_i), value = original)
         })
@@ -1538,12 +1621,12 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$applyAllOriginalNumeric, {
-    lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+    lapply(rownames(designVariables), function(row) {
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       global_i = which(varNames == var)
       if(type == "Numeric"){
-        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Selection"]))), ","))
         updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
         updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
       }
@@ -1551,12 +1634,12 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$applyAllOriginalEnum, {
-    lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+    lapply(rownames(designVariables), function(row) {
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       global_i = which(varNames == var)
       if(type == "Enumeration"){
-        original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+        original = gsub(",", ", ", levels(droplevels(designVariables[row, "Selection"])))
         updateTextInput(session, paste0('newSelection', global_i), value = original)
       }
     })
@@ -1617,35 +1700,59 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  observeEvent(input$exportRanges, {
+  observeEvent(input$runRanges, {
     if (nzchar(Sys.getenv('DIG_INPUT_CSV'))) {
-      exportRangesFunction(gsub("merged", "ranges", Sys.getenv('DIG_INPUT_CSV')))
+      resultsDirectory <- dirname(Sys.getenv('DIG_INPUT_CSV'))
+      projectDirectory <- dirname(resultsDirectory)
+      petConfigRefinedFilename <- file.path(resultsDirectory, "pet_config_refined.json")
+      exportRangesFunction(petConfigRefinedFilename)
+      system2("..\\Python27\\Scripts\\python.exe",
+              args = c("..\\UpdatePETParameters.py",
+                       "--pet-config",
+                       petConfigRefinedFilename,
+                       "--new-name",
+                       paste0("\"",input$newPetName,"\"")),
+              stdout = file.path(resultsDirectory, "UpdatePETParameters_stdout.log"),
+              stderr = file.path(resultsDirectory, "UpdatePETParameters_stderr.log"),
+              wait = FALSE)
     }
   })
   
   output$downloadRanges <- downloadHandler(
-    filename = function() {paste('ranges-', Sys.Date(), '.csv', sep='')},
+    filename = function() {paste('pet_config_refined_', Sys.Date(), '.json', sep='')},
     content = exportRangesFunction
   )
   
   exportRangesFunction <- function(file) { 
-    cnms <- c("VarName", "Type", "Selection")
-    data <- NULL
-    for(i in 1:length(rownames(mapping))){
-      var = levels(droplevels(mapping[i, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[i, "Type"])))
-      global_i = which(varNames == var)
-      if(type == "Numeric")
-        selection = toString(c(input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
-      else
-        selection = input[[paste0('newSelection', global_i)]]
-      
-      data <- rbind(data, c(var, type, selection))
+    petConfigRefined <- petConfig
+    
+    reassignDV <- function(dv, name) {
+      global_i = which(varNames == name)
+      if("type" %in% names(dv) && dv$type == "enum") {
+        selection <- strsplit(input[[paste0('newSelection', global_i)]], ",")
+        if (length(unlist(selection)) > 1) {
+          dv$items <- unlist(selection)
+        } else {
+          dv$items <- selection
+        }
+      } else {
+        dv$RangeMin <- as.numeric(input[[paste0('newMin', global_i)]])
+        dv$RangeMax <- as.numeric(input[[paste0('newMax', global_i)]])
+      }
+      dv
     }
-    ranges_df <- as.data.frame(data)
-    colnames(ranges_df) <- cnms
-    ranges_df <- apply(ranges_df,2,function(x)gsub('\\s+', '',x))
-    write.csv(ranges_df, file = file, row.names=F)
+    petConfigRefined$drivers[[1]]$designVariables <- Map(reassignDV, petConfigRefined$drivers[[1]]$designVariables, names(petConfigRefined$drivers[[1]]$designVariables))
+    
+    petConfigRefined$drivers[[1]]$details$Code <- paste0("num_samples=", input$petNumSamples)
+    petConfigRefined$drivers[[1]]$details$DOEType <- input$petSamplingMethod
+    
+    selectedConfigurations <- strsplit(input$newCfgIDs, ",")
+    if(length(unlist(selectedConfigurations)) > 1)
+      selectedConfigurations <- unlist(selectedConfigurations)
+    petConfigRefined$SelectedConfigurations <- selectedConfigurations
+    
+    
+    write(toJSON(petConfigRefined, pretty = TRUE, auto_unbox = TRUE), file = file)
   }
   
   # Bayesian -----------------------------------------------------------------
@@ -1741,8 +1848,8 @@ shinyServer(function(input, output, session) {
         this_sd <- importData[[paste0('gaussian_sd',global_i)]]
       }
       
-      #From mappingPET.csv
-      if(!is.null(mapping) & var %in% mapping$VarName) 
+      #From petConfig.json
+      if(petConfigPresent & var %in% designVariableNames) 
         this_direction <- "Input"
       else
         this_direction <- "Output"
