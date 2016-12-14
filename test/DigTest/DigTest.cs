@@ -1,5 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Interactions.Internal;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,13 +26,58 @@ namespace DigTest
             Console.In.ReadLine();
         }
 
+        void RetryStaleElement(Action a)
+        {
+            int tries = 3;
+            while (true)
+            {
+                try
+                {
+                    a();
+                    break;
+                }
+                catch (OpenQA.Selenium.StaleElementReferenceException)
+                {
+                    if (--tries == 0)
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        void RetryNoSuchElement(Action a)
+        {
+            int tries = 3;
+            while (true)
+            {
+                try
+                {
+                    a();
+                    break;
+                }
+                catch (OpenQA.Selenium.NoSuchElementException)
+                {
+                    if (--tries == 0)
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
         [Fact]
         void DigRuns()
         {
-            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
-                new OpenQA.Selenium.Chrome.ChromeOptions
+            var options = new OpenQA.Selenium.Chrome.ChromeOptions
                 {
-                }))
+
+          
+
+        };
+            options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
+            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
+                options))
             using (DigWrapper wrapper = new DigWrapper())
             {
                 try
@@ -38,6 +85,7 @@ namespace DigTest
                     wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/WindTurbineSimmerged.csv"));
 
                     driver.Navigate().GoToUrl(wrapper.url);
+                    
                     IWait<IWebDriver> wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
                     Assert.True(wait0.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
 
@@ -49,35 +97,56 @@ namespace DigTest
                     Assert.True(wait1.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Total Points: 5000")));
 
                     /*  Min/Max Coloring   */
-                    driver.FindElement(By.CssSelector("div[data-value=\"None\"]")).Click();
-                    driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click();
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"None\"]")).Click());
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click());
                     IWait<IWebDriver> wait2 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                     Assert.True(wait2.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Best Points: 1700")));
 
                     /*  Highlighted Coloring   */
-                    driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click();
-                    driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click();
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click());
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click());
                     IWait<IWebDriver> wait3 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                     Assert.True(wait3.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Highlighted Points: 0")));
 
                     /*  Ranked Coloring   */
-                    driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click();
-                    driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click();
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click());
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click());
                     IWait<IWebDriver> wait4 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                     Assert.True(wait4.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Ranked Points: 0")));
 
 
                     /*                          SINGLE PLOT TAB                             */
 
-                    driver.FindElement(By.CssSelector("a[data-value=\"Single Plot\"]")).Click();
-                    //driver.FindElement(By.CssSelector("div#singlePlot.shiny-plot-output.shiny-bound-output")).Click();
+                    
 
+                    // Switch to single plot tab
+                    driver.FindElement(By.CssSelector("a[data-value=\"Single Plot\"]")).Click();
+                    IWait<IWebDriver> single_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
+                    
+                    // Wait until plot is displayed and build plot brush sequence
+                    Actions builder = new Actions(driver);
+                    
+                    IWebElement single_plot = driver.FindElement(By.CssSelector("div#singlePlot.shiny-plot-output.shiny-bound-output"));
+                    //Assert.True(single_wait0.Until(driver1 => single_plot.Displayed));
+                    Assert.True(single_wait0.Until(driver1 => single_plot.FindElement(By.CssSelector("img")).Displayed));
+
+                    IAction plotBrush = builder.MoveToElement(single_plot, 80, 66).ClickAndHold().MoveByOffset(40, 40).Release().Build();
+
+                    plotBrush.Perform();
+
+                    driver.FindElement(By.Id("highlightData")).Click();
+
+                    IWait<IWebDriver> single_wait2 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                    Assert.True(single_wait2.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Highlighted Points: 8")));
 
                     /*                           DATA TABLE TAB                             */
 
                     /*  Rank data table by modelica.jturbine, select first data point, and color */
                     driver.FindElement(By.CssSelector("a[data-value=\"Data Table\"]")).Click();
-                    driver.FindElement(By.CssSelector("input#activateRanking")).Click();
+                    IWebElement activateRanking = driver.FindElement(By.CssSelector("input#activateRanking"));
+                    Thread.Sleep(50);
+                    activateRanking.Click();
+
                     driver.FindElement(By.CssSelector("div[class=\"selectize-input items not-full has-options\"]")).Click();
                     IWait<IWebDriver> wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                     Assert.True(wait5.Until(driver1 => driver.FindElement(By.CssSelector("div[class=\"selectize-input items not-full has-options focus input-active dropdown-active\"]")).Displayed));
@@ -101,7 +170,6 @@ namespace DigTest
                     driver.FindElement(By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
                     IWait<IWebDriver> wait9 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
                     Assert.Equal("80", wait9.Until(driver1 => driver.FindElement(By.Id("newMin2")).GetAttribute("value")));
-
                     
                     driver.FindElement(By.CssSelector("button#applyAllRefinedNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
                     IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
