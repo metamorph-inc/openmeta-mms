@@ -151,9 +151,12 @@ shinyServer(function(input, output, session) {
   
   initImport <- observeEvent(input$importSession, {
     print("in import session")
-    file <- fileChoose()
-    req(file)
-    importData <<- read.csv(file, header = TRUE, strip.white = TRUE)
+    if(is.null(input$loadSessionName))
+      path <- fileChoose()
+    else
+      path <- input$loadSessionName
+    req(file.exists(path))
+    importData <<- read.csv(path, header = TRUE, strip.white = TRUE)
     importFlags$tier1 <- TRUE
   })
   

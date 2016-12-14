@@ -323,12 +323,13 @@ shinyUI(fluidPage(
             h4("Session Options"),
             strong("Save Session"),
             textInput("sessionName", NULL, placeholder = "Enter a filename..."),
-            tags$div(title = "Download current state of visualizer.",
+            tags$div(title = "Download current settings of visualizer.",
                      downloadButton("exportSession", "Download")),
             br(), br(),
             strong("Load Session"), br(),
             tags$div(title = "Load a saved session.",
-                     actionButton('importSession', 'Choose File'))
+                     actionButton('importSession', 'Choose File')),
+            textInput("loadSessionName", NULL, placeholder = "Enter a file path to open...")
           )
         )
       ),
