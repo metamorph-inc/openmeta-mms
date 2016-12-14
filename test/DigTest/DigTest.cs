@@ -170,7 +170,7 @@ namespace DigTest
                     Assert.True(wait8.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Ranked Points: 1")));
 
 
-                    /*                             RANGES TAB                              */
+                    /*                             PET CONFIG TAB                              */
 
                     // Check refined and original ranges
                     driver.FindElement(By.CssSelector("a[data-value=\"PET Details\"]")).Click();
@@ -203,10 +203,6 @@ namespace DigTest
                     driver.FindElement(By.Id("sessionName")).Click();
                     driver.FindElement(By.Id("sessionName")).SendKeys("DigTestSettings");
                     driver.FindElement(By.Id("exportSession")).Click();
-
-                    /*DateTime now = DateTime.Now;
-                    String path = String.Format("C:/Users/MetaMorph/Downloads/session_{0}-{1}-{2}{0}-{1}-{2} {3}-{4}-{5}.csv",
-                                                now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);*/
 
                     driver.FindElement(By.Id("loadSessionName")).Click();
                     driver.FindElement(By.Id("loadSessionName")).SendKeys(path);
