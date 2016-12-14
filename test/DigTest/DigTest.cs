@@ -173,7 +173,7 @@ namespace DigTest
                     /*                             PET CONFIG TAB                              */
 
                     // Check refined and original ranges
-                    driver.FindElement(By.CssSelector("a[data-value=\"PET Details\"]")).Click();
+                    driver.FindElement(By.CssSelector("a[data-value=\"PET Refinement\"]")).Click();
 
                     //driver.Wait (By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Displayed;
 
@@ -200,19 +200,24 @@ namespace DigTest
                     if(File.Exists(path))
                         File.Delete(path);
                     
+                    // Save Current Session
                     driver.FindElement(By.Id("sessionName")).Click();
                     driver.FindElement(By.Id("sessionName")).SendKeys("DigTestSettings");
                     driver.FindElement(By.Id("exportSession")).Click();
 
+                    // Change data coloring to Max/Min in pairs tab
+                    driver.FindElement(By.CssSelector("a[data-value=\"Pairs Plot\"]")).Click();
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click());
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click());
+                    driver.FindElement(By.CssSelector("a[data-value=\"Options\"]")).Click();
+
+                    // Load earlier session
                     driver.FindElement(By.Id("loadSessionName")).Click();
                     driver.FindElement(By.Id("loadSessionName")).SendKeys(path);
                     driver.FindElement(By.Id("importSession")).Click();
 
-                    // Check to see that PET detail setting is preserved
-                    driver.FindElement(By.CssSelector("a[data-value=\"PET Details\"]")).Click();
-
-                    Assert.Equal("80.01195304", wait9.Until(driver1 => driver.FindElement(By.Id("newMin2")).GetAttribute("value")));
-
+                    // Check to see that coloring mode has returned to Ranked
+                    Assert.True(wait8.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Ranked Points: 1")));
 
 
                 }
