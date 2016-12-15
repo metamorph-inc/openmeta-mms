@@ -1,0 +1,74 @@
+{
+  "components": {
+    "TestWindTurbine": {
+      "parameters": {
+        "ElemCount": {
+          "source": ["ParameterStudy", "IN_ElemCount"]
+        },
+        "E11": {
+          "source": ["ParameterStudy", "IN_E11"]
+        },
+        "E22": {
+          "source": ["ParameterStudy", "IN_E22"]
+        },
+        "Root_AvgCapMaterialThickness": {
+          "source": ["ParameterStudy", "IN_Root_AvgCapMaterialThickness"]
+        },
+        "Tip_AvgCapMaterialThickness": {
+          "source": ["ParameterStudy", "IN_Tip_AvgCapMaterialThickness"]
+        }
+      },
+      "unknowns": {
+        "PowerOutput": {},
+        "IntegratedEnergy": {}
+      },
+      "details": {
+        "directory": "TestBench_TestWindTurbine"
+      }
+    }
+  },
+  "drivers": {
+    "ParameterStudy": {
+      "type": "parameterStudy",
+      "designVariables": {
+        "IN_ElemCount": {
+          "RangeMin": 5,
+          "RangeMax": 60
+        },
+        "IN_E11": {
+          "RangeMin": 26100,
+          "RangeMax": 31900
+        },
+        "IN_E22": {
+          "RangeMin": 9180,
+          "RangeMax": 11220
+        },
+        "IN_Root_AvgCapMaterialThickness": {
+          "RangeMin": 77,
+          "RangeMax": 97
+        },
+        "IN_Tip_AvgCapMaterialThickness": {
+          "RangeMin": 20,
+          "RangeMax": 30
+        }
+      },
+      "objectives": {
+        "Settle": {
+          "source": ["TestWindTurbine", "PowerOutput"]
+        },
+        "CoupAmp": {
+          "source": ["TestWindTurbine", "IntegratedEnergy"]
+        }
+      },
+      "details": {
+        "Code": "num_samples=600",
+        "SurrogateType": "None",
+        "DOEType": "Uniform"
+      }
+    }
+  },
+  "GeneratedConfigurationModel": "Exported-Configurations-at--04-15--20-46-05",
+  "SelectedConfigurations": ["28-16", "28-20", "30-16", "30-20", "32-16", "32-20"],
+  "PETName": "/Testing/Parametric Studies/WindTurbinePET",
+  "MgaFilename": "C:\\Users\\Tim\\Documents\\wind-turbine\\WindTurbine.mga"
+}

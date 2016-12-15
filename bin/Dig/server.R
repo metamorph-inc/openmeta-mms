@@ -83,12 +83,12 @@ shinyServer(function(input, output, session) {
     # petConfig = fromJSON("../../../results/pet_config.json", fill=T)
 
     # For testing with BladeMDA DoE Optimization Under Uncertainty Data
-    # raw = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty.csv", fill=T)
-    # if(file.exists("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv"))
-    #   mapping = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv", fill=T)
+    raw = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty_mergedPET.csv", fill=T)
+    if(file.exists("WindTurbineBladeDoEforOptimizationUnderUncertainty_pet_config.json"))
+      petConfig = fromJSON("WindTurbineBladeDoEforOptimizationUnderUncertainty_pet_config.json")
     
-    raw = read.csv("WindTurbineSim_mergedPET.csv", fill=T)
-    petConfig = fromJSON("WindTurbineSim_pet_config.json")
+    # raw = read.csv("WindTurbineSim_mergedPET.csv", fill=T)
+    # petConfig = fromJSON("WindTurbineSim_pet_config.json")
     
     # raw = iris
     # petConfig = read.csv("iris_config.json", fill = T)
