@@ -77,6 +77,7 @@ namespace DigTest
             }
         }
 
+       
         [Fact]
         void DigRuns()
         {
@@ -141,8 +142,8 @@ namespace DigTest
 
                     driver.FindElement(By.Id("highlightData")).Click();
 
-                    Thread.Sleep(100);
-                    Console.WriteLine(driver.FindElement(By.Id("stats")).Text);
+                    Thread.Sleep(1000);
+                    Trace.WriteLine(driver.FindElement(By.Id("stats")).Text);
 
                     /*IWait<IWebDriver> single_wait2 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
                     Assert.True(single_wait2.Until(driver1 => driver.FindElement(By.Id("stats")).Displayed));
@@ -175,7 +176,8 @@ namespace DigTest
                     // Check refined and original ranges
                     driver.FindElement(By.CssSelector("a[data-value=\"PET Refinement\"]")).Click();
 
-                    //driver.Wait (By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Displayed;
+                    IWait<IWebDriver> pet_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                    Assert.True(pet_wait0.Until(driver1 => driver.FindElement(By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Displayed));
 
                     driver.FindElement(By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
                     IWait<IWebDriver> wait9 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
@@ -222,6 +224,9 @@ namespace DigTest
                     // Check to see that coloring mode has returned to Ranked
                     Assert.True(wait8.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Ranked Points: 1")));
 
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click());
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click());
+
 
                 /*}
                 catch
@@ -233,7 +238,7 @@ namespace DigTest
                     }
                     throw;
                 }*/
-                
+
             }
 
         }
