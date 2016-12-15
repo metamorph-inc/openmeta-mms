@@ -1,10 +1,16 @@
 library(shiny)
 library(DT)
+library(topsis)
+library(jsonlite)
 source('bayesian_utils.r')
+source('uq.r')
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
 #options(error = function() traceback(2))
 #options(shiny.error = function() traceback(2))
+
+
+
 
 
 #---------------------Global Variables-------------------------#
@@ -51,7 +57,7 @@ shinyServer(function(input, output, session) {
   #   paste(names(query), query, sep = "=", collapse=", ")
   # })
   
-  mapping = NULL
+  petConfig = NULL
 
   if (!is.null(query[['csvfilename']])) {
     print("In read raw")
@@ -62,56 +68,76 @@ shinyServer(function(input, output, session) {
   else if (nzchar(Sys.getenv('DIG_INPUT_CSV')))
   {
     raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
-    if(file.exists(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV'))))
-      mapping = read.csv(gsub("merged", "mapping", Sys.getenv('DIG_INPUT_CSV')), fill = T)
+    petConfigFilename = gsub("mergedPET.csv", "pet_config.json", Sys.getenv('DIG_INPUT_CSV'))
+    if(file.exists(petConfigFilename))
+      petConfig = fromJSON(petConfigFilename)
   }
   else
   {
     # Needed setup for regression testing:
     # raw = read.csv("RegressionTestingDataset.csv", fill=T)
     # mapping = read.csv("RegressionTestingMapping.csv", fill=T)
-    raw = read.csv("WindTurbineSimmerged.csv", fill=T)
-    if(file.exists("WindTurbineSimmapping.csv"))
-      mapping = read.csv("WindTurbineSimmapping.csv", fill=T)
     
     # Useful test setups:
-    raw = read.csv("../../../results/mergedPET.csv", fill=T)
-    mapping = read.csv("../../../results/mappingPET.csv", fill=T)
-    # raw = read.csv("../data.csv", fill=T)
-    raw = iris
-    mapping = read.csv("iris_mapping.csv", fill = T)
+    # raw = read.csv("../../../results/mergedPET.csv", fill=T)
+    # petConfig = fromJSON("../../../results/pet_config.json", fill=T)
+
+    # For testing with BladeMDA DoE Optimization Under Uncertainty Data
+    # raw = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty.csv", fill=T)
+    # if(file.exists("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv"))
+    #   mapping = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv", fill=T)
+    
+    raw = read.csv("WindTurbineSim_mergedPET.csv", fill=T)
+    petConfig = fromJSON("WindTurbineSim_pet_config.json")
+    
+    # raw = iris
+    # petConfig = read.csv("iris_config.json", fill = T)
   }
   
-  output$mappingPresent <- reactive({
-    if (is.null(mapping))
-      answer <- F
-    else
-      answer <- T
-    print(paste("mappingPresent:",answer))
-    answer
+  petConfigPresent <- !is.null(petConfig)
+  
+  # Process PET Configuration File ('pet_config.json') -----------------------
+  designVariableNames <- NULL
+  numericDesignVariables <- FALSE
+  enumeratedDesignVariables <- FALSE
+  designVariables <- NULL
+  objectiveNames <- NULL
+  
+  if(petConfigPresent) {
+    designVariableNames <- names(petConfig$drivers[[1]]$designVariables)
+    numericDesignVariables <- lapply(petConfig$drivers[[1]]$designVariables, function(x) {"RangeMax" %in% names(x)})
+    enumeratedDesignVariables <- lapply(petConfig$drivers[[1]]$designVariables, function(x) {"type" %in% names(x)})
+    dvTypes <- unlist(lapply(numericDesignVariables, function(x) { if(x) "Numeric" else "Enumeration"}))
+    dvSelections <- unlist(lapply(petConfig$drivers[[1]]$designVariables, function(x) {if("type" %in% names(x) && x$type == "enum") paste0(unlist(x$items), collapse=",") else paste0(c(x$RangeMin, x$RangeMax), collapse=",")}))
+    designVariables <- data.frame(VarName=designVariableNames, Type=dvTypes, Selection=dvSelections)
+    objectiveNames <- names(petConfig$drivers[[1]]$objectives)
+    petConfigNumSamples <- unlist(strsplit(as.character(petConfig$drivers[[1]]$details$Code),'='))[2]
+    petConfigSamplingMethod <- petConfig$drivers[[1]]$details$DOEType
+    petGeneratedConfigurationModel <- petConfig$GeneratedConfigurationModel
+    petSelectedConfigurations <- petConfig$SelectedConfigurations
+    petName <- petConfig$PETName
+    petMgaName <- petConfig$MgaFilename
+  }
+    
+  
+  output$petConfigPresent <- reactive({
+    print(paste("petConfigPresent:",petConfigPresent))
+    petConfigPresent
   })
   
-  output$numericMapping <- reactive({
-    if("Numeric" %in% mapping[["Type"]])
-      answer <- T
-    else
-      answer <- F
-    answer
+  output$numericDesignVariables <- reactive({
+    TRUE %in% numericDesignVariables
   })
   
-  output$enumerationMapping <- reactive({
-    if("Enumeration" %in% mapping[["Type"]])
-      answer <- T
-    else
-      answer <- F
-    answer
+  output$enumerationDesignVariables <- reactive({
+    TRUE %in% enumeratedDesignVariables
   })
   
-  outputOptions(output, "mappingPresent", suspendWhenHidden=FALSE)
-  outputOptions(output, "numericMapping", suspendWhenHidden=FALSE)
-  outputOptions(output, "enumerationMapping", suspendWhenHidden=FALSE)
+  outputOptions(output, "petConfigPresent", suspendWhenHidden=FALSE)
+  outputOptions(output, "numericDesignVariables", suspendWhenHidden=FALSE)
+  outputOptions(output, "enumerationDesignVariables", suspendWhenHidden=FALSE)
   
-  output$noMappingMessage <- renderText(paste("No mapping file was found."))
+  output$noPetConfigMessage <- renderText(paste("No pet_config.json file was found."))
   
   # Import/Export Session Settings -------------------------------------------
   
@@ -135,9 +161,14 @@ shinyServer(function(input, output, session) {
   
   initImport <- observeEvent(input$importSession, {
     print("in import session")
-    file <- fileChoose()
-    req(file)
-    importData <<- read.csv(file, header = TRUE, strip.white = TRUE)
+    if(input$loadSessionName == ""){
+      path <- fileChoose()
+      req(path)
+    }
+    else
+      path <- input$loadSessionName
+    req(file.exists(path))
+    importData <<- read.csv(path, header = TRUE, strip.white = TRUE)
     importFlags$tier1 <- TRUE
   })
   
@@ -157,9 +188,9 @@ shinyServer(function(input, output, session) {
                          "autoData",
                          "autoRange",
                          "viewAllFilters",
-                         "activateRanking",
+                         
                          "transpose",
-                         "bayesDispAll")
+                         "bayesianDisplayAll")
       
       tier1Selects <- c("colVarNum",
                         "display",
@@ -172,8 +203,9 @@ shinyServer(function(input, output, session) {
                         "pointSize",
                         "pointStyle",
                         "radio",
+                        "activateRanking",
                         "weightMetrics",
-                        "bayesDispVars")
+                        "bayesianDisplayVars")
                      
       tier1Colors <- c("normColor", 
                        "minColor", 
@@ -299,6 +331,8 @@ shinyServer(function(input, output, session) {
 
   # Pre-processing -----------------------------------------------------------
   
+  if(is.null(petConfig))
+  
   print("Starting Preprocessing of the Data -----------------------------------------")
   
   varNames = names(raw)
@@ -345,12 +379,20 @@ shinyServer(function(input, output, session) {
     answer
   })
   
+  varConstant <- reactive({
+    print(paste("varConstant:"))
+    answer <- subset(varNames, !(varNames %in% varRange()))
+    if(length(answer) > 0)
+      uiElements$constants <- T
+    print(paste(answer))
+    answer
+  })
 
   observe({
     
     isolate({
     print("Updating Panel Selections...")
-    updateSelectInput(session, 'bayesDispVars', choices = varRangeNum(), selected = varRangeNum()[1:2])
+    updateSelectInput(session, 'bayesianDisplayVars', choices = varRangeNum(), selected = varRangeNum()[1:2])
     updateSelectInput(session, "colVarFactor", choices = varRangeFac())  
     updateSelectInput(session, "colVarNum", choices = varRangeNum())#, selected = varRangeNum()[c(1)])
     updateSelectInput(session, "display", choices = varRange(), selected = varRange()[c(1,2)])
@@ -408,7 +450,7 @@ shinyServer(function(input, output, session) {
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
   output$displayFilters <- reactive({
-    display <- !(input$inTabset == "Options" | input$inTabset == "Bayesian")
+    display <- !(input$inTabset == "Options" | input$inTabset == "Uncertainty Quantification")
   })
   
   outputOptions(output, "displayFilters", suspendWhenHidden=FALSE)
@@ -437,19 +479,18 @@ shinyServer(function(input, output, session) {
     
     for(i in 1:length(vars)){
       current <- vars[i]
-      if(varClass[current] == "factor")
-        facVars <- c(facVars, current)
-      else if(varClass[current] == "integer")
-        intVars <- c(intVars, current)
-      else if(varClass[current] == "numeric")
-        numVars <- c(numVars, current)
+      switch(varClass[current],
+             "factor" = {facVars <- c(facVars, current)},
+             "integer" = {intVars <- c(intVars, current)},
+             "numeric" = {numVars <- c(numVars, current)}
+      )
     }
     
     isolate({
       div(
         fluidRow(
           lapply(facVars, function(column) {
-              generateEnumUI(column)
+            generateEnumUI(column)
           })
         ),
         fluidRow(
@@ -529,35 +570,17 @@ shinyServer(function(input, output, session) {
     
   }
   
-  
   output$constants <- renderUI({
     print("In render constants")
+    
     fluidRow(
-      lapply(1:length(varNames), function(column) {
-        # print(paste(column, varNames[column], varClass[column]))
-        if(varClass[column] == "numeric") {
-          max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
-          min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
-          diff <- (max-min)
-          if (diff == 0) { 
-            uiElements$constants <- T
-            column(2, p(strong(paste0(varNames[column],":")), min))}
-          } 
-        else {
-          if (varClass[column] == "integer") {
-            max <- as.integer(unname(rawAbsMax()[varNames[column]]))
-            min <- as.integer(unname(rawAbsMin()[varNames[column]]))
-            if (min == max) { 
-              uiElements$constants <- T
-              column(2, p(strong(paste0(varNames[column],":")), min))}
-            } 
-          else {
-            if (varClass[column] == "factor" & length(names(table(raw_plus()[varNames[column]]))) == 1) {
-              uiElements$constants <- T
-              column(2, p(strong(paste0(varNames[column],":")), names(table(raw_plus()[varNames[column]]))))
-            }
-          }
-        }
+      lapply(varConstant(), function(column) {
+        
+        switch(varClass[column],
+               "numeric" = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
+               "integer" =  column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
+               "factor"  = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column])))
+        )
       })
     )
   })
@@ -570,66 +593,58 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$resetSliders, {
     print("In resetDefaultSliders()")
-    for(column in 1:length(varNames)) {
-      if(varClass[column] == "numeric") {
-        max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
-        min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
-        diff <- (max-min)
-        if (diff != 0) {
-          step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
-          updateSliderInput(session, paste0('inp', column), value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
-        }
-      } else {
-        if(varClass[column] == "integer") {
-          max <- as.integer(unname(rawAbsMax()[varNames[column]]))
-          min <- as.integer(unname(rawAbsMin()[varNames[column]]))
-          if(min != max) {
-            updateSliderInput(session, paste0('inp', column), value = c(min, max))
-          }
-        } else {
-          if(varClass[column] == "factor") {
-            updateSelectInput(session, paste0('inp', column), selected = names(table(raw_plus()[varNames[column]])))
-          }
-        }
-      }
+    for(column in 1:length(varNames)){
+      switch(varClass[column],
+             "numeric" = 
+             {
+               max <- as.numeric(unname(rawAbsMax()[varNames[column]]))
+               min <- as.numeric(unname(rawAbsMin()[varNames[column]]))
+               diff <- (max-min)
+               if (diff != 0) {
+                 step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
+                 updateSliderInput(session, paste0('inp', column), value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
+               }
+             },
+             "integer" = 
+             {
+               max <- as.integer(unname(rawAbsMax()[varNames[column]]))
+               min <- as.integer(unname(rawAbsMin()[varNames[column]]))
+               if(min != max) {
+                 updateSliderInput(session, paste0('inp', column), value = c(min, max))
+               }
+             },
+             "factor"  = updateSelectInput(session, paste0('inp', column), selected = names(table(raw_plus()[varNames[column]])))
+      )
     }
   })
   
   # Data processing ----------------------------------------------------------
     
   filterData <- reactive({
-    #print("In filterData()")
+    print("In filterData()")
     data <- raw_plus()
-    # print(paste("Length of VarNames:", length(varNames)))
     for(column in 1:length(varNames)) {
       inpName=paste("inp",toString(column),sep="")
       nname = varNames[column]
       rng = input[[inpName]]
-      # print(paste("column: ", column, "Checking", nname, "rng", rng[1], "(", rawAbsMin()[column], ",", rawAbsMax()[column], ")", rng[2]))
       if(length(rng) != 0) {
         if((varClass[column]=="numeric" | varClass[column]=="integer")) {
-          #print(paste("Filtering", nname, "between", rng[1], "and", rng[2]))
           isolate({
             above <- (data[[nname]] >= rng[1])
             below <- (data[[nname]] <= rng[2])
             inRange <- above & below
           })
-        } else {
-          if (varClass[column]=="factor") {
-            # print(paste(varNames[column],class(rng)))
-            # print(paste(rng))
+        } 
+        else if (varClass[column]=="factor") {
             rng <- unlist(lapply(rng, function(factor){
               sub("[0-9]+. ","", factor)}))
             inRange <- (data[[nname]] %in% rng)
-          }
         }
         inRange <- inRange | is.na(data[[nname]])
         data <- subset(data, inRange)
       }
-      
-      # cat("-----------", inpName, nname, rng, length(data[nname]), sep = '\n')
     }
-    #print("Data Filtered")
+    print("Data Filtered")
     data
   })
   
@@ -638,80 +653,81 @@ shinyServer(function(input, output, session) {
     data <- filterData()
     data$color <- character(nrow(data))
     data$color <- input$normColor
-     if (input$colType == "Max/Min") {
-      name <- input$colVarNum
-      bottom <- input$colSlider[1]
-      top <- input$colSlider[2]
-      print(paste("Coloring Data:", name, bottom, top))
-      data$color[(data[[name]] >= bottom) & (data[[name]] <= top)] <- input$midColor
-      if (input$radio == "max") {
-        data$color[data[[name]] < bottom] <- input$maxColor
-        data$color[data[[name]] > top] <- input$minColor
-      } else {
-        data$color[data[[name]] < bottom] <- input$minColor
-        data$color[data[[name]] > top] <- input$maxColor
-      }
-     } 
-     else {
-       if (input$colType == "Discrete") {
-         varList = names(table(raw_plus()[input$colVarFactor]))
-         for(i in 1:length(varList)){
-           data$color[(data[[input$colVarFactor]] == varList[i])] <- palette()[i]
-         }
-       }
-       else {
-         if (input$colType == "Highlighted") {
-           if (!is.null(input$plot_brush)){
-             if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
-               xRange <- FALSE
-               yRange <- FALSE
+
+    colorType = input$colType
+    
+    switch(colorType,
+           "Max/Min" = 
+           {
+             name <- input$colVarNum
+             bottom <- input$colSlider[1]
+             top <- input$colSlider[2]
+             print(paste("Coloring Data:", name, bottom, top))
+             data$color[(data[[name]] >= bottom) & (data[[name]] <= top)] <- input$midColor
+             if (input$radio == "max") {
+               data$color[data[[name]] < bottom] <- input$maxColor
+               data$color[data[[name]] > top] <- input$minColor
+             } 
+             else {
+               data$color[data[[name]] < bottom] <- input$minColor
+               data$color[data[[name]] > top] <- input$maxColor
              }
-             else{
-               if(varClass[input$xInput] == "factor"){
-                 lower <- ceiling(input$plot_brush$xmin)
-                 upper <- floor(input$plot_brush$xmax)
+           },
+           "Discrete" = 
+           {
+             varList = names(table(raw_plus()[input$colVarFactor]))
+             for(i in 1:length(varList)){
+               data$color[(data[[input$colVarFactor]] == varList[i])] <- palette()[i]
+             }
+           },
+           "Highlighted" = 
+           {
+             if (!is.null(input$plot_brush)){
+               if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
                  xRange <- FALSE
-                 for (i in lower:upper){
-                   xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
-                 }
-                 if (lower > upper){
-                   xRange <- FALSE
-                 }
-               }
-               else {
-                 xUpper <- data[input$xInput] < input$plot_brush$xmax
-                 xLower <- data[input$xInput] > input$plot_brush$xmin
-                 xRange <- xUpper & xLower
-               }
-               if(varClass[input$yInput] == "factor"){
-                 lower <- ceiling(input$plot_brush$ymin)
-                 upper <- floor(input$plot_brush$ymax)
                  yRange <- FALSE
-                 for (i in lower:upper){
-                   yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
-                 }                 
-                 if (lower > upper){
-                   yRange <- FALSE
-                 }
                }
                else{
-                 yUpper <- data[input$yInput] < input$plot_brush$ymax
-                 yLower <- data[input$yInput] > input$plot_brush$ymin
-                 yRange <- yUpper & yLower
+                 if(varClass[input$xInput] == "factor"){
+                   lower <- ceiling(input$plot_brush$xmin)
+                   upper <- floor(input$plot_brush$xmax)
+                   xRange <- FALSE
+                   for (i in lower:upper){
+                     xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
+                   }
+                   if (lower > upper){
+                     xRange <- FALSE
+                   }
+                 }
+                 else {
+                   xUpper <- data[input$xInput] < input$plot_brush$xmax
+                   xLower <- data[input$xInput] > input$plot_brush$xmin
+                   xRange <- xUpper & xLower
+                 }
+                 if(varClass[input$yInput] == "factor"){
+                   lower <- ceiling(input$plot_brush$ymin)
+                   upper <- floor(input$plot_brush$ymax)
+                   yRange <- FALSE
+                   for (i in lower:upper){
+                     yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
+                   }                 
+                   if (lower > upper){
+                     yRange <- FALSE
+                   }
+                 }
+                 else{
+                   yUpper <- data[input$yInput] < input$plot_brush$ymax
+                   yLower <- data[input$yInput] > input$plot_brush$ymin
+                   yRange <- yUpper & yLower
+                 }
                }
+               data$color[xRange & yRange] <- input$highlightColor #light blue
              }
-             data$color[xRange & yRange] <- input$highlightColor #light blue
-           }
-         }
-         else {
-           if (input$colType == "Ranked"){
-             data[input$dataTable_rows_selected, "color"] <- input$rankColor
-           }
-         }
-       }
-     }
-     print("Data Colored")
-     data
+           },
+           "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
+    )
+    print("Data Colored")
+    data
   })
   
   output$colorLegend <- renderUI({
@@ -751,9 +767,7 @@ shinyServer(function(input, output, session) {
     vars
   })
   
-  pairsTrendline <- function(...){
-    print("In pairs trendline")
-    
+  pairsSetup <- function(...){
     if(input$upperPanel) {
       if(input$trendLines) {
         p <- pairs(pairs_data()[pairs_vars()], lower.panel = panel.smooth, upper.panel = panel.smooth, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
@@ -770,13 +784,8 @@ shinyServer(function(input, output, session) {
         p <- pairs(pairs_data()[pairs_vars()], upper.panel = NULL, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
       }
     }
-    
+    p
   }
-  
-  output$pairsDisplay <- renderUI({
-    print("In pairs display")
-    plotOutput("pairsPlot", dblclick = "pairs_click", height=700)
-  })
   
   output$pairsPlot <- renderPlot({
     
@@ -787,33 +796,22 @@ shinyServer(function(input, output, session) {
     
     if (length(input$display) >= 2 & nrow(filterData()) > 0) {
       print("Rendering Plot.")
-      pairsTrendline()
+      
+      pairsSetup()
+      
       print("Plot Rendered.")
     }
-    else {
+    else { 
       if (nrow(filterData()) == 0) {
-        output$filterError <- 
-          renderText(
-            "No data points fit the current filtering scheme")
+        output$filterError <- renderText(
+            "<br/>No data points fit the current filtering scheme.")
       }
       if (length(input$display) < 2) {
-        output$displayError <-renderUI(
-          HTML("<br/>Please select two or more Display Variables.")
-        )
+        output$displayError <- renderText(
+          "<br/>Please select two or more Display Variables.")
       }
     }
   })
-  
-  output$filterError <- renderUI({
-    print("In filter error")
-    h4(textOutput("filterVars"), align = "center")
-  })
-  
-  output$displayError <- renderUI({
-    print("In display error")
-    h4(textOutput("displayVars"), align = "center")
-  })
-  
   
   #Change to single plot when user clicks a plot on pairs matrix
   observeEvent(input$pairs_click, {
@@ -832,16 +830,19 @@ shinyServer(function(input, output, session) {
       plot <- 0.9
       buffer <- 0.1
     }
-    if(num_vars > 11){
+    else if(num_vars > 11){
       margin <- -0.5
+      plot <- 0.9
       buffer <- 0.2
     }
-    if(num_vars > 12){
+    else if(num_vars > 12){
       buffer <- 0.15
+      plot <- 0.9
       margin <- -0.6
     }
-    if(num_vars > 18){
+    else if(num_vars > 18){
       margin <- -1.51
+      plot <- 0.9
       buffer <- 0.25
     }
     xlimits <- c(margin, plot+margin)
@@ -887,14 +888,7 @@ shinyServer(function(input, output, session) {
   })
   
   slowVarsList <- eventReactive(input$renderPlot, {
-    print("Getting Variable List.")
-    idx = 0
-    for(choice in 1:length(input$display)) {
-      mm <- match(input$display[choice],varNames)
-      if(mm > 0) { idx <- c(idx,mm) }
-    }
-    print(idx)
-    idx
+    varsList()
   })
   
   slowData <- eventReactive(input$renderPlot, {
@@ -905,7 +899,7 @@ shinyServer(function(input, output, session) {
     print("In render stats")
     if(nrow(filterData()) > 0){
       if(input$autoInfo == TRUE){
-        table <- infoTable()
+        table <- infoTable(input$colType)
       }
       else {
         table <- slowInfoTable()
@@ -923,7 +917,7 @@ shinyServer(function(input, output, session) {
     table
 })
 
-  infoTable <- function(...){
+  infoTable <- function(colorType){
     print("In info table")
     tb <- table(factor(colorData()$color, 
                        c(input$midColor, 
@@ -932,57 +926,49 @@ shinyServer(function(input, output, session) {
                          input$rankColor,
                          input$maxColor, 
                          input$normColor)))
-    if (input$colType == 'Max/Min') {
-      paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nColored Points: ", sum(tb[[input$minColor]], tb[[input$midColor]], tb[[input$maxColor]], tb[[input$normColor]]),
-             "\nWorst Points: ", tb[[input$maxColor]],
-             "\nIn Between Points: ", tb[[input$midColor]],
-             "\nBest Points: ", tb[[input$minColor]]
-      )
-    } 
-    else if(input$colType == 'Discrete') {
-      tb <- table(factor(colorData()$color, palette()))
-      d_vars <- names(table(raw_plus()[input$colVarFactor]))
-      output_string <- paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nColored Points: ", sum(tb[[palette()[1]]], 
-                                       tb[[palette()[2]]], 
-                                       tb[[palette()[3]]], 
-                                       tb[[palette()[4]]], 
-                                       tb[[palette()[5]]], 
-                                       tb[[palette()[6]]], 
-                                       tb[[palette()[7]]], 
-                                       tb[[palette()[8]]], 
-                                       tb[[palette()[9]]]))
-      for(i in 1:length(d_vars)){
+    switch(colorType,
+           "Max/Min" = paste0("Total Points: ", nrow(raw),
+                              "\nCurrent Points: ", nrow(colorData()),
+                              "\nColored Points: ", sum(tb[[input$minColor]], tb[[input$midColor]], tb[[input$maxColor]], tb[[input$normColor]]),
+                              "\nWorst Points: ", tb[[input$maxColor]],
+                              "\nIn Between Points: ", tb[[input$midColor]],
+                              "\nBest Points: ", tb[[input$minColor]]
+           ),
+           "Discrete" = {tb <- table(factor(colorData()$color, palette()))
+           d_vars <- names(table(raw_plus()[input$colVarFactor]))
+           output_string <- paste0("Total Points: ", nrow(raw),
+                                   "\nCurrent Points: ", nrow(colorData()),
+                                   "\nColored Points: ", sum(tb[[palette()[1]]], 
+                                                             tb[[palette()[2]]], 
+                                                             tb[[palette()[3]]], 
+                                                             tb[[palette()[4]]], 
+                                                             tb[[palette()[5]]], 
+                                                             tb[[palette()[6]]], 
+                                                             tb[[palette()[7]]], 
+                                                             tb[[palette()[8]]], 
+                                                             tb[[palette()[9]]]))
+           for(i in 1:length(d_vars)){
              output_string <- paste0(output_string, 
                                      "\n", d_vars[i]," Points: ", tb[[palette()[i]]])
-      }
-      output_string
-    }
-    else if(input$colType == 'Highlighted') {
-      paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nHighlighted Points: ", tb[[input$highlightColor]]
-      )
-    }
-    else if(input$colType == 'Ranked') {
-      paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nRanked Points: ", tb[[input$rankColor]]
-      )
-    }
-    else{
-      paste0("Total Points: ", nrow(raw),
-             "\nCurrent Points: ", nrow(filterData()),
-             "\nColored Points: ", tb[[input$normColor]]
-      )
-    }
+           }
+           output_string},
+           "Highlighted" = paste0("Total Points: ", nrow(raw),
+                                  "\nCurrent Points: ", nrow(colorData()),
+                                  "\nHighlighted Points: ", tb[[input$highlightColor]]
+           ),
+           "Ranked" = paste0("Total Points: ", nrow(raw),
+                             "\nCurrent Points: ", nrow(colorData()),
+                             "\nRanked Points: ", tb[[input$rankColor]]
+           ),
+           paste0("Total Points: ", nrow(raw),
+                  "\nCurrent Points: ", nrow(colorData()),
+                  "\nColored Points: ", tb[[input$normColor]]
+           )
+    )
   }
   
   slowInfoTable <- eventReactive(input$updateStats, {
-    infoTable()
+    infoTable(input$colType)
   })
 
   output$exportData <- downloadHandler(
@@ -1066,8 +1052,9 @@ shinyServer(function(input, output, session) {
   })
   
   #Event handler for "clear metrics" button
-  observeEvent(input$clearMetrics, {
-    updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
+  observe({
+    if(input$clearMetrics | input$activateRanking == "Unranked")
+      updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
   })
   
   #UI class for each metric UI
@@ -1095,61 +1082,85 @@ shinyServer(function(input, output, session) {
       funcVal <- func
     }
     
-    transferCondition = toString(paste0("input.util",current," == true"))
+    if(input$activateRanking == 'TOPSIS')
+      topsisMetricUI(current, radioVal, sliderVal)
+    else if(input$activateRanking == 'Simple Metric w/ TxFx')
+      simpleMetricUI(current, radioVal, sliderVal, utilVal, funcVal)
+  }
+  
+  topsisMetricUI <- function(current, radioVal, sliderVal) {
     
     varName <- varNames[current]
-    column(3, 
-      h4(varName),
-      radioButtons(paste0('sel', current),
-                   "Score By:",
-                   choices = c("Min", "Max"),
-                   selected = radioVal,
-                   inline = TRUE),
-      sliderInput(paste0('rnk', current),
-                  "Weight:",
-                  step = 0.01,
-                  min = 0,
-                  max = 1,
-                  value = sliderVal),
-      checkboxInput(paste0('util', current),
+    
+    fluidRow(
+      column(3, h5(varName)),
+      column(2, radioButtons(paste0('sel', current),
+                             NULL,
+                             choices = c("Min", "Max"),
+                             selected = radioVal,
+                             inline = TRUE)),
+      column(7, sliderInput(paste0('rnk', current),
+                            NULL,
+                            step = 0.01,
+                            min = 0,
+                            max = 1,
+                            value = sliderVal))
+    )
+  }
+  
+  simpleMetricUI <- function(current, radioVal, sliderVal, utilVal, funcVal) {
+    
+    varName <- varNames[current]
+    transferCondition = toString(paste0("input.util",current," == true"))
+    
+    fluidRow(
+      column(3, h5(varName)),
+      column(2, radioButtons(paste0('sel', current),
+                             NULL,
+                             choices = c("Min", "Max"),
+                             selected = radioVal,
+                             inline = TRUE)),
+      column(3, sliderInput(paste0('rnk', current),
+                            NULL,
+                            step = 0.01,
+                            min = 0,
+                            max = 1,
+                            value = sliderVal)),
+      column(1, checkboxInput(paste0('util', current),
                     "Add Transfer Function",
-                    value = utilVal),
-      conditionalPanel(condition = transferCondition,
+                    value = utilVal)),
+      column(3, conditionalPanel(condition = transferCondition,
                        textInput(paste0('func', current),
                                  "Enter Data Points",
-                                  placeholder = paste0("Value = Score | e.g. ", 
+                                  placeholder = paste0("Value = Score | e.g. ",
                                     rawAbsMin()[[varName]],
                                     " = 1, ",
                                     rawAbsMax()[[varName]],
                                     "= 0.5"),
                                  value = funcVal),
-                       utilityPlot(current)),
-      br(), br(), br()
+                       utilityPlot(current)))
     )
   }
   
   fullMetricUI <- reactive({
+    a <- input$activateRanking # Force reaction
     if(!importFlags$ranking){
-      fluidRow(
-        lapply(metricsList(), function(column) {
-          isolate(generateMetricUI(column))
-        })
-      )
+      lapply(metricsList(), function(column) {
+        isolate(generateMetricUI(column))
+      })
     }
     else{
-      fluidRow(
-        lapply(metricsList(), function(column) {
-          importedSlider <- importData[[paste0('rnk', column)]]
-          importedRadio <- importData[[paste0('sel', column)]]
-          importedUtil <- importData[[paste0('util', column)]]
-          importedFunc <- importData[[paste0('func', column)]]
-          isolate(generateMetricUI(column, 
-                                   importedSlider, 
-                                   importedRadio,
-                                   importedUtil,
-                                   importedFunc))
-        })
-      )
+      lapply(metricsList(), function(column) {
+        importedSlider <- importData[[paste0('rnk', column)]]
+        importedRadio <- importData[[paste0('sel', column)]]
+        importedUtil <- importData[[paste0('util', column)]]
+        importedFunc <- importData[[paste0('func', column)]]
+        isolate(generateMetricUI(column, 
+                                 importedSlider, 
+                                 importedRadio,
+                                 importedUtil,
+                                 importedFunc))
+      })
     }
   })
   
@@ -1275,6 +1286,7 @@ shinyServer(function(input, output, session) {
     print("In render ranking sliders")
     fullMetricUI()
   })
+
   
   #Process metric weights
   rankData <- reactive({
@@ -1327,7 +1339,6 @@ shinyServer(function(input, output, session) {
     data <- cbind(rank, score, data)
     data
     
-    
   })
   
   #Score individual point by transfer function
@@ -1354,17 +1365,53 @@ shinyServer(function(input, output, session) {
   slowRankData <- eventReactive(input$applyRanking, {
     rankData()
   })
-  
-  output$dataTable <- DT::renderDataTable({
-    processDataTable()
+ 
+  topsisData <- reactive({
+    req(metricsList())
+    print("In calculate topsis data")
+    data <- filterData()[varRangeNum()]
+    weights <- NULL
+    impacts <- NULL
+    for(i in 1:length(varRangeNum())){
+      global_index <- match(varRangeNum()[i], varNames)
+      if(!is.null(input[[paste0("rnk", global_index)]])){
+        weights <- c(weights, input[[paste0("rnk", global_index)]])
+        impacts <- c(impacts, input[[paste0("sel", global_index)]])
+      }
+      else{
+        weights <- c(weights, 0.01)
+        impacts <- c(impacts, '+')
+      }
+    }
+    impacts[impacts == "Max"] <- '+'
+    impacts[impacts == "Min"] <- '-'
+    t <- topsis(as.matrix(data), weights, impacts)
+    sorted_topsis <- t[order(t$rank),]
+    rank <- sorted_topsis$rank
+    score <- sorted_topsis$score
+    output_data <- filterData()[sorted_topsis$alt.row,]
+    output_data <- cbind(rank, score, output_data)
+    output_data
   })
   
-  processDataTable <- reactive({
-    if(input$activateRanking & length(input$weightMetrics) > 0){
-      if(input$autoRanking)
-        data <- rankData()
-      else
-        data <- slowRankData()
+  slowTopsisData <- eventReactive(input$applyRanking, {
+    topsisData()
+  })
+  
+  output$dataTable <- DT::renderDataTable({
+    if(length(input$weightMetrics) > 0){
+      if(input$activateRanking == 'TOPSIS'){
+        if(input$autoRanking)
+          data <- topsisData()
+        else
+          data <- slowTopsisData()
+      }
+      else{
+          if(input$autoRanking)
+            data <- rankData()
+          else
+            data <- slowRankData()
+      }
     }
     else{
       data <- filterData()
@@ -1375,15 +1422,6 @@ shinyServer(function(input, output, session) {
     #  data <- t(data)
     data
   })
-  
-  #Output ranked data table
-  # output$rankTable <- DT::renderDataTable({
-  #   print("In render ranked data table")
-  #   data <- rankData()
-  #   if(input$roundTables)
-  #     data <- round_df(rankData(), input$numDecimals)
-  #   data
-  # })
   
   #Event handler for "Color by selected rows"
   observeEvent(input$colorRanked, {
@@ -1396,7 +1434,7 @@ shinyServer(function(input, output, session) {
   output$exportPoints <- downloadHandler(
     filename = function() { paste('ranked_points-', Sys.Date(), '.csv', sep='') },
     content = function(file) { 
-      if(input$activateRanking)
+      if(input$activateRanking != "Unranked")
         write.csv(rankData()[input$dataTable_rows_selected, ], file)
       else
         write.csv(filterData()[input$dataTable_rows_selected, ], file) 
@@ -1410,13 +1448,33 @@ shinyServer(function(input, output, session) {
     all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
   })
   
+  output$petDriverConfig <- renderUI({
+    fluidRow(
+      column(3, selectInput("petSamplingMethod", "New Sampling Method:", choices = c("Full Factorial", "Uniform", "Central Composite", "Opt Latin Hypercube"), selected = petConfigSamplingMethod)),
+      column(3, textInput("petNumSamples", "New Number of Samples:", value = petConfigNumSamples))
+    )
+  })
+  
+  output$petRename <- renderUI({
+    fluidRow(
+      column(12, h5(strong("Original MGA Filename: ")), textOutput("mgaFilenameText")),
+      column(12, h5(strong("Original PET Name: ")), textOutput("currentPetNameText"), br()),
+      column(12, textInput("newPetName", "New PET Name:", value = paste0(petName, "_Refined")))
+    )
+  })
+  
+  output$originalDriverSettings <- renderText(paste(petConfigSamplingMethod," sampling with 'num_samples=", petConfigNumSamples,"' yielded ", nrow(raw), " points.", sep = ""))
+  output$mgaFilenameText <- renderText(petMgaName)
+  output$generatedConfigurationModelText <- renderText(petGeneratedConfigurationModel)
+  output$currentPetNameText <- renderText(petName)
+  
   output$original_numeric_ranges <- renderUI({
     
-    lapply(rownames(mapping), function(row){
+    lapply(rownames(designVariables), function(row){
       
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
+      selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Selection"]))), ","))
       
       if(type == "Numeric"){
         global_index = which(varNames == var)
@@ -1469,13 +1527,13 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  output$original_enumeration_ranges <- renderUI({
+  output$rangesEnum <- renderUI({
     
-    lapply(rownames(mapping), function(row){
+    lapply(rownames(designVariables), function(row){
       
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
-      selection = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
+      selection = gsub(",", ", ", levels(droplevels(designVariables[row, "Selection"])))
       
       if(type == "Enumeration"){
         global_index = which(varNames == var)
@@ -1514,22 +1572,67 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  # Pull values from Mapping File
+  output$original_configuration_ranges <- renderUI({
+    
+    original <- paste0(petSelectedConfigurations, collapse=",")
+    originalCount <- length(petSelectedConfigurations)
+    if(originalCount > EnumerationMaxDisplay)
+      original = paste0("List of ", originalCount, " Configurations.")
+    
+    refined <- paste0(unique(filterData()$CfgID), collapse=",")
+    refinedCount <- length(unique(filterData()$CfgID))
+    if(refinedCount > EnumerationMaxDisplay)
+      refined = paste0("List of ", refinedCount, " Configurations.")
+    if(refined == "")
+      refined = "No configurations available."
+    
+    input_selection <- NULL
+    # if(importFlags$ranges){
+    #   input_selection <- importData[[paste0('newSelection', global_index
+    #   NULL #This makes sure nothing appears in the UI
+    # }
+    
+    fluidRow(
+      column(2, h5(strong("Configuration Name(s)"))),
+      column(1, actionButton('applyOriginalCfgIDs', 'Apply')),
+      column(2, h5(original)),
+      column(1, actionButton('applyRefinedCfgIDs', 'Apply')),
+      column(2, h5(refined)),
+      column(4,
+             textInput('newCfgIDs',
+                       NULL,
+                       placeholder = "Enter selection",
+                       value = input_selection)
+      )
+    )
+  })
+  
+  observeEvent(input$applyOriginalCfgIDs, {
+    original <- paste0(petSelectedConfigurations, collapse=",")
+    updateTextInput(session, 'newCfgIDs', value = original)
+  })
+  
+  observeEvent(input$applyRefinedCfgIDs, {
+    refined <- paste0(unique(filterData()$CfgID), collapse=",")
+    updateTextInput(session, 'newCfgIDs', value = refined)
+  })
+  
+  # Pull values from petConfig.json File
   
   reactToApplyOriginalButtons <- observe({
-    lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+    lapply(rownames(designVariables), function(row) {
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       global_i = which(varNames == var)
       if(type == "Numeric"){
-        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Selection"]))), ","))
         observeEvent(input[[paste0('applyOriginalRange', global_i)]], {
           updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
           updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
         })
       }
       else if(type == "Enumeration"){
-        original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+        original = gsub(",", ", ", levels(droplevels(designVariables[row, "Selection"])))
         observeEvent(input[[paste0('applyOriginalSelection', global_i)]], {
           updateTextInput(session, paste0('newSelection', global_i), value = original)
         })
@@ -1538,12 +1641,12 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$applyAllOriginalNumeric, {
-    lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+    lapply(rownames(designVariables), function(row) {
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       global_i = which(varNames == var)
       if(type == "Numeric"){
-        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Selection"]))), ","))
+        original = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Selection"]))), ","))
         updateTextInput(session, paste0('newMin', global_i), value = as.numeric(original[1]))
         updateTextInput(session, paste0('newMax', global_i), value = as.numeric(original[2]))
       }
@@ -1551,12 +1654,12 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$applyAllOriginalEnum, {
-    lapply(rownames(mapping), function(row) {
-      var = levels(droplevels(mapping[row, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[row, "Type"])))
+    lapply(rownames(designVariables), function(row) {
+      var = levels(droplevels(designVariables[row, "VarName"]))
+      type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       global_i = which(varNames == var)
       if(type == "Enumeration"){
-        original = gsub(",", ", ", levels(droplevels(mapping[row, "Selection"])))
+        original = gsub(",", ", ", levels(droplevels(designVariables[row, "Selection"])))
         updateTextInput(session, paste0('newSelection', global_i), value = original)
       }
     })
@@ -1566,32 +1669,32 @@ shinyServer(function(input, output, session) {
   
   reactToApplyRefinedButtons <- observe({
     lapply(varNum, function(var) {
-      global_i = which(varNames == var)
-      observeEvent(input[[paste0('applyRefinedRange', global_i)]], {
-        updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
-        updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+      global_index = which(varNames == var)
+      observeEvent(input[[paste0('applyRefinedRange', global_index)]], {
+        updateTextInput(session, paste0('newMin', global_index), value = min(filterData()[var]))
+        updateTextInput(session, paste0('newMax', global_index), value = max(filterData()[var]))
       })
     })
     lapply(varFac, function(var) {
-      global_i = which(varNames == var)
-      observeEvent(input[[paste0('applyRefinedSelection', global_i)]], {
-        updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(filterData()[var])[,1]))
+      global_index = which(varNames == var)
+      observeEvent(input[[paste0('applyRefinedSelection', global_index)]], {
+        updateTextInput(session, paste0('newSelection', global_index), value = toString(unique(filterData()[var])[,1]))
       })
     })
   })
   
   observeEvent(input$applyAllRefinedNumeric, {
     lapply(varNum, function(var) {
-      global_i = which(varNames == var)
-      updateTextInput(session, paste0('newMin', global_i), value = min(filterData()[var]))
-      updateTextInput(session, paste0('newMax', global_i), value = max(filterData()[var]))
+      global_index = which(varNames == var)
+      updateTextInput(session, paste0('newMin', global_index), value = min(filterData()[var]))
+      updateTextInput(session, paste0('newMax', global_index), value = max(filterData()[var]))
     })
   })
   
   observeEvent(input$applyAllRefinedEnum, {
     lapply(varFac, function(var) {
-      global_i = which(varNames == var)
-      updateTextInput(session, paste0('newSelection', global_i), value = toString(unique(filterData()[var])[,1]))
+      global_index = which(varNames == var)
+      updateTextInput(session, paste0('newSelection', global_index), value = toString(unique(filterData()[var])[,1]))
     })
   })
   
@@ -1617,35 +1720,59 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  observeEvent(input$exportRanges, {
+  observeEvent(input$runRanges, {
     if (nzchar(Sys.getenv('DIG_INPUT_CSV'))) {
-      exportRangesFunction(gsub("merged", "ranges", Sys.getenv('DIG_INPUT_CSV')))
+      resultsDirectory <- dirname(Sys.getenv('DIG_INPUT_CSV'))
+      projectDirectory <- dirname(resultsDirectory)
+      petConfigRefinedFilename <- file.path(resultsDirectory, "pet_config_refined.json")
+      exportRangesFunction(petConfigRefinedFilename)
+      system2("..\\Python27\\Scripts\\python.exe",
+              args = c("..\\UpdatePETParameters.py",
+                       "--pet-config",
+                       petConfigRefinedFilename,
+                       "--new-name",
+                       paste0("\"",input$newPetName,"\"")),
+              stdout = file.path(resultsDirectory, "UpdatePETParameters_stdout.log"),
+              stderr = file.path(resultsDirectory, "UpdatePETParameters_stderr.log"),
+              wait = FALSE)
     }
   })
   
   output$downloadRanges <- downloadHandler(
-    filename = function() {paste('ranges-', Sys.Date(), '.csv', sep='')},
+    filename = function() {paste('pet_config_refined_', Sys.Date(), '.json', sep='')},
     content = exportRangesFunction
   )
   
   exportRangesFunction <- function(file) { 
-    cnms <- c("VarName", "Type", "Selection")
-    data <- NULL
-    for(i in 1:length(rownames(mapping))){
-      var = levels(droplevels(mapping[i, "VarName"]))
-      type = gsub("^\\s+|\\s+$", "", levels(droplevels(mapping[i, "Type"])))
-      global_i = which(varNames == var)
-      if(type == "Numeric")
-        selection = toString(c(input[[paste0('newMin', global_i)]], input[[paste0('newMax', global_i)]]))
-      else
-        selection = input[[paste0('newSelection', global_i)]]
-      
-      data <- rbind(data, c(var, type, selection))
+    petConfigRefined <- petConfig
+    
+    reassignDV <- function(dv, name) {
+      global_i = which(varNames == name)
+      if("type" %in% names(dv) && dv$type == "enum") {
+        selection <- strsplit(input[[paste0('newSelection', global_i)]], ",")
+        if (length(unlist(selection)) > 1) {
+          dv$items <- unlist(selection)
+        } else {
+          dv$items <- selection
+        }
+      } else {
+        dv$RangeMin <- as.numeric(input[[paste0('newMin', global_i)]])
+        dv$RangeMax <- as.numeric(input[[paste0('newMax', global_i)]])
+      }
+      dv
     }
-    ranges_df <- as.data.frame(data)
-    colnames(ranges_df) <- cnms
-    ranges_df <- apply(ranges_df,2,function(x)gsub('\\s+', '',x))
-    write.csv(ranges_df, file = file, row.names=F)
+    petConfigRefined$drivers[[1]]$designVariables <- Map(reassignDV, petConfigRefined$drivers[[1]]$designVariables, names(petConfigRefined$drivers[[1]]$designVariables))
+    
+    petConfigRefined$drivers[[1]]$details$Code <- paste0("num_samples=", input$petNumSamples)
+    petConfigRefined$drivers[[1]]$details$DOEType <- input$petSamplingMethod
+    
+    selectedConfigurations <- strsplit(input$newCfgIDs, ",")
+    if(length(unlist(selectedConfigurations)) > 1)
+      selectedConfigurations <- unlist(selectedConfigurations)
+    petConfigRefined$SelectedConfigurations <- selectedConfigurations
+    
+    
+    write(toJSON(petConfigRefined, pretty = TRUE, auto_unbox = TRUE), file = file)
   }
   
   # Bayesian -----------------------------------------------------------------
@@ -1654,19 +1781,36 @@ shinyServer(function(input, output, session) {
   bayesVarsList <- reactive({
     print("Getting Variable List.")
     idx = NULL
-    for(choice in 1:length(input$bayesDispVars)) {
-      mm <- match(input$bayesDispVars[choice],varRangeNum())
+    for(choice in 1:length(input$bayesianDisplayVars)) {
+      mm <- match(input$bayesianDisplayVars[choice],varRangeNum())
       if(mm > 0) { idx <- c(idx,mm) }
     }
     print(idx)
     idx
   })
   
+  observeEvent(input$bayesianDesignConfigsPresent, {
+    updateSelectInput(session, "bayesianDesignConfigVar", choices = varRangeFac())
+  })
+  
+  observeEvent(input$bayesianDesignConfigVar, {
+    print(paste(input$bayesianDesignConfigVar))
+    updateSelectInput(session, "bayesianDesignConfigChoice", choices = levels(raw_plus()[[input$bayesianDesignConfigVar]]))
+  })
+  
+  filtered_raw_plus <- reactive({
+    data <- raw_plus()
+    if(input$bayesianDesignConfigsPresent & !is.na(input$bayesianDesignConfigVar) & !is.na(input$bayesianDesignConfigChoice)) {
+      data <- subset(data, data[[paste0(input$bayesianDesignConfigVar)]] == input$bayesianDesignConfigChoice)
+    }
+    data
+  })
+      
   bayesianData <- reactive({
     print("In bayesianData()")
     
     variables <- varRangeNum()
-    input_data <- raw_plus()[variables]
+    input_data <- filtered_raw_plus()[variables]
     
     # Real Resample
     req(bayesianUIInitialized)
@@ -1676,113 +1820,103 @@ shinyServer(function(input, output, session) {
     else
     {
       output_data <- NULL
-      # # Surrogate Resample
-      # output_data <- list()
-      # data_mean <- apply(input_data, 2, mean)
-      # data_sd <- apply(input_data, 2, sd)
-      # 
-      # print(data_mean)
-      # print(data_sd)
-      # 
-      # for (i in 1:length(variables)) {
-      #   var <- variables[i]
-      #   samples <- seq(unname(rawAbsMin()[var])*0.8, unname(rawAbsMax()[var])*1.3, ((unname(rawAbsMax()[var])*1.3 - unname(rawAbsMin()[var])*0.8))/100)
-      #   output_data[[variables[i]]] <- list("xOrig" = samples,
-      #                                       "yOrig" = dnorm(samples, data_mean[var], data_sd[var]),
-      #                                       "xResampled" = samples,
-      #                                       "yResampled" = dnorm(samples, data_mean[[var]]*1.3, data_sd[[var]]*0.8))
-      # }
     }
-    
-    # bayesianUIInitialized <<- FALSE
     output_data
   })
-
-  
-  
-  # generateGaussian <- function(current) {
-  #   print ("Generating gaussian from user input ")
-  #   sd <- input[[paste0('gaussian_sd', current)]]
-  #   mean <- input[[paste0('gaussian_mean', current)]]
-  #   req(sd)
-  #   req(mean)
-  #   gaussian <- rnorm(1000, mean, sd)
-  # }
-  
-
   
   output$bayesianUI <- renderUI({
     print("In bayesianUI()")
     var_directions <- c("Input",
                         "Output")
-    data_mean <- apply(raw_plus()[varRangeNum()], 2, mean)
-    data_sd <- apply(raw_plus()[varRangeNum()], 2, sd)
+    data_mean <- apply(filtered_raw_plus()[varRangeNum()], 2, mean)
+    data_sd <- apply(filtered_raw_plus()[varRangeNum()], 2, function(x) {sd(x)/2})
     
     bayesChoices <- varRangeNum()
-    if(!input$bayesDispAll)
+    if(!input$bayesianDisplayAll)
       bayesChoices <- varRangeNum()[bayesVarsList()]
     
     lapply(bayesChoices, function(var) {
       # UI calculations
-      global_i <- which(varNames == var) # globalId
+      global_index <- which(varNames == var) # globalId
       #gaussianCondition = toString(paste0("input.gaussian",i," == true"))
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
       #Defaults
-      this_gaussian <- FALSE
+      this_gaussian <- TRUE
       this_gauss_mean <- data_mean[[var]]
       this_sd <- data_sd[[var]]
       
       #Import Session
       if(importFlags$bayesian){ 
-        this_direction <- importData[[paste0('varDirection', global_i)]]
-        this_gaussian <- importData[[paste0('gaussian', global_i)]]
-        this_gauss_mean <- importData[[paste0('gaussian_mean', global_i)]]
-        this_sd <- importData[[paste0('gaussian_sd',global_i)]]
+        this_direction <- importData[[paste0('varDirection', global_index)]]
+        this_gaussian <- importData[[paste0('gaussian', global_index)]]
+        this_gauss_mean <- importData[[paste0('gaussian_mean', global_index)]]
+        this_sd <- importData[[paste0('gaussian_sd',global_index)]]
       }
       
-      #From mappingPET.csv
-      if(!is.null(mapping) & var %in% mapping$VarName) 
+      #From petConfig.json
+      if(petConfigPresent & var %in% designVariableNames) 
         this_direction <- "Input"
       else
         this_direction <- "Output"
-      
-      fluidRow(
-        hr(),
-        column(8,
-               
-               selectInput(
-                 paste0('varDirection', global_i),
-                 label = var,
-                 choices = var_directions,
-                 selected = this_direction),
-               checkboxInput(
-                 paste0('gaussian', global_i),
-                 label = "Enable Gaussian",
-                 value = this_gaussian),
-               fluidRow(
-                 column(6,
-                        textInput(paste0('gaussian_mean', global_i),
-                                  HTML("&mu;:"),
-                                  placeholder = "Mean",
-                                  value = this_gauss_mean)
-                 ),
-                 column(6,
-                        textInput(paste0('gaussian_sd',global_i),
-                                  HTML("&sigma;:"),
-                                  placeholder = "StdDev",
-                                  value = this_sd)
-                 )
-               )
+
+      fluidRow(class = "uqVar", column(12,
+        # Type select
+        fluidRow(
+          hr(),
+          column(8,
+                 
+                 selectInput(
+                   paste0('varDirection', global_index),
+                   label = var,
+                   choices = var_directions,
+                   selected = this_direction)
+          ),
+          column(4# ,
+                 # bootstrapPage(
+                 #   br(),
+                 #   actionButton(paste0("add", var), "Add", class = "btn btn-success")
+                 # )
+          )
         ),
-        column(4,
-               bootstrapPage(
-                 br(),
-                 actionButton(paste0("add", var), "Add", class = "btn btn-success")
-               )
+        # conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Output'")),
+        #   br(), br(), br(), br(), br(), br()
+        # ),
+        conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Input'")),
+          # Gaussian
+          fluidRow(
+            column(4, 
+                   checkboxInput(
+                    paste0('gaussian', global_index),
+                    label = "Enable Gaussian",
+                    value = this_gaussian)
+            ),
+            #conditionalPanel(condition = toString(paste0('input.gaussian', global_index, ' == true')),
+              column(4,
+                     textInput(paste0('gaussian_mean', global_index),
+                              HTML("&mu;:"),
+                              placeholder = "Mean",
+                              value = this_gauss_mean)
+              ),
+              column(4,
+                     textInput(paste0('gaussian_sd',global_index),
+                              HTML("&sigma;:"),
+                              placeholder = "StdDev",
+                              value = this_sd)
+              )
+          #  )
+          ),
+          # Constraint
+          fluidRow(
+            column(4, checkboxInput(paste0("fuqConstraintEnable", global_index), "Enable Constraint")),
+          #  conditionalPanel(condition = toString(paste0('input.fuqConstraintEnable', global_index, ' == true')),
+              column(4, textInput(paste0("fuqConstraintValue", global_index), NULL, value = data_mean[[var]])),
+              column(4)
+          #  )
+            
+          )
         )
-      )
-      
+      ))
     })
     #print("Done with bayesianUI()")
   })
@@ -1790,16 +1924,16 @@ shinyServer(function(input, output, session) {
   bayesianCalc <- observe({
     for(i in 1:length(varRangeNum())){
       var <- varRangeNum()[i]
-      global_i <- which(varNames == var)
-      dir <- input[[paste0('varDirection', global_i)]]
-      is_gaus <- input[[paste0('gaussian', global_i)]]
+      global_index <- which(varNames == var)
+      dir <- input[[paste0('varDirection', global_index)]]
+      is_gaus <- input[[paste0('gaussian', global_index)]]
       req(dir)
-      bayesianDirection[[var]] <<- input[[paste0('varDirection', global_i)]]
+      bayesianDirection[[var]] <<- input[[paste0('varDirection', global_index)]]
       if (bayesianDirection[[var]] == "Input") {
-        if(input[[paste0('gaussian', global_i)]]) {
+        if(input[[paste0('gaussian', global_index)]]) {
           bayesianType[[var]] <<- "norm"
-          bayesianParams[[var]]$mean <<- as.numeric(input[[paste0('gaussian_mean', global_i)]])
-          bayesianParams[[var]]$stdDev <<- as.numeric(input[[paste0('gaussian_sd', global_i)]])
+          bayesianParams[[var]]$mean <<- as.numeric(input[[paste0('gaussian_mean', global_index)]])
+          bayesianParams[[var]]$stdDev <<- as.numeric(input[[paste0('gaussian_sd', global_index)]])
         }
         else {
           bayesianType[[var]] <<- "unif"
@@ -1810,14 +1944,13 @@ shinyServer(function(input, output, session) {
     }
     bayesianUIInitialized <<- TRUE
   })
-      
+  
   output$bayesianPlots <- renderUI({
     print("In bayesianPlots()")
-    data <- bayesianData()
+    data <- bayesianData()$dist
     variables <- varRangeNum()
-    if(!input$bayesDispAll)
+    if(!input$bayesianDisplayAll)
       variables <- varRangeNum()[bayesVarsList()]
-    
     
     if(is.null(data)) {
       verbatimTextOutput("Initializing...")
@@ -1825,15 +1958,15 @@ shinyServer(function(input, output, session) {
     else {
       lapply(variables, function(var) {
         par(mar = rep(2, 4))
-        raw_plus_histo <- hist(raw_plus()[[var]], freq = FALSE)
-        x_bounds <- c(min(raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
-                      max(raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
+        filtered_raw_plus_histo <- hist(filtered_raw_plus()[[var]], freq = FALSE)
+        x_bounds <- c(min(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
+                      max(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
-                      max(raw_plus_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
-        fluidRow(
+                      max(filtered_raw_plus_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
+        fluidRow(class = "uqVar",
           column(12,
                  renderPlot({
-                   hist(raw_plus()[[var]],
+                   hist(filtered_raw_plus()[[var]],
                         freq = FALSE,
                         col = input$bayHistColor,
                         border = "#C0C0C0",
@@ -1852,13 +1985,283 @@ shinyServer(function(input, output, session) {
                    lines(data[[var]][["xResampled"]],
                          data[[var]][["yResampled"]],
                          col = input$bayResampledColor, lwd=2)
-                 }, height = 229)
+                   if (!is.null(forwardUQData()) & !is.null(forwardUQData()[[var]])) {
+                     lines(forwardUQData()[[var]]$postPoints,
+                           forwardUQData()[[var]]$postPdf,
+                           col="orange", lwd=2)
+                   }
+                   box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
+                 }, height = 248)
           )
         )
       })
     }
   })
-
+  
+  boxColor <- function (var) {
+    if (bayesianDirection[[var]] == "Input")
+    {
+      "gold"
+    }
+    else if (bayesianDirection[[var]] == "Output")
+    {
+      "deepskyblue"
+    }
+    else
+    {
+      "black"
+    }
+  }
+  
+  # Uncertainty Quantification Footer -----------------------------------------
+  
+  output$displayQueries <- reactive({
+    display <- !(input$bayesianTabset == "Design Ranking")
+  })
+  
+  outputOptions(output, "displayQueries", suspendWhenHidden=FALSE)
+  
+  probabilityQueries <- reactiveValues(rows = c())
+  
+  observeEvent(input$addProbability, {
+    id <- input$addProbability
+    insertUI(
+      selector = '#probabilityUI',
+      ui = tags$div(
+        fluidRow(
+          column(1, actionButton(paste0('removeProbability', id), 'Delete')),
+          column(3, selectInput(paste0('queryVariable', id), NULL, choices = varRangeNum(), selected = varRangeNum()[[1]])),
+          column(2, selectInput(paste0('queryDirection', id), NULL, choices = c("Above", "Below")), selected = "Above"),
+          column(2, textInput(paste0('queryThreshold', id), NULL)),
+          column(2, textOutput(paste0('queryValue', id))),
+          column(2)
+        ),
+        id = paste0('probabilityQuery', id)
+      )
+    )
+    probabilityQueries$rows <<- c(probabilityQueries$rows, toString(id))
+  })
+  
+  removeProbability <- observe({
+    lapply(probabilityQueries$rows, function(id) {
+      observeEvent(input[[paste0('removeProbability', id)]], {
+        removeUI(
+          ## pass in appropriate div id
+          selector = paste0('#probabilityQuery', id)
+        )
+        probabilityQueries$rows <<- probabilityQueries$rows[sapply(probabilityQueries$rows, function(x) {x!=id})]
+      })
+    })
+  })
+  
+  bayesianInputs <- reactive({
+    inputs <- sapply(varRangeNum(), function(var) {bayesianDirection[[var]] == "Input"})
+    subset(varRangeNum(), inputs)
+  })
+  
+  bayesianOutputs <- reactive({
+    inputs <- sapply(varRangeNum(), function(var) {bayesianDirection[[var]] == "Output"})
+    subset(varRangeNum(), inputs)
+  })
+  
+  runQueries <- observeEvent(input$runProbabilityQueries, {
+    print("Started Calculating Probabilities.")
+    lapply(1:length(probabilityQueries$rows), function(i) {
+      id <- probabilityQueries$rows[i]
+      name <- input[[paste0('queryVariable', id)]]
+      direction <- input[[paste0('queryDirection', id)]]
+      threshold <-input[[paste0('queryThreshold', id)]]
+      req(threshold)
+      data <- bayesianData()$dist[[name]]
+      
+      value <- integrateData(data$xResampled,
+                             data$yResampled,
+                             min(data$xResampled),
+                             as.numeric(threshold))
+      
+      print(paste("Query: ",name, direction, threshold, value))
+      
+      if (direction == "Above") {
+        value <- (1-value)
+      }
+      output[[paste0('queryValue', id)]] <- renderText(toString(value))
+    })
+    print("Probabilites Calculated.")
+  })
+  
+  # Forward UQ ---------------------------------------------------------------
+  
+  #-----------REMOVE ME---------------------
+  # output$fuqConstraintsUI <- renderUI({
+  #   lapply(bayesianInputs(), function(input) {
+  #     id <- which(bayesianInputs() == input)
+  #     # fluidRow(
+  #     #   column(2, checkboxInput(paste0("fuqConstraintEnable", id), NULL)),
+  #     #   column(6, paste(input)),
+  #     #   column(4, textInput(paste0("fuqConstraintValue", id), NULL, value = toString(apply(filtered_raw_plus()[input], 2, mean))))
+  #     # )
+  #   })
+  # })
+  
+  forwardUQData <- reactive({
+    temp_results <- NULL
+    if(input$runFUQ){
+      isolate({
+        numberOfInputs <- 0
+        for (i in 1:length(bayesianInputs())) {
+          global_i = which(bayesianInputs()[i] == varNames)
+          if (input[[paste0("fuqConstraintEnable", global_i)]]) {
+            numberOfInputs <- numberOfInputs + 1
+          }
+        }
+        
+        if (numberOfInputs > 0) {
+          print("Started Forward UQ.")
+          temp_results <- processForwardUQ(filtered_raw_plus()[varRangeNum()], bayesianData(), bayesianInputs())
+          print("Completed Forward UQ.")
+        }
+      })
+    }
+    results <- temp_results
+  })
+  
+  processForwardUQ <- function(originalData, bayesianData, bayesianInputs) {
+    
+    resampledData <- bayesianData$resampledData
+    rho <- buildGuassianCopula(resampledData)
+    
+    constrainedInputs <- c()
+    columnsToRemove <- c()
+    for (i in 1:length(bayesianInputs)) {
+      global_i = which(bayesianInputs[i] == varNames)
+      if (input[[paste0("fuqConstraintEnable", global_i)]]) {
+        constrainedInputs <- c(constrainedInputs, bayesianInputs[i])
+      }
+      else {
+        columnsToRemove <- c(columnsToRemove, which(names(originalData) == bayesianInputs[i]))
+      }
+    }
+    
+    if(!is.null(columnsToRemove)){
+      originalDataTrimmed <- originalData[,-columnsToRemove]
+      resampledDataTrimmed <- resampledData[,-columnsToRemove]
+      rhoTrimmed <- rho[-columnsToRemove,-columnsToRemove]
+    }
+    else{
+      originalDataTrimmed <- originalData
+      resampledDataTrimmed <- resampledData
+      rhoTrimmed <- rho
+    }
+    
+    observations <- list()
+    observationsIndex <- c()
+    for (i in 1:length(constrainedInputs)) {
+      observations[[paste(constrainedInputs[i])]] = as.numeric(input[[paste0("fuqConstraintValue", which(constrainedInputs[i] == varNames))]])
+      observationsIndex <- c(observationsIndex, which(names(originalDataTrimmed) == constrainedInputs[i]))
+    }
+    observations <- as.data.frame(observations)
+    
+    print("Finished Processing ForwardUQ.")
+    
+    results <- forwardUq(originalDataTrimmed, resampledDataTrimmed, rhoTrimmed, observations, observationsIndex)[[1]]
+  }
+    
+  #-------------REMOVE ME------------------------
+  # output$fuqPlots <- renderUI({
+  #   data <- forwardUQData()
+  #   lapply(bayesianOutputs(), function(output) {
+  #     renderText(paste("Forward UQ plots for", output, "here."))
+  #   })
+  # })
+  
+  # Design Ranking -----------------------------------------------------------
+  
+  runFullProbability <- eventReactive(input$runProbability, {
+    data <- data.frame(Config = character(0), stringsAsFactors=FALSE)
+    print(data)
+    for(i in 1:length(probabilityQueries$rows)) {
+      id <- probabilityQueries$rows[i]
+      data[[paste0('Query', id)]] <- numeric(0)
+    }
+    configs <- levels(raw_plus()[[paste0(input$bayesianDesignConfigVar)]])
+    print(data)
+    for (i in 1:length(configs)) {
+      config <- configs[i]
+      print(paste(config))
+      configData <- subset(raw_plus(), raw_plus()[[paste0(input$bayesianDesignConfigVar)]] == config)
+      configData <- configData[varRangeNum()]
+      resampledData <- resampleData(configData, bayesianDirection, bayesianType, bayesianParams)$dist
+      answers <- c(paste0(config))
+      for(j in 1:length(probabilityQueries$rows)) {
+        id <- probabilityQueries$rows[j]
+        name <- input[[paste0('queryVariable', id)]]
+        direction <- input[[paste0('queryDirection', id)]]
+        threshold <-input[[paste0('queryThreshold', id)]]
+        req(threshold)
+        value <- integrateData(resampledData[[name]][["xResampled"]],
+                               resampledData[[name]][["yResampled"]],
+                               min(resampledData[[name]][["xResampled"]]),
+                               as.numeric(threshold))
+        if (direction == "Above") {
+          value <- (1-value)
+        }
+        answers <- c(answers, value)
+      }
+      data[nrow(data)+1,] <- answers
+    }
+    print(data)
+    data
+  })
+  
+  output$probabilityWeightUI <- renderUI({
+    lapply(probabilityQueries$rows, function(id) {
+      variable <- input[[paste0('queryVariable', id)]]
+      direction <- input[[paste0('queryDirection', id)]]
+      threshold <-input[[paste0('queryThreshold', id)]]
+      
+      fluidRow(
+        column(1, paste0("Query", id)),
+        column(1, paste0("Config")),
+        column(3, paste(variable, tolower(direction), threshold)),
+        column(4, selectInput(paste0("probImpact", id), NULL, choices = c("Positive", "Negative"), selected = "Positive")),
+        column(3, sliderInput(paste0("probWeight", id), NULL, 0, 1, 1, step = 0.05))
+      )
+    })
+  })
+  
+  topsisProbability <- reactive({
+    outputData <- runFullProbability()
+    decisions <- data.matrix(outputData[,-1])
+    weights <- NULL
+    impacts <- NULL
+    for(i in 1:length(probabilityQueries$rows)) {
+      id <- probabilityQueries$rows[i]
+      if(input[[paste0("probImpact", id)]] == "Positive")
+        impacts <- c(impacts, '+')
+      else
+        impacts <- c(impacts, '-')
+      weights <- c(weights, as.numeric(input[[paste0("probWeight", id)]]))
+    }
+    
+    if(ncol(decisions)>1) {
+      topsisData <- topsis(decisions, weights, impacts)
+      outputData <- cbind(topsisData[,-1], outputData)
+    }
+    else {
+      if (impacts[1] == "+") {
+        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[rev(order(outputData[[paste0("Query", probabilityQueries$rows[1])]])),])
+      }
+      else {
+        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[order(outputData[[paste0("Query", probabilityQueries$rows[1])]]),])
+      }
+    }
+    outputData
+  })
+  
+  output$probabilityTable <- DT::renderDataTable({
+    topsisProbability()
+  })
+  
   # UI Adjustments -----------------------------------------------------------
   
   colSliderSettings <- reactive({
@@ -1900,7 +2303,7 @@ shinyServer(function(input, output, session) {
                           max = colSliderSettings()$numericMax,
                           value = c(colSliderSettings()$lower, colSliderSettings()$upper))
       }
-      else if(varClass[[colSliderSettings()$variable]] == "integer") {
+      else if(varClass[[toString(colSliderSettings()$variable)]] == "integer") {
         updateSliderInput(session,
                           "colSlider",
                           min = colSliderSettings()$absMin,

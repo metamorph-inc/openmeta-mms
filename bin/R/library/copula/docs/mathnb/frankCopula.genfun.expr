@@ -1,0 +1,1 @@
+List(alpha/(1 - E**(alpha*u)),(alpha**2*E**(alpha*u))/(-1 + E**(alpha*u))**2)

@@ -1,14 +1,68 @@
-body.disconnected {
+#shiny-disconnected-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background-color: #999;
   opacity: 0.5;
+  overflow: hidden;
+  z-index: 99998;
+  pointer-events: none;
 }
 
-table.data {
-  width: auto;
+.table.shiny-table > thead > tr > th,
+.table.shiny-table > tbody > tr > th,
+.table.shiny-table > tfoot > tr > th,
+.table.shiny-table > thead > tr > td,
+.table.shiny-table > tbody > tr > td,
+.table.shiny-table > tfoot > tr > td {
+  padding-left: 12px;
+  padding-right: 12px ;
 }
-table.data td[align=right] {
-  font-family: monospace;
-  text-align: right;
+
+.shiny-table.spacing-xs > thead > tr > th,
+.shiny-table.spacing-xs > tbody > tr > th,
+.shiny-table.spacing-xs > tfoot > tr > th,
+.shiny-table.spacing-xs > thead > tr > td,
+.shiny-table.spacing-xs > tbody > tr > td,
+.shiny-table.spacing-xs > tfoot > tr > td {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.shiny-table.spacing-s > thead > tr > th,
+.shiny-table.spacing-s > tbody > tr > th,
+.shiny-table.spacing-s > tfoot > tr > th,
+.shiny-table.spacing-s > thead > tr > td,
+.shiny-table.spacing-s > tbody > tr > td,
+.shiny-table.spacing-s > tfoot > tr > td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.shiny-table.spacing-m > thead > tr > th,
+.shiny-table.spacing-m > tbody > tr > th,
+.shiny-table.spacing-m > tfoot > tr > th,
+.shiny-table.spacing-m > thead > tr > td,
+.shiny-table.spacing-m > tbody > tr > td,
+.shiny-table.spacing-m > tfoot > tr > td {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.shiny-table.spacing-l > thead > tr > th,
+.shiny-table.spacing-l > tbody > tr > th,
+.shiny-table.spacing-l > tfoot > tr > th,
+.shiny-table.spacing-l > thead > tr > td,
+.shiny-table.spacing-l > tbody > tr > td,
+.shiny-table.spacing-l > tfoot > tr > td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.shiny-table .NA {
+  color: #909090;
 }
 
 .shiny-output-error {
@@ -70,6 +124,7 @@ table.data td[align=right] {
   max-width: 100%;
 }
 
+/* Old-style progress */
 .shiny-progress-container {
   position: fixed;
   top: 0px;
@@ -110,6 +165,21 @@ table.data td[align=right] {
 
 .shiny-progress .progress-text .progress-detail {
   padding: 0px 3px;
+  font-size: 80%;
+}
+
+/* New-style progress (uses notifications API) */
+.shiny-progress-notification .progress {
+  margin-bottom: 5px;
+  height: 10px;
+}
+
+.shiny-progress-notification .progress-text .progress-message {
+  font-weight: bold;
+  font-size: 90%;
+}
+
+.shiny-progress-notification .progress-text .progress-detail {
   font-size: 80%;
 }
 
@@ -221,4 +291,64 @@ table.data td[align=right] {
 /* Width of non-selectize select inputs */
 .shiny-input-container > div > select:not(.selectized) {
   width: 100%;
+}
+
+
+#shiny-notification-panel {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0);
+  padding: 2px;
+  width: 250px;
+  z-index: 99999;
+}
+
+.shiny-notification {
+  background-color: #e8e8e8;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  opacity: 0.85;
+  padding: 10px 8px 10px 10px;
+  margin: 2px;
+}
+
+.shiny-notification-message {
+  color: #31708f;
+  background-color: #d9edf7;
+  border: 1px solid #bce8f1;
+}
+
+.shiny-notification-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border: 1px solid #faebcc;
+}
+
+.shiny-notification-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+}
+
+.shiny-notification-close {
+  float: right;
+  font-weight: bold;
+  font-size: 18px;
+  bottom: 9px;
+  position: relative;
+  padding-left: 4px;
+  color: #444;
+  cursor: default;
+}
+
+.shiny-notification-close:hover {
+  color: #000;
+}
+
+.shiny-notification-content-action a {
+  color: rgb(51, 122, 183);
+  text-decoration: underline;
+  font-weight: bold;
 }

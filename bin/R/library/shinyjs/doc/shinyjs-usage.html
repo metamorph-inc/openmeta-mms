@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Dean Attali" />
+
+<meta name="date" content="2016-11-03" />
+
+<title>Including shinyjs in different types of apps</title>
+
+
+
+
+
+
+<link href="data:text/css;charset=utf-8,body%7Bbackground%2Dcolor%3A%23fff%3Bmargin%3A1em%20auto%3Bmax%2Dwidth%3A700px%3Boverflow%3Avisible%3Bpadding%2Dleft%3A2em%3Bpadding%2Dright%3A2em%3Bfont%2Dfamily%3A%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3Bfont%2Dsize%3A14px%3Bline%2Dheight%3A1%2E35%7D%23header%7Btext%2Dalign%3Acenter%7D%23TOC%7Bclear%3Aboth%3Bmargin%3A0%200%2010px%2010px%3Bpadding%3A4px%3Bwidth%3A400px%3Bborder%3A1px%20solid%20%23CCCCCC%3Bborder%2Dradius%3A5px%3Bbackground%2Dcolor%3A%23f6f6f6%3Bfont%2Dsize%3A13px%3Bline%2Dheight%3A1%2E3%7D%23TOC%20%2Etoctitle%7Bfont%2Dweight%3Abold%3Bfont%2Dsize%3A15px%3Bmargin%2Dleft%3A5px%7D%23TOC%20ul%7Bpadding%2Dleft%3A40px%3Bmargin%2Dleft%3A%2D1%2E5em%3Bmargin%2Dtop%3A5px%3Bmargin%2Dbottom%3A5px%7D%23TOC%20ul%20ul%7Bmargin%2Dleft%3A%2D2em%7D%23TOC%20li%7Bline%2Dheight%3A16px%7Dtable%7Bmargin%3A1em%20auto%3Bborder%2Dwidth%3A1px%3Bborder%2Dcolor%3A%23DDDDDD%3Bborder%2Dstyle%3Aoutset%3Bborder%2Dcollapse%3Acollapse%7Dtable%20th%7Bborder%2Dwidth%3A2px%3Bpadding%3A5px%3Bborder%2Dstyle%3Ainset%7Dtable%20td%7Bborder%2Dwidth%3A1px%3Bborder%2Dstyle%3Ainset%3Bline%2Dheight%3A18px%3Bpadding%3A5px%205px%7Dtable%2C%20table%20th%2C%20table%20td%7Bborder%2Dleft%2Dstyle%3Anone%3Bborder%2Dright%2Dstyle%3Anone%7Dtable%20thead%2C%20table%20tr%2Eeven%7Bbackground%2Dcolor%3A%23f7f7f7%7Dp%7Bmargin%3A0%2E5em%200%7Dblockquote%7Bbackground%2Dcolor%3A%23f6f6f6%3Bpadding%3A0%2E25em%200%2E75em%7Dhr%7Bborder%2Dstyle%3Asolid%3Bborder%3Anone%3Bborder%2Dtop%3A1px%20solid%20%23777%3Bmargin%3A28px%200%7Ddl%7Bmargin%2Dleft%3A0%7Ddl%20dd%7Bmargin%2Dbottom%3A13px%3Bmargin%2Dleft%3A13px%7Ddl%20dt%7Bfont%2Dweight%3Abold%7Dul%7Bmargin%2Dtop%3A0%7Dul%20li%7Blist%2Dstyle%3Acircle%20outside%7Dul%20ul%7Bmargin%2Dbottom%3A0%7Dpre%2C%20code%7Bbackground%2Dcolor%3A%23f7f7f7%3Bborder%2Dradius%3A3px%3Bcolor%3A%23333%3Bwhite%2Dspace%3Apre%2Dwrap%7Dpre%7Bborder%2Dradius%3A3px%3Bmargin%3A5px%200px%2010px%200px%3Bpadding%3A10px%7Dpre%3Anot%28%5Bclass%5D%29%7Bbackground%2Dcolor%3A%23f7f7f7%7Dcode%7Bfont%2Dfamily%3AConsolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3Bfont%2Dsize%3A85%25%7Dp%20%3E%20code%2C%20li%20%3E%20code%7Bpadding%3A2px%200px%7Ddiv%2Efigure%7Btext%2Dalign%3Acenter%7Dimg%7Bbackground%2Dcolor%3A%23FFFFFF%3Bpadding%3A2px%3Bborder%3A1px%20solid%20%23DDDDDD%3Bborder%2Dradius%3A3px%3Bborder%3A1px%20solid%20%23CCCCCC%3Bmargin%3A0%205px%7Dh1%7Bmargin%2Dtop%3A0%3Bfont%2Dsize%3A35px%3Bline%2Dheight%3A40px%7Dh2%7Bborder%2Dbottom%3A4px%20solid%20%23f7f7f7%3Bpadding%2Dtop%3A10px%3Bpadding%2Dbottom%3A2px%3Bfont%2Dsize%3A145%25%7Dh3%7Bborder%2Dbottom%3A2px%20solid%20%23f7f7f7%3Bpadding%2Dtop%3A10px%3Bfont%2Dsize%3A120%25%7Dh4%7Bborder%2Dbottom%3A1px%20solid%20%23f7f7f7%3Bmargin%2Dleft%3A8px%3Bfont%2Dsize%3A105%25%7Dh5%2C%20h6%7Bborder%2Dbottom%3A1px%20solid%20%23ccc%3Bfont%2Dsize%3A105%25%7Da%7Bcolor%3A%230033dd%3Btext%2Ddecoration%3Anone%7Da%3Ahover%7Bcolor%3A%236666ff%7Da%3Avisited%7Bcolor%3A%23800080%7Da%3Avisited%3Ahover%7Bcolor%3A%23BB00BB%7Da%5Bhref%5E%3D%22http%3A%22%5D%7Btext%2Ddecoration%3Aunderline%7Da%5Bhref%5E%3D%22https%3A%22%5D%7Btext%2Ddecoration%3Aunderline%7Dcode%20%3E%20span%2Ekw%7Bcolor%3A%23555%3Bfont%2Dweight%3Abold%7Dcode%20%3E%20span%2Edt%7Bcolor%3A%23902000%7Dcode%20%3E%20span%2Edv%7Bcolor%3A%2340a070%7Dcode%20%3E%20span%2Ebn%7Bcolor%3A%23d14%7Dcode%20%3E%20span%2Efl%7Bcolor%3A%23d14%7Dcode%20%3E%20span%2Ech%7Bcolor%3A%23d14%7Dcode%20%3E%20span%2Est%7Bcolor%3A%23d14%7Dcode%20%3E%20span%2Eco%7Bcolor%3A%23888888%3Bfont%2Dstyle%3Aitalic%7Dcode%20%3E%20span%2Eot%7Bcolor%3A%23007020%7Dcode%20%3E%20span%2Eal%7Bcolor%3A%23ff0000%3Bfont%2Dweight%3Abold%7Dcode%20%3E%20span%2Efu%7Bcolor%3A%23900%3Bfont%2Dweight%3Abold%7Dcode%20%3E%20span%2Eer%7Bcolor%3A%23a61717%3Bbackground%2Dcolor%3A%23e3d2d2%7D" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Including shinyjs in different types of apps</h1>
+<h4 class="author"><em>Dean Attali</em></h4>
+<h4 class="date"><em>2016-11-03</em></h4>
+
+
+
+<div id="including-shinyjs-in-different-types-of-apps" class="section level1">
+<h1>Including shinyjs in different types of apps</h1>
+<div id="table-of-contents" class="section level2">
+<h2>Table of contents</h2>
+<ul>
+<li><a href="#usage-basic">Basic use of shinyjs</a></li>
+<li><a href="#usage-dashboard">Using shinyjs in Shiny Dashboards</a></li>
+<li><a href="#usage-navbarpage">Using shinyjs with navbarPage layout</a></li>
+<li><a href="#usage-interactive">Using shinyjs in interactive R Markdown documents</a></li>
+<li><a href="#usage-html">Using shinyjs when the user interface is built using an HTML file</a></li>
+</ul>
+<h2 id="usage-basic">
+Basic use of shinyjs
+</h2>
+<p>A typical Shiny app has a UI portion and a server portion. Before using most shinyjs functions, you need to call <code>useShinyjs()</code> in the app’s UI. It’s best to include it near the top as a convention.</p>
+<p>Here is a minimal Shiny app that uses <code>shinyjs</code>:</p>
+<pre><code>library(shiny)
+library(shinyjs)
+
+ui &lt;- fluidPage(
+  useShinyjs(),  # Include shinyjs
+
+  actionButton(&quot;button&quot;, &quot;Click me&quot;),
+  textInput(&quot;text&quot;, &quot;Text&quot;)
+)
+
+server &lt;- function(input, output) {
+  observeEvent(input$button, {
+    toggle(&quot;text&quot;)  # toggle is a shinyjs function
+  })
+}
+
+shinyApp(ui, server)</code></pre>
+<p>This is how most Shiny apps should initialize <code>shinyjs</code> - by calling <code>useShinyjs()</code> near the top of the UI.</p>
+<p>However, if you use shinyjs in any of the following cases:</p>
+<ul>
+<li>In Shiny dashboards (built using the <code>shinydashboard</code> package)</li>
+<li>In Shiny apps that use a <code>navbarPage</code> layout</li>
+<li>In interactive Rmd documents</li>
+<li>In Shiny apps that manually build the user interface with an HTML file or template (instead of using Shiny’s UI functions)</li>
+</ul>
+<p>Then the following sections will show you how you to include shinyjs.</p>
+<h2 id="usage-dashboard">
+Using shinyjs in Shiny Dashboards
+</h2>
+<p><code>shinydashboard</code> is an R package that lets you create nice dashboards with Shiny. Since it has a different structure than typical Shiny apps, it can be unclear where to include the call to <code>useShinyjs()</code> in these apps. It is recommended to place the call to <code>useShinyjs()</code> in the beginning of <code>dashboardBody()</code>. For example, here is a minimal Shiny dashboard that uses <code>shinyjs</code>:</p>
+<pre><code>library(shiny)
+library(shinydashboard)
+library(shinyjs)
+
+ui &lt;- dashboardPage(
+  dashboardHeader(),
+  dashboardSidebar(),
+  dashboardBody(
+    useShinyjs(),
+    actionButton(&quot;button&quot;, &quot;Click me&quot;),
+    div(id = &quot;hello&quot;, &quot;Hello!&quot;)
+  )
+)
+
+server &lt;- function(input, output) {
+  observeEvent(input$button, {
+    toggle(&quot;hello&quot;)
+  })
+}
+
+shinyApp(ui, server)</code></pre>
+<h2 id="usage-navbarpage">
+Using shinyjs with navbarPage layout
+</h2>
+<p>When creating a Shiny app that uses a <code>navbarPage</code> layout, the call to <code>useShinyjs()</code> can be placed inside any of the tabs (since the only real requirement is that it will be present <em>somewhere</em> in the UI). While having <code>useShinyjs()</code> inside the contents of any tab will work, there is another method that is preferred. You can wrap the <code>navbarPage</code> in a <code>tagList</code>, and call <code>useShinyjs()</code> within the <code>tagList</code>. This way, <code>shinyjs</code> gets set up in a way that is independent of each of the tabs. For example, here is a minimal Shiny app that uses <code>shinyjs</code> inside a <code>navbarPage</code> layout:</p>
+<pre><code>library(shiny)
+library(shinyjs)
+
+ui &lt;- tagList(
+  useShinyjs(),
+  navbarPage(
+    &quot;shinyjs with navbarPage&quot;,
+    tabPanel(&quot;tab1&quot;,
+             actionButton(&quot;button&quot;, &quot;Click me&quot;),
+             div(id = &quot;hello&quot;, &quot;Hello!&quot;)),
+    tabPanel(&quot;tab2&quot;)
+  )
+)
+
+server &lt;- function(input, output, session) {
+  observeEvent(input$button, {
+    toggle(&quot;hello&quot;)
+  })
+}
+
+shinyApp(ui, server)</code></pre>
+<h2 id="usage-interactive">
+Using shinyjs in interactive R Markdown documents
+</h2>
+<p>It is possible to embed Shiny components in an R Markdown document, resulting in interactive R Markdown documents. More information on how to use these documents is available <a href="http://rmarkdown.rstudio.com/authoring_shiny.html">on the R Markdown website</a>. Even though interactive documents don’t explicitly specify a UI and a server, using <code>shinyjs</code> is still easy: simply call <code>useShinyjs(rmd = TRUE)</code> (note the <code>rmd = TRUE</code> argument). For example, the following code can be used inside an R Markdown code chunk (assuming the document is set up as a Shiny document as the link above describes):</p>
+<pre><code>library(shinyjs)
+
+useShinyjs(rmd = TRUE)
+actionButton(&quot;button&quot;, &quot;Click me&quot;)
+div(id = &quot;hello&quot;, &quot;Hello!&quot;)
+
+observeEvent(input$button, {
+ toggle(&quot;hello&quot;)
+})</code></pre>
+<h2 id="usage-html">
+Using shinyjs when the user interface is built using an HTML file/template
+</h2>
+<p>While most Shiny apps use Shiny’s functions to build a user interface to the app, it is possible to build the UI with an HTML template, <a href="http://shiny.rstudio.com/articles/templates.html">as RStudio shows in this article</a>. In this case, you simply need to add <code>{{ useShinyjs() }}</code> somewhere in the template, preferably inside the <code>&lt;head&gt;...&lt;/head&gt;</code> tags.</p>
+<p>A similar way to create your app’s UI with HTML is to write it entirely in HTML (without templates), <a href="http://shiny.rstudio.com/articles/html-ui.html">as RStudio shows in this article</a>. Building Shiny apps like this is much more complicated and should only be used if you’re very comfortable with HTML. Using <code>shinyjs</code> in these apps is possible but it works a little differently since there is no <code>ui.R</code> to call <code>useShinyjs()</code> from. There are three simple steps to take in order to use <code>shinyjs</code> in these apps:</p>
+<ul>
+<li><p>create a <code>global.R</code> file in the same directory as your <code>server.R</code>, and add the following line to the file:</p>
+<pre><code>shiny::addResourcePath(&quot;shinyjs&quot;, system.file(&quot;srcjs&quot;, package = &quot;shinyjs&quot;))</code></pre></li>
+<li><p>in the <code>index.html</code> file you need to load a special JavaScript file named <code>shinyjs/inject.js</code>. You do this by adding the following line to the HTML’s <code>&lt;head&gt;</code> tag:</p>
+<pre><code>`&lt;script src=&quot;shinyjs/inject.js&quot;&gt;&lt;/script&gt;`</code></pre></li>
+<li><p>in your server function (the <code>shinyServer</code> function) you need to call <code>useShinyjs(html = TRUE)</code></p></li>
+</ul>
+<p>After adding these three lines to your code, you can use all <code>shinyjs</code> functions as usual.</p>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

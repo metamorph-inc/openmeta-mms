@@ -1,8 +1,7 @@
 Package: shiny
 Type: Package
 Title: Web Application Framework for R
-Version: 0.13.2
-Date: 2016-03-28
+Version: 0.14.2
 Authors@R: c(
     person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
     person("Joe", "Cheng", role = "aut", email = "joe@rstudio.com"),
@@ -15,7 +14,7 @@ Authors@R: c(
     person(family = "jQuery contributors", role = c("ctb", "cph"),
     comment = "jQuery library; authors listed in inst/www/shared/jquery-AUTHORS.txt"),
     person(family = "jQuery UI contributors", role = c("ctb", "cph"),
-    comment = "jQuery UI library; authors listed in inst/www/shared/jqueryui/1.10.4/AUTHORS.txt"),
+    comment = "jQuery UI library; authors listed in inst/www/shared/jqueryui/AUTHORS.txt"),
     person("Mark", "Otto", role = "ctb",
     comment = "Bootstrap library"),
     person("Jacob", "Thornton", role = "ctb",
@@ -62,30 +61,31 @@ Description: Makes it incredibly easy to build interactive web
 License: GPL-3 | file LICENSE
 Depends: R (>= 3.0.0), methods
 Imports: utils, httpuv (>= 1.3.3), mime (>= 0.3), jsonlite (>= 0.9.16),
-        xtable, digest, htmltools (>= 0.3), R6 (>= 2.0)
+        xtable, digest, htmltools (>= 0.3.5), R6 (>= 2.0), sourcetools
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6),
         markdown, rmarkdown, ggplot2
 URL: http://shiny.rstudio.com
 BugReports: https://github.com/rstudio/shiny/issues
-VignetteBuilder: knitr
-Collate: 'app.R' 'bootstrap-layout.R' 'conditions.R' 'map.R'
-        'globals.R' 'utils.R' 'bootstrap.R' 'cache.R' 'fileupload.R'
-        'stack.R' 'graph.R' 'hooks.R' 'html-deps.R' 'htmltools.R'
+Collate: 'app.R' 'bookmark-state-local.R' 'stack.R' 'bookmark-state.R'
+        'bootstrap-layout.R' 'conditions.R' 'map.R' 'globals.R'
+        'utils.R' 'bootstrap.R' 'cache.R' 'diagnose.R' 'fileupload.R'
+        'graph.R' 'hooks.R' 'html-deps.R' 'htmltools.R'
         'image-interact-opts.R' 'image-interact.R' 'imageutils.R'
         'input-action.R' 'input-checkbox.R' 'input-checkboxgroup.R'
         'input-date.R' 'input-daterange.R' 'input-file.R'
         'input-numeric.R' 'input-password.R' 'input-radiobuttons.R'
         'input-select.R' 'input-slider.R' 'input-submit.R'
-        'input-text.R' 'input-utils.R' 'jqueryui.R'
-        'middleware-shiny.R' 'middleware.R' 'modules.R'
-        'priorityqueue.R' 'progress.R' 'react.R' 'reactive-domains.R'
-        'reactives.R' 'render-plot.R' 'render-table.R' 'run-url.R'
-        'server-input-handlers.R' 'server.R' 'shiny.R' 'shinyui.R'
-        'shinywrappers.R' 'showcase.R' 'tar.R' 'timer.R'
-        'update-input.R'
+        'input-text.R' 'input-textarea.R' 'input-utils.R' 'insert-ui.R'
+        'jqueryui.R' 'middleware-shiny.R' 'middleware.R' 'modal.R'
+        'modules.R' 'notifications.R' 'priorityqueue.R' 'progress.R'
+        'react.R' 'reactive-domains.R' 'reactives.R' 'render-plot.R'
+        'render-table.R' 'run-url.R' 'serializers.R'
+        'server-input-handlers.R' 'server.R' 'shiny-options.R'
+        'shiny.R' 'shinyui.R' 'shinywrappers.R' 'showcase.R' 'tar.R'
+        'test-export.R' 'timer.R' 'update-input.R'
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-03-28 15:21:34 UTC; winston
+Packaged: 2016-10-31 18:49:17 UTC; winston
 Author: Winston Chang [aut, cre],
   Joe Cheng [aut],
   JJ Allaire [aut],
@@ -96,7 +96,7 @@ Author: Winston Chang [aut, cre],
   jQuery contributors [ctb, cph] (jQuery library; authors listed in
     inst/www/shared/jquery-AUTHORS.txt),
   jQuery UI contributors [ctb, cph] (jQuery UI library; authors listed in
-    inst/www/shared/jqueryui/1.10.4/AUTHORS.txt),
+    inst/www/shared/jqueryui/AUTHORS.txt),
   Mark Otto [ctb] (Bootstrap library),
   Jacob Thornton [ctb] (Bootstrap library),
   Bootstrap contributors [ctb] (Bootstrap library),
@@ -118,5 +118,5 @@ Author: Winston Chang [aut, cre],
   R Core Team [ctb, cph] (tar implementation from R)
 Maintainer: Winston Chang <winston@rstudio.com>
 Repository: CRAN
-Date/Publication: 2016-03-28 18:59:41
-Built: R 3.2.4; ; 2016-04-11 02:29:14 UTC; windows
+Date/Publication: 2016-11-01 19:53:48
+Built: R 3.2.5; ; 2016-11-14 19:00:00 UTC; windows

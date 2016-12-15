@@ -51,8 +51,8 @@ shinyUI(fluidPage(
         ),
         column(9,
             uiOutput("displayError"),   
-            uiOutput("filterError"),
-            uiOutput("pairsDisplay")
+            uiOutput("filterError"), 
+            plotOutput("pairsPlot", dblclick = "pairs_click", height = 700)
         )
       )
     ),
@@ -85,6 +85,7 @@ shinyUI(fluidPage(
     ),
     tabPanel("Data Table",
       br(),
+      radioButtons("activateRanking", "Output Preference", choices = c("Unranked", "TOPSIS", "Simple Metric w/ TxFx"), selected = "Unranked"),
       wellPanel(
         style = "overflow-x:auto",
         DT::dataTableOutput("dataTable"),
@@ -93,10 +94,8 @@ shinyUI(fluidPage(
         #checkboxInput("transpose", "Transpose Table", value = FALSE)
         
       ),
-      checkboxInput("activateRanking", "Activate Data Rankings", value = FALSE),
-      conditionalPanel(condition = "input.activateRanking == true",
+      conditionalPanel(condition = "input.activateRanking != 'Unranked'",
         wellPanel(
-          # h4("Ranking Configuration"),
           conditionalPanel(condition = "input.autoRanking == false",
             actionButton("applyRanking", "Apply Ranking"),
             br(), br()
@@ -112,26 +111,52 @@ shinyUI(fluidPage(
           ),
           conditionalPanel(condition = "input.weightMetrics != null",
                            hr()),
+          fluidRow(
+            column(3, strong(h4("Variable Name"))),
+            column(2, strong(h4("Ranking Mode"))),
+            conditionalPanel(condition = "input.activateRanking == 'TOPSIS'",
+              column(7, strong(h4("Weight Amount")))),
+            conditionalPanel(condition = "input.activateRanking == 'Simple Metric w/ TxFx'",
+              column(3, strong(h4("Weight Amount"))),
+              column(4, strong(h4("Transfer Function"))))
+          ),
           uiOutput("rankings")#, 
           #br(), hr(), 
           #br()
         )
       )
     ), 
-    tabPanel("Ranges",
+    tabPanel("PET Refinement",
       br(),
-      conditionalPanel(condition = "output.mappingPresent == true",
+      conditionalPanel(condition = "output.petConfigPresent == true",
         wellPanel(
+          h4("Driver Configuration"),
           fluidRow(
-            column(6, conditionalPanel(condition = "input.autoRange == false",
-                             actionButton("updateRanges", "Update Ranges"), br(), br()),
-            downloadButton('downloadRanges', 'Download Ranges'),
-            actionButton('exportRanges', 'Export Ranges'), br())
-          ),
-          conditionalPanel(condition = "output.numericMapping == true",
+            column(6,
+                   h5(strong('Original Driver Settings: ')),
+                   textOutput("originalDriverSettings"))
+          ), br(),
+          uiOutput("petDriverConfig"), hr(),
+          fluidRow(
+            column(12,
+                   h4("Design Configurations"),
+                   h5(strong("Generated Configuration Model: ")),
+                   textOutput("generatedConfigurationModelText"),
+                   fluidRow(
+                     column(2),
+                     column(1, h5(strong('Original'))),
+                     column(2, h5(strong("Selection:"))),
+                     column(1, h5(strong('Refined'))),
+                     column(2, h5(strong("Selection:"))),
+                     column(4, h5(strong("New Selection:")))
+                   ), br(),
+                   uiOutput("original_configuration_ranges")
+            )
+          ), hr(),
+          conditionalPanel(condition = "output.numericDesignVariables == true",
             fluidRow(
               column(12,
-                     h4("Numeric Ranges", align = "center"),
+                     h4("Numeric Ranges"),
                      fluidRow(
                        column(2, h5(strong("Variable Name:"))),
                        column(1, actionButton('applyAllOriginalNumeric', 'Original')),
@@ -147,54 +172,153 @@ shinyUI(fluidPage(
               )
             )
           ),
-          conditionalPanel(condition = "output.enumerationMapping == true",
-              fluidRow(
-                column(12,
-                       h4("Enumerated Ranges", align = "center"),
-                       fluidRow(
-                         column(2, h5(strong("Variable Name:"))),
-                         column(1, actionButton('applyAllOriginalEnum', 'Original')),
-                         column(2, h5(strong("Selection:"))),
-                         column(1, actionButton('applyAllRefinedEnum', 'Refined')),
-                         column(2, h5(strong("Selection:"))),
-                         column(4, h5(strong("New Selection:")))
-                       ), br(),
-                       uiOutput("original_enumeration_ranges")
-                )
+          conditionalPanel(condition = "output.enumerationDesignVariables == true",
+            fluidRow(
+              column(12,
+                     h4("Enumerated Ranges"),
+                     fluidRow(
+                       column(2, h5(strong("Variable Name:"))),
+                       column(1, actionButton('applyAllOriginalEnum', 'Original')),
+                       column(2, h5(strong("Selection:"))),
+                       column(1, actionButton('applyAllRefinedEnum', 'Refined')),
+                       column(2, h5(strong("Selection:"))),
+                       column(4, h5(strong("New Selection:")))
+                     ), br(),
+                     uiOutput("original_enumeration_ranges")
               )
-          )
-          
+            )
+          ),
           # , fluidRow(
           #   h4("Factor Statistics", align = "center"),
           #   uiOutput("factor_ranges")
           # )
+          hr(),
+          fluidRow(
+            column(6,
+            # conditionalPanel(condition = "input.autoRange == false",
+            #                            actionButton("updateRanges", "Update Ranges"), br(), br()),
+            h4("PET Details"),
+            uiOutput("petRename"),
+            # downloadButton('downloadRanges', 'Download \'pet_config_refined.json\''), br(), br(),
+            actionButton('runRanges', 'Execute New PET'), br())
+          )
         )
       ),
-      conditionalPanel(condition = "output.mappingPresent == false",
-        verbatimTextOutput("noMappingMessage")
+      conditionalPanel(condition = "output.petConfigPresent == false",
+        verbatimTextOutput("noPetConfigMessage")
       )
     ),
-    tabPanel("Bayesian",
+    tabPanel("Uncertainty Quantification", 
       br(),
-      fluidRow(
-        column(4,
-          checkboxInput('bayesDispAll', "Display All Variables", value = T),
-          conditionalPanel(condition = 'input.bayesDispAll == false', 
-                           selectInput('bayesDispVars', "Bayesian Variables",
-                                       choices = c(),
-                                       multiple = T))
-        )
-      ),
-      fluidRow(
-        column(6, 
-          wellPanel(h4("Variable Configuration"),
-            uiOutput("bayesianUI"), br()#, height = 200)
+      tabsetPanel(
+        tabPanel("Weighting",
+          br(),
+          fluidRow(
+            column(3,
+              checkboxInput('bayesianDesignConfigsPresent', "Multiple Design Configurations Present", value = F)
+            )
+          ),
+          fluidRow(
+            conditionalPanel(condition = 'input.bayesianDesignConfigsPresent == true',
+              column(3,
+                selectInput('bayesianDesignConfigVar', "Design Configuration Identifier",
+                  choices = c(),
+                  multiple = F)
+              )
+            ),
+            conditionalPanel(condition = 'input.bayesianDesignConfigsPresent == true & input.bayesianDesignConfigVar != null',
+              column(3,
+                selectInput('bayesianDesignConfigChoice', "Selection",
+                  choices = c(),
+                  multiple = F)
+              )
+            )
+          ),
+          fluidRow(
+            column(3,
+              checkboxInput('bayesianDisplayAll', "Display All Variables", value = T),
+              conditionalPanel(condition = 'input.bayesianDisplayAll == false', 
+                selectInput(
+                  'bayesianDisplayVars',
+                  "Bayesian Variables",
+                  choices = c(),
+                  multiple = T
+                )
+              )
+            )
+          ),
+          fluidRow(
+            column(6, 
+              wellPanel(h4("Variable Configuration"),
+                uiOutput("bayesianUI"), br()#, height = 200)
+              )
+            ),
+            column(6,
+              wellPanel(h4("Variable Plots"), br(),
+                uiOutput("bayesianPlots")
+              )
+            )
+          ),
+          actionButton('runFUQ', 'Run Forward UQ')
+        ),
+        # --------REMOVE THIS SECTION---------------
+        # tabPanel("Forward UQ",
+        #   br(),
+        #   h4("Constraints:"),
+        #   fluidRow(
+        #     column(6,
+        #       wellPanel(
+        #         fluidRow(
+        #           column(2, h5(strong("Enable"))),
+        #           column(6, h5(strong("Variable:"))),
+        #           column(4, h5(strong("Value:")))
+        #         ),
+        #         uiOutput("fuqConstraintsUI")
+        #       )
+        #     ), column(6)
+        #   ), br(),
+        #   # actionButton('runFUQ', 'Run Forward UQ'),
+        #   br(),
+        #   hr(),
+        #   uiOutput("fuqPlots")
+        # ),
+        tabPanel("Design Ranking",
+          br(),
+          actionButton('runProbability', 'Compute Probabilities'),
+          br(), br(),
+          h4("Weights"),
+          wellPanel(
+            fluidRow(
+              column(1, h5(strong("ID:"))),
+              column(1, h5(strong("Source:"))),
+              column(3, h5(strong("Description:"))),
+              column(4, h5(strong("Impact:"))),
+              column(3, h5(strong("Weight:")))
+            ), br(),
+            uiOutput("probabilityWeightUI")
+          ),
+          h4("Rankings"),
+          wellPanel(
+            DT::dataTableOutput("probabilityTable")
           )
         ),
-        column(6,
-          wellPanel(h4("Variable Plots"), br(),
-            uiOutput("bayesianPlots")
-          )
+        id = "bayesianTabset"
+      ),
+      conditionalPanel("output.displayQueries",
+        hr(),
+        h4("Probability Queries:"),
+        wellPanel(
+          fluidRow(
+            column(1, actionButton('addProbability', 'Add')),
+            column(3, h5(strong("Variable Name:"))),
+            column(2, h5(strong("Direction:"))),
+            column(2, h5(strong("Threshold:"))),
+            column(2, h5(strong("Value:"))),
+            column(2)
+          ), br(),
+          tags$div(id = 'probabilityUI'),
+          hr(),
+          actionButton('runProbabilityQueries', 'Evaluate')
         )
       )
     ),
@@ -296,13 +420,19 @@ shinyUI(fluidPage(
           wellPanel(
             h4("Session Options"),
             strong("Save Session"),
-            textInput("sessionName", NULL, placeholder = "Enter a filename..."),
-            tags$div(title = "Download current state of visualizer.",
-                     downloadButton("exportSession", "Download")),
-            br(), br(),
+            fluidRow(
+              column(2, tags$div(title = "Download current settings of visualizer.",
+                                 downloadButton("exportSession", "Download"))),
+              column(10, textInput("sessionName", NULL, placeholder = "[Optional] Enter a filename..."))
+            ),
+            br(), 
             strong("Load Session"), br(),
-            tags$div(title = "Load a saved session.",
-                     actionButton('importSession', 'Choose File'))
+            fluidRow(
+              column(2, tags$div(title = "Load a saved session.",
+                                 actionButton('importSession', 'Upload File'))),
+              column(10, textInput("loadSessionName", NULL, placeholder = "[Optional] Enter a specific file path..."))
+            ),
+            code("NOTE: This feature does not save the results of analysis performed in the 'Uncertainty Quantification' tab.")
           )
         )
       ),
@@ -310,8 +440,8 @@ shinyUI(fluidPage(
         column(6,
           wellPanel(
             h4("About"),
-            p(strong("Version:"), "v1.6.0"),
-            p(strong("Date:"), "11/3/2016"),
+            p(strong("Version:"), "v1.8.0"),
+            p(strong("Date:"), "12/16/2016"),
             p(strong("Developer:"), "Metamorph Software"),
             p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )
@@ -335,5 +465,8 @@ shinyUI(fluidPage(
       h3("Constants:"),
       uiOutput("constants")
     )
+  ),
+  tags$head(tags$style("
+    .uqVar{height:250px;}")
   )
 ))

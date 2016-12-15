@@ -1,0 +1,22 @@
+Package: gsl
+Version: 1.9-10.1
+Depends: R (>= 2.10.0)
+Date: 2015-12-02
+Title: wrapper for the Gnu Scientific Library
+Author: Robin K. S. Hankin; qrng functions by Duncan Murdoch and
+ multimin by Andrew Clausen
+SystemRequirements: Gnu Scientific Library version >= 1.12
+Description: 
+ An R wrapper for the special functions and quasi random number
+ generators of the Gnu Scientific Library
+ (http://www.gnu.org/software/gsl/).  See gsl-package.Rd for details of 
+ overall package organization, and Misc.Rd for some functions that are
+ widely used in the package, and some tips on installation.
+Maintainer: Robin K. S. Hankin <hankin.robin@gmail.com>
+License: GPL-2
+Packaged: 2015-12-02 11:10:29 UTC; ripley
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2015-12-02 12:31:29
+Built: R 3.2.5; x86_64-w64-mingw32; 2016-11-02 13:29:37 UTC; windows
+Archs: i386, x64

@@ -1,34 +1,57 @@
 library(shiny)
 library(shinyjs)
 
+share <- list(
+  title = "colourInput",
+  url = "http://daattali.com/shiny/colourInput/",
+  image = "http://daattali.com/shiny/img/colourinput.png",
+  description = "An input control that allows users to select colours in Shiny apps (from shinyjs package)",
+  twitter_user = "daattali"
+)
+
 shinyApp(
   ui = fluidPage(
-    tags$head(includeCSS(file.path("www", "app.css"))),
-    titlePanel(tags$strong("Demo of colourInput"),
-               "Demo of colourInput"
-    ),
-    h4(
-      p(
-        tags$strong("colourInput"),
-        "is an input control available in",
-        tags$a("shinyjs", href = "https://github.com/daattali/shinyjs", target = "_blank"),
-        "that allows users to select colours in Shiny apps",
-        HTML("(<a target='_blank' href='http://deanattali.com/2015/06/28/introducing-shinyjs-colourinput/'>announcement blog post</a>)")
-      ),
-      p("shinyjs::colourInput() behaves just like any other built-in Shiny input and is trivially easy to use")
-    ),
-    div(
-      br(),
-      "Related:", "select colours with a",
-      a(href = "https://raw.githubusercontent.com/daattali/shinyjs/master/inst/img/colourPickerGadget.gif",
-        "colour picker RStudio addin/gadget"), "by shinyjs",
-      br(),
-      "Created by",
-      a("Dean Attali", href = "http://deanattali.com", target = "_blank"),
-      HTML("&bull;"),
-      "Code", a("on GitHub", href = "https://github.com/daattali/shiny-server/tree/master/colourInput", target = "_blank")    ),
-    tags$hr(),
+    tags$head(
+      includeCSS(file.path("www", "app.css")),
+      # Favicon
+      tags$link(rel = "shortcut icon", type="image/x-icon", href="http://daattali.com/shiny/img/favicon.ico"),
+      # Facebook OpenGraph tags
+      tags$meta(property = "og:title", content = share$title),
+      tags$meta(property = "og:type", content = "website"),
+      tags$meta(property = "og:url", content = share$url),
+      tags$meta(property = "og:image", content = share$image),
+      tags$meta(property = "og:description", content = share$description),
 
+      # Twitter summary cards
+      tags$meta(name = "twitter:card", content = "summary"),
+      tags$meta(name = "twitter:site", content = paste0("@", share$twitter_user)),
+      tags$meta(name = "twitter:creator", content = paste0("@", share$twitter_user)),
+      tags$meta(name = "twitter:title", content = share$title),
+      tags$meta(name = "twitter:description", content = share$description),
+      tags$meta(name = "twitter:image", content = share$image)
+    ),
+    tags$a(
+      href="https://github.com/daattali/shinyjs",
+      tags$img(style="position: absolute; top: 0; right: 0; border: 0;",
+               src="github-gray-right.png",
+               alt="Fork me on GitHub")
+    ),
+    div(id = "header",
+        div(id = "title",
+            "colourInput"
+        ),
+        div(id = "subtitle",
+            "An input control that allows users to select colours in Shiny apps (from shinyjs package)"),
+        div(id = "subsubtitle",
+            "By",
+            tags$a(href = "http://deanattali.com/", "Dean Attali"),
+            HTML("&bull;"),
+            "Package available",
+            tags$a(href = "https://github.com/daattali/shinyjs", "on GitHub"),
+            HTML("&bull;"),
+            tags$a(href = "http://daattali.com/shiny/", "More apps"), "by Dean"
+        )
+    ),
     div(
       class = "section",
       div(class = "title", "Simple"),
