@@ -505,6 +505,14 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
+    if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link")) {
+      btn.css.class <- paste("btn",btn.style,sep="-")
+    } else btn.css.class = ""
+    
+    tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
+  }
+  
   generateEnumUI <- function(current) {
     items <- names(table(raw_plus()[varNames[current]]))
     
@@ -527,25 +535,47 @@ shinyServer(function(input, output, session) {
     
   }
   
-  generateNumericSliderUI <- function(current) {
+  generateNumericSliderUI <- function(current, min, max) {
     
-    max <- as.numeric(unname(rawAbsMax()[varNames[current]]))
     min <- as.numeric(unname(rawAbsMin()[varNames[current]]))
+    max <- as.numeric(unname(rawAbsMax()[varNames[current]]))
     step <- max((max-min)*0.01, abs(min)*0.001, abs(max)*0.001)
     
+    newMin = NULL
+    newMax = NULL
+    
     if (min != max) {
+      
+      label = varNames[current]
     
       sliderVal <- input[[paste0('inp', current)]]
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4))
       
-      column(2, sliderInput(paste0('inp', current),
-                            varNames[current],
+      observeEvent(input[[paste0("pop", current)]]%%2 == 0, {
+        newMin = input[[paste0("min_inp", current)]]
+        newMax = input[[paste0("max_inp", current)]]
+        if(!is.null(newMin) && newMin != "")
+          sliderVal = as.numeric(c(newMin, sliderVal[2]))
+        if(!is.null(newMax) && newMax != "")
+          sliderVal = as.numeric(c(sliderVal[1], newMax))
+        updateSliderInput(session, paste0('inp', current), value = sliderVal)
+      })
+      
+      column(2, actionButton(paste0('pop', current), label, "link"),
+             conditionalPanel(condition = paste0('input.pop', current, '%2 == 1'),
+                              wellPanel(style = "position: absolute; width: 70%; left: 10%; top: -175%; box-shadow: 10px 10px 15px grey;",
+                                        textInput(paste0("min_inp", current), "Enter Min:"),
+                                        textInput(paste0("max_inp", current), "Enter Max:"))),
+             sliderInput(paste0('inp', current),
+                            NULL,
                             step = signif(step, digits = 4),
                             min = signif(min-step*10, digits = 4),
                             max = signif(max+step*10, digits = 4),
                             value = sliderVal)
-      )
+            )
+      
+      
     }
   }
   
@@ -554,20 +584,43 @@ shinyServer(function(input, output, session) {
     max <- as.numeric(unname(rawAbsMax()[varNames[current]]))
     min <- as.numeric(unname(rawAbsMin()[varNames[current]]))
     
+    newMin = NULL
+    newMax = NULL
+    
     if(min != max) {
+      
+      label = varNames[current]
       
       sliderVal <- input[[paste0('inp', current)]]
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(min, max)
       
-      column(2, sliderInput(paste0('inp', current),
-                            varNames[current],
+      observeEvent(input[[paste0("pop", current)]], {
+        if(input[[paste0("pop", current)]]%%2 == 0){
+          newMin = input[[paste0("min_inp", current)]]
+          newMax = input[[paste0("max_inp", current)]]
+          updateTextInput(session, paste0("min_inp", current), value = "")
+          updateTextInput(session, paste0("max_inp", current), value = "")
+          if(!is.null(newMin) && newMin != "")
+            sliderVal = as.numeric(c(newMin, sliderVal[2]))
+          if(!is.null(newMax) && newMax != "")
+            sliderVal = as.numeric(c(sliderVal[1], newMax))
+          updateSliderInput(session, paste0('inp', current), value = sliderVal)
+        }
+      })
+      
+      column(2, actionButton(paste0('pop', current), label, "link"),
+             conditionalPanel(condition = paste0('input.pop', current, '%2 == 1'),
+                              wellPanel(style = "position: absolute; width: 70%; left: 10%; top: -175%; box-shadow: 10px 10px 15px grey;",
+                                        textInput(paste0("min_inp", current), "Enter Min:"),
+                                        textInput(paste0("max_inp", current), "Enter Max:"))),
+             sliderInput(paste0('inp', current),
+                            NULL,
                             min = min,
                             max = max,
                             value = sliderVal)
       )
     }
-    
   }
   
   output$constants <- renderUI({
