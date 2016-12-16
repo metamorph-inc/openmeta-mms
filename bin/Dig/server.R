@@ -1527,7 +1527,7 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  output$rangesEnum <- renderUI({
+  output$original_enumeration_ranges <- renderUI({
     
     lapply(rownames(designVariables), function(row){
       
