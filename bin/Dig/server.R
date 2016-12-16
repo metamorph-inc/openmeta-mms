@@ -506,10 +506,9 @@ shinyServer(function(input, output, session) {
   })
   
   actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
-    if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link")) {
+    if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
       btn.css.class <- paste("btn",btn.style,sep="-")
-    } else btn.css.class = ""
-    
+    else btn.css.class = ""
     tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
   }
   
@@ -532,7 +531,6 @@ shinyServer(function(input, output, session) {
                           selected = selectVal)
     )
     
-    
   }
   
   generateNumericSliderUI <- function(current, min, max) {
@@ -547,26 +545,52 @@ shinyServer(function(input, output, session) {
     if (min != max) {
       
       label = varNames[current]
+      
+      openToolTip <- F
+      currentValOfApply <- 0
     
       sliderVal <- input[[paste0('inp', current)]]
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4))
       
-      observeEvent(input[[paste0("pop", current)]]%%2 == 0, {
-        newMin = input[[paste0("min_inp", current)]]
-        newMax = input[[paste0("max_inp", current)]]
-        if(!is.null(newMin) && newMin != "")
-          sliderVal = as.numeric(c(newMin, sliderVal[2]))
-        if(!is.null(newMax) && newMax != "")
-          sliderVal = as.numeric(c(sliderVal[1], newMax))
-        updateSliderInput(session, paste0('inp', current), value = sliderVal)
+      observe({
+        input$lastkeypresscode
+        input[[paste0("submit", current)]] 
+        
+        isolate({
+          if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip){
+            if(input[[paste0("submit", current)]] != currentValOfApply)
+              currentValOfApply <<- input[[paste0("submit", current)]]
+            sliderVal = input[[paste0('inp', current)]]
+            newMin = input[[paste0("min_inp", current)]]
+            newMax = input[[paste0("max_inp", current)]]
+            updateTextInput(session, paste0("min_inp", current), value = "")
+            updateTextInput(session, paste0("max_inp", current), value = "")
+            if(!is.null(newMin) && newMin != "")
+              sliderVal = as.numeric(c(newMin, sliderVal[2]))
+            if(!is.null(newMax) && newMax != "")
+              sliderVal = as.numeric(c(sliderVal[1], newMax))
+            updateSliderInput(session, paste0('inp', current), value = sliderVal)
+            toggle(paste0("slider_tooltip", current))
+            openToolTip <<- F
+          }
+        })
       })
       
-      column(2, actionButton(paste0('pop', current), label, "link"),
-             conditionalPanel(condition = paste0('input.pop', current, '%2 == 1'),
-                              wellPanel(style = "position: absolute; width: 70%; left: 10%; top: -175%; box-shadow: 10px 10px 15px grey;",
-                                        textInput(paste0("min_inp", current), "Enter Min:"),
-                                        textInput(paste0("max_inp", current), "Enter Max:"))),
+      observeEvent(input[[paste0('pop', current)]], {
+        toggle(paste0("slider_tooltip", current))
+        openToolTip <<- !openToolTip
+      })
+      
+      column(2, 
+             actionButton(paste0('pop', current), label, "link"),
+             useShinyjs(),
+             wellPanel(id = paste0("slider_tooltip", current), 
+                       style = "position: absolute; z-index: 100; box-shadow: 10px 10px 15px grey; width: 70%; left: 3%; top: -215%; display: none;",
+                       #h4(label),
+                       textInput(paste0("min_inp", current), "Enter Min:"),
+                       textInput(paste0("max_inp", current), "Enter Max:"),
+                       actionButton(paste0("submit", current), "Apply", "success")),
              sliderInput(paste0('inp', current),
                             NULL,
                             step = signif(step, digits = 4),
@@ -589,31 +613,53 @@ shinyServer(function(input, output, session) {
     
     if(min != max) {
       
+      openToolTip <- F
+      currentValOfApply <- 0
+      
       label = varNames[current]
       
       sliderVal <- input[[paste0('inp', current)]]
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(min, max)
       
-      observeEvent(input[[paste0("pop", current)]], {
-        if(input[[paste0("pop", current)]]%%2 == 0){
-          newMin = input[[paste0("min_inp", current)]]
-          newMax = input[[paste0("max_inp", current)]]
-          updateTextInput(session, paste0("min_inp", current), value = "")
-          updateTextInput(session, paste0("max_inp", current), value = "")
-          if(!is.null(newMin) && newMin != "")
-            sliderVal = as.numeric(c(newMin, sliderVal[2]))
-          if(!is.null(newMax) && newMax != "")
-            sliderVal = as.numeric(c(sliderVal[1], newMax))
-          updateSliderInput(session, paste0('inp', current), value = sliderVal)
-        }
+      observe({
+        input$lastkeypresscode
+        input[[paste0("submit", current)]] 
+        
+        isolate({
+          if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip){
+            if(input[[paste0("submit", current)]] != currentValOfApply)
+              currentValOfApply <<- input[[paste0("submit", current)]]
+            sliderVal = input[[paste0('inp', current)]]
+            newMin = input[[paste0("min_inp", current)]]
+            newMax = input[[paste0("max_inp", current)]]
+            updateTextInput(session, paste0("min_inp", current), value = "")
+            updateTextInput(session, paste0("max_inp", current), value = "")
+            if(!is.null(newMin) && newMin != "")
+              sliderVal = as.numeric(c(newMin, sliderVal[2]))
+            if(!is.null(newMax) && newMax != "")
+              sliderVal = as.numeric(c(sliderVal[1], newMax))
+            updateSliderInput(session, paste0('inp', current), value = sliderVal)
+            toggle(paste0("slider_tooltip", current))
+            openToolTip <<- F
+          }
+        })
       })
       
-      column(2, actionButton(paste0('pop', current), label, "link"),
-             conditionalPanel(condition = paste0('input.pop', current, '%2 == 1'),
-                              wellPanel(style = "position: absolute; width: 70%; left: 10%; top: -175%; box-shadow: 10px 10px 15px grey;",
-                                        textInput(paste0("min_inp", current), "Enter Min:"),
-                                        textInput(paste0("max_inp", current), "Enter Max:"))),
+      observeEvent(input[[paste0('pop', current)]], {
+        toggle(paste0("slider_tooltip", current))
+        openToolTip <<- !openToolTip
+      })
+      
+      column(2, 
+             actionButton(paste0('pop', current), label, "link"),
+             useShinyjs(),
+             wellPanel(id = paste0("slider_tooltip", current), 
+                       style = "position: absolute; z-index: 100; box-shadow: 10px 10px 15px grey; width: 70%; left: 3%; top: -215%; display: none;",
+                       #h4(label),
+                       textInput(paste0("min_inp", current), "Enter Min:"),
+                       textInput(paste0("max_inp", current), "Enter Max:"),
+                       actionButton(paste0("submit", current), "Apply", "success")),
              sliderInput(paste0('inp', current),
                             NULL,
                             min = min,
