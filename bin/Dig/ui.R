@@ -463,7 +463,7 @@ shinyUI(fluidPage(
     ),
     conditionalPanel("output.constantsPresent",
       bootstrapPage(tags$script('
-        $(document).on("keypress", function (e) {
+        $(document).on("keydown", function (e) {
         Shiny.onInputChange("lastkeypresscode", e.keyCode);
         });
       ')),

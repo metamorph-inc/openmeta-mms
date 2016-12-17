@@ -25,6 +25,7 @@ EnumerationMaxDisplay = 3
 xFuncs <- data.frame()
 xFuncs <- xFuncs[1:4,]
 row.names(xFuncs) <- c("Values", "Scores", "Slopes", "Y_ints")
+openToolTip <- NULL
 openToolTip <- data.frame()
 
 bayesianDirection <- list()
