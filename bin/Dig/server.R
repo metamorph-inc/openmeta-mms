@@ -25,6 +25,7 @@ EnumerationMaxDisplay = 3
 xFuncs <- data.frame()
 xFuncs <- xFuncs[1:4,]
 row.names(xFuncs) <- c("Values", "Scores", "Slopes", "Y_ints")
+openToolTip <- data.frame()
 
 bayesianDirection <- list()
 bayesianType <- list()
@@ -473,6 +474,10 @@ shinyServer(function(input, output, session) {
     vars <- filterVars()
     data <- raw_plus()
     
+    openToolTip <<- openToolTip[1:length(vars),]
+    row.names(openToolTip) <<- unlist(strsplit(toString(vars), ", "))
+    openToolTip$display <<- F
+    
     facVars <- NULL
     intVars <- NULL
     numVars <- NULL
@@ -546,7 +551,6 @@ shinyServer(function(input, output, session) {
       
       label = varNames[current]
       
-      openToolTip <- F
       currentValOfApply <- 0
     
       sliderVal <- input[[paste0('inp', current)]]
@@ -558,7 +562,7 @@ shinyServer(function(input, output, session) {
         input[[paste0("submit", current)]] 
         
         isolate({
-          if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip){
+          if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip[toString(current), "display"]){
             if(input[[paste0("submit", current)]] != currentValOfApply)
               currentValOfApply <<- input[[paste0("submit", current)]]
             sliderVal = input[[paste0('inp', current)]]
@@ -572,14 +576,21 @@ shinyServer(function(input, output, session) {
               sliderVal = as.numeric(c(sliderVal[1], newMax))
             updateSliderInput(session, paste0('inp', current), value = sliderVal)
             toggle(paste0("slider_tooltip", current))
-            openToolTip <<- F
+            openToolTip[toString(current), "display"] <<- F
           }
         })
       })
       
       observeEvent(input[[paste0('pop', current)]], {
         toggle(paste0("slider_tooltip", current))
-        openToolTip <<- !openToolTip
+        openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
+        for(i in 1:length(openToolTip[,"display"])){
+          row = row.names(openToolTip)[i]
+          if(row != current && openToolTip[row,"display"]){
+            toggle(paste0("slider_tooltip", row))
+            openToolTip[row,"display"] <<- F
+          }
+        }
       })
       
       column(2, 
@@ -613,7 +624,6 @@ shinyServer(function(input, output, session) {
     
     if(min != max) {
       
-      openToolTip <- F
       currentValOfApply <- 0
       
       label = varNames[current]
@@ -627,7 +637,7 @@ shinyServer(function(input, output, session) {
         input[[paste0("submit", current)]] 
         
         isolate({
-          if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip){
+          if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip[toString(current), "display"]){
             if(input[[paste0("submit", current)]] != currentValOfApply)
               currentValOfApply <<- input[[paste0("submit", current)]]
             sliderVal = input[[paste0('inp', current)]]
@@ -641,14 +651,21 @@ shinyServer(function(input, output, session) {
               sliderVal = as.numeric(c(sliderVal[1], newMax))
             updateSliderInput(session, paste0('inp', current), value = sliderVal)
             toggle(paste0("slider_tooltip", current))
-            openToolTip <<- F
+            openToolTip[toString(current), "display"] <<- F
           }
         })
       })
       
       observeEvent(input[[paste0('pop', current)]], {
         toggle(paste0("slider_tooltip", current))
-        openToolTip <<- !openToolTip
+        openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
+        for(i in 1:length(openToolTip[,"display"])){
+          row = row.names(openToolTip)[i]
+          if(row != current && openToolTip[row,"display"]){
+            toggle(paste0("slider_tooltip", row))
+            openToolTip[row,"display"] <<- F
+          }
+        }
       })
       
       column(2, 
