@@ -18,6 +18,7 @@ namespace CyPhyPET
     using Newtonsoft.Json;
     using System.Globalization;
     using AVM.DDP;
+    using System.Security;
 
     public class PET
     {
@@ -117,6 +118,7 @@ namespace CyPhyPET
                         var intermVar = new PETConfig.Parameter();
                         intermVar.source = sourcePath;
                         setUnit(intermediateVar.Referred.unit, intermVar);
+                        checkUnitMatchesSource(intermediateVar);
 
                         config.intermediateVariables.Add(intermediateVar.Name, intermVar);
                     }
@@ -273,6 +275,7 @@ namespace CyPhyPET
                     };
                     config.objectives.Add(objective.Name, configParameter);
                     setUnit(objective.Referred.unit, configParameter);
+                    checkUnitMatchesSource(objective);
                 }
             }
 
@@ -282,6 +285,30 @@ namespace CyPhyPET
             }
 
             return config;
+        }
+
+        private void checkUnitMatchesSource(ISIS.GME.Common.Interfaces.Reference objective)
+        {
+            var mgaObjective = (MgaReference)objective.Impl;
+            foreach (MgaConnPoint connPoint in mgaObjective.PartOfConns)
+            {
+                if (connPoint.ConnRole != "dst")
+                {
+                    continue;
+                }
+                var metric = (MgaReference)((MgaSimpleConnection)connPoint.Owner).Src;
+                if (metric.Referred == null || mgaObjective.Referred == null)
+                {
+                    continue;
+                }
+                if (metric.Referred.ID != mgaObjective.Referred.ID)
+                {
+                    Logger.WriteFailed(String.Format("Unit for <a href=\"mga:{0}\">{1}</a> must match unit for <a href=\"mga:{2}\">{3}</a>",
+                        metric.getTracedObjectOrSelf(Logger.Traceability).ID, SecurityElement.Escape(metric.Name),
+                        objective.Impl.getTracedObjectOrSelf(Logger.Traceability).ID, SecurityElement.Escape(objective.Name)));
+                    throw new ApplicationException();
+                }
+            }
         }
 
         public void GenerateCode(CyPhy.TestBenchRef testBenchRef, string testBenchOutputDir)
@@ -568,6 +595,7 @@ namespace CyPhyPET
                     };
                     driver.objectives.Add(objective.Name, configParameter);
                     setUnit(objective.Referred.unit, configParameter);
+                    checkUnitMatchesSource(objective);
                 }
             }
 
@@ -923,6 +951,19 @@ namespace CyPhyPET
                 {
                     yield return obj;
                 }
+            }
+        }
+
+        public static IMgaObject getTracedObjectOrSelf(this IMgaObject obj, CyPhyCOMInterfaces.IMgaTraceability traceability)
+        {
+            string originalID;
+            if (traceability != null && traceability.TryGetMappedObject(obj.ID, out originalID))
+            {
+                return obj.Project.GetObjectByID(originalID);
+            }
+            else
+            {
+                return obj;
             }
         }
     }
