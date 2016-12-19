@@ -18,6 +18,12 @@ palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
          "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
 
 importData <- NULL #import session data
+units <- list("CfgID" = "na", "IN_ElemCount" = "na", 
+              "IN_E11" = "wind", "IN_E22" = "wind", 
+              "IN_Root_AvgCapMaterialThickness" = "mm",
+              "IN_Tip_AvgCapMaterialThickness" = "mm",
+              "OUT_Blade_Cost_Total" = "$",
+              "OUT_Blade_Tip_Deflection" = "mm")
 
 EnumerationMaxDisplay = 3
 
@@ -95,6 +101,9 @@ shinyServer(function(input, output, session) {
     # raw = iris
     # petConfig = read.csv("iris_config.json", fill = T)
   }
+  
+  # Set variable names to include units
+  names(raw) <- unlist(lapply(names(raw), function(x) {paste0(x, "(", units[[x]], ")")}))
   
   petConfigPresent <- !is.null(petConfig)
   
@@ -338,7 +347,7 @@ shinyServer(function(input, output, session) {
   print("Starting Preprocessing of the Data -----------------------------------------")
   
   varNames = names(raw)
-  varClass = sapply(raw,class)
+  varClass = sapply(raw, class)
   print(paste("varClass:"))
   print(paste(varClass))
   
@@ -349,6 +358,9 @@ shinyServer(function(input, output, session) {
   varNum <- varNames[varClass != "factor"]
   print(paste("varNum:"))
   print(paste(varNum))
+  
+  # plainVarNum <- gsub("\\([^()]*\\)", "", varNum)
+  # plainVarFac <- gsub("\\([^()]*\\)", "", varFac)
   
   rawAbsMin <- reactive({
     print("In rawAbsMin")
