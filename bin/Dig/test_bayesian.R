@@ -2,10 +2,10 @@ debugSource("bayesian_utils.R")
 debugSource("uq.R")
 
 # Load data
-data_all = read.csv("WindTurbineSim.csv")
+data_all = read.csv("WindTurbineSim_mergedPET.csv")
 
 # Get subset of data for training
-data = data_all[1:4500, ]
+data = data_all[1:4500, 1:5]
 
 numberOfVariables = ncol(data)
 
