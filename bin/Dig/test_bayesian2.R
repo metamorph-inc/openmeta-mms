@@ -5,7 +5,7 @@ debugSource("uq.R")
 data_all = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty_mergedPET.csv")
 
 # Get subset of data for training
-data = data_all[data_all$CfgID == "32-16",-1]
+data = data_all[data_all$CfgID == "32-16",-1]  # Options: "28-16" "28-20" "30-16" "30-20" "32-16" "32-20"
 
 numberOfVariables = ncol(data)
 
