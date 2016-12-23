@@ -18,6 +18,7 @@ namespace CyPhyPET
     using Newtonsoft.Json;
     using System.Globalization;
     using AVM.DDP;
+    using System.Security;
 
     public class PET
     {
@@ -116,6 +117,8 @@ namespace CyPhyPET
                     {
                         var intermVar = new PETConfig.Parameter();
                         intermVar.source = sourcePath;
+                        setUnit(intermediateVar.Referred.unit, intermVar);
+                        checkUnitMatchesSource(intermediateVar);
 
                         config.intermediateVariables.Add(intermediateVar.Name, intermVar);
                     }
@@ -200,6 +203,7 @@ namespace CyPhyPET
             foreach (var designVariable in driver.Children.DesignVariableCollection)
             {
                 var configVariable = new PETConfig.DesignVariable();
+                setUnit(designVariable.Referred.unit, configVariable);
                 config.designVariables.Add(designVariable.Name, configVariable);
 
                 var range = designVariable.Attributes.Range;
@@ -268,10 +272,13 @@ namespace CyPhyPET
                 var sourcePath = GetSourcePath(null, (MgaFCO)objective.Impl);
                 if (sourcePath != null)
                 {
-                    config.objectives.Add(objective.Name, new PETConfig.Parameter()
+                    var configParameter = new PETConfig.Parameter()
                     {
                         source = sourcePath
-                    });
+                    };
+                    config.objectives.Add(objective.Name, configParameter);
+                    setUnit(objective.Referred.unit, configParameter);
+                    checkUnitMatchesSource(objective);
                 }
             }
 
@@ -281,6 +288,30 @@ namespace CyPhyPET
             }
 
             return config;
+        }
+
+        private void checkUnitMatchesSource(ISIS.GME.Common.Interfaces.Reference objective)
+        {
+            var mgaObjective = (MgaReference)objective.Impl;
+            foreach (MgaConnPoint connPoint in mgaObjective.PartOfConns)
+            {
+                if (connPoint.ConnRole != "dst")
+                {
+                    continue;
+                }
+                var metric = (MgaReference)((MgaSimpleConnection)connPoint.Owner).Src;
+                if (metric.Referred == null || mgaObjective.Referred == null)
+                {
+                    continue;
+                }
+                if (metric.Referred.ID != mgaObjective.Referred.ID)
+                {
+                    Logger.WriteFailed(String.Format("Unit for <a href=\"mga:{0}\">{1}</a> must match unit for <a href=\"mga:{2}\">{3}</a>",
+                        metric.getTracedObjectOrSelf(Logger.Traceability).ID, SecurityElement.Escape(metric.Name),
+                        objective.Impl.getTracedObjectOrSelf(Logger.Traceability).ID, SecurityElement.Escape(objective.Name)));
+                    throw new ApplicationException();
+                }
+            }
         }
 
         public void GenerateCode(CyPhy.TestBenchRef testBenchRef, string testBenchOutputDir)
@@ -301,17 +332,19 @@ namespace CyPhyPET
                 var sourcePath = GetSourcePath((MgaReference)testBenchRef.Impl, (MgaFCO)parameter.Impl);
                 if (sourcePath != null)
                 {
-                    config.parameters.Add(parameter.Name, new PETConfig.Parameter()
+                    var configParameter = new PETConfig.Parameter()
                     {
                         source = sourcePath
-                    });
+                    };
+                    config.parameters.Add(parameter.Name, configParameter);
+                    setUnit(parameter.Referred.unit, configParameter);
                 }
             }
             foreach (var metric in testBench.Children.MetricCollection)
             {
-                config.unknowns.Add(metric.Name, new PETConfig.Parameter()
-                {
-                });
+                var configParameter = new PETConfig.Parameter();
+                config.unknowns.Add(metric.Name, configParameter);
+                setUnit(metric.Referred.unit, configParameter);
             }
             if (this.testBench is CyPhy.TestBench)
             {
@@ -322,6 +355,33 @@ namespace CyPhyPET
                     this.SimpleCalculation();
                 }
             }
+        }
+
+        private Dictionary<CyPhy.unit, List<Action<string>>> unitsToSet = new Dictionary<CyPhy.unit, List<Action<string>>>();
+
+        private void setUnit(CyPhy.unit unit, Action<string> action)
+        {
+            if (unit == null)
+            {
+                return;
+            }
+            List<Action<string>> setters;
+            if (unitsToSet.TryGetValue(unit, out setters) == false)
+            {
+                setters = new List<Action<string>>();
+                unitsToSet[unit] = setters;
+            }
+            setters.Add(action);
+        }
+
+        private void setUnit(CyPhy.unit unit, PETConfig.Parameter configParameter)
+        {
+            setUnit(unit, units => configParameter.units = units);
+        }
+
+        private void setUnit(CyPhy.unit unit, PETConfig.DesignVariable designVariable)
+        {
+            setUnit(unit, units => designVariable.units = units);
         }
 
         private static string[] GetSourcePath(MgaReference refe, MgaFCO port)
@@ -373,6 +433,39 @@ namespace CyPhyPET
                 if (this.pet.Children.ParameterStudyCollection.First().Attributes.SurrogateType != CyPhyClasses.ParameterStudy.AttributesClass.SurrogateType_enum.None)
                 {
                     throw new ApplicationException("Surrogates are not supported");
+                }
+            }
+
+            if (unitsToSet.Count > 0)
+            {
+                var cyPhyPython = (IMgaComponentEx)Activator.CreateInstance(Type.GetTypeFromProgID("MGA.Interpreter.CyPhyPython"));
+                // cyPhyPython.ComponentParameter["script_file"] = Path.Combine(META.VersionInfo.MetaPath, "bin", "CyPhyPET_unit_setter.py");
+                cyPhyPython.ComponentParameter["script_file"] = "CyPhyPET_unit_setter.py";
+
+                var fcos = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
+                int i = 0;
+                foreach (var unit in unitsToSet.Keys)
+                {
+                    // fcos.Append((MgaFCO)unit.Impl);
+                    cyPhyPython.ComponentParameter[String.Format("unit_id_{0}", i)] = unit.Impl.ID;
+                    i++;
+                }
+
+                cyPhyPython.InvokeEx(pet.Impl.Project, (MgaFCO)pet.Impl, fcos, 128);
+
+                i = 0;
+                foreach (var unit in unitsToSet.Keys)
+                {
+                    foreach (var action in unitsToSet[unit])
+                    {
+                        var value = (string)cyPhyPython.ComponentParameter[String.Format("unit_id_{0}_ret", i)];
+                        if (value == "")
+                        {
+                            value = null;
+                        }
+                        action(value);
+                    }
+                    i++;
                 }
             }
 
@@ -491,6 +584,7 @@ namespace CyPhyPET
             foreach (var designVariable in PCCDriver.Children.PCCParameterCollection)
             {
                 var configVariable = new PETConfig.DesignVariable();
+                setUnit(designVariable.Referred.unit, configVariable);
                 driver.designVariables.Add(designVariable.Name, configVariable);
             }
             foreach (var objective in PCCDriver.Children.PCCOutputCollection)
@@ -498,10 +592,13 @@ namespace CyPhyPET
                 var sourcePath = GetSourcePath(null, (MgaFCO)objective.Impl);
                 if (sourcePath != null)
                 {
-                    driver.objectives.Add(objective.Name, new PETConfig.Parameter()
+                    var configParameter = new PETConfig.Parameter()
                     {
                         source = sourcePath
-                    });
+                    };
+                    driver.objectives.Add(objective.Name, configParameter);
+                    setUnit(objective.Referred.unit, configParameter);
+                    checkUnitMatchesSource(objective);
                 }
             }
 
@@ -770,17 +867,22 @@ namespace CyPhyPET
                 var sourcePath = GetSourcePath(null, (MgaFCO)parameter.Impl);
                 if (sourcePath != null)
                 {
-                    config.parameters.Add(parameter.Name, new PETConfig.Parameter()
+                    var configParameter = new PETConfig.Parameter()
                     {
-                        source = sourcePath
-                    });
+                        source = sourcePath,
+                    };
+                    config.parameters.Add(parameter.Name, configParameter);
+                    setUnit(parameter.Referred.unit, configParameter);
+
                 }
             }
             foreach (var metric in excel.Children.MetricCollection)
             {
-                config.unknowns.Add(metric.Name, new PETConfig.Parameter()
+                var configParameter = new PETConfig.Parameter()
                 {
-                });
+                };
+                config.unknowns.Add(metric.Name, configParameter);
+                setUnit(metric.Referred.unit, configParameter);
             }
 
             this.config.components.Add(excel.Name, config);
@@ -852,6 +954,19 @@ namespace CyPhyPET
                 {
                     yield return obj;
                 }
+            }
+        }
+
+        public static IMgaObject getTracedObjectOrSelf(this IMgaObject obj, CyPhyCOMInterfaces.IMgaTraceability traceability)
+        {
+            string originalID;
+            if (traceability != null && traceability.TryGetMappedObject(obj.ID, out originalID))
+            {
+                return obj.Project.GetObjectByID(originalID);
+            }
+            else
+            {
+                return obj;
             }
         }
     }
