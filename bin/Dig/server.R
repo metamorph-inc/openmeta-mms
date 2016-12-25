@@ -118,7 +118,35 @@ shinyServer(function(input, output, session) {
     petName <- petConfig$PETName
     petMgaName <- petConfig$MgaFilename
   }
-    
+  
+  units <- list()
+  for (i in 1:length(designVariableNames))
+  {
+    unit <-petConfig$driver[[1]]$designVariables[[designVariableNames[i]]]$units
+    if(is.null(unit)) {
+      unit <- ""
+      nameWithUnit <- designVariableNames[[i]]
+    }
+    else
+    {
+      nameWithUnit <- paste0(designVariableNames[i]," (",petConfig$driver[[1]]$designVariables[[designVariableNames[i]]]$units,")")
+    }
+    units[[designVariableNames[[i]]]] <- list("unit"=unit, "nameWithUnit"=nameWithUnit)
+  }
+  for (i in 1:length(objectiveNames))
+  {
+    unit <-petConfig$driver[[1]]$objectives[[objectiveNames[i]]]$units
+    if(is.null(unit)) {
+      unit <- ""
+      nameWithUnit <- objectiveNames[[i]]
+    }
+    else
+    {
+      nameWithUnit <- paste0(objectiveNames[i]," (",petConfig$driver[[1]]$objectives[[objectiveNames[i]]]$units,")")
+    }
+    units[[objectiveNames[[i]]]] <- list("unit"=unit, "nameWithUnit"=nameWithUnit)
+  }
+  
   
   output$petConfigPresent <- reactive({
     print(paste("petConfigPresent:",petConfigPresent))
