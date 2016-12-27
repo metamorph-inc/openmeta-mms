@@ -19,8 +19,8 @@
         }
       },
       "unknowns": {
-        "PowerOutput": {},
-        "IntegratedEnergy": {}
+        "TotalCost": {},
+        "TipDeflection": {}
       },
       "details": {
         "directory": "TestBench_TestWindTurbine"
@@ -53,11 +53,11 @@
         }
       },
       "objectives": {
-        "Settle": {
-          "source": ["TestWindTurbine", "PowerOutput"]
+        "OUT_Blade_Cost_Total": {
+          "source": ["TestWindTurbine", "TotalCost"]
         },
-        "CoupAmp": {
-          "source": ["TestWindTurbine", "IntegratedEnergy"]
+        "OUT_Blade_Tip_Deflection": {
+          "source": ["TestWindTurbine", "TipDeflection"]
         }
       },
       "details": {
