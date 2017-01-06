@@ -54,8 +54,6 @@ namespace CyPhySignalBlocksAddOn
         private GMEConsole GMEConsole { get; set; }
         private MgaProject project;
 
-
-        // test code
         private class LibraryInfo
         {
             public bool attachedLibrary = false;
@@ -346,6 +344,7 @@ namespace CyPhySignalBlocksAddOn
 #if DEBUG
                 GMEConsole.Info.WriteLine("CyPhySignalBlocksAddOn starting up...");
 #endif
+                GMEConsole.Info.WriteLine(String.Format("This is OpenMETA version {0}", META.VersionInfo.MetaVersion));
 
                 //GMEConsole.Info.WriteLine(eventMask.ToString());
                 if (!componentEnabled)
@@ -466,7 +465,7 @@ namespace CyPhySignalBlocksAddOn
                             throw new Exception();
                         }
 
-                        GMEConsole.Info.WriteLine("Attaching library " + mgaPath);
+                        // GMEConsole.Info.WriteLine("Attaching library " + mgaPath);
                         RootFolder newLibFolder = Common.Classes.RootFolder.GetRootFolder(project).AttachLibrary("MGA=" + mgaPath);
                         DateTime modtime = RoundDateTimeToSeconds(File.GetLastWriteTimeUtc(mgaPath));
                         ((newLibFolder as ISIS.GME.Common.Classes.RootFolder).Impl as GME.MGA.IMgaFolder).RegistryValue["modtime"] =
