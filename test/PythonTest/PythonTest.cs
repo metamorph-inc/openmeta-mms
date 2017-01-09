@@ -66,7 +66,8 @@ namespace PythonTest
                     "py_modelica_exporter",
                     "run_mdao",
                     "testbenchexecutor",
-
+                    "excel_wrapper",
+                    "matlab_wrapper",
                     "SpiceVisualizer",
                     "SpiceVisualizer.post_process",
                     "SpiceVisualizer.process_spice",
@@ -76,7 +77,6 @@ namespace PythonTest
                     "pyqtgraph",
                     "spice_viewer",
                     "matlab_wrapper",
-                    "matlab_proxy",
                     "tables",
                     "vitables",
             };

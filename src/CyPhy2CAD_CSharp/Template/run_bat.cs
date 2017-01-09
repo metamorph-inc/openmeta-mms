@@ -15,7 +15,7 @@ namespace CyPhy2CAD_CSharp.Template
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+    #line 1 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     public partial class run_bat : run_batBase
     {
@@ -31,8 +31,6 @@ REM	    PROE_ISIS_EXTENSIONS	// typically set to C:\Program Files\META\Proe ISIS
 REM
 REM	See ""C:\Program Files\META\Proe ISIS Extensions\0Readme - CreateAssembly.txt"" for the complete setup instructions.
 
-setlocal EnableDelayedExpansion
-
 set WORKING_DIR="".""
 set ERROR_CODE=0
 
@@ -41,10 +39,9 @@ set ERROR_MSG=""""
 FOR /F ""skip=2 tokens=2,*"" %%A IN ('%SystemRoot%\SysWoW64\REG.exe query ""HKLM\software\META"" /v ""META_PATH""') DO set MetaPath=%%B
 
 set CADPython=%MetaPath%\bin\CAD
-if exist ""%MetaPath%\src\CADAssembler\Python"" set CADPython=%MetaPath%\src\CADAssembler\Python
 
 if exist TestBench_PreProcess.cmd (
-cmd /c TestBench_PreProcess.cmd || exit /b !ERRORLEVEL!
+cmd /c TestBench_PreProcess.cmd
 )
 
 set ERROR_CODE=%ERRORLEVEL%
@@ -55,42 +52,42 @@ goto :ERROR_SECTION
 
 ""%MetaPath%\bin\Python27\Scripts\Python.exe"" ""%MetaPath%\bin\CAD\CADJobDriver.py"" -assembler ");
             
-            #line 31 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 28 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Assembler));
             
             #line default
             #line hidden
             this.Write(" -mesher ");
             
-            #line 31 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 28 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Mesher));
             
             #line default
             #line hidden
             this.Write(" -analyzer ");
             
-            #line 31 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 28 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Analyzer));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 31 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 28 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
  if (Mode!=null) { 
             
             #line default
             #line hidden
             this.Write("-mode ");
             
-            #line 31 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 28 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Mode));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 31 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 28 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
 }
             
             #line default
@@ -99,28 +96,28 @@ goto :ERROR_SECTION
                     " runCADJob.bat: CADJobDriver.py encountered error during execution, error level " +
                     "is %ERROR_CODE%\"\r\ngoto :ERROR_SECTION\r\n)\r\n\r\n");
             
-            #line 39 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 36 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
  if (CallDomainTool!=null) { 
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 41 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 38 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(CallDomainTool));
             
             #line default
             #line hidden
             this.Write("\r\n\r\n");
             
-            #line 43 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 40 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
  } 
             
             #line default
             #line hidden
             this.Write("\r\n\r\n");
             
-            #line 46 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 43 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
  if (Automation) { 
             
             #line default
@@ -128,7 +125,7 @@ goto :ERROR_SECTION
             this.Write("@echo off\r\n\r\n\r\nRem ****************************\r\nREM Python Metric Update Script\r" +
                     "\nRem ****************************\r\n\r\nset RESULT_XML_FILE=");
             
-            #line 54 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 51 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ComputedMetricsPath));
             
             #line default
@@ -158,7 +155,7 @@ goto :ERROR_SECTION
 )
 
 if exist TestBench_PostProcess.cmd (
-cmd /c TestBench_PostProcess.cmd || exit /b !ERRORLEVEL!
+cmd /c TestBench_PostProcess.cmd
 )
 
 set ERROR_CODE=%ERRORLEVEL%
@@ -168,17 +165,17 @@ goto :ERROR_SECTION
 )
 ");
             
-            #line 87 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+            #line 84 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("\r\nexit 0\r\n\r\n:ERROR_SECTION\r\necho %ERROR_MSG% >>_FAILED.txt\r\necho \"\"\r\necho \"See Er" +
-                    "ror Log: _FAILED.txt\"\r\nping -n 8 127.0.0.1 > nul\r\nexit /b %ERROR_CODE%\r\n\r\n");
+            this.Write("\r\nexit /b 0\r\n\r\n:ERROR_SECTION\r\necho %ERROR_MSG% >>_FAILED.txt\r\necho \"\"\r\necho \"See" +
+                    " Error Log: _FAILED.txt\"\r\nping -n 8 127.0.0.1 > nul\r\nexit /b %ERROR_CODE%\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 98 "C:\Users\kevin\Documents\meta-tonka\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
+        #line 95 "C:\Users\kevin\Documents\meta-core\src\CyPhy2CAD_CSharp\Template\run_bat.tt"
   
 public string XMLFileName {get;set;}
 public bool Automation {get;set;}

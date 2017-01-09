@@ -1,0 +1,210 @@
+
+CLASS vSurfaceOrSolid
+
+	CLASSWIDE STRING	c_ClassName[32]	
+	
+	CLASSWIDE STRING  errorMsg[1024] 
+	CLASSWIDE INTEGER errorLevel	
+	
+	CLASSWIDE LOGICAL laminatesFound
+	CLASSWIDE INTEGER maxNumLayersFound		
+				
+################################################################################
+FUNCTION initialize()
+	c_ClassName = "vSurfaceOrSolid"
+	
+	laminatesFound = FALSE
+	maxNumLayersFound = 0	
+	
+END FUNCTION
+################################################################################
+FUNCTION patranPostProcess(	in_Patran_SolidModel, 			@ 
+							in_Patran_SurfaceModel, 		@
+							in_Patran_withFailureCriteria )
+
+	LOGICAL in_Patran_SolidModel
+	LOGICAL in_Patran_SurfaceModel	
+	LOGICAL in_Patran_withFailureCriteria	
+	
+	INTEGER returnStatus = 0
+
+	STRING  functionName[64]
+	functionName = c_ClassName // ".patranPostProcess"
+	
+	
+	IF ( in_Patran_SolidModel && in_Patran_SurfaceModel ) THEN
+		errorMsg = "Solid and surface elements in the same model are not supported. Only solid or surface elements in a model are supported."
+		errorLevel = vLogger.get_ci_ERROR()
+		vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 
+		RETURN -1
+	END IF
+	
+	##########################################
+	# Get Region to Property-Set Mappings
+	##########################################
+	
+	vRegions.retrieveRegionIDs()
+	vRegions.logRegionIDs()
+	vRegions.retrieveRegions_to_PropSetNames()
+	vRegions.logPropertySetNames()
+	
+	##########################################
+	# Get LoadCases
+	##########################################	
+	vLoadcases.retrieve_Loadcases()
+	vLoadcases.log_LoadCaseIDs()
+	
+	##########################################
+	# For each ComponentInstance ID
+	#	Get property sets
+	#	Get grid points
+	#	Get max metric for the grid points
+	##########################################	
+	
+	INTEGER numUniqueCompInstIDs 
+	numUniqueCompInstIDs = vInputFile.get_NumUniqueCompInstIDs()	
+	
+	STRING uniqueCompInstIDs[128](VIRTUAL)
+	sys_allocate_array ( uniqueCompInstIDs, 	1, numUniqueCompInstIDs )
+	
+	vInputFile.get_UniqueCompInstIDs( uniqueCompInstIDs )
+	
+	INTEGER numFoundPropertySetNames
+	
+	INTEGER maxNumPropertySets  
+	maxNumPropertySets = vInputFile.get_TotalNumCompInstIDEntries()
+	
+	STRING propertySetNames[64](VIRTUAL)
+	#sys_allocate_array ( propertySetNames, 	1, numUniqueCompInstIDs )
+	sys_allocate_array ( propertySetNames, 	1, maxNumPropertySets )	
+	
+	INTEGER i
+	INTEGER j
+	INTEGER	regionID
+	
+	vMetrics.allocateMetricsVariables( numUniqueCompInstIDs )
+	
+	dump numUniqueCompInstIDs
+	
+	FOR ( i = 1 to numUniqueCompInstIDs )
+	
+		STRING nodes[VIRTUAL]
+	
+		vInputFile.get_PropertSetNames_per_CompID( uniqueCompInstIDs(i), numFoundPropertySetNames, propertySetNames )
+		
+		text_write_string( vLogger.getChannel(), "******* Begin Processing Component Instance ID *******")	
+		text_write_string( vLogger.getChannel(), "	Component Instance ID: " // uniqueCompInstIDs(i) // @
+								",     Number Property Sets: " // str_from_integer(numFoundPropertySetNames) )
+								
+		INTEGER returnStatus_temp
+		returnStatus_temp = 0
+		FOR ( j = 1 to numFoundPropertySetNames )
+			regionID = vRegions.get_RegionID(  propertySetNames(j))
+			
+			# Make sure the property set in the input file is a property set in the output (xdb/op2) files of the Patran/Nastran run
+			IF ( regionID == vConstants.get_ci_Undefined() ) THEN		
+				# Must break this up into more than one message because a single messge would exceed 256 characters
+				errorLevel = vLogger.get_ci_ERROR()
+				errorMsg = "No property sets found for Component Instance ID: " //  uniqueCompInstIDs(i) 
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg )
+				
+				errorMsg = "   Property Set Name: " // propertySetNames(j) // ", Region ID: " // str_from_integer(regionID)
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg )
+				
+				errorMsg = 	"   Check the input file to verify that the " // vInputFile.get_c_CompInstID_PropertySet() // @
+							" field is set properly, File name: " // vInputFile.get_fileName()
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 
+				
+				errorMsg = 	"   Another cause could be that a property set contains no surfaces." 
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 	
+
+				errorMsg = 	"   This is usually caused by zones (CyPhy MaterialContents refers to geometry which represents a zone)" 
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 	
+
+				errorMsg = 	"   overlapping in the CyPhy model." 
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 	
+
+				errorMsg = 	"   To check this, using Patran, open Patran_Model.db, select Properties tab, Action: Show (right dialogue box)," 
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 	
+
+				errorMsg = 	"   Property Set Name, Scalar Plot, Apply.  Each zone should have a different color.  Make sure no color" 
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 	
+				
+				errorMsg = 	"   appears in multiple areas that are not in-line with the model you intended in CyPhy.  If your CyPhy zones" 
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 	
+
+				errorMsg = 	"   overlap, then a surface will appear in an unintended zone and leave the intended zone empty." 
+				vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 				
+				
+				
+			   returnStatus_temp = -1
+			END IF 
+			
+			text_write_string( vLogger.getChannel(), "    Property Set Name:     " // propertySetNames(j) // @
+													 "    Region ID: " // str_from_integer(regionID))			
+		END FOR
+		
+		IF ( returnStatus_temp != 0 ) THEN RETURN returnStatus_temp
+		
+		
+		#dump propertySetNames
+
+		
+		##################################
+		# Find grid points for the region
+		##################################
+		
+		vPatranUtils.get_Nodes( numFoundPropertySetNames, propertySetNames, nodes )
+		# dump nodes
+		vPatranUtils.log_Nodes(nodes)
+		
+		IF ( str_length( str_strip_trail(str_strip_lead(nodes))) == 0 ) THEN
+			errorMsg = "No nodes found for property set(s): "
+			FOR ( j = 1 to numFoundPropertySetNames )
+				errorMsg = errorMsg // propertySetNames(j) // " "
+			END FOR
+			errorLevel = vLogger.get_ci_ERROR()
+			vLogger.addErrorMessage(  errorLevel, functionName, errorMsg ) 
+		   RETURN -1
+		END IF
+
+		#################################################
+		# Gather Metrics (VM, MP, D) or Failure Criteria
+		#################################################			
+		# Failure Criteria specified, just get that criteria; otherwise get VM, MP, D
+			
+		dump "----------- Before vMetrics.computeMetrics"
+		dump laminatesFound		
+		vMetrics.computeMetrics( i, uniqueCompInstIDs(i), nodes, laminatesFound, maxNumLayersFound ) 		
+		dump "------------After vMetrics.computeMetrics"		
+		
+		dump laminatesFound
+		
+		text_write_string( vLogger.getChannel(), "******* END Processing Component Instance ID *******")	
+	
+		sys_free_string(nodes)
+	
+	END FOR
+	
+	sys_free_array( uniqueCompInstIDs )
+	sys_free_array( propertySetNames )	
+	
+	returnStatus = vMetrics.computeMassAndVolume()
+	
+	vMetrics.log_Metrics()
+	vMetrics.writeMetricsToOutputFile()			
+	
+	STRING filename[64] 
+	
+	filename = vPatranPostProcess.get_fileName()
+		
+	#dump laminatesFound
+	#dump maxNumLayersFound
+
+	vPlots.createAllPlots(filename)
+	
+	RETURN returnStatus
+	
+END FUNCTION
+################################################################################
+END CLASS
