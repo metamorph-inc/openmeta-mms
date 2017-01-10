@@ -148,7 +148,9 @@ shinyServer(function(input, output, session) {
       }
       else
       {
-        unit <- gsub("\\*\\*", "^", unit)
+        unit <- gsub("\\*\\*", "^", unit) #replace Python '**' with '^'
+        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
+        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
         nameWithUnit <- paste0(designVariableNames[i]," (",unit,")")
       }
       units[[designVariableNames[[i]]]] <- list("unit"=unit, "nameWithUnit"=nameWithUnit)
