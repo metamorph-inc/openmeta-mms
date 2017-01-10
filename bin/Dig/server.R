@@ -83,12 +83,12 @@ shinyServer(function(input, output, session) {
     # petConfig = fromJSON("../../../results/pet_config.json", fill=T)
 
     # For testing with BladeMDA DoE Optimization Under Uncertainty Data
-    # raw = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty.csv", fill=T)
-    # if(file.exists("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv"))
-    #   mapping = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertaintyMapping.csv", fill=T)
+    raw = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty_mergedPET.csv", fill=T)
+    if(file.exists("WindTurbineBladeDoEforOptimizationUnderUncertainty_pet_config.json"))
+      petConfig = fromJSON("WindTurbineBladeDoEforOptimizationUnderUncertainty_pet_config.json")
     
-    raw = read.csv("WindTurbineSim_mergedPET.csv", fill=T)
-    petConfig = fromJSON("WindTurbineSim_pet_config.json")
+    # raw = read.csv("WindTurbineSim_mergedPET.csv", fill=T)
+    # petConfig = fromJSON("WindTurbineSim_pet_config.json")
     
     # raw = iris
     # petConfig = read.csv("iris_config.json", fill = T)
@@ -102,6 +102,24 @@ shinyServer(function(input, output, session) {
   enumeratedDesignVariables <- FALSE
   designVariables <- NULL
   objectiveNames <- NULL
+  units <- NULL
+  reverseUnits <- NULL
+  
+  addUnits <- function(name) {
+    if(is.null(units) | !(name %in% names(units))) {
+      name
+    } else {
+      units[[name]]$nameWithUnit
+    }
+  }
+  
+  removeUnits <- function(nameWithUnits) {
+    if(is.null(reverseUnits) | !(nameWithUnits %in% names(reverseUnits))) {
+      nameWithUnits
+    } else {
+      reverseUnits[[nameWithUnits]]
+    }
+  }
   
   if(petConfigPresent) {
     designVariableNames <- names(petConfig$drivers[[1]]$designVariables)
@@ -117,8 +135,44 @@ shinyServer(function(input, output, session) {
     petSelectedConfigurations <- petConfig$SelectedConfigurations
     petName <- petConfig$PETName
     petMgaName <- petConfig$MgaFilename
-  }
     
+    # Generate Units Tables
+    units <- list()
+    reverseUnits <- list()
+    for (i in 1:length(designVariableNames))
+    {
+      unit <-petConfig$driver[[1]]$designVariables[[designVariableNames[i]]]$units
+      if(is.null(unit)) {
+        unit <- ""
+        nameWithUnit <- designVariableNames[[i]]
+      }
+      else
+      {
+        unit <- gsub("\\*\\*", "^", unit)
+        nameWithUnit <- paste0(designVariableNames[i]," (",unit,")")
+      }
+      units[[designVariableNames[[i]]]] <- list("unit"=unit, "nameWithUnit"=nameWithUnit)
+      reverseUnits[[nameWithUnit]] <- designVariableNames[[i]]
+    }
+    for (i in 1:length(objectiveNames))
+    {
+      unit <-petConfig$driver[[1]]$objectives[[objectiveNames[i]]]$units
+      if(is.null(unit)) {
+        unit <- ""
+        nameWithUnit <- objectiveNames[[i]]
+      }
+      else
+      {
+        unit <- gsub("\\*\\*", "^", unit)
+        nameWithUnit <- paste0(objectiveNames[i]," (",unit,")")
+      }
+      units[[objectiveNames[[i]]]] <- list("unit"=unit, "nameWithUnit"=nameWithUnit)
+      reverseUnits[[nameWithUnit]] <- objectiveNames[[i]]
+    }
+    
+    # Replace add units to column names in raw
+    colnames(raw) <- sapply(colnames(raw), addUnits)
+  }
   
   output$petConfigPresent <- reactive({
     print(paste("petConfigPresent:",petConfigPresent))
@@ -516,8 +570,8 @@ shinyServer(function(input, output, session) {
     if(is.null(selectVal) | !input$stickyFilters)
       selectVal <- items
     
-    column(2, selectInput(paste0('inp', current),
-                          varNames[current],
+    column(2, selectInput(inputId = paste0('inp', current),
+                          label = varNames[current],
                           multiple = TRUE,
                           selectize = FALSE,
                           choices = items,
@@ -539,8 +593,8 @@ shinyServer(function(input, output, session) {
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4))
       
-      column(2, sliderInput(paste0('inp', current),
-                            varNames[current],
+      column(2, sliderInput(inputId = paste0('inp', current),
+                            label = varNames[current],
                             step = signif(step, digits = 4),
                             min = signif(min-step*10, digits = 4),
                             max = signif(max+step*10, digits = 4),
@@ -560,8 +614,8 @@ shinyServer(function(input, output, session) {
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(min, max)
       
-      column(2, sliderInput(paste0('inp', current),
-                            varNames[current],
+      column(2, sliderInput(inputId = paste0('inp', current),
+                            label = varNames[current],
                             min = min,
                             max = max,
                             value = sliderVal)
@@ -575,13 +629,15 @@ shinyServer(function(input, output, session) {
     
     fluidRow(
       lapply(varConstant(), function(column) {
-        
+
         switch(varClass[column],
                "numeric" = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
-               "integer" =  column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
+               "integer" = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
                "factor"  = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column])))
         )
       })
+      # lapply(varConstant(), function(x) {column(2, p(strong(paste0(addUnits(x),":")), unname(raw_plus()[1,column])))})
+      # lapply(varConstant(), function(x) {column(2, p(strong(paste0(x,":")), unname(raw_plus()[1,column])))})
     )
   })
   
@@ -1441,12 +1497,12 @@ shinyServer(function(input, output, session) {
       }
   )
   
-  # Ranges Table Tab --------------------------------------------------------------------------------
+  # PET Refinement Tab -------------------------------------------------------
   all_ranges <- list()  #List of all ranges: 1 for all numerics and individual ones for each factor
   
-  slowNumericRangeData <- eventReactive(input$updateRanges, {
-    all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
-  })
+  # slowNumericRangeData <- eventReactive(input$updateRanges, {
+  #   all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
+  # })
   
   output$petDriverConfig <- renderUI({
     fluidRow(
@@ -1472,7 +1528,7 @@ shinyServer(function(input, output, session) {
     
     lapply(rownames(designVariables), function(row){
       
-      var = levels(droplevels(designVariables[row, "VarName"]))
+      var = addUnits(levels(droplevels(designVariables[row, "VarName"])))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Selection"]))), ","))
       
@@ -1531,7 +1587,7 @@ shinyServer(function(input, output, session) {
     
     lapply(rownames(designVariables), function(row){
       
-      var = levels(droplevels(designVariables[row, "VarName"]))
+      var = addUnits(levels(droplevels(designVariables[row, "VarName"])))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       selection = gsub(",", ", ", levels(droplevels(designVariables[row, "Selection"])))
       
@@ -1747,7 +1803,7 @@ shinyServer(function(input, output, session) {
     petConfigRefined <- petConfig
     
     reassignDV <- function(dv, name) {
-      global_i = which(varNames == name)
+      global_i = which(varNames == addUnits(name))
       if("type" %in% names(dv) && dv$type == "enum") {
         selection <- strsplit(input[[paste0('newSelection', global_i)]], ",")
         if (length(unlist(selection)) > 1) {

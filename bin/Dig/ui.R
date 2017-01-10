@@ -462,6 +462,11 @@ shinyUI(fluidPage(
       uiOutput("filters")
     ),
     conditionalPanel("output.constantsPresent",
+      bootstrapPage(tags$script('
+        $(document).on("keydown", function (e) {
+        Shiny.onInputChange("lastkeypresscode", e.keyCode);
+        });
+      ')),
       h3("Constants:"),
       uiOutput("constants")
     )

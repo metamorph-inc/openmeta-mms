@@ -77,6 +77,7 @@ namespace DigTest
             }
         }
 
+       
         [Fact]
         void DigRuns()
         {
@@ -97,7 +98,7 @@ namespace DigTest
                     Assert.True(wait0.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
 
                     Assert.Equal("Visualizer", driver.Title);
-
+                    
                     /*                              PAIRS TAB                              */
 
                     // Check coloring schemes
@@ -141,8 +142,8 @@ namespace DigTest
 
                     driver.FindElement(By.Id("highlightData")).Click();
 
-                    Thread.Sleep(100);
-                    Console.WriteLine(driver.FindElement(By.Id("stats")).Text);
+                    Thread.Sleep(1000);
+                    Trace.WriteLine(driver.FindElement(By.Id("stats")).Text);
 
                     /*IWait<IWebDriver> single_wait2 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
                     Assert.True(single_wait2.Until(driver1 => driver.FindElement(By.Id("stats")).Displayed));
@@ -175,7 +176,8 @@ namespace DigTest
                     // Check refined and original ranges
                     driver.FindElement(By.CssSelector("a[data-value=\"PET Refinement\"]")).Click();
 
-                    //driver.Wait (By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Displayed;
+                    IWait<IWebDriver> pet_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                    Assert.True(pet_wait0.Until(driver1 => driver.FindElement(By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Displayed));
 
                     driver.FindElement(By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
                     IWait<IWebDriver> wait9 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
@@ -222,6 +224,9 @@ namespace DigTest
                     // Check to see that coloring mode has returned to Ranked
                     Assert.True(wait8.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Ranked Points: 1")));
 
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click());
+                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click());
+
 
                 /*}
                 catch
@@ -233,7 +238,100 @@ namespace DigTest
                     }
                     throw;
                 }*/
-                
+
+            }
+
+        }
+
+        [Fact]
+        void MultipleCfgIDs()
+        {
+            var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
+
+            options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
+            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
+                options))
+            using (DigWrapper wrapper = new DigWrapper())
+            {
+                try
+                {
+                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/WindTurbineBladeDoEforOptimizationUnderUncertainty_mergedPET.csv"));
+
+                    driver.Navigate().GoToUrl(wrapper.url);
+
+                    IWait<IWebDriver> wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
+                    Assert.True(wait0.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
+
+                    Assert.Equal("Visualizer", driver.Title);
+
+                    /*                              UNCERTAINTY QUANTIFICATION TAB                                 */
+                    // Lots of Thread.Sleep(n) here due to calculations being performed
+                            
+                    /*      WEIGHTING TAB       */
+                    driver.FindElement(By.CssSelector("a[data-value=\"Uncertainty Quantification\"]")).Click();
+
+                    // Click multiple design cfgs
+                    driver.FindElement(By.Id("bayesianDesignConfigsPresent")).Click();
+                    Thread.Sleep(3000); 
+
+                    // Wait for plots to be displayed
+                    IWait<IWebDriver> UQ_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(20.0));
+                    Assert.True(UQ_wait0.Until(driver1 => driver.FindElement(By.CssSelector("#bayesianPlots > div:nth-child(1) > div > div > img")).Displayed));
+
+                    // Click enable constraint
+                    Thread.Sleep(3000);
+                    driver.FindElement(By.CssSelector("#fuqConstraintEnable2")).Click();
+                    Assert.True(UQ_wait0.Until(driver1 => driver.FindElement(By.CssSelector("#fuqConstraintEnable2")).Selected));
+
+                    // Calculate Forward UQ
+                    driver.FindElement(By.CssSelector("#runFUQ")).Click();
+
+                    // Wait for plots to finish recalculating
+                    /*
+                    IWait<IWebDriver> UQ_wait1 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                    IWebElement output_plot = driver.FindElement(By.CssSelector("#bayesianPlots > div:nth-child(7) > div"));
+                    Assert.True(UQ_wait1.Until(driver1 => output_plot.FindElement(By.CssSelector("div")).GetAttribute("class") == "shiny-plot-output shiny-bound-output recalculating"));
+                    Assert.True(UQ_wait1.Until(driver1 => output_plot.FindElement(By.CssSelector("div")).GetAttribute("class") == "shiny-plot-output shiny-bound-output"));
+                    */
+
+                    // Add Probability Query
+                    driver.FindElement(By.CssSelector("#addProbability")).Click();
+
+                    // Wait for values/UI elements to populate
+                    IWait<IWebDriver> UQ_wait2 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                    Assert.True(UQ_wait2.Until(driver1 => driver.FindElement(By.CssSelector("#queryThreshold1")).Displayed));
+                    driver.FindElement(By.CssSelector("#queryThreshold1")).SendKeys("40");
+                    Assert.True(UQ_wait2.Until(driver1 => driver.FindElement(By.CssSelector("#queryThreshold1")).GetAttribute("value") == "40"));
+
+                    // Evaluate current probability Query
+                    driver.FindElement(By.CssSelector("#runProbabilityQueries")).Click();
+                    IWait<IWebDriver> UQ_wait3 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                    Assert.True(UQ_wait3.Until(driver1 => driver.FindElement(By.CssSelector("#queryValue1")).Displayed));
+                    Assert.True(UQ_wait3.Until(driver1 => float.Parse(driver.FindElement(By.CssSelector("#queryValue1")).Text) < 0.5));
+
+                    /*      DESIGN RANKING TAB      */
+                    driver.FindElement(By.CssSelector("#bayesianTabset > li:nth-child(2) > a")).Click();
+
+                    IWait<IWebDriver> UQ_wait4 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                    Assert.True(UQ_wait4.Until(driver1 => driver.FindElement(By.CssSelector("#runProbability")).Displayed));
+                    driver.FindElement(By.CssSelector("#runProbability")).Click();
+
+                    /*
+                    IWait<IWebDriver> UQ_wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                    Assert.True(UQ_wait5.Until(driver1 => driver.FindElement(By.CssSelector("#probabilityTable")).Displayed));
+                    */
+
+                }
+                catch
+                {
+                    if (Debugger.IsAttached)
+                    {
+                        // this should keep the browser open for inspection
+                        Debugger.Break();
+                    }
+                    throw;
+                }
+
             }
 
         }
