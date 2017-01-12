@@ -475,7 +475,10 @@ shinyServer(function(input, output, session) {
     vars <- filterVars()
     data <- raw_plus()
     
-    openToolTip <<- openToolTip[1:length(vars),]
+    if(all.equal(dim(openToolTip), c(0,0)) == TRUE)
+      openToolTip <<- openToolTip[1:length(vars),]
+    else
+      openToolTip <<- head(openToolTip, length(vars))
     row.names(openToolTip) <<- unlist(strsplit(toString(vars), ", "))
     openToolTip$display <<- F
     
