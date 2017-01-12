@@ -1887,7 +1887,7 @@ shinyServer(function(input, output, session) {
     var_directions <- c("Input",
                         "Output")
     data_mean <- apply(filtered_raw_plus()[varRangeNum()], 2, mean)
-    data_sd <- apply(filtered_raw_plus()[varRangeNum()], 2, function(x) {sd(x)/2})
+    data_sd <- apply(filtered_raw_plus()[varRangeNum()], 2, function(x) {sd(x)})
     
     bayesChoices <- varRangeNum()
     if(!input$bayesianDisplayAll)
