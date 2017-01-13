@@ -50,6 +50,10 @@ def start_pdb():
     pdb.set_trace()
 
 
+class InvalidGMEUnitException(ValueError):
+    pass
+
+
 # from OpenMDAO
 def in_base_units(value, unit):
     new_value = value * unit.factor
@@ -87,7 +91,10 @@ def get_unit_for_gme(fco, exponent=1):
             return None
             # n.b. ignore exponent
             return PhysicalUnit({}, 1.0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0.0)
-        return _find_unit(str(sym)) ** exponent
+        try:
+            return _find_unit(str(sym)) ** exponent
+        except:
+            raise InvalidGMEUnitException()
     if fco.GetStrAttrByNameDisp('Symbol') in ('degF', 'degC'):
         return _find_unit(str(fco.GetStrAttrByNameDisp('Symbol')))
     if fco.MetaBase.Name == 'derived_unit':
@@ -149,6 +156,9 @@ def set_unit(unit_fco, set_units):
     debug_log(symbol)
     try:
         gme_unit = get_unit_for_gme(unit_fco)
+    except InvalidGMEUnitException:
+            set_units('')
+            return
     except TypeError as e:
         if 'cannot multiply units with non-zero offset' in e.message:
             # FIXME: investigate why .../degC always fails
