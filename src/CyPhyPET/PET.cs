@@ -19,6 +19,7 @@ namespace CyPhyPET
     using System.Globalization;
     using AVM.DDP;
     using System.Security;
+    using System.Runtime.InteropServices;
 
     public class PET
     {
@@ -290,6 +291,12 @@ namespace CyPhyPET
             return config;
         }
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool SetDllDirectory(string lpPathName);
+
+        [DllImport("CyPhyFormulaEvaluator.dll")]
+        static extern bool AreUnitsEqual(IMgaFCO fco1, IMgaFCO fco2);
+
         private void checkUnitMatchesSource(ISIS.GME.Common.Interfaces.Reference objective)
         {
             var mgaObjective = (MgaReference)objective.Impl;
@@ -306,10 +313,20 @@ namespace CyPhyPET
                 }
                 if (metric.Referred.ID != mgaObjective.Referred.ID)
                 {
-                    Logger.WriteFailed(String.Format("Unit for <a href=\"mga:{0}\">{1}</a> must match unit for <a href=\"mga:{2}\">{3}</a>",
-                        metric.getTracedObjectOrSelf(Logger.Traceability).ID, SecurityElement.Escape(metric.Name),
-                        objective.Impl.getTracedObjectOrSelf(Logger.Traceability).ID, SecurityElement.Escape(objective.Name)));
-                    throw new ApplicationException();
+                    foreach (var path in new string[] { Path.Combine(META.VersionInfo.MetaPath, "bin"), Path.Combine(META.VersionInfo.MetaPath, "src", "bin") })
+                    {
+                        if (File.Exists(Path.Combine(path, "CyPhyFormulaEvaluator.dll")))
+                        {
+                            SetDllDirectory(path);
+                        }
+                    }
+                    if (AreUnitsEqual(metric.Referred, mgaObjective.Referred) == false)
+                    {
+                        Logger.WriteFailed(String.Format("Unit for <a href=\"mga:{0}\">{1}</a> must match unit for <a href=\"mga:{2}\">{3}</a>",
+                            metric.getTracedObjectOrSelf(Logger.Traceability).ID, SecurityElement.Escape(metric.Name),
+                            objective.Impl.getTracedObjectOrSelf(Logger.Traceability).ID, SecurityElement.Escape(objective.Name)));
+                        throw new ApplicationException();
+                    }
                 }
             }
         }
