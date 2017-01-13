@@ -55,80 +55,6 @@ def start_pdb():
     pdb.set_trace()
 
 
-# from OpenMDAO
-def in_base_units(value, unit):
-    new_value = value * unit.factor
-    num = ''
-    denom = ''
-    for unit, power in zip(_UNIT_LIB.base_names, unit.powers):
-        if power < 0:
-            denom = denom + '/' + unit
-            if power < -1:
-                denom = denom + '**' + str(-power)
-        elif power > 0:
-            num = num + '*' + unit
-            if power > 1:
-                num = num + '**' + str(power)
-
-    if len(num) == 0:
-        num = '1'
-    else:
-        num = num[1:]
-
-    if new_value != 1:
-        return repr(new_value) + '*' + num + denom
-    else:
-        return num + denom
-
-
-def reduce_none(op, items):
-    return reduce(op, (item for item in items if item is not None))
-
-
-def get_unit_for_gme(fco, exponent=1):
-    if fco.MetaBase.Name == 'si_unit':
-        sym = fco.GetStrAttrByNameDisp('Symbol')
-        if sym == 'U':
-            return None
-            # n.b. ignore exponent
-            return PhysicalUnit({}, 1.0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0.0)
-        return _find_unit(str(sym)) ** exponent
-    if fco.GetStrAttrByNameDisp('Symbol') in ('degF', 'degC'):
-        return _find_unit(str(fco.GetStrAttrByNameDisp('Symbol')))
-    if fco.MetaBase.Name == 'derived_unit':
-        for exponent in (ref.GetFloatAttrByNameDisp('exponent') for ref in fco.ChildFCOs):
-            if int(exponent) != exponent:
-                raise ValueError()
-        return reduce_none(operator.mul, (get_unit_for_gme(ref.Referred, int(ref.GetFloatAttrByNameDisp('exponent'))) for ref in fco.ChildFCOs))
-    # log('xxx' + fco.MetaBase.Name)
-    if fco.MetaBase.Name == 'conversion_based_unit':
-        return reduce_none(operator.mul, (get_unit_for_gme(ref.Referred) * ref.GetFloatAttrByNameDisp('conversion_factor') for ref in fco.ChildFCOs)) ** exponent
-    raise ValueError(fco.MetaBase.Name)
-
-
-def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
-    return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
-
-
-def unit_eq(self, other):
-    return isclose(self.factor, other.factor) and \
-           self.offset == other.offset and \
-           self.powers == other.powers
-
-
-def convert_unit_symbol(symbol):
-    symbol = re.sub('-(?!\\d)', '*', symbol)
-    symbol = symbol.replace('^', '**')
-    symbol = symbol.replace(u'\u00b5', 'u')
-    symbol = re.sub(' */ *', '/', symbol)
-    symbol = re.sub(' +', '*', symbol)
-    symbol = re.sub('\\bin\\b', 'inch', symbol)
-    symbol = re.sub('\\byd\\b', 'yard', symbol)
-    # TODO acre?
-    # TODO metric tonne?
-    return symbol.encode('ascii', 'replace')
-
-
 # This is the entry point
 def invoke(focusObject, rootObject, componentParameters, udmProject, **kwargs):
     mga_project = focusObject.convert_udm2gme().Project
@@ -140,7 +66,7 @@ def invoke(focusObject, rootObject, componentParameters, udmProject, **kwargs):
     def set_units(symbol):
         if symbol is None or symbol == '':
             return
-        all_units.append((_find_unit(symbol), unit_fco.ID))
+        all_units.append((_find_unit(symbol), unit_fco))
     for unit_fco in CyPhyPET_unit_setter.get_all_unit_fcos(mga_project):
         if unit_fco.Name in ('Pebi', 'Tebi', 'Zebi', 'Exbi', 'Kibi', 'Yotta', 'Yobi', 'Mebi', 'Gibi'):
             continue
@@ -155,10 +81,17 @@ def invoke(focusObject, rootObject, componentParameters, udmProject, **kwargs):
         # debug_log(repr(unit_expr))
         openmdao_unit = _find_unit(unit_expr)
 
-        for unit, fco_id in all_units:
+        gme_unit_id = None
+        for unit, fco in all_units:
             if unit == openmdao_unit:
-                metadata['gme_unit_id'] = fco_id
-                break
+                if gme_unit_id is None:
+                    gme_unit_id = fco.ID
+                # prefer a unit with Symbol that matches (e.g. m^3 vs stere)
+                if CyPhyPET_unit_setter.convert_unit_symbol(fco.GetStrAttrByNameDisp('Symbol')) == unit_expr:
+                    gme_unit_id = fco.ID
+                    break
+        if gme_unit_id is not None:
+            metadata['gme_unit_id'] = gme_unit_id
         # else: TODO create a new unit
 
     componentParameters['ret'] = json.dumps({'params': c._init_params_dict, 'unknowns': c._init_unknowns_dict},
