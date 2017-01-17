@@ -401,6 +401,7 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL)
     updateSelectInput(session, "xInput", choices = varRange(), selected = varRange()[c(1)])
     updateSelectInput(session, "yInput", choices = varRange(), selected = varRange()[c(2)])
+    setupToolTip()
     })   
     
   })
@@ -471,16 +472,17 @@ shinyServer(function(input, output, session) {
       varsList()
   })
   
+  setupToolTip <- function(...){
+    varsList <- match(varRangeNum(), varNames)
+    openToolTip <<- openToolTip[1:length(varsList),]
+    row.names(openToolTip) <<- unlist(strsplit(toString(varsList), ", "))
+    openToolTip$display <<- F
+    openToolTip$valApply <<- 0
+  }
+  
   fullFilterUI <- reactive({
     vars <- filterVars()
     data <- raw_plus()
-    
-    if(all.equal(dim(openToolTip), c(0,0)) == TRUE)
-      openToolTip <<- openToolTip[1:length(vars),]
-    else
-      openToolTip <<- head(openToolTip, length(vars))
-    row.names(openToolTip) <<- unlist(strsplit(toString(vars), ", "))
-    openToolTip$display <<- F
     
     facVars <- NULL
     intVars <- NULL
@@ -554,48 +556,10 @@ shinyServer(function(input, output, session) {
     if (min != max) {
       
       label = varNames[current]
-      
-      currentValOfApply <- 0
     
       sliderVal <- input[[paste0('inp', current)]]
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4))
-      
-      observe({
-        input$lastkeypresscode
-        input[[paste0("submit", current)]] 
-        
-        isolate({
-          if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip[toString(current), "display"]){
-            if(input[[paste0("submit", current)]] != currentValOfApply)
-              currentValOfApply <<- input[[paste0("submit", current)]]
-            sliderVal = input[[paste0('inp', current)]]
-            newMin = input[[paste0("min_inp", current)]]
-            newMax = input[[paste0("max_inp", current)]]
-            updateTextInput(session, paste0("min_inp", current), value = "")
-            updateTextInput(session, paste0("max_inp", current), value = "")
-            if(!is.null(newMin) && newMin != "")
-              sliderVal = as.numeric(c(newMin, sliderVal[2]))
-            if(!is.null(newMax) && newMax != "")
-              sliderVal = as.numeric(c(sliderVal[1], newMax))
-            updateSliderInput(session, paste0('inp', current), value = sliderVal)
-            toggle(paste0("slider_tooltip", current))
-            openToolTip[toString(current), "display"] <<- F
-          }
-        })
-      })
-      
-      observeEvent(input[[paste0('pop', current)]], {
-        toggle(paste0("slider_tooltip", current))
-        openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
-        for(i in 1:length(openToolTip[,"display"])){
-          row = row.names(openToolTip)[i]
-          if(row != current && openToolTip[row,"display"]){
-            toggle(paste0("slider_tooltip", row))
-            openToolTip[row,"display"] <<- F
-          }
-        }
-      })
       
       column(2, 
              actionButton(paste0('pop', current), label, "link"),
@@ -613,10 +577,10 @@ shinyServer(function(input, output, session) {
                             max = signif(max+step*10, digits = 4),
                             value = sliderVal)
             )
-      
-      
     }
   }
+  
+
   
   generateIntegerSliderUI <- function(current) {
     
@@ -628,49 +592,11 @@ shinyServer(function(input, output, session) {
     
     if(min != max) {
       
-      currentValOfApply <- 0
-      
       label = varNames[current]
       
       sliderVal <- input[[paste0('inp', current)]]
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(min, max)
-      
-      observe({
-        input$lastkeypresscode
-        input[[paste0("submit", current)]] 
-        
-        isolate({
-          if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip[toString(current), "display"]){
-            if(input[[paste0("submit", current)]] != currentValOfApply)
-              currentValOfApply <<- input[[paste0("submit", current)]]
-            sliderVal = input[[paste0('inp', current)]]
-            newMin = input[[paste0("min_inp", current)]]
-            newMax = input[[paste0("max_inp", current)]]
-            updateTextInput(session, paste0("min_inp", current), value = "")
-            updateTextInput(session, paste0("max_inp", current), value = "")
-            if(!is.null(newMin) && newMin != "")
-              sliderVal = as.numeric(c(newMin, sliderVal[2]))
-            if(!is.null(newMax) && newMax != "")
-              sliderVal = as.numeric(c(sliderVal[1], newMax))
-            updateSliderInput(session, paste0('inp', current), value = sliderVal)
-            toggle(paste0("slider_tooltip", current))
-            openToolTip[toString(current), "display"] <<- F
-          }
-        })
-      })
-      
-      observeEvent(input[[paste0('pop', current)]], {
-        toggle(paste0("slider_tooltip", current))
-        openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
-        for(i in 1:length(openToolTip[,"display"])){
-          row = row.names(openToolTip)[i]
-          if(row != current && openToolTip[row,"display"]){
-            toggle(paste0("slider_tooltip", row))
-            openToolTip[row,"display"] <<- F
-          }
-        }
-      })
       
       column(2, 
              actionButton(paste0('pop', current), label, "link"),
@@ -689,6 +615,50 @@ shinyServer(function(input, output, session) {
       )
     }
   }
+  
+  # Slider tooltip handler
+  observe({
+    lapply(varNames, function(name) {
+      if(name %in% varRangeNum()){
+        current = match(name, varNames)
+        observeEvent(input[[paste0('pop', current)]], {
+          toggle(paste0("slider_tooltip", current))
+          openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
+          for(i in 1:length(openToolTip[,"display"])){
+            row = row.names(openToolTip)[i]
+            if(row != current && openToolTip[row,"display"]){
+              toggle(paste0("slider_tooltip", row))
+              openToolTip[row,"display"] <<- F
+            }
+          }
+        })
+        observe({
+          input$lastkeypresscode
+          input[[paste0("submit", current)]] 
+          
+          isolate({
+            currentValOfApply <- openToolTip[toString(current), "valApply"]
+            if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip[toString(current), "display"]){
+              if(input[[paste0("submit", current)]] != currentValOfApply) 
+                openToolTip[toString(current), "valApply"] <<- input[[paste0("submit", current)]]
+              sliderVal = input[[paste0('inp', current)]]
+              newMin = input[[paste0("min_inp", current)]]
+              newMax = input[[paste0("max_inp", current)]]
+              updateTextInput(session, paste0("min_inp", current), value = "")
+              updateTextInput(session, paste0("max_inp", current), value = "")
+              if(!is.null(newMin) && newMin != "")
+                sliderVal = as.numeric(c(newMin, sliderVal[2]))
+              if(!is.null(newMax) && newMax != "")
+                sliderVal = as.numeric(c(sliderVal[1], newMax))
+              updateSliderInput(session, paste0('inp', current), value = sliderVal)
+              toggle(paste0("slider_tooltip", current))
+              openToolTip[toString(current), "display"] <<- F
+            }
+          })
+        })
+      }
+    })
+  })
   
   output$constants <- renderUI({
     print("In render constants")
