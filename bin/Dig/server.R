@@ -480,6 +480,8 @@ shinyServer(function(input, output, session) {
     openToolTip$valApply <<- 0
   }
   
+  
+  
   fullFilterUI <- reactive({
     vars <- filterVars()
     data <- raw_plus()
@@ -616,22 +618,35 @@ shinyServer(function(input, output, session) {
     }
   }
   
+  openSliderToolTip <- function(current) {
+    toggle(paste0("slider_tooltip", current))
+    openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
+    for(i in 1:length(openToolTip[,"display"])){
+      row = row.names(openToolTip)[i]
+      if(row != current && openToolTip[row,"display"]){
+        toggle(paste0("slider_tooltip", row))
+        openToolTip[row,"display"] <<- F
+      }
+    }
+  }
+  
   # Slider tooltip handler
   observe({
     lapply(varNames, function(name) {
       if(name %in% varRangeNum()){
         current = match(name, varNames)
-        observeEvent(input[[paste0('pop', current)]], {
-          toggle(paste0("slider_tooltip", current))
-          openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
-          for(i in 1:length(openToolTip[,"display"])){
-            row = row.names(openToolTip)[i]
-            if(row != current && openToolTip[row,"display"]){
-              toggle(paste0("slider_tooltip", row))
-              openToolTip[row,"display"] <<- F
-            }
-          }
-        })
+        onevent("dblclick", paste0("inp", current), openSliderToolTip(current))
+        # observeEvent(input[[paste0('pop', current)]], {
+        #   toggle(paste0("slider_tooltip", current))
+        #   openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
+        #   for(i in 1:length(openToolTip[,"display"])){
+        #     row = row.names(openToolTip)[i]
+        #     if(row != current && openToolTip[row,"display"]){
+        #       toggle(paste0("slider_tooltip", row))
+        #       openToolTip[row,"display"] <<- F
+        #     }
+        #   }
+        # })
         observe({
           input$lastkeypresscode
           input[[paste0("submit", current)]] 
@@ -876,6 +891,7 @@ shinyServer(function(input, output, session) {
     }
     p
   }
+  
   
   output$pairsPlot <- renderPlot({
     

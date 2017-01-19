@@ -3,6 +3,7 @@ library(shinyjs)
 
 # Define UI for Visualizer
 shinyUI(fluidPage(
+  useShinyjs(),
   #  Application title
   titlePanel("Visualizer"),
   #verbatimTextOutput("debug"),
