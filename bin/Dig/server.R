@@ -4,6 +4,7 @@ library(topsis)
 library(jsonlite)
 source('bayesian_utils.r')
 source('uq.r')
+source('sandbox.R')
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
 #options(error = function() traceback(2))
@@ -29,6 +30,8 @@ row.names(xFuncs) <- c("Values", "Scores", "Slopes", "Y_ints")
 bayesianDirection <- list()
 bayesianType <- list()
 bayesianParams <- list()
+#customFilePath < list()
+path <- NULL
 
 bayesianUIInitialized <- FALSE
 #-------------------End Global Variables-----------------------#
@@ -41,6 +44,7 @@ shinyServer(function(input, output, session) {
   makeReactiveBinding("bayesianDirection")
   makeReactiveBinding("bayesianType")
   makeReactiveBinding("bayesianParams")
+  #makeReactiveBinding("customFilePath")
 
   uiElements <- reactiveValues(constants = FALSE)
   importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE, ranges = FALSE, bayesian = FALSE)
@@ -176,6 +180,8 @@ shinyServer(function(input, output, session) {
     colnames(raw) <- sapply(colnames(raw), addUnits)
   }
   
+  SandboxServer(input, output, session, raw)
+  
   output$petConfigPresent <- reactive({
     print(paste("petConfigPresent:",petConfigPresent))
     petConfigPresent
@@ -194,6 +200,31 @@ shinyServer(function(input, output, session) {
   outputOptions(output, "enumerationDesignVariables", suspendWhenHidden=FALSE)
   
   output$noPetConfigMessage <- renderText(paste("No pet_config.json file was found."))
+  
+  output$sandboxUI <- reactive({
+    input$chooseSandbox
+    if(file.exists(paste(path))) {
+      source(paste(path))
+    }
+    if (exists("customUI")) {
+      answer <- customUI
+    }
+    else {
+      answer <- renderUI(div(br(),column(3,renderText("No Sandbox File Provided."))))
+    }
+    answer
+  })
+  
+  # output$sandboxUI <- renderUI(div(br(),column(3,renderText("No Sandbox File Provided."))))
+  # output$sandboxUI <- renderText("No Sandbox File Provided.")
+  
+  # reactiveValue
+  
+  sandboxImport <- observeEvent(input$chooseSandbox, {
+    print("button pressed")
+    path <<- fileChoose()
+    # source(paste(path))
+  })
   
   # Import/Export Session Settings -------------------------------------------
   

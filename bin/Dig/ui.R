@@ -1,5 +1,6 @@
 library(shiny)
 library(shinyjs)
+source('sandbox.R')
 
 # Define UI for Visualizer
 shinyUI(fluidPage(
@@ -321,6 +322,20 @@ shinyUI(fluidPage(
           actionButton('runProbabilityQueries', 'Evaluate')
         )
       )
+    ),
+    # tabPanel("Sandbox",
+    #   fluidRow(
+    #     br(),
+    #     column(3,
+    #       actionButton("chooseSandbox", "Choose File")
+    #     )
+    #   ), hr(),
+    #   fluidRow(
+    #     uiOutput("sandboxUI")
+    #   )
+    # ),
+    tabPanel("Sandbox",
+      SandboxUI()
     ),
     tabPanel("Options",
       fluidRow(
