@@ -121,6 +121,11 @@ genDist = function(distribution, length) {
 densityPdf = function(data, pointsToEvaluate) {
   min = min(data)
   max = max(data)
+  
+  margins = (max - min)*0.3
+  min = min - margins
+  max = max + margins
+      
   pdf = density(data, n=2048, from=min, to=max)
   pdfFunction = approxfun(pdf$x, pdf$y, yleft=0, yright=0)
   
@@ -138,6 +143,11 @@ densityPdf = function(data, pointsToEvaluate) {
 densityCdf = function(data, pointsToEvaluate) {
   min = min(data)
   max = max(data)
+  
+  margins = (max - min)*0.3
+  min = min - margins
+  max = max + margins
+      
   pdf = density(data, n=2048, from=min, to=max)
   pdfFunction = approxfun(pdf$x, pdf$y, yleft=0, yright=0)
   integrationPoints = seq(min, max, (max-min)/2047)
