@@ -4,6 +4,8 @@ To get started with this, install doxygen: http://www.stack.nl/~dimitri/doxygen/
 
 Then run `python build.py`
 
+You can also double click the 'testpage.bat' file to build and launch the docs. (If you are building OpenMETA from source, use 'testpage_fromsource.bat' instead.)
+
 ## Document Structure
 Each folder should comprise a chapter.
 
@@ -63,8 +65,7 @@ _DesignSpace_
 _alternatives_
 
 
-## Documentation Practices
-Added 8/10/15, tthomas@metamorphsoftware.com
+## Documentation Precedents
 
 ### Copy and Paste
 Use copy and paste as separate words, conjegating each of them separately, and spell out the word 'and.'
