@@ -4,7 +4,7 @@ To get started with this, install doxygen: http://www.stack.nl/~dimitri/doxygen/
 
 Then run `python build.py`
 
-You can also double click the 'testpage.bat' file to build and launch the docs. (If you are building OpenMETA from source, use 'testpage_fromsource.bat' instead.)
+_Note: You can also double click the `testpage.bat` file to build and launch the docs. (If you are building OpenMETA from source, use `testpage_fromsource.bat` instead.)_
 
 ## Document Structure
 Each folder should comprise a chapter.
