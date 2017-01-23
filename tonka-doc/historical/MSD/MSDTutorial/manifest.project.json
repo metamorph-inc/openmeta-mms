@@ -1,0 +1,76 @@
+{
+  "Project": {
+    "Components": [
+      {
+        "revision": null,
+        "modelpath": "components/Damper_10/AVM.Component-50ec54726e6cc33768468c1ev2/ComponentData.xml",
+        "avmid": "AVM.Component:50ec54726e6cc33768468c1e",
+        "version": "2",
+        "name": "Damper_10"
+      },
+      {
+        "revision": null,
+        "modelpath": "components/Damper_2/AVM.Component-50ec54a86e6cc33768468c31v2/ComponentData.xml",
+        "avmid": "AVM.Component:50ec54a86e6cc33768468c31",
+        "version": "2",
+        "name": "Damper_2"
+      },
+      {
+        "revision": null,
+        "modelpath": "components/Damper_6/AVM.Component-50ec54ce64344c388a731c49v2/ComponentData.xml",
+        "avmid": "AVM.Component:50ec54ce64344c388a731c49",
+        "version": "2",
+        "name": "Damper_6"
+      },
+      {
+        "revision": null,
+        "modelpath": "components/Mass_Gold/AVM.Component-50ec5516a07d9b39ee4bb7fbv2/ComponentData.xml",
+        "avmid": "AVM.Component:50ec5516a07d9b39ee4bb7fb",
+        "version": "2",
+        "name": "Mass_Gold"
+      },
+      {
+        "revision": null,
+        "modelpath": "components/Mass_Steel/AVM.Component-50ec5516a07d9b39ee4bb7fbv3/ComponentData.xml",
+        "avmid": "AVM.Component:50ec5516a07d9b39ee4bb7fc",
+        "version": "2",
+        "name": "Mass_Steel"
+      },
+      {
+        "revision": null,
+        "modelpath": "components/Mass_Titanium/AVM.Component-50ec5554a07d9b39ebfe5dc9v1/ComponentData.xml",
+        "avmid": "AVM.Component:50ec5554a07d9b39ebfe5dc9",
+        "version": "1",
+        "name": "Mass_Titanium"
+      },
+      {
+        "revision": null,
+        "modelpath": "components/Spring_Steel/AVM.Component-50eb5f72719e597025a4f54ev1/ComponentData.xml",
+        "avmid": "AVM.Component:50eb5f72719e597025a4f54e",
+        "version": "1",
+        "name": "Spring_Steel"
+      },
+      {
+        "revision": null,
+        "modelpath": "components/Spring_Titanium/AVM.Component-50eb60f66e6cc370ae16ae4ev1/ComponentData.xml",
+        "avmid": "AVM.Component:50eb60f66e6cc370ae16ae4e",
+        "version": "1",
+        "name": "Spring_Titanium"
+      },
+      {
+        "revision": null,
+        "modelpath": "components/Spring_Tungsten/AVM.Component-50eb5f2364344c6fb0853062v2/ComponentData.xml",
+        "avmid": "AVM.Component:50eb5f2364344c6fb0853062",
+        "version": "2",
+        "name": "Spring_Tungsten"
+      }
+    ],
+    "DesignSpaceModels": [],
+    "Configurations": [],
+    "TestBenches": [],
+    "Results": {"UrlHints": []},
+    "Requirements": {"UrlHints": []},
+    "CyPhyProjectFileName": "MSDTutorial.mga",
+    "LastModified": "2013-09-30 09-24-52"
+  }
+}

@@ -1,0 +1,23 @@
+# INTERNAL NOTE: Doc Outline
+
+- Intro / Concepts
+- Installation
+- Simple Walkthrough
+  - *Topic:* 1-to-4 LED example
+  - Design Spaces
+  - Test Bench
+  - Schematic Generation
+  - Dashboard
+- Case Studies
+  - Complex LED matrix
+  - MSD?
+  - Pulse Oximeter
+- Component Library
+  - Importing
+  - Finding/Acquiring
+  - Organizing
+- Deep Topics
+  - Design Spaces
+  - Dynamics
+  - Schematics
+  - whatever
