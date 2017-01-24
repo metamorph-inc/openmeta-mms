@@ -1,6 +1,20 @@
 library(shiny)
 library(shinyjs)
-source('sandbox.R')
+# source('sandbox.R')
+
+insertTabs <- function () {
+  tabs <- NULL
+  if (dir.exists('tabs')) {
+    tabs <- lapply(list.files('tabs', pattern = "*.R"), function(filename) {
+      source(file.path('tabs',filename))
+      tab <- tabPanel("Sandbox",SandboxUI())
+      tab
+    })
+  }
+  tabs
+}
+
+tabs <- insertTabs()
 
 # Define UI for Visualizer
 shinyUI(fluidPage(
@@ -337,6 +351,7 @@ shinyUI(fluidPage(
     tabPanel("Sandbox",
       SandboxUI()
     ),
+    # insertTabs(),
     tabPanel("Options",
       fluidRow(
         column(6,
@@ -490,3 +505,5 @@ shinyUI(fluidPage(
     .uqVar{height:250px;}")
   )
 ))
+
+
