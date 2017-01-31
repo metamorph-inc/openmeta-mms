@@ -1,3 +1,4 @@
+"""Converts CyPhy units to OpenMDAO unit strings."""
 import sys
 # sys.path[0:0] = ['C:\\Users\\kevin\\Documents\\meta-tonka\\bin\\Python27\\lib\\site-packages']
 import operator
@@ -49,6 +50,10 @@ def start_pdb():
     pdb.set_trace()
 
 
+class InvalidGMEUnitException(ValueError):
+    pass
+
+
 # from OpenMDAO
 def in_base_units(value, unit):
     new_value = value * unit.factor
@@ -86,7 +91,10 @@ def get_unit_for_gme(fco, exponent=1):
             return None
             # n.b. ignore exponent
             return PhysicalUnit({}, 1.0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0.0)
-        return _find_unit(str(sym)) ** exponent
+        try:
+            return _find_unit(str(sym)) ** exponent
+        except:
+            raise InvalidGMEUnitException()
     if fco.GetStrAttrByNameDisp('Symbol') in ('degF', 'degC'):
         return _find_unit(str(fco.GetStrAttrByNameDisp('Symbol')))
     if fco.MetaBase.Name == 'derived_unit':
@@ -148,6 +156,9 @@ def set_unit(unit_fco, set_units):
     debug_log(symbol)
     try:
         gme_unit = get_unit_for_gme(unit_fco)
+    except InvalidGMEUnitException:
+            set_units('')
+            return
     except TypeError as e:
         if 'cannot multiply units with non-zero offset' in e.message:
             # FIXME: investigate why .../degC always fails
@@ -186,12 +197,30 @@ def round_to_single_precision(f):
     import array
     return array.array('f', (f,))[0]
 
+
+def get_all_unit_fcos(project):
+    def sort_gme(fcos):
+        ret = list(fcos)
+        ret.sort(key=operator.attrgetter('Name'))
+        return ret
+    # TODO: would it be more performant to crawl the model
+    filter = project.CreateFilter()
+    filter.Kind = "derived_unit"
+    deriveds = sort_gme(project.AllFCOs(filter))
+    filter = project.CreateFilter()
+    filter.Kind = "si_unit"
+    sis = sort_gme(project.AllFCOs(filter))
+    filter = project.CreateFilter()
+    filter.Kind = "conversion_based_unit"
+    cbus = sort_gme(project.AllFCOs(filter))
+    return itertools.chain(sis, deriveds, cbus)
+
 # run under gme console: check all units
 if __name__ == '__ax_main__':
     gme = gme
 
     def log(msg):
-        #if msg.startswith('Close') or msg.startswith('mismatch'):
+        # if msg.startswith('Close') or msg.startswith('mismatch'):
         gme.ConsoleMessage(unicode(msg), 1)
     debug_log = log
 
@@ -200,22 +229,8 @@ if __name__ == '__ax_main__':
 
     gme.MgaProject.BeginTransactionInNewTerr()
     try:
-        def sort_gme(fcos):
-            ret = list(fcos)
-            ret.sort(key=operator.attrgetter('Name'))
-            return ret
-        filter = gme.MgaProject.CreateFilter()
-        filter.Kind = "derived_unit"
-        deriveds = sort_gme(gme.MgaProject.AllFCOs(filter))
-        filter = gme.MgaProject.CreateFilter()
-        filter.Kind = "si_unit"
-        sis = sort_gme(gme.MgaProject.AllFCOs(filter))
-        filter = gme.MgaProject.CreateFilter()
-        filter.Kind = "conversion_based_unit"
-        cbus = sort_gme(gme.MgaProject.AllFCOs(filter))
-
-        for derived_unit in itertools.chain(sis, deriveds, cbus):
-        # for derived_unit in cbus:
+        for derived_unit in get_all_unit_fcos(gme.MgaProject):
+            # for derived_unit in cbus:
             # if 'Radian' in derived_unit.Name:
             #     continue
             if 'Steradian' in derived_unit.Name:
