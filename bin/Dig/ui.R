@@ -1,7 +1,13 @@
 library(shiny)
 library(shinyjs)
 
-lapply(list.files('tabs', pattern = "*.R"), function(filename) {source(file.path('tabs',filename))})
+customTabFiles<- list.files('tabs', pattern = "*.R")
+
+customTabEnvironments <- lapply(customTabFiles, function(filename) {
+  env <- new.env()
+  source(file.path('tabs',filename), local = env)
+  env
+})
 
 primaryTabs <- list(
 
@@ -104,7 +110,7 @@ table =
           br(), br()
         ),
         fluidRow(
-          column(4, 
+          column(4,
             selectInput("weightMetrics",
                         "Ranking Metrics:",
                         c(),
@@ -215,10 +221,10 @@ pet =
   )
 )
 
-addedTabs <- lapply(list.files('tabs', pattern = "*.R"), function(filename) {
-  tabName <- tools::file_path_sans_ext(filename)
-  tabUI <- do.call(paste0(tabName,"UI"),list())
-  tabPanel(tabName, tabUI)
+addedTabs <- lapply(customTabEnvironments, function(customEnv) {
+  # tabUI <- do.call(UI, list(), envir = customEnv)
+  print(customEnv$title)
+  tabPanel(customEnv$title, customEnv$ui())
 })
 
 finalTabs <- list(

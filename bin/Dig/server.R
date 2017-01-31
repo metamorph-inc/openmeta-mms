@@ -4,15 +4,23 @@ library(topsis)
 library(jsonlite)
 source('bayesian_utils.r')
 source('uq.r')
-lapply(list.files('tabs', pattern = "*.R"), function(filename) {source(file.path('tabs',filename))})
-#source('sandbox.R')
+
+customTabFiles <- list.files('tabs', pattern = "*.R")
+
+customTabEnvironments <- lapply(customTabFiles, function(filename) {
+  env <- new.env()
+  source(file.path('tabs',filename), local = env)
+  env
+})
+
+# Launch with testing datasets
+Sys.setenv(DIG_INPUT_CSV=file.path('datasets','WindTurbineForOptimization','mergedPET.csv'))
+# Sys.setenv(DIG_INPUT_CSV=file.path('datasets','WindTurbine','mergedPET.csv'))
+
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)
 #options(error = function() traceback(2))
 #options(shiny.error = function() traceback(2))
-
-
-
 
 
 #---------------------Global Variables-------------------------#
@@ -45,7 +53,6 @@ shinyServer(function(input, output, session) {
   makeReactiveBinding("bayesianDirection")
   makeReactiveBinding("bayesianType")
   makeReactiveBinding("bayesianParams")
-  #makeReactiveBinding("customFilePath")
 
   uiElements <- reactiveValues(constants = FALSE)
   importFlags <- reactiveValues(tier1 = FALSE, tier2 = FALSE, ranking = FALSE, ranges = FALSE, bayesian = FALSE)
@@ -64,12 +71,15 @@ shinyServer(function(input, output, session) {
   
   petConfig = NULL
 
+  # For the Docker version of the Visualizer
   if (!is.null(query[['csvfilename']])) {
     print("In read raw")
     # raw.csv(paste0(dirname(sys.frame(1)$ofile), "/../webserver/public/csvs/", query[['csvfilename']]), fill=T)
     # raw = read.csv(paste0(dirname("/csvs/", query[['csvfilename']]), fill=T)
     raw = read.csv(paste("/media/sf_kevin/Downloads/", query[['csvfilename']], sep=''), fill=T)
   }
+  
+  # For launching the Visualizer from the Results Browser 
   else if (nzchar(Sys.getenv('DIG_INPUT_CSV')))
   {
     raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
@@ -77,6 +87,8 @@ shinyServer(function(input, output, session) {
     if(file.exists(petConfigFilename))
       petConfig = fromJSON(petConfigFilename)
   }
+  
+  # For development
   else
   {
     # Needed setup for regression testing:
@@ -86,17 +98,9 @@ shinyServer(function(input, output, session) {
     # Useful test setups:
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # petConfig = fromJSON("../../../results/pet_config.json", fill=T)
-
-    # For testing with BladeMDA DoE Optimization Under Uncertainty Data
-    raw = read.csv("WindTurbineBladeDoEforOptimizationUnderUncertainty_mergedPET.csv", fill=T)
-    if(file.exists("WindTurbineBladeDoEforOptimizationUnderUncertainty_pet_config.json"))
-      petConfig = fromJSON("WindTurbineBladeDoEforOptimizationUnderUncertainty_pet_config.json")
     
-    # raw = read.csv("WindTurbineSim_mergedPET.csv", fill=T)
-    # petConfig = fromJSON("WindTurbineSim_pet_config.json")
-    
-    # raw = iris
-    # petConfig = read.csv("iris_config.json", fill = T)
+    raw = iris
+    petConfig = read.csv("iris_config.json", fill = T)
   }
   
   petConfigPresent <- !is.null(petConfig)
@@ -181,8 +185,11 @@ shinyServer(function(input, output, session) {
     colnames(raw) <- sapply(colnames(raw), addUnits)
   }
   
-  # SandboxServer(input, output, session, raw)
-  lapply(list.files('tabs', pattern = "*.R"), function(filename) {do.call(paste0(tools::file_path_sans_ext(filename),"Server"),list(input, output, session, raw))})
+  # Call the different Server functions for the different tabs ---------------
+  lapply(customTabEnvironments, function(customEnv) {
+    do.call(customEnv$server,
+            list(input, output, session, raw))
+  })
   
   output$petConfigPresent <- reactive({
     print(paste("petConfigPresent:",petConfigPresent))
@@ -202,31 +209,6 @@ shinyServer(function(input, output, session) {
   outputOptions(output, "enumerationDesignVariables", suspendWhenHidden=FALSE)
   
   output$noPetConfigMessage <- renderText(paste("No pet_config.json file was found."))
-  
-  output$sandboxUI <- reactive({
-    input$chooseSandbox
-    if(file.exists(paste(path))) {
-      source(paste(path))
-    }
-    if (exists("customUI")) {
-      answer <- customUI
-    }
-    else {
-      answer <- renderUI(div(br(),column(3,renderText("No Sandbox File Provided."))))
-    }
-    answer
-  })
-  
-  # output$sandboxUI <- renderUI(div(br(),column(3,renderText("No Sandbox File Provided."))))
-  # output$sandboxUI <- renderText("No Sandbox File Provided.")
-  
-  # reactiveValue
-  
-  sandboxImport <- observeEvent(input$chooseSandbox, {
-    print("button pressed")
-    path <<- fileChoose()
-    # source(paste(path))
-  })
   
   # Import/Export Session Settings -------------------------------------------
   
@@ -1866,8 +1848,8 @@ shinyServer(function(input, output, session) {
     write(toJSON(petConfigRefined, pretty = TRUE, auto_unbox = TRUE), file = file)
   }
   
-  # Bayesian -----------------------------------------------------------------
-  # Reactive variables for running the bayesian analysis
+  # Uncertainty Quantification Tab -------------------------------------------
+  # Reactive variables for running the uncertainty quantification analysis
   
   bayesVarsList <- reactive({
     print("Getting Variable List.")

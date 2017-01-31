@@ -1,6 +1,8 @@
 library(shiny)
 
-SandboxUI <- function() {
+title <- "Histogram"
+
+ui <- function() {
   fluidRow(
     br(),
     column(3,
@@ -12,7 +14,7 @@ SandboxUI <- function() {
   )
 }
 
-SandboxServer <- function(input, output, session, data) {
+server <- function(input, output, session, data) {
   
   varNames <- names(data)
   varClass <- sapply(data,class)
