@@ -181,7 +181,8 @@ shinyServer(function(input, output, session) {
     colnames(raw) <- sapply(colnames(raw), addUnits)
   }
   
-  SandboxServer(input, output, session, raw)
+  # SandboxServer(input, output, session, raw)
+  lapply(list.files('tabs', pattern = "*.R"), function(filename) {do.call(paste0(tools::file_path_sans_ext(filename),"Server"),list(input, output, session, raw))})
   
   output$petConfigPresent <- reactive({
     print(paste("petConfigPresent:",petConfigPresent))
