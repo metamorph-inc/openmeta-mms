@@ -2048,7 +2048,7 @@ shinyServer(function(input, output, session) {
     else {
       lapply(variables, function(var) {
         par(mar = rep(2, 4))
-        filtered_raw_plus_histo <- hist(filtered_raw_plus()[[var]], freq = FALSE)
+        filtered_raw_plus_histo <- hist(filtered_raw_plus()[[var]], freq = FALSE, breaks=30)
         x_bounds <- c(min(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
                       max(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
@@ -2068,6 +2068,7 @@ shinyServer(function(input, output, session) {
                         ylim = y_bounds,
                         # las = 1,
                         #asp = 1.3,
+                        breaks = 30,
                         bty = "o")
                    lines(data[[var]][["xOrig"]],
                          data[[var]][["yOrig"]],
