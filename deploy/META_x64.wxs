@@ -108,6 +108,7 @@
             </Directory>
           </Directory>
           <Directory Id='INSTALLDIR_DOC' Name='doc'/>
+          <Directory Id='html_documentation' Name='html_documentation'/>
           <Directory Id='INSTALLDIR_META' Name='meta'>
             <Directory Id='icons' Name='icons'/>
           </Directory>
@@ -461,6 +462,8 @@
       <ComponentRef Id='boost_chrono_vc140_mt_1_60.dll'/>
 
       <ComponentGroupRef Id='Json.NET'/>
+
+      <ComponentGroupRef Id="html_documentation"/>
 
       <ComponentGroupRef Id='MaterialLibrary'/>
       <ComponentGroupRef Id='Validation'/>
