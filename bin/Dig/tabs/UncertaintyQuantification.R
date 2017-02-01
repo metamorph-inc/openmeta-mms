@@ -30,7 +30,7 @@ ui <- function() {
           ),
           conditionalPanel(condition = 'input.designConfigsPresent == true & input.designConfigVar != null',
             column(3,
-              selectInput('bayesianDesignConfigChoice', "Selection",
+              selectInput('designConfigChoice', "Selection",
                 choices = c(),
                 multiple = F)
             )
@@ -38,11 +38,11 @@ ui <- function() {
         ),
         fluidRow(
           column(3,
-            checkboxInput('bayesianDisplayAll', "Display All Variables", value = T),
-            conditionalPanel(condition = 'input.bayesianDisplayAll == false', 
+            checkboxInput('displayAll', "Display All Variables", value = T),
+            conditionalPanel(condition = 'input.displayAll == false', 
               selectInput(
-                'bayesianDisplayVars',
-                "Bayesian Variables",
+                'uqDisplayVars',
+                "Display Variables",
                 choices = c(),
                 multiple = T
               )
@@ -52,12 +52,12 @@ ui <- function() {
         fluidRow(
           column(6, 
             wellPanel(h4("Variable Configuration"),
-              uiOutput("bayesianUI"), br()#, height = 200)
+              uiOutput("uqControlUI"), br()#, height = 200)
             )
           ),
           column(6,
             wellPanel(h4("Variable Plots"), br(),
-              uiOutput("bayesianPlots")
+              uiOutput("uqPlots")
             )
           )
         ),
@@ -104,7 +104,7 @@ ui <- function() {
           DT::dataTableOutput("probabilityTable")
         )
       ),
-      id = "bayesianTabset"
+      id = "uqTabset"
     ),
     conditionalPanel("output.displayQueries",
       hr(),
@@ -126,25 +126,25 @@ ui <- function() {
   )
 }
 
-server <- function(input, output, session, data, designVariableNames) {
+server <- function(input, output, session, raw_data, designVariableNames) {
 
   makeReactiveBinding("uiInitialized")
   makeReactiveBinding("directions")
   makeReactiveBinding("types")
   makeReactiveBinding("params")
   
-  varNames <- names(data)
-  varClass <- sapply(data,class)
+  varNames <- names(raw_data)
+  varClass <- sapply(raw_data,class)
   varNums <- varNames[varClass != "factor"]
-  varRangeNum <- function(...){varNums}
-  varRangeFac <- function(...){varNames[varClass == "factor"]}
-  raw_plus <- function(...){data}
+  varFacs <- varNames[varClass == "factor"]
+  rawAbsMin <- apply(raw_data[varNums], 2, min, na.rm=TRUE)
+  rawAbsMax <- apply(raw_data[varNums], 2, max, na.rm=TRUE)
   
-  bayesVarsList <- reactive({
+  varsList <- reactive({
     print("Getting Variable List.")
     idx = NULL
-    for(choice in 1:length(input$bayesianDisplayVars)) {
-      mm <- match(input$bayesianDisplayVars[choice],varRangeNum())
+    for(choice in 1:length(input$uqDisplayVars)) {
+      mm <- match(input$uqDisplayVars[choice],varNums)
       if(mm > 0) { idx <- c(idx,mm) }
     }
     print(idx)
@@ -152,27 +152,27 @@ server <- function(input, output, session, data, designVariableNames) {
   })
   
   observeEvent(input$designConfigsPresent, {
-    updateSelectInput(session, "designConfigVar", choices = varRangeFac())
+    updateSelectInput(session, "designConfigVar", choices = varFacs)
   })
   
   observeEvent(input$designConfigVar, {
     print(paste(input$designConfigVar))
-    updateSelectInput(session, "bayesianDesignConfigChoice", choices = levels(raw_plus()[[input$designConfigVar]]))
+    updateSelectInput(session, "designConfigChoice", choices = levels(raw_data[[input$designConfigVar]]))
   })
   
-  filtered_raw_plus <- reactive({
-    data <- raw_plus()
-    if(input$designConfigsPresent & !is.na(input$designConfigVar) & !is.na(input$bayesianDesignConfigChoice)) {
-      data <- subset(data, data[[paste0(input$designConfigVar)]] == input$bayesianDesignConfigChoice)
+  filtered_data <- reactive({
+    filData <- raw_data
+    if(input$designConfigsPresent & !is.na(input$designConfigVar) & !is.na(input$designConfigChoice)) {
+      filData <- subset(filData, filData[[paste0(input$designConfigVar)]] == input$designConfigChoice)
     }
-    data
+    filData
   })
       
-  bayesianData <- reactive({
-    print("In bayesianData()")
+  uqData <- reactive({
+    print("In uqData()")
     
-    variables <- varRangeNum()
-    input_data <- filtered_raw_plus()[variables]
+    variables <- varNums
+    input_data <- filtered_data()[variables]
     
     # Real Resample
     req(uiInitialized)
@@ -186,18 +186,18 @@ server <- function(input, output, session, data, designVariableNames) {
     output_data
   })
   
-  output$bayesianUI <- renderUI({
-    print("In bayesianUI()")
+  output$uqControlUI <- renderUI({
+    print("In uqControlUI()")
     var_directions <- c("Input",
                         "Output")
-    data_mean <- apply(filtered_raw_plus()[varRangeNum()], 2, mean)
-    data_sd <- apply(filtered_raw_plus()[varRangeNum()], 2, function(x) {sd(x)})
+    data_mean <- apply(filtered_data()[varNums], 2, mean)
+    data_sd <- apply(filtered_data()[varNums], 2, function(x) {sd(x)})
     
-    bayesChoices <- varRangeNum()
-    if(!input$bayesianDisplayAll)
-      bayesChoices <- varRangeNum()[bayesVarsList()]
+    choices <- varNums
+    if(!input$displayAll)
+      choices <- varNums[varsList()]
     
-    lapply(bayesChoices, function(var) {
+    lapply(choices, function(var) {
       # UI calculations
       global_index <- which(varNames == var) # globalId
       #gaussianCondition = toString(paste0("input.gaussian",i," == true"))
@@ -226,16 +226,8 @@ server <- function(input, output, session, data, designVariableNames) {
                    choices = var_directions,
                    selected = this_direction)
           ),
-          column(4# ,
-                 # bootstrapPage(
-                 #   br(),
-                 #   actionButton(paste0("add", var), "Add", class = "btn btn-success")
-                 # )
-          )
+          column(4)
         ),
-        # conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Output'")),
-        #   br(), br(), br(), br(), br(), br()
-        # ),
         conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Input'")),
           # Gaussian
           fluidRow(
@@ -272,12 +264,12 @@ server <- function(input, output, session, data, designVariableNames) {
         )
       ))
     })
-    #print("Done with bayesianUI()")
+    #print("Done with uqControlUI()")
   })
   
-  bayesianCalc <- observe({
-    for(i in 1:length(varRangeNum())){
-      var <- varRangeNum()[i]
+  uqCalc <- observe({
+    for(i in 1:length(varNums)){
+      var <- varNums[i]
       global_index <- which(varNames == var)
       dir <- input[[paste0('varDirection', global_index)]]
       is_gaus <- input[[paste0('gaussian', global_index)]]
@@ -291,20 +283,20 @@ server <- function(input, output, session, data, designVariableNames) {
         }
         else {
           types[[var]] <<- "unif"
-          params[[var]]$min <<- unname(rawAbsMin()[[var]])
-          params[[var]]$max <<- unname(rawAbsMax()[[var]])
+          params[[var]]$min <<- unname(rawAbsMin[[var]])
+          params[[var]]$max <<- unname(rawAbsMax[[var]])
         }
       }
     }
     uiInitialized <<- TRUE
   })
   
-  output$bayesianPlots <- renderUI({
-    print("In bayesianPlots()")
-    data <- bayesianData()$dist
-    variables <- varRangeNum()
-    if(!input$bayesianDisplayAll)
-      variables <- varRangeNum()[bayesVarsList()]
+  output$uqPlots <- renderUI({
+    print("In uqPlots()")
+    data <- uqData()$dist
+    variables <- varNums
+    if(!input$displayAll)
+      variables <- varNums[varsList()]
     
     if(is.null(data)) {
       verbatimTextOutput("Initializing...")
@@ -312,15 +304,15 @@ server <- function(input, output, session, data, designVariableNames) {
     else {
       lapply(variables, function(var) {
         par(mar = rep(2, 4))
-        filtered_raw_plus_histo <- hist(filtered_raw_plus()[[var]], freq = FALSE, breaks=30)
-        x_bounds <- c(min(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
-                      max(filtered_raw_plus_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
+        filtered_data_histo <- hist(filtered_data()[[var]], freq = FALSE, breaks=30)
+        x_bounds <- c(min(filtered_data_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]),
+                      max(filtered_data_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
-                      max(filtered_raw_plus_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
+                      max(filtered_data_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
         fluidRow(class = "uqVar",
           column(12,
                  renderPlot({
-                   hist(filtered_raw_plus()[[var]],
+                   hist(filtered_data()[[var]],
                         freq = FALSE,
                         col = input$bayHistColor,
                         border = "#C0C0C0",
@@ -371,7 +363,7 @@ server <- function(input, output, session, data, designVariableNames) {
   # Uncertainty Quantification Footer -----------------------------------------
   
   output$displayQueries <- reactive({
-    display <- !(input$bayesianTabset == "Design Ranking")
+    display <- !(input$uqTabset == "Design Ranking")
   })
   
   outputOptions(output, "displayQueries", suspendWhenHidden=FALSE)
@@ -385,7 +377,7 @@ server <- function(input, output, session, data, designVariableNames) {
       ui = tags$div(
         fluidRow(
           column(1, actionButton(paste0('removeProbability', id), 'Delete')),
-          column(3, selectInput(paste0('queryVariable', id), NULL, choices = varRangeNum(), selected = varRangeNum()[[1]])),
+          column(3, selectInput(paste0('queryVariable', id), NULL, choices = varNums, selected = varNums[[1]])),
           column(2, selectInput(paste0('queryDirection', id), NULL, choices = c("Above", "Below")), selected = "Above"),
           column(2, textInput(paste0('queryThreshold', id), NULL)),
           column(2, textOutput(paste0('queryValue', id))),
@@ -409,14 +401,14 @@ server <- function(input, output, session, data, designVariableNames) {
     })
   })
   
-  bayesianInputs <- reactive({
-    inputs <- sapply(varRangeNum(), function(var) {directions[[var]] == "Input"})
-    subset(varRangeNum(), inputs)
+  uqInputs <- reactive({
+    inputs <- sapply(varNums, function(var) {directions[[var]] == "Input"})
+    subset(varNums, inputs)
   })
   
-  bayesianOutputs <- reactive({
-    inputs <- sapply(varRangeNum(), function(var) {directions[[var]] == "Output"})
-    subset(varRangeNum(), inputs)
+  uqOutputs <- reactive({
+    inputs <- sapply(varNums, function(var) {directions[[var]] == "Output"})
+    subset(varNums, inputs)
   })
   
   runQueries <- observeEvent(input$runProbabilityQueries, {
@@ -427,7 +419,7 @@ server <- function(input, output, session, data, designVariableNames) {
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
       req(threshold)
-      data <- bayesianData()$dist[[name]]
+      data <- uqData()$dist[[name]]
       
       value <- integrateData(data$xResampled,
                              data$yResampled,
@@ -448,12 +440,12 @@ server <- function(input, output, session, data, designVariableNames) {
   
   #-----------REMOVE ME---------------------
   # output$fuqConstraintsUI <- renderUI({
-  #   lapply(bayesianInputs(), function(input) {
-  #     id <- which(bayesianInputs() == input)
+  #   lapply(uqInputs(), function(input) {
+  #     id <- which(uqInputs() == input)
   #     # fluidRow(
   #     #   column(2, checkboxInput(paste0("fuqConstraintEnable", id), NULL)),
   #     #   column(6, paste(input)),
-  #     #   column(4, textInput(paste0("fuqConstraintValue", id), NULL, value = toString(apply(filtered_raw_plus()[input], 2, mean))))
+  #     #   column(4, textInput(paste0("fuqConstraintValue", id), NULL, value = toString(apply(filtered_data()[input], 2, mean))))
   #     # )
   #   })
   # })
@@ -463,8 +455,8 @@ server <- function(input, output, session, data, designVariableNames) {
     if(input$runFUQ){
       isolate({
         numberOfInputs <- 0
-        for (i in 1:length(bayesianInputs())) {
-          global_i = which(bayesianInputs()[i] == varNames)
+        for (i in 1:length(uqInputs())) {
+          global_i = which(uqInputs()[i] == varNames)
           if (input[[paste0("fuqConstraintEnable", global_i)]]) {
             numberOfInputs <- numberOfInputs + 1
           }
@@ -472,7 +464,7 @@ server <- function(input, output, session, data, designVariableNames) {
         
         if (numberOfInputs > 0) {
           print("Started Forward UQ.")
-          temp_results <- processForwardUQ(filtered_raw_plus()[varRangeNum()], bayesianData(), bayesianInputs())
+          temp_results <- processForwardUQ(filtered_data()[varNums], uqData(), uqInputs())
           print("Completed Forward UQ.")
         }
       })
@@ -480,20 +472,20 @@ server <- function(input, output, session, data, designVariableNames) {
     results <- temp_results
   })
   
-  processForwardUQ <- function(originalData, bayesianData, bayesianInputs) {
+  processForwardUQ <- function(originalData, uqData, uqInputs) {
     
-    resampledData <- bayesianData$resampledData
+    resampledData <- uqData$resampledData
     rho <- buildGuassianCopula(resampledData)
     
     constrainedInputs <- c()
     columnsToRemove <- c()
-    for (i in 1:length(bayesianInputs)) {
-      global_i = which(bayesianInputs[i] == varNames)
+    for (i in 1:length(uqInputs)) {
+      global_i = which(uqInputs[i] == varNames)
       if (input[[paste0("fuqConstraintEnable", global_i)]]) {
-        constrainedInputs <- c(constrainedInputs, bayesianInputs[i])
+        constrainedInputs <- c(constrainedInputs, uqInputs[i])
       }
       else {
-        columnsToRemove <- c(columnsToRemove, which(names(originalData) == bayesianInputs[i]))
+        columnsToRemove <- c(columnsToRemove, which(names(originalData) == uqInputs[i]))
       }
     }
     
@@ -524,7 +516,7 @@ server <- function(input, output, session, data, designVariableNames) {
   #-------------REMOVE ME------------------------
   # output$fuqPlots <- renderUI({
   #   data <- forwardUQData()
-  #   lapply(bayesianOutputs(), function(output) {
+  #   lapply(uqOutputs(), function(output) {
   #     renderText(paste("Forward UQ plots for", output, "here."))
   #   })
   # })
@@ -538,13 +530,13 @@ server <- function(input, output, session, data, designVariableNames) {
       id <- probabilityQueries$rows[i]
       data[[paste0('Query', id)]] <- numeric(0)
     }
-    configs <- levels(raw_plus()[[paste0(input$designConfigVar)]])
+    configs <- levels(raw_data[[paste0(input$designConfigVar)]])
     print(data)
     for (i in 1:length(configs)) {
       config <- configs[i]
       print(paste(config))
-      configData <- subset(raw_plus(), raw_plus()[[paste0(input$designConfigVar)]] == config)
-      configData <- configData[varRangeNum()]
+      configData <- subset(raw_data, raw_data[[paste0(input$designConfigVar)]] == config)
+      configData <- configData[varNums]
       resampledData <- resampleData(configData, directions, types, params)$dist
       answers <- c(paste0(config))
       for(j in 1:length(probabilityQueries$rows)) {
