@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using Xunit;
 using System.Reflection;
+using System.Management;
 
 namespace SpiceViewerTest
 {
@@ -32,6 +33,18 @@ namespace SpiceViewerTest
                 return;
             }
 
+            // compress schema.raw directory
+            DirectoryInfo directoryInfo = new DirectoryInfo(Path.GetDirectoryName(pathRAWFile));
+            if ((directoryInfo.Attributes & FileAttributes.Compressed) != FileAttributes.Compressed)
+            {
+                string objPath = "Win32_Directory.Name=" + "\"" + Path.GetFullPath(Path.GetDirectoryName(pathRAWFile)).Replace("\\", "\\\\") + "\"";
+                using (ManagementObject dir = new ManagementObject(objPath))
+                {
+                    ManagementBaseObject outParams = dir.InvokeMethod("Compress", null, null);
+                    uint ret = (uint)(outParams.Properties["ReturnValue"].Value);
+                }
+            }
+
             var process = new System.Diagnostics.Process()
             {
                 StartInfo = new System.Diagnostics.ProcessStartInfo()
@@ -45,15 +58,18 @@ namespace SpiceViewerTest
             };
 
             process.Start();
-            int minsToWait = 8;
-            if (process.WaitForExit(1000 * 60 * minsToWait) == false)
+            using (process)
             {
-                process.Kill();
-                throw new TimeoutException(String.Format("{0} did not complete in {1} minutes",
-                                                         process.StartInfo.FileName,
-                                                         minsToWait));
+                int minsToWait = 8;
+                if (process.WaitForExit(1000 * 60 * minsToWait) == false)
+                {
+                    process.Kill();
+                    throw new TimeoutException(String.Format("{0} did not complete in {1} minutes",
+                                                             process.StartInfo.FileName,
+                                                             minsToWait));
+                }
+                Assert.Equal(0, process.ExitCode);
             }
-            Assert.Equal(0, process.ExitCode);
         }
     }
 

@@ -1,0 +1,10 @@
+Thumbs.db
+.idea/
+generated/
+html/
+node_modules/
+.DS_Store
+doc/10-connectors/log/
+doc/10-connectors/requirements/
+processed_doc/
+out/
