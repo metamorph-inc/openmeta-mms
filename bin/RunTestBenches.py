@@ -1,13 +1,21 @@
 # coding: utf-8
+r'''
+Run MasterInterpreter on TestBenches, run the JobManager command, and compare Metrics to MetricConstraints.
+
+e.g.
+META\bin\Python27\Scripts\python META\bin\RunTestBenches.py --max_configs 2 "Master Combined.mga" -- -s --with-xunit
+'''
 import os
 import os.path
+import operator
 import unittest
 import nose.core
+import subprocess
+import json
+
 from nose.loader import TestLoader
 from nose.plugins.manager import BuiltinPluginManager
 from nose.config import Config, all_config_files
-import subprocess
-import json
 from win32com.client import DispatchEx
 Dispatch = DispatchEx
 import _winreg as winreg
@@ -41,9 +49,11 @@ class TestBenchTest(unittest.TestCase):
         # metrics = {metric['GMEID']: metric['Value'] for metric in manifest['Metrics']}
         project = testBench.Project
         project.BeginTransactionInNewTerr()
+        testBench_metrics = {m.Name: m for m in (me for me in testBench.ChildFCOs if me.MetaBase.Name == 'Metric')}
         try:
             for metric in manifest['Metrics']:
-                metric_fco = project.GetFCOByID(metric['GMEID'])
+                # can't use project.GetFCOByID(metric['GMEID']) because it may be from a copy
+                metric_fco = testBench_metrics[metric['Name']]
                 for connPoint in metric_fco.PartOfConns:
                     if connPoint.Owner.MetaBase.Name != 'MetricConstraintBinding':
                         continue
@@ -66,6 +76,7 @@ if __name__ == '__main__':
         import argparse
 
         parser = argparse.ArgumentParser(description='Run TestBenches.')
+        parser.add_argument('--max_configs', type=int)
         parser.add_argument('model_file')
         parser.add_argument('nose_options', nargs=argparse.REMAINDER)
         command_line_args = parser.parse_args()
@@ -83,25 +94,25 @@ if __name__ == '__main__':
             parser.ParseProject(project, command_line_args.model_file)
         else:
             # n.b. without abspath, things break (e.g. CyPhy2CAD)
-            project.Open("MGA=" + os.path.abspath(command_line_args.model_file))
+            project.OpenEx("MGA=" + os.path.abspath(command_line_args.model_file), "CyPhyML", None)
 
-        mi_configs = []
         project.BeginTransactionInNewTerr()
         try:
+            master = Dispatch("CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI")
+            master.Initialize(project)
+
             filter = project.CreateFilter()
             filter.Kind = "TestBench"
-            testBenches = project.AllFCOs(filter)
-            for tb in testBenches:
-                if tb.IsLibObject:
-                    continue
-                suts = [sut for sut in tb.ChildFCOs if sut.MetaRole.Name == 'TopLevelSystemUnderTest']
+            testBenches = [tb for tb in project.AllFCOs(filter) if not tb.IsLibObject]
+            for testBench in testBenches:
+                suts = [sut for sut in testBench.ChildFCOs if sut.MetaRole.Name == 'TopLevelSystemUnderTest']
                 if len(suts) == 0:
-                    raise ValueError('Error: TestBench "{}" has no TopLevelSystemUnderTest'.format(tb.Name))
+                    raise ValueError('Error: TestBench "{}" has no TopLevelSystemUnderTest'.format(testBench.Name))
                 if len(suts) > 1:
-                    raise ValueError('Error: TestBench "{}" has more than one TopLevelSystemUnderTest'.format(tb.Name))
+                    raise ValueError('Error: TestBench "{}" has more than one TopLevelSystemUnderTest'.format(testBench.Name))
                 sut = suts[0]
                 if sut.Referred.MetaBase.Name == 'ComponentAssembly':
-                    config_ids = [sut.Referred.ID]
+                    configs = [sut.Referred]
                 else:
                     configurations = [config for config in sut.Referred.ChildFCOs if config.MetaBase.Name == 'Configurations']
                     if not configurations:
@@ -109,30 +120,30 @@ if __name__ == '__main__':
                     configurations = configurations[0]
                     cwcs = [cwc for cwc in configurations.ChildFCOs if cwc.MetaBase.Name == 'CWC' and cwc.Name]
                     if not cwcs:
-                        raise ValueError('Error: could not find CWCs for "{}"'.format(tb.Name))
-                    config_ids = [cwc.ID for cwc in cwcs]
+                        raise ValueError('Error: could not find CWCs for "{}"'.format(testBench.Name))
+                    configs = list(cwcs)
+                    # FIXME cfg2 > cfg10
+                    configs.sort(key=operator.attrgetter('Name'))
+                    configs = configs[slice(0, command_line_args.max_configs)]
 
-                config_light = Dispatch("CyPhyMasterInterpreter.ConfigurationSelectionLight")
+                for config in configs:
+                    mi_config = Dispatch("CyPhyMasterInterpreter.ConfigurationSelectionLight")
 
-                # GME id, or guid, or abs path or path to Test bench or SoT or PET
-                config_light.ContextId = tb.ID
+                    # GME id, or guid, or abs path or path to Test bench or SoT or PET
+                    mi_config.ContextId = testBench.ID
 
-                config_light.SetSelectedConfigurationIds(config_ids)
+                    mi_config.SetSelectedConfigurationIds([config.ID])
 
-                # config_light.KeepTemporaryModels = True
-                config_light.PostToJobManager = False
-                mi_configs.append(config_light)
+                    # mi_config.KeepTemporaryModels = True
+                    mi_config.PostToJobManager = False
 
-            master = Dispatch("CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI")
-            master.Initialize(project)
-
-            for testBench, config in zip(testBenches, mi_configs):
-                def add_test(testBench, config):
-                    def testTestBench(self):
-                        self._testTestBench(testBench, master, config)
-                    testTestBench.__name__ = str('test' + testBench.Name + "_" + testBench.ID)
-                    setattr(TestBenchTest, testTestBench.__name__, testTestBench)
-                add_test(testBench, config)
+                    def add_test(testBench, mi_config, config):
+                        def testTestBench(self):
+                            self._testTestBench(testBench, master, mi_config)
+                        # testTestBench.__name__ = str('test_' + testBench.Name + "_" + testBench.ID + "__" + config.Name)
+                        testTestBench.__name__ = str('test_' + testBench.Name + "__" + config.Name)
+                        setattr(TestBenchTest, testTestBench.__name__, testTestBench)
+                    add_test(testBench, mi_config, config)
         finally:
             project.CommitTransaction()
 
