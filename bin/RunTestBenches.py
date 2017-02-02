@@ -57,7 +57,7 @@ class TestBenchTest(unittest.TestCase):
                 for connPoint in metric_fco.PartOfConns:
                     if connPoint.Owner.MetaBase.Name != 'MetricConstraintBinding':
                         continue
-                    other = connPoint.Owner.Dst if connPoint.ConnRole == 'dst' else connPoint.Owner.Dst
+                    other = connPoint.Owner.Src if connPoint.ConnRole == 'dst' else connPoint.Owner.Dst
                     target_type = other.GetStrAttrByNameDisp('TargetType')
                     target_value = other.GetFloatAttrByNameDisp('TargetValue')
                     if target_type == 'Must Exceed':
