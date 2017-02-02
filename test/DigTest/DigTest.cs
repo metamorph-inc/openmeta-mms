@@ -78,7 +78,7 @@ namespace DigTest
         }
 
        
-        [Fact]
+        [Fact(Skip = "flakey")]
         void DigRuns()
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
@@ -243,7 +243,7 @@ namespace DigTest
 
         }
 
-        [Fact]
+        [Fact(Skip = "flakey")]
         void MultipleCfgIDs()
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
