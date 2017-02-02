@@ -271,12 +271,12 @@ namespace DigTest
                     driver.FindElement(By.CssSelector("a[data-value=\"Uncertainty Quantification\"]")).Click();
 
                     // Click multiple design cfgs
-                    driver.FindElement(By.Id("bayesianDesignConfigsPresent")).Click();
+                    driver.FindElement(By.Id("designConfigsPresent")).Click();
                     Thread.Sleep(3000); 
 
                     // Wait for plots to be displayed
                     IWait<IWebDriver> UQ_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(20.0));
-                    Assert.True(UQ_wait0.Until(driver1 => driver.FindElement(By.CssSelector("#bayesianPlots > div:nth-child(1) > div > div > img")).Displayed));
+                    Assert.True(UQ_wait0.Until(driver1 => driver.FindElement(By.CssSelector("#uqPlots > div:nth-child(1) > div > div > img")).Displayed));
 
                     // Click enable constraint
                     Thread.Sleep(3000);
@@ -310,7 +310,7 @@ namespace DigTest
                     Assert.True(UQ_wait3.Until(driver1 => float.Parse(driver.FindElement(By.CssSelector("#queryValue1")).Text) < 0.5));
 
                     /*      DESIGN RANKING TAB      */
-                    driver.FindElement(By.CssSelector("#bayesianTabset > li:nth-child(2) > a")).Click();
+                    driver.FindElement(By.CssSelector("#uqTabset > li:nth-child(2) > a")).Click();
 
                     IWait<IWebDriver> UQ_wait4 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                     Assert.True(UQ_wait4.Until(driver1 => driver.FindElement(By.CssSelector("#runProbability")).Displayed));
