@@ -36,7 +36,7 @@ We must also add a **Publish JUnit test result report** Post-build Action to the
 ![](images/12-04-BuildAndPostBuild.png)
 
 ### Configuring the OpenMETA Model
-By default, the automation script will run each Test Bench and inform Jenkins if any fail to run. However, the model creator can add more detail, setting target and threshold values for Test Bench parameters. If the Test Bench results fail to meet these targets, the test report will mark them as failing tests.
+By default, the automation script will run each Test Bench and inform Jenkins if any of them fail to run. However, the model creator can add more detail, setting target and threshold values for Test Bench parameters. If the Test Bench results fail to meet these targets, the test report will mark them as failing tests.
 
 This can be useful for regression-testing the _performance_ of a design, warning when performance has been compromised by a new model change.
 
