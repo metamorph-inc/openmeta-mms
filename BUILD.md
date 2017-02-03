@@ -7,8 +7,7 @@ Follow these configuration instructions, in order, to set up your machine to bui
 ## Windows x64 (7 SP1, 8.1, 10 or Server equivalent)
 Install Windows updates until your version is current
 
-## Microsoft Visual Studio 2010 (Professional or above)
-_NOTE: Will not compile under Express Edition_
+## Microsoft Visual Studio 2010 (any edition including Express)
 
 When installing, select these packages (at minimum):
 - C++
@@ -82,6 +81,12 @@ _NOTE: The CadQuery library must be copied into the `<FreeCAD_Install_Dir>\Mod` 
 For the tests to pass, EAGLE must be installed.
 
 [Download EAGLE](https://cadsoft.io/). Version 6.5 is known to work.
+
+## OpenEMS
+
+For the tests to pass, OpenEMS must be installed to `C:\OpenEMS`
+
+[Download OpenEMS](http://openems.de/download/win64/) Version 0.32 is known to work.
 
 ## Git
 [Download msysgit](https://msysgit.github.io/)

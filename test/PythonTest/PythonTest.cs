@@ -7,6 +7,7 @@ using Xunit;
 using META;
 using System.Diagnostics;
 using System.IO;
+using System.Xml;
 
 namespace PythonTest
 {
@@ -173,5 +174,67 @@ namespace PythonTest
             return proc.ExitCode;
 
         }
+
+
+        [Fact]
+        public void TestRunTestBenchesPy()
+        {
+            var model_dir = Path.Combine(Assembly.GetAssembly(typeof(PythonTest)).CodeBase.Substring("file:///".Length),
+                "../../../../../models/MetricConstraints_Simple");
+            var testXmlFilename = Path.Combine(model_dir, "nosetests.xml");
+            if (File.Exists(testXmlFilename))
+            {
+                File.Delete(testXmlFilename);
+            }
+            Process proc = new Process();
+            proc.StartInfo.Arguments = String.Format("\"{0}\" \"{1}\" -- --with-xunit",
+                Path.Combine(VersionInfo.MetaPath, "bin", "RunTestBenches.py"),
+                Path.Combine(model_dir, "MetricConstraints_Simple.xme"));
+
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.FileName = VersionInfo.PythonVEnvExe;
+            proc.StartInfo.RedirectStandardInput = true;
+            proc.StartInfo.RedirectStandardOutput = true;
+            proc.StartInfo.RedirectStandardError = true;
+            proc.StartInfo.WorkingDirectory = model_dir;
+            using (proc)
+            {
+                StringBuilder stdoutData = new StringBuilder();
+                StringBuilder stderrData = new StringBuilder();
+                proc.OutputDataReceived += (o, args) =>
+                {
+                    if (args.Data != null)
+                    {
+                        lock (stdoutData)
+                        {
+                            stdoutData.Append(args.Data);
+                        }
+                    }
+                };
+                proc.ErrorDataReceived += (o, args) =>
+                {
+                    if (args.Data != null)
+                    {
+                        lock (stderrData)
+                        {
+                            stderrData.Append(args.Data);
+                        }
+                    }
+                };
+                proc.Start();
+                proc.BeginErrorReadLine();
+                proc.BeginOutputReadLine();
+                proc.StandardInput.Close();
+
+                proc.WaitForExit();
+
+                XmlDocument doc = new XmlDocument();
+                doc.Load(testXmlFilename);
+                var testsuite = doc.LastChild;
+                Assert.Equal(2, int.Parse(testsuite.Attributes["tests"].Value));
+                Assert.Equal(1, int.Parse(testsuite.Attributes["failures"].Value));
+            }
+        }
+
     }
 }
