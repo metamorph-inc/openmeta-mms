@@ -126,7 +126,7 @@ ui <- function() {
   )
 }
 
-server <- function(input, output, session, raw_data, designVariableNames) {
+server <- function(input, output, session, raw_data, raw_info) {
 
   makeReactiveBinding("uiInitialized")
   makeReactiveBinding("directions")
@@ -209,7 +209,7 @@ server <- function(input, output, session, raw_data, designVariableNames) {
       this_sd <- data_sd[[var]]
       
       #From petConfig.json
-      if(var %in% designVariableNames) 
+      if(raw_info$variables[[var]]$type == "Design Variable") 
         this_direction <- "Input"
       else
         this_direction <- "Output"

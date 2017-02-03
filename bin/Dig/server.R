@@ -178,16 +178,7 @@ shinyServer(function(input, output, session) {
       units[[objectiveNames[[i]]]] <- list("unit"=unit, "nameWithUnit"=nameWithUnit)
       reverseUnits[[nameWithUnit]] <- objectiveNames[[i]]
     }
-    
-    # Replace add units to column names in raw
-    colnames(raw) <- sapply(colnames(raw), addUnits)
   }
-  
-  # Call the different Server functions for the different tabs ---------------
-  lapply(customTabEnvironments, function(customEnv) {
-    do.call(customEnv$server,
-            list(input, output, session, raw, designVariableNames))
-  })
   
   output$petConfigPresent <- reactive({
     print(paste("petConfigPresent:",petConfigPresent))
@@ -207,6 +198,26 @@ shinyServer(function(input, output, session) {
   outputOptions(output, "enumerationDesignVariables", suspendWhenHidden=FALSE)
   
   output$noPetConfigMessage <- renderText(paste("No pet_config.json file was found."))
+  
+  # Build info data frame
+  variables <- lapply(names(raw), function(varName) {
+    list(name = varName,
+         nameWithUnits = addUnits(varName),
+         type = if (varName %in% designVariableNames) "Design Variable" else "Objective"
+    )
+  })
+  names(variables) <- names(raw)
+  
+  info <- list(variables = variables)
+  
+  # Call the different Server functions for the different tabs ---------------
+  lapply(customTabEnvironments, function(customEnv) {
+    do.call(customEnv$server,
+            list(input, output, session, raw, info))
+  })
+  
+  # Replace add units to column names in raw
+  colnames(raw) <- sapply(colnames(raw), addUnits)
   
   # Import/Export Session Settings -------------------------------------------
   
