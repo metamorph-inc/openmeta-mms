@@ -78,7 +78,7 @@ namespace DigTest
         }
 
        
-        [Fact(Skip = "flakey")]
+        [Fact(Skip = "Flaky")]
         void DigRuns()
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
@@ -90,7 +90,7 @@ namespace DigTest
             {
                 /*try
                 {*/
-                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/WindTurbineSim_mergedPET.csv"));
+                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/mergedPET.csv"));
 
                     driver.Navigate().GoToUrl(wrapper.url);
                     
@@ -243,7 +243,7 @@ namespace DigTest
 
         }
 
-        [Fact(Skip = "flakey")]
+        [Fact(Skip = "Flaky")]
         void MultipleCfgIDs()
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
@@ -255,7 +255,7 @@ namespace DigTest
             {
                 try
                 {
-                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/WindTurbineBladeDoEforOptimizationUnderUncertainty_mergedPET.csv"));
+                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/mergedPET.csv"));
 
                     driver.Navigate().GoToUrl(wrapper.url);
 
