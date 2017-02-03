@@ -214,7 +214,7 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
 set ERROR_CODE=0
 
 FOR /F "skip=2 tokens=2,*" %%A IN ('C:\Windows\SysWoW64\REG.exe query "HKLM\software\META" /v "META_PATH"') DO set META_PATH=%%B
-%META_PATH%\\bin\\Python27\\Scripts\\python.exe compute.py
+"%META_PATH%\\bin\\Python27\\Scripts\\python.exe" compute.py
 
 echo "DONE"
 exit /b
