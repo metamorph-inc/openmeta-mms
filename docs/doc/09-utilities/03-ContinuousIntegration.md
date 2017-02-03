@@ -1,5 +1,5 @@
 ___
-##  Continuous Integration with OpenMETA
+##  Continuous Integration
 
 OpenMETA models can be integrated with Continuous Integration (CI) methods to provide automatic testing for regressions. OpenMETA includes a utility script that automatically runs Test Benches and checks the resulting Metric values against target values provided by the model author.
 
@@ -31,11 +31,16 @@ Part | Description
 `-s` | Don’t capture stdout (any stdout output will be printed immediately)
 `--with-xunit` | Produce a JUnit-compatible XML file as output
 
-We must also add a *Publish JUnit test result report* Post-build Action to the Jenkins job, telling it to grab the `nosetests.xml` test report.
+We must also add a **Publish JUnit test result report** Post-build Action to the Jenkins job, telling it to grab the `nosetests.xml` test report.
 
 ![](images/12-04-BuildAndPostBuild.png)
 
 ### Configuring the OpenMETA Model
+By default, the automation script will run each Test Bench and inform Jenkins if any fail to run. However, the model creator can add more detail, setting target and threshold values for Test Bench parameters. If the Test Bench results fail to meet these targets, the test report will mark them as failing tests.
 
+This can be useful for regression-testing the _performance_ of a design, warning when performance has been compromised by a new model change.
 
+Using our [<b>Spacecraft Study</b>](https://github.com/metamorph-inc/openmeta-spacecraft-study) example, we'll add a **Metric Constraint** object to our **PowerAnalysis** Test Bench. By connecting it to the *minBusVoltage* Metric, then setting it to have **TargetType "MustExceed"** and **TargetValue** of **14V**, we tell the testing script to mark the Test Bench as *failed* if the calculated *minBusVoltage* drops below 14V due to a model change.
+
+![](images/12-04-MetricConstraint.png)
 
