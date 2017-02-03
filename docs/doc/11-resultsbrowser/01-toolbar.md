@@ -16,6 +16,4 @@ This button will force a refresh of the PET Tab and Test Benches Tab results lis
 
 **Cleanup**
 
-This button acts like the 'Move to Recycle Bin' button in Windows. When you delete a PetResult, Archive, or TestBenchResult, they are only removed from the index while the raw data is still left on disk; this is done as a safety precaution against accidental deletion.
-
-The cleanup button collects all the deleted folders and moves them into the '_deleted' folder within the project directory. If you want to totally delete old data, you can remove this folder after using the Cleanup button.
+This button cleans up the `results` folder, by moving any untracked folders from the `results` folder to the `_deleted` folder.  If you want to totally delete old data, you can remove this folder after using the Cleanup button.
