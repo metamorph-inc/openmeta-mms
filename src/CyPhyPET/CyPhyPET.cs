@@ -979,7 +979,8 @@ namespace CyPhyPET
                 else if (((IMgaFCO)fco).Meta.Name == "MATLABWrapper")
                 {
                     var wrapper = CyPhyClasses.MATLABWrapper.Cast((IMgaFCO)fco);
-                    string filename = CreateParametersAndMetricsForOpenMDAOComponent("MATLAB file|*.m|All Files (*.*)|*.*", ".m", wrapper.Attributes.MFilename, wrapper, "matlab_wrapper",
+                    string filename = CreateParametersAndMetricsForOpenMDAOComponent("MATLAB file|*.m|All Files (*.*)|*.*", ".m", wrapper.Attributes.MFilename, wrapper,
+                        (filename_, model) => GetParamsAndUnknownsFromPythonExe(filename_, "matlab_wrapper", model),
                         () => CyPhyClasses.Metric.Create(wrapper), () => CyPhyClasses.Parameter.Create(wrapper));
                     if (filename != null)
                     {
@@ -989,7 +990,7 @@ namespace CyPhyPET
                 else if (((IMgaFCO)fco).Meta.Name == "PythonWrapper")
                 {
                     var wrapper = CyPhyClasses.PythonWrapper.Cast((IMgaFCO)fco);
-                    string filename = CreateParametersAndMetricsForOpenMDAOComponent("Python file|*.py;*.pyd|All Files (*.*)|*.*", ".py", wrapper.Attributes.PyFilename, wrapper, "run_mdao.python_component.get_params_and_unknowns",
+                    string filename = CreateParametersAndMetricsForOpenMDAOComponent("Python file|*.py;*.pyd|All Files (*.*)|*.*", ".py", wrapper.Attributes.PyFilename, wrapper, GetParamsAndUnknownsForPythonOpenMDAO,
                         () => CyPhyClasses.Metric.Create(wrapper), () => CyPhyClasses.Parameter.Create(wrapper));
                     if (filename != null)
                     {
@@ -1011,7 +1012,8 @@ namespace CyPhyPET
             }
         }
 
-        private string CreateParametersAndMetricsForOpenMDAOComponent(string openFileFilter, string defaultExt, string oldFilename, CyPhy.ParametricTestBench tb, string pythonModule, Func<CyPhy.Metric> metricCreate, Func<CyPhy.Parameter> paramCreate)
+        private string CreateParametersAndMetricsForOpenMDAOComponent(string openFileFilter, string defaultExt, string oldFilename, CyPhy.ParametricTestBench tb,
+            Func<string, ISIS.GME.Common.Interfaces.Model, Dictionary<string, Dictionary<string, Dictionary<string, object>>>> GetParamsAndUnknowns, Func<CyPhy.Metric> metricCreate, Func<CyPhy.Parameter> paramCreate)
         {
             string mgaDir = Path.GetDirectoryName(Path.GetFullPath(tb.Impl.Project.ProjectConnStr.Substring("MGA=".Length)));
             oldFilename = Path.Combine(mgaDir, oldFilename);
@@ -1040,13 +1042,36 @@ namespace CyPhyPET
 
             var valueFlow = ((GME.MGA.Meta.IMgaMetaModel)tb.Impl.MetaBase).AspectByName["ValueFlowAspect"];
 
-            Dictionary<string, Dictionary<string, Dictionary<string, object>>> paramsAndUnknowns = GetParamsAndUnknowns(dialog.FileName, pythonModule);
+            Dictionary<string, Dictionary<string, Dictionary<string, object>>> paramsAndUnknowns = GetParamsAndUnknowns(dialog.FileName, tb);
 
             HashSet<ISIS.GME.Common.Interfaces.FCO> metricsAndParameters = new HashSet<ISIS.GME.Common.Interfaces.FCO>(new DsmlFCOComparer());
             foreach (var metricOrParameter in tb.Children.MetricCollection.Concat<ISIS.GME.Common.Interfaces.FCO>(tb.Children.ParameterCollection))
             {
                 metricsAndParameters.Add(metricOrParameter);
             }
+
+            Action<ISIS.GME.Common.Interfaces.FCO, Dictionary<string, object>> setUnit = (fco, metadata) => {
+                object gme_unit_id;
+                if (metadata.TryGetValue("gme_unit_id", out gme_unit_id))
+                {
+                    var unit = tb.Impl.Project.GetFCOByID((string)gme_unit_id);
+                    ((IMgaReference)fco.Impl).Referred = unit;
+                }
+                else
+                {
+                    if (metadata.ContainsKey("units") == false)
+                    {
+                        ((IMgaReference)fco.Impl).Referred = null;
+                    }
+                    else
+                    {
+                        GMEConsole console = GMEConsole.CreateFromProject(((IMgaFCO)fco.Impl).Project);
+                        console.Warning.WriteLine(String.Format("Couldn't find CyPhy unit for OpenMDAO unit \"{0}\" for \"{1}\"", metadata["units"], fco.Name));
+                    }
+                }
+
+            };
+
             foreach (var item in paramsAndUnknowns["unknowns"])
             {
                 string name = item.Key;
@@ -1062,6 +1087,7 @@ namespace CyPhyPET
                 {
                     metricsAndParameters.Remove(metric);
                 }
+                setUnit(metric, item.Value);
             }
             foreach (var item in paramsAndUnknowns["params"])
             {
@@ -1077,6 +1103,8 @@ namespace CyPhyPET
                 {
                     metricsAndParameters.Remove(param);
                 }
+                setUnit(param, item.Value);
+
             }
             foreach (var metricOrParameter in metricsAndParameters)
             {
@@ -1092,7 +1120,24 @@ namespace CyPhyPET
             return filename;
         }
 
-        private static Dictionary<string, Dictionary<string, Dictionary<string, object>>> GetParamsAndUnknowns(string filename, string pythonModule)
+        private static Dictionary<string, Dictionary<string, Dictionary<string, object>>> GetParamsAndUnknownsForPythonOpenMDAO(string filename, ISIS.GME.Common.Interfaces.Model obj)
+        {
+
+            var cyPhyPython = (IMgaComponentEx)Activator.CreateInstance(Type.GetTypeFromProgID("MGA.Interpreter.CyPhyPython"));
+            // cyPhyPython.ComponentParameter["script_file"] = Path.Combine(META.VersionInfo.MetaPath, "bin", "CyPhyPET_unit_setter.py");
+            cyPhyPython.ComponentParameter["script_file"] = "CyPhyPET_unit_matcher.py";
+
+            var fcos = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
+
+            cyPhyPython.ComponentParameter["openmdao_py"] = filename;
+
+            cyPhyPython.InvokeEx(obj.Impl.Project, (MgaFCO)obj.Impl, fcos, 128);
+
+            var value = (string)cyPhyPython.ComponentParameter["ret"];
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, object>>>>(value);
+        }
+
+        private static Dictionary<string, Dictionary<string, Dictionary<string, object>>> GetParamsAndUnknownsFromPythonExe(string filename, string pythonModule, ISIS.GME.Common.Interfaces.Model obj)
         {
             Process getParamsAndUnknowns = new Process();
             getParamsAndUnknowns.StartInfo = new ProcessStartInfo(META.VersionInfo.PythonVEnvExe)

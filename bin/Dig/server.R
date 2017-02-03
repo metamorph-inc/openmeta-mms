@@ -1900,7 +1900,7 @@ shinyServer(function(input, output, session) {
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
       #Defaults
-      this_gaussian <- TRUE
+      this_gaussian <- FALSE
       this_gauss_mean <- data_mean[[var]]
       this_sd <- data_sd[[var]]
       

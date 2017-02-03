@@ -107,7 +107,9 @@
               <Directory Id='src_BlockTemplate_Python'/>
             </Directory>
           </Directory>
-          <Directory Id='INSTALLDIR_DOC' Name='doc'/>
+          <Directory Id='INSTALLDIR_DOC' Name='Documentation'>
+            <Directory Id='html_documentation' Name='HtmlDoc'/>
+          </Directory>
           <Directory Id='INSTALLDIR_META' Name='meta'>
             <Directory Id='icons' Name='icons'/>
           </Directory>
@@ -177,6 +179,10 @@
         <Shortcut Id="JobManagerShortcut" Name="META Job Manager" Description="META Job Manager" Target="[#JobManager.exe]"/>
         <RemoveFolder Id='ApplicationProgramsFolderDir' On='uninstall' />
         <RegistryValue Root="HKCU" Key="Software\Microsoft\META" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+      <Component Id="HtmlDocumentationShortcut" Guid="{2F1884E0-15E4-41FA-8360-A4F0BF2D3E20}">
+        <Shortcut Id="HtmlDocumentationShortcut" Name="META Documentation" Description="META Documentation" Target="[#filCFFE02EAECD6F2614ECC3C42E1B41657]"/>
+        <RegistryValue Root="HKCU" Key="Software\Microsoft\META" Name="HtmlDocumentation" Type="string" Value="[#HtmlDocumentationShortcut]" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
     
@@ -461,6 +467,9 @@
       <ComponentRef Id='boost_chrono_vc140_mt_1_60.dll'/>
 
       <ComponentGroupRef Id='Json.NET'/>
+
+      <ComponentGroupRef Id="html_documentation"/>
+      <ComponentRef Id="HtmlDocumentationShortcut"/>
 
       <ComponentGroupRef Id='MaterialLibrary'/>
       <ComponentGroupRef Id='Validation'/>

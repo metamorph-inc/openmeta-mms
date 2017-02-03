@@ -1,26 +1,28 @@
 import fnmatch
 import os
+import sys
 import shutil
 import subprocess
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 ### Delete generated html and preprocessed files
-if os.path.exists('out/html'):
-    shutil.rmtree('out/html', ignore_errors=True)
+if os.path.exists('out/html_documentation'):
+    shutil.rmtree('out/html_documentation', ignore_errors=True)
 if os.path.exists('processed_doc'):
     shutil.rmtree('processed_doc', ignore_errors=True)
 
 ### Preprocess
-subprocess.check_call(['python', 'preprocess/preprocess_md.py'])
-subprocess.check_call(['python', 'preprocess/consolidate_chapter_sections.py'])
+subprocess.check_call([sys.executable, 'preprocess/preprocess_md.py'])
+subprocess.check_call([sys.executable, 'preprocess/consolidate_chapter_sections.py'])
 
 
 ### Call Doxygen
-subprocess.check_call(['doxygen', 'Doxyfile'])
+subprocess.check_call(['../3rdParty/doxygen/doxygen-1.8.5.windows.x64.bin/doxygen.exe', 'Doxyfile'])
 
 
 ### Copy Images
-img_path = os.path.join('out', 'html', 'images')
+img_path = os.path.join('out', 'html_documentation', 'images')
 if not os.path.exists(img_path):
     os.makedirs(img_path)
 
