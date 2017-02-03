@@ -10,28 +10,28 @@ This pane lists all the active jobs.
 
 **Title**
 
-# TestBenchResult: This is the only type of Test Bench List items.
+The title of the job, as generated at the time of execution by the Master Interpreter.
 
 **Test Bench Name**
 
-This name is taken from the OpenMETA model at the time of execution by the Master Interpreter
+This name is taken from the OpenMETA model at the time of execution by the Master Interpreter.
 
 **Working Directory**
 
-This the directory that the job is executing/was executed in. You can open this directory by right-clicking a job and selecting 'Open in Explorer' or by highlighting the job and clicking 'Open Selected Job in Explorer.'
+This the directory that the job is executing or was executed in. You can open this directory by right-clicking a job and selecting 'Open in Explorer' or by highlighting the job and clicking 'Open Selected Job in Explorer.'
 
 **Status**
 
-This is the status taken from the Test Bench Manifest. The possible values are as follows:
+This is the current status of the job, according to the Job Manager. The possible values are as follows:
 
 * Succeeded: The job was executed and finished without errors.
-* Failed: The job was executed, but an error was encountered.
+* Failed: The job was executed, but the job was aborted or an error was encountered.
 * Running: The job is currently being executed.
 * In Queue: The job is waiting to be executed because the maximum number of simultaneous jobs has already been met.
 
 **Run Command**
 
-This is command that is called by the job executor to invoke the job (?).
+This is the command that is called by the job executor to invoke the job.
 
 #### Action Buttons
 
