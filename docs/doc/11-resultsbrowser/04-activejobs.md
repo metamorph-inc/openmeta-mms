@@ -24,10 +24,10 @@ This the directory that the job is executing/was executed in. You can open this 
 
 This is the status taken from the Test Bench Manifest. The possible values are as follows:
 
-* Succeeded: 
-* Failed: 
-* Running: 
-* In Queue: 
+* Succeeded: The job was executed and finished without errors.
+* Failed: The job was executed, but an error was encountered.
+* Running: The job is currently being executed.
+* In Queue: The job is waiting to be executed because the maximum number of simultaneous jobs has already been met.
 
 **Run Command**
 

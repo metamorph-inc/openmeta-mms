@@ -24,9 +24,9 @@ This design name is taken from the OpenMETA model at the time of execution by th
 
 This is the status taken from the Test Bench Manifest. The possible values are as follows:
 
-* Unexecuted: 
-* Failed:
-* OK: 
+* Unexecuted: The job was aborted before it was executed.
+* Failed: The job was exectuted, but an error was encountered.
+* OK: The job was exectuted without errors.
 
 **Time**
 
@@ -49,8 +49,8 @@ This pane shows details about the currently-highlighted dataset in the PET Datas
 
 Below the header is a summary of the Test Bench. Each of the five sections provides information that is encoded in the 'testbench_manifest.json' file.
 
-* Steps:
-* Parameters:
-* Metrics:
-* Artifacts:
-* Visualization Artifacts:
+* Steps: An ordered list of the commands to be invoked for the execution of this Test Bench.
+* Parameters: The input parameters of the Test Bench, including their value, range, and units.
+* Metrics: The output metrics that resulted from the execution of the Test Bench, including their value and units.
+* Artifacts: A list of recorded artifacts from the Test Bench execution.
+* Visualization Artifacts: A list of the recorded visual artifacts from the Test Bench execution.
