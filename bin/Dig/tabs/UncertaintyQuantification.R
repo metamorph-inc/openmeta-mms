@@ -1,6 +1,5 @@
-library(shiny)
-source('bayesian_utils.r')
-source('uq.r')
+source('utils/bayesian_utils.r')
+source('utils/uq.r')
 
 uiInitialized <- FALSE
 directions <- list()

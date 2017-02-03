@@ -8,12 +8,15 @@ customTabFiles <- list.files('tabs', pattern = "*.R")
 customTabEnvironments <- lapply(customTabFiles, function(filename) {
   env <- new.env()
   source(file.path('tabs',filename), local = env)
+  # debugSource(file.path('tabs',filename), local = env)
   env
 })
 
 # Launch with testing datasets
-Sys.setenv(DIG_INPUT_CSV=file.path('datasets','WindTurbineForOptimization','mergedPET.csv'))
-# Sys.setenv(DIG_INPUT_CSV=file.path('datasets','WindTurbine','mergedPET.csv'))
+if (Sys.getenv('DIG_INPUT_CSV') == "") {
+  Sys.setenv(DIG_INPUT_CSV=file.path('datasets','WindTurbineForOptimization','mergedPET.csv'))
+  # Sys.setenv(DIG_INPUT_CSV=file.path('datasets','WindTurbine','mergedPET.csv'))
+}
 
 #options(shiny.trace=TRUE)
 #options(shiny.fullstacktrace = TRUE)

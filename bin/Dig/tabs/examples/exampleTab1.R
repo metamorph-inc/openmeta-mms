@@ -1,9 +1,8 @@
-library(shiny)
-
 title <- "Histogram"
 
 ui <- function() {
-  fluidRow(
+  
+  fluidPage(
     br(),
     column(3,
       selectInput("sandboxVar", "Histogram Variable:", c())
@@ -12,15 +11,17 @@ ui <- function() {
       plotOutput("sandboxPlot")
     )
   )
+  
 }
 
-server <- function(input, output, session, data) {
+server <- function(input, output, session, data, info) {
   
   varNames <- names(data)
   varClass <- sapply(data,class)
   varNums <- varNames[varClass != "factor"]
   
   updateSelectInput(session, "sandboxVar", choices = varNums, selected = varNums[1])
+  
   output$sandboxPlot <- renderPlot({
     if(input$sandboxVar != "")
       hist(data[[input$sandboxVar]],
