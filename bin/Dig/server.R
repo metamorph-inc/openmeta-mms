@@ -28,8 +28,6 @@ abbreviationLength = 25
 xFuncs <- data.frame()
 xFuncs <- xFuncs[1:4,]
 row.names(xFuncs) <- c("Values", "Scores", "Slopes", "Y_ints")
-openToolTip <- NULL
-openToolTip <- data.frame()
 
 bayesianDirection <- list()
 bayesianType <- list()
@@ -107,6 +105,24 @@ shinyServer(function(input, output, session) {
   enumeratedDesignVariables <- FALSE
   designVariables <- NULL
   objectiveNames <- NULL
+  units <- NULL
+  reverseUnits <- NULL
+  
+  addUnits <- function(name) {
+    if(is.null(units) | !(name %in% names(units))) {
+      name
+    } else {
+      units[[name]]$nameWithUnit
+    }
+  }
+  
+  removeUnits <- function(nameWithUnits) {
+    if(is.null(reverseUnits) | !(nameWithUnits %in% names(reverseUnits))) {
+      nameWithUnits
+    } else {
+      reverseUnits[[nameWithUnits]]
+    }
+  }
   
   if(petConfigPresent) {
     designVariableNames <- names(petConfig$drivers[[1]]$designVariables)
@@ -122,8 +138,46 @@ shinyServer(function(input, output, session) {
     petSelectedConfigurations <- petConfig$SelectedConfigurations
     petName <- petConfig$PETName
     petMgaName <- petConfig$MgaFilename
-  }
     
+    # Generate Units Tables
+    units <- list()
+    reverseUnits <- list()
+    for (i in 1:length(designVariableNames))
+    {
+      unit <-petConfig$driver[[1]]$designVariables[[designVariableNames[i]]]$units
+      if(is.null(unit)) {
+        unit <- ""
+        nameWithUnit <- designVariableNames[[i]]
+      }
+      else
+      {
+        unit <- gsub("\\*\\*", "^", unit) #replace Python '**' with '^'
+        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
+        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
+        nameWithUnit <- paste0(designVariableNames[i]," (",unit,")")
+      }
+      units[[designVariableNames[[i]]]] <- list("unit"=unit, "nameWithUnit"=nameWithUnit)
+      reverseUnits[[nameWithUnit]] <- designVariableNames[[i]]
+    }
+    for (i in 1:length(objectiveNames))
+    {
+      unit <-petConfig$driver[[1]]$objectives[[objectiveNames[i]]]$units
+      if(is.null(unit)) {
+        unit <- ""
+        nameWithUnit <- objectiveNames[[i]]
+      }
+      else
+      {
+        unit <- gsub("\\*\\*", "^", unit)
+        nameWithUnit <- paste0(objectiveNames[i]," (",unit,")")
+      }
+      units[[objectiveNames[[i]]]] <- list("unit"=unit, "nameWithUnit"=nameWithUnit)
+      reverseUnits[[nameWithUnit]] <- objectiveNames[[i]]
+    }
+    
+    # Replace add units to column names in raw
+    colnames(raw) <- sapply(colnames(raw), addUnits)
+  }
   
   output$petConfigPresent <- reactive({
     print(paste("petConfigPresent:",petConfigPresent))
@@ -523,13 +577,6 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
-    if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
-      btn.css.class <- paste("btn",btn.style,sep="-")
-    else btn.css.class = ""
-    tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
-  }
-  
   generateEnumUI <- function(current) {
     items <- names(table(raw_plus()[varNames[current]]))
     
@@ -541,13 +588,14 @@ shinyServer(function(input, output, session) {
     if(is.null(selectVal) | !input$stickyFilters)
       selectVal <- items
     
-    column(2, selectInput(paste0('inp', current),
-                          varNames[current],
+    column(2, selectInput(inputId = paste0('inp', current),
+                          label = varNames[current],
                           multiple = TRUE,
                           selectize = FALSE,
                           choices = items,
                           selected = selectVal)
     )
+    
     
   }
   
@@ -603,6 +651,7 @@ shinyServer(function(input, output, session) {
         openToolTip[row,"display"] <<- F
       }
     }
+    
   }
   
   # Slider tooltip handler
@@ -647,13 +696,15 @@ shinyServer(function(input, output, session) {
     
     fluidRow(
       lapply(varConstant(), function(column) {
-        
+
         switch(varClass[column],
                "numeric" = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
-               "integer" =  column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
+               "integer" = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column]))),
                "factor"  = column(2, p(strong(paste0(column,":")), unname(raw_plus()[1,column])))
         )
       })
+      # lapply(varConstant(), function(x) {column(2, p(strong(paste0(addUnits(x),":")), unname(raw_plus()[1,column])))})
+      # lapply(varConstant(), function(x) {column(2, p(strong(paste0(x,":")), unname(raw_plus()[1,column])))})
     )
   })
   
@@ -1514,12 +1565,12 @@ shinyServer(function(input, output, session) {
       }
   )
   
-  # Ranges Table Tab --------------------------------------------------------------------------------
+  # PET Refinement Tab -------------------------------------------------------
   all_ranges <- list()  #List of all ranges: 1 for all numerics and individual ones for each factor
   
-  slowNumericRangeData <- eventReactive(input$updateRanges, {
-    all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
-  })
+  # slowNumericRangeData <- eventReactive(input$updateRanges, {
+  #   all_ranges$numerics <<- do.call(rbind, lapply(filterData()[varRangeNum()], summary))
+  # })
   
   output$petDriverConfig <- renderUI({
     fluidRow(
@@ -1545,7 +1596,7 @@ shinyServer(function(input, output, session) {
     
     lapply(rownames(designVariables), function(row){
       
-      var = levels(droplevels(designVariables[row, "VarName"]))
+      var = addUnits(levels(droplevels(designVariables[row, "VarName"])))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       selection = unlist(strsplit(gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Selection"]))), ","))
       
@@ -1600,11 +1651,11 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  output$rangesEnum <- renderUI({
+  output$original_enumeration_ranges <- renderUI({
     
     lapply(rownames(designVariables), function(row){
       
-      var = levels(droplevels(designVariables[row, "VarName"]))
+      var = addUnits(levels(droplevels(designVariables[row, "VarName"])))
       type = gsub("^\\s+|\\s+$", "", levels(droplevels(designVariables[row, "Type"])))
       selection = gsub(",", ", ", levels(droplevels(designVariables[row, "Selection"])))
       
@@ -1820,7 +1871,7 @@ shinyServer(function(input, output, session) {
     petConfigRefined <- petConfig
     
     reassignDV <- function(dv, name) {
-      global_i = which(varNames == name)
+      global_i = which(varNames == addUnits(name))
       if("type" %in% names(dv) && dv$type == "enum") {
         selection <- strsplit(input[[paste0('newSelection', global_i)]], ",")
         if (length(unlist(selection)) > 1) {
@@ -1902,7 +1953,7 @@ shinyServer(function(input, output, session) {
     var_directions <- c("Input",
                         "Output")
     data_mean <- apply(filtered_raw_plus()[varRangeNum()], 2, mean)
-    data_sd <- apply(filtered_raw_plus()[varRangeNum()], 2, function(x) {sd(x)/2})
+    data_sd <- apply(filtered_raw_plus()[varRangeNum()], 2, function(x) {sd(x)})
     
     bayesChoices <- varRangeNum()
     if(!input$bayesianDisplayAll)
@@ -1915,7 +1966,7 @@ shinyServer(function(input, output, session) {
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
       #Defaults
-      this_gaussian <- TRUE
+      this_gaussian <- FALSE
       this_gauss_mean <- data_mean[[var]]
       this_sd <- data_sd[[var]]
       

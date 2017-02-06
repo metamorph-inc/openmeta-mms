@@ -44,13 +44,17 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
   
   # Plot resampled samples
   for (var in names(data)) {
+    original_min = min(data[[var]])
+    original_max = max(data[[var]])
+    margins = (original_max - original_min)*0.3
+    
+    min = original_min - margins
+    max = original_max + margins
+    
     if(dataDirection[[var]] == 'Input') {
-      min = min(data_new[[var]])
-      max = max(data_new[[var]])
-      
-      xpoint = seq(min, max, (max - min)/255)
+      xpoint = seq(min, max, (max - min)/511)
       pdfAnalytical = pdfComp(distributionTypes[[var]], distributionParams[[var]], xpoint)
-      pdfSample = density(data_new[[var]], n=256, from=min, to=max)
+      pdfSample = density(data_new[[var]], n=512, from=min, to=max)
       
       result = list(xOrig = xpoint,
                     yOrig = pdfAnalytical,
@@ -58,11 +62,8 @@ resampleData = function(data, dataDirection, distributionTypes, distributionPara
                     yResampled = pdfSample[['y']])
       distList[[var]] = result
     } else if(dataDirection[[var]] == 'Output') {
-      min = min(data_new[[var]])
-      max = max(data_new[[var]])
-      
-      originalPdf = density(data[[var]], n=256, from=min, to=max)
-      resampledPdf = density(data_new[[var]], n=256, from=min, to=max)
+      originalPdf = density(data[[var]], n=512, from=min, to=max)
+      resampledPdf = density(data_new[[var]], n=512, from=min, to=max)
       
       result = list(xOrig = originalPdf[['x']],
                     yOrig = originalPdf[['y']],
@@ -120,6 +121,11 @@ genDist = function(distribution, length) {
 densityPdf = function(data, pointsToEvaluate) {
   min = min(data)
   max = max(data)
+  
+  margins = (max - min)*0.3
+  min = min - margins
+  max = max + margins
+      
   pdf = density(data, n=2048, from=min, to=max)
   pdfFunction = approxfun(pdf$x, pdf$y, yleft=0, yright=0)
   
@@ -137,6 +143,11 @@ densityPdf = function(data, pointsToEvaluate) {
 densityCdf = function(data, pointsToEvaluate) {
   min = min(data)
   max = max(data)
+  
+  margins = (max - min)*0.3
+  min = min - margins
+  max = max + margins
+      
   pdf = density(data, n=2048, from=min, to=max)
   pdfFunction = approxfun(pdf$x, pdf$y, yleft=0, yright=0)
   integrationPoints = seq(min, max, (max-min)/2047)
@@ -163,6 +174,11 @@ densityCdf = function(data, pointsToEvaluate) {
 densityInverseCdf = function(data, pointsToEvaluate) {
   min = min(data)
   max = max(data)
+  
+  margins = (max - min)*0.3
+  min = min - margins
+  max = max + margins
+      
   pdf = density(data, n=2048, from=min, to=max)
   pdfFunction = approxfun(pdf$x, pdf$y, yleft=0, yright=0)
   cdfFunction = function(x) {

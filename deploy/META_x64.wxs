@@ -12,7 +12,7 @@
         Manufacturer='MetaMorph Software, Inc; Vanderbilt University, ISIS'
         InstallerVersion='405' Languages='1033' Compressed='yes' SummaryCodepage='1252'
         InstallPrivileges='elevated' InstallScope='perMachine' Platform='x64'
-		Comments='Version $(var.VERSIONSTR) ($(var.GITVERSION))'/>
+		Comments='Version $(var.VCSVERSION) ($(var.VCSHASH))'/>
 
     <Upgrade Id="$(var.UpgradeCode)">
       <UpgradeVersion Minimum="$(var.VERSIONSTR)" OnlyDetect="yes" Property="NEWERFOUND"/>
@@ -98,10 +98,6 @@
         <Directory Id='INSTALLDIR' Name='META'>
           <Directory Id='analysis_tools' Name='analysis_tools'/>
           <Directory Id='INSTALLDIR_BIN' Name='bin'>
-			<Directory Id='CADPython' Name='CAD'>
-				<Directory Id='CADCreatePatran' Name='CreatePatranModel'/>
-				<Directory Id='CADPatranPostProcess' Name='PatranPostProcessing'/>
-			</Directory>
             <Directory Id='bin'/>
             <Directory Id='Json.NET'/>
             <Directory Id='Ionic.Zip' />
@@ -111,7 +107,9 @@
               <Directory Id='src_BlockTemplate_Python'/>
             </Directory>
           </Directory>
-          <Directory Id='INSTALLDIR_DOC' Name='doc'/>
+          <Directory Id='INSTALLDIR_DOC' Name='Documentation'>
+            <Directory Id='html_documentation' Name='HtmlDoc'/>
+          </Directory>
           <Directory Id='INSTALLDIR_META' Name='meta'>
             <Directory Id='icons' Name='icons'/>
           </Directory>
@@ -182,6 +180,10 @@
         <RemoveFolder Id='ApplicationProgramsFolderDir' On='uninstall' />
         <RegistryValue Root="HKCU" Key="Software\Microsoft\META" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
+      <Component Id="HtmlDocumentationShortcut" Guid="{2F1884E0-15E4-41FA-8360-A4F0BF2D3E20}">
+        <Shortcut Id="HtmlDocumentationShortcut" Name="META Documentation" Description="META Documentation" Target="[#filCFFE02EAECD6F2614ECC3C42E1B41657]"/>
+        <RegistryValue Root="HKCU" Key="Software\Microsoft\META" Name="HtmlDocumentation" Type="string" Value="[#HtmlDocumentationShortcut]" KeyPath="yes"/>
+      </Component>
     </DirectoryRef>
     
     <DirectoryRef Id="INSTALLDIR_META">
@@ -218,6 +220,21 @@
       <Component Id='META_PATH' Guid='{f6504e26-e4c7-4667-a5b4-b5e8a4110235}' Win64='no'>
         <RegistryKey Root='HKLM' Key='Software\META'>
           <RegistryValue Name='META_PATH' Type='string' Value='[INSTALLDIR]'/>
+        </RegistryKey>
+      </Component>
+      <Component Id='META_VERSION' Guid='{6e8cae49-ac6d-423f-9d7c-f36d9ae6fcbc}' Win64='no'>
+        <RegistryKey Root='HKLM' Key='Software\META'>
+          <RegistryValue Name='META_VERSION' Type='string' Value='$(var.VERSIONSTR)'/>
+        </RegistryKey>
+      </Component>
+      <Component Id='META_VCSHASH' Guid='{63979997-6993-4d32-b1f7-0db7a37cdf4b}' Win64='no'>
+        <RegistryKey Root='HKLM' Key='Software\META'>
+          <RegistryValue Name='META_VCSHASH' Type='string' Value='$(var.VCSHASH)'/>
+        </RegistryKey>
+      </Component>
+      <Component Id='META_FULLVERSION' Guid='{a4339136-716f-4621-8457-3c65f0a9c3e2}' Win64='no'>
+        <RegistryKey Root='HKLM' Key='Software\META'>
+          <RegistryValue Name='META_FULLVERSION' Type='string' Value='$(var.VERSIONSTR) ($(var.VCSHASH))'/>
         </RegistryKey>
       </Component>
       <Component Id='MAX_DYMOLA_STEP_TIME' Guid='{4ED177DD-87CC-4FF8-9E0A-23D640C5C312}' Win64='no'>
@@ -384,6 +401,9 @@
       <ComponentGroupRef Id='bin'/>
       <ComponentGroupRef Id='analysis_tools'/>
       <ComponentRef Id='META_PATH'/>
+      <ComponentRef Id='META_VERSION'/>
+      <ComponentRef Id='META_VCSHASH'/>
+      <ComponentRef Id='META_FULLVERSION'/>
       <ComponentRef Id='META_PATH64'/>
 
       <ComponentRef Id='MAX_DYMOLA_STEP_TIME'/>
@@ -397,9 +417,6 @@
       <ComponentGroupRef Id="CyPhySignalBlocksAddOn_x64"/>
       <ComponentGroupRef Id="CyPhyPython"/>
       <ComponentGroupRef Id="python_packages"/>
-      <ComponentGroupRef Id='CADPython'/>
-	  <ComponentGroupRef Id='CADCreatePatran'/>
-	  <ComponentGroupRef Id='CADPatranPostProcess'/>
 	  
       <ComponentGroupRef Id='CyPhyMasterInterpreter'/>
 	  <ComponentGroupRef Id='CyPhyPrepareIFab'/>
@@ -450,6 +467,9 @@
       <ComponentRef Id='boost_chrono_vc140_mt_1_60.dll'/>
 
       <ComponentGroupRef Id='Json.NET'/>
+
+      <ComponentGroupRef Id="html_documentation"/>
+      <ComponentRef Id="HtmlDocumentationShortcut"/>
 
       <ComponentGroupRef Id='MaterialLibrary'/>
       <ComponentGroupRef Id='Validation'/>

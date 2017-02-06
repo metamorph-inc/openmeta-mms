@@ -68,9 +68,9 @@ class ExcelWrapper(Component):
             os.unlink(self.excelFile)
 
     def _coerce_val(self, variable):
-        if variable['type'] == 'Bool':
-            variable['val'] = variable['val'] == 'True'
-        elif variable['type'] == 'Str':
+        if variable['type'].lower() == 'bool':
+            variable['val'] = variable['val'].lower() == 'true'
+        elif variable['type'].lower() == 'str':
             variable['val'] = six.text_type(variable['val'])
         else:
             variable['val'] = getattr(six.moves.builtins, variable['type'].lower())(variable['val'])

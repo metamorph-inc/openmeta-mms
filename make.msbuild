@@ -58,8 +58,12 @@
   <Target Name="DownloadNuGetPackages">
     <Exec Command="..\bin\Python27\Scripts\python.exe -c &quot;import build_msi; build_msi.get_nuget_packages()&quot;" IgnoreExitCode="true" WorkingDirectory="$(MSBuildThisFileDirectory)\deploy"/>
   </Target>
+
+  <Target Name="GenerateDocumentation">
+    <Exec Command="..\bin\Python27\Scripts\python.exe build.py" WorkingDirectory="$(MSBuildThisFileDirectory)\docs"/>
+  </Target>
   
-  <Target Name="All" DependsOnTargets="Install_PythonLibs;MetaLink;CyPhyML;DownloadNuGetPackages">
+  <Target Name="All" DependsOnTargets="Install_PythonLibs;MetaLink;CyPhyML;DownloadNuGetPackages;GenerateDocumentation">
     <MSBuild Projects="src/Run_PRISMATIC_toolchain/Run_Prismatic_toolchain.sln" Properties="Platform=Any CPU;Configuration=$(Configuration);META_PATH=$(META_PATH)" Targets="Build"/>
   </Target>
   

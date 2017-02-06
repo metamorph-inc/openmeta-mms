@@ -524,7 +524,7 @@ namespace PETBrowser
             //If we haven't found any selected objects, use the highlighted dataset (also, check to make sure
             //there aren't archives selected)
             if (petConfigPaths.Count == 0 &&
-                (highlightedDatasetOnly || ArchiveDatasets.TrueForAll(dataset => !dataset.Selected)))
+                (highlightedDatasetOnly || (highlightedDataset.Kind != Dataset.DatasetKind.Archive && ArchiveDatasets.TrueForAll(dataset => !dataset.Selected))))
             {
                 foreach (var folder in highlightedDataset.Folders)
                 {
