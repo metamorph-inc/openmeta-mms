@@ -28,6 +28,8 @@ abbreviationLength = 25
 xFuncs <- data.frame()
 xFuncs <- xFuncs[1:4,]
 row.names(xFuncs) <- c("Values", "Scores", "Slopes", "Y_ints")
+openToolTip <- NULL
+openToolTip <- data.frame()
 
 bayesianDirection <- list()
 bayesianType <- list()
@@ -576,6 +578,14 @@ shinyServer(function(input, output, session) {
       )
     })
   })
+  
+  actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
+    if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
+      btn.css.class <- paste("btn",btn.style,sep="-")
+    else btn.css.class = ""
+    tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
+  }
+
   
   generateEnumUI <- function(current) {
     items <- names(table(raw_plus()[varNames[current]]))
