@@ -203,7 +203,7 @@ server <- function(input, output, session, raw_data, raw_info) {
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
       #Defaults
-      this_gaussian <- TRUE
+      this_gaussian <- FALSE
       this_gauss_mean <- data_mean[[var]]
       this_sd <- data_sd[[var]]
       
@@ -233,7 +233,7 @@ server <- function(input, output, session, raw_data, raw_info) {
             column(4, 
                    checkboxInput(
                     paste0('gaussian', global_index),
-                    label = "Enable Gaussian",
+                    label = "Reshape to Gaussian",
                     value = this_gaussian)
             ),
             #conditionalPanel(condition = toString(paste0('input.gaussian', global_index, ' == true')),
