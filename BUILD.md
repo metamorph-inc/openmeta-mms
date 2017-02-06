@@ -4,7 +4,7 @@ The Metamorphosys tools can be compiled from the source code in this repository.
 # Build Machine Setup
 Follow these configuration instructions, in order, to set up your machine to build the Metamorphosys tools from source.
 
-## Windows x64 (7 SP1, 8.1, 10 or Server equivalent)
+## Windows x64 (7 SP3, 8.1, 10 or Server equivalent)
 Install Windows updates until your version is current
 
 ## Microsoft Visual Studio 2010 (any edition including Express)
@@ -24,8 +24,8 @@ When installing, select these packages (at minimum):
 - Programming Languages
     + C++
 
-## Microsoft Visual Studio 2015 Update 2
-[Download](https://www.visualstudio.com/en-us/news/vs2015-update2-vs.aspx)
+## Microsoft Visual Studio 2015 Update 3
+[Download](https://www.visualstudio.com/en-us/news/releasenotes/vs2015-update3-vs)
 
 ## Java JDK 7 or above
 [Download it here](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
@@ -35,7 +35,7 @@ _NOTE: Either x86 or x64 is okay_
 ### Set JAVA_HOME
 Set environment variable JAVA_HOME to the installed directory, such as `C:\Program Files (x86)\Java\jdk1.7.0_09`
 
-The real name of the subdirectory depends on what version you have installed.
+The actual name of the subdirectory depends on what version you have installed.
 
 ## GME 16.3+
 [Download it here](https://forge.isis.vanderbilt.edu/gme)
