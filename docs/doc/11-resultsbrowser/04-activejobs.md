@@ -1,6 +1,6 @@
 ## Active Jobs Tab
 
-<img src="images/activejobs.png" alt="Active Jobs" style="width: 800px;"/>
+<img src="images/activejobs.png" alt="Active Jobs" style="width: 957px;"/>
 
 ### Active Jobs List Pane
 

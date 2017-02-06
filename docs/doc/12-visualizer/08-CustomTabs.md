@@ -68,7 +68,7 @@ The `server` function is where we describe the backend processing that produces 
 
 The rendered tab looks like this:
 
-<img src="images/histogramTab.png" alt="Example Histogram Tab" style="width: 800px;"/>
+<img src="images/histogramTab.png" alt="Example Histogram Tab" style="width: 1110px;"/>
 
 This example can be found at `C:\Program Files (x86)\META\bin\Dig\tabs\examples\exampleTab1.R` (or wherever you installed OpenMETA) and used as the basis for creating tabs of your own.
 

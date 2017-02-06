@@ -6,11 +6,11 @@ OpenMETA models can be integrated with Continuous Integration (CI) methods to pr
 ### Configuring the Jenkins job
 For this example, we'll use the Jenkins CI platform. We'll create a new Freestyle project that polls the repository for changes. Our test model will be the open-source [<b>Spacecraft Study</b>](https://github.com/metamorph-inc/openmeta-spacecraft-study) model project available on GitHub.
 
-![](images/12-04-JobName.png)
+<img src="images/12-04-JobName.png" alt="Job Name" style="width: 947px;"/>
 
 In the Source Code Management section, we'll configure the job to poll the master branch of the repo on a five-minute interval.
 
-![](images/12-04-SCM.png)
+<img src="images/12-04-SCM.png" alt="SCM" style="width: 948px;"/>
 
 Next, we need to configure Jenkins to run the utility script that will automatically run the Test Benches in the OpenMETA project.
 
@@ -35,11 +35,11 @@ Part | Description
 
 We must also add a **Publish JUnit test result report** Post-build Action to the Jenkins job, telling it to grab the `nosetests.xml` test report.
 
-![](images/12-04-BuildAndPostBuild.png)
+<img src="images/12-04-BuildAndPostBuild.png" alt="Build and Post Build" style="width: 947px;"/>
 
 Test reports in Jenkins include a list of tests, markings for those passing and failing, and duration measurements for the time it took to conduct the test. For failed tests, status messages indicate the nature and reason for failure.
 
-![](images/12-04-TestReport.png)
+<img src="images/12-04-TestReport.png" alt="Test Report" style="width: 548px;"/>
 
 ### Configuring the OpenMETA Model
 By default, the automation script will run each Test Bench and inform Jenkins if any of them fail to run. However, the model creator can add more detail, setting target and threshold values for Test Bench parameters. If the Test Bench results fail to meet these targets, the test report will mark them as failing tests.
@@ -48,5 +48,5 @@ This can be useful for regression-testing the _performance_ of a design, warning
 
 Using our [<b>Spacecraft Study</b>](https://github.com/metamorph-inc/openmeta-spacecraft-study) example, we'll add a **Metric Constraint** object to our **PowerAnalysis** Test Bench. By connecting it to the *minBusVoltage* Metric, then setting it to have **TargetType "MustExceed"** and **TargetValue** of **14V**, we tell the testing script to mark the Test Bench as *failed* if the calculated *minBusVoltage* drops below 14V due to a model change.
 
-![](images/12-04-MetricConstraint.png)
+<img src="images/12-04-MetricConstraint.png" alt="Metric Constraint" style="width: 1694px;"/>
 

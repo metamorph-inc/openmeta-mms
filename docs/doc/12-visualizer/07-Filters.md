@@ -13,7 +13,7 @@ This button will return the visible filters to their original state (fully opene
 **3. Filters**
 These filters (3 filters are shown above in the picture), will carve out the dataset to include only the points that fit within the ranges for each variable.  If you limit the dataset to have 0 points a message will appear in the pairs plot telling you that “there are no data points that fit the current filtering scheme”. 
 
-![Exact Entry](images/filter_exactentry.png)
+<img src="images/filter_exactentry.png" alt="Exact Entry"/>
 
 **4. Exact Entry Window**
 When a slider is 'double-clicked', a new window opens up allowing the user to specify an exact range for the filter.  The window shows the name of the variable along with text fields for minimum and maximum range.

@@ -1,6 +1,6 @@
 ## Test Bench Tab
 
-<img src="images/testbenchtab.png" alt="Test Bench Tab" style="width: 800px;"/>
+<img src="images/testbenchtab.png" alt="Test Bench Tab" style="width: 954px;"/>
 
 ### Test Bench List Pane
 

@@ -1,4 +1,4 @@
-<img src="images/pettab.png" alt="Toolbar and PET Tab" style="width: 800px;"/>
+<img src="images/pettab.png" alt="Toolbar and PET Tab" style="width: 954px;"/>
 
 ## Toolbar
 
