@@ -1,10 +1,10 @@
 # coding: utf-8
-r'''
+r"""
 Run MasterInterpreter on TestBenches, run the JobManager command, and compare Metrics to MetricConstraints.
 
 e.g.
 META\bin\Python27\Scripts\python META\bin\RunTestBenches.py --max_configs 2 "Master Combined.mga" -- -s --with-xunit
-'''
+"""
 import os
 import os.path
 import operator
@@ -77,6 +77,7 @@ if __name__ == '__main__':
 
         parser = argparse.ArgumentParser(description='Run TestBenches.')
         parser.add_argument('--max_configs', type=int)
+        parser.add_argument('--run_desert', action='store_true')
         parser.add_argument('model_file')
         parser.add_argument('nose_options', nargs=argparse.REMAINDER)
         command_line_args = parser.parse_args()
@@ -98,6 +99,16 @@ if __name__ == '__main__':
 
         project.BeginTransactionInNewTerr()
         try:
+            if command_line_args.run_desert:
+                desert = Dispatch("MGA.Interpreter.DesignSpaceHelper")
+                desert.Initialize(project)
+                filter = project.CreateFilter()
+                filter.Kind = "DesignContainer"
+                # FIXME wont work right for TBs that point to non-root design sace
+                designContainers = [tb for tb in project.AllFCOs(filter) if not tb.IsLibObject and tb.ParentFolder is not None]
+                for designContainer in designContainers:
+                    desert.InvokeEx(project, designContainer, Dispatch("MGA.MgaFCOs"), 128)
+
             master = Dispatch("CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI")
             master.Initialize(project)
 
@@ -116,7 +127,7 @@ if __name__ == '__main__':
                 else:
                     configurations = [config for config in sut.Referred.ChildFCOs if config.MetaBase.Name == 'Configurations']
                     if not configurations:
-                        raise ValueError('Error: design has no Configurations models')
+                        raise ValueError('Error: design has no Configurations models. Try using the --run_desert option')
                     configurations = configurations[0]
                     cwcs = [cwc for cwc in configurations.ChildFCOs if cwc.MetaBase.Name == 'CWC' and cwc.Name]
                     if not cwcs:
