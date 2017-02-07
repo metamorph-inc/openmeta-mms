@@ -59,6 +59,21 @@ pairs =
           uiOutput("filterError"), 
           plotOutput("pairsPlot", dblclick = "pairs_click", height = 700)
       )
+    ),
+    tags$head(    
+      tags$script(    
+        'var dimension = [0, 0];    
+        $(document).on("shiny:connected", function(e) {   
+        dimension[1] = screen.width;    
+        dimension[0] = window.innerWidth;   
+        Shiny.onInputChange("dimension", dimension);    
+        });   
+        $(window).resize(function(e) {    
+        dimension[1] = screen.width;    
+        dimension[0] = window.innerWidth;   
+        Shiny.onInputChange("dimension", dimension);    
+        }); 
+      ')  
     )
   ),
 

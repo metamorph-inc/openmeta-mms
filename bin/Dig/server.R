@@ -33,7 +33,7 @@ importData <- NULL #import session data
 
 EnumerationMaxDisplay = 3
 
-abbreviationLength = 25
+defaultNameLength = 25
 
 #Initialize empty data frame for transfer functions in Ranking tab
 xFuncs <- data.frame()
@@ -105,8 +105,8 @@ shinyServer(function(input, output, session) {
     # raw = read.csv("../../../results/mergedPET.csv", fill=T)
     # petConfig = fromJSON("../../../results/pet_config.json", fill=T)
     
-    raw = iris
-    petConfig = read.csv("iris_config.json", fill = T)
+    # raw = iris
+    # petConfig = read.csv("iris_config.json", fill = T)
   }
   
   petConfigPresent <- !is.null(petConfig)
@@ -428,7 +428,18 @@ shinyServer(function(input, output, session) {
   print(paste("varClass:"))
   print(paste(varClass))
   
-  abbrvNames = abbreviate(varNames, abbreviationLength)
+  abbrvNames <- function(widthInfo) {
+    windowWidth <- widthInfo[1]		
+    screenRes <- widthInfo[2]		
+    
+    abbrevLength <- as.integer((windowWidth/screenRes)*41.406 - 6.129)		
+    
+    if(abbrevLength < 10)		
+      abbrevLength <- defaultNameLength		
+    
+    #print(paste0(windowWidth, ":", abbrevLength))		
+    abbreviate(varNames, abbrevLength)		
+  }
   
   varFac <- varNames[varClass == "factor"]
   print(paste("varFac:"))
@@ -587,23 +598,23 @@ shinyServer(function(input, output, session) {
       )
     }
     
-    isolate({
-      div(
-        fluidRow(
-          lapply(facVars, function(column) {
-            generateEnumUI(column)
-          })
-        ),
-        fluidRow(
-          lapply(intVars, function(column) {
-            generateSliderUI(column, "integer")
-          }),
-          lapply(numVars, function(column) {
-            generateSliderUI(column, "numeric")
-          })
-        )
+    div(
+      fluidRow(
+        lapply(facVars, function(column) {
+          generateEnumUI(column)
+        })
+      ),
+      fluidRow(
+        lapply(intVars, function(column) {
+          label <- abbrvNames(input$dimension)[column]
+          isolate(generateSliderUI(column, label, "integer"))
+        }),
+        lapply(numVars, function(column) {
+          label <- abbrvNames(input$dimension)[column]
+          isolate(generateSliderUI(column, label, "numeric"))
+        })
       )
-    })
+    )
   })
   
   actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
@@ -636,12 +647,12 @@ shinyServer(function(input, output, session) {
     
   }
   
-  generateSliderUI <- function(current, mode) {
+  generateSliderUI <- function(current, label, mode) {
     
     if (varNames[current] %in% varRangeNum()) {
       
       sliderVal <- input[[paste0('inp', current)]]
-    
+      
       if(mode == "numeric"){
         min <- as.numeric(unname(rawAbsMin()[varNames[current]]))
         max <- as.numeric(unname(rawAbsMax()[varNames[current]]))
@@ -655,26 +666,24 @@ shinyServer(function(input, output, session) {
         sliderMin <- as.numeric(unname(rawAbsMin()[varNames[current]]))
       }
       
-      label <- abbrvNames[current]
-      
       if(is.null(sliderVal) | !input$stickyFilters)
         sliderVal <- c(signif(sliderMin-step*10, digits = 4), signif(sliderMax+step*10, digits = 4))
       
       column(2, 
              useShinyjs(),
              wellPanel(id = paste0("slider_tooltip", current), 
-                       style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 100%; left: 15%; top: -275%; display: none;",
+                       style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
                        h4(label),
                        textInput(paste0("min_inp", current), "Min:"),
                        textInput(paste0("max_inp", current), "Max:"),
                        actionButton(paste0("submit", current), "Apply", "success")),
              sliderInput(paste0('inp', current),
-                            label,
-                            step = step,
-                            min = sliderMin,
-                            max = sliderMax,
-                            value = sliderVal)
-            )
+                         label,
+                         step = step,
+                         min = sliderMin,
+                         max = sliderMax,
+                         value = sliderVal)
+      )
     }
   }
   
