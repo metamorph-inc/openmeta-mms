@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,8 +11,12 @@ using JobManagerFramework;
 
 namespace PETBrowser
 {
-    public class JobStore : IDisposable
+    public class JobStore : IDisposable, INotifyPropertyChanged
     {
+        private const int USER_THREAD_COUNT_MAX = 8;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private JobManagerFramework.JobManager Manager { get; set; }
         public List<JobViewModel> TrackedJobs { get; private set; }
 
@@ -46,17 +51,69 @@ namespace PETBrowser
             get { return Manager.HasIncompleteSots; }
         }
 
+        private int _selectedThreadCount;
+
+        public int SelectedThreadCount
+        {
+            get { return _selectedThreadCount; }
+
+            set
+            {
+                PropertyChanged.ChangeAndNotify(ref _selectedThreadCount, value, () => SelectedThreadCount);
+
+                if (Manager != null)
+                {
+                    Manager.LocalConcurrentThreads = value;
+                }
+            }
+        }
+
+        private IList<int> _threadOptionsList;
+
+        public IList<int> ThreadOptionsList
+        {
+            get { return _threadOptionsList; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _threadOptionsList, value, () => ThreadOptionsList); }
+        }
+
+        private int _physicalCoreCount;
+
+        public int PhysicalCoreCount
+        {
+            get { return _physicalCoreCount; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _physicalCoreCount, value, () => PhysicalCoreCount); }
+        }
+
+        public bool HasNoRunningJobs
+        {
+            get { return TrackedJobs.All(model => model.AllowAbort != true); }
+        }
+
         //Constructor MUST be called on UI thread (we capture the UI synchronization context for use later)
         public JobStore()
         {
+            PhysicalCoreCount = LocalPool.GetNumberOfPhysicalCores();
+            SelectedThreadCount = PhysicalCoreCount; //TODO: load setting from a previous session?
+            ThreadOptionsList = Enumerable.Range(1, USER_THREAD_COUNT_MAX).ToList();
+            if (SelectedThreadCount > USER_THREAD_COUNT_MAX)
+            {
+                ThreadOptionsList.Add(SelectedThreadCount);
+            }
 
             UiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
             TrackedJobs = new List<JobViewModel>();
             Manager = new JobManagerFramework.JobManager(35010,
-                new JobManagerFramework.JobManager.JobManagerConfiguration());
+                new JobManagerFramework.JobManager.JobManagerConfiguration(), SelectedThreadCount);
 
             Manager.JobAdded += Manager_JobAdded;
+
+            this.TrackedJobsChanged += (sender, args) =>
+            {
+                PropertyChanged.Notify(() => HasNoRunningJobs);
+            };
         }
 
         private bool disposed = false;
@@ -92,6 +149,9 @@ namespace PETBrowser
                                 JobCompleted(this, new JobCompletedEventArgs(e.Job));
                             }
                         }
+
+                        //Regardless of status, always notify that HasNoRunningJobs might've changed when a job's status changes
+                        PropertyChanged.Notify(() => HasNoRunningJobs);
                     });
                     
                 };

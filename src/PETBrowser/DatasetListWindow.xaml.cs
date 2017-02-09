@@ -719,7 +719,7 @@ namespace PETBrowser
                     source.ContextMenu.AddHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed), true);
                     // If there is a drop-down assigned to this button, then position and display it 
                     source.ContextMenu.PlacementTarget = source;
-                    source.ContextMenu.Placement = PlacementMode.Bottom;
+                    //source.ContextMenu.Placement = PlacementMode.Bottom;
                     source.ContextMenu.IsOpen = true;
                     isContextMenuOpen = true;
                 }
@@ -792,6 +792,16 @@ namespace PETBrowser
             result = result.Replace("%4", META.VersionInfo.MetaPath);
 
             return result;
+        }
+
+        private void NewCoreCountSelected(object sender, RoutedEventArgs e)
+        {
+            var source = (MenuItem) sender;
+
+            var newCount = (int) source.DataContext;
+            
+            //TODO: change core count in job manager
+            ViewModel.JobStore.SelectedThreadCount = newCount;
         }
     }
 

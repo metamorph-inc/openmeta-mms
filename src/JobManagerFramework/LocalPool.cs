@@ -38,7 +38,7 @@ namespace JobManagerFramework
         CancellationTokenSource ts { get; set; }
         CancellationToken ct { get; set; }
 
-        private static int GetNumberOfPhysicalCores()
+        public static int GetNumberOfPhysicalCores()
         {
             int coreCount = 0;
             // n.b. requires Vista or later
@@ -49,11 +49,19 @@ namespace JobManagerFramework
             return coreCount;
         }
 
-        public LocalPool()
+        /**
+         * Creates a new LocalPool with the specified initialThreadCount.  Pass 0 to match the number of physical cores.
+         */
+        public LocalPool(int initialThreadCount = 0)
         {
-            int numPhysicalCores = GetNumberOfPhysicalCores();
-            int numCommandThread = numPhysicalCores;
-            int numMatLabThread = numPhysicalCores;
+            if (initialThreadCount == 0)
+            {
+                initialThreadCount = GetNumberOfPhysicalCores();
+            }
+
+            int coreCount = initialThreadCount;
+            int numCommandThread = coreCount;
+            int numMatLabThread = coreCount;
             int numCADThread = 2;
 
             ts = new CancellationTokenSource();
@@ -68,7 +76,7 @@ namespace JobManagerFramework
             int numAllThread = numCommandThread + numMatLabThread + numCADThread;
 
             // do not use more threads than cores
-            numAllThread = Math.Min(numAllThread, numPhysicalCores);
+            numAllThread = Math.Min(numAllThread, coreCount);
 
             NumAllThread = numAllThread;
             NumCommandThread = numCommandThread;
