@@ -85,15 +85,6 @@
                                 </Path>
                             </StackPanel>
                         </Button.Content>
-                        <!--<Button.Style>
-                            <Style TargetType="Button">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsEnabled}" Value="False">
-                                        <Setter Property="Background" Value="{x:Null}"></Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>-->
                         <Button.ContextMenu>
                             <ContextMenu Placement="Bottom" ItemsSource="{Binding JobStore.ThreadOptionsList}">
                                 <ContextMenu.ItemContainerStyle>
@@ -106,6 +97,11 @@
                                                     <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.JobStore.SelectedThreadCount" Mode="OneWay" />
                                                     <Binding Mode="OneWay"/>
                                                 </MultiBinding>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="IsEnabled">
+                                            <Setter.Value>
+                                                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.JobStore.HasNoRunningJobs" Mode="OneWay" />
                                             </Setter.Value>
                                         </Setter>
                                         <EventSetter Event="Click" Handler="NewCoreCountSelected"></EventSetter>
