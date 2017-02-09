@@ -3,6 +3,8 @@ Shiny.addCustomMessageHandler("dataframe",
 		
 		var input_data = message;
 		
+		d3.select("#tempID").remove();
+		
 		console.log(input_data.length);
 
 		var margin = {top: 45, right: 65, bottom: 10, left: -40},
@@ -19,6 +21,7 @@ Shiny.addCustomMessageHandler("dataframe",
 		    foreground;
 
 		var svg = d3.select("#div_parallel_coords").append("svg")
+		    .attr("id", "tempID")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height + margin.top + margin.bottom)
 		  .append("g")
