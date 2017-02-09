@@ -3,7 +3,7 @@ Shiny.addCustomMessageHandler("dataframe",
 		
 		var input_data = message;
 		
-		d3.select("#tempID").remove();
+		d3.select("#singleParallelPlotID").remove();
 		
 		console.log(input_data.length);
 
@@ -21,7 +21,7 @@ Shiny.addCustomMessageHandler("dataframe",
 		    foreground;
 
 		var svg = d3.select("#div_parallel_coords").append("svg")
-		    .attr("id", "tempID")
+		    .attr("id", "singleParallelPlotID")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height + margin.top + margin.bottom)
 		  .append("g")

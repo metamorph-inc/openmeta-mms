@@ -3,7 +3,6 @@ library(DT)
 library(topsis)
 library(jsonlite)
 library(shinyBS)
-library(htmlwidgets)
 
 customTabFiles <- list.files('tabs', pattern = "*.R")
 
