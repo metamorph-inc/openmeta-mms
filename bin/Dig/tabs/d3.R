@@ -35,8 +35,10 @@ server <- function(input, output, session, raw_data, raw_info) {
   d3df <- apply(raw_data, 1, function(row) as.list(row[!is.na(row)]))
   
   observe({
-    input$dimension
-    input$refresh
+    input$dimension #Causes d3 object to reflect current window size
+    input$refresh   #Causes d3 object to re-render when button is clicked
+    
+    #This line sends the current raw_data to the d3 process.
     isolate(session$sendCustomMessage(type="dataframe", d3df))
   })
 
