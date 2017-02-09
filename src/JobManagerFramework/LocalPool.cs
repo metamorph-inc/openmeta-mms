@@ -191,7 +191,7 @@ namespace JobManagerFramework
                 job = GetNextJob();
                 if (job == null)
                 {
-                    JobAdded.WaitOne();
+                    WaitHandle.WaitAny(new WaitHandle[] { JobAdded, ShutdownPool });
                 }
                 else
                 {

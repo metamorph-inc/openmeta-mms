@@ -231,7 +231,7 @@ namespace JobManagerFramework
         /// <summary>
         /// Local thread pool for jobs.
         /// </summary>
-        private LocalPool pool = new LocalPool();
+        private LocalPool pool;
 
         private int highPriorityJobsRemaining = 0;
 
