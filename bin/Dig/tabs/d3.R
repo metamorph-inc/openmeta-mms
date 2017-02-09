@@ -1,5 +1,5 @@
 
-title <- "d3 Visualization - Parallel Axis Plot"
+title <- "Parallel Coordinates Plot"
 
 ui <- function() {
 
@@ -28,7 +28,7 @@ ui <- function() {
       #load javascript
       tags$script(src="script.js"),
       #create div referring to div in the d3script
-      tags$div(id="div_tree")
+      tags$div(id="div_parallel_coords")
       #create div referring to div in the d3script
     )
   )
@@ -37,17 +37,11 @@ ui <- function() {
 server <- function(input, output, session, raw_data, raw_info) {
 
   output$text <- renderText("raw_data")
-  
-  df <- raw_data
-  row.names(df) <- NULL
-  d3df <- apply(df, 1, function(row) as.list(row[!is.na(row)]))
-  
 
-  csv_path <- normalizePath(Sys.getenv("DIG_INPUT_CSV"))
+  row.names(raw_data) <- NULL
+  d3df <- apply(raw_data, 1, function(row) as.list(row[!is.na(row)]))
   
-  print(csv_path)
-  
-  session$sendCustomMessage(type="csvdata", d3df)
+  session$sendCustomMessage(type="dataframe", d3df)
 
   varNames <- names(raw_data)
   varClass <- sapply(raw_data,class)
@@ -56,5 +50,4 @@ server <- function(input, output, session, raw_data, raw_info) {
   rawAbsMin <- apply(raw_data[varNums], 2, min, na.rm=TRUE)
   rawAbsMax <- apply(raw_data[varNums], 2, max, na.rm=TRUE)
   
-
 }

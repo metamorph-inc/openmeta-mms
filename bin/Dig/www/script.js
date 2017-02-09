@@ -1,16 +1,13 @@
-Shiny.addCustomMessageHandler("csvdata",
+Shiny.addCustomMessageHandler("dataframe",
 	function(message){
-		d3.select("#div_tree").append('p').text('Hello World')
 		
-		var cars = message;
+		var input_data = message;
 		
-		d3.select("#div_tree").append('p').text(String(d3.keys(cars[1])))
-		
-		//d3.select("#div_tree").append('p').text(input_data)
+		console.log(input_data.length);
 
-		var margin = {top: 30, right: 10, bottom: 10, left: 10},
-    		width = 960 - margin.left - margin.right,
-    		height = 500 - margin.top - margin.bottom;
+		var margin = {top: 45, right: 65, bottom: 10, left: -40},
+    		width = window.innerWidth - margin.left - margin.right,
+    		height = input_data.length*1.5 - margin.top - margin.bottom;
 
 		var x = d3.scale.ordinal().rangePoints([0, width], 1),
 		    y = {},
@@ -21,28 +18,27 @@ Shiny.addCustomMessageHandler("csvdata",
 		    background,
 		    foreground;
 
-		var svg = d3.select("#div_tree").append("svg")
+		var svg = d3.select("#div_parallel_coords").append("svg")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height + margin.top + margin.bottom)
 		  .append("g")
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-		console.log(cars)
-
 		// Extract the list of dimensions and create a scale for each.
-		x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
+		x.domain(dimensions = d3.keys(input_data[0]).filter(function(d) {
+		  // d is data variable
 			return d != "CfgID" && (y[d] = d3.scale.linear()
-			.domain(d3.extent(cars, function(p) { return +p[d]; }))
+			.domain(d3.extent(input_data, function(p) { 
+			  // p is data point
+			  return +p[d]; }))
 			.range([height, 0]));
 		}));
 		
-		
-
 		// Add grey background lines for context.
 		background = svg.append("g")
 			.attr("class", "background")
 			.selectAll("path")
-			.data(cars)
+			.data(input_data)
 			.enter().append("path")
 			.attr("d", path);
 
@@ -50,7 +46,7 @@ Shiny.addCustomMessageHandler("csvdata",
 		foreground = svg.append("g")
 			.attr("class", "foreground")
 			.selectAll("path")
-			.data(cars)
+			.data(input_data)
 			.enter().append("path")
 			.attr("d", path);
 
@@ -104,10 +100,10 @@ Shiny.addCustomMessageHandler("csvdata",
 			.selectAll("rect")
 			.attr("x", -8)
 			.attr("width", 16);
-
+  
 		function position(d) {
 		  var v = dragging[d];
-		  return v === null ? x(d) : v;
+		  return typeof v === 'undefined' ? x(d) : v;
 		}
 
 		function transition(g) {
@@ -116,7 +112,8 @@ Shiny.addCustomMessageHandler("csvdata",
 
 		// Returns the path for a given data point.
 		function path(d) {
-		  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
+		  return line(dimensions.map(function(p) { 
+		    return [position(p), y[p](d[p])]; }));
 		}
 
 		function brushstart() {
