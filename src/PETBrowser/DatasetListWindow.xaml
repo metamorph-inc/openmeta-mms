@@ -58,7 +58,7 @@
                     <Button BorderThickness="0" Background="{x:Null}" IsTabStop="False" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" Padding="3,1" IsEnabled="{Binding JobStore.HasNoRunningJobs}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding JobStore.SelectedThreadCount, StringFormat={}{0} Cores}">
+                                <TextBlock Text="{Binding JobStore.SelectedThreadCount, StringFormat='Simultaneous processes: {0}'}">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -99,7 +99,7 @@
                                 <ContextMenu.ItemContainerStyle>
                                     <Style TargetType="MenuItem">
                                         <Setter Property="Header" Value="{Binding}" />
-                                        <Setter Property="HeaderStringFormat" Value="{}{0} Cores"></Setter>
+                                        <Setter Property="HeaderStringFormat" Value="{}{0} processes"></Setter>
                                         <Setter Property="IsChecked">
                                             <Setter.Value>
                                                 <MultiBinding Converter="{StaticResource EqualityMultiValueConverter}">
