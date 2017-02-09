@@ -55,7 +55,7 @@
             <StatusBarItem DockPanel.Dock="Right" Margin="0,0,12,0">
                 <StackPanel Orientation="Horizontal" >
                     <ProgressBar Minimum="0" Maximum="{Binding LoadTotalCount}" Value="{Binding LoadProgressCount}" Width="150" Height="12" Margin="0,0,6,0"  Visibility="{Binding IsLoading, Converter={StaticResource BoolVisibilityConverter}}"/>
-                    <Button BorderThickness="0" Background="{x:Null}" IsTabStop="False" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" Padding="3,1" IsEnabled="{Binding JobStore.HasNoRunningJobs}">
+                    <Button BorderThickness="0" Background="{x:Null}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" IsTabStop="False" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" Padding="3,1" IsEnabled="{Binding JobStore.HasNoRunningJobs}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding JobStore.SelectedThreadCount, StringFormat='Simultaneous processes: {0}'}">
@@ -85,7 +85,7 @@
                                 </Path>
                             </StackPanel>
                         </Button.Content>
-                        <Button.Style>
+                        <!--<Button.Style>
                             <Style TargetType="Button">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsEnabled}" Value="False">
@@ -93,7 +93,7 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Button.Style>
+                        </Button.Style>-->
                         <Button.ContextMenu>
                             <ContextMenu Placement="Bottom" ItemsSource="{Binding JobStore.ThreadOptionsList}">
                                 <ContextMenu.ItemContainerStyle>
