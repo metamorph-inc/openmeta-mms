@@ -20,7 +20,7 @@ Shiny.addCustomMessageHandler("dataframe",
 		    background,
 		    foreground;
 
-		var svg = d3.select("#div_parallel_coords").append("svg")
+		var svg = d3.select("#div_parallel_axis_plot").append("svg")
 		    .attr("id", "singleParallelPlotID")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height + margin.top + margin.bottom)

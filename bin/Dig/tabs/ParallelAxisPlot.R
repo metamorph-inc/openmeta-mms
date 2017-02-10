@@ -1,5 +1,5 @@
 
-title <- "Parallel Coordinates Plot"
+title <- "Parallel Axis Plot"
 
 ui <- function() {
 
@@ -14,13 +14,13 @@ ui <- function() {
       
       ############## D3 ###############
       #to style to d3 output pull in css
-      tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "style.css")),
+      tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "parallelAxisPlotStyle.css")),
       #load D3JS library
       tags$script(src="https://d3js.org/d3.v3.min.js"),
       #load javascript
-      tags$script(src="script.js"),
+      tags$script(src="parallelAxisPlotScript.js"),
       #create div referring to div in the d3script
-      tags$div(id="div_parallel_coords")
+      tags$div(id="div_parallel_axis_plot")
       #create div referring to div in the d3script
       ##################################
     )
@@ -41,12 +41,5 @@ server <- function(input, output, session, raw_data, raw_info) {
     #This line sends the current raw_data to the d3 process.
     isolate(session$sendCustomMessage(type="dataframe", d3df))
   })
-
-  varNames <- names(raw_data)
-  varClass <- sapply(raw_data,class)
-  varNums <- varNames[varClass != "factor"]
-  varFacs <- varNames[varClass == "factor"]
-  rawAbsMin <- apply(raw_data[varNums], 2, min, na.rm=TRUE)
-  rawAbsMax <- apply(raw_data[varNums], 2, max, na.rm=TRUE)
   
 }
