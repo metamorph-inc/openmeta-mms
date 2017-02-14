@@ -10,7 +10,6 @@ title <- "Uncertainty Quantification"
 
 ui <- function() {
   fluidPage(
-  	tags$head(tags$style(".uqVar{height:250px;}")),
     br(),
     tabsetPanel(
       tabPanel("Weighting",
@@ -63,7 +62,27 @@ ui <- function() {
         ),
         actionButton('runFUQ', 'Run Forward UQ')
       ),
-            
+      # --------REMOVE THIS SECTION---------------
+      # tabPanel("Forward UQ",
+      #   br(),
+      #   h4("Constraints:"),
+      #   fluidRow(
+      #     column(6,
+      #       wellPanel(
+      #         fluidRow(
+      #           column(2, h5(strong("Enable"))),
+      #           column(6, h5(strong("Variable:"))),
+      #           column(4, h5(strong("Value:")))
+      #         ),
+      #         uiOutput("fuqConstraintsUI")
+      #       )
+      #     ), column(6)
+      #   ), br(),
+      #   # actionButton('runFUQ', 'Run Forward UQ'),
+      #   br(),
+      #   hr(),
+      #   uiOutput("fuqPlots")
+      # ),
       tabPanel("Design Ranking",
         br(),
         actionButton('runProbability', 'Compute Probabilities'),
@@ -102,14 +121,6 @@ ui <- function() {
         hr(),
         actionButton('runProbabilityQueries', 'Evaluate')
       )
-    ),
-    fluidRow(
-	    column(4, tags$div(title = "Color of ranked data points.",
-	    	colourInput("bayHistColor", "Histogram", "wheat"))),
-	    column(4, tags$div(title = "Color of ranked data points.",
-	      colourInput("bayOrigColor", "Original", "#000000"))),
-	    column(4, tags$div(title = "Color of ranked data points.",
-	      colourInput("bayResampledColor", "Resampled", "#5CC85C")))
     )
   )
 }
