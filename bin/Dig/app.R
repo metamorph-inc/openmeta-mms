@@ -1,38 +1,77 @@
+# Copyright (c) 2016-2017, MetaMorph Software
+# 
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+# 
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+# Script: app.R
+#
+# Author: Timothy Thomas [aut, cre],
+#   Will Knight [aut]
+#
+# Maintainer: Timothy Thomas <tthomas@metamorphsoftware.com>
+#
+# Description: OpenMETA Visualizer
+#
+#   This framework allows for the assembly of selected tabs into a single
+#   Visualizer session. This allows for the tabs to interact and share
+#   selection sets, classification variables, and filter settings. It
+#   also manages the persistence of the design data generated during
+#   exploration.
+#
+# URL: www.metamorphsoftware.com/openmeta
+
 library(shiny)
 library(shinyjs)
 library(jsonlite)
 
-### BASE VISUALIZER ###
-
-## Access Individual Tabs ##
-
+# Load selected tabs.
 custom_tab_files <- list.files('tabs', pattern = "*.R")
-
 custom_tab_environments <- lapply(custom_tab_files, function(file_name) {
   env <- new.env()
   source(file.path('tabs',file_name), local = env)
   env
 })
 
-##
-
-## Setup Test Input ##
-
+# Setup test input.
 if (Sys.getenv('DIG_INPUT_CSV') == "") {
-  Sys.setenv(DIG_INPUT_CSV=file_path('datasets','WindTurbineForOptimization','mergedPET.csv'))
-  # Sys.setenv(DIG_INPUT_CSV=file_path('datasets','WindTurbine','mergedPET.csv'))
+  Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
+                                     'WindTurbineForOptimization',
+                                     'mergedPET.csv'))
+  # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
+  #                                    'WindTurbine',
+  #                                    'mergedPET.csv'))
 }
 
-##
+Server <- function(input, output, session) {
+  # Handles the processing of all UI interactions.
+  #
+  # Args:
+  #   input: the Shiny list of all the UI input elements.
+  #   output: the Shiny list of all the UI output elements.
+  #   session: a handle for the Shiny session.
 
-server <- function(input, output, session) {
-
+  # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
     stopApp()
   })
   
-# Read Input Files
-  
+  # Read input files. 
   raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
   
   pet_config_present <- FALSE
@@ -42,9 +81,7 @@ server <- function(input, output, session) {
     pet_config_present <- TRUE
   } 
   
-  
-# Process PET Configuration File ('pet_config_json')
-  
+  # Process PET configuration tile ('pet_config_json').
   design_variable_names <- NULL
   numeric_design_variables <- FALSE
   enumerate_design_variables <- FALSE
@@ -69,7 +106,6 @@ server <- function(input, output, session) {
   
   if(pet_config_present) {
     design_variable_names <- names(pet_config$drivers[[1]]$designVariables)
-    print(design_variable_names)
     numeric_design_variables <- lapply(pet_config$drivers[[1]]$designVariables, 
                                        function(x) {
                                          "RangeMax" %in% names(x)
@@ -82,7 +118,7 @@ server <- function(input, output, session) {
                               function(x) { 
                                 if (x) "Numeric" else "Enumeration"
                               })
-                       )
+                      )
     dv_selections <- unlist(lapply(pet_config$drivers[[1]]$designVariables, 
                                    function(x) {
                                      if("type" %in% names(x) && x$type == "enum") 
@@ -100,13 +136,13 @@ server <- function(input, output, session) {
     pet_name <- pet_config$pet_name
     pet_mga_name <- pet_config$mga_file_name
     
-    # Generate Units Tables
+    # Generate units tables.
     units <- list()
     reverse_units <- list()
-    print(design_variable_names)
+    # TODO(tthomas): Clean up the construction of the units list.
     for (i in 1:length(design_variable_names))
     {
-      unit <-pet_config$driver[[1]]$design_variables[[design_variable_names[i]]]$units
+      unit <-pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
       if(is.null(unit)) {
         unit <- ""
         name_with_units <- design_variable_names[[i]]
@@ -123,7 +159,7 @@ server <- function(input, output, session) {
     }
     for (i in 1:length(objective_names))
     {
-      unit <-pet_config$driver[[1]]$objectives[[objective_names[i]]]$units
+      unit <-pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
       if(is.null(unit)) {
         unit <- ""
         name_with_units <- objective_names[[i]]
@@ -131,17 +167,14 @@ server <- function(input, output, session) {
       else
       {
         unit <- gsub("\\*\\*", "^", unit)
+        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
+        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
         name_with_units <- paste0(objective_names[i]," (",unit,")")
       }
       units[[objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
       reverse_units[[name_with_units]] <- objective_names[[i]]
     }
   }
-  
-  output$pet_config_present <- reactive({
-    print(paste("pet_config_present:",pet_config_present))
-    pet_config_present
-  })
   
   output$numeric_design_variables <- reactive({
     TRUE %in% numeric_design_variables
@@ -151,53 +184,52 @@ server <- function(input, output, session) {
     TRUE %in% enumerate_design_variables
   })
   
-  outputOptions(output, "pet_config_present", suspendWhenHidden=FALSE)
   outputOptions(output, "numeric_design_variables", suspendWhenHidden=FALSE)
   outputOptions(output, "enumerationdesign_variables", suspendWhenHidden=FALSE)
   
-  output$no_pet_config_message <- renderText(paste("No pet_config_json file was found_"))
-  
-  # Build info data frame
+  # Build variables info list.
   variables <- lapply(names(raw), function(var_name) {
+    if (var_name %in% design_variable_names)
+      type <- "Design Variable"
+    else
+      type <- "Objective"
     list(name = var_name,
          name_with_units = AddUnits(var_name),
-         type = if (var_name %in% design_variable_names) "Design Variable" else "Objective"
+         type = type
     )
   })
   names(variables) <- names(raw)
   
-  info <- list(variables = variables)
+  # Build the "Shared Data" list.
+  shared_data <- list(variables = variables)
   
-# Call Individual Tabs' Server Function
-  
+  # Call individual tabs' Server() functions.
   lapply(custom_tab_environments, function(customEnv) {
     do.call(customEnv$server,
-            list(input, output, session, raw, info))
+            list(input, output, session, raw, shared_data))
   })
-
 }
 
-## Setup UI for Additional Tabs ##
+# Setup UI with requested tabs.
+base_tabs <- NULL
 
+print("Tabs:")
 added_tabs <- lapply(custom_tab_environments, function(custom_env) {
-  # tabUI <- do.call(UI, list(), envir = customEnv)
   print(custom_env$title)
   tabPanel(custom_env$title, custom_env$ui())
 })
 
-base_tabs <- NULL
+tabset_arguments <- c(unname(base_tabs),
+                      unname(added_tabs),
+                      id = "inTabset")
 
-tabsetArguments <- c(unname(base_tabs),
-                     unname(added_tabs),
-                     id = "inTabset")
-
-##
-
+# Defines the UI of the Visualizer.
 ui <- fluidPage(
-  #  Application title
   titlePanel("Visualizer"),
-  do.call(tabsetPanel, tabsetArguments)
+  
+  # Generates the master tabset from the user-defined tabs provided.
+  do.call(tabsetPanel, tabset_arguments)
 )
 
-
-shinyApp(ui = ui, server = server)
+# Start the Shiny app.
+shinyApp(ui = ui, server = Server)

@@ -105,11 +105,11 @@ ui <- function() {
     ),
     fluidRow(
 	    column(4, tags$div(title = "Color of ranked data points.",
-	    	colourInput("bayHistColor", "Histogram", "wheat"))),
+	    	colourpicker::colourInput("bayHistColor", "Histogram", "wheat"))),
 	    column(4, tags$div(title = "Color of ranked data points.",
-	      colourInput("bayOrigColor", "Original", "#000000"))),
+	      colourpicker::colourInput("bayOrigColor", "Original", "#000000"))),
 	    column(4, tags$div(title = "Color of ranked data points.",
-	      colourInput("bayResampledColor", "Resampled", "#5CC85C")))
+	      colourpicker::colourInput("bayResampledColor", "Resampled", "#5CC85C")))
     )
   )
 }
@@ -129,13 +129,13 @@ server <- function(input, output, session, raw_data, raw_info) {
   rawAbsMax <- apply(raw_data[varNums], 2, max, na.rm=TRUE)
   
   varsList <- reactive({
-    print("Getting Variable List.")
+    # print("Getting Variable List.")
     idx = NULL
     for(choice in 1:length(input$uqDisplayVars)) {
       mm <- match(input$uqDisplayVars[choice],varNums)
       if(mm > 0) { idx <- c(idx,mm) }
     }
-    print(idx)
+    # print(idx)
     idx
   })
   
@@ -144,7 +144,7 @@ server <- function(input, output, session, raw_data, raw_info) {
   })
   
   observeEvent(input$designConfigVar, {
-    print(paste(input$designConfigVar))
+    # print(paste(input$designConfigVar))
     updateSelectInput(session, "designConfigChoice", choices = levels(raw_data[[input$designConfigVar]]))
   })
   
@@ -157,7 +157,7 @@ server <- function(input, output, session, raw_data, raw_info) {
   })
       
   uqData <- reactive({
-    print("In uqData()")
+    # print("In uqData()")
     
     variables <- varNums
     input_data <- filtered_data()[variables]
@@ -175,7 +175,7 @@ server <- function(input, output, session, raw_data, raw_info) {
   })
   
   output$uqControlUI <- renderUI({
-    print("In uqControlUI()")
+    # print("In uqControlUI()")
     var_directions <- c("Input",
                         "Output")
     data_mean <- apply(filtered_data()[varNums], 2, mean)
@@ -252,7 +252,7 @@ server <- function(input, output, session, raw_data, raw_info) {
         )
       ))
     })
-    #print("Done with uqControlUI()")
+    # print("Done with uqControlUI()")
   })
   
   uqCalc <- observe({
@@ -280,7 +280,7 @@ server <- function(input, output, session, raw_data, raw_info) {
   })
   
   output$uqPlots <- renderUI({
-    print("In uqPlots()")
+    # print("In uqPlots()")
     data <- uqData()$dist
     variables <- varNums
     if(!input$displayAll)
@@ -414,7 +414,7 @@ server <- function(input, output, session, raw_data, raw_info) {
                              min(data$xResampled),
                              as.numeric(threshold))
       
-      print(paste("Query: ",name, direction, threshold, value))
+      print(paste("Query: ", name, direction, threshold, value))
       
       if (direction == "Above") {
         value <- (1-value)
@@ -513,16 +513,15 @@ server <- function(input, output, session, raw_data, raw_info) {
   
   runFullProbability <- eventReactive(input$runProbability, {
     data <- data.frame(Config = character(0), stringsAsFactors=FALSE)
-    print(data)
     for(i in 1:length(probabilityQueries$rows)) {
       id <- probabilityQueries$rows[i]
       data[[paste0('Query', id)]] <- numeric(0)
     }
     configs <- levels(raw_data[[paste0(input$designConfigVar)]])
-    print(data)
+    # print(data)
     for (i in 1:length(configs)) {
       config <- configs[i]
-      print(paste(config))
+      # print(paste(config))
       configData <- subset(raw_data, raw_data[[paste0(input$designConfigVar)]] == config)
       configData <- configData[varNums]
       resampledData <- resampleData(configData, directions, types, params)$dist
@@ -544,7 +543,7 @@ server <- function(input, output, session, raw_data, raw_info) {
       }
       data[nrow(data)+1,] <- answers
     }
-    print(data)
+    # print(data)
     data
   })
   
