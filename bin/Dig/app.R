@@ -39,6 +39,7 @@
 library(shiny)
 library(shinyjs)
 library(jsonlite)
+library(topsis)
 
 # Defined Constants
 DEFAULT_NAME_LENGTH <- 25
@@ -78,11 +79,11 @@ Server <- function(input, output, session) {
     stopApp()
   })
   
-  # Read Input Files ---------------------------------------------------------
-  raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
-  
+  # Read input files. 
+  raw <- read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
+
   pet_config_present <- FALSE
-  pet_config_file_name = gsub("mergedPET.csv",
+  pet_config_file_name <- gsub("mergedPET.csv",
                               "pet_config.json",
                               Sys.getenv('DIG_INPUT_CSV'))
   if(file.exists(pet_config_file_name)){
@@ -115,16 +116,16 @@ Server <- function(input, output, session) {
   }
   
   if(pet_config_present) {
-    pet_config_dvs <- pet_config$drivers[[1]]$designVariables
-    design_variable_names <- names(pet_config_dvs)
-    numeric_design_variables <- lapply(pet_config_dvs,
+    dvs <- pet_config$drivers[[1]]$designVariables
+    design_variable_names <- names(dvs)
+    numeric_design_variables <- lapply(dvs,
                                        function(x) {
                                          "RangeMax" %in% names(x)
                                        })
-    enumerated_design_variables <- lapply(pet_config_dvs,
-                                         function(x) {
-                                           "type" %in% names(x)
-                                         })
+    enumerated_design_variables <- lapply(dvs,
+                                          function(x) {
+                                            "type" %in% names(x)
+                                          })
     dv_types <- unlist(lapply(numeric_design_variables, 
                               function(x) { 
                                 if (x)
@@ -132,7 +133,7 @@ Server <- function(input, output, session) {
                                 else
                                   "Enumeration"
                               }))
-    dv_selections <- unlist(lapply(pet_config_dvs, 
+    dv_selections <- unlist(lapply(dvs, 
                                    function(x) {
                                      if("type" %in% names(x)
                                         && x$type == "enum") 
@@ -143,12 +144,12 @@ Server <- function(input, output, session) {
                                    }))
     design_variables <- data.frame(var_name=design_variable_names, Type=dv_types, Selection=dv_selections)
     objective_names <- names(pet_config$drivers[[1]]$objectives)
-    pet_config_num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
-    pet_config_sampling_method <- pet_config$drivers[[1]]$details$DOEType
-    pet_generated_configuration_model <- pet_config$GeneratedConfigurationModel
-    pet_selected_configurations <- pet_config$SelectedConfigurations
-    pet_name <- pet_config$pet_name
-    pet_mga_name <- pet_config$mga_file_name
+    num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
+    sampling_method <- pet_config$drivers[[1]]$details$DOEType
+    generated_configuration_model <- pet_config$GeneratedConfigurationModel
+    selected_configurations <- pet_config$SelectedConfigurations
+    name <- pet_config$PETName
+    mga_name <- pet_config$MgaFilename
     
     # Generate units tables.
     units <- list()
@@ -173,7 +174,7 @@ Server <- function(input, output, session) {
     }
     for (i in 1:length(objective_names))
     {
-      unit <-pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
+      unit <- pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
       if(is.null(unit)) {
         unit <- ""
         name_with_units <- objective_names[[i]]
@@ -220,19 +221,6 @@ Server <- function(input, output, session) {
                                    })]
   var_range <- c(var_facs, var_nums_and_ints)
   var_constants <- subset(var_names, !(var_names %in% var_range))
-  
-  var_selections <- list(var_names=var_names,
-                         var_class=var_class,
-                         var_facs=var_facs,
-                         var_ints=var_ints,
-                         var_nums=var_nums,
-                         var_nums_and_ints=var_nums_and_ints,
-                         abs_min=abs_min,
-                         abs_max=abs_max,
-                         var_range_nums_and_ints=var_range_nums_and_ints,
-                         var_range_facs=var_range_facs,
-                         var_range=var_range,
-                         var_constants=var_constants)
   
   AbbreviatedNames <- reactive({
     # TODO(wknight): Write a clear description of this function.
@@ -504,10 +492,32 @@ Server <- function(input, output, session) {
   })
   names(variables) <- var_names
   
+  pet <- list(sampling_method=sampling_method,
+              num_samples=num_samples,
+              name=name,
+              mga_name=mga_name,
+              generated_configuration_model=generated_configuration_model,
+              selected_configurations=selected_configurations,
+              design_variable_names=design_variable_names)
+  
+  preprocessing <- list(var_names=var_names,
+                        var_class=var_class,
+                        var_facs=var_facs,
+                        var_ints=var_ints,
+                        var_nums=var_nums,
+                        var_nums_and_ints=var_nums_and_ints,
+                        abs_min=abs_min,
+                        abs_max=abs_max,
+                        var_range_nums_and_ints=var_range_nums_and_ints,
+                        var_range_facs=var_range_facs,
+                        var_range=var_range,
+                        var_constants=var_constants)
+  
   # Build the 'meta' list.
   data$meta <- list(variables=variables,
-                    preprocessing=var_selections)
-  
+                    pet=pet,
+                    preprocessing=preprocessing)
+
   # Call individual tabs' Server() functions.
   lapply(custom_tab_environments, function(customEnv) {
     do.call(customEnv$server,
