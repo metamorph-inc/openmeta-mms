@@ -1,3 +1,5 @@
+## TODO (Will Knight) Clean up some of the UI stuff that isn't being used.
+
 title <- "PET Refinement"
 
 ui <- function() {
