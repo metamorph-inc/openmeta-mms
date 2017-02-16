@@ -58,6 +58,8 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   #                                    'mergedPET.csv'))
 }
 
+# Server ---------------------------------------------------------------------
+
 Server <- function(input, output, session) {
   # Handles the processing of all UI interactions.
   #
@@ -75,7 +77,9 @@ Server <- function(input, output, session) {
   raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
   
   pet_config_present <- FALSE
-  pet_config_file_name = gsub("mergedPET.csv", "pet_config.json", Sys.getenv('DIG_INPUT_CSV'))
+  pet_config_file_name = gsub("mergedPET.csv",
+                              "pet_config.json",
+                              Sys.getenv('DIG_INPUT_CSV'))
   if(file.exists(pet_config_file_name)){
     pet_config <- fromJSON(pet_config_file_name)
     pet_config_present <- TRUE
@@ -84,7 +88,7 @@ Server <- function(input, output, session) {
   # Process PET configuration tile ('pet_config_json').
   design_variable_names <- NULL
   numeric_design_variables <- FALSE
-  enumerate_design_variables <- FALSE
+  enumerated_design_variables <- FALSE
   design_variables <- NULL
   objective_names <- NULL
   units <- NULL
@@ -105,28 +109,32 @@ Server <- function(input, output, session) {
   }
   
   if(pet_config_present) {
-    design_variable_names <- names(pet_config$drivers[[1]]$designVariables)
-    numeric_design_variables <- lapply(pet_config$drivers[[1]]$designVariables, 
+    pet_config_dvs <- pet_config$drivers[[1]]$designVariables
+    design_variable_names <- names(pet_config_dvs)
+    numeric_design_variables <- lapply(pet_config_dvs,
                                        function(x) {
                                          "RangeMax" %in% names(x)
                                        })
-    enumerate_design_variables <- lapply(pet_config$drivers[[1]]$designVariables, 
+    enumerated_design_variables <- lapply(pet_config_dvs,
                                          function(x) {
                                            "type" %in% names(x)
                                          })
     dv_types <- unlist(lapply(numeric_design_variables, 
                               function(x) { 
-                                if (x) "Numeric" else "Enumeration"
-                              })
-                      )
-    dv_selections <- unlist(lapply(pet_config$drivers[[1]]$designVariables, 
+                                if (x)
+                                  "Numeric"
+                                else
+                                  "Enumeration"
+                              }))
+    dv_selections <- unlist(lapply(pet_config_dvs, 
                                    function(x) {
-                                     if("type" %in% names(x) && x$type == "enum") 
+                                     if("type" %in% names(x)
+                                        && x$type == "enum") 
                                        paste0(unlist(x$items), collapse=",") 
                                      else 
-                                       paste0(c(x$RangeMin, x$RangeMax), collapse=",")
-                                   })
-                            )
+                                       paste0(c(x$RangeMin, x$RangeMax),
+                                              collapse=",")
+                                   }))
     design_variables <- data.frame(var_name=design_variable_names, Type=dv_types, Selection=dv_selections)
     objective_names <- names(pet_config$drivers[[1]]$objectives)
     pet_config_num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
@@ -176,16 +184,17 @@ Server <- function(input, output, session) {
     }
   }
   
-  output$numeric_design_variables <- reactive({
-    TRUE %in% numeric_design_variables
-  })
-  
-  output$enumerationdesign_variables <- reactive({
-    TRUE %in% enumerate_design_variables
-  })
-  
-  outputOptions(output, "numeric_design_variables", suspendWhenHidden=FALSE)
-  outputOptions(output, "enumerationdesign_variables", suspendWhenHidden=FALSE)
+  # COMMENT(tthomas): Why do we need this?
+  # output$numeric_design_variables <- reactive({
+  #   TRUE %in% numeric_design_variables
+  # })
+  # 
+  # output$enumerationdesign_variables <- reactive({
+  #   TRUE %in% enumerated_design_variables
+  # })
+  # 
+  # outputOptions(output, "numeric_design_variables", suspendWhenHidden=FALSE)
+  # outputOptions(output, "enumerated_design_variables", suspendWhenHidden=FALSE)
   
   # Build variables info list.
   variables <- lapply(names(raw), function(var_name) {
@@ -209,6 +218,8 @@ Server <- function(input, output, session) {
             list(input, output, session, raw, shared_data))
   })
 }
+
+# UI -------------------------------------------------------------------------
 
 # Setup UI with requested tabs.
 base_tabs <- NULL
