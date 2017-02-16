@@ -33,31 +33,38 @@
       "designVariables": {
         "IN_ElemCount": {
           "RangeMin": 5,
-          "RangeMax": 60
+          "RangeMax": 60,
+          "units": ""
         },
         "IN_E11": {
           "RangeMin": 26100,
-          "RangeMax": 31900
+          "RangeMax": 31900,
+          "units": ""
         },
         "IN_E22": {
           "RangeMin": 9180,
-          "RangeMax": 11220
+          "RangeMax": 11220,
+          "units": ""
         },
         "IN_Root_AvgCapMaterialThickness": {
           "RangeMin": 77,
-          "RangeMax": 97
+          "RangeMax": 97,
+          "units": "mm"
         },
         "IN_Tip_AvgCapMaterialThickness": {
           "RangeMin": 20,
-          "RangeMax": 30
+          "RangeMax": 30,
+          "units": "mm"
         }
       },
       "objectives": {
         "OUT_Blade_Cost_Total": {
-          "source": ["TestWindTurbine", "TotalCost"]
+          "source": ["TestWindTurbine", "TotalCost"],
+          "units": "USD"
         },
         "OUT_Blade_Tip_Deflection": {
-          "source": ["TestWindTurbine", "TipDeflection"]
+          "source": ["TestWindTurbine", "TipDeflection"],
+          "units": "mm"
         }
       },
       "details": {

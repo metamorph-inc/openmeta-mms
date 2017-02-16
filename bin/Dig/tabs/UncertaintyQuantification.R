@@ -7,6 +7,7 @@ types <- list()
 params <- list()
 
 title <- "Uncertainty Quantification"
+footer <- FALSE
 
 ui <- function() {
   fluidPage(

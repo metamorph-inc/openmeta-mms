@@ -40,6 +40,9 @@ library(shiny)
 library(shinyjs)
 library(jsonlite)
 
+# Defined Constants
+DEFAULT_NAME_LENGTH <- 25
+
 # Load selected tabs.
 custom_tab_files <- list.files('tabs', pattern = "*.R")
 custom_tab_environments <- lapply(custom_tab_files, function(file_name) {
@@ -58,6 +61,8 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   #                                    'mergedPET.csv'))
 }
 
+# Custom Functions -----------------------------------------------------------
+
 # Server ---------------------------------------------------------------------
 
 Server <- function(input, output, session) {
@@ -73,7 +78,7 @@ Server <- function(input, output, session) {
     stopApp()
   })
   
-  # Read input files. 
+  # Read Input Files ---------------------------------------------------------
   raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
   
   pet_config_present <- FALSE
@@ -85,7 +90,8 @@ Server <- function(input, output, session) {
     pet_config_present <- TRUE
   } 
   
-  # Process PET configuration tile ('pet_config_json').
+  # Process PET Configuration File ('pet_config_json') -----------------------
+  
   design_variable_names <- NULL
   numeric_design_variables <- FALSE
   enumerated_design_variables <- FALSE
@@ -151,7 +157,7 @@ Server <- function(input, output, session) {
     for (i in 1:length(design_variable_names))
     {
       unit <-pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
-      if(is.null(unit)) {
+      if(is.null(unit) | unit == "") {
         unit <- ""
         name_with_units <- design_variable_names[[i]]
       }
@@ -196,12 +202,297 @@ Server <- function(input, output, session) {
   # outputOptions(output, "numeric_design_variables", suspendWhenHidden=FALSE)
   # outputOptions(output, "enumerated_design_variables", suspendWhenHidden=FALSE)
   
+  # Pre-Processing ----------------------------------------------------------
+  
+  var_names <- names(raw)
+  var_class <- sapply(raw, class)
+  var_facs <- var_names[var_class == "factor"]
+  var_ints <- var_names[var_class == "integer"]
+  var_nums <- var_names[var_class == "numeric"]
+  var_nums_and_ints <- var_names[var_class == "integer" |
+                                 var_class == "numeric"]
+  abs_min <- apply(raw[var_nums_and_ints], 2, min, na.rm=TRUE)
+  abs_max <- apply(raw[var_nums_and_ints], 2, max, na.rm=TRUE)
+  var_range_nums_and_ints <- var_nums_and_ints[(abs_min != abs_max) &
+                                               (abs_min != Inf)]
+  var_range_facs <- var_facs[apply(raw[var_facs], 2, function(var_fac) {
+                                     length(names(table(var_fac))) > 1
+                                   })]
+  var_range <- c(var_facs, var_nums_and_ints)
+  var_constants <- subset(var_names, !(var_names %in% var_range))
+  
+  var_selections <- list(var_names=var_names,
+                         var_class=var_class,
+                         var_facs=var_facs,
+                         var_ints=var_ints,
+                         var_nums=var_nums,
+                         var_nums_and_ints=var_nums_and_ints,
+                         abs_min=abs_min,
+                         abs_max=abs_max,
+                         var_range_nums_and_ints=var_range_nums_and_ints,
+                         var_range_facs=var_range_facs,
+                         var_range=var_range,
+                         var_constants=var_constants)
+  
+  AbbreviatedNames <- reactive({
+    # TODO(wknight): Write a clear description of this function.
+    req(input$dimension)
+    abbreviation_length <- as.integer(input$dimension/6/10)
+    print(paste(abbreviation_length))
+    # TODO(wknight): Find a way to understand when the window is going to
+    # to transition from 12-wide to 4-wide, so we handle the 4-wide case
+    # more elegantly. 
+    if (abbreviation_length < 10)		
+      abbreviation_length <- DEFAULT_NAME_LENGTH		
+    
+    #print(paste0(windowWidth, ":", abbrevLength))		
+    abbreviate(var_names, abbreviation_length)		
+  })
+  
+  # Filters (Enumerations, Sliders) and Constants ----------------------------
+  
+  # Lets the UI know if a tab has requested the 'Filters' footer.  
+  footer_preferences <- lapply(custom_tab_environments,
+                               function(custom_env) {custom_env$footer})
+  names(footer_preferences) <- lapply(custom_tab_environments,
+                                      function(custom_env) {custom_env$title})
+  output$display_filters <- reactive({
+    display <- (footer_preferences[[input$master_tabset]])
+  })
+  outputOptions(output, "display_filters", suspendWhenHidden=FALSE)
+  
+  # Generates the sliders and select boxes.
+  output$filters <- renderUI({
+    var_selects <- var_range_facs
+    var_sliders <- var_range_nums_and_ints
+    
+    div(
+      fluidRow(
+        lapply(var_selects, function(var_select) {
+          GenerateEnumUI(var_select)
+        })
+      ),
+      fluidRow(
+        lapply(var_sliders, function(var_slider) {
+          GenerateSliderUI(var_slider, AbbreviatedNames()[var_slider])
+        })
+      )
+    )
+  })
+  
+  # setupToolTip <- function(...){
+  #   varsList <- match(varRangeNum(), var_names)
+  #   openToolTip <<- openToolTip[1:length(varsList),]
+  #   row.names(openToolTip) <<- unlist(strsplit(toString(varsList), ", "))
+  #   openToolTip$display <<- F
+  #   openToolTip$valApply <<- 0
+  # }
+  
+  # actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
+  #   if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
+  #     btn.css.class <- paste("btn",btn.style,sep="-")
+  #   else btn.css.class = ""
+  #   tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
+  # }
+
+  GenerateEnumUI <- function(current) {
+    items <- names(table(raw[[current]]))
+    
+    for(i in 1:length(items)){
+      items[i] <- paste0(i, '. ', items[i])
+    }
+    
+    selected_value <- input[[paste0('filter_', current)]]
+    # COMMENT(tthomas): I think sticky filters should be the only option.
+    if(is.null(selected_value)) # | !input$stickyFilters)
+      selected_value <- items
+    
+    column(2, selectInput(inputId = paste0('filter_', current),
+                          label = current,
+                          multiple = TRUE,
+                          selectize = FALSE,
+                          choices = items,
+                          selected = selected_value)
+    )
+  }
+  
+  GenerateSliderUI <- function(current, label) {
+    
+    slider_value <- input[[paste0('filter_', current)]]
+      
+    if(current %in% var_nums){
+      min <- as.numeric(abs_min[current])
+      max <- as.numeric(abs_max[current])
+      step <- signif(max((max-min)*0.01, abs(min)*0.001, abs(max)*0.001),
+                     digits = 4)
+      slider_min <- signif((min - step*10), digits = 4)
+      slider_max <- signif((max + step*10), digits = 4)
+    }
+    else{
+      step <- 0
+      slider_min <- as.numeric(abs_min[current])
+      slider_max <- as.numeric(abs_max[current])
+    }
+    
+    # COMMENT(tthomas): I think sticky filters should be the only option.
+    if(is.null(slider_value)) # | !input$stickyFilters)
+      # TODO(tthomas): Why are we using 'step' around the already 'stepped' numerics?
+      slider_value <- c(signif(slider_min-step*10, digits = 4),
+                        signif(slider_max+step*10, digits = 4))
+    
+    column(2,
+           # useShinyjs(),
+           # wellPanel(id = paste0("slider_tooltip_", current), 
+           #           style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
+           #           h4(label),
+           #           textInput(paste0("min_input_", current), "Min:"),
+           #           textInput(paste0("max_input_", current), "Max:"),
+           #           actionButton(paste0("submit_", current), "Apply",
+           #                        "success")),
+           sliderInput(paste0('filter_', current),
+                       label,
+                       step = step,
+                       min = slider_min,
+                       max = slider_max,
+                       value = slider_value)
+    )
+  }
+  
+  # openSliderToolTip <- function(current) {
+  #   toggle(paste0("slider_tooltip_", current))
+  #   openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
+  #   for(i in 1:length(openToolTip[,"display"])){
+  #     row = row.names(openToolTip)[i]
+  #     if(row != current && openToolTip[row,"display"]){
+  #       toggle(paste0("slider_tooltip", row))
+  #       openToolTip[row,"display"] <<- F
+  #     }
+  #   }
+  # }
+  
+  # Slider tooltip handler.
+  # observe({
+  #   lapply(var_names, function(name) {
+  #     if(name %in% varRangeNum()){
+  #       current = match(name, var_names)
+  #       
+  #       onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
+  #       observe({
+  #         input$lastkeypresscode
+  #         input[[paste0("submit", current)]] 
+  #         
+  #         isolate({
+  #           currentValOfApply <- openToolTip[toString(current), "valApply"]
+  #           if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip[toString(current), "display"]){
+  #             if(input[[paste0("submit", current)]] != currentValOfApply) 
+  #               openToolTip[toString(current), "valApply"] <<- input[[paste0("submit", current)]]
+  #             slider_value = input[[paste0('filter_', current)]]
+  #             newMin = input[[paste0("min_inp", current)]]
+  #             newMax = input[[paste0("max_inp", current)]]
+  #             updateTextInput(session, paste0("min_inp", current), value = "")
+  #             updateTextInput(session, paste0("max_inp", current), value = "")
+  #             suppressWarnings({ #Suppress warnings from non-numeric inputs
+  #               if(!is.null(newMin) && newMin != "" && !is.na(as.numeric(newMin)))
+  #                 slider_value = as.numeric(c(newMin, slider_value[2]))
+  #               if(!is.null(newMax) && newMax != "" && !is.na(as.numeric(newMax)))
+  #                 slider_value = as.numeric(c(slider_value[1], newMax))
+  #             })
+  #             updateSliderInput(session, paste0('filter_', current), value = slider_value)
+  #             toggle(paste0("slider_tooltip", current))
+  #             openToolTip[toString(current), "display"] <<- F
+  #           }
+  #         })
+  #       })
+  #     }
+  #   })
+  # })
+  
+  output$constants <- renderUI({
+    # print("In render constants")
+    fluidRow(
+      lapply(var_constants, function(var_constant) {
+        column(2,
+          p(strong(paste0(var_constant,":")), unname(raw[1,var_constant]))
+        )
+      })
+    )
+  })
+  
+  output$constants_present <- reactive({
+    length(var_constants) > 0
+  })
+  
+  outputOptions(output, "constants_present", suspendWhenHidden=FALSE)
+  
+  # observeEvent(input$resetSliders, {
+  #   # print("In resetDefaultSliders()")
+  #   for(column in 1:length(var_names)){
+  #     switch(varClass[column],
+  #            "numeric" = 
+  #            {
+  #              max <- as.numeric(unname(rawAbsMax()[var_names[column]]))
+  #              min <- as.numeric(unname(rawAbsMin()[var_names[column]]))
+  #              diff <- (max-min)
+  #              if (diff != 0) {
+  #                step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
+  #                updateSliderInput(session, paste0('filter_', column), value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
+  #              }
+  #            },
+  #            "integer" = 
+  #            {
+  #              max <- as.integer(unname(rawAbsMax()[var_names[column]]))
+  #              min <- as.integer(unname(rawAbsMin()[var_names[column]]))
+  #              if(min != max) {
+  #                updateSliderInput(session, paste0('filter_', column), value = c(min, max))
+  #              }
+  #            },
+  #            "factor"  = updateSelectInput(session, paste0('filter_', column), selected = names(table(raw_plus()[var_names[column]])))
+  #     )
+  #   }
+  # })
+  
+  # Data processing ----------------------------------------------------------
+    
+  FilteredData <- reactive({
+    data <- raw
+    for(index in 1:length(var_names)) {
+      name <- var_names[index]
+      input_name <- paste("filter_", name, sep="")
+      selection = input[[input_name]]
+      if(length(selection) != 0) {
+        if(name %in% var_nums_and_ints) {
+          isolate({
+            above <- (data[[name]] >= selection[1])
+            below <- (data[[name]] <= selection[2])
+            in_range <- above & below
+          })
+        }
+        else if (name %in% var_facs) {
+            selection <- unlist(lapply(selection, function(factor){
+                                                    sub("[0-9]+. ","", factor)
+                                                  }))
+            inRange <- (data[[name]] %in% selection)
+        }
+        
+        # Don't filter based on missing values.
+        inRange <- inRange | is.na(data[[name]])
+        
+        data <- subset(data, inRange)
+      }
+    }
+    print("Data Filtered.")
+    data
+  })
+  
+  # Final Processing ---------------------------------------------------------
+  
   # Build the 'data' list that is shared between all tabs.
   data <- list()
   data$raw <- raw
+  data$Filtered <- FilteredData
   
   # Build variables metadata list.
-  variables <- lapply(names(raw), function(var_name) {
+  variables <- lapply(var_names, function(var_name) {
     if (var_name %in% design_variable_names)
       type <- "Design Variable"
     else
@@ -211,10 +502,11 @@ Server <- function(input, output, session) {
          type = type
     )
   })
-  names(variables) <- names(raw)
+  names(variables) <- var_names
   
   # Build the 'meta' list.
-  data$meta <- list(variables = variables)
+  data$meta <- list(variables=variables,
+                    preprocessing=var_selections)
   
   # Call individual tabs' Server() functions.
   lapply(custom_tab_environments, function(customEnv) {
@@ -236,14 +528,52 @@ added_tabs <- lapply(custom_tab_environments, function(custom_env) {
 
 tabset_arguments <- c(unname(base_tabs),
                       unname(added_tabs),
-                      id = "inTabset")
+                      id = "master_tabset")
 
 # Defines the UI of the Visualizer.
 ui <- fluidPage(
+  tags$head(
+    # COMMENT(tthomas): Can we tighten this down?
+    tags$script(    
+      'var dimension = 0;    
+      $(document).on("shiny:connected", function(e) {   
+      dimension = window.innerWidth;   
+      Shiny.onInputChange("dimension", dimension);    
+      });   
+      $(window).resize(function(e) {    
+      dimension = window.innerWidth;   
+      Shiny.onInputChange("dimension", dimension);    
+      });
+    ')  
+  ),
+  
   titlePanel("Visualizer"),
   
   # Generates the master tabset from the user-defined tabs provided.
-  do.call(tabsetPanel, tabset_arguments)
+  do.call(tabsetPanel, tabset_arguments),
+  
+  # Optional Filters footer.
+  conditionalPanel("output.display_filters",
+    hr(),
+    h3("Filter Data:"),
+    wellPanel(
+      tags$div(title = "Activate to show filters for all dataset variables.",
+               checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
+      tags$div(title = "Return visible sliders to default state.",
+               actionButton("resetSliders", "Reset Visible Filters")),
+      hr(),
+      uiOutput("filters")
+    ),
+    conditionalPanel("output.constants_present",
+      # bootstrapPage(tags$script('
+      #   $(document).on("keydown", function (e) {
+      #   Shiny.onInputChange("lastkeypresscode", e.keyCode);
+      #   });
+      # ')),
+      h3("Constants:"),
+      uiOutput("constants")
+    )
+  )
 )
 
 # Start the Shiny app.
