@@ -14,17 +14,17 @@ ui <- function() {
   
 }
 
-server <- function(input, output, session, data, info) {
+server <- function(input, output, session, data) {
   
-  varNames <- names(data)
-  varClass <- sapply(data,class)
+  varNames <- names(data$raw)
+  varClass <- sapply(data$raw,class)
   varNums <- varNames[varClass != "factor"]
   
   updateSelectInput(session, "sandboxVar", choices = varNums, selected = varNums[1])
   
   output$sandboxPlot <- renderPlot({
     if(input$sandboxVar != "")
-      hist(data[[input$sandboxVar]],
+      hist(data$raw[[input$sandboxVar]],
            main = paste("Histogram of" , paste(input$sandboxVar)),
            xlab = paste(input$sandboxVar))
   })

@@ -196,7 +196,11 @@ Server <- function(input, output, session) {
   # outputOptions(output, "numeric_design_variables", suspendWhenHidden=FALSE)
   # outputOptions(output, "enumerated_design_variables", suspendWhenHidden=FALSE)
   
-  # Build variables info list.
+  # Build the 'data' list that is shared between all tabs.
+  data <- list()
+  data$raw <- raw
+  
+  # Build variables metadata list.
   variables <- lapply(names(raw), function(var_name) {
     if (var_name %in% design_variable_names)
       type <- "Design Variable"
@@ -209,13 +213,13 @@ Server <- function(input, output, session) {
   })
   names(variables) <- names(raw)
   
-  # Build the "Shared Data" list.
-  shared_data <- list(variables = variables)
+  # Build the 'meta' list.
+  data$meta <- list(variables = variables)
   
   # Call individual tabs' Server() functions.
   lapply(custom_tab_environments, function(customEnv) {
     do.call(customEnv$server,
-            list(input, output, session, raw, shared_data))
+            list(input, output, session, data))
   })
 }
 

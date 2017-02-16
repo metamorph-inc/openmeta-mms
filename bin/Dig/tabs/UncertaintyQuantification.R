@@ -114,8 +114,10 @@ ui <- function() {
   )
 }
 
-server <- function(input, output, session, raw_data, raw_info) {
-
+server <- function(input, output, session, data) {
+  raw_data <- data$raw
+  raw_info <- data$meta
+  
   makeReactiveBinding("uiInitialized")
   makeReactiveBinding("directions")
   makeReactiveBinding("types")
