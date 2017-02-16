@@ -39,6 +39,7 @@
 library(shiny)
 library(shinyjs)
 library(jsonlite)
+library(topsis)
 
 # Load selected tabs.
 custom_tab_files <- list.files('tabs', pattern = "*.R")
@@ -74,10 +75,10 @@ Server <- function(input, output, session) {
   })
   
   # Read input files. 
-  raw = read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
+  raw <- read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
   
   pet_config_present <- FALSE
-  pet_config_file_name = gsub("mergedPET.csv",
+  pet_config_file_name <- gsub("mergedPET.csv",
                               "pet_config.json",
                               Sys.getenv('DIG_INPUT_CSV'))
   if(file.exists(pet_config_file_name)){
@@ -108,25 +109,26 @@ Server <- function(input, output, session) {
       reverse_units[[name_with_units]]
   }
   
+  pet <- list()
   if(pet_config_present) {
-    pet_config_dvs <- pet_config$drivers[[1]]$designVariables
-    design_variable_names <- names(pet_config_dvs)
-    numeric_design_variables <- lapply(pet_config_dvs,
+    pet$dvs <- pet_config$drivers[[1]]$designVariables
+    pet$design_variable_names <- names(pet$dvs)
+    pet$numeric_design_variables <- lapply(pet$dvs,
                                        function(x) {
                                          "RangeMax" %in% names(x)
                                        })
-    enumerated_design_variables <- lapply(pet_config_dvs,
+    pet$enumerated_design_variables <- lapply(pet$dvs,
                                          function(x) {
                                            "type" %in% names(x)
                                          })
-    dv_types <- unlist(lapply(numeric_design_variables, 
+    pet$dv_types <- unlist(lapply(pet$numeric_design_variables, 
                               function(x) { 
                                 if (x)
                                   "Numeric"
                                 else
                                   "Enumeration"
                               }))
-    dv_selections <- unlist(lapply(pet_config_dvs, 
+    pet$dv_selections <- unlist(lapply(pet$dvs, 
                                    function(x) {
                                      if("type" %in% names(x)
                                         && x$type == "enum") 
@@ -135,42 +137,42 @@ Server <- function(input, output, session) {
                                        paste0(c(x$RangeMin, x$RangeMax),
                                               collapse=",")
                                    }))
-    design_variables <- data.frame(var_name=design_variable_names, Type=dv_types, Selection=dv_selections)
-    objective_names <- names(pet_config$drivers[[1]]$objectives)
-    pet_config_num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
-    pet_config_sampling_method <- pet_config$drivers[[1]]$details$DOEType
-    pet_generated_configuration_model <- pet_config$GeneratedConfigurationModel
-    pet_selected_configurations <- pet_config$SelectedConfigurations
-    pet_name <- pet_config$pet_name
-    pet_mga_name <- pet_config$mga_file_name
+    pet$design_variables <- data.frame(var_name=pet$design_variable_names, Type=pet$dv_types, Selection=pet$dv_selections)
+    pet$objective_names <- names(pet_config$drivers[[1]]$objectives)
+    pet$num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
+    pet$sampling_method <- pet_config$drivers[[1]]$details$DOEType
+    pet$generated_configuration_model <- pet_config$GeneratedConfigurationModel
+    pet$selected_configurations <- pet_config$SelectedConfigurations
+    pet$name <- pet_config$PETName
+    pet$mga_name <- pet_config$MgaFilename
     
     # Generate units tables.
     units <- list()
     reverse_units <- list()
     # TODO(tthomas): Clean up the construction of the units list.
-    for (i in 1:length(design_variable_names))
+    for (i in 1:length(pet$design_variable_names))
     {
-      unit <-pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
+      unit <-pet_config$drivers[[1]]$designVariables[[pet$design_variable_names[i]]]$units
       if(is.null(unit)) {
         unit <- ""
-        name_with_units <- design_variable_names[[i]]
+        name_with_units <- pet$design_variable_names[[i]]
       }
       else
       {
         unit <- gsub("\\*\\*", "^", unit) #replace Python '**' with '^'
         unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
         unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
-        name_with_units <- paste0(design_variable_names[i]," (",unit,")")
+        name_with_units <- paste0(pet$design_variable_names[i]," (",unit,")")
       }
-      units[[design_variable_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
-      reverse_units[[name_with_units]] <- design_variable_names[[i]]
+      units[[pet$design_variable_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
+      reverse_units[[name_with_units]] <- pet$design_variable_names[[i]]
     }
-    for (i in 1:length(objective_names))
+    for (i in 1:length(pet$objective_names))
     {
-      unit <-pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
+      unit <- pet_config$drivers[[1]]$objectives[[pet$objective_names[i]]]$units
       if(is.null(unit)) {
         unit <- ""
-        name_with_units <- objective_names[[i]]
+        name_with_units <- pet$objective_names[[i]]
       }
       else
       {
@@ -179,8 +181,8 @@ Server <- function(input, output, session) {
         unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
         name_with_units <- paste0(objective_names[i]," (",unit,")")
       }
-      units[[objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
-      reverse_units[[name_with_units]] <- objective_names[[i]]
+      units[[pet$objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
+      reverse_units[[name_with_units]] <- pet$objective_names[[i]]
     }
   }
   
@@ -202,7 +204,7 @@ Server <- function(input, output, session) {
   
   # Build variables metadata list.
   variables <- lapply(names(raw), function(var_name) {
-    if (var_name %in% design_variable_names)
+    if (var_name %in% pet$design_variable_names)
       type <- "Design Variable"
     else
       type <- "Objective"
@@ -214,7 +216,7 @@ Server <- function(input, output, session) {
   names(variables) <- names(raw)
   
   # Build the 'meta' list.
-  data$meta <- list(variables = variables)
+  data$meta <- list(variables = variables, pet = pet)
   
   # Call individual tabs' Server() functions.
   lapply(custom_tab_environments, function(customEnv) {
