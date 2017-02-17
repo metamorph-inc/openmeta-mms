@@ -8,7 +8,7 @@ This pane on the left of the PET tab shows the available datasets.
 
 **Dataset Types**
 
-* Archive: These are datasets are archives of PET Results that were created with the 'Archive Selected' button at the bottom of the PET Dataset Pane.
+* Archive: These are archives of PET Results that were created with the 'Archive Selected' button at the bottom of the PET Dataset Pane.
 * PetResult: These are results that were aggregated from a single execution of the Master Interpreter.
 
 **Count**
