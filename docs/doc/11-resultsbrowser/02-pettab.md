@@ -8,7 +8,7 @@ This pane on the left of the PET tab shows the available datasets.
 
 **Dataset Types**
 
-* Archive: These are datasets are archives of PET Results that were created with the 'Archive Selected' button at the bottom of the PET Dataset Pane. 
+* Archive: These are datasets are archives of PET Results that were created with the 'Archive Selected' button at the bottom of the PET Dataset Pane.
 * PetResult: These are results that were aggregated from a single execution of the Master Interpreter.
 
 **Count**
@@ -35,7 +35,7 @@ This button is under development; more documentation is forthcoming.
 
 **Open Selected in Visualizer**
 
-This button will launch the visualizer with selected dataset(s). If more than one is selected it will attempt to merge them. If none are selected, it will launch the highlighted dataset.
+This button will launch the visualizer with selected (checked) dataset(s). If more than one is selected it will attempt to merge them. If none are selected, it will launch the highlighted dataset.
 
 ### PET Details Pane
 
