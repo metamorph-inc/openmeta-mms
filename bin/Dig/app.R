@@ -48,7 +48,8 @@ DEFAULT_NAME_LENGTH <- 25
 custom_tab_files <- list.files('tabs', pattern = "*.R")
 custom_tab_environments <- lapply(custom_tab_files, function(file_name) {
   env <- new.env()
-  source(file.path('tabs',file_name), local = env)
+  # source(file.path('tabs',file_name), local = env)
+  debugSource(file.path('tabs',file_name), local = env)
   env
 })
 
@@ -63,6 +64,8 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
 }
 
 # Custom Functions -----------------------------------------------------------
+
+RemoveItemNumber <- function(factor) {sub("[0-9]+. ","", factor)}
 
 # Server ---------------------------------------------------------------------
 
@@ -226,7 +229,7 @@ Server <- function(input, output, session) {
     # TODO(wknight): Write a clear description of this function.
     req(input$dimension)
     abbreviation_length <- as.integer(input$dimension/6/10)
-    print(paste(abbreviation_length))
+    # print(paste(abbreviation_length))
     # TODO(wknight): Find a way to understand when the window is going to
     # to transition from 12-wide to 4-wide, so we handle the 4-wide case
     # more elegantly. 
@@ -442,11 +445,13 @@ Server <- function(input, output, session) {
   # Data processing ----------------------------------------------------------
     
   FilteredData <- reactive({
+    # This reactive holds the full dataset that has been filtered using the
+    # values of the sliders.
     data <- raw
     for(index in 1:length(var_names)) {
       name <- var_names[index]
       input_name <- paste("filter_", name, sep="")
-      selection = input[[input_name]]
+      selection <- input[[input_name]]
       if(length(selection) != 0) {
         if(name %in% var_nums_and_ints) {
           isolate({
@@ -457,7 +462,7 @@ Server <- function(input, output, session) {
         }
         else if (name %in% var_facs) {
             selection <- unlist(lapply(selection, function(factor){
-                                                    sub("[0-9]+. ","", factor)
+                                                    RemoveItemNumber(factor)
                                                   }))
             inRange <- (data[[name]] %in% selection)
         }
@@ -472,12 +477,49 @@ Server <- function(input, output, session) {
     data
   })
   
+  Filters <- reactive({
+    # This reactive returns a list of all the filter values so a tab can use
+    # the information for filtering the raw dataset itself.
+    #
+    # Each of the variables will have a "type" that is simply the var_class for
+    # that variable and either "selection" or "min" and "max", e.g.:
+    # > Filters()$Engine$type
+    #   "factor"
+    # > Filters()$Engine$selection
+    #   "V6" "V8"
+    # > Filters()$TopSpeed$type
+    #   "numeric"
+    # > Filters()$TopSpeed$min
+    #   130
+    # > Filters()$TopSpeed$max
+    #   210
+    
+    filters <- list()
+    for(index in 1:length(var_names)) {
+      name <- var_names[index]
+      input_name <- paste("filter_", name, sep="")
+      selection <- input[[input_name]]
+      filters[[name]] <- list()
+      filters[[name]]$type <- var_class[[name]]
+      if(var_class[[name]] == "factor") {
+        filters[[name]]$selection <- unname(sapply(selection,
+                                                   RemoveItemNumber))
+      }
+      else {
+        filters[[name]]$min <- selection[1]
+        filters[[name]]$max <- selection[2]
+      }
+    }
+    filters
+  })
+  
   # Final Processing ---------------------------------------------------------
   
   # Build the 'data' list that is shared between all tabs.
   data <- list()
   data$raw <- raw
   data$Filtered <- FilteredData
+  data$Filters <- Filters
   
   # Build variables metadata list.
   variables <- lapply(var_names, function(var_name) {
@@ -517,7 +559,9 @@ Server <- function(input, output, session) {
   data$meta <- list(variables=variables,
                     pet=pet,
                     preprocessing=preprocessing)
-
+  
+  data$experimental <- list(FilterFunction)
+  
   # Call individual tabs' Server() functions.
   lapply(custom_tab_environments, function(customEnv) {
     do.call(customEnv$server,

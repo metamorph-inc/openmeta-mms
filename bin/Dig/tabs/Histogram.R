@@ -25,10 +25,11 @@ server <- function(input, output, session, data) {
                     selected = vars[1])
   
   output$sandboxPlot <- renderPlot({
-    if(input$sandboxVar != "")
+    if(input$sandboxVar != "") {
       hist(data$Filtered()[[input$sandboxVar]],
            main = paste("Histogram of" , paste(input$sandboxVar)),
            xlab = paste(input$sandboxVar))
+    }
   })
   
 }
