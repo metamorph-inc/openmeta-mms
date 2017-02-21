@@ -560,7 +560,7 @@ Server <- function(input, output, session) {
                     pet=pet,
                     preprocessing=preprocessing)
   
-  data$experimental <- list(FilterFunction)
+  data$experimental <- list()
   
   # Call individual tabs' Server() functions.
   lapply(custom_tab_environments, function(customEnv) {
