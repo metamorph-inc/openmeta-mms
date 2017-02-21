@@ -464,14 +464,15 @@ Server <- function(input, output, session) {
             selection <- unlist(lapply(selection, function(factor){
                                                     RemoveItemNumber(factor)
                                                   }))
-            inRange <- (data[[name]] %in% selection)
+            in_range <- (data[[name]] %in% selection)
         }
         
         # Don't filter based on missing values.
-        inRange <- inRange | is.na(data[[name]])
+        in_range <- in_range | is.na(data[[name]])
         
-        data <- subset(data, inRange)
+        data <- subset(data, in_range)
       }
+      print(nrow(data))
     }
     print("Data Filtered.")
     data
