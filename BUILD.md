@@ -104,3 +104,9 @@ If you encounter errors, try to build once more. There may be some remaining rac
 
 # Run
 For first-time users, [Walkthrough Documentation](http://www.metamorphsoftware.com/alpha/meta-walkthroughs.html) is a good introduction to using the tools. More advanced capabilities are explored in the [META Case Studies](http://www.metamorphsoftware.com/alpha/meta-case-studies.html).
+
+# Installer
+
+Merge modules from Visual Studio 2008 (vc9), 2010 (vc10), and 2012 (vc11) are required to be present in `C:\Program Files (x86)\Common Files\Merge Modules\` to build the installer.
+
+Run `bin\Python27\Scripts\python.exe deploy\build_msi.py` to build the installer.
