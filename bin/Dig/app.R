@@ -38,6 +38,7 @@
 
 library(shiny)
 library(shinyjs)
+library(shinyBS)
 library(jsonlite)
 library(topsis)
 
@@ -46,6 +47,9 @@ DEFAULT_NAME_LENGTH <- 25
 
 # Load selected tabs.
 custom_tab_files <- list.files('tabs', pattern = "*.R")
+custom_tab_files <- c("Explore.R",
+                      "DataTable.R",
+                      "PETRefinement.R")
 custom_tab_environments <- lapply(custom_tab_files, function(file_name) {
   env <- new.env()
   # source(file.path('tabs',file_name), local = env)
@@ -247,10 +251,10 @@ Server <- function(input, output, session) {
                                function(custom_env) {custom_env$footer})
   names(footer_preferences) <- lapply(custom_tab_environments,
                                       function(custom_env) {custom_env$title})
-  output$display_filters <- reactive({
+  output$display_footer <- reactive({
     display <- (footer_preferences[[input$master_tabset]])
   })
-  outputOptions(output, "display_filters", suspendWhenHidden=FALSE)
+  outputOptions(output, "display_footer", suspendWhenHidden=FALSE)
   
   # Generates the sliders and select boxes.
   output$filters <- renderUI({
@@ -442,6 +446,69 @@ Server <- function(input, output, session) {
   #   }
   # })
   
+  # Coloring -----------------------------------------------------------------
+  
+  updateSelectInput(session, "col_var_num", choices = var_range_nums_and_ints)
+  
+  col_slider_settings <- reactive({
+    if(input$col_var_num != ""){
+      # print("In colSlider settings")
+      variable <- input$col_var_num
+      isolate({
+        data <- FilteredData()
+        min <- min(data[[variable]], na.rm=TRUE)
+        max <- max(data[[variable]], na.rm=TRUE)
+        thirtythree <- quantile(data[[variable]], 0.33, na.rm=TRUE)
+        sixtysix <- quantile(data[[variable]], 0.66, na.rm=TRUE)
+        abs_min_val <- as.numeric(unname(abs_min[variable]))
+        abs_max_val <- as.numeric(unname(abs_max[variable]))
+        abs_step <- max((max - min) * 0.01,
+                        abs(min) * 0.001,
+                        abs(max) * 0.001)
+        numeric_min <- signif(abs_min_val - abs_step*10, digits = 4)
+        numeric_max <- signif(abs_max_val + abs_step*10, digits = 4)
+        numeric_step <- signif(abs_step, digits = 4)
+        lower <- unname(thirtythree)
+        upper <- unname(sixtysix)
+      })
+      # print("colSlider settings complete")
+      colSlider <- data.frame(min, max, lower, upper,
+                        numeric_min, numeric_max, numeric_step,
+                        abs_min_val, abs_max_val, abs_step)
+    }
+  })
+  
+  update_color_slider <- observe({
+    if(input$col_var_num != ""){
+      if(var_class[[input$col_var_num]] == "numeric") {
+        updateSliderInput(session,
+                          "col_slider",
+                          step = col_slider_settings()$numeric_step,
+                          min = col_slider_settings()$numeric_min,
+                          max = col_slider_settings()$numeric_max,
+                          value = c(col_slider_settings()$lower,
+                                    col_slider_settings()$upper))
+      }
+      else if(var_class[[input$col_var_num]] == "integer") {
+        updateSliderInput(session,
+                          "col_slider",
+                          min = col_slider_settings()$abs_min_val,
+                          max = col_slider_settings()$abs_max_val,
+                          value = c(floor(col_slider_settings()$lower),
+                                    ceiling(col_slider_settings()$upper)))
+      }
+      # print("updateColorSlider() done.")
+    }
+    # else{
+    #   print("updateColorSlider stalled")
+    # }
+    # if(importFlags$tier2){
+    #   importFlags$tier2 <- FALSE
+    #   importFlags$ranges <- TRUE
+    #   importFlags$bayesian <- TRUE
+    # }
+  })
+  
   # Data processing ----------------------------------------------------------
     
   FilteredData <- reactive({
@@ -472,9 +539,9 @@ Server <- function(input, output, session) {
         
         data <- subset(data, in_range)
       }
-      print(nrow(data))
+      # print(nrow(data))
     }
-    print("Data Filtered.")
+    # print("Data Filtered.")
     data
   })
   
@@ -514,12 +581,95 @@ Server <- function(input, output, session) {
     filters
   })
   
+  ColoredData <- reactive({
+    data <- FilteredData()
+    
+    data$color <- character(nrow(data))
+    data$color <- "black"#input$normColor
+    
+    color_type = input$col_type
+    
+    switch(color_type,
+           "Max/Min" = 
+           {
+             name <- input$col_var_num
+             bottom <- input$col_slider[1]
+             top <- input$col_slider[2]
+             print(paste("Coloring Data:", name, bottom, top))
+             data$color[(data[[name]] >= bottom) & (data[[name]] <= top)] <- "yellow"#input$midColor
+             if (input$radio == "max") {
+               data$color[data[[name]] < bottom] <- "red"#input$maxColor
+               data$color[data[[name]] > top] <- "green"#input$minColor
+             } 
+             else {
+               data$color[data[[name]] < bottom] <- "green"#input$minColor
+               data$color[data[[name]] > top] <- "red"#input$maxColor
+             }
+           },
+           "Discrete" = 
+           {
+             varList = names(table(raw_plus()[input$colVarFactor]))
+             for(i in 1:length(varList)){
+               data$color[(data[[input$colVarFactor]] == varList[i])] <- palette()[i]
+             }
+           },
+           "Highlighted" = 
+           {
+             if (!is.null(input$plot_brush)){
+               if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
+                 xRange <- FALSE
+                 yRange <- FALSE
+               }
+               else{
+                 if(varClass[input$xInput] == "factor"){
+                   lower <- ceiling(input$plot_brush$xmin)
+                   upper <- floor(input$plot_brush$xmax)
+                   xRange <- FALSE
+                   for (i in lower:upper){
+                     xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
+                   }
+                   if (lower > upper){
+                     xRange <- FALSE
+                   }
+                 }
+                 else {
+                   xUpper <- data[input$xInput] < input$plot_brush$xmax
+                   xLower <- data[input$xInput] > input$plot_brush$xmin
+                   xRange <- xUpper & xLower
+                 }
+                 if(varClass[input$yInput] == "factor"){
+                   lower <- ceiling(input$plot_brush$ymin)
+                   upper <- floor(input$plot_brush$ymax)
+                   yRange <- FALSE
+                   for (i in lower:upper){
+                     yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
+                   }                 
+                   if (lower > upper){
+                     yRange <- FALSE
+                   }
+                 }
+                 else{
+                   yUpper <- data[input$yInput] < input$plot_brush$ymax
+                   yLower <- data[input$yInput] > input$plot_brush$ymin
+                   yRange <- yUpper & yLower
+                 }
+               }
+               data$color[xRange & yRange] <- input$highlightColor #light blue
+             }
+           },
+           "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
+    )
+    # print("Data Colored")
+    data
+  })
+  
   # Final Processing ---------------------------------------------------------
   
   # Build the 'data' list that is shared between all tabs.
   data <- list()
   data$raw <- raw
   data$Filtered <- FilteredData
+  data$Colored <- ColoredData
   data$Filters <- Filters
   
   # Build variables metadata list.
@@ -607,26 +757,45 @@ ui <- fluidPage(
   # Generates the master tabset from the user-defined tabs provided.
   do.call(tabsetPanel, tabset_arguments),
   
-  # Optional Filters footer.
-  conditionalPanel("output.display_filters",
+  # Optional Footer.
+  conditionalPanel("output.display_footer",
     hr(),
-    h3("Filter Data:"),
-    wellPanel(
-      tags$div(title = "Activate to show filters for all dataset variables.",
-               checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
-      tags$div(title = "Return visible sliders to default state.",
-               actionButton("resetSliders", "Reset Visible Filters")),
-      hr(),
-      uiOutput("filters")
-    ),
-    conditionalPanel("output.constants_present",
-      # bootstrapPage(tags$script('
-      #   $(document).on("keydown", function (e) {
-      #   Shiny.onInputChange("lastkeypresscode", e.keyCode);
-      #   });
-      # ')),
-      h3("Constants:"),
-      uiOutput("constants")
+    bsCollapse(id = "footer_collapse", open = NULL,
+      bsCollapsePanel("Filters", 
+        tags$div(title = "Activate to show filters for all dataset variables.",
+                 checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
+        tags$div(title = "Return visible sliders to default state.",
+                 actionButton("resetSliders", "Reset Visible Filters")),
+        hr(),
+        uiOutput("filters"),
+        conditionalPanel("output.constants_present",
+          # bootstrapPage(tags$script('
+          #   $(document).on("keydown", function (e) {
+          #   Shiny.onInputChange("lastkeypresscode", e.keyCode);
+          #   });
+          # ')),
+          h3("Constants:"),
+          uiOutput("constants")
+        ),
+        style = "default"),
+      bsCollapsePanel("Coloring",
+        column(3,
+          selectInput("col_type", "Type:", choices = c("None", "Max/Min"), selected = "None")#, "Discrete", "Highlighted", "Ranked"), selected = "None")
+        ),
+        column(3,
+          conditionalPanel(
+            condition = "input.col_type == 'Max/Min'",
+            selectInput("col_var_num", "Colored Variable:", c()),
+            radioButtons("radio", NULL, c("Maximize" = "max", "Minimize" = "min"), selected = "max"),
+            sliderInput("col_slider", NULL, min=0, max=1, value = c(0.3, 0.7), step=0.1)
+          ),
+          conditionalPanel(
+            condition = "input.col_type == 'Discrete'",
+            selectInput("col_var_factor", "Colored Variable:", c()),
+            htmlOutput("color_legend")
+          )
+        ),
+        style = "default")
     )
   )
 )

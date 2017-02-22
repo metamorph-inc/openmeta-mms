@@ -54,8 +54,8 @@ ui <- function() {
         fluidRow(
           column(3,
             br(),
-            actionButton("single_back_pairs", "Back"),
-            br(), br(),
+            # actionButton("single_back_pairs", "Back"),
+            # br(), br(),
             wellPanel(
               selectInput("x_input", "X-axis", c()),
               selectInput("y_input", "Y-Axis", c()),
@@ -138,10 +138,10 @@ server <- function(input, output, session, data) {
     
     if (length(input$display) >= 2 & nrow(data$Filtered()) > 0) {
       # pairs_setup()
-      pairs(data$Filtered()[vars_list()], upper.panel = NULL)
+      pairs(data$Colored()[vars_list()], upper.panel = NULL, col = data$Colored()$color)
     }
     else { 
-      if (nrow(data$Filtered()) == 0) {
+      if (nrow(data$Colored()) == 0) {
         output$pairs_filter_error <- renderText(
             "<br/>No data points fit the current filtering scheme.")
       }
