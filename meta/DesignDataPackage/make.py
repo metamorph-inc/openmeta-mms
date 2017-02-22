@@ -81,7 +81,7 @@ def make():
 
     print ""
     print "== Generate Python library =="
-    relpath_pyxbgen = os.path.join('..', '..', 'bin', 'Python27', 'scripts', 'pyxbgen')
+    relpath_pyxbgen = os.path.join('..', '..', 'bin', 'Python27', 'Scripts', 'pyxbgen')
     abspath_pyxbgen = os.path.abspath(relpath_pyxbgen)
     abspath_python_interpreter = sys.executable
     with pushd('schema'):
