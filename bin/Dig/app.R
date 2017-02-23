@@ -232,7 +232,9 @@ Server <- function(input, output, session) {
   var_constants <- subset(var_names, !(var_names %in% var_range))
   
   AbbreviatedNames <- reactive({
-    # TODO(wknight): Write a clear description of this function.
+    # This function reacts to the user scaling the size of the browser window
+    # Once called, this function processes a new abbreviation length for the slider labels
+    
     # abbreviate(var_names, abbreviate_length)
     # print(paste0("slider width = ", input$sliderWidth))
     # print(paste0("label sizes: ", input$labelWidth))
