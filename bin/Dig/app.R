@@ -22,7 +22,7 @@
 # Script: app.R
 #
 # Author: Timothy Thomas [aut, cre],
-#   Will Knight [aut]
+#         Will Knight [aut]
 #
 # Maintainer: Timothy Thomas <tthomas@metamorphsoftware.com>
 #
@@ -44,6 +44,8 @@ library(topsis)
 
 # Defined Constants
 DEFAULT_NAME_LENGTH <- 25
+abbreviate_length <- DEFAULT_NAME_LENGTH
+FIRST_TIME_LOAD <- 0
 
 # Load selected tabs.
 custom_tab_files <- list.files('tabs', pattern = "*.R")
@@ -231,18 +233,36 @@ Server <- function(input, output, session) {
   
   AbbreviatedNames <- reactive({
     # TODO(wknight): Write a clear description of this function.
-    req(input$dimension)
-    abbreviation_length <- as.integer(input$dimension/6/10)
-    # print(paste(abbreviation_length))
+    # abbreviate(var_names, abbreviate_length)
+    # print(paste0("slider width = ", input$sliderWidth))
+    # print(paste0("label sizes: ", input$labelWidth))
+    # abbreviation_length <- as.integer(input$windowWidth/6/10)
+    
+    req(input$windowWidth)
+    
+    
+    if(!is.null(input$labelWidth)){
+      if(max(input$labelWidth) >= input$sliderWidth)
+        abbreviate_length <<- abbreviate_length - 1
+      else if((input$sliderWidth - max(input$labelWidth)) > 1)
+          abbreviate_length <<- abbreviate_length + 1
+      
+      
+      # session$sendCustomMessage(type = 'sliderSize', message = var_names)
+      session$sendCustomMessage(type = 'labelSize', message = var_names)
+    }
+    
     # TODO(wknight): Find a way to understand when the window is going to
     # to transition from 12-wide to 4-wide, so we handle the 4-wide case
     # more elegantly. 
-    if (abbreviation_length < 10)		
-      abbreviation_length <- DEFAULT_NAME_LENGTH		
     
-    #print(paste0(windowWidth, ":", abbrevLength))		
-    abbreviate(var_names, abbreviation_length)		
+    #if (abbreviation_length < 10)		
+    #  abbreviation_length <- DEFAULT_NAME_LENGTH		
+    abbreviate(var_names, abbreviate_length)
+    
   })
+  
+  
   
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
@@ -273,7 +293,14 @@ Server <- function(input, output, session) {
         })
       )
     )
+  })   
+  
+  observeEvent(input$windowWidth, {
+    # FIRST_TIME_LOAD <<- FIRST_TIME_LOAD + 1
+    session$sendCustomMessage(type = 'sliderSize', message = var_names)
+    session$sendCustomMessage(type = 'labelSize', message = var_names)
   })
+  
   
   # setupToolTip <- function(...){
   #   varsList <- match(varRangeNum(), var_names)
@@ -351,6 +378,7 @@ Server <- function(input, output, session) {
                        max = slider_max,
                        value = slider_value)
     )
+    
   }
   
   # openSliderToolTip <- function(current) {
@@ -738,18 +766,7 @@ tabset_arguments <- c(unname(base_tabs),
 # Defines the UI of the Visualizer.
 ui <- fluidPage(
   tags$head(
-    # COMMENT(tthomas): Can we tighten this down?
-    tags$script(    
-      'var dimension = 0;    
-      $(document).on("shiny:connected", function(e) {   
-      dimension = window.innerWidth;   
-      Shiny.onInputChange("dimension", dimension);    
-      });   
-      $(window).resize(function(e) {    
-      dimension = window.innerWidth;   
-      Shiny.onInputChange("dimension", dimension);    
-      });
-    ')  
+    tags$script(src = "main.js")
   ),
   
   titlePanel("Visualizer"),
