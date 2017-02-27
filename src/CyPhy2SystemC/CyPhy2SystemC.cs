@@ -581,6 +581,7 @@ namespace CyPhy2SystemC
                 GMEConsole.Info.WriteLine("Elaborating model...");
                 System.Windows.Forms.Application.DoEvents();
 
+                // elaborator.UnrollConnectors = true;
                 elaborator.InvokeEx(project, currentobj, selectedobjs, param);
 
                 CyPhyCOMInterfaces.IMgaTraceability traceability = elaborator.ComponentParameter["traceability"] as CyPhyCOMInterfaces.IMgaTraceability;

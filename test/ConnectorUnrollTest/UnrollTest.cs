@@ -866,6 +866,7 @@ namespace ConnectorUnrollTest
             // Finally, we wanna make sure we have all the right connections within the assembly.
             proj.PerformInTransaction(delegate
             {
+                compDef = asm.Children.ComponentCollection.First();
                 Assert.Equal(numConnPorts, compDef.Children.PortCollection.Count(p => IsSupported(p)));
 
                 var comp1 = asm.Children.ComponentCollection.First(c => c.Name == "CompRef1");
