@@ -303,22 +303,6 @@ Server <- function(input, output, session) {
     session$sendCustomMessage(type = 'labelSize', message = var_names)
   })
   
-  
-  # setupToolTip <- function(...){
-  #   varsList <- match(varRangeNum(), var_names)
-  #   openToolTip <<- openToolTip[1:length(varsList),]
-  #   row.names(openToolTip) <<- unlist(strsplit(toString(varsList), ", "))
-  #   openToolTip$display <<- F
-  #   openToolTip$valApply <<- 0
-  # }
-  
-  # actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
-  #   if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
-  #     btn.css.class <- paste("btn",btn.style,sep="-")
-  #   else btn.css.class = ""
-  #   tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
-  # }
-
   GenerateEnumUI <- function(current) {
     items <- names(table(raw[[current]]))
     
@@ -327,8 +311,7 @@ Server <- function(input, output, session) {
     }
     
     selected_value <- input[[paste0('filter_', current)]]
-    # COMMENT(tthomas): I think sticky filters should be the only option.
-    if(is.null(selected_value)) # | !input$stickyFilters)
+    if(is.null(selected_value))
       selected_value <- items
     
     column(2, selectInput(inputId = paste0('filter_', current),
@@ -358,79 +341,70 @@ Server <- function(input, output, session) {
       slider_max <- as.numeric(abs_max[current])
     }
     
-    # COMMENT(tthomas): I think sticky filters should be the only option.
-    if(is.null(slider_value)) # | !input$stickyFilters)
+    if(is.null(slider_value))
       # TODO(tthomas): Why are we using 'step' around the already 'stepped' numerics?
       slider_value <- c(signif(slider_min-step*10, digits = 4),
                         signif(slider_max+step*10, digits = 4))
     
-    column(2,
-           # useShinyjs(),
-           # wellPanel(id = paste0("slider_tooltip_", current), 
-           #           style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
-           #           h4(label),
-           #           textInput(paste0("min_input_", current), "Min:"),
-           #           textInput(paste0("max_input_", current), "Max:"),
-           #           actionButton(paste0("submit_", current), "Apply",
-           #                        "success")),
-           sliderInput(paste0('filter_', current),
-                       label,
-                       step = step,
-                       min = slider_min,
-                       max = slider_max,
-                       value = slider_value)
-    )
-    
+      column(2,
+             wellPanel(id = paste0("slider_tooltip_", current),
+                       style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
+                       h4(label),
+                       textInput(paste0("min_input_", current), "Min:"),
+                       textInput(paste0("max_input_", current), "Max:"),
+                       actionButton(paste0("submit_", current), "Apply","success")
+             ),
+             sliderInput(paste0('filter_', current),
+                         label,
+                         step = step,
+                         min = slider_min,
+                         max = slider_max,
+                         value = slider_value)
+      )
   }
   
-  # openSliderToolTip <- function(current) {
-  #   toggle(paste0("slider_tooltip_", current))
-  #   openToolTip[toString(current), "display"] <<- !openToolTip[toString(current), "display"]
-  #   for(i in 1:length(openToolTip[,"display"])){
-  #     row = row.names(openToolTip)[i]
-  #     if(row != current && openToolTip[row,"display"]){
-  #       toggle(paste0("slider_tooltip", row))
-  #       openToolTip[row,"display"] <<- F
-  #     }
-  #   }
-  # }
+  actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
+    if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
+      btn.css.class <- paste("btn",btn.style,sep="-")
+    else btn.css.class = ""
+    tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
+  }
+
+  openSliderToolTip <- function(current) {
+    for(i in 1:length(var_range_nums_and_ints)) {
+      hide(paste0("slider_tooltip_", var_range_nums_and_ints[i]))
+    }
+    show(paste0("slider_tooltip_", current))
+  }
   
-  # Slider tooltip handler.
-  # observe({
-  #   lapply(var_names, function(name) {
-  #     if(name %in% varRangeNum()){
-  #       current = match(name, var_names)
-  #       
-  #       onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
-  #       observe({
-  #         input$lastkeypresscode
-  #         input[[paste0("submit", current)]] 
-  #         
-  #         isolate({
-  #           currentValOfApply <- openToolTip[toString(current), "valApply"]
-  #           if(((!is.null(input$lastkeypresscode) && input$lastkeypresscode == 13) || input[[paste0("submit", current)]] != currentValOfApply) && openToolTip[toString(current), "display"]){
-  #             if(input[[paste0("submit", current)]] != currentValOfApply) 
-  #               openToolTip[toString(current), "valApply"] <<- input[[paste0("submit", current)]]
-  #             slider_value = input[[paste0('filter_', current)]]
-  #             newMin = input[[paste0("min_inp", current)]]
-  #             newMax = input[[paste0("max_inp", current)]]
-  #             updateTextInput(session, paste0("min_inp", current), value = "")
-  #             updateTextInput(session, paste0("max_inp", current), value = "")
-  #             suppressWarnings({ #Suppress warnings from non-numeric inputs
-  #               if(!is.null(newMin) && newMin != "" && !is.na(as.numeric(newMin)))
-  #                 slider_value = as.numeric(c(newMin, slider_value[2]))
-  #               if(!is.null(newMax) && newMax != "" && !is.na(as.numeric(newMax)))
-  #                 slider_value = as.numeric(c(slider_value[1], newMax))
-  #             })
-  #             updateSliderInput(session, paste0('filter_', current), value = slider_value)
-  #             toggle(paste0("slider_tooltip", current))
-  #             openToolTip[toString(current), "display"] <<- F
-  #           }
-  #         })
-  #       })
-  #     }
-  #   })
-  # })
+  lapply(var_range_nums_and_ints, function(current) {
+    observe({
+      input[[paste0("submit_", current)]]
+      input$last_key_pressed
+      
+      isolate({
+        slider_value = input[[paste0('filter_', current)]]
+        new_min = input[[paste0("min_input_", current)]]
+        new_max = input[[paste0("max_input_", current)]]
+        updateTextInput(session, paste0("min_input_", current), value = "")
+        updateTextInput(session, paste0("max_input_", current), value = "")
+        suppressWarnings({ #Suppress warnings from non-numeric inputs
+          if(!is.null(new_min) && new_min != "" && !is.na(as.numeric(new_min)))
+            slider_value = as.numeric(c(new_min, slider_value[2]))
+          if(!is.null(new_max) && new_max != "" && !is.na(as.numeric(new_max)))
+            slider_value = as.numeric(c(slider_value[1], new_max))
+        })
+        updateSliderInput(session, paste0('filter_', current), value = slider_value)
+        hide(paste0("slider_tooltip_", current))
+      })
+    })
+  })
+  
+  observe({
+    lapply(var_range_nums_and_ints, function(current) {
+      onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
+    })
+  })
   
   output$constants <- renderUI({
     # print("In render constants")
@@ -767,9 +741,10 @@ tabset_arguments <- c(unname(base_tabs),
 
 # Defines the UI of the Visualizer.
 ui <- fluidPage(
-  tags$head(
-    tags$script(src = "main.js")
-  ),
+  
+  useShinyjs(),
+  
+  tags$script(src = "main.js"),
   
   titlePanel("Visualizer"),
   
@@ -786,13 +761,9 @@ ui <- fluidPage(
         tags$div(title = "Return visible sliders to default state.",
                  actionButton("resetSliders", "Reset Visible Filters")),
         hr(),
+        
         uiOutput("filters"),
         conditionalPanel("output.constants_present",
-          # bootstrapPage(tags$script('
-          #   $(document).on("keydown", function (e) {
-          #   Shiny.onInputChange("lastkeypresscode", e.keyCode);
-          #   });
-          # ')),
           h3("Constants:"),
           uiOutput("constants")
         ),

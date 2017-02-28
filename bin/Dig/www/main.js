@@ -1,6 +1,7 @@
 var windowWidth = 0; 
 var $slider = document.querySelector("#filters > div > div:nth-child(2) > div:nth-child(1) > div");
 var $labels;
+var enter_trigger = 0;
 
 $(document).on("shiny:connected", function(e) {  
 windowWidth = window.innerWidth; 
@@ -36,4 +37,11 @@ Shiny.addCustomMessageHandler("labelSize", function(message) {
   }
 
   Shiny.onInputChange("labelWidth", labelWidth);
+});
+
+// Triggers when an enter key is pressed
+$(document).on("keydown", function (e) {
+  if(e.keyCode == 13){
+    Shiny.onInputChange("last_key_pressed", enter_trigger++);
+  }
 });
