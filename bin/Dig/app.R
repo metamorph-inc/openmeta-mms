@@ -341,10 +341,12 @@ Server <- function(input, output, session) {
       slider_max <- as.numeric(abs_max[current])
     }
     
-    if(is.null(slider_value))
+    if(is.null(slider_value)){
       # TODO(tthomas): Why are we using 'step' around the already 'stepped' numerics?
       slider_value <- c(signif(slider_min-step*10, digits = 4),
                         signif(slider_max+step*10, digits = 4))
+      # slider_value <- c(slider_min, slider_max)
+    }
     
       column(2,
              wellPanel(id = paste0("slider_tooltip_", current),
