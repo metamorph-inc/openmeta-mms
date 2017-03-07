@@ -351,6 +351,8 @@ Server <- function(input, output, session) {
       # slider_value <- c(slider_min, slider_max)
     }
     
+    print("Abourt to setup ui for slider")
+    
       column(2,
              wellPanel(id = paste0("slider_tooltip_", current),
                        style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
@@ -379,7 +381,7 @@ Server <- function(input, output, session) {
     for(i in 1:length(var_range_nums_and_ints)) {
       hide(paste0("slider_tooltip_", var_range_nums_and_ints[i]))
     }
-    show(paste0("slider_tooltip_", current))
+    shinyjs::show(paste0("slider_tooltip_", current))
   }
   
   lapply(var_range_nums_and_ints, function(current) {
