@@ -342,7 +342,9 @@ Server <- function(input, output, session) {
       # slider_value <- c(slider_min, slider_max)
     }
     
+    
       column(2,
+             # Hidden well panel for slider tooltip
              wellPanel(id = paste0("slider_tooltip_", current),
                        style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
                        h4(label),
@@ -350,6 +352,7 @@ Server <- function(input, output, session) {
                        textInput(paste0("max_input_", current), "Max:"),
                        actionButton(paste0("submit_", current), "Apply","success")
              ),
+             # The slider itself
              sliderInput(paste0('filter_', current),
                          label,
                          step = step,
@@ -359,20 +362,29 @@ Server <- function(input, output, session) {
       )
   }
   
+  ###############
+  # Custom action button for exact entry --- this makes a green button and can also be accessed to produced different themed buttons
+  ###############
   actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
     if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
       btn.css.class <- paste("btn",btn.style,sep="-")
     else btn.css.class = ""
     tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
   }
-
+  
+  ###############
+  # This function hides all slider exact entry windows on a 'double click' and then shows the one you clicked on
+  ###############
   openSliderToolTip <- function(current) {
     for(i in 1:length(var_range_nums_and_ints)) {
       hide(paste0("slider_tooltip_", var_range_nums_and_ints[i]))
     }
-    show(paste0("slider_tooltip_", current))
+    shinyjs::show(paste0("slider_tooltip_", current))
   }
   
+  ###############
+  # This handles the processing of exact entry back into the slider - it reacts to either the submit button OR the enter key
+  ###############
   lapply(var_range_nums_and_ints, function(current) {
     observe({
       input[[paste0("submit_", current)]]
@@ -396,6 +408,9 @@ Server <- function(input, output, session) {
     })
   })
   
+  ###############
+  # This function adds a double click handler to each slider
+  ###############
   observe({
     lapply(var_range_nums_and_ints, function(current) {
       onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
