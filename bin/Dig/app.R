@@ -130,31 +130,22 @@ Server <- function(input, output, session) {
   if(pet_config_present) {
     dvs <- pet_config$drivers[[1]]$designVariables
     design_variable_names <- names(dvs)
-    numeric_design_variables <- lapply(dvs,
-                                       function(x) {
-                                         "RangeMax" %in% names(x)
-                                       })
-    enumerated_design_variables <- lapply(dvs,
-                                          function(x) {
-                                            "type" %in% names(x)
-                                          })
-    dv_types <- unlist(lapply(numeric_design_variables, 
-                              function(x) { 
-                                if (x)
-                                  "Numeric"
-                                else
-                                  "Enumeration"
-                              }))
-    dv_selections <- unlist(lapply(dvs, 
-                                   function(x) {
-                                     if("type" %in% names(x)
-                                        && x$type == "enum") 
-                                       paste0(unlist(x$items), collapse=",") 
-                                     else 
-                                       paste0(c(x$RangeMin, x$RangeMax),
-                                              collapse=",")
-                                   }))
-    design_variables <- data.frame(var_name=design_variable_names, Type=dv_types, Selection=dv_selections)
+    design_variables <- Map(function(item, name) {
+      new_item <- list()
+      new_item$name <- name
+      if ("RangeMax" %in% names(item)) {
+        new_item$type <- "Numeric"
+      } else {
+        new_item$type <- "Enumeration"
+      }
+      if("type" %in% names(item) && item$type == "enum") {
+        new_item$selection <- paste0(unlist(item$items), collapse=",")
+      } else {
+        new_item$selection <- paste0(c(item$RangeMin, item$RangeMax),
+                                     collapse=",")
+      }
+      new_item
+    }, dvs, names(dvs))
     objective_names <- names(pet_config$drivers[[1]]$objectives)
     num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
     sampling_method <- pet_config$drivers[[1]]$details$DOEType
@@ -765,7 +756,8 @@ Server <- function(input, output, session) {
               mga_name=mga_name,
               generated_configuration_model=generated_configuration_model,
               selected_configurations=selected_configurations,
-              design_variable_names=design_variable_names)
+              design_variable_names=design_variable_names,
+              design_variables=design_variables)
   
   preprocessing <- list(var_names=var_names,
                         var_class=var_class,
