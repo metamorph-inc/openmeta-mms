@@ -46,6 +46,7 @@ library(topsis)
 DEFAULT_NAME_LENGTH <- 25
 abbreviate_length <- DEFAULT_NAME_LENGTH
 FIRST_TIME_LOAD <- 0
+LENGTH_SATISFIED <- F
 
 # Load selected tabs.
 custom_tab_files <- list.files('tabs', pattern = "*.R")
@@ -231,6 +232,10 @@ Server <- function(input, output, session) {
   var_range <- c(var_facs, var_nums_and_ints)
   var_constants <- subset(var_names, !(var_names %in% var_range))
   
+  # session$onFlushed(function() {
+  #   session$sendCustomMessage(type = 'send_vars', message = var_names)
+  # })
+  
   AbbreviatedNames <- reactive({
     # This function reacts to the user scaling the size of the browser window
     # Once called, this function processes a new abbreviation length for the slider labels
@@ -240,18 +245,16 @@ Server <- function(input, output, session) {
     # print(paste0("label sizes: ", input$labelWidth))
     # abbreviation_length <- as.integer(input$windowWidth/6/10)
     
-    req(input$windowWidth)
-    
-    
     if(!is.null(input$labelWidth)){
-      if(max(input$labelWidth) >= input$sliderWidth)
+      if((input$sliderWidth - max(input$labelWidth)) < 1){
         abbreviate_length <<- abbreviate_length - 1
-      else if((input$sliderWidth - max(input$labelWidth)) > 1)
-          abbreviate_length <<- abbreviate_length + 1
-      
-      
-      # session$sendCustomMessage(type = 'sliderSize', message = var_names)
-      session$sendCustomMessage(type = 'labelSize', message = var_names)
+      }
+      else if((input$sliderWidth - max(input$labelWidth)) > 10){
+        abbreviate_length <<- abbreviate_length + 1
+      }
+      else{
+        LENGTH_SATISFIED <<- T 
+      }
     }
     
     # TODO(wknight): Find a way to understand when the window is going to
@@ -264,6 +267,30 @@ Server <- function(input, output, session) {
     
   })
   
+  observeEvent(input$labelWidth, {
+    print(input$labelWidth)
+  })
+  observeEvent(input$sliderWidth, {
+    print(input$sliderWidth)
+  })
+  
+  observe({
+    if(!LENGTH_SATISFIED){
+      session$onFlushed(function() {
+        session$sendCustomMessage("update_widths", message = 1);
+      }, once = F)
+    }
+  })
+  
+  observeEvent(input$windowWidth, {
+    LENGTH_SATISFIED <<- F
+  })
+  
+  observeEvent( input$footer_collapse, {
+    session$onFlushed(function() {
+      session$sendCustomMessage("update_widths", message = 1);
+    })
+  })
   
   
   # Filters (Enumerations, Sliders) and Constants ----------------------------
@@ -282,6 +309,7 @@ Server <- function(input, output, session) {
   output$filters <- renderUI({
     var_selects <- var_range_facs
     var_sliders <- var_range_nums_and_ints
+    input$labelWidth
     
     div(
       fluidRow(
@@ -291,17 +319,26 @@ Server <- function(input, output, session) {
       ),
       fluidRow(
         lapply(var_sliders, function(var_slider) {
-          GenerateSliderUI(var_slider, AbbreviatedNames()[var_slider])
+          GenerateSliderUI(var_slider, AbbreviateLabel(var_slider))
         })
       )
     )
   })   
   
-  observeEvent(input$windowWidth, {
-    # FIRST_TIME_LOAD <<- FIRST_TIME_LOAD + 1
-    session$sendCustomMessage(type = 'sliderSize', message = var_names)
-    session$sendCustomMessage(type = 'labelSize', message = var_names)
-  })
+  AbbreviateLabel <- function(name) {
+    
+    #index <- match(name, c(var_range_facs, var_range_nums_and_ints))
+    
+    if(!is.null(input$sliderWidth)){
+      # pixels <- input$labelWidth[index]
+      #abbreviate_length <- input$sliderWidth/8
+    }
+    
+    abbreviate(name, abbreviate_length)
+    
+    
+    
+  }
   
   GenerateEnumUI <- function(current) {
     items <- names(table(raw[[current]]))
@@ -405,6 +442,7 @@ Server <- function(input, output, session) {
   observe({
     lapply(var_range_nums_and_ints, function(current) {
       onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
+      inlineCSS(list(.style = "overflow: hidden"))
     })
   })
   
@@ -745,6 +783,8 @@ tabset_arguments <- c(unname(base_tabs),
 ui <- fluidPage(
   
   useShinyjs(),
+  
+  #includeCSS("style.css"),
   
   tags$script(src = "main.js"),
   
