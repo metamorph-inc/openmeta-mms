@@ -207,15 +207,37 @@ namespace JobManagerFramework
             }
         }
 
+        public int LocalConcurrentThreads
+        {
+            get { return pool.NumAllThread; }
+
+            set
+            {
+                if (pool.GetNumberOfUnfinishedJobs() != 0)
+                {
+                    throw new InvalidPoolStateException(
+                        "Cannot change number of concurrent threads while jobs are running.");
+                }
+                else
+                {
+                    //Create a new local pool with the new thread count
+                    var oldPool = pool;
+                    pool = new LocalPool(value);
+                    oldPool.Dispose();
+                }
+            }
+        }
+
         /// <summary>
         /// Local thread pool for jobs.
         /// </summary>
-        private LocalPool pool = new LocalPool();
+        private LocalPool pool;
 
         private int highPriorityJobsRemaining = 0;
 
-        public JobManager(int preferredPort, JobManagerConfiguration configuration)
+        public JobManager(int preferredPort, JobManagerConfiguration configuration, int localConcurrentThreads = 0)
         {
+            pool = new LocalPool(localConcurrentThreads);
             Configuration = configuration;
             InitializeChannels(preferredPort);
             InitializePersistence();
