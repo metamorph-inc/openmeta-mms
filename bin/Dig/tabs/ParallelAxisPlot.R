@@ -1,5 +1,5 @@
-
 title <- "Parallel Axis Plot"
+footer <- TRUE
 
 ui <- function() {
 
@@ -27,19 +27,37 @@ ui <- function() {
   )
 }
 
-server <- function(input, output, session, raw_data, raw_info) {
-
-  output$text <- renderText("raw_data")
-
-  row.names(raw_data) <- NULL
-  d3df <- apply(raw_data, 1, function(row) as.list(row[!is.na(row)]))
+server <- function(input, output, session, data) {
   
+  ### ALL Comments by Will Knight
+
+  # Prepare the data frame for input into d3 javascript file
+  row.names(data$raw) <- NULL
+  d3df <- apply(data$raw, 1, function(row) as.list(row[!is.na(row)]))
+  
+  # Main rendering of d3 plot
   observe({
-    input$dimension #Causes d3 object to reflect current window size
-    input$refresh   #Causes d3 object to re-render when button is clicked
+    # Uncommenting this line will cause the plot to render 
+    # whenever the window gets resized.  This should be handled
+    # by a separate function to preserve brush/slider settings
+    #input$dimension 
+    
+    #Causes d3 object to re-render when button is clicked
+    input$refresh   
     
     #This line sends the current raw_data to the d3 process.
+    # 
     isolate(session$sendCustomMessage(type="dataframe", d3df))
+  })
+  
+  # Separate handler for adjust sliders
+  observeEvent(data$Filters(), {
+    session$sendCustomMessage(type="slider_update", data$Filters())
+  })
+  
+  # Separate handler for resizing window
+  observeEvent(input$dimension, {
+    session$sendCustomMessage(type="resize", data$Filters())       
   })
   
 }

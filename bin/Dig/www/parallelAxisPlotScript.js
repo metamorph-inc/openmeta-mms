@@ -1,3 +1,26 @@
+var sliders = [];
+var num_sliders;
+
+Shiny.addCustomMessageHandler("slider_update", 
+  function(message){
+    /*  This function sets the global sliders variable
+     *  to be equal to all items in data$Filters() that
+     *  are not factors
+     */
+    sliders = [];
+    
+    for(var i = 0; i < Object.keys(message).length; i++) {
+      if(message[Object.keys(message)[i]]["type"] != "factor") {
+        sliders.push(Object.keys(message)[i]);
+      }
+    }
+    console.log("sliders");
+    console.log(sliders);
+  }
+);
+
+
+
 Shiny.addCustomMessageHandler("dataframe",
 	function(message){
 		
@@ -134,4 +157,13 @@ Shiny.addCustomMessageHandler("dataframe",
 		  });
 		}
 	}
+);
+
+Shiny.addCustomMessageHandler("resize",
+	function(message){
+		
+  // resize code here - mostly duplicated from data frame message handler
+  
+	}
+	
 );

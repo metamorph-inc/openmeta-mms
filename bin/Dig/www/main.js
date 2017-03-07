@@ -20,6 +20,10 @@ windowWidth = window.innerWidth;
 Shiny.onInputChange("windowWidth", windowWidth); 
 });
 
+$(window).bind("resizeEnd", function() {
+Shiny.onInputChange("dimension", [window.innerWidth, window.innerHeight]); 
+});
+
 Shiny.addCustomMessageHandler("sliderSize", function(message) {
   $slider = document.querySelector("#filters > div > div:nth-child(2) > div:nth-child(1) > div");
   var sliderWidth = $slider.offsetWidth; // all sliders are the same size
