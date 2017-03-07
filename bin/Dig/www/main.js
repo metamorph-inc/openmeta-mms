@@ -2,15 +2,13 @@ var windowWidth = 0;
 var enter_trigger = 0;
 var var_names = [];
 
+/* Process window width on startup...currently not used */
 $(document).on("shiny:connected", function(e) {  
   windowWidth = window.innerWidth; 
   Shiny.onInputChange("windowWidth", windowWidth);    
 }); 
 
-// Shiny.addCustomMessageHandler("send_vars", function(message){
-//   var_names = message;
-// });
-
+/* These next 2 functions process a change everytime the user adjusts window size */
 $(window).resize(function() {
   if(this.resizeTO) clearTimeout(this.resizeTO);
     this.resizeTO = setTimeout(function() {
@@ -27,12 +25,14 @@ $(window).bind("resizeEnd", function() {
   update_label_width();
 });
 
-Shiny.addCustomMessageHandler("update_widths", function(message) {
 
+/* This gets called when filter footer is opened...helpful as a startup condition */
+Shiny.addCustomMessageHandler("update_widths", function(message) {
   update_slider_width();
   update_label_width();
 })
 
+/* Sends shiny the pixel lengths of each slider */
 function update_slider_width() {
   var $sliders = document.querySelector("#filters").querySelectorAll("div.form-group.shiny-input-container");
 
@@ -51,6 +51,10 @@ function update_slider_width() {
   }
 }
 
+/* CURRENTLY NOT NEEDED
+ * Sends shiny the pixel lengths of each slider label 
+ * NOTE...any length > slider length will be 'saturated' at slider length
+ */
 function update_label_width() {
   var labelWidth = [];
 
@@ -68,7 +72,7 @@ function update_label_width() {
   }
 }
 
-// Triggers when an enter key is pressed
+/* Sends shiny a trigger whennever enter key is pressed */
 $(document).on("keydown", function (e) {
   if(e.keyCode == 13){
     Shiny.onInputChange("last_key_pressed", enter_trigger++);

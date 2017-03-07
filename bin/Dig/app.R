@@ -43,10 +43,7 @@ library(jsonlite)
 library(topsis)
 
 # Defined Constants
-DEFAULT_NAME_LENGTH <- 25
-abbreviate_length <- DEFAULT_NAME_LENGTH
-FIRST_TIME_LOAD <- 0
-LENGTH_SATISFIED <- F
+abbreviate_length <- 25
 
 # Load selected tabs.
 custom_tab_files <- list.files('tabs', pattern = "*.R")
@@ -232,67 +229,6 @@ Server <- function(input, output, session) {
   var_range <- c(var_facs, var_nums_and_ints)
   var_constants <- subset(var_names, !(var_names %in% var_range))
   
-  # session$onFlushed(function() {
-  #   session$sendCustomMessage(type = 'send_vars', message = var_names)
-  # })
-  
-  AbbreviatedNames <- reactive({
-    # This function reacts to the user scaling the size of the browser window
-    # Once called, this function processes a new abbreviation length for the slider labels
-    
-    # abbreviate(var_names, abbreviate_length)
-    # print(paste0("slider width = ", input$sliderWidth))
-    # print(paste0("label sizes: ", input$labelWidth))
-    # abbreviation_length <- as.integer(input$windowWidth/6/10)
-    
-    if(!is.null(input$labelWidth)){
-      if((input$sliderWidth - max(input$labelWidth)) < 1){
-        abbreviate_length <<- abbreviate_length - 1
-      }
-      else if((input$sliderWidth - max(input$labelWidth)) > 10){
-        abbreviate_length <<- abbreviate_length + 1
-      }
-      else{
-        LENGTH_SATISFIED <<- T 
-      }
-    }
-    
-    # TODO(wknight): Find a way to understand when the window is going to
-    # to transition from 12-wide to 4-wide, so we handle the 4-wide case
-    # more elegantly. 
-    
-    #if (abbreviation_length < 10)		
-    #  abbreviation_length <- DEFAULT_NAME_LENGTH		
-    abbreviate(var_names, abbreviate_length)
-    
-  })
-  
-  observeEvent(input$labelWidth, {
-    print(input$labelWidth)
-  })
-  observeEvent(input$sliderWidth, {
-    print(input$sliderWidth)
-  })
-  
-  observe({
-    if(!LENGTH_SATISFIED){
-      session$onFlushed(function() {
-        session$sendCustomMessage("update_widths", message = 1);
-      }, once = F)
-    }
-  })
-  
-  observeEvent(input$windowWidth, {
-    LENGTH_SATISFIED <<- F
-  })
-  
-  observeEvent( input$footer_collapse, {
-    session$onFlushed(function() {
-      session$sendCustomMessage("update_widths", message = 1);
-    })
-  })
-  
-  
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
   # Lets the UI know if a tab has requested the 'Filters' footer.  
@@ -309,7 +245,6 @@ Server <- function(input, output, session) {
   output$filters <- renderUI({
     var_selects <- var_range_facs
     var_sliders <- var_range_nums_and_ints
-    input$labelWidth
     
     div(
       fluidRow(
@@ -325,20 +260,40 @@ Server <- function(input, output, session) {
     )
   })   
   
+  # FUTURE IMPROVEMENT
+  ###################################
+  #### SLIDER ABBREVIATION ##########
+  #### TODO: TTHOMAS ################
+  ###################################
+  ## For each slider ################
+  ## Add Class
+  ## Add CSS
+  ## overflow: hidden
+  ## textoverflow: ellipses
+  ## on hover - show full name
+  ###################################
+  
+  ###################################
+  ### HERE IS 90% SOLUTION ##########
+  # Slider abbreviation function based off sliderWidth
   AbbreviateLabel <- function(name) {
     
-    #index <- match(name, c(var_range_facs, var_range_nums_and_ints))
-    
     if(!is.null(input$sliderWidth)){
-      # pixels <- input$labelWidth[index]
-      #abbreviate_length <- input$sliderWidth/8
+      abbreviate_length <<- input$sliderWidth/8
     }
     
     abbreviate(name, abbreviate_length)
     
-    
-    
   }
+  
+  # Process slider pixel width when opening filters
+  observeEvent( input$footer_collapse, {
+    session$onFlushed(function() {
+      session$sendCustomMessage("update_widths", message = 1);
+    })
+  })
+  #### END OF 90% ABBREVIATION SOL. ##
+  ####################################
   
   GenerateEnumUI <- function(current) {
     items <- names(table(raw[[current]]))
