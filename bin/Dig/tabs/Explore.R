@@ -19,20 +19,15 @@ ui <- function() {
                 condition = "input.auto_render == false",
                 actionButton("render_plot", "Render Plot"),
                 br()
-              ), hr(),
-              # h4("Data Coloring"),
-              # selectInput("col_type", "Type:", choices = c("None", "Max/Min", "Discrete", "Highlighted", "Ranked"), selected = "None"),
-              # conditionalPanel(
-              #   condition = "input.col_type == 'Max/Min'",
-              #   selectInput("col_var_num", "Colored Variable:", c()),
-              #   radioButtons("radio", NULL, c("Maximize" = "max", "Minimize" = "min"), selected = "max"),
-              #   sliderInput("col_slider", NULL, min=0, max=1, value = c(0.3, 0.7), step=0.1)
-              # ),
-              # conditionalPanel(
-              #   condition = "input.col_type == 'Discrete'",
-              #   selectInput("colVarFactor", "Colored Variable:", c()),
-              #   htmlOutput("colorLegend")
-              # ),  hr(),
+              ),
+              hr(),
+              selectInput("pairs_plot_marker",
+                          "Plot Markers:",
+                          c("Circle, Open"=1,
+                            "Circle, Filled"=19)),
+              radioButtons("pairs_plot_marker_size", "Marker Size:",
+                           c("Small" = 1, "Medium" = 1.5, "Large" = 2)),
+              hr(),
               h4("Info"),
               verbatimTextOutput("pairs_stats")#,
               # TODO(tthomas): Add this functionality back in.
@@ -60,6 +55,14 @@ ui <- function() {
               selectInput("x_input", "X-axis", c()),
               selectInput("y_input", "Y-Axis", c()),
               br(),
+              hr(),
+              selectInput("single_plot_marker",
+                          "Plot Markers:",
+                          c("Circle, Open"=1,
+                            "Circle, Filled"=19)),
+              radioButtons("single_plot_marker_size", "Marker Size:",
+                           c("Small" = 1, "Medium" = 1.5, "Large" = 2)),
+              hr(),
               p(strong("Adjust Sliders to Selection")),
               actionButton("update_x", "X"),
               actionButton("update_y", "Y"),
@@ -138,7 +141,11 @@ server <- function(input, output, session, data) {
     
     if (length(input$display) >= 2 & nrow(data$Filtered()) > 0) {
       # pairs_setup()
-      pairs(data$Colored()[vars_list()], upper.panel = NULL, col = data$Colored()$color)
+      pairs(data$Colored()[vars_list()],
+            upper.panel = NULL,
+            col = data$Colored()$color,
+            pch = as.numeric(input$pairs_plot_marker),
+            cex = as.numeric(input$pairs_plot_marker_size))
     }
     else { 
       if (nrow(data$Colored()) == 0) {
@@ -256,7 +263,10 @@ server <- function(input, output, session, data) {
     plot(data$Filtered()[[paste(input$x_input)]],
          data$Filtered()[[paste(input$y_input)]],
          xlab = paste(input$x_input),
-         ylab = paste(input$y_input))#,
+         ylab = paste(input$y_input),
+         col = data$Colored()$color,
+         pch = as.numeric(input$single_plot_marker),
+         cex = as.numeric(input$single_plot_marker_size))#,
          # pch = as.numeric(input$pointStyle))
   })
   
