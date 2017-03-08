@@ -255,42 +255,22 @@ Server <- function(input, output, session) {
         })
       )
     )
-  })   
-  
-  # FUTURE IMPROVEMENT
-  ###################################
-  #### SLIDER ABBREVIATION ##########
-  #### TODO: TTHOMAS ################
-  ###################################
-  ## For each slider ################
-  ## Add Class
-  ## Add CSS
-  ## overflow: hidden
-  ## textoverflow: ellipses
-  ## on hover - show full name
-  ###################################
-  
-  ###################################
-  ### HERE IS 90% SOLUTION ##########
+  })
+
   # Slider abbreviation function based off sliderWidth
   AbbreviateLabel <- function(name) {
-    
     if(!is.null(input$sliderWidth)){
       abbreviate_length <<- input$sliderWidth/8
     }
-    
     abbreviate(name, abbreviate_length)
-    
   }
   
   # Process slider pixel width when opening filters
-  observeEvent( input$footer_collapse, {
+  observeEvent(input$footer_collapse, {
     session$onFlushed(function() {
       session$sendCustomMessage("update_widths", message = 1);
     })
   })
-  #### END OF 90% ABBREVIATION SOL. ##
-  ####################################
   
   GenerateEnumUI <- function(current) {
     items <- names(table(raw[[current]]))
@@ -357,9 +337,8 @@ Server <- function(input, output, session) {
       )
   }
   
-  ###############
-  # Custom action button for exact entry --- this makes a green button and can also be accessed to produced different themed buttons
-  ###############
+  # Custom action button for exact entry. This makes a green button
+  # and can also be accessed to produced different themed buttons
   actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
     if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
       btn.css.class <- paste("btn",btn.style,sep="-")
@@ -367,20 +346,18 @@ Server <- function(input, output, session) {
     tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
   }
   
-  ###############
-  # This function hides all slider exact entry windows on a 'double click' and then shows the one you clicked on
-  ###############
   openSliderToolTip <- function(current) {
+    # This function calls hide on all slider exact entry windows on a
+    # 'double click' and then calls 'show' on the opened one.
     for(i in 1:length(var_range_nums_and_ints)) {
       hide(paste0("slider_tooltip_", var_range_nums_and_ints[i]))
     }
     shinyjs::show(paste0("slider_tooltip_", current))
   }
   
-  ###############
-  # This handles the processing of exact entry back into the slider - it reacts to either the submit button OR the enter key
-  ###############
   lapply(var_range_nums_and_ints, function(current) {
+    # This handles the processing of exact entry back into the slider.
+    # It reacts to either the submit button OR the enter key
     observe({
       input[[paste0("submit_", current)]]
       input$last_key_pressed
@@ -403,9 +380,7 @@ Server <- function(input, output, session) {
     })
   })
   
-  ###############
   # This function adds a double click handler to each slider
-  ###############
   observe({
     lapply(var_range_nums_and_ints, function(current) {
       onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
@@ -414,7 +389,6 @@ Server <- function(input, output, session) {
   })
   
   output$constants <- renderUI({
-    # print("In render constants")
     fluidRow(
       lapply(var_constants, function(var_constant) {
         column(2,

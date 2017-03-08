@@ -1,11 +1,11 @@
-var windowWidth = 0; 
+var window_width = 0; 
 var enter_trigger = 0;
 var var_names = [];
 
 /* Process window width on startup...currently not used */
 $(document).on("shiny:connected", function(e) {  
-  windowWidth = window.innerWidth; 
-  Shiny.onInputChange("windowWidth", windowWidth);    
+  window_width = window.innerWidth; 
+  Shiny.onInputChange("window_width", window_width);    
 }); 
 
 /* These next 2 functions process a change everytime the user adjusts window size */
@@ -17,14 +17,9 @@ $(window).resize(function() {
 });
 
 $(window).bind("resizeEnd", function() {
-  // windowWidth = window.innerWidth;  
-  // Shiny.onInputChange("windowWidth", windowWidth); 
   console.log("resize occured");
-
   update_slider_width();
-  update_label_width();
 });
-
 
 /* This gets called when filter footer is opened...helpful as a startup condition */
 Shiny.addCustomMessageHandler("update_widths", function(message) {
@@ -48,27 +43,6 @@ function update_slider_width() {
     console.log(sliderWidth);
 
     Shiny.onInputChange("sliderWidth", sliderWidth);
-  }
-}
-
-/* CURRENTLY NOT NEEDED
- * Sends shiny the pixel lengths of each slider label 
- * NOTE...any length > slider length will be 'saturated' at slider length
- */
-function update_label_width() {
-  var labelWidth = [];
-
-  var $labels = document.querySelector("#filters").querySelectorAll("label.control-label");
-
-  if($labels.length > 0){
-    for(var i = 0; i < $labels.length; i++){
-      labelWidth.push($labels[i].offsetWidth)
-    }
-
-    console.log("labelWidth");
-    console.log(labelWidth);
-
-    Shiny.onInputChange("labelWidth", labelWidth);
   }
 }
 
