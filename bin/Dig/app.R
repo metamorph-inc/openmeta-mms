@@ -57,19 +57,22 @@ custom_tab_files <- c("Explore.R",
                       "UncertaintyQuantification.R")
 custom_tab_environments <- lapply(custom_tab_files, function(file_name) {
   env <- new.env()
-  # source(file.path('tabs',file_name), local = env)
-  debugSource(file.path('tabs',file_name), local = env)
+  source(file.path('tabs',file_name), local = env)
+  # debugSource(file.path('tabs',file_name), local = env)
   env
 })
 
 # Setup test input.
 if (Sys.getenv('DIG_INPUT_CSV') == "") {
-  Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
-                                     'WindTurbineForOptimization',
-                                     'mergedPET.csv'))
+  # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
+  #                                    'WindTurbineForOptimization',
+  #                                    'mergedPET.csv'))
   # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
   #                                    'WindTurbine',
   #                                    'mergedPET.csv'))
+  Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
+                                     'TestPETRefinement',
+                                     'mergedPET.csv'))
 }
 
 # Custom Functions -----------------------------------------------------------
@@ -96,8 +99,8 @@ Server <- function(input, output, session) {
 
   pet_config_present <- FALSE
   pet_config_file_name <- gsub("mergedPET.csv",
-                              "pet_config.json",
-                              Sys.getenv('DIG_INPUT_CSV'))
+                               "pet_config.json",
+                               Sys.getenv('DIG_INPUT_CSV'))
   if(file.exists(pet_config_file_name)){
     pet_config <- fromJSON(pet_config_file_name)
     pet_config_present <- TRUE
@@ -160,8 +163,8 @@ Server <- function(input, output, session) {
     # TODO(tthomas): Clean up the construction of the units list.
     for (i in 1:length(design_variable_names))
     {
-      unit <-pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
-      if(is.null(unit) | unit == "") {
+      unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
+      if(is.null(unit) || unit == "") {
         unit <- ""
         name_with_units <- design_variable_names[[i]]
       }
@@ -772,7 +775,8 @@ Server <- function(input, output, session) {
               generated_configuration_model=generated_configuration_model,
               selected_configurations=selected_configurations,
               design_variable_names=design_variable_names,
-              design_variables=design_variables)
+              design_variables=design_variables,
+              pet_config=pet_config)
   
   preprocessing <- list(var_names=var_names,
                         var_class=var_class,
