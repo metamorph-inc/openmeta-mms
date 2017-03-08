@@ -54,7 +54,7 @@ ui <- function() {
           )
         ),
         conditionalPanel(
-          condition = "output.enumeration_design_variables_present == true",
+          condition = "output.enumerated_design_variables_present == true",
           fluidRow(
             column(12,
               h4("Enumerated Ranges"),
@@ -84,7 +84,7 @@ ui <- function() {
   )
 }
 
-enumerationMaxDisplay <- 3
+max_enums_display <- 3
 
 server <- function(input, output, session, data) {
 
@@ -125,14 +125,14 @@ server <- function(input, output, session, data) {
   
   output$pet_driver_config <- renderUI({
     fluidRow(
-      column(3, selectInput("petSamplingMethod",
+      column(3, selectInput("pet_sampling_method",
                             "New Sampling Method:",
                             choices = c("Full Factorial",
                                         "Uniform",
                                         "Central Composite",
                                         "Opt Latin Hypercube"),
                             selected = pet$sampling_method)),
-      column(3, textInput("petNumSamples",
+      column(3, textInput("pet_num_samples",
                           "New Number of Samples:",
                           value = pet$num_samples))
     )
@@ -140,8 +140,8 @@ server <- function(input, output, session, data) {
   
   output$pet_rename <- renderUI({
     fluidRow(
-      column(12, h5(strong("Original MGA Filename: ")), textOutput("mgaFilenameText")),
-      column(12, h5(strong("Original PET Name: ")), textOutput("currentPetNameText"), br()),
+      column(12, h5(strong("Original MGA Filename: ")), textOutput("mga_filename_text")),
+      column(12, h5(strong("Original PET Name: ")), textOutput("current_pet_name_text"), br()),
       column(12, textInput("newPetName",
                            "New PET Name:",
                            value = paste0(pet$name, "_Refined")))
@@ -149,22 +149,22 @@ server <- function(input, output, session, data) {
   })
   
   output$original_driver_settings <- renderText(paste(pet$sampling_method," sampling with 'num_samples=", pet$num_samples,"' yielded ", nrow(data$raw), " points.", sep = ""))
-  output$mgaFilenameText <- renderText(pet$mga_name)
+  output$mga_filename_text <- renderText(pet$mga_name)
   output$generated_configuration_model_text <- renderText(pet$generated_configuration_model)
-  output$currentPetNameText <- renderText(pet$name)
+  output$current_pet_name_text <- renderText(pet$name)
   
   
   
   output$original_configuration_ranges <- renderUI({
     
-    original <- paste0(pet$selected_configurations, collapse=",")
+    original <- toString(pet$selected_configurations)
     original_count <- length(pet$selected_configurations)
-    if(original_count > enumerationMaxDisplay)
+    if(original_count > max_enums_display)
       original = paste0("List of ", original_count, " Configurations.")
     
-    refined <- paste0(unique(FilterData()$CfgID), collapse=",")
+    refined <- toString(unique(FilterData()$CfgID))
     refined_count <- length(unique(FilterData()$CfgID))
-    if(refined_count > enumerationMaxDisplay)
+    if(refined_count > max_enums_display)
       refined = paste0("List of ", refined_count, " Configurations.")
     if(refined == "")
       refined = "No configurations available."
@@ -185,12 +185,12 @@ server <- function(input, output, session, data) {
   })
   
   observeEvent(input$apply_original_cfg__ids, {
-    original <- paste0(pet$selected_configurations, collapse=",")
+    original <- toString(pet$selected_configurations)
     updateTextInput(session, 'new_cfg_ids', value = original)
   })
   
   observeEvent(input$apply_refined_cfg__ids, {
-    refined <- paste0(unique(FilterData()$CfgID), collapse=",")
+    refined <- toString(unique(FilterData()$CfgID))
     updateTextInput(session, 'new_cfg_ids', value = refined)
   })
   
@@ -207,8 +207,8 @@ server <- function(input, output, session, data) {
         selection <- unlist(strsplit(var$selection, "\\,"))
         original_min <- AbbreviateNumber(selection[1])
         original_max <- AbbreviateNumber(selection[2])
-        refined_min <- AbbreviateNumber(min(data$Filtered()[var$name]))
-        refined_max <-AbbreviateNumber(max(data$Filtered()[var$name]))
+        refined_min <- AbbreviateNumber(min(FilterData()[var$name]))
+        refined_max <-AbbreviateNumber(max(FilterData()[var$name]))
         # COMMENT(tthomas): Left over from session loading
         # min_input <- NULL
         # max_input <- NULL
@@ -266,26 +266,27 @@ server <- function(input, output, session, data) {
     lapply(design_variables, function(var){
       if(var$type == "Numeric") {
         updateTextInput(session, paste0('new_min_', var$name),
-                        value = min(data$Filtered()[var$name]))
+                        value = min(FilterData()[var$name]))
         updateTextInput(session, paste0('new_max_', var$name),
-                        value = max(data$Filtered()[var$name]))
+                        value = max(FilterData()[var$name]))
       }
     })
   })
   
   output$original_enumeration_ranges <- renderUI({
     lapply(design_variables, function(var){
-      if(type == "Enumeration"){
-        # WIP(tthomas): need some example data to play with
-        # var = addUnits(levels(droplevels(pet$design_variable_names[row, "VarName"])))
-        # type = gsub("^\\s+|\\s+$", "", levels(droplevels(pet$design_variable_names[row, "Type"])))
-        # selection = gsub(",", ", ", levels(droplevels(pet$design_variable_names[row, "Selection"])))
-        original <- var$selection
-        # if(length(unlist(strsplit(original, ","))) > enumerationMaxDisplay)
-        #   original = paste0("List of ", length(unlist(strsplit(original, ","))), " Enumerations.")
-        refined <- toString(unique(data$Filtered()[var$name])[,1])
-        # if(length(unlist(strsplit(refined, ","))) > enumerationMaxDisplay)
-        #   refined = paste0("List of ", length(unlist(strsplit(refined, ","))), " Enumerations.")
+      if(var$type == "Enumeration"){
+        
+        original <- toString(unlist(strsplit(var$selection, ",")))
+        original_count <- length(unlist(strsplit(original, ",")))
+        if(original_count > max_enums_display)
+          original = paste0("List of ", original_count, " Enumerations.")
+        
+        refined <- toString(unique(FilterData()[[var$name]]))
+        refined_count <- length(unlist(strsplit(refined, ",")))
+        if(refined_count > max_enums_display)
+          refined = paste0("List of ", refined_count, " Enumerations.")
+        
         # if(refined == "")
         #   refined = "No data available in table"
         # input_selection <- NULL
@@ -293,8 +294,9 @@ server <- function(input, output, session, data) {
         #   input_selection <- importData[[paste0('newSelection', global_index)]]
         #   NULL #This makes sure nothing appears in the UI
         # }
+        
         fluidRow(
-          column(2, h5(strong(var))),
+          column(2, h5(strong(var$name))),
           column(1, actionButton(paste0('apply_original_selection_', var$name), 'Apply')),
           column(2, h5(original)),
           column(1, actionButton(paste0('apply_refined_selection_', var$name), 'Apply')),
@@ -303,10 +305,30 @@ server <- function(input, output, session, data) {
                  textInput(paste0('new_selection_', var$name),
                            NULL,
                            placeholder = "Enter selection",
-                           value = input_selection)
+                           value = "")
           ),
           hr()
         )
+      }
+    })
+  })
+  
+  observeEvent(input$apply_all_original_enum, {
+    lapply(design_variables, function(var){
+      if(var$type == "Enumeration"){
+        original <- toString(unlist(strsplit(var$selection, ",")))
+        updateTextInput(session, paste0('new_selection_', var$name),
+                          value=original)
+      }
+    })
+  })
+
+  observeEvent(input$apply_all_refined_enum, {
+    lapply(design_variables, function(var){
+      if(var$type == "Enumeration"){
+        refined <- toString(unique(FilterData()[[var$name]]))
+        updateTextInput(session, paste0('new_selection_', var$name),
+                        value=refined)
       }
     })
   })
@@ -321,21 +343,23 @@ server <- function(input, output, session, data) {
         })
         observeEvent(input[[paste0('apply_refined_range_', var$name)]], {
           updateTextInput(session, paste0('new_min_', var$name),
-                          value = min(data$Filtered()[var$name]))
+                          value = min(FilterData()[var$name]))
           updateTextInput(session, paste0('new_max_', var$name),
-                          value = max(data$Filtered()[var$name]))
+                          value = max(FilterData()[var$name]))
         })
       }
-      # WIP(tthomas): still need to add this functionality back in
-      # else if(var$type == "Enumeration"){
-      #   original = gsub(",", ", ", levels(droplevels(pet$design_variable_names[row, "Selection"])))
-      #   observeEvent(input[[paste0('apply_original_selection_', var$name)]], {
-      #     updateTextInput(session, paste0('new_selection_', var$name), value = original)
-      #   })
-      #   observeEvent(input[[paste0('apply_refined_selection_', var$name)]], {
-      #     updateTextInput(session, paste0('new_selection_', var$name), value = toString(unique(FilterData()[var])[,1]))
-      #   })
-      # }
+      else if (var$type == "Enumeration"){
+        observeEvent(input[[paste0('apply_original_selection_', var$name)]], {
+          original <- toString(unlist(strsplit(var$selection, ",")))
+          updateTextInput(session, paste0('new_selection_', var$name),
+                          value=original)
+        })
+        observeEvent(input[[paste0('apply_refined_selection_', var$name)]], {
+          refined <- toString(unique(FilterData()[[var$name]]))
+          updateTextInput(session, paste0('new_selection_', var$name),
+                          value=refined)
+        })
+      }
     })
   })
   
@@ -363,80 +387,36 @@ server <- function(input, output, session, data) {
   )
   
   ExportRangesFunction <- function(file) { 
-    pet_refined <- pet
+    pet_config_refined <- pet$pet_config
     
     ReassignDV <- function(dv, name) {
-      global_i = which(var_names == addUnits(name))
       if("type" %in% names(dv) && dv$type == "enum") {
-        selection <- strsplit(input[[paste0('newSelection', global_i)]], ",")
-        if (length(unlist(selection)) > 1) {
-          dv$items <- unlist(selection)
-        } else {
-          dv$items <- selection
+        dv$items <- unlist(lapply(strsplit(input[[paste0('new_selection_', name)]], ","),
+                                  trimws))
+        # To retain array type in .json file
+        if (length(dv$items) == 1) {
+          dv$items <- list(dv$items)
         }
       } else {
-        dv$RangeMin <- as.numeric(input[[paste0('newMin', global_i)]])
-        dv$RangeMax <- as.numeric(input[[paste0('newMax', global_i)]])
+        dv$RangeMin <- as.numeric(input[[paste0('new_min_', name)]])
+        dv$RangeMax <- as.numeric(input[[paste0('new_max_', name)]])
       }
       dv
     }
 
-    refined_var_names <- lapply(pet$design_variable_names, 
-                                function(var_name) {
-                                  data$meta$variables[[var_name]]$name_with_units
-                                })
-
-    pet_refined$drivers[[1]]$pet$design_variable_names <- refined_var_names
+    new_dvs <- Map(ReassignDV,
+                   pet_config_refined$drivers[[1]]$designVariables,
+                   names(pet_config_refined$drivers[[1]]$designVariables))
+    pet_config_refined$drivers[[1]]$designVariables <- new_dvs
+    pet_config_refined$drivers[[1]]$details$Code <- paste0("num_samples=", input$pet_num_samples)
+    pet_config_refined$drivers[[1]]$details$DOEType <- input$pet_sampling_method
     
-    pet_refined$drivers[[1]]$details$Code <- paste0("num_samples=", input$petNumSamples)
-    pet_refined$drivers[[1]]$details$DOEType <- input$petSamplingMethod
+    selected_configurations <- unlist(lapply(strsplit(input$new_cfg_ids, ","), trimws))
+    # To retain array type in .json file
+    if(length(selected_configurations) == 1)
+      selected_configurations <- list(selected_configurations)
+    pet_config_refined$SelectedConfigurations <- selected_configurations
     
-    pet$selected_configurations <- strsplit(input$new_cfg_ids, ",")
-    if(length(unlist(pet$selected_configurations)) > 1)
-      pet$selected_configurations <- unlist(pet$selected_configurations)
-    pet_refined$selected_configurations <- pet$selected_configurations
-    
-    write(toJSON(pet_refined, pretty = TRUE, auto_unbox = TRUE), file = file)
+    write(toJSON(pet_config_refined, pretty = TRUE, auto_unbox = TRUE), file = file)
   }
 }
-  
-  # observeEvent(input$apply_all_original_enum, {
-  #   lapply(rownames(pet$design_variable_names), function(row) {
-  #     var = levels(droplevels(pet$design_variable_names[row, "VarName"]))
-  #     type = gsub("^\\s+|\\s+$", "", levels(droplevels(pet$design_variable_names[row, "Type"])))
-  #     global_i = which(var_names == var)
-  #     if(type == "Enumeration"){
-  #       original = gsub(",", ", ", levels(droplevels(pet$design_variable_names[row, "Selection"])))
-  #       updateTextInput(session, paste0('newSelection', global_i), value = original)
-  #     }
-  #   })
-  # })
-  
-  # observeEvent(input$apply_all_refined_enum, {
-  #   lapply(var_fac, function(var) {
-  #     global_index = which(var_names == var)
-  #     updateTextInput(session, paste0('newSelection', global_index), value = toString(unique(FilterData()[var])[,1]))
-  #   })
-  # })
-  
-  # slowFactorRangeData <- eventReactive(input$updateRanges, {
-  #   printFactorStatistics()
-  # })
-  
-  # printFactorStatistics <- function(...){
-  #   lapply(varRangeFac(), function(var) {
-  #     all_ranges[[var]] <<- do.call(rbind, lapply(FilterData()[var], summary))
-  #     renderPrint({
-  #       all_ranges[[var]]
-  #     })
-  #   })
-  # }
-  
-  # output$factor_ranges <- renderUI({
-  #   if(input$autoRange == TRUE){
-  #     printFactorStatistics()
-  #   }
-  #   else {
-  #     slowFactorRangeData()
-  #   }
-  # })
