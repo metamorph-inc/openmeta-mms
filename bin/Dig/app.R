@@ -43,35 +43,40 @@ library(jsonlite)
 library(topsis)
 
 # Defined Constants
-DEFAULT_NAME_LENGTH <- 25
-abbreviate_length <- DEFAULT_NAME_LENGTH
-FIRST_TIME_LOAD <- 0
+abbreviate_length <- 25
 
 # Load selected tabs.
 custom_tab_files <- list.files('tabs', pattern = "*.R")
 custom_tab_files <- c("Explore.R",
                       "DataTable.R",
-                      "PETRefinement.R")
+                      "Histogram.R",
+                      "PETRefinement.R",
+                      "Scratch.R",
+                      "ParallelAxisPlot.R",
+                      "UncertaintyQuantification.R")
 custom_tab_environments <- lapply(custom_tab_files, function(file_name) {
   env <- new.env()
-  # source(file.path('tabs',file_name), local = env)
-  debugSource(file.path('tabs',file_name), local = env)
+  source(file.path('tabs',file_name), local = env)
+  # debugSource(file.path('tabs',file_name), local = env)
   env
 })
 
 # Setup test input.
 if (Sys.getenv('DIG_INPUT_CSV') == "") {
-  Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
-                                     'WindTurbineForOptimization',
-                                     'mergedPET.csv'))
+  # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
+  #                                    'WindTurbineForOptimization',
+  #                                    'mergedPET.csv'))
   # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
   #                                    'WindTurbine',
   #                                    'mergedPET.csv'))
+  Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
+                                     'TestPETRefinement',
+                                     'mergedPET.csv'))
 }
 
 # Custom Functions -----------------------------------------------------------
 
-RemoveItemNumber <- function(factor) {sub("[0-9]+. ","", factor)}
+RemoveItemNumber <- function(factor) {sub("[0-9]+. ", "", factor)}
 
 # Server ---------------------------------------------------------------------
 
@@ -93,8 +98,8 @@ Server <- function(input, output, session) {
 
   pet_config_present <- FALSE
   pet_config_file_name <- gsub("mergedPET.csv",
-                              "pet_config.json",
-                              Sys.getenv('DIG_INPUT_CSV'))
+                               "pet_config.json",
+                               Sys.getenv('DIG_INPUT_CSV'))
   if(file.exists(pet_config_file_name)){
     pet_config <- fromJSON(pet_config_file_name)
     pet_config_present <- TRUE
@@ -127,31 +132,22 @@ Server <- function(input, output, session) {
   if(pet_config_present) {
     dvs <- pet_config$drivers[[1]]$designVariables
     design_variable_names <- names(dvs)
-    numeric_design_variables <- lapply(dvs,
-                                       function(x) {
-                                         "RangeMax" %in% names(x)
-                                       })
-    enumerated_design_variables <- lapply(dvs,
-                                          function(x) {
-                                            "type" %in% names(x)
-                                          })
-    dv_types <- unlist(lapply(numeric_design_variables, 
-                              function(x) { 
-                                if (x)
-                                  "Numeric"
-                                else
-                                  "Enumeration"
-                              }))
-    dv_selections <- unlist(lapply(dvs, 
-                                   function(x) {
-                                     if("type" %in% names(x)
-                                        && x$type == "enum") 
-                                       paste0(unlist(x$items), collapse=",") 
-                                     else 
-                                       paste0(c(x$RangeMin, x$RangeMax),
-                                              collapse=",")
-                                   }))
-    design_variables <- data.frame(var_name=design_variable_names, Type=dv_types, Selection=dv_selections)
+    design_variables <- Map(function(item, name) {
+      new_item <- list()
+      new_item$name <- name
+      if ("RangeMax" %in% names(item)) {
+        new_item$type <- "Numeric"
+      } else {
+        new_item$type <- "Enumeration"
+      }
+      if("type" %in% names(item) && item$type == "enum") {
+        new_item$selection <- paste0(unlist(item$items), collapse=",")
+      } else {
+        new_item$selection <- paste0(c(item$RangeMin, item$RangeMax),
+                                     collapse=",")
+      }
+      new_item
+    }, dvs, names(dvs))
     objective_names <- names(pet_config$drivers[[1]]$objectives)
     num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
     sampling_method <- pet_config$drivers[[1]]$details$DOEType
@@ -166,8 +162,8 @@ Server <- function(input, output, session) {
     # TODO(tthomas): Clean up the construction of the units list.
     for (i in 1:length(design_variable_names))
     {
-      unit <-pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
-      if(is.null(unit) | unit == "") {
+      unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
+      if(is.null(unit) || unit == "") {
         unit <- ""
         name_with_units <- design_variable_names[[i]]
       }
@@ -231,41 +227,6 @@ Server <- function(input, output, session) {
   var_range <- c(var_facs, var_nums_and_ints)
   var_constants <- subset(var_names, !(var_names %in% var_range))
   
-  AbbreviatedNames <- reactive({
-    # This function reacts to the user scaling the size of the browser window
-    # Once called, this function processes a new abbreviation length for the slider labels
-    
-    # abbreviate(var_names, abbreviate_length)
-    # print(paste0("slider width = ", input$sliderWidth))
-    # print(paste0("label sizes: ", input$labelWidth))
-    # abbreviation_length <- as.integer(input$windowWidth/6/10)
-    
-    req(input$windowWidth)
-    
-    
-    if(!is.null(input$labelWidth)){
-      if(max(input$labelWidth) >= input$sliderWidth)
-        abbreviate_length <<- abbreviate_length - 1
-      else if((input$sliderWidth - max(input$labelWidth)) > 1)
-          abbreviate_length <<- abbreviate_length + 1
-      
-      
-      # session$sendCustomMessage(type = 'sliderSize', message = var_names)
-      session$sendCustomMessage(type = 'labelSize', message = var_names)
-    }
-    
-    # TODO(wknight): Find a way to understand when the window is going to
-    # to transition from 12-wide to 4-wide, so we handle the 4-wide case
-    # more elegantly. 
-    
-    #if (abbreviation_length < 10)		
-    #  abbreviation_length <- DEFAULT_NAME_LENGTH		
-    abbreviate(var_names, abbreviate_length)
-    
-  })
-  
-  
-  
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
   # Lets the UI know if a tab has requested the 'Filters' footer.  
@@ -291,16 +252,25 @@ Server <- function(input, output, session) {
       ),
       fluidRow(
         lapply(var_sliders, function(var_slider) {
-          GenerateSliderUI(var_slider, AbbreviatedNames()[var_slider])
+          GenerateSliderUI(var_slider, AbbreviateLabel(var_slider))
         })
       )
     )
-  })   
+  })
+
+  # Slider abbreviation function based off sliderWidth
+  AbbreviateLabel <- function(name) {
+    if(!is.null(input$sliderWidth)){
+      abbreviate_length <<- input$sliderWidth/8
+    }
+    abbreviate(name, abbreviate_length)
+  }
   
-  observeEvent(input$windowWidth, {
-    # FIRST_TIME_LOAD <<- FIRST_TIME_LOAD + 1
-    session$sendCustomMessage(type = 'sliderSize', message = var_names)
-    session$sendCustomMessage(type = 'labelSize', message = var_names)
+  # Process slider pixel width when opening filters
+  observeEvent(input$footer_collapse, {
+    session$onFlushed(function() {
+      session$sendCustomMessage("update_widths", message = 1);
+    })
   })
   
   GenerateEnumUI <- function(current) {
@@ -348,7 +318,9 @@ Server <- function(input, output, session) {
       # slider_value <- c(slider_min, slider_max)
     }
     
+    
       column(2,
+             # Hidden well panel for slider tooltip
              wellPanel(id = paste0("slider_tooltip_", current),
                        style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
                        h4(label),
@@ -356,6 +328,7 @@ Server <- function(input, output, session) {
                        textInput(paste0("max_input_", current), "Max:"),
                        actionButton(paste0("submit_", current), "Apply","success")
              ),
+             # The slider itself
              sliderInput(paste0('filter_', current),
                          label,
                          step = step,
@@ -365,21 +338,27 @@ Server <- function(input, output, session) {
       )
   }
   
+  # Custom action button for exact entry. This makes a green button
+  # and can also be accessed to produced different themed buttons
   actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
     if ( btn.style %in% c("primary","info","success","warning","danger","inverse","link"))
       btn.css.class <- paste("btn",btn.style,sep="-")
     else btn.css.class = ""
     tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
   }
-
+  
   openSliderToolTip <- function(current) {
+    # This function calls hide on all slider exact entry windows on a
+    # 'double click' and then calls 'show' on the opened one.
     for(i in 1:length(var_range_nums_and_ints)) {
       hide(paste0("slider_tooltip_", var_range_nums_and_ints[i]))
     }
-    show(paste0("slider_tooltip_", current))
+    shinyjs::show(paste0("slider_tooltip_", current))
   }
   
   lapply(var_range_nums_and_ints, function(current) {
+    # This handles the processing of exact entry back into the slider.
+    # It reacts to either the submit button OR the enter key
     observe({
       input[[paste0("submit_", current)]]
       input$last_key_pressed
@@ -402,14 +381,15 @@ Server <- function(input, output, session) {
     })
   })
   
+  # This function adds a double click handler to each slider
   observe({
     lapply(var_range_nums_and_ints, function(current) {
       onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
+      inlineCSS(list(.style = "overflow: hidden"))
     })
   })
   
   output$constants <- renderUI({
-    # print("In render constants")
     fluidRow(
       lapply(var_constants, function(var_constant) {
         column(2,
@@ -451,69 +431,6 @@ Server <- function(input, output, session) {
   #     )
   #   }
   # })
-  
-  # Coloring -----------------------------------------------------------------
-  
-  updateSelectInput(session, "col_var_num", choices = var_range_nums_and_ints)
-  
-  col_slider_settings <- reactive({
-    if(input$col_var_num != ""){
-      # print("In colSlider settings")
-      variable <- input$col_var_num
-      isolate({
-        data <- FilteredData()
-        min <- min(data[[variable]], na.rm=TRUE)
-        max <- max(data[[variable]], na.rm=TRUE)
-        thirtythree <- quantile(data[[variable]], 0.33, na.rm=TRUE)
-        sixtysix <- quantile(data[[variable]], 0.66, na.rm=TRUE)
-        abs_min_val <- as.numeric(unname(abs_min[variable]))
-        abs_max_val <- as.numeric(unname(abs_max[variable]))
-        abs_step <- max((max - min) * 0.01,
-                        abs(min) * 0.001,
-                        abs(max) * 0.001)
-        numeric_min <- signif(abs_min_val - abs_step*10, digits = 4)
-        numeric_max <- signif(abs_max_val + abs_step*10, digits = 4)
-        numeric_step <- signif(abs_step, digits = 4)
-        lower <- unname(thirtythree)
-        upper <- unname(sixtysix)
-      })
-      # print("colSlider settings complete")
-      colSlider <- data.frame(min, max, lower, upper,
-                        numeric_min, numeric_max, numeric_step,
-                        abs_min_val, abs_max_val, abs_step)
-    }
-  })
-  
-  update_color_slider <- observe({
-    if(input$col_var_num != ""){
-      if(var_class[[input$col_var_num]] == "numeric") {
-        updateSliderInput(session,
-                          "col_slider",
-                          step = col_slider_settings()$numeric_step,
-                          min = col_slider_settings()$numeric_min,
-                          max = col_slider_settings()$numeric_max,
-                          value = c(col_slider_settings()$lower,
-                                    col_slider_settings()$upper))
-      }
-      else if(var_class[[input$col_var_num]] == "integer") {
-        updateSliderInput(session,
-                          "col_slider",
-                          min = col_slider_settings()$abs_min_val,
-                          max = col_slider_settings()$abs_max_val,
-                          value = c(floor(col_slider_settings()$lower),
-                                    ceiling(col_slider_settings()$upper)))
-      }
-      # print("updateColorSlider() done.")
-    }
-    # else{
-    #   print("updateColorSlider stalled")
-    # }
-    # if(importFlags$tier2){
-    #   importFlags$tier2 <- FALSE
-    #   importFlags$ranges <- TRUE
-    #   importFlags$bayesian <- TRUE
-    # }
-  })
   
   # Data processing ----------------------------------------------------------
     
@@ -589,84 +506,212 @@ Server <- function(input, output, session) {
   
   ColoredData <- reactive({
     data <- FilteredData()
-    
     data$color <- character(nrow(data))
-    data$color <- "black"#input$normColor
-    
-    color_type = input$col_type
-    
-    switch(color_type,
-           "Max/Min" = 
-           {
-             name <- input$col_var_num
-             bottom <- input$col_slider[1]
-             top <- input$col_slider[2]
-             print(paste("Coloring Data:", name, bottom, top))
-             data$color[(data[[name]] >= bottom) & (data[[name]] <= top)] <- "yellow"#input$midColor
-             if (input$radio == "max") {
-               data$color[data[[name]] < bottom] <- "red"#input$maxColor
-               data$color[data[[name]] > top] <- "green"#input$minColor
-             } 
-             else {
-               data$color[data[[name]] < bottom] <- "green"#input$minColor
-               data$color[data[[name]] > top] <- "red"#input$maxColor
-             }
-           },
-           "Discrete" = 
-           {
-             varList = names(table(raw_plus()[input$colVarFactor]))
-             for(i in 1:length(varList)){
-               data$color[(data[[input$colVarFactor]] == varList[i])] <- palette()[i]
-             }
-           },
-           "Highlighted" = 
-           {
-             if (!is.null(input$plot_brush)){
-               if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
-                 xRange <- FALSE
-                 yRange <- FALSE
-               }
-               else{
-                 if(varClass[input$xInput] == "factor"){
-                   lower <- ceiling(input$plot_brush$xmin)
-                   upper <- floor(input$plot_brush$xmax)
-                   xRange <- FALSE
-                   for (i in lower:upper){
-                     xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
-                   }
-                   if (lower > upper){
-                     xRange <- FALSE
-                   }
-                 }
-                 else {
-                   xUpper <- data[input$xInput] < input$plot_brush$xmax
-                   xLower <- data[input$xInput] > input$plot_brush$xmin
-                   xRange <- xUpper & xLower
-                 }
-                 if(varClass[input$yInput] == "factor"){
-                   lower <- ceiling(input$plot_brush$ymin)
-                   upper <- floor(input$plot_brush$ymax)
-                   yRange <- FALSE
-                   for (i in lower:upper){
-                     yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
-                   }                 
-                   if (lower > upper){
-                     yRange <- FALSE
-                   }
-                 }
-                 else{
-                   yUpper <- data[input$yInput] < input$plot_brush$ymax
-                   yLower <- data[input$yInput] > input$plot_brush$ymin
-                   yRange <- yUpper & yLower
-                 }
-               }
-               data$color[xRange & yRange] <- input$highlightColor #light blue
-             }
-           },
-           "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
-    )
+    data$color <- "black"  #input$normColor
+    if (input$coloring_source != "None") {
+      isolate({
+        if (input$coloring_source == "Live") {
+          type <- input$live_coloring_type
+        }
+        else {
+          type <- coloring$items[[input$coloring_source]]$type
+        }
+        isolate({
+          coloring$current <- list()
+          coloring$current$name <- input$coloring_source
+          coloring$current$type <- type
+        })
+        switch(type,
+          "Max/Min" = 
+          {
+            if (input$coloring_source == "Live") {
+              var <- input$live_coloring_variable_numeric
+              goal <- input$live_coloring_max_min
+            }
+            else {
+              scheme <- coloring$items[[input$coloring_source]]
+              var <- scheme$var
+              goal <- scheme$goal
+            }
+            bins <- 30
+            divisor <- (abs_max[[var]] - abs_min[[var]]) / bins
+            minimum <- abs_min[[var]]
+            maximum <- abs_max[[var]]
+            cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
+            if (goal == "Maximize") {
+              data$color <- unlist(sapply(data[[var]], function(value) {
+                              cols[max(1, ceiling((value - minimum) / divisor))]}))
+            } 
+            else {
+              data$color <- unlist(sapply(data[[var]], function(value) {
+                              cols[max(1, ceiling((maximum - value) / divisor))]}))
+            }
+            isolate({
+              coloring$current$var <- var
+              coloring$current$goal <- goal
+            })
+          },
+          "Discrete" = 
+          {
+            if (input$coloring_source == "Live") {
+              var <- input$live_color_variable_factor
+              palette_selection <- input$live_color_palette
+              if (palette_selection == "Rainbow") {
+                s_value <- input$live_color_rainbow_s
+                v_value <- input$live_color_rainbow_v
+              }
+            }
+            else {
+              scheme <- coloring$items[[input$coloring_source]]
+              var <- scheme$var
+              palette_selection <- scheme$palette
+              if (palette_selection == "Rainbow") {
+                s_value <- scheme$rainbow_s
+                v_value <- scheme$rainbow_v
+              }
+            }
+            variables_list = names(table(data[[var]]))
+            switch(palette_selection,
+                   "Rainbow"={cols <- rainbow(length(variables_list),
+                                              s_value,
+                                              v_value)},
+                   "Heat"={cols <- heat.colors(length(variables_list))},
+                   "Terrain"={cols <- terrain.colors(length(variables_list))},
+                   "Topo"={cols <- topo.colors(length(variables_list))},
+                   "Cm"={cols <- cm.colors(length(variables_list))})
+            for(i in 1:length(variables_list)){
+              data$color[(data[[var]] == variables_list[i])] <- cols[i]
+            }
+            isolate({
+              coloring$current$var <- var
+              coloring$current$colors <- cols
+            })
+          }  #,
+          # "Highlighted" = 
+          # {
+          #   if (!is.null(input$plot_brush)){
+          #     if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
+          #       xRange <- FALSE
+          #       yRange <- FALSE
+          #     }
+          #     else{
+          #       if(varClass[input$xInput] == "factor"){
+          #         lower <- ceiling(input$plot_brush$xmin)
+          #         upper <- floor(input$plot_brush$xmax)
+          #         xRange <- FALSE
+          #         for (i in lower:upper){
+          #           xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
+          #         }
+          #         if (lower > upper){
+          #           xRange <- FALSE
+          #         }
+          #       }
+          #       else {
+          #         xUpper <- data[input$xInput] < input$plot_brush$xmax
+          #         xLower <- data[input$xInput] > input$plot_brush$xmin
+          #         xRange <- xUpper & xLower
+          #       }
+          #       if(varClass[input$yInput] == "factor"){
+          #         lower <- ceiling(input$plot_brush$ymin)
+          #         upper <- floor(input$plot_brush$ymax)
+          #         yRange <- FALSE
+          #         for (i in lower:upper){
+          #           yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
+          #         }                 
+          #         if (lower > upper){
+          #           yRange <- FALSE
+          #         }
+          #       }
+          #       else{
+          #         yUpper <- data[input$yInput] < input$plot_brush$ymax
+          #         yLower <- data[input$yInput] > input$plot_brush$ymin
+          #         yRange <- yUpper & yLower
+          #       }
+          #     }
+          #     data$color[xRange & yRange] <- input$highlightColor #light blue
+          #   }
+          # },
+          # "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
+        )
+      })
+    }
     # print("Data Colored")
     data
+  })
+  
+  # Coloring -----------------------------------------------------------------
+  
+  updateSelectInput(session, "live_coloring_variable_numeric", choices = var_range_nums_and_ints)
+  updateSelectInput(session, "live_color_variable_factor", choices = var_range_facs)
+  
+  coloring_items <- list()
+  current_coloring <- list()
+  coloring <- reactiveValues(items=coloring_items,
+                             current=current_coloring)
+  
+  output$coloring_table <- renderTable({
+    names <- unlist(lapply(coloring$items,
+                           function(current) {current$name}))
+    descriptions <- unlist(lapply(coloring$items, function(current) {
+      switch(current$type,
+        "Max/Min"={paste0(current$goal, " ", current$var)},
+        "Discrete"={paste0(current$var, " with ", current$palette, " palette.")}
+      )
+    }))
+    table <- data.frame(Names=names, Descriptions=descriptions)
+  })
+  
+  observeEvent(input$live_coloring_add_classification, {
+    isolate({
+      name <- input$live_coloring_name
+      if (name != "" && !(name %in% names(coloring$items))) {
+        switch(input$live_coloring_type,
+          "Max/Min"={
+            coloring$items[[name]] <- list()
+            coloring$items[[name]]$name <- name
+            coloring$items[[name]]$type <- "Max/Min"
+            coloring$items[[name]]$var <- input$live_coloring_variable_numeric
+            coloring$items[[name]]$goal <- input$live_coloring_max_min
+            coloring$items[[name]]$slider <- input$col_slider
+          },
+          "Discrete"={
+            coloring$items[[name]] <- list()
+            coloring$items[[name]]$name <- name
+            coloring$items[[name]]$type <- "Discrete"
+            coloring$items[[name]]$var <- input$live_color_variable_factor
+            coloring$items[[name]]$palette <- input$live_color_palette
+            coloring$items[[name]]$rainbow_s <- input$live_color_rainbow_s
+            coloring$items[[name]]$rainbow_v <- input$live_color_rainbow_v
+          }
+        )
+      }
+    })
+  })
+  
+  observe({
+    isolate({
+      selected <- input$coloring_source
+    })
+    new_choices <- c("None", "Live", names(coloring$items))
+    updateSelectInput(session,
+                      "coloring_source",
+                      choices = new_choices,
+                      selected = selected)
+  })
+  
+  output$coloring_legend <- renderUI({
+    req(coloring$current$type)
+    if (coloring$current$type == "Discrete") {
+      names <- names(table(data$raw[coloring$current$var]))
+      raw_label <- ""
+      for(i in 1:length(coloring$current$colors)){
+        raw_label <- HTML(paste(raw_label, "<font color=",
+                                sub("FF$", "", coloring$current$colors[i]),
+                                "<b>", "&#9632", " ",
+                                names[i], '<br/>'))
+      }
+      raw_label
+    }
   })
   
   # Final Processing ---------------------------------------------------------
@@ -697,7 +742,9 @@ Server <- function(input, output, session) {
               mga_name=mga_name,
               generated_configuration_model=generated_configuration_model,
               selected_configurations=selected_configurations,
-              design_variable_names=design_variable_names)
+              design_variable_names=design_variable_names,
+              design_variables=design_variables,
+              pet_config=pet_config)
   
   preprocessing <- list(var_names=var_names,
                         var_class=var_class,
@@ -712,8 +759,11 @@ Server <- function(input, output, session) {
                         var_range=var_range,
                         var_constants=var_constants)
   
+  
+  
   # Build the 'meta' list.
   data$meta <- list(variables=variables,
+                    coloring=coloring,
                     pet=pet,
                     preprocessing=preprocessing)
   
@@ -743,11 +793,8 @@ tabset_arguments <- c(unname(base_tabs),
 
 # Defines the UI of the Visualizer.
 ui <- fluidPage(
-  
   useShinyjs(),
-  
   tags$script(src = "main.js"),
-  
   titlePanel("Visualizer"),
   
   # Generates the master tabset from the user-defined tabs provided.
@@ -769,25 +816,57 @@ ui <- fluidPage(
           h3("Constants:"),
           uiOutput("constants")
         ),
-        style = "default"),
+        style = "default"
+      ),
       bsCollapsePanel("Coloring",
         column(3,
-          selectInput("col_type", "Type:", choices = c("None", "Max/Min"), selected = "None")#, "Discrete", "Highlighted", "Ranked"), selected = "None")
+          h4("Coloring Source"),
+          selectInput("coloring_source", "Source", choices = c("None", "Live"), selected = "None"),
+          htmlOutput("coloring_legend")
         ),
         column(3,
+          h4("Live"),
+          selectInput("live_coloring_type", "Type:", choices = c("Max/Min", "Discrete"), selected = "Max/Min"),  #, "Highlighted", "Ranked"), selected = "None")
           conditionalPanel(
-            condition = "input.col_type == 'Max/Min'",
-            selectInput("col_var_num", "Colored Variable:", c()),
-            radioButtons("radio", NULL, c("Maximize" = "max", "Minimize" = "min"), selected = "max"),
-            sliderInput("col_slider", NULL, min=0, max=1, value = c(0.3, 0.7), step=0.1)
+            condition = "input.live_coloring_type == 'Max/Min'",
+            selectInput("live_coloring_variable_numeric", "Colored Variable:", c()),
+            radioButtons("live_coloring_max_min", NULL, c("Maximize" = "Maximize", "Minimize" = "Minimize"), selected = "Maximize")
           ),
           conditionalPanel(
-            condition = "input.col_type == 'Discrete'",
-            selectInput("col_var_factor", "Colored Variable:", c()),
-            htmlOutput("color_legend")
+            condition = "input.live_coloring_type == 'Discrete'",
+            selectInput("live_color_variable_factor",
+                        "Colored Variable:",
+                        c()),
+            selectInput("live_color_palette",
+                        "Color Palette:",
+                        c("Rainbow", "Heat", "Terrain", "Topo", "Cm")),
+            conditionalPanel(
+              condition = "input.live_color_palette == 'Rainbow'",
+              sliderInput("live_color_rainbow_s", "Saturation:",
+                          min=0, max=1,
+                          value=1, step=0.025),
+              sliderInput("live_color_rainbow_v", "Value/Brightness:",
+                          min=0, max=1,
+                          value=1, step=0.025)
+            )
           )
         ),
-        style = "default")
+        column(6,
+          h4("Saved"),
+          textInput("live_coloring_name", "Name"),
+          actionButton("live_coloring_add_classification", "Add Current 'Live' Coloring"),
+          br(), tableOutput("coloring_table")
+        ),
+        style = "default"
+      ),
+      bsCollapsePanel("Scratch",
+        fluidRow(
+          column(12,
+            tableOutput('test_table_output')
+          )
+        ),
+        style = "default"
+      )
     )
   )
 )

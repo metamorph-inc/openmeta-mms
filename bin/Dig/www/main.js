@@ -1,49 +1,52 @@
-var windowWidth = 0; 
-var $slider = document.querySelector("#filters > div > div:nth-child(2) > div:nth-child(1) > div");
-var $labels;
+var window_width = 0; 
 var enter_trigger = 0;
+var var_names = [];
 
+/* Process window width on startup...currently not used */
 $(document).on("shiny:connected", function(e) {  
-windowWidth = window.innerWidth; 
-Shiny.onInputChange("windowWidth", windowWidth);    
-});   
+  window_width = window.innerWidth; 
+  Shiny.onInputChange("window_width", window_width);    
+}); 
 
+/* These next 2 functions process a change everytime the user adjusts window size */
 $(window).resize(function() {
-if(this.resizeTO) clearTimeout(this.resizeTO);
-this.resizeTO = setTimeout(function() {
-$(this).trigger("resizeEnd");
-}, 500);
+  if(this.resizeTO) clearTimeout(this.resizeTO);
+    this.resizeTO = setTimeout(function() {
+      $(this).trigger("resizeEnd");
+    }, 500);
 });
 
 $(window).bind("resizeEnd", function() {
-windowWidth = window.innerWidth;  
-Shiny.onInputChange("windowWidth", windowWidth); 
+  console.log("resize occured");
+  update_slider_width();
 });
 
-$(window).bind("resizeEnd", function() {
-Shiny.onInputChange("dimension", [window.innerWidth, window.innerHeight]); 
-});
+/* This gets called when filter footer is opened...helpful as a startup condition */
+Shiny.addCustomMessageHandler("update_widths", function(message) {
+  update_slider_width();
+  update_label_width();
+})
 
-Shiny.addCustomMessageHandler("sliderSize", function(message) {
-  $slider = document.querySelector("#filters > div > div:nth-child(2) > div:nth-child(1) > div");
-  var sliderWidth = $slider.offsetWidth; // all sliders are the same size
+/* Sends shiny the pixel lengths of each slider */
+function update_slider_width() {
+  var $sliders = document.querySelector("#filters").querySelectorAll("div.form-group.shiny-input-container");
 
-  Shiny.onInputChange("sliderWidth", sliderWidth);
-});
+  var sliderWidth = 0;
 
-Shiny.addCustomMessageHandler("labelSize", function(message) {
-  var indices = message.length; // length of var names
-  var labelWidth = [];
+  if($sliders.length > 0){
+    for(var i = 0; i < $sliders.length; i++) {
+      if($sliders[i].offsetWidth > sliderWidth)
+        sliderWidth = $sliders[i].offsetWidth;
+    }
 
-  $labels = document.querySelector("#filters").querySelectorAll("label");
-  for(var i = 0; i < indices; i++){
-    labelWidth.push($labels[i].offsetWidth)
+    console.log("sliderWidth");
+    console.log(sliderWidth);
+
+    Shiny.onInputChange("sliderWidth", sliderWidth);
   }
+}
 
-  Shiny.onInputChange("labelWidth", labelWidth);
-});
-
-// Triggers when an enter key is pressed
+/* Sends shiny a trigger whennever enter key is pressed */
 $(document).on("keydown", function (e) {
   if(e.keyCode == 13){
     Shiny.onInputChange("last_key_pressed", enter_trigger++);
