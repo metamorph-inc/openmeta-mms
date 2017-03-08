@@ -55,19 +55,22 @@ custom_tab_files <- c("Explore.R",
                       "UncertaintyQuantification.R")
 custom_tab_environments <- lapply(custom_tab_files, function(file_name) {
   env <- new.env()
-  # source(file.path('tabs',file_name), local = env)
-  debugSource(file.path('tabs',file_name), local = env)
+  source(file.path('tabs',file_name), local = env)
+  # debugSource(file.path('tabs',file_name), local = env)
   env
 })
 
 # Setup test input.
 if (Sys.getenv('DIG_INPUT_CSV') == "") {
-  Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
-                                     'WindTurbineForOptimization',
-                                     'mergedPET.csv'))
+  # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
+  #                                    'WindTurbineForOptimization',
+  #                                    'mergedPET.csv'))
   # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
   #                                    'WindTurbine',
   #                                    'mergedPET.csv'))
+  Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
+                                     'TestPETRefinement',
+                                     'mergedPET.csv'))
 }
 
 # Custom Functions -----------------------------------------------------------
@@ -94,8 +97,8 @@ Server <- function(input, output, session) {
 
   pet_config_present <- FALSE
   pet_config_file_name <- gsub("mergedPET.csv",
-                              "pet_config.json",
-                              Sys.getenv('DIG_INPUT_CSV'))
+                               "pet_config.json",
+                               Sys.getenv('DIG_INPUT_CSV'))
   if(file.exists(pet_config_file_name)){
     pet_config <- fromJSON(pet_config_file_name)
     pet_config_present <- TRUE
@@ -128,31 +131,22 @@ Server <- function(input, output, session) {
   if(pet_config_present) {
     dvs <- pet_config$drivers[[1]]$designVariables
     design_variable_names <- names(dvs)
-    numeric_design_variables <- lapply(dvs,
-                                       function(x) {
-                                         "RangeMax" %in% names(x)
-                                       })
-    enumerated_design_variables <- lapply(dvs,
-                                          function(x) {
-                                            "type" %in% names(x)
-                                          })
-    dv_types <- unlist(lapply(numeric_design_variables, 
-                              function(x) { 
-                                if (x)
-                                  "Numeric"
-                                else
-                                  "Enumeration"
-                              }))
-    dv_selections <- unlist(lapply(dvs, 
-                                   function(x) {
-                                     if("type" %in% names(x)
-                                        && x$type == "enum") 
-                                       paste0(unlist(x$items), collapse=",") 
-                                     else 
-                                       paste0(c(x$RangeMin, x$RangeMax),
-                                              collapse=",")
-                                   }))
-    design_variables <- data.frame(var_name=design_variable_names, Type=dv_types, Selection=dv_selections)
+    design_variables <- Map(function(item, name) {
+      new_item <- list()
+      new_item$name <- name
+      if ("RangeMax" %in% names(item)) {
+        new_item$type <- "Numeric"
+      } else {
+        new_item$type <- "Enumeration"
+      }
+      if("type" %in% names(item) && item$type == "enum") {
+        new_item$selection <- paste0(unlist(item$items), collapse=",")
+      } else {
+        new_item$selection <- paste0(c(item$RangeMin, item$RangeMax),
+                                     collapse=",")
+      }
+      new_item
+    }, dvs, names(dvs))
     objective_names <- names(pet_config$drivers[[1]]$objectives)
     num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
     sampling_method <- pet_config$drivers[[1]]$details$DOEType
@@ -167,8 +161,8 @@ Server <- function(input, output, session) {
     # TODO(tthomas): Clean up the construction of the units list.
     for (i in 1:length(design_variable_names))
     {
-      unit <-pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
-      if(is.null(unit) | unit == "") {
+      unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
+      if(is.null(unit) || unit == "") {
         unit <- ""
         name_with_units <- design_variable_names[[i]]
       }
@@ -773,7 +767,9 @@ Server <- function(input, output, session) {
               mga_name=mga_name,
               generated_configuration_model=generated_configuration_model,
               selected_configurations=selected_configurations,
-              design_variable_names=design_variable_names)
+              design_variable_names=design_variable_names,
+              design_variables=design_variables,
+              pet_config=pet_config)
   
   preprocessing <- list(var_names=var_names,
                         var_class=var_class,
