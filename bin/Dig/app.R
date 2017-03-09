@@ -42,41 +42,187 @@ library(shinyBS)
 library(jsonlite)
 library(topsis)
 
-# Defined Constants
+# Defined Constants ----------------------------------------------------------
+
 abbreviate_length <- 25
-
-# Load selected tabs.
-custom_tab_files <- list.files('tabs', pattern = "*.R")
-custom_tab_files <- c("Explore.R",
-                      "DataTable.R",
-                      "Histogram.R",
-                      "PETRefinement.R",
-                      "Scratch.R",
-                      "ParallelAxisPlot.R",
-                      "UncertaintyQuantification.R")
-custom_tab_environments <- lapply(custom_tab_files, function(file_name) {
-  env <- new.env()
-  source(file.path('tabs',file_name), local = env)
-  # debugSource(file.path('tabs',file_name), local = env)
-  env
-})
-
-# Setup test input.
-if (Sys.getenv('DIG_INPUT_CSV') == "") {
-  # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
-  #                                    'WindTurbineForOptimization',
-  #                                    'mergedPET.csv'))
-  # Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
-  #                                    'WindTurbine',
-  #                                    'mergedPET.csv'))
-  Sys.setenv(DIG_INPUT_CSV=file.path('datasets',
-                                     'TestPETRefinement',
-                                     'mergedPET.csv'))
-}
 
 # Custom Functions -----------------------------------------------------------
 
 RemoveItemNumber <- function(factor) {sub("[0-9]+. ", "", factor)}
+
+# Resolve Dataset Configuration ----------------------------------------------
+
+if (Sys.getenv('DIG_INPUT_CSV') == "") {
+  # Visualizer 2.0 style input dataset
+  if (Sys.getenv('DIG_DATASET_CONFIG') == "") {
+    # Setup one of the test datasets if no input dataset
+    Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
+                                            'WindTurbineForOptimization',
+                                            'visualizer_config.json'))
+    # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
+    #                                         'WindTurbine',
+    #                                         'visualizer_config.json'))
+    # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
+    #                                         'TestPETRefinement',
+    #                                         'visualizer_config.json'))
+  }
+  visualizer_config <- fromJSON(Sys.getenv('DIG_DATASET_CONFIG'))
+  launch_dir <- dirname(Sys.getenv('DIG_DATASET_CONFIG'))
+  raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
+  pet_config_filename <- file.path(launch_dir, visualizer_config$pet_config)
+  tab_requests <- visualizer_config$tabs
+} else {
+  # Visualizer legacy dataset format
+  raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
+  pet_config_filename <- gsub("mergedPET.csv",
+                              "pet_config.json",
+                              Sys.getenv('DIG_INPUT_CSV'))
+  tab_requests <- c("Explore.R",
+                    "DataTable.R",
+                    "Histogram.R",
+                    "PETRefinement.R",
+                    "Scratch.R",
+                    "ParallelAxisPlot.R",
+                    "UncertaintyQuantification.R")
+}
+
+# Load Tabs and Data ---------------------------------------------------------
+
+tab_files <- list()
+for (i in 1:length(tab_requests)) {
+  request <- tab_requests[i]
+  if (file.exists(file.path(launch_dir, request))) {
+    tab_files <- c(tab_files, file.path(launch_dir, request))
+  } else if (file.exists(file.path('tabs', request))) {
+    tab_files <- c(tab_files, file.path('tabs', request))
+  }
+}
+
+tab_environments <- lapply(tab_files, function(file_name) {
+  env <- new.env()
+  source(file_name, local = env)
+  # debugSource(file_name, local = env)
+  env
+})
+
+# Read input files. 
+raw <- read.csv(raw_data_filename, fill=T)
+
+pet_config_present <- FALSE
+if(file.exists(pet_config_filename)){
+  pet_config <- fromJSON(pet_config_filename)
+  pet_config_present <- TRUE
+} 
+
+# Process PET Configuration File ('pet_config_json') -----------------------
+
+design_variable_names <- NULL
+numeric_design_variables <- FALSE
+enumerated_design_variables <- FALSE
+design_variables <- NULL
+objective_names <- NULL
+units <- NULL
+reverse_units <- NULL
+
+AddUnits <- function(name) {
+  if(is.null(units) | !(name %in% names(units)))
+    name
+  else
+    units[[name]]$name_with_units
+}
+
+RemoveUnits <- function(name_with_units) {
+  if(is.null(reverse_units) | !(name_with_units %in% names(reverse_units)))
+    name_with_units
+  else
+    reverse_units[[name_with_units]]
+}
+
+if(pet_config_present) {
+  dvs <- pet_config$drivers[[1]]$designVariables
+  design_variable_names <- names(dvs)
+  design_variables <- Map(function(item, name) {
+    new_item <- list()
+    new_item$name <- name
+    if ("RangeMax" %in% names(item)) {
+      new_item$type <- "Numeric"
+    } else {
+      new_item$type <- "Enumeration"
+    }
+    if("type" %in% names(item) && item$type == "enum") {
+      new_item$selection <- paste0(unlist(item$items), collapse=",")
+    } else {
+      new_item$selection <- paste0(c(item$RangeMin, item$RangeMax),
+                                   collapse=",")
+    }
+    new_item
+  }, dvs, names(dvs))
+  objective_names <- names(pet_config$drivers[[1]]$objectives)
+  num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
+  sampling_method <- pet_config$drivers[[1]]$details$DOEType
+  generated_configuration_model <- pet_config$GeneratedConfigurationModel
+  selected_configurations <- pet_config$SelectedConfigurations
+  name <- pet_config$PETName
+  mga_name <- pet_config$MgaFilename
+  
+  # Generate units tables.
+  units <- list()
+  reverse_units <- list()
+  # TODO(tthomas): Clean up the construction of the units list.
+  for (i in 1:length(design_variable_names))
+  {
+    unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
+    if(is.null(unit) || unit == "") {
+      unit <- ""
+      name_with_units <- design_variable_names[[i]]
+    }
+    else
+    {
+      unit <- gsub("\\*\\*", "^", unit) #replace Python '**' with '^'
+      unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
+      unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
+      name_with_units <- paste0(design_variable_names[i]," (",unit,")")
+    }
+    units[[design_variable_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
+    reverse_units[[name_with_units]] <- design_variable_names[[i]]
+  }
+  for (i in 1:length(objective_names))
+  {
+    unit <- pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
+    if(is.null(unit)) {
+      unit <- ""
+      name_with_units <- objective_names[[i]]
+    }
+    else
+    {
+      unit <- gsub("\\*\\*", "^", unit)
+      unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
+      unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
+      name_with_units <- paste0(objective_names[i]," (",unit,")")
+    }
+    units[[objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
+    reverse_units[[name_with_units]] <- objective_names[[i]]
+  }
+}
+
+# Pre-Processing ----------------------------------------------------------
+
+var_names <- names(raw)
+var_class <- sapply(raw, class)
+var_facs <- var_names[var_class == "factor"]
+var_ints <- var_names[var_class == "integer"]
+var_nums <- var_names[var_class == "numeric"]
+var_nums_and_ints <- var_names[var_class == "integer" |
+                               var_class == "numeric"]
+abs_min <- apply(raw[var_nums_and_ints], 2, min, na.rm=TRUE)
+abs_max <- apply(raw[var_nums_and_ints], 2, max, na.rm=TRUE)
+var_range_nums_and_ints <- var_nums_and_ints[(abs_min != abs_max) &
+                                             (abs_min != Inf)]
+var_range_facs <- var_facs[apply(raw[var_facs], 2, function(var_fac) {
+                                   length(names(table(var_fac))) > 1
+                                 })]
+var_range <- c(var_facs, var_nums_and_ints)
+var_constants <- subset(var_names, !(var_names %in% var_range))
 
 # Server ---------------------------------------------------------------------
 
@@ -93,147 +239,13 @@ Server <- function(input, output, session) {
     stopApp()
   })
   
-  # Read input files. 
-  raw <- read.csv(Sys.getenv('DIG_INPUT_CSV'), fill=T)
-
-  pet_config_present <- FALSE
-  pet_config_file_name <- gsub("mergedPET.csv",
-                               "pet_config.json",
-                               Sys.getenv('DIG_INPUT_CSV'))
-  if(file.exists(pet_config_file_name)){
-    pet_config <- fromJSON(pet_config_file_name)
-    pet_config_present <- TRUE
-  } 
-  
-  # Process PET Configuration File ('pet_config_json') -----------------------
-  
-  design_variable_names <- NULL
-  numeric_design_variables <- FALSE
-  enumerated_design_variables <- FALSE
-  design_variables <- NULL
-  objective_names <- NULL
-  units <- NULL
-  reverse_units <- NULL
-  
-  AddUnits <- function(name) {
-    if(is.null(units) | !(name %in% names(units)))
-      name
-    else
-      units[[name]]$name_with_units
-  }
-  
-  RemoveUnits <- function(name_with_units) {
-    if(is.null(reverse_units) | !(name_with_units %in% names(reverse_units)))
-      name_with_units
-    else
-      reverse_units[[name_with_units]]
-  }
-  
-  if(pet_config_present) {
-    dvs <- pet_config$drivers[[1]]$designVariables
-    design_variable_names <- names(dvs)
-    design_variables <- Map(function(item, name) {
-      new_item <- list()
-      new_item$name <- name
-      if ("RangeMax" %in% names(item)) {
-        new_item$type <- "Numeric"
-      } else {
-        new_item$type <- "Enumeration"
-      }
-      if("type" %in% names(item) && item$type == "enum") {
-        new_item$selection <- paste0(unlist(item$items), collapse=",")
-      } else {
-        new_item$selection <- paste0(c(item$RangeMin, item$RangeMax),
-                                     collapse=",")
-      }
-      new_item
-    }, dvs, names(dvs))
-    objective_names <- names(pet_config$drivers[[1]]$objectives)
-    num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
-    sampling_method <- pet_config$drivers[[1]]$details$DOEType
-    generated_configuration_model <- pet_config$GeneratedConfigurationModel
-    selected_configurations <- pet_config$SelectedConfigurations
-    name <- pet_config$PETName
-    mga_name <- pet_config$MgaFilename
-    
-    # Generate units tables.
-    units <- list()
-    reverse_units <- list()
-    # TODO(tthomas): Clean up the construction of the units list.
-    for (i in 1:length(design_variable_names))
-    {
-      unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
-      if(is.null(unit) || unit == "") {
-        unit <- ""
-        name_with_units <- design_variable_names[[i]]
-      }
-      else
-      {
-        unit <- gsub("\\*\\*", "^", unit) #replace Python '**' with '^'
-        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
-        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
-        name_with_units <- paste0(design_variable_names[i]," (",unit,")")
-      }
-      units[[design_variable_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
-      reverse_units[[name_with_units]] <- design_variable_names[[i]]
-    }
-    for (i in 1:length(objective_names))
-    {
-      unit <- pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
-      if(is.null(unit)) {
-        unit <- ""
-        name_with_units <- objective_names[[i]]
-      }
-      else
-      {
-        unit <- gsub("\\*\\*", "^", unit)
-        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
-        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
-        name_with_units <- paste0(objective_names[i]," (",unit,")")
-      }
-      units[[objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
-      reverse_units[[name_with_units]] <- objective_names[[i]]
-    }
-  }
-  
-  # COMMENT(tthomas): Why do we need this?
-  # output$numeric_design_variables <- reactive({
-  #   TRUE %in% numeric_design_variables
-  # })
-  # 
-  # output$enumerationdesign_variables <- reactive({
-  #   TRUE %in% enumerated_design_variables
-  # })
-  # 
-  # outputOptions(output, "numeric_design_variables", suspendWhenHidden=FALSE)
-  # outputOptions(output, "enumerated_design_variables", suspendWhenHidden=FALSE)
-  
-  # Pre-Processing ----------------------------------------------------------
-  
-  var_names <- names(raw)
-  var_class <- sapply(raw, class)
-  var_facs <- var_names[var_class == "factor"]
-  var_ints <- var_names[var_class == "integer"]
-  var_nums <- var_names[var_class == "numeric"]
-  var_nums_and_ints <- var_names[var_class == "integer" |
-                                 var_class == "numeric"]
-  abs_min <- apply(raw[var_nums_and_ints], 2, min, na.rm=TRUE)
-  abs_max <- apply(raw[var_nums_and_ints], 2, max, na.rm=TRUE)
-  var_range_nums_and_ints <- var_nums_and_ints[(abs_min != abs_max) &
-                                               (abs_min != Inf)]
-  var_range_facs <- var_facs[apply(raw[var_facs], 2, function(var_fac) {
-                                     length(names(table(var_fac))) > 1
-                                   })]
-  var_range <- c(var_facs, var_nums_and_ints)
-  var_constants <- subset(var_names, !(var_names %in% var_range))
-  
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
   # Lets the UI know if a tab has requested the 'Filters' footer.  
-  footer_preferences <- lapply(custom_tab_environments,
-                               function(custom_env) {custom_env$footer})
-  names(footer_preferences) <- lapply(custom_tab_environments,
-                                      function(custom_env) {custom_env$title})
+  footer_preferences <- lapply(tab_environments,
+                               function(tab_env) {tab_env$footer})
+  names(footer_preferences) <- lapply(tab_environments,
+                                      function(tab_env) {tab_env$title})
   output$display_footer <- reactive({
     display <- (footer_preferences[[input$master_tabset]])
   })
@@ -770,8 +782,8 @@ Server <- function(input, output, session) {
   data$experimental <- list()
   
   # Call individual tabs' Server() functions.
-  lapply(custom_tab_environments, function(customEnv) {
-    do.call(customEnv$server,
+  lapply(tab_environments, function(custom_env) {
+    do.call(custom_env$server,
             list(input, output, session, data))
   })
 }
@@ -782,9 +794,9 @@ Server <- function(input, output, session) {
 base_tabs <- NULL
 
 print("Tabs:")
-added_tabs <- lapply(custom_tab_environments, function(custom_env) {
-  print(custom_env$title)
-  tabPanel(custom_env$title, custom_env$ui())
+added_tabs <- lapply(tab_environments, function(tab_env) {
+  print(tab_env$title)
+  tabPanel(tab_env$title, tab_env$ui())
 })
 
 tabset_arguments <- c(unname(base_tabs),
