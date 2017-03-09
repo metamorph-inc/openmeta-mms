@@ -2,7 +2,7 @@ ____
 ## Getting Started
 
 ### Downloading the Tutorial Zip File
-To complete this tutorial you will need to download the [<b>LED Tutorial Model</b>](http://doc.metamorphsoftware.com/alpha-releases/design-models/LED_Tutorial_Files.zip).
+To complete this tutorial you will need to download the [<b>LED Tutorial Model</b>](http://docs.metamorphsoftware.com/alpha-releases/design-models/LED_Tutorial_Files.zip).
 
 ### Setting Up Directory
 1. Once you've downloaded the tutorial model, unzip it and double-click `Walkthrough_LED.xme` to open it in the **GME**.
