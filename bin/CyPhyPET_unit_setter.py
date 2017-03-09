@@ -100,7 +100,7 @@ def get_unit_for_gme(fco, exponent=1):
     if fco.MetaBase.Name == 'derived_unit':
         for exponent in (ref.GetFloatAttrByNameDisp('exponent') for ref in fco.ChildFCOs):
             if int(exponent) != exponent:
-                raise ValueError()
+                raise ValueError('Only integer and inverse integer exponents allowed')
         return reduce_none(operator.mul, (get_unit_for_gme(ref.Referred, int(ref.GetFloatAttrByNameDisp('exponent'))) for ref in fco.ChildFCOs))
     # log('xxx' + fco.MetaBase.Name)
     if fco.MetaBase.Name == 'conversion_based_unit':
