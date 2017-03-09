@@ -29,7 +29,7 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='Run xunit in parallel.')
-    parser.add_argument('xunit_files', nargs='*', default=['tests.xunit'])
+    parser.add_argument('xunit_files', nargs='*', default=['tests.xunit', 'tests_tonka.xunit'])
     parser.add_argument('--start-failed', action='store_true')
 
     args = parser.parse_args()
