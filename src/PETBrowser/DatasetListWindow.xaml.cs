@@ -470,6 +470,20 @@ namespace PETBrowser
 
         private void PetGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            foreach(var deselectedObject in e.RemovedItems)
+            {
+                var dataset = (Dataset) deselectedObject;
+
+                dataset.Selected = false;
+            }
+
+            foreach (var selectedObject in e.AddedItems)
+            {
+                var dataset = (Dataset)selectedObject;
+
+                dataset.Selected = true;
+            }
+
             PetDetailsPanel.Children.Clear();
 
             //If we recreate this intermediate panel every time this method's called, we can
@@ -803,6 +817,20 @@ namespace PETBrowser
             //TODO: change core count in job manager
             ViewModel.JobStore.SelectedThreadCount = newCount;
         }
+
+        private void MergeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var mergeDialog = new MergeDialog(PetGrid.SelectedItems.Cast<Dataset>(), ViewModel.Store.DataDirectory) { Owner = this };
+
+                mergeDialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Merge error", "An error occurred while merging results.", ex.Message, ex.ToString());
+            }
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
@@ -979,6 +1007,7 @@ namespace PETBrowser
                     PetDatasetsList.Clear();
                     PetDatasetsList.AddRange(Store.ResultDatasets);
                     PetDatasetsList.AddRange(Store.ArchiveDatasets);
+                    PetDatasetsList.AddRange(Store.MergedDatasets);
                     PetDatasets.Refresh();
 
                     TestBenchDatasetsList.Clear();
