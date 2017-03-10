@@ -219,40 +219,54 @@ namespace PETBrowser
                 {
                     string vizConfigPath = System.IO.Path.Combine(((Dataset) PetGrid.SelectedItem).Folders[0],
                         "visualizer_config.json");
-                    Console.WriteLine(vizConfigPath);
-                    string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(),
-                        "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
-
-                    ProcessStartInfo psi = new ProcessStartInfo()
-                    {
-                        FileName = "cmd.exe",
-                        Arguments =
-                            String.Format("/S /C \"\"{0}\" \"{1}\" \"{2}\" > \"{3}\" 2>&1\"",
-                                System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), vizConfigPath,
-                                META.VersionInfo.MetaPath, logPath),
-                        CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        // WorkingDirectory = ,
-                        // RedirectStandardError = true,
-                        // RedirectStandardOutput = true,
-                        UseShellExecute = true
-                        //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
-                    };
-                    var p = new Process();
-                    p.StartInfo = psi;
-                    p.Start();
-
-                    p.Dispose();
+                    LaunchVisualizer(vizConfigPath);
                 }
                 else
                 {
                     //TODO: for archives/PET results, perform a merge and launch that in the viz
+                    var mergeDialog = new MergeDialog(PetGrid.SelectedItems.Cast<Dataset>(), ViewModel.Store.DataDirectory) { Owner = this };
+
+                    if (mergeDialog.ShowDialog() == true)
+                    {
+                        string mergedName = mergeDialog.MergedPetName;
+                        string vizConfigPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.MergedDirectory, mergedName,
+                        "visualizer_config.json");
+                        LaunchVisualizer(vizConfigPath);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 ShowErrorDialog("Error", "An error occurred while starting visualizer.", ex.Message, ex.ToString());
             }
+        }
+
+        private void LaunchVisualizer(string vizConfigPath)
+        {
+            Console.WriteLine(vizConfigPath);
+            string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(),
+                "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
+
+            ProcessStartInfo psi = new ProcessStartInfo()
+            {
+                FileName = "cmd.exe",
+                Arguments =
+                    String.Format("/S /C \"\"{0}\" \"{1}\" \"{2}\" > \"{3}\" 2>&1\"",
+                        System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), vizConfigPath,
+                        META.VersionInfo.MetaPath, logPath),
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                // WorkingDirectory = ,
+                // RedirectStandardError = true,
+                // RedirectStandardOutput = true,
+                UseShellExecute = true
+                //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
+            };
+            var p = new Process();
+            p.StartInfo = psi;
+            p.Start();
+
+            p.Dispose();
         }
 
         private void explorerButton_Click(object sender, RoutedEventArgs e)

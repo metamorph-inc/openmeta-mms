@@ -4,12 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using AVM.DDP;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace PETBrowser
@@ -69,12 +67,10 @@ namespace PETBrowser
             {
                 var metadataPath = Path.Combine(tempDirectoryPath, "metadata.json");
                 var exportPath = Path.Combine(tempDirectoryPath, "mergedPET.csv");
-                var mappingPath = Path.Combine(tempDirectoryPath, "mappingPET.csv");
                 var mergedPetConfigPath = Path.Combine(tempDirectoryPath, "pet_config.json");
                 var vizConfigPath = Path.Combine(tempDirectoryPath, "visualizer_config.json");
 
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
-                WriteSelectedMappingToCsv(mappingPath, datasets, dataDirectoryPath);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
                 WriteMergedMetadata(metadataPath, datasets);
                 WriteDefaultVizConfig(vizConfigPath);
@@ -419,107 +415,7 @@ namespace PETBrowser
             }
             return false;
         }
-
-        private static void WriteSelectedMappingToCsv(string csvPath, IEnumerable<Dataset> datasets, string dataDirectoryPath)
-        {
-            Console.WriteLine("Searching for Mapping");
-
-            using (var outputCsvFile = File.CreateText(csvPath))
-            {
-                var writer = new CsvWriter(outputCsvFile);
-
-                // Try writing the mapping for one of the selected datasets
-                foreach (var d in datasets.Where(dataset => dataset.Kind == Dataset.DatasetKind.PetResult))
-                {
-                    if (d.Selected)
-                    {
-                        if (WriteMappingToCsv(d, writer, dataDirectoryPath))
-                            return;
-                    }
-                }
-            }
-
-            // 'mappingPET.csv' should be removed/absent from ./results/ if no mappings were written
-            File.Delete(csvPath);
-        }
-
-        private static bool WriteMappingToCsv(Dataset d, CsvWriter writer, string dataDirectoryPath)
-        {
-            Console.WriteLine(d.Name);
-
-            writer.WriteField("VarName");
-            writer.WriteField("Type");
-            writer.WriteField("Selection");
-            writer.NextRecord();
-
-            List<string> names = new List<string>();
-            List<string> rangeMins = new List<string>();
-            List<string> rangeMaxs = new List<string>();
-
-            foreach (var folder in d.Folders)
-            {
-                string mdaoName;
-                if (d.Kind == Dataset.DatasetKind.PetResult)
-                {
-                    mdaoName = Path.Combine(dataDirectoryPath, DatasetStore.ResultsDirectory,
-                        Regex.Replace(folder, "testbench_manifest\\.json$", "mdao_config.json"));
-
-                    // Try to get the mapping to export to 'mappingPET.csv'
-                    try
-                    {
-                        // Parse the mdaoConfig file to get the mapping
-                        using (var mdaoFile = File.OpenText(mdaoName))
-                        using (var jsonReader = new JsonTextReader(mdaoFile))
-                        {
-                            //Console.WriteLine("Attempting to open {0}", mdaoName);
-                            //Console.WriteLine("Using jsonReader: {0}", jsonReader);
-                            var mdaoJson = (JObject)JToken.ReadFrom(jsonReader);
-
-                            foreach (var singleDriver in ((JObject)mdaoJson["drivers"]))
-                            {
-                                //Console.WriteLine(singleDriver.ToString());
-                                foreach (var variable in (JObject)(((JObject)singleDriver.Value)["designVariables"]))
-                                {
-                                    writer.WriteField(variable.Key);
-
-                                    if ((string)variable.Value["type"] == "enum")
-                                    {
-                                        writer.WriteField("Enumeration");
-                                        writer.WriteField(String.Join(",",
-                                            Enumerable.Select<JToken, string>(
-                                            ((JArray)(variable.Value)["items"]).Children(), (x => x.ToString()))));
-                                    }
-                                    else
-                                    {
-                                        //Console.WriteLine(variable.ToString());
-                                        writer.WriteField("Numeric");
-                                        writer.WriteField((string)((JObject)variable.Value)["RangeMin"] + "," +
-                                            (string)((JObject)variable.Value)["RangeMax"]);
-                                    }
-                                    writer.NextRecord();
-                                }
-                            }
-
-                            //Console.WriteLine("Names: {0}", names.Count);
-                            //Console.WriteLine("rangeMins: {0}", rangeMins.Count);
-                            //Console.WriteLine("rangeMaxs: {0}", rangeMaxs.Count);
-
-                            return true;
-                        }
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        //Don't grab mapping if we don't find a corresponding mdao config file in its results folder
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
-                        //Don't grab mapping if we don't find a corresponding mdao config file in its results folder
-                    }
-                }
-            }
-            return false;
-        }
-
+        
         // Code from MSDN example:  https://msdn.microsoft.com/en-us/library/bb762914(v=vs.110).aspx
         private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {

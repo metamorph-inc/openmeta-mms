@@ -18,6 +18,13 @@ namespace PETBrowser
     /// </summary>
     public partial class MergeDialog : Window
     {
+        public string MergedPetName
+        {
+            get { return this.MergedPetNameTextBox.Text; }
+
+            set { this.MergedPetNameTextBox.Text = value; }
+        }
+
         private IEnumerable<Dataset> DatasetsToMerge { get; set; }
 
         private string DataDirectoryPath { get; set; }
