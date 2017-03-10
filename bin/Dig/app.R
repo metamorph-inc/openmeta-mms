@@ -66,8 +66,7 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
     #                                         'TestPETRefinement',
     #                                         'visualizer_config.json'))
   }
-  config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
-  visualizer_config <- fromJSON(config_filename)
+  visualizer_config <- fromJSON(Sys.getenv('DIG_DATASET_CONFIG'))
   launch_dir <- dirname(Sys.getenv('DIG_DATASET_CONFIG'))
   raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
   pet_config_filename <- file.path(launch_dir, visualizer_config$pet_config)

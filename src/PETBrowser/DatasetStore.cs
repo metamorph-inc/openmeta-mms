@@ -207,13 +207,13 @@ namespace PETBrowser
 
             foreach (var directory in Directory.EnumerateDirectories(mergedDirectory))
             {
-                //Consider a merged directory to be valid if it contains a mergedPET.csv (the others may or may not exist)
-                var mergedPetFile = Path.Combine(directory, "mergedPET.csv");
+                //Consider a merged directory to be valid if it contains a metadata.json (the others may or may not exist)
+                var mergedPetFile = Path.Combine(directory, "metadata.json");
                 if (File.Exists(mergedPetFile))
                 {
                     var newDataset = new Dataset(Dataset.DatasetKind.MergedPet, File.GetCreationTime(mergedPetFile).ToString("yyyy-MM-dd HH-mm-ss"), directory);
                     newDataset.Count++;
-                    newDataset.Folders.Add(Path.GetDirectoryName(directory));
+                    newDataset.Folders.Add(directory);
 
                     MergedDatasets.Add(newDataset);
                 }

@@ -10,9 +10,37 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace PETBrowser
 {
+    public class MergedPetMetadata
+    {
+        public List<string> PetDirectories { get; set; }
+
+        public MergedPetMetadata()
+        {
+            PetDirectories = new List<string>();
+        }
+    }
+
+    public class VisualizerConfig
+    {
+        [JsonProperty(PropertyName = "pet_config")]
+        public string PetConfig { get; set; }
+
+        [JsonProperty(PropertyName = "raw_data")]
+        public string RawData { get; set; }
+
+        [JsonProperty(PropertyName = "tabs")]
+        public List<string> Tabs { get; set; }
+
+        public VisualizerConfig()
+        {
+            Tabs = new List<string>();
+        }
+    }
+
     public class PetMerger
     {
         public const string MergedDirectory = "merged";
@@ -39,13 +67,17 @@ namespace PETBrowser
 
             try
             {
+                var metadataPath = Path.Combine(tempDirectoryPath, "metadata.json");
                 var exportPath = Path.Combine(tempDirectoryPath, "mergedPET.csv");
                 var mappingPath = Path.Combine(tempDirectoryPath, "mappingPET.csv");
                 var mergedPetConfigPath = Path.Combine(tempDirectoryPath, "pet_config.json");
+                var vizConfigPath = Path.Combine(tempDirectoryPath, "visualizer_config.json");
 
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
                 WriteSelectedMappingToCsv(mappingPath, datasets, dataDirectoryPath);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
+                WriteMergedMetadata(metadataPath, datasets);
+                WriteDefaultVizConfig(vizConfigPath);
 
                 DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true);
             }
@@ -53,6 +85,48 @@ namespace PETBrowser
             {
                 // Make sure our temp directory is removed, whether we complete successfully or an error occurs
                 Directory.Delete(tempDirectoryPath, true);
+            }
+        }
+
+        private static void WriteMergedMetadata(string filePath, IEnumerable<Dataset> datasets)
+        {
+            var metadata = new MergedPetMetadata();
+
+            foreach (var dataset in datasets.Where(dataset => dataset.Kind == Dataset.DatasetKind.PetResult))
+            {
+                foreach (var folder in dataset.Folders)
+                {
+                    var executionDirectoryPath = Path.GetDirectoryName(folder);
+                    if (executionDirectoryPath != null)
+                    {
+                        var relativePath = Path.Combine("..", "..", DatasetStore.ResultsDirectory,
+                            executionDirectoryPath);
+
+                        metadata.PetDirectories.Add(relativePath);
+                    }
+                }
+            }
+
+            using (var writer = File.CreateText(filePath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Formatting = Formatting.Indented;
+                serializer.Serialize(writer, metadata);
+            }
+        }
+
+        private static void WriteDefaultVizConfig(string vizConfigPath)
+        {
+            var config = new VisualizerConfig();
+            config.PetConfig = "pet_config.json";
+            config.RawData = "mergedPET.csv";
+            config.Tabs = new List<string> { "Explore.R", "DataTable.R", "PETRefinement.R" };
+
+            using (var writer = File.CreateText(vizConfigPath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Formatting = Formatting.Indented;
+                serializer.Serialize(writer, config);
             }
         }
 
