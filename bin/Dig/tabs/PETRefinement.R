@@ -105,7 +105,7 @@ server <- function(input, output, session, data) {
   design_variables <- pet$design_variables
   
   output$pet_config_present <- reactive({
-    !is.null(pet$name)
+    !is.null(pet$pet_name)
   })
   
   output$numeric_design_variables_present <- reactive({
@@ -144,14 +144,14 @@ server <- function(input, output, session, data) {
       column(12, h5(strong("Original PET Name: ")), textOutput("current_pet_name_text"), br()),
       column(12, textInput("newPetName",
                            "New PET Name:",
-                           value = paste0(pet$name, "_Refined")))
+                           value = paste0(pet$pet_name, "_Refined")))
     )
   })
   
   output$original_driver_settings <- renderText(paste(pet$sampling_method," sampling with 'num_samples=", pet$num_samples,"' yielded ", nrow(data$raw), " points.", sep = ""))
   output$mga_filename_text <- renderText(pet$mga_name)
   output$generated_configuration_model_text <- renderText(pet$generated_configuration_model)
-  output$current_pet_name_text <- renderText(pet$name)
+  output$current_pet_name_text <- renderText(pet$pet_name)
   
   
   

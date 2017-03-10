@@ -50,34 +50,61 @@ abbreviate_length <- 25
 
 RemoveItemNumber <- function(factor) {sub("[0-9]+. ", "", factor)}
 
+units <- NULL
+reverse_units <- NULL
+
+AddUnits <- function(name) {
+  if(is.null(units) || !(name %in% names(units)))
+    name
+  else
+    units[[name]]$name_with_units
+}
+
+RemoveUnits <- function(name_with_units) {
+  if(is.null(reverse_units) || !(name_with_units %in% names(reverse_units)))
+    name_with_units
+  else
+    reverse_units[[name_with_units]]
+}
+
 # Resolve Dataset Configuration ----------------------------------------------
 
+pet_config_present <- FALSE
 if (Sys.getenv('DIG_INPUT_CSV') == "") {
   # Visualizer 2.0 style input dataset
   if (Sys.getenv('DIG_DATASET_CONFIG') == "") {
     # Setup one of the test datasets if no input dataset
-    Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-                                            'WindTurbineForOptimization',
-                                            'visualizer_config.json'))
+    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
+    #                                         'WindTurbineForOptimization',
+    #                                         'visualizer_config.json'))
     # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
     #                                         'WindTurbine',
     #                                         'visualizer_config.json'))
-    # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
-    #                                         'TestPETRefinement',
-    #                                         'visualizer_config.json'))
+    Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
+                                            'TestPETRefinement',
+                                            'visualizer_config.json'))
   }
   config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
   visualizer_config <- fromJSON(config_filename)
-  launch_dir <- dirname(Sys.getenv('DIG_DATASET_CONFIG'))
-  raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
-  pet_config_filename <- file.path(launch_dir, visualizer_config$pet_config)
   tab_requests <- visualizer_config$tabs
+  launch_dir <- dirname(config_filename)
+  raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
+  pet_config_value <- visualizer_config$pet_config
+  if (!is.null(pet_config_value) && pet_config_value != "") {
+    pet_config_filename <- file.path(launch_dir, pet_config_value)
+    if (file.exists(pet_config_filename)) {
+      pet_config_present <- TRUE
+    }
+  }
 } else {
   # Visualizer legacy dataset format
   raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
   pet_config_filename <- gsub("mergedPET.csv",
                               "pet_config.json",
                               Sys.getenv('DIG_INPUT_CSV'))
+  if (file.exists(pet_config_filename)) {
+    pet_config_present <- TRUE
+  }
   tab_requests <- c("Explore.R",
                     "DataTable.R",
                     "Histogram.R",
@@ -89,6 +116,10 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
 
 # Load Tabs and Data ---------------------------------------------------------
 
+# Read input dataset file
+raw <- read.csv(raw_data_filename, fill=T)
+
+# Read tab files
 tab_files <- list()
 for (i in 1:length(tab_requests)) {
   request <- tab_requests[i]
@@ -106,40 +137,13 @@ tab_environments <- lapply(tab_files, function(file_name) {
   env
 })
 
-# Read input files. 
-raw <- read.csv(raw_data_filename, fill=T)
-
-pet_config_present <- FALSE
-if(file.exists(pet_config_filename)){
-  pet_config <- fromJSON(pet_config_filename)
-  pet_config_present <- TRUE
-} 
-
 # Process PET Configuration File ('pet_config_json') -----------------------
 
-design_variable_names <- NULL
-numeric_design_variables <- FALSE
-enumerated_design_variables <- FALSE
-design_variables <- NULL
-objective_names <- NULL
-units <- NULL
-reverse_units <- NULL
-
-AddUnits <- function(name) {
-  if(is.null(units) | !(name %in% names(units)))
-    name
-  else
-    units[[name]]$name_with_units
-}
-
-RemoveUnits <- function(name_with_units) {
-  if(is.null(reverse_units) | !(name_with_units %in% names(reverse_units)))
-    name_with_units
-  else
-    reverse_units[[name_with_units]]
-}
+pet <- NULL
+variables <- NULL
 
 if(pet_config_present) {
+  pet_config <- fromJSON(pet_config_filename)
   dvs <- pet_config$drivers[[1]]$designVariables
   design_variable_names <- names(dvs)
   design_variables <- Map(function(item, name) {
@@ -163,13 +167,23 @@ if(pet_config_present) {
   sampling_method <- pet_config$drivers[[1]]$details$DOEType
   generated_configuration_model <- pet_config$GeneratedConfigurationModel
   selected_configurations <- pet_config$SelectedConfigurations
-  name <- pet_config$PETName
+  pet_name <- pet_config$PETName
   mga_name <- pet_config$MgaFilename
   
+  pet <- list(sampling_method=sampling_method,
+              num_samples=num_samples,
+              pet_name=pet_name,
+              mga_name=mga_name,
+              generated_configuration_model=generated_configuration_model,
+              selected_configurations=selected_configurations,
+              design_variable_names=design_variable_names,
+              design_variables=design_variables,
+              pet_config=pet_config)
+  
+  # TODO(tthomas): Clean up the construction of the units list.
   # Generate units tables.
   units <- list()
   reverse_units <- list()
-  # TODO(tthomas): Clean up the construction of the units list.
   for (i in 1:length(design_variable_names))
   {
     unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
@@ -204,6 +218,19 @@ if(pet_config_present) {
     units[[objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
     reverse_units[[name_with_units]] <- objective_names[[i]]
   }
+  
+  # Build variables metadata list.
+  variables <- lapply(names(raw), function(var_name) {
+    if (var_name %in% design_variable_names)
+      type <- "Design Variable"
+    else
+      type <- "Objective"
+    list(name = var_name,
+         name_with_units = AddUnits(var_name),
+         type = type
+    )
+  })
+  names(variables) <- names(raw)
 }
 
 # Pre-Processing ----------------------------------------------------------
@@ -224,6 +251,19 @@ var_range_facs <- var_facs[apply(raw[var_facs], 2, function(var_fac) {
                                  })]
 var_range <- c(var_facs, var_nums_and_ints)
 var_constants <- subset(var_names, !(var_names %in% var_range))
+
+preprocessing <- list(var_names=var_names,
+                      var_class=var_class,
+                      var_facs=var_facs,
+                      var_ints=var_ints,
+                      var_nums=var_nums,
+                      var_nums_and_ints=var_nums_and_ints,
+                      abs_min=abs_min,
+                      abs_max=abs_max,
+                      var_range_nums_and_ints=var_range_nums_and_ints,
+                      var_range_facs=var_range_facs,
+                      var_range=var_range,
+                      var_constants=var_constants)
 
 # Server ---------------------------------------------------------------------
 
@@ -519,6 +559,7 @@ Server <- function(input, output, session) {
   
   ColoredData <- reactive({
     data <- FilteredData()
+    names(data) <- lapply(names(data), AddUnits)
     data$color <- character(nrow(data))
     data$color <- "black"  #input$normColor
     if (input$coloring_source != "None") {
@@ -734,51 +775,13 @@ Server <- function(input, output, session) {
   data$Colored <- ColoredData
   data$Filters <- Filters
   
-  # Build variables metadata list.
-  variables <- lapply(var_names, function(var_name) {
-    if (var_name %in% design_variable_names)
-      type <- "Design Variable"
-    else
-      type <- "Objective"
-    list(name = var_name,
-         name_with_units = AddUnits(var_name),
-         type = type
-    )
-  })
-  names(variables) <- var_names
-  
-  pet <- list(sampling_method=sampling_method,
-              num_samples=num_samples,
-              name=name,
-              mga_name=mga_name,
-              generated_configuration_model=generated_configuration_model,
-              selected_configurations=selected_configurations,
-              design_variable_names=design_variable_names,
-              design_variables=design_variables,
-              pet_config=pet_config)
-  
-  preprocessing <- list(var_names=var_names,
-                        var_class=var_class,
-                        var_facs=var_facs,
-                        var_ints=var_ints,
-                        var_nums=var_nums,
-                        var_nums_and_ints=var_nums_and_ints,
-                        abs_min=abs_min,
-                        abs_max=abs_max,
-                        var_range_nums_and_ints=var_range_nums_and_ints,
-                        var_range_facs=var_range_facs,
-                        var_range=var_range,
-                        var_constants=var_constants)
-  
-  
-  
   # Build the 'meta' list.
   data$meta <- list(variables=variables,
                     coloring=coloring,
                     pet=pet,
                     preprocessing=preprocessing)
   
-  data$experimental <- list()
+  # data$experimental <- list()
   
   # Call individual tabs' Server() functions.
   lapply(tab_environments, function(custom_env) {
