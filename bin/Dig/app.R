@@ -522,131 +522,129 @@ Server <- function(input, output, session) {
     data$color <- character(nrow(data))
     data$color <- "black"  #input$normColor
     if (input$coloring_source != "None") {
+      if (input$coloring_source == "Live") {
+        type <- input$live_coloring_type
+      }
+      else {
+        type <- coloring$items[[input$coloring_source]]$type
+      }
       isolate({
-        if (input$coloring_source == "Live") {
-          type <- input$live_coloring_type
-        }
-        else {
-          type <- coloring$items[[input$coloring_source]]$type
-        }
-        isolate({
-          coloring$current <- list()
-          coloring$current$name <- input$coloring_source
-          coloring$current$type <- type
-        })
-        switch(type,
-          "Max/Min" = 
-          {
-            if (input$coloring_source == "Live") {
-              var <- input$live_coloring_variable_numeric
-              goal <- input$live_coloring_max_min
-            }
-            else {
-              scheme <- coloring$items[[input$coloring_source]]
-              var <- scheme$var
-              goal <- scheme$goal
-            }
-            bins <- 30
-            divisor <- (abs_max[[var]] - abs_min[[var]]) / bins
-            minimum <- abs_min[[var]]
-            maximum <- abs_max[[var]]
-            cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
-            if (goal == "Maximize") {
-              data$color <- unlist(sapply(data[[var]], function(value) {
-                              cols[max(1, ceiling((value - minimum) / divisor))]}))
-            } 
-            else {
-              data$color <- unlist(sapply(data[[var]], function(value) {
-                              cols[max(1, ceiling((maximum - value) / divisor))]}))
-            }
-            isolate({
-              coloring$current$var <- var
-              coloring$current$goal <- goal
-            })
-          },
-          "Discrete" = 
-          {
-            if (input$coloring_source == "Live") {
-              var <- input$live_color_variable_factor
-              palette_selection <- input$live_color_palette
-              if (palette_selection == "Rainbow") {
-                s_value <- input$live_color_rainbow_s
-                v_value <- input$live_color_rainbow_v
-              }
-            }
-            else {
-              scheme <- coloring$items[[input$coloring_source]]
-              var <- scheme$var
-              palette_selection <- scheme$palette
-              if (palette_selection == "Rainbow") {
-                s_value <- scheme$rainbow_s
-                v_value <- scheme$rainbow_v
-              }
-            }
-            variables_list = names(table(data[[var]]))
-            switch(palette_selection,
-                   "Rainbow"={cols <- rainbow(length(variables_list),
-                                              s_value,
-                                              v_value)},
-                   "Heat"={cols <- heat.colors(length(variables_list))},
-                   "Terrain"={cols <- terrain.colors(length(variables_list))},
-                   "Topo"={cols <- topo.colors(length(variables_list))},
-                   "Cm"={cols <- cm.colors(length(variables_list))})
-            for(i in 1:length(variables_list)){
-              data$color[(data[[var]] == variables_list[i])] <- cols[i]
-            }
-            isolate({
-              coloring$current$var <- var
-              coloring$current$colors <- cols
-            })
-          }  #,
-          # "Highlighted" = 
-          # {
-          #   if (!is.null(input$plot_brush)){
-          #     if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
-          #       xRange <- FALSE
-          #       yRange <- FALSE
-          #     }
-          #     else{
-          #       if(varClass[input$xInput] == "factor"){
-          #         lower <- ceiling(input$plot_brush$xmin)
-          #         upper <- floor(input$plot_brush$xmax)
-          #         xRange <- FALSE
-          #         for (i in lower:upper){
-          #           xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
-          #         }
-          #         if (lower > upper){
-          #           xRange <- FALSE
-          #         }
-          #       }
-          #       else {
-          #         xUpper <- data[input$xInput] < input$plot_brush$xmax
-          #         xLower <- data[input$xInput] > input$plot_brush$xmin
-          #         xRange <- xUpper & xLower
-          #       }
-          #       if(varClass[input$yInput] == "factor"){
-          #         lower <- ceiling(input$plot_brush$ymin)
-          #         upper <- floor(input$plot_brush$ymax)
-          #         yRange <- FALSE
-          #         for (i in lower:upper){
-          #           yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
-          #         }                 
-          #         if (lower > upper){
-          #           yRange <- FALSE
-          #         }
-          #       }
-          #       else{
-          #         yUpper <- data[input$yInput] < input$plot_brush$ymax
-          #         yLower <- data[input$yInput] > input$plot_brush$ymin
-          #         yRange <- yUpper & yLower
-          #       }
-          #     }
-          #     data$color[xRange & yRange] <- input$highlightColor #light blue
-          #   }
-          # },
-          # "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
-        )
+        coloring$current <- list()
+        coloring$current$name <- input$coloring_source
+        coloring$current$type <- type
       })
+      switch(type,
+        "Max/Min" = 
+        {
+          if (input$coloring_source == "Live") {
+            var <- input$live_coloring_variable_numeric
+            goal <- input$live_coloring_max_min
+          }
+          else {
+            scheme <- coloring$items[[input$coloring_source]]
+            var <- scheme$var
+            goal <- scheme$goal
+          }
+          bins <- 30
+          divisor <- (abs_max[[var]] - abs_min[[var]]) / bins
+          minimum <- abs_min[[var]]
+          maximum <- abs_max[[var]]
+          cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
+          if (goal == "Maximize") {
+            data$color <- unlist(sapply(data[[var]], function(value) {
+                            cols[max(1, ceiling((value - minimum) / divisor))]}))
+          } 
+          else {
+            data$color <- unlist(sapply(data[[var]], function(value) {
+                            cols[max(1, ceiling((maximum - value) / divisor))]}))
+          }
+          isolate({
+            coloring$current$var <- var
+            coloring$current$goal <- goal
+          })
+        },
+        "Discrete" = 
+        {
+          if (input$coloring_source == "Live") {
+            var <- input$live_color_variable_factor
+            palette_selection <- input$live_color_palette
+            if (palette_selection == "Rainbow") {
+              s_value <- input$live_color_rainbow_s
+              v_value <- input$live_color_rainbow_v
+            }
+          }
+          else {
+            scheme <- coloring$items[[input$coloring_source]]
+            var <- scheme$var
+            palette_selection <- scheme$palette
+            if (palette_selection == "Rainbow") {
+              s_value <- scheme$rainbow_s
+              v_value <- scheme$rainbow_v
+            }
+          }
+          variables_list = names(table(data[[var]]))
+          switch(palette_selection,
+                 "Rainbow"={cols <- rainbow(length(variables_list),
+                                            s_value,
+                                            v_value)},
+                 "Heat"={cols <- heat.colors(length(variables_list))},
+                 "Terrain"={cols <- terrain.colors(length(variables_list))},
+                 "Topo"={cols <- topo.colors(length(variables_list))},
+                 "Cm"={cols <- cm.colors(length(variables_list))})
+          for(i in 1:length(variables_list)){
+            data$color[(data[[var]] == variables_list[i])] <- cols[i]
+          }
+          isolate({
+            coloring$current$var <- var
+            coloring$current$colors <- cols
+          })
+        }  #,
+        # "Highlighted" = 
+        # {
+        #   if (!is.null(input$plot_brush)){
+        #     if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
+        #       xRange <- FALSE
+        #       yRange <- FALSE
+        #     }
+        #     else{
+        #       if(varClass[input$xInput] == "factor"){
+        #         lower <- ceiling(input$plot_brush$xmin)
+        #         upper <- floor(input$plot_brush$xmax)
+        #         xRange <- FALSE
+        #         for (i in lower:upper){
+        #           xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
+        #         }
+        #         if (lower > upper){
+        #           xRange <- FALSE
+        #         }
+        #       }
+        #       else {
+        #         xUpper <- data[input$xInput] < input$plot_brush$xmax
+        #         xLower <- data[input$xInput] > input$plot_brush$xmin
+        #         xRange <- xUpper & xLower
+        #       }
+        #       if(varClass[input$yInput] == "factor"){
+        #         lower <- ceiling(input$plot_brush$ymin)
+        #         upper <- floor(input$plot_brush$ymax)
+        #         yRange <- FALSE
+        #         for (i in lower:upper){
+        #           yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
+        #         }                 
+        #         if (lower > upper){
+        #           yRange <- FALSE
+        #         }
+        #       }
+        #       else{
+        #         yUpper <- data[input$yInput] < input$plot_brush$ymax
+        #         yLower <- data[input$yInput] > input$plot_brush$ymin
+        #         yRange <- yUpper & yLower
+        #       }
+        #     }
+        #     data$color[xRange & yRange] <- input$highlightColor #light blue
+        #   }
+        # },
+        # "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
+      )
     }
     # print("Data Colored")
     data
