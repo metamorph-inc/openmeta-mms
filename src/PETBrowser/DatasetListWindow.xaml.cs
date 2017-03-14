@@ -228,6 +228,7 @@ namespace PETBrowser
 
                     if (mergeDialog.ShowDialog() == true)
                     {
+                        ViewModel.ReloadMerged();
                         string mergedName = mergeDialog.MergedPetName;
                         string vizConfigPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.MergedDirectory, mergedName,
                         "visualizer_config.json");
@@ -848,6 +849,8 @@ namespace PETBrowser
                 var mergeDialog = new MergeDialog(PetGrid.SelectedItems.Cast<Dataset>(), ViewModel.Store.DataDirectory) { Owner = this };
 
                 mergeDialog.ShowDialog();
+
+                ViewModel.ReloadMerged();
             }
             catch (Exception ex)
             {
@@ -1052,6 +1055,18 @@ namespace PETBrowser
             PetDatasetsList.Clear();
             PetDatasetsList.AddRange(Store.ResultDatasets);
             PetDatasetsList.AddRange(Store.ArchiveDatasets);
+            PetDatasetsList.AddRange(Store.MergedDatasets);
+            PetDatasets.Refresh();
+        }
+
+        public void ReloadMerged()
+        {
+            Store.LoadMergedDatasets();
+
+            PetDatasetsList.Clear();
+            PetDatasetsList.AddRange(Store.ResultDatasets);
+            PetDatasetsList.AddRange(Store.ArchiveDatasets);
+            PetDatasetsList.AddRange(Store.MergedDatasets);
             PetDatasets.Refresh();
         }
 

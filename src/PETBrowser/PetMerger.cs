@@ -14,11 +14,11 @@ namespace PETBrowser
 {
     public class MergedPetMetadata
     {
-        public List<string> PetDirectories { get; set; }
+        public List<string> PetSources { get; set; }
 
         public MergedPetMetadata()
         {
-            PetDirectories = new List<string>();
+            PetSources = new List<string>();
         }
     }
 
@@ -88,17 +88,42 @@ namespace PETBrowser
         {
             var metadata = new MergedPetMetadata();
 
-            foreach (var dataset in datasets.Where(dataset => dataset.Kind == Dataset.DatasetKind.PetResult))
+            foreach (var dataset in datasets)
             {
-                foreach (var folder in dataset.Folders)
+                if (dataset.Kind == Dataset.DatasetKind.PetResult)
                 {
-                    var executionDirectoryPath = Path.GetDirectoryName(folder);
-                    if (executionDirectoryPath != null)
+                    foreach (var folder in dataset.Folders)
                     {
-                        var relativePath = Path.Combine("..", "..", DatasetStore.ResultsDirectory,
-                            executionDirectoryPath);
+                        var executionDirectoryPath = Path.GetDirectoryName(folder);
+                        if (executionDirectoryPath != null)
+                        {
+                            var relativePath = Path.Combine("..", "..", DatasetStore.ResultsDirectory,
+                                executionDirectoryPath);
 
-                        metadata.PetDirectories.Add(relativePath);
+                            metadata.PetSources.Add(relativePath);
+                        }
+                    }
+                }
+                else if (dataset.Kind == Dataset.DatasetKind.Archive)
+                {
+                    Console.WriteLine(dataset.Folders[0]);
+                    var relativePath = Path.Combine("..", "..", DatasetStore.ArchiveDirectory,
+                                dataset.Folders[0]);
+
+                    metadata.PetSources.Add(relativePath);
+                }
+                else if (dataset.Kind == Dataset.DatasetKind.MergedPet)
+                {
+                    //Load merged PET's metadata
+                    using (var reader = File.OpenText(Path.Combine(dataset.Folders[0], "metadata.json")))
+                    {
+                        var serializer = new JsonSerializer();
+
+                        var otherPetMetadata = (MergedPetMetadata) serializer.Deserialize(reader, typeof(MergedPetMetadata));
+                        foreach (var source in otherPetMetadata.PetSources)
+                        {
+                            metadata.PetSources.Add(source); //TODO: handle case where path points to a subfolder of the merged PET directory (or relative path changes for some other reason)
+                        }
                     }
                 }
             }
@@ -220,6 +245,9 @@ namespace PETBrowser
                     {
                         //Don't adjust configuration name if we don't find its directory
                     }
+                } else if (d.Kind == Dataset.DatasetKind.MergedPet)
+                {
+                    csvFileName = Path.Combine(dataDirectoryPath, DatasetStore.MergedDirectory, folder, "mergedPET.csv");
                 }
                 else
                 {
@@ -332,12 +360,24 @@ namespace PETBrowser
             //Compute the list of mdao_configs to summarize
             List<string> petConfigPaths = new List<string>();
 
-            foreach (var d in datasets.Where(dataset => dataset.Kind == Dataset.DatasetKind.PetResult))
+            foreach (var d in datasets)
             {
-                foreach (var folder in d.Folders)
+                if (d.Kind == Dataset.DatasetKind.PetResult)
                 {
-                    petConfigPaths.Add(Path.Combine(dataDirectoryPath, DatasetStore.ResultsDirectory,
-                        folder.Replace("testbench_manifest.json", "mdao_config.json")));
+                    foreach (var folder in d.Folders)
+                    {
+                        petConfigPaths.Add(Path.Combine(dataDirectoryPath, DatasetStore.ResultsDirectory,
+                            folder.Replace("testbench_manifest.json", "mdao_config.json")));
+                    }
+                }
+                else if(d.Kind == Dataset.DatasetKind.MergedPet)
+                {
+                    var path = Path.Combine(dataDirectoryPath, DatasetStore.MergedDirectory, d.Folders[0], "pet_config.json");
+
+                    if (File.Exists(path))
+                    {
+                        petConfigPaths.Add(path);
+                    }
                 }
             }
 

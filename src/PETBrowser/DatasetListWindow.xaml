@@ -155,7 +155,6 @@
                         <StackPanel DockPanel.Dock="Bottom">
                             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
                                 <Button x:Name="MergeButton" Content="Merge Selected" Margin="0,10,5,10" Click="MergeButton_OnClick" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
-                                <Button x:Name="button" Content="Archive Selected" Margin="5,10,5,10" Click="button_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
                                 <Button x:Name="AnalysisToolsButton" Margin="5,10,5,10" Padding="5,3" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" IsEnabled="{Binding DatasetLoaded}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
