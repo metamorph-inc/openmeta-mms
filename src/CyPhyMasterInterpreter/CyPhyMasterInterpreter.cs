@@ -152,6 +152,11 @@ namespace CyPhyMasterInterpreter
                 try
                 {
                     selection = masterInterpreter.ShowConfigurationSelectionForm(currentobj as MgaModel, enableDebugging: controlWasHeld);
+                    if (selection.SelectedConfigurations == null)
+                    {
+                        // user selected Run all configs in parallel
+                        return;
+                    }
                     MgaGateway.PerformInTransaction(() =>
                     {
                         this.Logger.WriteDebug("MasterExe command: CyPhyMasterExe.exe \"{0}\" \"{1}\" \"{2}\"", currentobj.Project.ProjectConnStr, GMELightObject.ShortenAbsPath(currentobj.AbsPath),
@@ -435,7 +440,6 @@ namespace CyPhyMasterInterpreter
         public static void GMERegister(Type t)
         {
             Registrar.RegisterComponentsInGMERegistry();
-
         }
 
         [ComUnregisterFunctionAttribute]
@@ -445,8 +449,5 @@ namespace CyPhyMasterInterpreter
         }
 
         #endregion
-
     }
-
-
 }

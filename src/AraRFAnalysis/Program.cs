@@ -291,69 +291,19 @@ namespace AraRFAnalysis
     {
         public void RunScript(string filename)
         {
+
+            var dispatch = new CyPhyMasterInterpreter.JobManagerDispatch();
+            dispatch.StartJobManager(Path.GetDirectoryName(filename));
+
             Job j;
             JobServer manager;
 
-            try
-            {
-                manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
-                j = manager.CreateJob();
-            }
-            catch (System.Net.Sockets.SocketException)
-            {
-                StartJobManager();
-                manager = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
-                j = manager.CreateJob();
-            }
+            j = dispatch.CreateJob(out manager, Path.GetDirectoryName(filename));
 
             j.RunCommand = Path.GetFileName(filename);
             j.WorkingDirectory = Path.GetDirectoryName(filename);
             j.Title = "Ara RF Simulation";
             manager.AddJob(j);
-        }
-
-        private static Uri JobServerConnection = new Uri("tcp://" + System.Net.IPAddress.Loopback.ToString() + ":35010/JobServer");
-
-        private static void StartJobManager()
-        {
-            // n.b. Assembly.Location is wrong with Shadow Copy enabled
-            string assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            string exe = Path.Combine(assemblyDir, "JobManager.exe");
-            if (!File.Exists(exe))
-            {
-                exe = Path.Combine(META.VersionInfo.MetaPath,
-                                   "src",
-                                   "JobManager",
-                                   "JobManager",
-                                   "bin",
-                                   "Release",
-                                   "JobManager.exe");
-            }
-            if (!File.Exists(exe))
-            {
-                exe = Path.Combine(META.VersionInfo.MetaPath,
-                                   "src",
-                                   "JobManager",
-                                   "JobManager",
-                                   "bin",
-                                   "Debug",
-                                   "JobManager.exe");
-            }
-            if (File.Exists(exe))
-            {
-                Process proc = new Process();
-                proc.StartInfo.UseShellExecute = false;
-                proc.StartInfo.FileName = exe;
-                proc.StartInfo.RedirectStandardOutput = true;
-                proc.Start();
-                proc.WaitForInputIdle(10 * 1000);
-                proc.StandardOutput.ReadLine(); // matches Console.Out.WriteLine("JobManager has started"); in JobManager
-                //System.Threading.Thread.Sleep(3 * 1000);
-            }
-            else
-            {
-                throw new Exception("Job Manager was not found on your computer. Make sure your META installer is healthy.");
-            } 
         }
     }
 

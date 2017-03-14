@@ -142,7 +142,6 @@ namespace CyPhyMasterInterpreter
                     string title = string.Empty;
                     string testbenchName = string.Empty;
                     string workingDirectory = interpreter.MainParameters.OutputDirectory;
-                    string projectDirectory = ProjectDirectory;
 
 
                     string interpreterName = interpreter.Name.StartsWith("MGA.Interpreter.") ?
@@ -158,7 +157,7 @@ namespace CyPhyMasterInterpreter
                         .TestBenchType
                         .Name;
 
-                    success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, projectDirectory, interpreter);
+                    success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, ProjectDirectory, interpreter);
                 }
             }
 
@@ -240,7 +239,8 @@ namespace CyPhyMasterInterpreter
         string cmdName = null;
         public override bool UpdateTestBenchManifestExecutionSteps(AVM.DDP.MetaTBManifest manifest)
         {
-            manifest.Steps.Add(new AVM.DDP.MetaTBManifest.Step() {
+            manifest.Steps.Add(new AVM.DDP.MetaTBManifest.Step()
+            {
                 Invocation = "python.exe -E -m run_mdao",
                 Description = "ParametricExploration",
                 // Type = "Parametric Study",
