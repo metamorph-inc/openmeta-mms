@@ -217,7 +217,7 @@ namespace PETBrowser
                 if (PetGrid.SelectedItems.Count == 1 &&
                     ((Dataset) PetGrid.SelectedItem).Kind == Dataset.DatasetKind.MergedPet)
                 {
-                    string vizConfigPath = System.IO.Path.Combine(((Dataset) PetGrid.SelectedItem).Folders[0],
+                    string vizConfigPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.MergedDirectory, ((Dataset) PetGrid.SelectedItem).Folders[0],
                         "visualizer_config.json");
                     LaunchVisualizer(vizConfigPath);
                 }
@@ -340,8 +340,12 @@ namespace PETBrowser
 
         private void DeletePetItem(object sender, RoutedEventArgs e)
         {
-            var selectedDataset = (Dataset) PetGrid.SelectedItem;
-            DeleteItem(selectedDataset);
+            //TODO: handle delete for multiple selection
+            if (PetGrid.SelectedItems.Count == 1)
+            {
+                var selectedDataset = (Dataset) PetGrid.SelectedItem;
+                DeleteItem(selectedDataset);
+            }
         }
 
         private void DeleteTestBenchItem(object sender, RoutedEventArgs e)
@@ -855,6 +859,24 @@ namespace PETBrowser
             catch (Exception ex)
             {
                 ShowErrorDialog("Merge error", "An error occurred while merging results.", ex.Message, ex.ToString());
+            }
+        }
+
+        private void RefreshMergedPet(object sender, RoutedEventArgs e)
+        {
+            //TODO: Refresh multiple selected merged PETs?
+            if (PetGrid.SelectedItems.Count == 1)
+            {
+                try
+                {
+                    var selectedDataset = (Dataset) PetGrid.SelectedItem;
+
+                    PetMerger.RefreshMergedPet(selectedDataset, ViewModel.Store.DataDirectory);
+                }
+                catch (Exception ex)
+                {
+                    ShowErrorDialog("Refresh error", "An error occurred while refreshing the merged PET.", ex.Message, ex.ToString());
+                }
             }
         }
     }

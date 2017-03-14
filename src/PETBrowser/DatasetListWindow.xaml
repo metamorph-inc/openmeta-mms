@@ -226,6 +226,10 @@
                                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
                             </DataGrid.HorizontalGridLinesBrush>
                             <DataGrid.Resources>
+                                <ContextMenu x:Key="MergedPetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <MenuItem Header="Refresh" Click="RefreshMergedPet" />
+                                    <MenuItem Header="Delete..." Click="DeletePetItem" />
+                                </ContextMenu>
                                 <ContextMenu x:Key="PetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                     <MenuItem Header="Delete..." Click="DeletePetItem" />
                                 </ContextMenu>
@@ -241,7 +245,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="DataType" IsReadOnly="True" Width="60"/>
+                                <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="DataType" IsReadOnly="True" Width="65"/>
                                 <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
                                 <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*" SortDirection="Descending" /> <!-- Note: data is actually sorted by the ListCollectionView, in code-behind -->
@@ -251,6 +255,9 @@
                                 <Style TargetType="DataGridRow">
                                     <EventSetter Event="MouseDoubleClick" Handler="showPetDetails"></EventSetter>
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Kind}" Value="MergedPet">
+                                            <Setter Property="ContextMenu" Value="{StaticResource MergedPetRowMenu}" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Kind}" Value="PetResult">
                                             <Setter Property="ContextMenu" Value="{StaticResource PetRowMenu}" />
                                         </DataTrigger>

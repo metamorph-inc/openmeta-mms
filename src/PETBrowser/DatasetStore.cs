@@ -211,9 +211,10 @@ namespace PETBrowser
                 var mergedPetFile = Path.Combine(directory, "metadata.json");
                 if (File.Exists(mergedPetFile))
                 {
-                    var newDataset = new Dataset(Dataset.DatasetKind.MergedPet, File.GetCreationTime(mergedPetFile).ToString("yyyy-MM-dd HH-mm-ss"), directory);
+                    var directoryName = Path.GetFileName(directory);
+                    var newDataset = new Dataset(Dataset.DatasetKind.MergedPet, File.GetCreationTime(mergedPetFile).ToString("yyyy-MM-dd HH-mm-ss"), directoryName);
                     newDataset.Count++;
-                    newDataset.Folders.Add(directory);
+                    newDataset.Folders.Add(directoryName);
 
                     MergedDatasets.Add(newDataset);
                 }
@@ -233,6 +234,13 @@ namespace PETBrowser
 
                 var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
                 File.Move(archivePath, Path.Combine(deletedDirectory.FullName, Path.GetFileName(archivePath)));
+            }
+            else if (datasetToDelete.Kind == Dataset.DatasetKind.MergedPet)
+            {
+                var mergedPath = Path.Combine(this.DataDirectory, MergedDirectory, datasetToDelete.Folders[0]);
+
+                var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
+                Directory.Move(mergedPath, Path.Combine(deletedDirectory.FullName, Path.GetFileName(mergedPath)));
             }
             else
             {

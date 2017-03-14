@@ -14,11 +14,11 @@ namespace PETBrowser
 {
     public class MergedPetMetadata
     {
-        public List<string> PetSources { get; set; }
+        public List<Dataset> SourceDatasets { get; set; }
 
         public MergedPetMetadata()
         {
-            PetSources = new List<string>();
+            SourceDatasets = new List<Dataset>();
         }
     }
 
@@ -84,49 +84,59 @@ namespace PETBrowser
             }
         }
 
+        public static void RefreshMergedPet(Dataset datasetToRefresh, string dataDirectoryPath)
+        {
+            if (datasetToRefresh.Kind != Dataset.DatasetKind.MergedPet)
+            {
+                throw new InvalidOperationException("Only MergedPet datasets can be refreshed.");
+            }
+
+            var mergedPetDirectory = Path.Combine(dataDirectoryPath, DatasetStore.MergedDirectory,
+                datasetToRefresh.Folders[0]);
+            Console.WriteLine("Merged PET directory: {0}", mergedPetDirectory);
+            Console.WriteLine("Dataset Folder: {0}", datasetToRefresh.Folders[0]);
+
+            var datasets = new List<Dataset>();
+
+            using (
+                var reader =
+                    File.OpenText(Path.Combine(mergedPetDirectory, "metadata.json")))
+            {
+                var serializer = new JsonSerializer();
+                var metadata = (MergedPetMetadata) serializer.Deserialize(reader, typeof(MergedPetMetadata));
+
+                datasets.AddRange(metadata.SourceDatasets);
+            }
+
+            var tempDirectoryPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                Directory.CreateDirectory(tempDirectoryPath);
+
+            try
+            {
+                var metadataPath = Path.Combine(tempDirectoryPath, "metadata.json");
+                var exportPath = Path.Combine(tempDirectoryPath, "mergedPET.csv");
+                var mergedPetConfigPath = Path.Combine(tempDirectoryPath, "pet_config.json");
+                var vizConfigPath = Path.Combine(tempDirectoryPath, "visualizer_config.json");
+
+                WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
+                WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
+                WriteMergedMetadata(metadataPath, datasets);
+                WriteDefaultVizConfig(vizConfigPath);
+
+                DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true, true);
+            }
+            finally
+            {
+                // Make sure our temp directory is removed, whether we complete successfully or an error occurs
+                Directory.Delete(tempDirectoryPath, true);
+            }
+        }
+
         private static void WriteMergedMetadata(string filePath, IEnumerable<Dataset> datasets)
         {
             var metadata = new MergedPetMetadata();
 
-            foreach (var dataset in datasets)
-            {
-                if (dataset.Kind == Dataset.DatasetKind.PetResult)
-                {
-                    foreach (var folder in dataset.Folders)
-                    {
-                        var executionDirectoryPath = Path.GetDirectoryName(folder);
-                        if (executionDirectoryPath != null)
-                        {
-                            var relativePath = Path.Combine("..", "..", DatasetStore.ResultsDirectory,
-                                executionDirectoryPath);
-
-                            metadata.PetSources.Add(relativePath);
-                        }
-                    }
-                }
-                else if (dataset.Kind == Dataset.DatasetKind.Archive)
-                {
-                    Console.WriteLine(dataset.Folders[0]);
-                    var relativePath = Path.Combine("..", "..", DatasetStore.ArchiveDirectory,
-                                dataset.Folders[0]);
-
-                    metadata.PetSources.Add(relativePath);
-                }
-                else if (dataset.Kind == Dataset.DatasetKind.MergedPet)
-                {
-                    //Load merged PET's metadata
-                    using (var reader = File.OpenText(Path.Combine(dataset.Folders[0], "metadata.json")))
-                    {
-                        var serializer = new JsonSerializer();
-
-                        var otherPetMetadata = (MergedPetMetadata) serializer.Deserialize(reader, typeof(MergedPetMetadata));
-                        foreach (var source in otherPetMetadata.PetSources)
-                        {
-                            metadata.PetSources.Add(source); //TODO: handle case where path points to a subfolder of the merged PET directory (or relative path changes for some other reason)
-                        }
-                    }
-                }
-            }
+            metadata.SourceDatasets.AddRange(datasets);
 
             using (var writer = File.CreateText(filePath))
             {
@@ -457,7 +467,7 @@ namespace PETBrowser
         }
         
         // Code from MSDN example:  https://msdn.microsoft.com/en-us/library/bb762914(v=vs.110).aspx
-        private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs, bool overwrite = false)
         {
             // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
@@ -481,7 +491,7 @@ namespace PETBrowser
             foreach (FileInfo file in files)
             {
                 string temppath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, false);
+                file.CopyTo(temppath, overwrite);
             }
 
             // If copying subdirectories, copy them and their contents to new location.
@@ -490,7 +500,7 @@ namespace PETBrowser
                 foreach (DirectoryInfo subdir in dirs)
                 {
                     string temppath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                    DirectoryCopy(subdir.FullName, temppath, copySubDirs, overwrite);
                 }
             }
         }
