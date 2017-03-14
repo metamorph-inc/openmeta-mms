@@ -562,6 +562,41 @@ namespace PETBrowser
                                 }
                             }
                         }, TaskScheduler.FromCurrentSynchronizationContext());
+                    } else if (selectedDataset.Kind == Dataset.DatasetKind.MergedPet)
+                    {
+                        placeholderPanel.IsLoading = true;
+                        var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
+                            DatasetStore.MergedDirectory);
+
+                        var loadTask = Task<MergedPetDetailsViewModel>.Factory.StartNew(() =>
+                        {
+                            return new MergedPetDetailsViewModel(selectedDataset, resultsDirectory);
+                        });
+
+                        loadTask.ContinueWith(task =>
+                        {
+                            if (!task.IsCanceled)
+                            {
+                                if (task.Exception != null)
+                                {
+                                    placeholderPanel.IsLoading = false;
+                                    placeholderPanel.DisplayText =
+                                        "An error occurred while inspecting selected object: \n";
+
+                                    foreach (var exception in task.Exception.InnerExceptions)
+                                    {
+                                        placeholderPanel.DisplayText += "\n" + exception.Message;
+                                    }
+                                }
+                                else
+                                {
+                                    var detailsControl = new MergedPetDetailsControl(task.Result, ViewModel);
+
+                                    detailsPanel.Children.Clear();
+                                    detailsPanel.Children.Add(detailsControl);
+                                }
+                            }
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
                     }
                     else
                     {
