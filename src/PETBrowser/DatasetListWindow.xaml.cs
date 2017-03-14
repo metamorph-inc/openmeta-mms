@@ -907,6 +907,9 @@ namespace PETBrowser
                     var selectedDataset = (Dataset) PetGrid.SelectedItem;
 
                     PetMerger.RefreshMergedPet(selectedDataset, ViewModel.Store.DataDirectory);
+
+                    //Trigger an update of the details panel
+                    PetGrid_SelectionChanged(this, new SelectionChangedEventArgs(e.RoutedEvent, new Object[0], new Object[0]));
                 }
                 catch (Exception ex)
                 {
