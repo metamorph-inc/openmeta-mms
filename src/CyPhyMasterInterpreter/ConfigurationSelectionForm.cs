@@ -21,7 +21,7 @@ namespace CyPhyMasterInterpreter
 {
     public partial class ConfigurationSelectionForm : Form
     {
-        public ConfigurationSelectionOutput ConfigurationSelectionResult {get; set;}
+        public ConfigurationSelectionOutput ConfigurationSelectionResult { get; set; }
         private ConfigurationSelectionInput m_Input { get; set; }
 
         public ConfigurationSelectionForm(ConfigurationSelectionInput input, bool enableDebugging)
@@ -48,6 +48,12 @@ namespace CyPhyMasterInterpreter
             this.chbVerbose.Checked = Properties.Settings.Default.bVerboseLogging;
 
             this.InitForm();
+        }
+
+        private void CommandLinkRunParallel_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Yes;
+            this.Close();
         }
 
         public void InitForm()
@@ -197,7 +203,7 @@ namespace CyPhyMasterInterpreter
         {
             string newToolTipText = string.Empty;
             int nIdx = this.lbExportedCAs.IndexFromPoint(e.Location);
-            
+
             if (nIdx >= 0 &&
                 nIdx < this.lbExportedCAs.Items.Count)
             {

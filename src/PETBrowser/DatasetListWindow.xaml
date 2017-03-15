@@ -16,9 +16,8 @@
         </ResourceDictionary>
     </Window.Resources>
     <Window.Title>
-        <MultiBinding StringFormat="Results Browser ({0}) [Port {1}]">
+        <MultiBinding StringFormat="Results Browser ({0})">
             <Binding Path="ProjectPath" />
-            <Binding Path="ManagerPort" />
         </MultiBinding>
     </Window.Title>
     <DockPanel Background="#FFEEF5FD">

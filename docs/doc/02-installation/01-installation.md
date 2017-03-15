@@ -53,7 +53,7 @@ Remember to install GME **before installing the META core.**
  
 The **Metamorphosys Core** (aka META Core) contains the primary set of interpreters and tools for assembling models and running simulations.
 
-[<b>Download META (Windows-Beta) Installer</b>](http://doc.metamorphsoftware.com/alpha-releases/meta-tools/META_x64_beta_1994.msi)
+[<b>Download META (Windows-Beta) Installer</b>](http://docs.metamorphsoftware.com/alpha-releases/meta-tools/META_x64_beta_1994.msi)
 
 Note: Remember to install GME **before** installing the META core.
 
@@ -114,14 +114,14 @@ NOTE:</b> The CadQuery library must be copied into the "<FreeCAD_Install_Dir/>Mo
 | Name | Link | Description |
 | :--- | :--- | :---------- |
 | **GME Installer** | [download](http://repo.isis.vanderbilt.edu/GME/14.7.28/GME_x64-14.7.28.msi) | The modeling framework underlying the META tools. Please refer to the [Installation Instructions](@ref installation-and-setup).
-| **META (Alpha) Installer** | [download](http://doc.metamorphsoftware.com/alpha-releases/meta-tools/META_x64_beta_1789.msi) | The META tools installer. Please refer to the [Installation Instructions](@ref installation-and-setup).
-| **LED Tutorial Model** | [download](http://doc.metamorphsoftware.com/alpha-releases/design-models/walkthrough_simple_LED_matrix_circuit.zip) | The model project used as part of [Chapter 3: LED Tutorial](@ref meta-walkthroughs)
-| **Component Library** | [download](http://doc.metamorphsoftware.com/alpha-releases/component-models/all_components.zip) | A collection of components that can be imported into META projects.
-| **InvertedF Antenna Example** | [download](http://doc.metamorphsoftware.com/alpha-releases/design-models/inverted_f_antenna.zip) | An example project with an Inverted-F type 2.4 GHz antenna mounted onto an Ara prototype module.
-| **LED Matrix Model** | [download](http://doc.metamorphsoftware.com/alpha-releases/design-models/LED_matrix.zip) | A META design project capturing a simple "LED Matrix" module. This model is based on early prototypes of the Ara platform and doesn't conform to the Ara specs provided in the MDK. This model should be used for demonstration and exploration of META tool capabilities only.
-| **Astable Multivibrator Model** | [download](http://doc.metamorphsoftware.com/alpha-releases/design-models/astable_multivibrator.zip) | A META design project capturing a simple dual-transistor switching circuit. This model is useful for experimenting with the SPICE simulation and visualization capabilities of the META tools.
-| **SCBus Example** | [download](http://doc.metamorphsoftware.com/alpha-releases/design-models/scbus_example.zip) | A META design project capturing a simple microcontroller circuit. The model can be used to generate a hardware simulation that runs user-provided firmware. This example is designed to communicate with the **SystemCTest** Android app provided with the META tools.
-| **Manufacturing Example** | [download](http://doc.metamorphsoftware.com/alpha-releases/design-models/manufacturing_example.zip) | A META design project used to demonstrate the generation of files for submitting a design to a circuit board fabricator.
+| **META (Alpha) Installer** | [download](http://docs.metamorphsoftware.com/alpha-releases/meta-tools/META_x64_beta_1789.msi) | The META tools installer. Please refer to the [Installation Instructions](@ref installation-and-setup).
+| **LED Tutorial Model** | [download](http://docs.metamorphsoftware.com/alpha-releases/design-models/walkthrough_simple_LED_matrix_circuit.zip) | The model project used as part of [Chapter 3: LED Tutorial](@ref meta-walkthroughs)
+| **Component Library** | [download](http://docs.metamorphsoftware.com/alpha-releases/component-models/all_components.zip) | A collection of components that can be imported into META projects.
+| **InvertedF Antenna Example** | [download](http://docs.metamorphsoftware.com/alpha-releases/design-models/inverted_f_antenna.zip) | An example project with an Inverted-F type 2.4 GHz antenna mounted onto an Ara prototype module.
+| **LED Matrix Model** | [download](http://docs.metamorphsoftware.com/alpha-releases/design-models/LED_matrix.zip) | A META design project capturing a simple "LED Matrix" module. This model is based on early prototypes of the Ara platform and doesn't conform to the Ara specs provided in the MDK. This model should be used for demonstration and exploration of META tool capabilities only.
+| **Astable Multivibrator Model** | [download](http://docs.metamorphsoftware.com/alpha-releases/design-models/astable_multivibrator.zip) | A META design project capturing a simple dual-transistor switching circuit. This model is useful for experimenting with the SPICE simulation and visualization capabilities of the META tools.
+| **SCBus Example** | [download](http://docs.metamorphsoftware.com/alpha-releases/design-models/scbus_example.zip) | A META design project capturing a simple microcontroller circuit. The model can be used to generate a hardware simulation that runs user-provided firmware. This example is designed to communicate with the **SystemCTest** Android app provided with the META tools.
+| **Manufacturing Example** | [download](http://docs.metamorphsoftware.com/alpha-releases/design-models/manufacturing_example.zip) | A META design project used to demonstrate the generation of files for submitting a design to a circuit board fabricator.
 
 - - -
 

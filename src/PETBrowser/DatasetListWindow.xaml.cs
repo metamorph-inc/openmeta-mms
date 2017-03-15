@@ -991,11 +991,6 @@ namespace PETBrowser
             set { PropertyChanged.ChangeAndNotify(ref _projectPath, value, () => ProjectPath); }
         }
 
-        public int ManagerPort
-        {
-            get { return JobStore.Port; }
-        }
-
         public DatasetListWindowViewModel(JobStore jobStore)
         {
             Store = null;
