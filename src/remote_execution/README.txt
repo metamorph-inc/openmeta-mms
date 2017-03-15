@@ -19,7 +19,7 @@ Install Jenkins (1.554.1LTS known to work)
          Add administrative user to list with full permissions (or you get locked out of Jenkins)
            To administer Jenkins, hijack your session from the JobManager; or add to sessions.json; or use Fiddler and set header X-Forwarded-User
          Anonymous user: check Overall>Read and Job>Create
-   Add labels to nodes: SystemC Schematic
+   Add labels to nodes: SystemC Schematic Windows14.13
 Edit config.json
   "target" is the Jenkins URL
   "port" is the port for clients

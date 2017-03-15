@@ -198,7 +198,7 @@ app.get('/testbench/get_file', function(req, res){
   ws.pipe(res);
   ws.on('error', function(err) {
     log_error("get_file " + err);
-    res.send(404);
+    res.sendStatus(404);
   });
 });
 app.post('/testbench/createItem', function(req, res){
@@ -225,12 +225,15 @@ app.post('/testbench/createItem', function(req, res){
                .set('Content-Type', 'text/xml')
                .set('X-Forwarded-User', sessions[req._session_id].username)
                .send(config_xml)
-               .end(function(get_res){
-                 if (get_res.ok) {
+               .end(function(err, get_res){
+                 if (err) {
+                   log_error(err);
+                   res.sendStatus(500);
+                 } else if (get_res.ok) {
                    res.send(200, 'ok');
                  } else {
                    log_error('/createItem: ' + get_res.text);
-                   res.send(500);
+                   res.sendStatus(500);
                  }
                });
         });
@@ -258,12 +261,15 @@ app.post(/^\/testbench\/job\/(\w+)\/build/, function(req, res) {
     });
     jenkins_req.send('json=' + encodeURIComponent(JSON.stringify(parameters_encoded)))
         .send('Submit=Build')
-        .end(function(jenkins_res){
-            if (jenkins_res.ok) {
-               res.send(200);
+        .end(function(err, jenkins_res){
+            if (err) {
+              log_error(err);
+              res.sendStatus(500);
+            } else if (jenkins_res.ok) {
+               res.sendStatus(200);
              } else {
                log_error('.../build: ' + jenkins_res.text);
-               res.send(500);
+               res.sendStatus(500);
              }
        });
 
@@ -286,6 +292,8 @@ routes = { '/auth/do_login': 1,
 
 
 var proxy = httpProxy.createProxyServer({});
+
+
 
 var server = require('http').createServer(function(req, res) {
   var cookies = new Cookies(req, res);
@@ -317,5 +325,15 @@ var server = require('http').createServer(function(req, res) {
   });
 });
 
-server.listen(config.port);
-log_info("listening on port " + config.port);
+fs.stat(config.files_dir, (err, stats) => {
+    if (err) {
+        log_error('Error stating config.files_dir: ' + err)
+        process.exit(2);
+    } else if (!stats.isDirectory()) {
+        log_error('config.files_dir is not a directory')
+        process.exit(2);
+    } else {
+        server.listen(config.port);
+        log_info("listening on port " + config.port);
+    }
+});
