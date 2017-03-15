@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
-using System.Text;
-using JobManagerFramework;
+using System.Runtime.Remoting.Channels.Ipc;
+using System.Threading;
 
 namespace PETBrowser
 {
     public class SingleInstanceManager : IDisposable
     {
-        public const int PortNumber = 36010;
+        public const string PortName = "MetaPETBrowser";
         public const string ServerName = "BrowserInstance";
 
         private InstanceImpl Instance { get; set; }
-        private TcpServerChannel ServerChannel { get; set; }
+        private IpcServerChannel ServerChannel { get; set; }
 
         public class OnCreateForWorkingDirectoryEventArgs : EventArgs
         {
@@ -33,20 +29,10 @@ namespace PETBrowser
 
         public SingleInstanceManager()
         {
-            BinaryServerFormatterSinkProvider serverProv = new BinaryServerFormatterSinkProvider();
-            serverProv.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+            var provider = new BinaryServerFormatterSinkProvider();
+            provider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
 
-            System.Collections.IDictionary clientTcpChannelProperties = new System.Collections.Hashtable();
-            clientTcpChannelProperties["name"] = "ClientTcpChan2";
-            ChannelServices.RegisterChannel(
-                new System.Runtime.Remoting.Channels.Tcp.TcpClientChannel(clientTcpChannelProperties,
-                    new BinaryClientFormatterSinkProvider()), false);
-
-            System.Collections.IDictionary TcpChannelProperties = new Dictionary<string, object>();
-            TcpChannelProperties["port"] = PortNumber;
-            TcpChannelProperties["bindTo"] = System.Net.IPAddress.Loopback.ToString();
-            TcpChannelProperties["name"] = "instance";
-            ServerChannel = new System.Runtime.Remoting.Channels.Tcp.TcpServerChannel(TcpChannelProperties, serverProv);
+            ServerChannel = new IpcServerChannel(ServerName, PortName, provider);
             ChannelServices.RegisterChannel(ServerChannel, false);
 
             Instance = new InstanceImpl();
@@ -82,12 +68,13 @@ namespace PETBrowser
         {
             try
             {
-                var instanceConnection = new Uri("tcp://" + System.Net.IPAddress.Loopback.ToString() + ":" + SingleInstanceManager.PortNumber + "/" + SingleInstanceManager.ServerName);
+                var instanceConnection = new Uri("ipc://" + SingleInstanceManager.PortName + "/" + SingleInstanceManager.ServerName);
                 var instance = (Instance)Activator.GetObject(typeof(Instance), instanceConnection.OriginalString);
+
                 instance.CreateBrowserForWorkingDirectory(workingDirectory);
                 return true;
             }
-            catch (System.Net.Sockets.SocketException)
+            catch (RemotingException)
             {
                 return false;
             }
