@@ -74,15 +74,15 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   # Visualizer 2.0 style input dataset
   if (Sys.getenv('DIG_DATASET_CONFIG') == "") {
     # Setup one of the test datasets if no input dataset
-    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-    #                                         'WindTurbineForOptimization',
-    #                                         'visualizer_config.json'))
+    Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
+                                            'WindTurbineForOptimization',
+                                            'visualizer_config.json'))
     # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
     #                                         'WindTurbine',
     #                                         'visualizer_config.json'))
-    Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
-                                            'TestPETRefinement',
-                                            'visualizer_config.json'))
+    # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
+    #                                         'TestPETRefinement',
+    #                                         'visualizer_config.json'))
   }
   config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
   visualizer_config <- fromJSON(config_filename)
@@ -639,52 +639,7 @@ Server <- function(input, output, session) {
             coloring$current$var <- var
             coloring$current$colors <- cols
           })
-        }  #,
-        # "Highlighted" = 
-        # {
-        #   if (!is.null(input$plot_brush)){
-        #     if(varClass[input$xInput] == "factor" & varClass[input$yInput] == "factor"){
-        #       xRange <- FALSE
-        #       yRange <- FALSE
-        #     }
-        #     else{
-        #       if(varClass[input$xInput] == "factor"){
-        #         lower <- ceiling(input$plot_brush$xmin)
-        #         upper <- floor(input$plot_brush$xmax)
-        #         xRange <- FALSE
-        #         for (i in lower:upper){
-        #           xRange <- xRange | data[input$xInput] == names(table(raw_plus()[input$xInput]))[i]
-        #         }
-        #         if (lower > upper){
-        #           xRange <- FALSE
-        #         }
-        #       }
-        #       else {
-        #         xUpper <- data[input$xInput] < input$plot_brush$xmax
-        #         xLower <- data[input$xInput] > input$plot_brush$xmin
-        #         xRange <- xUpper & xLower
-        #       }
-        #       if(varClass[input$yInput] == "factor"){
-        #         lower <- ceiling(input$plot_brush$ymin)
-        #         upper <- floor(input$plot_brush$ymax)
-        #         yRange <- FALSE
-        #         for (i in lower:upper){
-        #           yRange <- yRange | data[input$yInput] == names(table(raw_plus()[input$yInput]))[i]
-        #         }                 
-        #         if (lower > upper){
-        #           yRange <- FALSE
-        #         }
-        #       }
-        #       else{
-        #         yUpper <- data[input$yInput] < input$plot_brush$ymax
-        #         yLower <- data[input$yInput] > input$plot_brush$ymin
-        #         yRange <- yUpper & yLower
-        #       }
-        #     }
-        #     data$color[xRange & yRange] <- input$highlightColor #light blue
-        #   }
-        # },
-        # "Ranked" = data[input$dataTable_rows_selected, "color"] <- input$rankColor
+        }
       )
     }
     # print("Data Colored")
@@ -693,8 +648,21 @@ Server <- function(input, output, session) {
   
   # Coloring -----------------------------------------------------------------
   
-  updateSelectInput(session, "live_coloring_variable_numeric", choices = var_range_nums_and_ints)
-  updateSelectInput(session, "live_color_variable_factor", choices = var_range_facs)
+  updateSelectInput(session, "live_coloring_variable_numeric",
+                    choices = var_range_nums_and_ints)
+  updateSelectInput(session, "live_color_variable_factor",
+                    choices = var_range_facs)
+  
+  observe({
+    if (length(classification_items) == 0) {
+      numeric_choices <- var_range_nums_and_ints
+    } else {
+      numeric_choices <- list(Variables=var_range_nums_and_ints,
+                              Classifications=names(classification_items))
+    }
+    updateSelectInput(session, "live_coloring_variable_numeric",
+                      choices = numeric_choices)
+  })
   
   coloring_items <- list()
   current_coloring <- list()
@@ -707,7 +675,8 @@ Server <- function(input, output, session) {
     descriptions <- unlist(lapply(coloring$items, function(current) {
       switch(current$type,
         "Max/Min"={paste0(current$goal, " ", current$var)},
-        "Discrete"={paste0(current$var, " with ", current$palette, " palette.")}
+        "Discrete"={paste0(current$var, " with ",
+                           current$palette, " palette.")}
       )
     }))
     table <- data.frame(Names=names, Descriptions=descriptions)
@@ -766,6 +735,13 @@ Server <- function(input, output, session) {
     }
   })
   
+  # Classifications and Sets -------------------------------------------------
+  
+  classification_items <- list()
+  set_items <- list()
+  added <- reactiveValues(classifications=classification_items,
+                          sets=set_items)
+  
   # Final Processing ---------------------------------------------------------
   
   # Build the 'data' list that is shared between all tabs.
@@ -774,6 +750,7 @@ Server <- function(input, output, session) {
   data$Filtered <- FilteredData
   data$Colored <- ColoredData
   data$Filters <- Filters
+  data$added <- added
   
   # Build the 'meta' list.
   data$meta <- list(variables=variables,
