@@ -73,7 +73,7 @@ server <- function(input, output, session, data) {
     if (input$use_filtered) {
       local_data <- data$Filtered()
     } else {
-      local_data <- data$raw
+      local_data <- data$raw_reac$df
     }
     local_data
   })
@@ -101,7 +101,7 @@ server <- function(input, output, session, data) {
   }
   
   output$table <- DT::renderDataTable({
-    print("In render data table")
+    # print("In render data table")
     local_data <- LocalData()
     if(input$roundTables)
       local_data <- RoundDataFrame(LocalData(), input$numDecimals)
@@ -113,12 +113,12 @@ server <- function(input, output, session, data) {
   MetricsList <- reactive({
     idx = NULL
     req(input$weightMetrics)
-    print("Getting Metrics List.")
+    # print("Getting Metrics List.")
     for(choice in 1:length(input$weightMetrics)) {
       mm <- match(input$weightMetrics[choice],var_names)
       if(mm > 0) { idx <- c(idx,mm) }
     }
-    print(idx)
+    # print(idx)
     idx
   })
   
@@ -330,7 +330,7 @@ server <- function(input, output, session, data) {
   #Dynamic UI rendering for weighted metrics list
   output$rankings <- renderUI({
     req(MetricsList())
-    print("In render ranking sliders")
+    # print("In render ranking sliders")
     FullMetricUI()
   })
   
@@ -338,7 +338,7 @@ server <- function(input, output, session, data) {
   #Process metric weights
   RankData <- reactive({
     req(MetricsList())
-    print("In calculate ranked data")
+    # print("In calculate ranked data")
     data <- LocalData()[var_range_nums_and_ints]
     norm_data <- data.frame(t(t(data)/apply(data,2,max)))
     
@@ -414,8 +414,8 @@ server <- function(input, output, session, data) {
   
   TOPSISData <- reactive({
     req(MetricsList())
-    print("In calculate topsis data")
-    print(names(LocalData()))
+    # print("In calculate topsis data")
+    # print(names(LocalData()))
     data <- LocalData()[var_range_nums_and_ints]
     weights <- NULL
     impacts <- NULL
@@ -483,7 +483,18 @@ server <- function(input, output, session, data) {
   
   
   observeEvent(input$save_ranking, {
-    print("Saving Ranking")
+    name <- paste0("class", input$save_ranking)
+    mean <- 25 + runif(1) * 50
+    sd <- 2 + runif(1) * 3
+    data$raw_reac$df[[name]] <<- rnorm(nrow(data$raw_reac$df),
+                                  mean=mean,
+                                  sd=sd)
+    print(paste0("Saved Ranking: ", name))
+    l <- list()
+    l$name <- name
+    l$date <- toString(Sys.time())
+    l$user <- "tthomas"  #data$meta$user
+    data$added$classifications[[name]] <- l
   })
   
 }

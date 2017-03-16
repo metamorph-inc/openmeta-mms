@@ -242,8 +242,8 @@ var_ints <- var_names[var_class == "integer"]
 var_nums <- var_names[var_class == "numeric"]
 var_nums_and_ints <- var_names[var_class == "integer" |
                                var_class == "numeric"]
-abs_min <- apply(raw[var_nums_and_ints], 2, min, na.rm=TRUE)
 abs_max <- apply(raw[var_nums_and_ints], 2, max, na.rm=TRUE)
+abs_min <- apply(raw[var_nums_and_ints], 2, min, na.rm=TRUE)
 var_range_nums_and_ints <- var_nums_and_ints[(abs_min != abs_max) &
                                              (abs_min != Inf)]
 var_range_facs <- var_facs[apply(raw[var_facs], 2, function(var_fac) {
@@ -260,6 +260,8 @@ preprocessing <- list(var_names=var_names,
                       var_nums_and_ints=var_nums_and_ints,
                       abs_min=abs_min,
                       abs_max=abs_max,
+                      AbsMax=NULL,
+                      AbsMin=NULL,
                       var_range_nums_and_ints=var_range_nums_and_ints,
                       var_range_facs=var_range_facs,
                       var_range=var_range,
@@ -490,7 +492,7 @@ Server <- function(input, output, session) {
   FilteredData <- reactive({
     # This reactive holds the full dataset that has been filtered using the
     # values of the sliders.
-    data <- raw
+    data_filtered <- data$raw_reac$df
     for(index in 1:length(var_names)) {
       name <- var_names[index]
       input_name <- paste("filter_", name, sep="")
@@ -498,8 +500,8 @@ Server <- function(input, output, session) {
       if(length(selection) != 0) {
         if(name %in% var_nums_and_ints) {
           isolate({
-            above <- (data[[name]] >= selection[1])
-            below <- (data[[name]] <= selection[2])
+            above <- (data_filtered[[name]] >= selection[1])
+            below <- (data_filtered[[name]] <= selection[2])
             in_range <- above & below
           })
         }
@@ -507,18 +509,18 @@ Server <- function(input, output, session) {
             selection <- unlist(lapply(selection, function(factor){
                                                     RemoveItemNumber(factor)
                                                   }))
-            in_range <- (data[[name]] %in% selection)
+            in_range <- (data_filtered[[name]] %in% selection)
         }
         
         # Don't filter based on missing values.
-        in_range <- in_range | is.na(data[[name]])
+        in_range <- in_range | is.na(data_filtered[[name]])
         
-        data <- subset(data, in_range)
+        data_filtered <- subset(data_filtered, in_range)
       }
-      # print(nrow(data))
+      # print(nrow(data_filtered))
     }
     # print("Data Filtered.")
-    data
+    data_filtered
   })
   
   Filters <- reactive({
@@ -558,10 +560,9 @@ Server <- function(input, output, session) {
   })
   
   ColoredData <- reactive({
-    data <- FilteredData()
-    names(data) <- lapply(names(data), AddUnits)
-    data$color <- character(nrow(data))
-    data$color <- "black"  #input$normColor
+    data_colored <- FilteredData()
+    data_colored$color <- character(nrow(data_colored))
+    data_colored$color <- "black"  #input$normColor
     if (input$coloring_source != "None") {
       if (input$coloring_source == "Live") {
         type <- input$live_coloring_type
@@ -587,16 +588,16 @@ Server <- function(input, output, session) {
             goal <- scheme$goal
           }
           bins <- 30
-          divisor <- (abs_max[[var]] - abs_min[[var]]) / bins
-          minimum <- abs_min[[var]]
-          maximum <- abs_max[[var]]
+          divisor <- (data$meta$preprocessing$AbsMax()[[var]] - data$meta$preprocessing$AbsMin()[[var]]) / bins
+          minimum <- data$meta$preprocessing$AbsMin()[[var]]
+          maximum <- data$meta$preprocessing$AbsMax()[[var]]
           cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
           if (goal == "Maximize") {
-            data$color <- unlist(sapply(data[[var]], function(value) {
+            data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
                             cols[max(1, ceiling((value - minimum) / divisor))]}))
           } 
           else {
-            data$color <- unlist(sapply(data[[var]], function(value) {
+            data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
                             cols[max(1, ceiling((maximum - value) / divisor))]}))
           }
           isolate({
@@ -623,7 +624,7 @@ Server <- function(input, output, session) {
               v_value <- scheme$rainbow_v
             }
           }
-          variables_list = names(table(data[[var]]))
+          variables_list = names(table(data_colored[[var]]))
           switch(palette_selection,
                  "Rainbow"={cols <- rainbow(length(variables_list),
                                             s_value,
@@ -633,7 +634,7 @@ Server <- function(input, output, session) {
                  "Topo"={cols <- topo.colors(length(variables_list))},
                  "Cm"={cols <- cm.colors(length(variables_list))})
           for(i in 1:length(variables_list)){
-            data$color[(data[[var]] == variables_list[i])] <- cols[i]
+            data_colored$color[(data_colored[[var]] == variables_list[i])] <- cols[i]
           }
           isolate({
             coloring$current$var <- var
@@ -643,7 +644,9 @@ Server <- function(input, output, session) {
       )
     }
     # print("Data Colored")
-    data
+    # TODO(tthomas): Move adding units code out into the Explore.R tab.
+    # names(data_colored) <- lapply(names(data_colored), AddUnits)
+    data_colored
   })
   
   # Coloring -----------------------------------------------------------------
@@ -654,11 +657,11 @@ Server <- function(input, output, session) {
                     choices = var_range_facs)
   
   observe({
-    if (length(classification_items) == 0) {
-      numeric_choices <- var_range_nums_and_ints
+    if (length(data$added$classifications) == 0) {
+      numeric_choices <- as.list(var_range_nums_and_ints)
     } else {
-      numeric_choices <- list(Variables=var_range_nums_and_ints,
-                              Classifications=names(classification_items))
+      numeric_choices <- list(Variables=as.list(var_range_nums_and_ints),
+                              Classifications=as.list(names(data$added$classifications)))
     }
     updateSelectInput(session, "live_coloring_variable_numeric",
                       choices = numeric_choices)
@@ -742,11 +745,19 @@ Server <- function(input, output, session) {
   added <- reactiveValues(classifications=classification_items,
                           sets=set_items)
   
+  output$classification_table_output <- renderTable(ClassificationsTable())
+  
+  ClassificationsTable <- reactive({
+    new_table <- do.call(rbind, data$added$classifications)
+    new_table
+  })
+  
   # Final Processing ---------------------------------------------------------
   
   # Build the 'data' list that is shared between all tabs.
   data <- list()
   data$raw <- raw
+  data$raw_reac <- reactiveValues(df = raw)
   data$Filtered <- FilteredData
   data$Colored <- ColoredData
   data$Filters <- Filters
@@ -757,6 +768,18 @@ Server <- function(input, output, session) {
                     coloring=coloring,
                     pet=pet,
                     preprocessing=preprocessing)
+  
+  data$meta$preprocessing$AbsMax <- reactive({
+    classification_names <- names(data$added$classifications)
+    vars <- c(var_nums_and_ints, classification_names)
+    apply(data$raw_reac$df[vars], 2, max, na.rm=TRUE)
+  })
+  
+  data$meta$preprocessing$AbsMin <- reactive({
+    vars <- c(var_nums_and_ints, names(data$added$classifications))
+    apply(data$raw_reac$df[vars], 2, min, na.rm=TRUE)
+  })
+  
   
   # data$experimental <- list()
   
@@ -850,10 +873,10 @@ ui <- fluidPage(
         ),
         style = "default"
       ),
-      bsCollapsePanel("Scratch",
+      bsCollapsePanel("Classifications",
         fluidRow(
           column(12,
-            tableOutput('test_table_output')
+            tableOutput('classification_table_output')
           )
         ),
         style = "default"
