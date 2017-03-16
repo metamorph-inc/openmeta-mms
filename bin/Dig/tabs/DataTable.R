@@ -73,7 +73,7 @@ server <- function(input, output, session, data) {
     if (input$use_filtered) {
       local_data <- data$Filtered()
     } else {
-      local_data <- data$raw_reac$df
+      local_data <- data$raw$df
     }
     local_data
   })
@@ -486,7 +486,7 @@ server <- function(input, output, session, data) {
     name <- paste0("class", input$save_ranking)
     mean <- 25 + runif(1) * 50
     sd <- 2 + runif(1) * 3
-    data$raw_reac$df[[name]] <<- rnorm(nrow(data$raw_reac$df),
+    data$raw$df[[name]] <<- rnorm(nrow(data$raw$df),
                                   mean=mean,
                                   sd=sd)
     print(paste0("Saved Ranking: ", name))

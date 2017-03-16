@@ -170,7 +170,7 @@ server <- function(input, output, session, data) {
   output$pairs_stats <- renderText({
     # print("In render stats")
     if(nrow(data$Filtered()) > 0) {
-      table <- paste0("Total Points: ", nrow(data$raw),
+      table <- paste0("Total Points: ", nrow(data$raw$df),
                       "\nCurrent Points: ", nrow(data$Filtered()))
     }
     else {

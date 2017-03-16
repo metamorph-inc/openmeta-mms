@@ -148,7 +148,7 @@ server <- function(input, output, session, data) {
     )
   })
   
-  output$original_driver_settings <- renderText(paste(pet$sampling_method," sampling with 'num_samples=", pet$num_samples,"' yielded ", nrow(data$raw), " points.", sep = ""))
+  output$original_driver_settings <- renderText(paste(pet$sampling_method," sampling with 'num_samples=", pet$num_samples,"' yielded ", nrow(data$raw$df), " points.", sep = ""))
   output$mga_filename_text <- renderText(pet$mga_name)
   output$generated_configuration_model_text <- renderText(pet$generated_configuration_model)
   output$current_pet_name_text <- renderText(pet$pet_name)

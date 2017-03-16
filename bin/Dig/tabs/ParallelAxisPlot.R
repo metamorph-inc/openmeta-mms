@@ -32,8 +32,9 @@ server <- function(input, output, session, data) {
   ### ALL Comments by Will Knight
 
   # Prepare the data frame for input into d3 javascript file
-  row.names(data$raw) <- NULL
-  d3df <- apply(data$raw, 1, function(row) as.list(row[!is.na(row)]))
+  data_raw <- isolate(data$raw$df)
+  row.names(data_raw) <- NULL
+  d3df <- apply(data_raw, 1, function(row) as.list(row[!is.na(row)]))
   
   # Main rendering of d3 plot
   observe({

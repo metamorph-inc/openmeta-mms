@@ -116,7 +116,7 @@ ui <- function() {
 }
 
 server <- function(input, output, session, data) {
-  raw_data <- data$raw
+  raw_data <- isolate(data$raw$df)
   raw_info <- data$meta
   
   makeReactiveBinding("uiInitialized")

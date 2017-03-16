@@ -492,7 +492,7 @@ Server <- function(input, output, session) {
   FilteredData <- reactive({
     # This reactive holds the full dataset that has been filtered using the
     # values of the sliders.
-    data_filtered <- data$raw_reac$df
+    data_filtered <- data$raw$df
     for(index in 1:length(var_names)) {
       name <- var_names[index]
       input_name <- paste("filter_", name, sep="")
@@ -744,7 +744,12 @@ Server <- function(input, output, session) {
   set_items <- list()
   added <- reactiveValues(classifications=classification_items,
                           sets=set_items)
-  
+  output$no_classifications <- renderText(NoClassifications())
+  NoClassifications <- reactive({
+    if (length(data$added$classifications) == 0) {
+      "No Classifications Available."
+    }
+  })
   output$classification_table_output <- renderTable(ClassificationsTable())
   
   ClassificationsTable <- reactive({
@@ -756,8 +761,7 @@ Server <- function(input, output, session) {
   
   # Build the 'data' list that is shared between all tabs.
   data <- list()
-  data$raw <- raw
-  data$raw_reac <- reactiveValues(df = raw)
+  data$raw <- reactiveValues(df = raw)
   data$Filtered <- FilteredData
   data$Colored <- ColoredData
   data$Filters <- Filters
@@ -772,12 +776,12 @@ Server <- function(input, output, session) {
   data$meta$preprocessing$AbsMax <- reactive({
     classification_names <- names(data$added$classifications)
     vars <- c(var_nums_and_ints, classification_names)
-    apply(data$raw_reac$df[vars], 2, max, na.rm=TRUE)
+    apply(data$raw$df[vars], 2, max, na.rm=TRUE)
   })
   
   data$meta$preprocessing$AbsMin <- reactive({
     vars <- c(var_nums_and_ints, names(data$added$classifications))
-    apply(data$raw_reac$df[vars], 2, min, na.rm=TRUE)
+    apply(data$raw$df[vars], 2, min, na.rm=TRUE)
   })
   
   
@@ -876,6 +880,7 @@ ui <- fluidPage(
       bsCollapsePanel("Classifications",
         fluidRow(
           column(12,
+            textOutput('no_classifications'),
             tableOutput('classification_table_output')
           )
         ),
