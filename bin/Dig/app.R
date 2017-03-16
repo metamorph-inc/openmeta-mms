@@ -460,32 +460,32 @@ Server <- function(input, output, session) {
   
   outputOptions(output, "constants_present", suspendWhenHidden=FALSE)
   
-  # observeEvent(input$resetSliders, {
-  #   # print("In resetDefaultSliders()")
-  #   for(column in 1:length(var_names)){
-  #     switch(varClass[column],
-  #            "numeric" = 
-  #            {
-  #              max <- as.numeric(unname(rawAbsMax()[var_names[column]]))
-  #              min <- as.numeric(unname(rawAbsMin()[var_names[column]]))
-  #              diff <- (max-min)
-  #              if (diff != 0) {
-  #                step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
-  #                updateSliderInput(session, paste0('filter_', column), value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
-  #              }
-  #            },
-  #            "integer" = 
-  #            {
-  #              max <- as.integer(unname(rawAbsMax()[var_names[column]]))
-  #              min <- as.integer(unname(rawAbsMin()[var_names[column]]))
-  #              if(min != max) {
-  #                updateSliderInput(session, paste0('filter_', column), value = c(min, max))
-  #              }
-  #            },
-  #            "factor"  = updateSelectInput(session, paste0('filter_', column), selected = names(table(raw_plus()[var_names[column]])))
-  #     )
-  #   }
-  # })
+  observeEvent(input$reset_sliders, {
+    for(column in 1:length(var_names)){
+      name <- var_names[column]
+      switch(var_class[column],
+        "numeric" =
+        {
+          max <- as.numeric(unname(data$meta$preprocessing$AbsMax()[var_names[column]]))
+          min <- as.numeric(unname(data$meta$preprocessing$AbsMin()[var_names[column]]))
+          diff <- (max-min)
+          if (diff != 0) {
+            step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
+            updateSliderInput(session, paste0('filter_', name), value = c(signif(min-step*10, digits = 4), signif(max+step*10, digits = 4)))
+          }
+        },
+        "integer" =
+        {
+          max <- as.integer(unname(data$meta$preprocessing$AbsMax()[var_names[column]]))
+          min <- as.integer(unname(data$meta$preprocessing$AbsMin()[var_names[column]]))
+          if(min != max) {
+            updateSliderInput(session, paste0('filter_', name), value = c(min, max))
+          }
+        },
+        "factor"  = updateSelectInput(session, paste0('filter_', name), selected = names(table(data$raw$df[var_names[column]])))
+      )
+    }
+  })
   
   # Data processing ----------------------------------------------------------
     
@@ -823,10 +823,10 @@ ui <- fluidPage(
     hr(),
     bsCollapse(id = "footer_collapse", open = NULL,
       bsCollapsePanel("Filters", 
-        tags$div(title = "Activate to show filters for all dataset variables.",
-                 checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
+        # tags$div(title = "Activate to show filters for all dataset variables.",
+        #          checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
         tags$div(title = "Return visible sliders to default state.",
-                 actionButton("resetSliders", "Reset Visible Filters")),
+                 actionButton("reset_sliders", "Reset Visible Filters")),
         hr(),
         
         uiOutput("filters"),

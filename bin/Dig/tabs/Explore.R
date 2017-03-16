@@ -51,27 +51,34 @@ ui <- function() {
             br(),
             # actionButton("single_back_pairs", "Back"),
             # br(), br(),
-            wellPanel(
-              selectInput("x_input", "X-axis", c()),
-              selectInput("y_input", "Y-Axis", c()),
-              hr(),
-              selectInput("single_plot_marker",
-                          "Plot Markers:",
-                          c("Circle, Open"=1,
-                            "Circle, Filled"=19)),
-              sliderInput("single_plot_marker_size", "Marker Size:",
-                          min=0.5, max=2.5, value=1, step=0.025),
-              hr(),
-              p(strong("Adjust Sliders to Selection")),
-              actionButton("update_x", "X"),
-              actionButton("update_y", "Y"),
-              actionButton("update_both", "Both")#,
+            bsCollapse(id = "single_plot_collapse", open = "Variables",
+              bsCollapsePanel("Variables", 
+                selectInput("x_input", "X-axis", c()),
+                selectInput("y_input", "Y-Axis", c()),
+                style = "default"),
+              bsCollapsePanel("Markers",
+                selectInput("single_plot_marker",
+                            "Plot Markers:",
+                            c("Circle, Open"=1,
+                              "Circle, Filled"=19)),
+                sliderInput("single_plot_marker_size", "Marker Size:",
+                            min=0.5, max=2.5, value=1, step=0.025),
+                style = "default"),
+              bsCollapsePanel("Filter", 
+                p(strong("Adjust Sliders to Selection")),
+                actionButton("update_x", "X"),
+                actionButton("update_y", "Y"),
+                actionButton("update_both", "Both"),
+                style = "default"),
               # TODO(wknight): Restore this functionality.
               # br(), br(),
               # p(strong("Highlight Selection")),
               # bootstrapPage(
               #   actionButton("highlightData", "Highlight Selection", class = "btn btn-primary")
               # )
+              bsCollapsePanel("Overlays", 
+                checkboxInput("add_pareto", "Add Pareto Plot"),
+                style = "default")
             )
           ),
           column(9,
@@ -258,15 +265,31 @@ server <- function(input, output, session, data) {
     updateTabsetPanel(session, "explore_tabset", selected = "Pairs Plot")
   })
   
-  output$single_plot <- renderPlot({
-    plot(data$Filtered()[[paste(input$x_input)]],
-         data$Filtered()[[paste(input$y_input)]],
-         xlab = paste(input$x_input),
-         ylab = paste(input$y_input),
-         col = data$Colored()$color,
-         pch = as.numeric(input$single_plot_marker),
-         cex = as.numeric(input$single_plot_marker_size))#,
-         # pch = as.numeric(input$pointStyle))
+  output$single_plot <- renderPlot(SinglePlot())
+  
+  SinglePlot <- reactive({
+    if(var_class[input$x_input] == 'factor') {
+      plot(data$Filtered()[[paste(input$x_input)]],
+           data$Filtered()[[paste(input$y_input)]],
+           xlab = paste(input$x_input),
+           ylab = paste(input$y_input),
+           pch = as.numeric(input$single_plot_marker),
+           cex = as.numeric(input$single_plot_marker_size))#,
+           # pch = as.numeric(input$pointStyle))
+    } else {
+      plot(data$Filtered()[[paste(input$x_input)]],
+           data$Filtered()[[paste(input$y_input)]],
+           xlab = paste(input$x_input),
+           ylab = paste(input$y_input),
+           col = data$Colored()$color,
+           pch = as.numeric(input$single_plot_marker),
+           cex = as.numeric(input$single_plot_marker_size))#,
+           # pch = as.numeric(input$pointStyle))
+    }
+    if(input$add_pareto) {
+      # lines()
+      print("Added Pareto")
+    }
   })
   
   output$single_info <- renderPrint({
