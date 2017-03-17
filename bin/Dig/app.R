@@ -70,13 +70,14 @@ RemoveUnits <- function(name_with_units) {
 # Resolve Dataset Configuration ----------------------------------------------
 
 pet_config_present <- FALSE
+saved_inputs <- NULL
 if (Sys.getenv('DIG_INPUT_CSV') == "") {
   # Visualizer 2.0 style input dataset
   if (Sys.getenv('DIG_DATASET_CONFIG') == "") {
     # Setup one of the test datasets if no input dataset
     Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
                                             'WindTurbineForOptimization',
-                                            'visualizer_config.json'))
+                                            'visualizer_config_session.json'))
     # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
     #                                         'WindTurbine',
     #                                         'visualizer_config.json'))
@@ -86,7 +87,11 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   }
   config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
   visualizer_config <- fromJSON(config_filename)
+  # print(visualizer_config)
   tab_requests <- visualizer_config$tabs
+  # print(tab_requests)
+  saved_inputs <- visualizer_config$inputs
+  # print(saved_inputs)
   launch_dir <- dirname(config_filename)
   raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
   pet_config_value <- visualizer_config$pet_config
@@ -105,14 +110,30 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   if (file.exists(pet_config_filename)) {
     pet_config_present <- TRUE
   }
-  tab_requests <- c("Explore.R",
-                    "DataTable.R",
-                    "Histogram.R",
-                    "PETRefinement.R",
-                    "Scratch.R",
-                    "ParallelAxisPlot.R",
-                    "UncertaintyQuantification.R")
+  # tab_requests <- c("Explore.R",
+  #                   "DataTable.R",
+  #                   "Histogram.R",
+  #                   "PETRefinement.R",
+  #                   "Scratch.R",
+  #                   "ParallelAxisPlot.R",
+  #                   "UncertaintyQuantification.R")
 }
+
+
+
+si <- function(name, default) {
+  # print(is.null(saved_inputs))
+  # if(!is.null(saved_inputs))
+    # print(saved_inputs[[name]])
+  if(!is.null(saved_inputs) && !is.null(saved_inputs[[name]])) {
+    # print(paste0("si('",name,"',",default,") -- saved: ",toString(saved_inputs[[name]])))
+    saved_inputs[[name]]
+  } else {
+    # print(paste0("si('",name,"',",default,") -- default: ",default))
+    default
+  }
+}
+
 
 # Load Tabs and Data ---------------------------------------------------------
 
@@ -279,7 +300,36 @@ Server <- function(input, output, session) {
 
   # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
+    # Grab all the necessary inputs
+    inputs <- isolate(reactiveValuesToList(input))
+    inputs[unlist(lapply(inputs, function (x) {
+                                   "shinyActionButtonValue" %in% class(x)
+                                 }))] <- NULL
+    inputs[["window_width"]] <- NULL
+    inputs <- inputs[order(names(inputs))]
+    
+    # Save config file
+    visualizer_config$inputs <- inputs
+    visualizer_config_filename <- file.path('datasets',
+                                            'WindTurbineForOptimization',
+                                            'visualizer_config_session.json')
+    write(toJSON(visualizer_config), file=visualizer_config_filename)
+    print("Session saved.")
+    
     stopApp()
+  })
+  
+  # First cut at appling setting dynamically after the input has been initialized
+  observe({
+    current_input <- "display"
+    req(input[[current_input]])
+    if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
+      value <- saved_inputs$display
+      saved_inputs$display <<- NULL
+      updateSelectInput(session,
+                        "display",
+                        selected = value)
+    }
   })
   
   # Filters (Enumerations, Sliders) and Constants ----------------------------
@@ -766,6 +816,7 @@ Server <- function(input, output, session) {
   data$Colored <- ColoredData
   data$Filters <- Filters
   data$added <- added
+  # data$si <- si
   
   # Build the 'meta' list.
   data$meta <- list(variables=variables,
@@ -865,7 +916,7 @@ ui <- fluidPage(
                           value=1, step=0.025),
               sliderInput("live_color_rainbow_v", "Value/Brightness:",
                           min=0, max=1,
-                          value=1, step=0.025)
+                          value=si("live_color_rainbow_v",1), step=0.025)
             )
           )
         ),
