@@ -45,6 +45,9 @@
     <Reference Include="CyPhyCOMInterfacesCS">
       <HintPath>..\..\src\CyPhyCOMInterfacesCS\bin\Release\CyPhyCOMInterfacesCS.dll</HintPath>
     </Reference>
+    <Reference Include="CyPhyElaborateCS">
+      <HintPath>..\CyPhyElaborateCS\bin\Release\CyPhyElaborateCS.dll</HintPath>
+    </Reference>
     <Reference Include="CyPhyGUIs">
       <HintPath>..\..\src\CyPhyGUIs\bin\Release\CyPhyGUIs.dll</HintPath>
     </Reference>
@@ -83,17 +86,32 @@
     <Compile Include="Registrar.cs" />
     <Compile Include="GMEConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Simulink\SimulinkGenerator.cs" />
+    <Compile Include="Simulink\SimulinkModel.cs" />
     <!--$ADDITIONALFILES$-->
   </ItemGroup>
   <ItemGroup>
     <Content Include="CyPhy2Simulink.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="StaticFiles\CreateOrOverwriteModel.m" />
+    <None Include="StaticFiles\PopulateTestBenchParams.py" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AssemblySignature.snk" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--
   <Target Name="BeforeBuild">

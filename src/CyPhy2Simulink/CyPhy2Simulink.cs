@@ -12,6 +12,7 @@ using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
 using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
 using CyPhyGUIs;
 using System.Windows.Forms;
+using CyPhy2Simulink.Simulink;
 using Microsoft.Win32;
 
 namespace CyPhy2Simulink
@@ -545,58 +546,35 @@ namespace CyPhy2Simulink
             int param,
             bool expand = true)
         {
+            bool result = false;
             try
             {
-
-                // call elaborator and expand the references
-                Type t = Type.GetTypeFromProgID("MGA.Interpreter.CyPhyElaborate");
-                IMgaComponentEx elaborator = Activator.CreateInstance(t) as IMgaComponentEx;
+                GMEConsole.Info.WriteLine("Calling elaborator...");
+                var elaborator = new CyPhyElaborateCS.CyPhyElaborateCSInterpreter();
                 elaborator.Initialize(project);
+                int verbosity = 128;
 
-                if (expand)
+                elaborator.UnrollConnectors = true;
+                result = elaborator.RunInTransaction(project, currentobj, selectedobjs, verbosity);
+
+                if (this.result.Traceability == null)
                 {
-                    elaborator.ComponentParameter["automated_expand"] = "true";
-                }
-                else
-                {
-                    elaborator.ComponentParameter["automated_collapse"] = "true";
-                }
-
-                GMEConsole.Info.WriteLine("Elaborating model...");
-                System.Windows.Forms.Application.DoEvents();
-
-                // elaborator.UnrollConnectors = true;
-                elaborator.InvokeEx(project, currentobj, selectedobjs, param);
-
-                CyPhyCOMInterfaces.IMgaTraceability traceability = elaborator.ComponentParameter["traceability"] as CyPhyCOMInterfaces.IMgaTraceability;
-
-                this.result.Traceability = new META.MgaTraceability();
-
-                if (traceability != null)
-                {
-                    traceability.CopyTo(this.result.Traceability);
+                    this.result.Traceability = new META.MgaTraceability();
                 }
 
+                if (elaborator.Traceability != null)
+                {
+                    elaborator.Traceability.CopyTo(this.result.Traceability);
+                }
                 GMEConsole.Info.WriteLine("Elaboration is done.");
-                System.Windows.Forms.Application.DoEvents();
-
-                // TODO: get exception message(s) from elaborator
-                string msgs = elaborator.ComponentParameter["exception"] as string;
-                if (string.IsNullOrWhiteSpace(msgs) == false)
-                {
-                    GMEConsole.Error.WriteLine("Elaborator exception occurred: {0}", msgs);
-                    System.Windows.Forms.Application.DoEvents();
-                    throw new Exception(msgs);
-                }
-
             }
             catch (Exception ex)
             {
-                GMEConsole.Error.WriteLine(ex);
-                return false;
+                GMEConsole.Error.WriteLine("Exception occurred in Elaborator : {0}", ex.ToString());
+                result = false;
             }
 
-            return true;
+            return result;
         }
 
         private MgaFCO SurrogateMaster(
@@ -674,8 +652,21 @@ namespace CyPhy2Simulink
             try
             {
                 //TODO: Simulink generation goes here
+                SimulinkGenerator.GMEConsole = GMEConsole;
 
-                this.result.RunCommand = "cmd /c dir";
+                var testBench = CyPhyClasses.TestBench.Cast(this.mainParameters.CurrentFCO);
+                if (testBench != null)
+                {
+                    SimulinkGenerator.GenerateSimulink(testBench, this.mainParameters.OutputDirectory,
+                        this.mainParameters.ProjectDirectory);
+                }
+                else
+                {
+                    GMEConsole.Error.WriteLine("Invalid context of invocation <{0}>, invoke the interpreter from a Testbench model",
+                        this.mainParameters.CurrentFCO.Name);
+                }
+
+                this.result.RunCommand = "cmd /c run.cmd";
             }
             catch (Exception ex)
             {
