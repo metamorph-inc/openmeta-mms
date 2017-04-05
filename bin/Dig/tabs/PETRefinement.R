@@ -1,26 +1,26 @@
-# TODO(wknight): Clean up some of the UI stuff that isn't being used.
-
 title <- "PET Refinement"
 footer <- TRUE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
+  
   fluidPage(
     br(),
-    conditionalPanel(condition = "output.pet_config_present == true",
+    conditionalPanel(condition = paste0("output['", ns("pet_config_present"), "'] == true"),
       wellPanel(
         h4("Driver Configuration"),
         fluidRow(
           column(6, h5(strong('Original Driver Settings: ')),
-                    textOutput("original_driver_settings"))
+                    textOutput(ns("original_driver_settings")))
         ),
         br(),
-        uiOutput("pet_driver_config"), 
+        uiOutput(ns("pet_driver_config")), 
         hr(),
         fluidRow(
           column(12,
             h4("Design Configurations"),
             h5(strong("Generated Configuration Model: ")),
-            textOutput("generated_configuration_model_text"),
+            textOutput(ns("generated_configuration_model_text")),
             fluidRow(
               column(2),
               column(1, h5(strong('Original'))),
@@ -29,45 +29,45 @@ ui <- function() {
               column(2, h5(strong("Selection:"))),
               column(4, h5(strong("New Selection:")))
               ), br(),
-            uiOutput("original_configuration_ranges")
+            uiOutput(ns("original_configuration_ranges"))
             )
         ), 
         hr(),
         conditionalPanel(
-          condition = "output.numeric_design_variables_present == true",
+          condition = paste0("output['", ns("numeric_design_variables_present"), "'] == true"),
           fluidRow(
             column(12,
               h4("Numeric Ranges"),
               fluidRow(
                 column(2, h5(strong("Variable Name:"))),
-                column(1, actionButton('apply_all_original_numeric', 'Original')),
+                column(1, actionButton(ns('apply_all_original_numeric'), 'Original')),
                 column(1, h5(strong("Minimum:"))),
                 column(1, h5(strong("Maximum:"))),
-                column(1, actionButton('apply_all_refined_numeric', 'Refined')),
+                column(1, actionButton(ns('apply_all_refined_numeric'), 'Refined')),
                 column(1, h5(strong("Minimum:"))),
                 column(1, h5(strong("Maximum:"))),
                 column(2, h5(strong("New Minimum:"))),
                 column(2, h5(strong("New Maximum:")))
               ), br(),
-              uiOutput("original_numeric_ranges")
+              uiOutput(ns("original_numeric_ranges"))
             )
           )
         ),
         conditionalPanel(
-          condition = "output.enumerated_design_variables_present == true",
+          condition = paste0("output['", ns("enumerated_design_variables_present"), "'] == true"),
           fluidRow(
             column(12,
               h4("Enumerated Ranges"),
               fluidRow(
                 column(2, h5(strong("Variable Name:"))),
-                column(1, actionButton('apply_all_original_enum', 'Original')),
+                column(1, actionButton(ns('apply_all_original_enum'), 'Original')),
                 column(2, h5(strong("Selection:"))),
-                column(1, actionButton('apply_all_refined_enum', 'Refined')),
+                column(1, actionButton(ns('apply_all_refined_enum'), 'Refined')),
                 column(2, h5(strong("Selection:"))),
                 column(4, h5(strong("New Selection:")))
               ), 
               br(),
-              uiOutput("original_enumeration_ranges")
+              uiOutput(ns("original_enumeration_ranges"))
             )
           )
         ),
@@ -75,8 +75,8 @@ ui <- function() {
         fluidRow(
           column(6,
             h4("PET Details"),
-            uiOutput("pet_rename"),
-            actionButton('run_ranges', 'Execute New PET'), br()
+            uiOutput(ns("pet_rename")),
+            actionButton(ns('run_ranges'), 'Execute New PET'), br()
           )
         )
       )
@@ -86,7 +86,9 @@ ui <- function() {
 
 max_enums_display <- 3
 
-server <- function(input, output, session, data) {
+server <- function(input, output, session, data, id) {
+  
+  ns <- NS(id)
 
   FilterData <- data$Filtered
   var_names <- data$meta$preprocessing$var_names
@@ -140,8 +142,8 @@ server <- function(input, output, session, data) {
   
   output$pet_rename <- renderUI({
     fluidRow(
-      column(12, h5(strong("Original MGA Filename: ")), textOutput("mga_filename_text")),
-      column(12, h5(strong("Original PET Name: ")), textOutput("current_pet_name_text"), br()),
+      column(12, h5(strong("Original MGA Filename: ")), textOutput(ns("mga_filename_text"))),
+      column(12, h5(strong("Original PET Name: ")), textOutput(ns("current_pet_name_text")), br()),
       column(12, textInput("newPetName",
                            "New PET Name:",
                            value = paste0(pet$pet_name, "_Refined")))
@@ -149,8 +151,8 @@ server <- function(input, output, session, data) {
   })
   
   output$original_driver_settings <- renderText(paste(pet$sampling_method," sampling with 'num_samples=", pet$num_samples,"' yielded ", nrow(data$raw$df), " points.", sep = ""))
-  output$mga_filename_text <- renderText(pet$mga_name)
   output$generated_configuration_model_text <- renderText(pet$generated_configuration_model)
+  output$mga_filename_text <- renderText(pet$mga_name)
   output$current_pet_name_text <- renderText(pet$pet_name)
   
   

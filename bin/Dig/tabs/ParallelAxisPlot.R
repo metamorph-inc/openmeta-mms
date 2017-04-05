@@ -1,15 +1,16 @@
 title <- "Parallel Axis Plot"
 footer <- TRUE
 
-ui <- function() {
-
+ui <- function(id) {
+  ns <- NS(id)
+  
   fluidPage(
     br(),
     
     wellPanel(
       
       h3("Parallel Coordinates Plot"),
-      actionButton("refresh", "Refresh"),
+      actionButton(ns("refresh"), "Refresh"),
       br(),
       
       ############## D3 ###############
@@ -27,7 +28,7 @@ ui <- function() {
   )
 }
 
-server <- function(input, output, session, data) {
+server <- function(input, output, session, data, id) {
   
   ### ALL Comments by Will Knight
 

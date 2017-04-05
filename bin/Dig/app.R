@@ -87,7 +87,7 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
   visualizer_config <- fromJSON(config_filename)
   tab_requests <- visualizer_config$tabs
-  tab_requests <- c("Histogram.R") # For Debugging Only! <-------------------------------
+  # tab_requests <- c("Histogram.R", "Explore.R") # For Debugging Only! <-------------------------------
   launch_dir <- dirname(config_filename)
   raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
   pet_config_value <- visualizer_config$pet_config
@@ -797,7 +797,7 @@ Server <- function(input, output, session) {
   mapply(function(tab_env, id_num) {
     # do.call(tab_env$server,
     #         list(input, output, session, data))
-    callModule(tab_env$server, paste(id_num), data)
+    callModule(tab_env$server, paste(id_num), data, id_num)
   },
   tab_env=tab_environments,
   id_num=1:length(tab_environments),

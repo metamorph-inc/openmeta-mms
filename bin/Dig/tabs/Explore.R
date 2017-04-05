@@ -1,7 +1,9 @@
 title <- "Explore"
 footer <- TRUE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
+  
   fluidPage(
   	br(),
     tabsetPanel(
@@ -11,25 +13,25 @@ ui <- function() {
             br(),
             wellPanel(
               h4("Plot Options"),
-              selectInput("display",
+              selectInput(ns("display"),
                           "Display Variables:",
                           c(),
                           multiple = TRUE),
               conditionalPanel(
                 condition = "input.auto_render == false",
-                actionButton("render_plot", "Render Plot"),
+                actionButton(ns("render_plot"), "Render Plot"),
                 br()
               ),
               hr(),
-              selectInput("pairs_plot_marker",
+              selectInput(ns("pairs_plot_marker"),
                           "Plot Markers:",
                           c("Circle, Open"=1,
                             "Circle, Filled"=19)),
-              sliderInput("pairs_plot_marker_size", "Marker Size:",
+              sliderInput(ns("pairs_plot_marker_size"), "Marker Size:",
                           min=0.5, max=2.5, value=1, step=0.025),
               hr(),
               h4("Info"),
-              verbatimTextOutput("pairs_stats")#,
+              verbatimTextOutput(ns("pairs_stats"))#,
               # TODO(tthomas): Add this functionality back in.
               # h4("Download"),
               # downloadButton('exportData', 'Dataset'), 
@@ -39,9 +41,9 @@ ui <- function() {
             )
           ),
           column(9,
-              uiOutput("pairs_display_error"),   
-              uiOutput("pairs_filter_error"), 
-              plotOutput("pairs_plot", dblclick = "pairs_click", height = 700)
+              uiOutput(ns("pairs_display_error")),   
+              uiOutput(ns("pairs_filter_error")), 
+              plotOutput(ns("pairs_plot"), dblclick = ns("pairs_click"), height = 700)
           )
         )
       ), 
@@ -53,22 +55,22 @@ ui <- function() {
             # br(), br(),
             bsCollapse(id = "single_plot_collapse", open = "Variables",
               bsCollapsePanel("Variables", 
-                selectInput("x_input", "X-axis", c()),
-                selectInput("y_input", "Y-Axis", c()),
+                selectInput(ns("x_input"), "X-axis", c()),
+                selectInput(ns("y_input"), "Y-Axis", c()),
                 style = "default"),
               bsCollapsePanel("Markers",
-                selectInput("single_plot_marker",
+                selectInput(ns("single_plot_marker"),
                             "Plot Markers:",
                             c("Circle, Open"=1,
                               "Circle, Filled"=19)),
-                sliderInput("single_plot_marker_size", "Marker Size:",
+                sliderInput(ns("single_plot_marker_size"), "Marker Size:",
                             min=0.5, max=2.5, value=1, step=0.025),
                 style = "default"),
               bsCollapsePanel("Filter", 
                 p(strong("Adjust Sliders to Selection")),
-                actionButton("update_x", "X"),
-                actionButton("update_y", "Y"),
-                actionButton("update_both", "Both"),
+                actionButton(ns("update_x"), "X"),
+                actionButton(ns("update_y"), "Y"),
+                actionButton(ns("update_both"), "Both"),
                 style = "default"),
               # TODO(wknight): Restore this functionality.
               # br(), br(),
@@ -77,15 +79,15 @@ ui <- function() {
               #   actionButton("highlightData", "Highlight Selection", class = "btn btn-primary")
               # )
               bsCollapsePanel("Overlays", 
-                checkboxInput("add_pareto", "Add Pareto Plot"),
+                checkboxInput(ns("add_pareto"), "Add Pareto Plot"),
                 style = "default")
             )
           ),
           column(9,
-            plotOutput("single_plot", click = "plot_click", brush = "plot_brush", height=700)
+            plotOutput(ns("single_plot"), click = ns("plot_click"), brush = ns("plot_brush"), height=700)
           ),
           column(12,
-            verbatimTextOutput("single_info")
+            verbatimTextOutput(ns("single_info"))
           )
         )
       ),
@@ -94,7 +96,7 @@ ui <- function() {
   )
 }
 
-server <- function(input, output, session, data) {
+server <- function(input, output, session, data, id) {
   
   observe({
     isolate({
