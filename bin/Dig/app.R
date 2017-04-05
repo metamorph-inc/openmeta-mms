@@ -87,6 +87,7 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
   visualizer_config <- fromJSON(config_filename)
   tab_requests <- visualizer_config$tabs
+  tab_requests <- c("Histogram.R") # For Debugging Only! <-------------------------------
   launch_dir <- dirname(config_filename)
   raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
   pet_config_value <- visualizer_config$pet_config
@@ -788,10 +789,19 @@ Server <- function(input, output, session) {
   # data$experimental <- list()
   
   # Call individual tabs' Server() functions.
-  lapply(tab_environments, function(custom_env) {
-    do.call(custom_env$server,
-            list(input, output, session, data))
-  })
+  # lapply(tab_environments, function(custom_env) {
+  #   do.call(custom_env$server,
+  #           list(input, output, session, data))
+  # })
+  
+  mapply(function(tab_env, id_num) {
+    # do.call(tab_env$server,
+    #         list(input, output, session, data))
+    callModule(tab_env$server, paste(id_num), data)
+  },
+  tab_env=tab_environments,
+  id_num=1:length(tab_environments),
+  SIMPLIFY = FALSE)
 }
 
 # UI -------------------------------------------------------------------------
@@ -802,7 +812,7 @@ base_tabs <- NULL
 print("Tabs:")
 added_tabs <- mapply(function(tab_env, id_num) {
   print(paste0(id_num, ": ", tab_env$title))
-  tabPanel(tab_env$title, tab_env$ui())
+  tabPanel(tab_env$title, tab_env$ui(paste(id_num)))
 }, tab_env=tab_environments, id_num=1:length(tab_environments), SIMPLIFY = FALSE)
 
 tabset_arguments <- c(unname(base_tabs),
