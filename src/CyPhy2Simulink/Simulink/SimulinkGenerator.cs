@@ -24,6 +24,8 @@ namespace CyPhy2Simulink.Simulink
 
             CopyCopyFiles(selectedTestBench, outputDirectory);
 
+            var postProcessScripts = GetAndCopyPostProcessScripts(selectedTestBench, outputDirectory);
+
             using (var writer = File.CreateText(Path.Combine(outputDirectory, "build_simulink.m")))
             {
                 model.GenerateSimulinkModelCode(writer);
@@ -36,13 +38,18 @@ namespace CyPhy2Simulink.Simulink
 
             using (var writer = File.CreateText(Path.Combine(outputDirectory, "run.cmd")))
             {
-                GenerateRunCmd(writer);
+                GenerateRunCmd(writer, postProcessScripts);
             }
         }
 
-        private static void GenerateRunCmd(TextWriter writer)
+        private static void GenerateRunCmd(TextWriter writer, IList<string> postProcessScripts )
         {
             writer.WriteLine("matlab.exe -nodisplay -nosplash -nodesktop -wait -r \"diary('matlab.out.txt'), try, run('build_simulink.m'), run('run_simulink.m'), catch me, fprintf('%s / %s\\n',me.identifier,me.message), exit(1), end, exit(0)\"");
+
+            foreach (var script in postProcessScripts)
+            {
+                writer.WriteLine("\"{0}\" \"{1}\"", META.VersionInfo.PythonVEnvExe, script);
+            }
         }
 
         private static void CopySupportFile(string outputDirectory, string fileName, string contents)
@@ -51,6 +58,36 @@ namespace CyPhy2Simulink.Simulink
             {
                 writer.Write(contents);
             }
+        }
+
+        private static IList<string> GetAndCopyPostProcessScripts(TestBench selectedTestBench, string outputDirectory)
+        {
+            var scripts = new List<string>();
+
+            foreach (var postprocessItem in selectedTestBench.Children.PostProcessingCollection)
+            {
+                if (postprocessItem.Attributes.ScriptPath != "")
+                {
+                    var fileNameOnly = Path.GetFileName(postprocessItem.Attributes.ScriptPath);
+
+                    if (fileNameOnly != null)
+                    {
+                        if (File.Exists(Path.Combine(outputDirectory, fileNameOnly)))
+                        {
+                            GMEConsole.Warning.WriteLine(
+                                    "PostProcessing script {0} already exists in output directory", fileNameOnly);
+                        }
+                        else
+                        {
+                            File.Copy(postprocessItem.Attributes.ScriptPath, Path.Combine(outputDirectory, fileNameOnly));
+                            scripts.Add(fileNameOnly);
+                        }
+
+                    }
+                }
+            }
+
+            return scripts;
         }
 
         private static void CopyCopyFiles(TestBench selectedTestBench, string outputDirectory)
