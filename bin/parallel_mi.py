@@ -1,4 +1,6 @@
 
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 import os
 import os.path
@@ -12,11 +14,12 @@ import imp
 #  load our pythoncom27.dll (which we know works) with an explicit path
 import os.path
 import afxres
+from six.moves import range
 # FIXME: would this be better : pkg_resources.resource_filename('win32api', 'pythoncom27.dll')
 imp.load_dynamic('pythoncom', os.path.join(os.path.dirname(afxres.__file__), 'pythoncom%d%d.dll' % sys.version_info[0:2]))
 import pythoncom
 
-import _winreg as winreg
+import six.moves.winreg as winreg
 with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"Software\META") as software_meta:
     meta_path, _ = winreg.QueryValueEx(software_meta, "META_PATH")
 sys.path.append(os.path.join(meta_path, 'bin'))
@@ -24,11 +27,12 @@ import udm
 
 
 def log(s):
-    print s
+    print(s)
 
 
 def log_formatted(s):
-    print s
+    print(s)
+
 
 try:
     import CyPhyPython  # will fail if not running under CyPhyPython
@@ -55,20 +59,18 @@ def start_pdb():
 
 
 def test_jobmanager_running(mga_dir):
-    import socket
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        s.connect(('127.0.0.1', 35010))
-        s.close()
-    except socket.error as e:
-        if e.errno != errno.WSAECONNREFUSED:
+        with open(r'\\.\pipe\MetaJobManager', 'r+b', 0):
+            pass
+    except IOError as e:
+        if e.errno != errno.ENOENT:
             raise
     else:
         return
 
     for jobmanager_exe in (os.path.join(meta_path, "bin", "PETBrowser.exe"), os.path.join(meta_path, "bin", "JobManager.exe"),
-            os.path.join(meta_path, r"src\\PETBrowser\\bin\\Release\\PETBrowser.exe"),
-            os.path.join(meta_path, r"src\\JobManager\\JobManager\\bin\\Release\\JobManager.exe")):
+            os.path.join(meta_path, r"src\PETBrowser\bin\Release\PETBrowser.exe"),
+            os.path.join(meta_path, r"src\JobManager\JobManager\bin\Release\JobManager.exe")):
         if os.path.isfile(jobmanager_exe):
             break
     else:
@@ -163,6 +165,7 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
     # start_pdb()
     log('Parallel Master Interpreter finished')
 
+
 # Allow calling this script with a .mga file as an argument
 if __name__ == '__main__':
     # need to open meta DN since it isn't compiled in
@@ -175,7 +178,7 @@ if __name__ == '__main__':
     meta_dn.open(CyPhyML_udm, "")
 
     dn = udm.SmartDataNetwork(meta_dn.root)
-    dn.open(sys.argv[1], "")
+    dn.open(os.path.abspath(sys.argv[1]), "")
     focusObject = dn.get_object_by_id(udm.GmeId2UdmId(sys.argv[2]))
     invoke(focusObject, dn.root, {})
     dn.close_no_update()
