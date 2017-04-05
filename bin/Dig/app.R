@@ -800,10 +800,10 @@ Server <- function(input, output, session) {
 base_tabs <- NULL
 
 print("Tabs:")
-added_tabs <- lapply(tab_environments, function(tab_env) {
-  print(tab_env$title)
+added_tabs <- mapply(function(tab_env, id_num) {
+  print(paste0(id_num, ": ", tab_env$title))
   tabPanel(tab_env$title, tab_env$ui())
-})
+}, tab_env=tab_environments, id_num=1:length(tab_environments), SIMPLIFY = FALSE)
 
 tabset_arguments <- c(unname(base_tabs),
                       unname(added_tabs),
