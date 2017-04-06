@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GME.CSharp;
+using ISIS.GME.Common.Classes;
 using ISIS.GME.Dsml.CyPhyML.Interfaces;
 
 namespace CyPhy2Simulink.Simulink
@@ -270,9 +271,10 @@ namespace CyPhy2Simulink.Simulink
             TestBenchParameterName = testBenchParameterName;
         }
 
-        public static SimulinkParameter FromDomainParameter(ISIS.GME.Dsml.CyPhyML.Interfaces.GenericDomainModelParameter param)
+        public static SimulinkParameter FromDomainParameter(GenericDomainModelParameter param)
         {
             var value = GetAdjacentParameterValue(param);
+            var tbParamName = TryGetTestbenchParamName((FCO) param, new HashSet<FCO>());
 
             if (value != null)
             {
@@ -309,6 +311,45 @@ namespace CyPhy2Simulink.Simulink
                     return null;
                 }
             }
+        }
+
+        private static string TryGetTestbenchParamName(FCO fco, ISet<FCO> visited)
+        {
+            if (fco.ParentContainer is TestBench)
+            {
+                SimulinkGenerator.GMEConsole.Info.WriteLine("Testbench parameter found: {0}", fco.ParentContainer.Name);
+                return fco.ParentContainer.Name;
+            }
+
+            visited.Add(fco);
+
+            foreach (var connection in fco.AllDstConnections)
+            {
+                var adjacent = (FCO) connection.GenericDstEnd; //Cast to abstract FCO class, rather than interface (hopefully this always works?)
+                if (adjacent is Parameter && !visited.Contains(adjacent))
+                {
+                    var result = TryGetTestbenchParamName(adjacent, visited);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+            }
+
+            foreach (var connection in fco.AllSrcConnections)
+            {
+                var adjacent = (FCO)connection.GenericSrcEnd; //Cast to abstract FCO class, rather than interface (hopefully this always works?)
+                if (adjacent is Parameter && !visited.Contains(adjacent))
+                {
+                    var result = TryGetTestbenchParamName(adjacent, visited);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
