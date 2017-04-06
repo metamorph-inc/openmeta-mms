@@ -16,10 +16,13 @@ namespace CyPhy2Simulink.Simulink
 
         public IDictionary<string, string> SimulationParams { get; private set; }
 
+        public List<string> UserLibraries { get; private set; }
+
         public SimulinkModel()
         {
             Blocks = new List<SimulinkBlock>();
             SimulationParams = new Dictionary<string, string>();
+            UserLibraries = new List<string>();
         }
 
         public SimulinkModel(TestBench testBench) : this()
@@ -45,9 +48,11 @@ namespace CyPhy2Simulink.Simulink
                     if (param.Name == "CopyFile")
                     {
                         //Ignore
-                    } else if (param.Name == "UserLibrary")
+                    } else if (param.Name == "UserLibrary"  && param.Attributes.Value != "")
                     {
-                        //TODO: support external user libraries
+                        var baseName = Path.GetFileNameWithoutExtension(param.Attributes.Value);
+
+                        UserLibraries.Add(baseName);
                     }
                     else
                     {
@@ -66,7 +71,13 @@ namespace CyPhy2Simulink.Simulink
             writer.WriteLine();
             writer.WriteLine("disp('Generating Simulink model; don''t close this window');");
             writer.WriteLine();
+
+            foreach (var lib in UserLibraries)
+            {
+                writer.WriteLine("load_system('{0}');", lib);
+            }
             writer.WriteLine("sys = CreateOrOverwriteModel('NewModel');");
+
             writer.WriteLine("load_system(sys);");
             writer.WriteLine();
             writer.WriteLine("try");

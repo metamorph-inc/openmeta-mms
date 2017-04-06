@@ -113,9 +113,21 @@ namespace CyPhy2Simulink.Simulink
                             }
                         }
                     }
-                    else if (param.Name == "UserLibrary")
+                    else if (param.Name == "UserLibrary" && param.Attributes.Value != "")
                     {
-                        //TODO: support external user libraries
+                        var fileNameOnly = Path.GetFileName(param.Attributes.Value);
+                        if (fileNameOnly != null)
+                        {
+                            if (File.Exists(Path.Combine(outputDirectory, fileNameOnly)))
+                            {
+                                GMEConsole.Warning.WriteLine(
+                                    "Attempted to copy file {0} which already exists in output directory", fileNameOnly);
+                            }
+                            else
+                            {
+                                File.Copy(param.Attributes.Value, Path.Combine(outputDirectory, fileNameOnly));
+                            }
+                        }
                     }
                     else
                     {
