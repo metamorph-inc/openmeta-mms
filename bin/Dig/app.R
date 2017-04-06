@@ -89,7 +89,7 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   visualizer_config <- fromJSON(config_filename)
   # print(visualizer_config)
   tab_requests <- visualizer_config$tabs
-  # tab_requests <- c("Histogram.R", "Explore.R") # For Debugging Only! <-------------------------------
+  # tab_requests <- c("Histogram.R", "CopyOfHistogram.R") # For Debugging Only! <-------------------------------
   # print(tab_requests)
   saved_inputs <- visualizer_config$inputs
   # print(saved_inputs)
@@ -127,10 +127,10 @@ si <- function(name, default) {
   # if(!is.null(saved_inputs))
     # print(saved_inputs[[name]])
   if(!is.null(saved_inputs) && !is.null(saved_inputs[[name]])) {
-    # print(paste0("si('",name,"',",default,") -- saved: ",toString(saved_inputs[[name]])))
+    print(paste0("si('",name,"',",default,") -- saved: ",toString(saved_inputs[[name]])))
     saved_inputs[[name]]
   } else {
-    # print(paste0("si('",name,"',",default,") -- default: ",default))
+    print(paste0("si('",name,"',",default,") -- default: ",default))
     default
   }
 }

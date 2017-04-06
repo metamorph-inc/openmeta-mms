@@ -304,37 +304,38 @@ server <- function(input, output, session, data) {
                       max(filtered_data_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
                       max(filtered_data_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
-        print(paste(var, x_bounds, y_bounds))
+        # print(paste(var, x_bounds, y_bounds))
         fluidRow(class = "uqVar",
           column(12,
-                 renderPlot({
-                   hist(filtered_data()[[var]],
-                        freq = FALSE,
-                        col = input$bayHistColor,
-                        border = "#C0C0C0",
-                        #type = "l",
-                        main = "",
-                        xlab = "", ylab = "",
-                        yaxt = "n",
-                        xlim = x_bounds,
-                        ylim = y_bounds,
-                        # las = 1,
-                        #asp = 1.3,
-                        breaks = 30,
-                        bty = "o")
-                   lines(data[[var]][["xOrig"]],
-                         data[[var]][["yOrig"]],
-                         col = input$bayOrigColor, lwd=2)
-                   lines(data[[var]][["xResampled"]],
-                         data[[var]][["yResampled"]],
-                         col = input$bayResampledColor, lwd=2)
-                   if (!is.null(forwardUQData()) & !is.null(forwardUQData()[[var]])) {
-                     lines(forwardUQData()[[var]]$postPoints,
-                           forwardUQData()[[var]]$postPdf,
-                           col="orange", lwd=2)
-                   }
-                   box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
-                 }, height = 248)
+            renderPlot({
+              hist(filtered_data()[[var]],
+                   freq = FALSE,
+                   col = input$bayHistColor,
+                   border = "#C0C0C0",
+                   #type = "l",
+                   main = "",
+                   xlab = "", ylab = "",
+                   yaxt = "n",
+                   xlim = x_bounds,
+                   ylim = y_bounds,
+                   # las = 1,
+                   #asp = 1.3,
+                   breaks = 30,
+                   bty = "o")
+              lines(data[[var]][["xOrig"]],
+                    data[[var]][["yOrig"]],
+                    col = input$bayOrigColor, lwd=2)
+              lines(data[[var]][["xResampled"]],
+                    data[[var]][["yResampled"]],
+                    col = input$bayResampledColor, lwd=2)
+              if (!is.null(forwardUQData()) & !is.null(forwardUQData()[[var]])) {
+                lines(forwardUQData()[[var]]$postPoints,
+                      forwardUQData()[[var]]$postPdf,
+                      col="orange", lwd=2)
+              }
+              box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
+            }, height = 248)
+            # renderText("test"))
           )
         )
       })
