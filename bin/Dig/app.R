@@ -77,10 +77,10 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
     Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
                                             'WindTurbineForOptimization',
                                             'visualizer_config.json'))
-    # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
+    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
     #                                         'WindTurbine',
     #                                         'visualizer_config.json'))
-    # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
+    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
     #                                         'TestPETRefinement',
     #                                         'visualizer_config.json'))
   }
@@ -179,7 +179,8 @@ if(pet_config_present) {
               selected_configurations=selected_configurations,
               design_variable_names=design_variable_names,
               design_variables=design_variables,
-              pet_config=pet_config)
+              pet_config=pet_config,
+              pet_config_filename=pet_config_filename)
   
   # TODO(tthomas): Clean up the construction of the units list.
   # Generate units tables.
@@ -280,6 +281,8 @@ Server <- function(input, output, session) {
 
   # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
+    Sys.setenv(DIG_INPUT_CSV="")
+    Sys.setenv(DIG_DATASET_CONFIG="")
     stopApp()
   })
   
