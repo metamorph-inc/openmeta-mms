@@ -1,63 +1,64 @@
 title <- "Data Table"
 footer <- TRUE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
   
   tabPanel("Data Table",
     br(),
     # fluidRow(
     #   column(4, 
     #     tags$div(title = "Rounds data in all tables to a set number of decimal places", 
-    #     checkboxInput("roundTables", "Round Data Table", value = FALSE))),
+    #     checkboxInput(ns("roundTables"), "Round Data Table", value = FALSE))),
     #   column(8, 
-    #     conditionalPanel("input.roundTables == '1'", 
+    #     conditionalPanel(paste0("input.", ns("roundTables"), " == '1'"), 
     #       tags$div(title = "Maximum number of decimals to show in data tables.", 
-    #       sliderInput("numDecimals", "Decimal Places", min = 0, max = 11, step = 1, value = 4))))
+    #       sliderInput(ns("numDecimals"), "Decimal Places", min = 0, max = 11, step = 1, value = 4))))
     # ),
-    # checkboxInput("autoRanking", "Automatic Refresh", value = TRUE),
+    # checkboxInput(ns("autoRanking"), "Automatic Refresh", value = TRUE),
     wellPanel(
       h4("Data Processing"),
-      checkboxInput("use_filtered", "Apply Filters", value=TRUE),
-      selectInput("process_method", "Method", choices = c("None", "TOPSIS"), selected = "None"),
-      conditionalPanel(condition = "input.process_method != 'None'",
-        # conditionalPanel(condition = "input.autoRanking == false",
-        #   actionButton("applyRanking", "Apply Ranking"),
+      checkboxInput(ns("use_filtered"), "Apply Filters", value=TRUE),
+      selectInput(ns("process_method"), "Method", choices = c("None", "TOPSIS"), selected = "None"),
+      conditionalPanel(condition = paste0("input['", ns("process_method"), "'] != 'None'"),
+        # conditionalPanel(condition = paste0("input['", ns("autoRanking"), "'] == false"),
+        #   actionButton(ns("applyRanking"), "Apply Ranking"),
         #   br(), br()
         # ),
         fluidRow(
           column(4,
-            selectInput("weightMetrics",
+            selectInput(ns("weightMetrics"),
                         "Ranking Metrics:",
                         c(),
                         multiple = TRUE),
-            actionButton("clearMetrics", "Clear Metrics")
+            actionButton(ns("clearMetrics"), "Clear Metrics")
           )
         ),
-        conditionalPanel(condition = "input.weightMetrics != null",
+        conditionalPanel(condition = paste0("input['", ns("weightMetrics"), "'] != null"),
           hr(),
           fluidRow(
             column(3, strong(h4("Variable Name"))),
             column(2, strong(h4("Ranking Mode"))),
-            # conditionalPanel(condition = "input.process_method == 'TOPSIS'",
+            # conditionalPanel(condition = paste0("input['", ns("process_method"), "'] == 'TOPSIS'"),
               column(7, strong(h4("Weight Amount")))
             # ),
-            # conditionalPanel(condition = "input.process_method == 'Simple Metric w/ TxFx'",
+            # conditionalPanel(condition = paste0("input['", ns("process_method"), "'] == 'Simple Metric w/ TxFx'"),
             #   column(3, strong(h4("Weight Amount"))),
             #   column(4, strong(h4("Transfer Function")))
             # )
           ),
-          uiOutput("rankings"),
+          uiOutput(ns("rankings")),
           hr(),
-          actionButton("save_ranking", "Add Ranking as Classification")
+          actionButton(ns("save_ranking"), "Add Ranking as Classification")
         )
       )
     ),
     wellPanel(
       style = "overflow-x:auto",
-      DT::dataTableOutput("dataTable")  #,
-      # downloadButton("exportPoints", "Export Selected Points"), 
-      # actionButton("colorRanked", "Color by Selected Rows")
-      #checkboxInput("transpose", "Transpose Table", value = FALSE)
+      DT::dataTableOutput(ns("dataTable"))  #,
+      # downloadButton(ns("exportPoints"), "Export Selected Points"), 
+      # actionButton(ns("colorRanked"), "Color by Selected Rows")
+      #checkboxInput(ns("transpose"), "Transpose Table", value = FALSE)
     )
   )
 }
@@ -65,6 +66,8 @@ ui <- function() {
 
 
 server <- function(input, output, session, data) {
+  
+  ns <- session$ns
 
   var_names <- data$meta$preprocessing$var_names
   var_range_nums_and_ints <- data$meta$preprocessing$var_range_nums_and_ints
@@ -165,12 +168,12 @@ server <- function(input, output, session, data) {
     
     fluidRow(
       column(3, h5(varName)),
-      column(2, radioButtons(paste0('sel', current),
+      column(2, radioButtons(ns(paste0('sel', current)),
                              NULL,
                              choices = c("Min", "Max"),
                              selected = radio_val,
                              inline = TRUE)),
-      column(7, sliderInput(paste0('rnk', current),
+      column(7, sliderInput(ns(paste0('rnk', current)),
                             NULL,
                             step = 0.01,
                             min = 0.01,
@@ -186,22 +189,22 @@ server <- function(input, output, session, data) {
     
     fluidRow(
       column(3, h5(varName)),
-      column(2, radioButtons(paste0('sel', current),
+      column(2, radioButtons(ns(paste0('sel', current)),
                              NULL,
                              choices = c("Min", "Max"),
                              selected = radio_val,
                              inline = TRUE)),
-      column(3, sliderInput(paste0('rnk', current),
+      column(3, sliderInput(ns(paste0('rnk', current)),
                             NULL,
                             step = 0.01,
                             min = 0,
                             max = 1,
                             value = slider_val)),
-      column(1, checkboxInput(paste0('util', current),
+      column(1, checkboxInput(ns(paste0('util', current)),
                               "Add Transfer Function",
                               value = util_val)),
       column(3, conditionalPanel(condition = transferCondition,
-                                 textInput(paste0('func', current),
+                                 textInput(ns(paste0('func', current)),
                                            "Enter Data Points",
                                            placeholder = paste0("Value = Score | e.g. ",
                                                                 min(LocalData()[[varName]]),

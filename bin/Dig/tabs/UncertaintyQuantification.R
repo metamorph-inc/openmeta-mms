@@ -9,7 +9,9 @@ params <- list()
 title <- "Uncertainty Quantification"
 footer <- FALSE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
+  
   fluidPage(
   	tags$head(tags$style(".uqVar{height:250px;}")),
     br(),
@@ -18,20 +20,20 @@ ui <- function() {
         br(),
         fluidRow(
           column(3,
-            checkboxInput('designConfigsPresent', "Multiple Design Configurations Present", value = F)
+            checkboxInput(ns('designConfigsPresent'), "Multiple Design Configurations Present", value = F)
           )
         ),
         fluidRow(
-          conditionalPanel(condition = 'input.designConfigsPresent == true',
+          conditionalPanel(condition = paste0('input["', 'designConfigsPresent', '"] == true'),
             column(3,
-              selectInput('designConfigVar', "Design Configuration Identifier",
+              selectInput(ns('designConfigVar'), "Design Configuration Identifier",
                 choices = c(),
                 multiple = F)
             )
           ),
-          conditionalPanel(condition = 'input.designConfigsPresent == true & input.designConfigVar != null',
+          conditionalPanel(condition = paste0('input["', ns('designConfigsPresent'), '"] == true & input["', ns('designConfigVar'), '"] != null'),
             column(3,
-              selectInput('designConfigChoice', "Selection",
+              selectInput(ns('designConfigChoice'), "Selection",
                 choices = c(),
                 multiple = F)
             )
@@ -39,10 +41,10 @@ ui <- function() {
         ),
         fluidRow(
           column(3,
-            checkboxInput('displayAll', "Display All Variables", value = T),
-            conditionalPanel(condition = 'input.displayAll == false', 
+            checkboxInput(ns('displayAll'), "Display All Variables", value = T),
+            conditionalPanel(condition = paste0('input["', ns('displayAll'), '"] == false'), 
               selectInput(
-                'uqDisplayVars',
+                ns('uqDisplayVars'),
                 "Display Variables",
                 choices = c(),
                 multiple = T
@@ -53,21 +55,21 @@ ui <- function() {
         fluidRow(
           column(6, 
             wellPanel(h4("Variable Configuration"),
-              uiOutput("uqControlUI"), br()#, height = 200)
+              uiOutput(ns("uqControlUI")), br()#, height = 200)
             )
           ),
           column(6,
             wellPanel(h4("Variable Plots"), br(),
-              uiOutput("uqPlots")
+              uiOutput(ns("uqPlots"))
             )
           )
         ),
-        actionButton('runFUQ', 'Run Forward UQ')
+        actionButton(ns('runFUQ'), 'Run Forward UQ')
       ),
             
       tabPanel("Design Ranking",
         br(),
-        actionButton('runProbability', 'Compute Probabilities'),
+        actionButton(ns('runProbability'), 'Compute Probabilities'),
         br(), br(),
         h4("Weights"),
         wellPanel(
@@ -78,21 +80,21 @@ ui <- function() {
             column(4, h5(strong("Impact:"))),
             column(3, h5(strong("Weight:")))
           ), br(),
-          uiOutput("probabilityWeightUI")
+          uiOutput(ns("probabilityWeightUI"))
         ),
         h4("Rankings"),
         wellPanel(
-          DT::dataTableOutput("probabilityTable")
+          DT::dataTableOutput(ns("probabilityTable"))
         )
       ),
       id = "uqTabset"
     ),
-    conditionalPanel("output.displayQueries",
+    conditionalPanel(paste0("output['", ns('displayQueries'), "']"),
       hr(),
       h4("Probability Queries:"),
       wellPanel(
         fluidRow(
-          column(1, actionButton('addProbability', 'Add')),
+          column(1, actionButton(ns('addProbability'), 'Add')),
           column(3, h5(strong("Variable Name:"))),
           column(2, h5(strong("Direction:"))),
           column(2, h5(strong("Threshold:"))),
@@ -101,21 +103,23 @@ ui <- function() {
         ), br(),
         tags$div(id = 'probabilityUI'),
         hr(),
-        actionButton('runProbabilityQueries', 'Evaluate')
+        actionButton(ns('runProbabilityQueries'), 'Evaluate')
       )
     ),
     fluidRow(
 	    column(4, tags$div(title = "Color of ranked data points.",
-	    	colourpicker::colourInput("bayHistColor", "Histogram", "wheat"))),
+	    	colourpicker::colourInput(ns("bayHistColor"), "Histogram", "wheat"))),
 	    column(4, tags$div(title = "Color of ranked data points.",
-	      colourpicker::colourInput("bayOrigColor", "Original", "#000000"))),
+	      colourpicker::colourInput(ns("bayOrigColor"), "Original", "#000000"))),
 	    column(4, tags$div(title = "Color of ranked data points.",
-	      colourpicker::colourInput("bayResampledColor", "Resampled", "#5CC85C")))
+	      colourpicker::colourInput(ns("bayResampledColor"), "Resampled", "#5CC85C")))
     )
   )
 }
 
 server <- function(input, output, session, data) {
+  ns <- session$ns
+  
   raw_data <- isolate(data$raw$df)
   raw_info <- data$meta
   
@@ -212,42 +216,42 @@ server <- function(input, output, session, data) {
           column(8,
                  
                  selectInput(
-                   paste0('varDirection', global_index),
+                   ns(paste0('varDirection', global_index)),
                    label = var,
                    choices = var_directions,
                    selected = this_direction)
           ),
           column(4)
         ),
-        conditionalPanel(condition = toString(paste0('input.varDirection', global_index, " == 'Input'")),
+        conditionalPanel(condition = paste0('input["', ns(paste0('varDirection', global_index)), '"] == "Input"'),
           # Gaussian
           fluidRow(
             column(4, 
                    checkboxInput(
-                    paste0('gaussian', global_index),
+                    ns(paste0('gaussian', global_index)),
                     label = "Reshape to Gaussian",
                     value = this_gaussian)
             ),
             #conditionalPanel(condition = toString(paste0('input.gaussian', global_index, ' == true')),
               column(4,
-                     textInput(paste0('gaussian_mean', global_index),
-                              HTML("&mu;:"),
-                              placeholder = "Mean",
-                              value = this_gauss_mean)
+                     textInput(ns(paste0('gaussian_mean', global_index)),
+                               HTML("&mu;:"),
+                               placeholder = "Mean",
+                               value = this_gauss_mean)
               ),
               column(4,
-                     textInput(paste0('gaussian_sd',global_index),
-                              HTML("&sigma;:"),
-                              placeholder = "StdDev",
-                              value = this_sd)
+                     textInput(ns(paste0('gaussian_sd',global_index)),
+                               HTML("&sigma;:"),
+                               placeholder = "StdDev",
+                               value = this_sd)
               )
           #  )
           ),
           # Constraint
           fluidRow(
-            column(4, checkboxInput(paste0("fuqConstraintEnable", global_index), "Enable Constraint")),
+            column(4, checkboxInput(ns(paste0("fuqConstraintEnable", global_index)), "Enable Constraint")),
           #  conditionalPanel(condition = toString(paste0('input.fuqConstraintEnable', global_index, ' == true')),
-              column(4, textInput(paste0("fuqConstraintValue", global_index), NULL, value = data_mean[[var]])),
+              column(4, textInput(ns(paste0("fuqConstraintValue", global_index)), NULL, value = data_mean[[var]])),
               column(4)
           #  )
             
@@ -283,7 +287,7 @@ server <- function(input, output, session, data) {
   })
   
   output$uqPlots <- renderUI({
-    # print("In uqPlots()")
+    print("In uqPlots()")
     data <- uqData()$dist
     variables <- varNums
     if(!input$displayAll)
@@ -300,6 +304,7 @@ server <- function(input, output, session, data) {
                       max(filtered_data_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
                       max(filtered_data_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
+        print(paste(var, x_bounds, y_bounds))
         fluidRow(class = "uqVar",
           column(12,
                  renderPlot({
@@ -308,9 +313,9 @@ server <- function(input, output, session, data) {
                         col = input$bayHistColor,
                         border = "#C0C0C0",
                         #type = "l",
-                        main = "", 
-                        xlab = "", ylab = "", 
-                        yaxt = "n", 
+                        main = "",
+                        xlab = "", ylab = "",
+                        yaxt = "n",
                         xlim = x_bounds,
                         ylim = y_bounds,
                         # las = 1,
@@ -367,11 +372,11 @@ server <- function(input, output, session, data) {
       selector = '#probabilityUI',
       ui = tags$div(
         fluidRow(
-          column(1, actionButton(paste0('removeProbability', id), 'Delete')),
-          column(3, selectInput(paste0('queryVariable', id), NULL, choices = varNums, selected = varNums[[1]])),
-          column(2, selectInput(paste0('queryDirection', id), NULL, choices = c("Above", "Below")), selected = "Above"),
-          column(2, textInput(paste0('queryThreshold', id), NULL)),
-          column(2, textOutput(paste0('queryValue', id))),
+          column(1, actionButton(ns(paste0('removeProbability', id)), 'Delete')),
+          column(3, selectInput(ns(paste0('queryVariable', id)), NULL, choices = varNums, selected = varNums[[1]])),
+          column(2, selectInput(ns(paste0('queryDirection', id)), NULL, choices = c("Above", "Below")), selected = "Above"),
+          column(2, textInput(ns(paste0('queryThreshold', id)), NULL)),
+          column(2, textOutput(ns(paste0('queryValue', id)))),
           column(2)
         ),
         id = paste0('probabilityQuery', id)
@@ -387,7 +392,11 @@ server <- function(input, output, session, data) {
           ## pass in appropriate div id
           selector = paste0('#probabilityQuery', id)
         )
-        probabilityQueries$rows <<- probabilityQueries$rows[sapply(probabilityQueries$rows, function(x) {x!=id})]
+        if (length(probabilityQueries$rows) == 1) {
+          probabilityQueries$rows <<- NULL
+        } else {
+          probabilityQueries$rows <<- probabilityQueries$rows[sapply(probabilityQueries$rows, function(x) {x!=id})]
+        }
       })
     })
   })

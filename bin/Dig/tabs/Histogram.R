@@ -1,15 +1,16 @@
 title <- "Histogram"
 footer <- TRUE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
   
   fluidPage(
     br(),
     column(3,
-      selectInput("sandboxVar", "Histogram Variable:", c())
+      selectInput(ns("sandboxVar"), "Histogram Variable:", c())
     ),
     column(9,
-      plotOutput("sandboxPlot")
+      plotOutput(ns("sandboxPlot"))
     )
   )
   

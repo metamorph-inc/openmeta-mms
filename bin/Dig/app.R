@@ -78,10 +78,10 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
     Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
                                             'WindTurbineForOptimization',
                                             'visualizer_config_session.json'))
-    # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
+    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
     #                                         'WindTurbine',
     #                                         'visualizer_config.json'))
-    # Sys.setenv(DIG_DATASET_FOLDER=file.path('datasets',
+    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
     #                                         'TestPETRefinement',
     #                                         'visualizer_config.json'))
   }
@@ -89,6 +89,7 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   visualizer_config <- fromJSON(config_filename)
   # print(visualizer_config)
   tab_requests <- visualizer_config$tabs
+  # tab_requests <- c("Histogram.R", "Explore.R") # For Debugging Only! <-------------------------------
   # print(tab_requests)
   saved_inputs <- visualizer_config$inputs
   # print(saved_inputs)
@@ -199,7 +200,8 @@ if(pet_config_present) {
               selected_configurations=selected_configurations,
               design_variable_names=design_variable_names,
               design_variables=design_variables,
-              pet_config=pet_config)
+              pet_config=pet_config,
+              pet_config_filename=pet_config_filename)
   
   # TODO(tthomas): Clean up the construction of the units list.
   # Generate units tables.
@@ -316,6 +318,8 @@ Server <- function(input, output, session) {
     write(toJSON(visualizer_config), file=visualizer_config_filename)
     print("Session saved.")
     
+    Sys.setenv(DIG_INPUT_CSV="")
+    Sys.setenv(DIG_DATASET_CONFIG="")
     stopApp()
   })
   
@@ -839,10 +843,19 @@ Server <- function(input, output, session) {
   # data$experimental <- list()
   
   # Call individual tabs' Server() functions.
-  lapply(tab_environments, function(custom_env) {
-    do.call(custom_env$server,
-            list(input, output, session, data))
-  })
+  # lapply(tab_environments, function(custom_env) {
+  #   do.call(custom_env$server,
+  #           list(input, output, session, data))
+  # })
+  
+  mapply(function(tab_env, id_num) {
+    # do.call(tab_env$server,
+    #         list(input, output, session, data))
+    callModule(tab_env$server, paste(id_num), data)
+  },
+  tab_env=tab_environments,
+  id_num=1:length(tab_environments),
+  SIMPLIFY = FALSE)
 }
 
 # UI -------------------------------------------------------------------------
@@ -851,10 +864,10 @@ Server <- function(input, output, session) {
 base_tabs <- NULL
 
 print("Tabs:")
-added_tabs <- lapply(tab_environments, function(tab_env) {
-  print(tab_env$title)
-  tabPanel(tab_env$title, tab_env$ui())
-})
+added_tabs <- mapply(function(tab_env, id_num) {
+  print(paste0(id_num, ": ", tab_env$title))
+  tabPanel(tab_env$title, tab_env$ui(paste(id_num)))
+}, tab_env=tab_environments, id_num=1:length(tab_environments), SIMPLIFY = FALSE)
 
 tabset_arguments <- c(unname(base_tabs),
                       unname(added_tabs),

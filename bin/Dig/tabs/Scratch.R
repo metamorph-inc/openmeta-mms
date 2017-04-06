@@ -1,13 +1,14 @@
 title <- "Scratch"
 footer <- TRUE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
   
   fluidPage(
     br(),
-    verbatimTextOutput("text"),
-    verbatimTextOutput("text2"),
-    verbatimTextOutput("text3")
+    verbatimTextOutput(ns("text")),
+    verbatimTextOutput(ns("text2")),
+    verbatimTextOutput(ns("text3"))
   )
   
 }
