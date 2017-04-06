@@ -18,32 +18,18 @@ namespace CyPhyMasterInterpreter
         {
             this.parametricExploration = parametricExploration;
 
-            this.OriginalSystemUnderTest = parametricExploration
-                .Children
-                .TestBenchRefCollection
-                .FirstOrDefault()
-                .Referred
-                .TestBenchType
-                .Children
-                .TopLevelSystemUnderTestCollection
-                .FirstOrDefault();
-
-            var pet = this.parametricExploration;
-            if (pet.Children.PCCDriverCollection.Count() == 1)
+            var tbRef = parametricExploration
+               .Children
+               .TestBenchRefCollection
+               .FirstOrDefault();
+            if (tbRef != null)
             {
-                cmdName = "run_PCC.cmd";
-            }
-            else if (pet.Children.OptimizerCollection.Count() == 1)
-            {
-                cmdName = "run_optimizer.cmd";
-            }
-            else if (pet.Children.ParameterStudyCollection.Count() == 1)
-            {
-                cmdName = "run_parameter_study.cmd";
-            }
-            if (cmdName == null)
-            {
-                throw new ApplicationException("Invalid Parametric Exploration: must have exactly one PCCDriver, Optimizer, or Parameter Study");
+                this.OriginalSystemUnderTest = tbRef
+                    .Referred
+                    .TestBenchType
+                    .Children
+                    .TopLevelSystemUnderTestCollection
+                    .FirstOrDefault();
             }
         }
 
@@ -55,6 +41,21 @@ namespace CyPhyMasterInterpreter
         public override MgaModel GetExpandedObject()
         {
             return this.expandedParametricExploration.Impl as MgaModel;
+        }
+
+        public override bool SaveDesign(AVM.DDP.MetaAvmProject projectManifest)
+        {
+            if (this.Configuration == null)
+            {
+                // standalone PET doesn't have design model
+                return true;
+            }
+            return base.SaveDesign(projectManifest);
+        }
+
+        public override void Expand(CyPhy.ParametricExploration parametricExploration)
+        {
+            this.expandedParametricExploration = this.parametricExploration;
         }
 
         public override void Expand(CyPhy.ComponentAssembly configuration)
@@ -144,13 +145,7 @@ namespace CyPhyMasterInterpreter
                         interpreter.Name;
 
                     title = String.Format("{0}_{1}", interpreterName, this.expandedParametricExploration.Name).Replace(" ", "_");
-                    testbenchName = this.parametricExploration
-                        .Children
-                        .TestBenchRefCollection
-                        .FirstOrDefault()
-                        .Referred
-                        .TestBenchType
-                        .Name;
+                    testbenchName = this.parametricExploration.Name;
 
                     success = success && manager.EnqueueJob(runCommand, title, testbenchName, workingDirectory, ProjectDirectory, interpreter);
                 }
@@ -179,30 +174,12 @@ namespace CyPhyMasterInterpreter
 
             this.EnsureOutputDirectory();
 
-
-            //TODO: review this method - are we doing the right thing? are we doing the thing right?
-            var originalTestBench = this.parametricExploration
-                .Children
-                .TestBenchRefCollection
-                .FirstOrDefault()
-                .Referred
-                .TestBenchType;
-
-
-            var expandedTestBench = this.expandedParametricExploration
-                .Children
-                .TestBenchRefCollection
-                .FirstOrDefault()
-                .Referred
-                .TestBenchType;
-
-
             var success = project.SaveTestBenchManifest(
-                this.Configuration.Name,
+                this.Configuration != null ? this.Configuration.Name : this.parametricExploration.Name,
                 configurationName,
-                expandedTestBench,
+                this.parametricExploration.Name,
+                expandedParametricExploration,
                 this.OutputDirectory,
-                originalTestBench,
                 analysisStartTime);
 
             return success;
@@ -231,7 +208,6 @@ namespace CyPhyMasterInterpreter
             return success;
         }
 
-        string cmdName = null;
         public override bool UpdateTestBenchManifestExecutionSteps(AVM.DDP.MetaTBManifest manifest)
         {
             manifest.Steps.Add(new AVM.DDP.MetaTBManifest.Step()
