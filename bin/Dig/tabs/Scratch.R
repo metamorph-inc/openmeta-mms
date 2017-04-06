@@ -13,7 +13,7 @@ ui <- function(id) {
   
 }
 
-server <- function(input, output, session, data, id) {
+server <- function(input, output, session, data) {
   
   output$text <- renderPrint(data$Filters())
   output$text2 <- renderPrint(apply(data$Filtered(), 2, max, na.rm=TRUE))

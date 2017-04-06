@@ -65,7 +65,7 @@ ui <- function(id) {
 
 
 
-server <- function(input, output, session, data, id) {
+server <- function(input, output, session, data) {
 
   var_names <- data$meta$preprocessing$var_names
   var_range_nums_and_ints <- data$meta$preprocessing$var_range_nums_and_ints

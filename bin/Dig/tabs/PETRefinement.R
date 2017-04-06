@@ -86,9 +86,9 @@ ui <- function(id) {
 
 max_enums_display <- 3
 
-server <- function(input, output, session, data, id) {
+server <- function(input, output, session, data) {
   
-  ns <- NS(id)
+  ns <- session$ns
 
   FilterData <- data$Filtered
   var_names <- data$meta$preprocessing$var_names

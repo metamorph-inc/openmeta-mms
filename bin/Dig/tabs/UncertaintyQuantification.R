@@ -117,8 +117,8 @@ ui <- function(id) {
   )
 }
 
-server <- function(input, output, session, data, id) {
-  ns <- NS(id)
+server <- function(input, output, session, data) {
+  ns <- session$ns
   
   raw_data <- isolate(data$raw$df)
   raw_info <- data$meta
@@ -304,7 +304,7 @@ server <- function(input, output, session, data, id) {
                       max(filtered_data_histo$breaks, data[[var]][["xOrig"]], data[[var]][["xResampled"]]))
         y_bounds <- c(0,
                       max(filtered_data_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
-        print(paste("examining var", var))
+        print(paste(var, x_bounds, y_bounds))
         fluidRow(class = "uqVar",
           column(12,
                  renderPlot({
@@ -313,9 +313,9 @@ server <- function(input, output, session, data, id) {
                         col = input$bayHistColor,
                         border = "#C0C0C0",
                         #type = "l",
-                        main = "", 
-                        xlab = "", ylab = "", 
-                        yaxt = "n", 
+                        main = "",
+                        xlab = "", ylab = "",
+                        yaxt = "n",
                         xlim = x_bounds,
                         ylim = y_bounds,
                         # las = 1,

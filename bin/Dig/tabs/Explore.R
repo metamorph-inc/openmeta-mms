@@ -96,7 +96,7 @@ ui <- function(id) {
   )
 }
 
-server <- function(input, output, session, data, id) {
+server <- function(input, output, session, data) {
   
   observe({
     isolate({

@@ -797,7 +797,7 @@ Server <- function(input, output, session) {
   mapply(function(tab_env, id_num) {
     # do.call(tab_env$server,
     #         list(input, output, session, data))
-    callModule(tab_env$server, paste(id_num), data, id_num)
+    callModule(tab_env$server, paste(id_num), data)
   },
   tab_env=tab_environments,
   id_num=1:length(tab_environments),

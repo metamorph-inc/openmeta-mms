@@ -28,7 +28,7 @@ ui <- function(id) {
   )
 }
 
-server <- function(input, output, session, data, id) {
+server <- function(input, output, session, data) {
   
   ### ALL Comments by Will Knight
 
