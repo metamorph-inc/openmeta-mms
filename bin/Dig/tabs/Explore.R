@@ -38,10 +38,10 @@ ui <- function(id) {
               verbatimTextOutput(ns("pairs_stats"))#,
               # TODO(tthomas): Add this functionality back in.
               # h4("Download"),
-              # downloadButton('exportData', 'Dataset'), 
+              # downloadButton(ns('exportData'), 'Dataset'), 
               # paste("          "),
-              # downloadButton('exportPlot', 'Plot'), hr(),
-              # actionButton("resetOptions", "Reset to Default Options")
+              # downloadButton(ns('exportPlot'), 'Plot'), hr(),
+              # actionButton(ns("resetOptions"), "Reset to Default Options")
             )
           ),
           column(9,
@@ -55,7 +55,7 @@ ui <- function(id) {
         fluidRow(
           column(3,
             br(),
-            # actionButton("single_back_pairs", "Back"),
+            # actionButton(ns("single_back_pairs"), "Back"),
             # br(), br(),
             bsCollapse(id = "single_plot_collapse", open = "Variables",
               bsCollapsePanel("Variables", 
@@ -80,7 +80,7 @@ ui <- function(id) {
               # br(), br(),
               # p(strong("Highlight Selection")),
               # bootstrapPage(
-              #   actionButton("highlightData", "Highlight Selection", class = "btn btn-primary")
+              #   actionButton(ns("highlightData"), "Highlight Selection", class = "btn btn-primary")
               # )
               bsCollapsePanel("Overlays", 
                 checkboxInput(ns("add_pareto"), "Add Pareto Plot"),

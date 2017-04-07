@@ -287,16 +287,33 @@ server <- function(input, output, session, data) {
   })
   
   output$uqPlots <- renderUI({
-    print("In uqPlots()")
     data <- uqData()$dist
     variables <- varNums
     if(!input$displayAll)
       variables <- varNums[varsList()]
     
     if(is.null(data)) {
-      verbatimTextOutput("Initializing...")
+      verbatimTextOutput(ns("uq_plot_initializing"))
     }
     else {
+      lapply(variables, function(var) {
+        fluidRow(class = "uqVar",
+          column(12,
+            plotOutput(ns(paste0("uq_plot_", var)), height = 248)
+          )
+        )
+      })
+    }
+  })
+  
+  output$uq_plot_initializing <- renderText("Initializing...")
+  
+  observe({
+    data <- uqData()$dist
+    variables <- varNums
+    if(!input$displayAll)
+      variables <- varNums[varsList()]
+    if(!is.null(data)) {
       lapply(variables, function(var) {
         par(mar = rep(2, 4))
         filtered_data_histo <- hist(filtered_data()[[var]], freq = FALSE, breaks=30)
@@ -305,39 +322,34 @@ server <- function(input, output, session, data) {
         y_bounds <- c(0,
                       max(filtered_data_histo$density, data[[var]][["yOrig"]], data[[var]][["yResampled"]]))
         # print(paste(var, x_bounds, y_bounds))
-        fluidRow(class = "uqVar",
-          column(12,
-            renderPlot({
-              hist(filtered_data()[[var]],
-                   freq = FALSE,
-                   col = input$bayHistColor,
-                   border = "#C0C0C0",
-                   #type = "l",
-                   main = "",
-                   xlab = "", ylab = "",
-                   yaxt = "n",
-                   xlim = x_bounds,
-                   ylim = y_bounds,
-                   # las = 1,
-                   #asp = 1.3,
-                   breaks = 30,
-                   bty = "o")
-              lines(data[[var]][["xOrig"]],
-                    data[[var]][["yOrig"]],
-                    col = input$bayOrigColor, lwd=2)
-              lines(data[[var]][["xResampled"]],
-                    data[[var]][["yResampled"]],
-                    col = input$bayResampledColor, lwd=2)
-              if (!is.null(forwardUQData()) & !is.null(forwardUQData()[[var]])) {
-                lines(forwardUQData()[[var]]$postPoints,
-                      forwardUQData()[[var]]$postPdf,
-                      col="orange", lwd=2)
-              }
-              box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
-            }, height = 248)
-            # renderText("test"))
-          )
-        )
+        output[[paste0("uq_plot_", var)]] <- renderPlot({
+          hist(filtered_data()[[var]],
+               freq = FALSE,
+               col = input$bayHistColor,
+               border = "#C0C0C0",
+               #type = "l",
+               main = "",
+               xlab = "", ylab = "",
+               yaxt = "n",
+               xlim = x_bounds,
+               ylim = y_bounds,
+               # las = 1,
+               #asp = 1.3,
+               breaks = 30,
+               bty = "o")
+          lines(data[[var]][["xOrig"]],
+                data[[var]][["yOrig"]],
+                col = input$bayOrigColor, lwd=2)
+          lines(data[[var]][["xResampled"]],
+                data[[var]][["yResampled"]],
+                col = input$bayResampledColor, lwd=2)
+          if (!is.null(forwardUQData()) & !is.null(forwardUQData()[[var]])) {
+            lines(forwardUQData()[[var]]$postPoints,
+                  forwardUQData()[[var]]$postPdf,
+                  col="orange", lwd=2)
+          }
+          box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
+        }, height = 248)
       })
     }
   })
@@ -444,9 +456,9 @@ server <- function(input, output, session, data) {
   #   lapply(uqInputs(), function(input) {
   #     id <- which(uqInputs() == input)
   #     # fluidRow(
-  #     #   column(2, checkboxInput(paste0("fuqConstraintEnable", id), NULL)),
+  #     #   column(2, checkboxInput(ns(paste0("fuqConstraintEnable", id)), NULL)),
   #     #   column(6, paste(input)),
-  #     #   column(4, textInput(paste0("fuqConstraintValue", id), NULL, value = toString(apply(filtered_data()[input], 2, mean))))
+  #     #   column(4, textInput(ns(paste0("fuqConstraintValue", id)), NULL, value = toString(apply(filtered_data()[input], 2, mean))))
   #     # )
   #   })
   # })
@@ -570,8 +582,8 @@ server <- function(input, output, session, data) {
         column(1, paste0("Query", id)),
         column(1, paste0("Config")),
         column(3, paste(variable, tolower(direction), threshold)),
-        column(4, selectInput(paste0("probImpact", id), NULL, choices = c("Positive", "Negative"), selected = "Positive")),
-        column(3, sliderInput(paste0("probWeight", id), NULL, 0, 1, 1, step = 0.05))
+        column(4, selectInput(ns(paste0("probImpact", id)), NULL, choices = c("Positive", "Negative"), selected = "Positive")),
+        column(3, sliderInput(ns(paste0("probWeight", id)), NULL, 0, 1, 1, step = 0.05))
       )
     })
   })
