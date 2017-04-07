@@ -325,16 +325,25 @@ Server <- function(input, output, session) {
   
   # First cut at appling setting dynamically after the input has been initialized
   observe({
-    current_input <- "1-display"
-    req(input[[current_input]])
-    if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
-      print(paste("applying via observe", current_input, paste(saved_inputs[[current_input]], collapse = ", ")))
-      value <- saved_inputs[[current_input]]
-      saved_inputs[[current_input]] <<- NULL
-      updateSelectInput(session,
-                        current_input,
-                        selected = value)
+    # print(paste(c("SET",names(input)), collapse=" "))
+    # print(names(input))
+    if(length(saved_inputs) < 6) {
+      print(paste("Remaining:", length(saved_inputs), paste(names(saved_inputs), collapse = ", ")))
+    } else {
+      print(paste("Remaining:", length(saved_inputs)))
     }
+    lapply(names(saved_inputs), function(current_input) {
+      # print(current_input)
+      # req(input[[current_input]])
+      if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
+        print(paste("applying via observe", current_input, paste(saved_inputs[[current_input]], collapse = ", ")))
+        value <- saved_inputs[[current_input]]
+        saved_inputs[[current_input]] <<- NULL
+        updateSelectInput(session,
+                          current_input,
+                          selected = value)
+      }
+    })
   })
   
   # Filters (Enumerations, Sliders) and Constants ----------------------------
