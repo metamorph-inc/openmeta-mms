@@ -127,10 +127,10 @@ si <- function(name, default) {
   # if(!is.null(saved_inputs))
     # print(saved_inputs[[name]])
   if(!is.null(saved_inputs) && !is.null(saved_inputs[[name]])) {
-    print(paste0("si('",name,"',",default,") -- saved: ",toString(saved_inputs[[name]])))
+    # print(paste0("si('",name,"',",default,") -- saved: ",toString(saved_inputs[[name]])))
     saved_inputs[[name]]
   } else {
-    print(paste0("si('",name,"',",default,") -- default: ",default))
+    # print(paste0("si('",name,"',",default,") -- default: ",default))
     default
   }
 }
@@ -325,13 +325,14 @@ Server <- function(input, output, session) {
   
   # First cut at appling setting dynamically after the input has been initialized
   observe({
-    current_input <- "display"
+    current_input <- "1-display"
     req(input[[current_input]])
     if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
-      value <- saved_inputs$display
-      saved_inputs$display <<- NULL
+      print(paste("applying via observe", current_input, paste(saved_inputs[[current_input]], collapse = ", ")))
+      value <- saved_inputs[[current_input]]
+      saved_inputs[[current_input]] <<- NULL
       updateSelectInput(session,
-                        "display",
+                        current_input,
                         selected = value)
     }
   })
