@@ -30,9 +30,9 @@ namespace CyPhy2Simulink.Simulink
             //Iterate through TB to find blocks
             testBench.TraverseDFS(children => children, (child, i) =>
             {
-                if (child is GenericDomainModel)
+                if (child is ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel)
                 {
-                    var block = SimulinkBlock.FromDomainModel((GenericDomainModel)child);
+                    var block = SimulinkBlock.FromDomainModel((ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel)child);
                     if (block != null)
                     {
                         SimulinkGenerator.GMEConsole.Info.Write("Added block {0} ({1})", block.Name, block.BlockType);
@@ -146,16 +146,11 @@ namespace CyPhy2Simulink.Simulink
             Parameters = new List<SimulinkParameter>();
         }
 
-        public static SimulinkBlock FromDomainModel(GenericDomainModel domainModel)
+        public static SimulinkBlock FromDomainModel(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel domainModel)
         {
-            if (!DomainModelIsSimulink(domainModel))
-            {
-                return null;
-            }
+            var result = new SimulinkBlock(GetParentComponentName(domainModel), domainModel.Attributes.BlockType);
 
-            var result = new SimulinkBlock(GetParentComponentName(domainModel), domainModel.Attributes.Type);
-
-            foreach (var param in domainModel.Children.GenericDomainModelParameterCollection)
+            foreach (var param in domainModel.Children.SimulinkParameterCollection)
             {
                 var simulinkParam = SimulinkParameter.FromDomainParameter(param);
                 if (simulinkParam != null)
@@ -164,7 +159,7 @@ namespace CyPhy2Simulink.Simulink
                 }
             }
 
-            foreach (var port in domainModel.Children.GenericDomainModelPortCollection)
+            foreach (var port in domainModel.Children.SimulinkPortCollection)
             {
                 var simulinkPort = SimulinkPort.FromDomainPort(port);
                 if (simulinkPort != null)
@@ -176,12 +171,7 @@ namespace CyPhy2Simulink.Simulink
             return result;
         }
 
-        public static bool DomainModelIsSimulink(GenericDomainModel domainModel)
-        {
-            return domainModel.Attributes.Domain == "simulink";
-        }
-
-        public static string GetParentComponentName(GenericDomainModel domainModel)
+        public static string GetParentComponentName(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel domainModel)
         {
             return domainModel.ParentContainer.Name;
         }
@@ -227,48 +217,48 @@ namespace CyPhy2Simulink.Simulink
             ConnectedInputPorts = new List<string>();
         }
 
-        public static SimulinkPort FromDomainPort(GenericDomainModelPort port)
+        public static SimulinkPort FromDomainPort(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort port)
         {
-            if (port.Attributes.Type != "out")
+            if (port.Attributes.SimulinkPortDirection != ISIS.GME.Dsml.CyPhyML.Classes.SimulinkPort.AttributesClass.SimulinkPortDirection_enum.@out)
             {
                 return null;
             }
             else
             {
-                var result = new SimulinkPort(port.Name);
-                result.AddConnectedInputPorts(port, new HashSet<GenericDomainModelPort>());
+                var result = new SimulinkPort(port.Attributes.SimulinkPortID);
+                result.AddConnectedInputPorts(port, new HashSet<ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort>());
 
                 return result;
             }
         }
 
-        private void AddConnectedInputPorts(GenericDomainModelPort port, ISet<GenericDomainModelPort> visited)
+        private void AddConnectedInputPorts(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort port, ISet<ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort> visited)
         {
             visited.Add(port);
 
-            if (port.Attributes.Type == "in" && port.ParentContainer is GenericDomainModel)
+            if (port.Attributes.SimulinkPortDirection == ISIS.GME.Dsml.CyPhyML.Classes.SimulinkPort.AttributesClass.SimulinkPortDirection_enum.@in && port.ParentContainer is ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel)
             {
                 string parentComponentName =
-                    SimulinkBlock.GetParentComponentName((GenericDomainModel) port.ParentContainer);
-                ConnectedInputPorts.Add(string.Format("{0}/{1}", parentComponentName, port.Name));
-                SimulinkGenerator.GMEConsole.Info.WriteLine("Connection: {0}/{1}", parentComponentName, port.Name);
+                    SimulinkBlock.GetParentComponentName((ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel) port.ParentContainer);
+                ConnectedInputPorts.Add(string.Format("{0}/{1}", parentComponentName, port.Attributes.SimulinkPortID));
+                SimulinkGenerator.GMEConsole.Info.WriteLine("Connection: {0}/{1}", parentComponentName, port.Attributes.SimulinkPortID);
             }
 
             foreach (var connection in port.SrcConnections.PortCompositionCollection)
             {
                 var adjacent = connection.SrcEnd;
-                if (adjacent is GenericDomainModelPort && !visited.Contains(adjacent))
+                if (adjacent is ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort && !visited.Contains(adjacent))
                 {
-                    AddConnectedInputPorts((GenericDomainModelPort) adjacent, visited);
+                    AddConnectedInputPorts((ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort) adjacent, visited);
                 }
             }
 
             foreach (var connection in port.DstConnections.PortCompositionCollection)
             {
                 var adjacent = connection.DstEnd;
-                if (adjacent is GenericDomainModelPort && !visited.Contains(adjacent))
+                if (adjacent is ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort && !visited.Contains(adjacent))
                 {
-                    AddConnectedInputPorts((GenericDomainModelPort)adjacent, visited);
+                    AddConnectedInputPorts((ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort) adjacent, visited);
                 }
             }
         }
@@ -289,7 +279,7 @@ namespace CyPhy2Simulink.Simulink
             TestBenchParameterName = testBenchParameterName;
         }
 
-        public static SimulinkParameter FromDomainParameter(GenericDomainModelParameter param)
+        public static SimulinkParameter FromDomainParameter(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkParameter param)
         {
             var value = GetAdjacentParameterValue(param);
             var tbParamName = TryGetTestbenchParamName((FCO) param, new HashSet<FCO>());
@@ -304,9 +294,9 @@ namespace CyPhy2Simulink.Simulink
             }
         }
 
-        private static string GetAdjacentParameterValue(GenericDomainModelParameter param)
+        private static string GetAdjacentParameterValue(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkParameter param)
         {
-            var connections = param.SrcConnections.GenericParameterPortMapCollection.ToList();
+            var connections = param.SrcConnections.SimulinkParameterPortMapCollection.ToList();
 
             if (connections.Count() != 1)
             {
