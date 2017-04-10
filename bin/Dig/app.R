@@ -108,6 +108,7 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   pet_config_filename <- gsub("mergedPET.csv",
                               "pet_config.json",
                               Sys.getenv('DIG_INPUT_CSV'))
+  launch_dir <- dirname(Sys.getenv('DIG_INPUT_CSV'))
   if (file.exists(pet_config_filename)) {
     pet_config_present <- TRUE
   }
