@@ -57,18 +57,19 @@ ui <- function(id) {
             br(),
             # actionButton(ns("single_back_pairs"), "Back"),
             # br(), br(),
-            bsCollapse(id = "single_plot_collapse", open = "Variables",
+            bsCollapse(id = ns("single_plot_collapse"), open = "Variables",
               bsCollapsePanel("Variables", 
-                selectInput(ns("x_input"), "X-axis", c(), selected=si(ns("x_input"), NULL)),
-                selectInput(ns("y_input"), "Y-Axis", c(), selected=si(ns("y_input"), NULL)),
+                selectInput(ns("x_input"), "X-axis", c(), selected=NULL),
+                selectInput(ns("y_input"), "Y-Axis", c(), selected=NULL),
                 style = "default"),
               bsCollapsePanel("Markers",
                 selectInput(ns("single_plot_marker"),
                             "Plot Markers:",
                             c("Circle, Open"=1,
-                              "Circle, Filled"=19)),
+                              "Circle, Filled"=19),
+                            selected = si(ns("single_plot_marker"), 1)),
                 sliderInput(ns("single_plot_marker_size"), "Marker Size:",
-                            min=0.5, max=2.5, value=1, step=0.025),
+                            min=0.5, max=2.5, value=si(ns("single_plot_marker_size"), 1), step=0.025),
                 style = "default"),
               bsCollapsePanel("Filter", 
                 p(strong("Adjust Sliders to Selection")),
@@ -95,7 +96,7 @@ ui <- function(id) {
           )
         )
       ),
-      id = "explore_tabset"
+      id = ns("explore_tabset")
     )
   )
 }

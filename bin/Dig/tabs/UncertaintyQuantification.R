@@ -87,7 +87,7 @@ ui <- function(id) {
           DT::dataTableOutput(ns("probabilityTable"))
         )
       ),
-      id = "uqTabset"
+      id = ns("uqTabset")
     ),
     conditionalPanel(paste0("output['", ns('displayQueries'), "']"),
       hr(),

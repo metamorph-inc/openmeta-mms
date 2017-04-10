@@ -128,8 +128,10 @@ si <- function(name, default) {
   # if(!is.null(saved_inputs))
     # print(saved_inputs[[name]])
   if(!is.null(saved_inputs) && !is.null(saved_inputs[[name]])) {
-    # print(paste0("si('",name,"',",default,") -- saved: ",toString(saved_inputs[[name]])))
-    saved_inputs[[name]]
+    print(paste0("(", length(saved_inputs),") Applying via si('", name, "') ",toString(saved_inputs[[name]])))
+    value <- saved_inputs[[name]]
+    saved_inputs[[name]] <<- NULL
+    value
   } else {
     # print(paste0("si('",name,"',",default,") -- default: ",default))
     default
@@ -304,15 +306,21 @@ Server <- function(input, output, session) {
   # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
     # Grab all the necessary inputs
-    inputs <- isolate(reactiveValuesToList(input))
-    inputs[unlist(lapply(inputs, function (x) {
-                                   "shinyActionButtonValue" %in% class(x)
-                                 }))] <- NULL
-    inputs[["window_width"]] <- NULL
-    inputs <- inputs[order(names(inputs))]
+    current_inputs <- isolate(reactiveValuesToList(input))
+    current_inputs[["window_width"]] <- NULL
+    current_inputs[unlist(lapply(names(current_inputs), function (name) {
+      "shinyActionButtonValue" %in% class(current_inputs[[name]]) ||
+      # grepl("click", name) ||
+      grepl("^tooltip_", name)
+    }))] <- NULL
+    
+    # Save unapplied saved inputs
+    combined_inputs <- c(saved_inputs,
+                         current_inputs[setdiff(names(current_inputs), names(saved_inputs))])
+    combined_inputs <- combined_inputs[order(names(combined_inputs))]
     
     # Save config file
-    visualizer_config$inputs <- inputs
+    visualizer_config$inputs <- combined_inputs
     visualizer_config_filename <- file.path('datasets',
                                             'WindTurbineForOptimization',
                                             'visualizer_config_session.json')
@@ -337,7 +345,7 @@ Server <- function(input, output, session) {
       # print(current_input)
       # req(input[[current_input]])
       if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
-        print(paste("applying via observe", current_input, paste(saved_inputs[[current_input]], collapse = ", ")))
+        print(paste0("(", length(saved_inputs),") Applying via Observe('", current_input, "') ", paste(saved_inputs[[current_input]], collapse = ", ")))
         value <- saved_inputs[[current_input]]
         saved_inputs[[current_input]] <<- NULL
         updateSelectInput(session,
@@ -402,7 +410,8 @@ Server <- function(input, output, session) {
     
     selected_value <- input[[paste0('filter_', current)]]
     if(is.null(selected_value))
-      selected_value <- items
+      # selected_value <- items
+      selected_value <- si(paste0('filter_', current), items)
     
     column(2, selectInput(inputId = paste0('filter_', current),
                           label = current,
@@ -415,8 +424,6 @@ Server <- function(input, output, session) {
   
   GenerateSliderUI <- function(current, label) {
     
-    slider_value <- input[[paste0('filter_', current)]]
-      
     if(current %in% var_nums){
       min <- as.numeric(abs_min[current])
       max <- as.numeric(abs_max[current])
@@ -431,10 +438,14 @@ Server <- function(input, output, session) {
       slider_max <- as.numeric(abs_max[current])
     }
     
+    slider_value <- input[[paste0('filter_', current)]]
     if(is.null(slider_value)){
       # TODO(tthomas): Why are we using 'step' around the already 'stepped' numerics?
-      slider_value <- c(signif(slider_min-step*10, digits = 4),
-                        signif(slider_max+step*10, digits = 4))
+      # slider_value <- c(signif(slider_min-step*10, digits = 4),
+      #                   signif(slider_max+step*10, digits = 4))
+      slider_value <- si(paste0('filter_', current),
+                         c(signif(slider_min-step*10, digits = 4),
+                           signif(slider_max+step*10, digits = 4)))
       # slider_value <- c(slider_min, slider_max)
     }
     
@@ -444,8 +455,8 @@ Server <- function(input, output, session) {
              wellPanel(id = paste0("slider_tooltip_", current),
                        style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
                        h4(label),
-                       textInput(paste0("min_input_", current), "Min:"),
-                       textInput(paste0("max_input_", current), "Max:"),
+                       textInput(paste0("tooltip_min_", current), "Min:"),
+                       textInput(paste0("tooltip_max_", current), "Max:"),
                        actionButton(paste0("submit_", current), "Apply","success")
              ),
              # The slider itself
@@ -485,10 +496,10 @@ Server <- function(input, output, session) {
       
       isolate({
         slider_value = input[[paste0('filter_', current)]]
-        new_min = input[[paste0("min_input_", current)]]
-        new_max = input[[paste0("max_input_", current)]]
-        updateTextInput(session, paste0("min_input_", current), value = "")
-        updateTextInput(session, paste0("max_input_", current), value = "")
+        new_min = input[[paste0("tooltip_min_", current)]]
+        new_max = input[[paste0("tooltip_max_", current)]]
+        updateTextInput(session, paste0("tooltip_min_", current), value = "")
+        updateTextInput(session, paste0("tooltip_max_", current), value = "")
         suppressWarnings({ #Suppress warnings from non-numeric inputs
           if(!is.null(new_min) && new_min != "" && !is.na(as.numeric(new_min)))
             slider_value = as.numeric(c(new_min, slider_value[2]))
@@ -791,7 +802,7 @@ Server <- function(input, output, session) {
   output$coloring_legend <- renderUI({
     req(coloring$current$type)
     if (coloring$current$type == "Discrete") {
-      names <- names(table(data$raw[coloring$current$var]))
+      names <- names(table(data$raw$df[coloring$current$var]))
       raw_label <- ""
       for(i in 1:length(coloring$current$colors)){
         raw_label <- HTML(paste(raw_label, "<font color=",
@@ -896,7 +907,7 @@ ui <- fluidPage(
   # Optional Footer.
   conditionalPanel("output.display_footer",
     hr(),
-    bsCollapse(id = "footer_collapse", open = NULL,
+    bsCollapse(id = "footer_collapse", open = si("footer_collapse", NULL),
       bsCollapsePanel("Filters", 
         # tags$div(title = "Activate to show filters for all dataset variables.",
         #          checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
@@ -914,12 +925,12 @@ ui <- fluidPage(
       bsCollapsePanel("Coloring",
         column(3,
           h4("Coloring Source"),
-          selectInput("coloring_source", "Source", choices = c("None", "Live"), selected = "None"),
+          selectInput("coloring_source", "Source", choices = c("None", "Live"), selected = si("coloring_source", "None")),
           htmlOutput("coloring_legend")
         ),
         column(3,
           h4("Live"),
-          selectInput("live_coloring_type", "Type:", choices = c("Max/Min", "Discrete"), selected = "Max/Min"),  #, "Highlighted", "Ranked"), selected = "None")
+          selectInput("live_coloring_type", "Type:", choices = c("Max/Min", "Discrete"), selected = si("live_coloring_type", "Max/Min")),  #, "Highlighted", "Ranked"), selected = "None")
           conditionalPanel(
             condition = "input.live_coloring_type == 'Max/Min'",
             selectInput("live_coloring_variable_numeric", "Colored Variable:", c()),
