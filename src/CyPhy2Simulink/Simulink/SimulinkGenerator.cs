@@ -16,6 +16,10 @@ namespace CyPhy2Simulink.Simulink
 
         public static void GenerateSimulink(TestBench selectedTestBench, string outputDirectory, string projectDirectory)
         {
+            // Reset block name cache (interpreters don't necessarily get reloaded between executions, so
+            // we need to reset any static variables ourselves that need to be reset between executions)
+            SimulinkBlock.ResetBlockNameCache();
+
             var model = new SimulinkModel(selectedTestBench);
 
             // Copy support files
@@ -45,7 +49,7 @@ namespace CyPhy2Simulink.Simulink
         private static void GenerateRunCmd(TextWriter writer, IList<string> postProcessScripts )
         {
             writer.WriteLine("\"{0}\" PopulateTestBenchParams.py", META.VersionInfo.PythonVEnvExe);
-            writer.WriteLine("matlab.exe -nodisplay -nosplash -nodesktop -wait -r \"diary('matlab.out.txt'), try, run('build_simulink.m'), run('run_simulink.m'), catch me, fprintf('%s / %s\\n',me.identifier,me.message), exit(1), end, exit(0)\"");
+            writer.WriteLine("matlab.exe -nodisplay -nosplash -nodesktop -wait -r \"diary('matlab.out.txt'), try, run('build_simulink.m'), run('run_simulink.m'), catch me, disp('An error occurred while building or executing the model:'), fprintf('%%s / %%s\\n',me.identifier,me.message), exit(1), end, exit(0)\"");
 
             foreach (var script in postProcessScripts)
             {

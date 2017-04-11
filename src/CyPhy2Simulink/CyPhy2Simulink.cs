@@ -469,7 +469,7 @@ namespace CyPhy2Simulink
 
             this.UpdateSuccess("Configuration", configSuccess);
 
-            this.result.Labels = "SystemC";
+            this.result.Labels = "Simulink";
             this.result.LogFileDirectory = Path.Combine(this.mainParameters.ProjectDirectory, "log");
             this.LogFileFilename = this.ComponentName + "." + System.Diagnostics.Process.GetCurrentProcess().Id + ".log";
 

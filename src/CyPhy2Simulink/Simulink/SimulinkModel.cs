@@ -7,6 +7,7 @@ using System.Text;
 using GME.CSharp;
 using ISIS.GME.Common.Classes;
 using ISIS.GME.Dsml.CyPhyML.Interfaces;
+using String = System.String;
 
 namespace CyPhy2Simulink.Simulink
 {
@@ -189,7 +190,7 @@ namespace CyPhy2Simulink.Simulink
 
                 if (string.IsNullOrWhiteSpace(candidateName))
                 {
-                    throw new ArgumentException(string.Format("Block {0}'s parent has no name", domainModel.Name));
+                    throw new ArgumentException(string.Format("Parent of SimulinkModel '{0}' has no name", domainModel.Name));
                 }
 
                 while (_usedBlockNames.Contains(candidateName))
@@ -231,6 +232,12 @@ namespace CyPhy2Simulink.Simulink
                 }
             }
         }
+
+        public static void ResetBlockNameCache()
+        {
+            _blockNameCache.Clear();
+            _usedBlockNames.Clear();
+        }
     }
 
     public class SimulinkPort
@@ -253,7 +260,7 @@ namespace CyPhy2Simulink.Simulink
             }
             else
             {
-                var result = new SimulinkPort(port.Attributes.SimulinkPortID);
+                var result = new SimulinkPort(GetPortId(port));
                 result.AddConnectedInputPorts(port, new HashSet<ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort>());
 
                 return result;
@@ -266,10 +273,11 @@ namespace CyPhy2Simulink.Simulink
 
             if (port.Attributes.SimulinkPortDirection == ISIS.GME.Dsml.CyPhyML.Classes.SimulinkPort.AttributesClass.SimulinkPortDirection_enum.@in && port.ParentContainer is ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel)
             {
-                string parentComponentName =
+                var parentComponentName =
                     SimulinkBlock.GetBlockName((ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel) port.ParentContainer);
-                ConnectedInputPorts.Add(string.Format("{0}/{1}", parentComponentName, port.Attributes.SimulinkPortID));
-                SimulinkGenerator.GMEConsole.Info.WriteLine("Connection: {0}/{1}", parentComponentName, port.Attributes.SimulinkPortID);
+                var portId = GetPortId(port);
+                ConnectedInputPorts.Add(string.Format("{0}/{1}", parentComponentName, portId));
+                SimulinkGenerator.GMEConsole.Info.WriteLine("Connection: {0}/{1}", parentComponentName, portId);
             }
 
             foreach (var connection in port.SrcConnections.PortCompositionCollection)
@@ -289,6 +297,16 @@ namespace CyPhy2Simulink.Simulink
                     AddConnectedInputPorts((ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort) adjacent, visited);
                 }
             }
+        }
+
+        private static string GetPortId(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkPort port)
+        {
+            var portId = port.Attributes.SimulinkPortID;
+            if (string.IsNullOrWhiteSpace(portId))
+            {
+                throw new ArgumentException(String.Format("Port '{0}' in object '{1}' has no SimulinkPortID", port.Name, port.ParentContainer.Name));
+            }
+            return portId;
         }
     }
 
