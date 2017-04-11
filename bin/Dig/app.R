@@ -123,17 +123,22 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
 
 
 
-si <- function(name, default) {
-  # print(is.null(saved_inputs))
-  # if(!is.null(saved_inputs))
-    # print(saved_inputs[[name]])
-  if(!is.null(saved_inputs) && !is.null(saved_inputs[[name]])) {
-    print(paste0("(", length(saved_inputs),") Applying via si('", name, "') ",toString(saved_inputs[[name]])))
-    value <- saved_inputs[[name]]
-    saved_inputs[[name]] <<- NULL
+si <- function(id, default) {
+  # Retrieves saved input state from the previous session for a UI element
+  # with a given id. This function should be called in a 'ui' definition
+  # when creating a UI input element
+  #
+  # Args:
+  #   id: the 'id' to look up in the saved_inputs list
+  #   default: the value to return if the 'id' isn't found
+
+  if(!is.null(saved_inputs) && !is.null(saved_inputs[[id]])) {
+    value <- saved_inputs[[id]]
+    saved_inputs[[id]] <<- NULL
     value
+    # print(paste0("(", length(saved_inputs),") Applying via si('", id, "') ",toString(value)))
   } else {
-    # print(paste0("si('",name,"',",default,") -- default: ",default))
+    # print(paste0("si('",id,"',",default,") -- default: ",default))
     default
   }
 }
@@ -303,6 +308,18 @@ Server <- function(input, output, session) {
   #   output: the Shiny list of all the UI output elements.
   #   session: a handle for the Shiny session.
 
+  # Session Save/Restore -----------------------------------------------------
+
+  # The save restore functionality relies upon three main mechanisms: 
+  #  1. It saves the values of all the inputs to the visualizer config file
+  #     on close by supplying the necessary callback function to
+  #     session$onSessionEnded().
+  #  2. It provides a function, si(id, default) to the tabs that allows
+  #     them to check for a saved value for a input when creating inputs
+  #     in their 'ui'.
+  #  3. Lastly, they are provided a list of saved inputs that they can use
+  #     in an observe to cover tricky cases.
+  
   # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
     # Grab all the necessary inputs
@@ -324,7 +341,7 @@ Server <- function(input, output, session) {
     visualizer_config_filename <- file.path('datasets',
                                             'WindTurbineForOptimization',
                                             'visualizer_config_session.json')
-    write(toJSON(visualizer_config), file=visualizer_config_filename)
+    write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE), file=visualizer_config_filename)
     print("Session saved.")
     
     Sys.setenv(DIG_INPUT_CSV="")
@@ -332,27 +349,35 @@ Server <- function(input, output, session) {
     stopApp()
   })
   
-  # First cut at appling setting dynamically after the input has been initialized
+  # Get Visualizer Framework only list
+  master_saved_inputs <- saved_inputs[unname(sapply(names(saved_inputs), function (name) {!grepl("-", name)}))]
+  
+  # Use observes() for restoring tricky saved inputs
   observe({
-    # print(paste(c("SET",names(input)), collapse=" "))
-    # print(names(input))
-    if(length(saved_inputs) < 6) {
-      print(paste("Remaining:", length(saved_inputs), paste(names(saved_inputs), collapse = ", ")))
-    } else {
-      print(paste("Remaining:", length(saved_inputs)))
-    }
-    lapply(names(saved_inputs), function(current_input) {
-      # print(current_input)
-      # req(input[[current_input]])
+    lapply(names(master_saved_inputs), function(current_input) {
       if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
-        print(paste0("(", length(saved_inputs),") Applying via Observe('", current_input, "') ", paste(saved_inputs[[current_input]], collapse = ", ")))
         value <- saved_inputs[[current_input]]
         saved_inputs[[current_input]] <<- NULL
+        master_saved_inputs[[current_input]] <<- NULL
         updateSelectInput(session,
                           current_input,
                           selected = value)
+        # print(paste0("(", length(saved_inputs), ":", length(master_saved_inputs), ") Applying via Observe('", current_input, "') ", paste(value, collapse = ", ")))
       }
     })
+  })
+
+  # Special observe to cover 'footer_collapse'
+  observe({
+    if("footer_collapse" %in% names(saved_inputs)) {
+      open <- saved_inputs$footer_collapse
+      if(is.null(unlist(open))) {
+        updateCollapse(session, "footer_collapse", close = "Filters")
+      } else {
+        updateCollapse(session, "footer_collapse", open = open)
+      }
+      saved_inputs$footer_collapse <<- NULL
+    }
   })
   
   # Filters (Enumerations, Sliders) and Constants ----------------------------
@@ -801,6 +826,8 @@ Server <- function(input, output, session) {
   
   output$coloring_legend <- renderUI({
     req(coloring$current$type)
+    req(coloring$current$var)
+    req(data$raw$df)
     if (coloring$current$type == "Discrete") {
       names <- names(table(data$raw$df[coloring$current$var]))
       raw_label <- ""
@@ -893,7 +920,8 @@ added_tabs <- mapply(function(tab_env, id_num) {
 
 tabset_arguments <- c(unname(base_tabs),
                       unname(added_tabs),
-                      id = "master_tabset")
+                      id = "master_tabset",
+                      selected = si("master_tabset", NULL))
 
 # Defines the UI of the Visualizer.
 ui <- fluidPage(
@@ -907,7 +935,7 @@ ui <- fluidPage(
   # Optional Footer.
   conditionalPanel("output.display_footer",
     hr(),
-    bsCollapse(id = "footer_collapse", open = si("footer_collapse", NULL),
+    bsCollapse(id = "footer_collapse", open = "Filters",  # COMMENT(tthomas): Filters need to open to initialize properly, observe() in server covers saved input.
       bsCollapsePanel("Filters", 
         # tags$div(title = "Activate to show filters for all dataset variables.",
         #          checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
@@ -934,7 +962,10 @@ ui <- fluidPage(
           conditionalPanel(
             condition = "input.live_coloring_type == 'Max/Min'",
             selectInput("live_coloring_variable_numeric", "Colored Variable:", c()),
-            radioButtons("live_coloring_max_min", NULL, c("Maximize" = "Maximize", "Minimize" = "Minimize"), selected = "Maximize")
+            radioButtons(inputId = "live_coloring_max_min",
+                         label = NULL,
+                         choices = c("Maximize" = "Maximize", "Minimize" = "Minimize"),
+                         selected = si("live_coloring_max_min", "Maximize"))
           ),
           conditionalPanel(
             condition = "input.live_coloring_type == 'Discrete'",
@@ -943,21 +974,24 @@ ui <- fluidPage(
                         c()),
             selectInput("live_color_palette",
                         "Color Palette:",
-                        c("Rainbow", "Heat", "Terrain", "Topo", "Cm")),
+                        c("Rainbow", "Heat", "Terrain", "Topo", "Cm"),
+                        si("live_color_palette", "Rainbow")),
             conditionalPanel(
               condition = "input.live_color_palette == 'Rainbow'",
               sliderInput("live_color_rainbow_s", "Saturation:",
                           min=0, max=1,
-                          value=1, step=0.025),
+                          value=si("live_color_rainbow_s", 1),
+                          step=0.025),
               sliderInput("live_color_rainbow_v", "Value/Brightness:",
                           min=0, max=1,
-                          value=si("live_color_rainbow_v",1), step=0.025)
+                          value=si("live_color_rainbow_v", 1),
+                          step=0.025)
             )
           )
         ),
         column(6,
           h4("Saved"),
-          textInput("live_coloring_name", "Name"),
+          textInput("live_coloring_name", "Name", si("live_coloring_name", "")),
           actionButton("live_coloring_add_classification", "Add Current 'Live' Coloring"),
           br(), tableOutput("coloring_table")
         ),

@@ -18,8 +18,8 @@ ui <- function(id) {
     # checkboxInput(ns("autoRanking"), "Automatic Refresh", value = TRUE),
     wellPanel(
       h4("Data Processing"),
-      checkboxInput(ns("use_filtered"), "Apply Filters", value=TRUE),
-      selectInput(ns("process_method"), "Method", choices = c("None", "TOPSIS"), selected = "None"),
+      checkboxInput(ns("use_filtered"), "Apply Filters", value=si(ns("use_filtered"), TRUE)),
+      selectInput(ns("process_method"), "Method", choices = c("None", "TOPSIS"), selected = si(ns("process_method"), "None")),
       conditionalPanel(condition = paste0("input['", ns("process_method"), "'] != 'None'"),
         # conditionalPanel(condition = paste0("input['", ns("autoRanking"), "'] == false"),
         #   actionButton(ns("applyRanking"), "Apply Ranking"),

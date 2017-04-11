@@ -20,18 +20,20 @@ ui <- function(id) {
         br(),
         fluidRow(
           column(3,
-            checkboxInput(ns('designConfigsPresent'), "Multiple Design Configurations Present", value = F)
+            checkboxInput(ns('design_configs_present'),
+                          "Multiple Design Configurations Present",
+                          value = si(ns('design_configs_present'), FALSE))
           )
         ),
         fluidRow(
-          conditionalPanel(condition = paste0('input["', 'designConfigsPresent', '"] == true'),
+          conditionalPanel(condition = paste0('input["', 'design_configs_present', '"] == true'),
             column(3,
               selectInput(ns('designConfigVar'), "Design Configuration Identifier",
                 choices = c(),
                 multiple = F)
             )
           ),
-          conditionalPanel(condition = paste0('input["', ns('designConfigsPresent'), '"] == true & input["', ns('designConfigVar'), '"] != null'),
+          conditionalPanel(condition = paste0('input["', ns('design_configs_present'), '"] == true & input["', ns('designConfigVar'), '"] != null'),
             column(3,
               selectInput(ns('designConfigChoice'), "Selection",
                 choices = c(),
@@ -41,8 +43,10 @@ ui <- function(id) {
         ),
         fluidRow(
           column(3,
-            checkboxInput(ns('displayAll'), "Display All Variables", value = T),
-            conditionalPanel(condition = paste0('input["', ns('displayAll'), '"] == false'), 
+            checkboxInput(ns('display_all'),
+                          "Display All Variables",
+                          value = si(ns('display_all'), TRUE)),
+            conditionalPanel(condition = paste0('input["', ns('display_all'), '"] == false'), 
               selectInput(
                 ns('uqDisplayVars'),
                 "Display Variables",
@@ -87,7 +91,8 @@ ui <- function(id) {
           DT::dataTableOutput(ns("probabilityTable"))
         )
       ),
-      id = ns("uqTabset")
+      id = ns("uqTabset"),
+      selected = si(ns("uqTabset"), NULL)
     ),
     conditionalPanel(paste0("output['", ns('displayQueries'), "']"),
       hr(),
@@ -108,11 +113,17 @@ ui <- function(id) {
     ),
     fluidRow(
 	    column(4, tags$div(title = "Color of ranked data points.",
-	    	colourpicker::colourInput(ns("bayHistColor"), "Histogram", "wheat"))),
+	    	colourpicker::colourInput(ns("hist_color"),
+	    	                          "Histogram",
+	    	                          si(ns("hist_color"), "wheat")))),
 	    column(4, tags$div(title = "Color of ranked data points.",
-	      colourpicker::colourInput(ns("bayOrigColor"), "Original", "#000000"))),
+	      colourpicker::colourInput(ns("orig_color"),
+	                                "Original",
+	                                si(ns("orig_color"), "#000000")))),
 	    column(4, tags$div(title = "Color of ranked data points.",
-	      colourpicker::colourInput(ns("bayResampledColor"), "Resampled", "#5CC85C")))
+	      colourpicker::colourInput(ns("resamp_color"),
+	                                "Resampled",
+	                                si(ns("resamp_color"), "#5CC85C"))))
     )
   )
 }
@@ -146,7 +157,7 @@ server <- function(input, output, session, data) {
     idx
   })
   
-  observeEvent(input$designConfigsPresent, {
+  observeEvent(input$design_configs_present, {
     updateSelectInput(session, "designConfigVar", choices = varFacs)
   })
   
@@ -157,7 +168,7 @@ server <- function(input, output, session, data) {
   
   filtered_data <- reactive({
     filData <- raw_data
-    if(input$designConfigsPresent & !is.na(input$designConfigVar) & !is.na(input$designConfigChoice)) {
+    if(input$design_configs_present & !is.na(input$designConfigVar) & !is.na(input$designConfigChoice)) {
       filData <- subset(filData, filData[[paste0(input$designConfigVar)]] == input$designConfigChoice)
     }
     filData
@@ -182,14 +193,14 @@ server <- function(input, output, session, data) {
   })
   
   output$uqControlUI <- renderUI({
-    # print("In uqControlUI()")
+    print("In uqControlUI()")
     var_directions <- c("Input",
                         "Output")
     data_mean <- apply(filtered_data()[varNums], 2, mean)
     data_sd <- apply(filtered_data()[varNums], 2, function(x) {sd(x)})
     
     choices <- varNums
-    if(!input$displayAll)
+    if(!input$display_all)
       choices <- varNums[varsList()]
     
     lapply(choices, function(var) {
@@ -219,7 +230,7 @@ server <- function(input, output, session, data) {
                    ns(paste0('varDirection', global_index)),
                    label = var,
                    choices = var_directions,
-                   selected = this_direction)
+                   selected = si(ns(paste0('varDirection', global_index)), this_direction))
           ),
           column(4)
         ),
@@ -227,31 +238,35 @@ server <- function(input, output, session, data) {
           # Gaussian
           fluidRow(
             column(4, 
-                   checkboxInput(
-                    ns(paste0('gaussian', global_index)),
-                    label = "Reshape to Gaussian",
-                    value = this_gaussian)
+              checkboxInput(
+                inputId = ns(paste0('gaussian_', global_index)),
+                label = "Reshape to Gaussian",
+                value = si(ns(paste0('gaussian_', global_index)), this_gaussian))
             ),
             #conditionalPanel(condition = toString(paste0('input.gaussian', global_index, ' == true')),
               column(4,
                      textInput(ns(paste0('gaussian_mean', global_index)),
                                HTML("&mu;:"),
                                placeholder = "Mean",
-                               value = this_gauss_mean)
+                               value = si(ns(paste0('gaussian_mean', global_index)), this_gauss_mean))
               ),
               column(4,
                      textInput(ns(paste0('gaussian_sd',global_index)),
                                HTML("&sigma;:"),
                                placeholder = "StdDev",
-                               value = this_sd)
+                               value = si(ns(paste0('gaussian_sd',global_index)), this_sd))
               )
           #  )
           ),
           # Constraint
           fluidRow(
-            column(4, checkboxInput(ns(paste0("fuqConstraintEnable", global_index)), "Enable Constraint")),
-          #  conditionalPanel(condition = toString(paste0('input.fuqConstraintEnable', global_index, ' == true')),
-              column(4, textInput(ns(paste0("fuqConstraintValue", global_index)), NULL, value = data_mean[[var]])),
+            column(4, checkboxInput(inputId = ns(paste0("fuq_constraint_enable", global_index)),
+                                    label = "Enable Constraint",
+                                    value = si(ns(paste0("fuq_constraint_enable", global_index)), FALSE))),
+          #  conditionalPanel(condition = toString(paste0('input.fuq_constraint_enable', global_index, ' == true')),
+              column(4, textInput(inputId = ns(paste0("fuq_constraint_value", global_index)),
+                                  label = NULL,
+                                  value = si(ns(paste0("fuq_constraint_value", global_index)), data_mean[[var]]))),
               column(4)
           #  )
             
@@ -267,11 +282,11 @@ server <- function(input, output, session, data) {
       var <- varNums[i]
       global_index <- which(varNames == var)
       dir <- input[[paste0('varDirection', global_index)]]
-      is_gaus <- input[[paste0('gaussian', global_index)]]
+      is_gaus <- input[[paste0('gaussian_', global_index)]]
       req(dir)
       directions[[var]] <<- input[[paste0('varDirection', global_index)]]
       if (directions[[var]] == "Input") {
-        if(input[[paste0('gaussian', global_index)]]) {
+        if(input[[paste0('gaussian_', global_index)]]) {
           types[[var]] <<- "norm"
           params[[var]]$mean <<- as.numeric(input[[paste0('gaussian_mean', global_index)]])
           params[[var]]$stdDev <<- as.numeric(input[[paste0('gaussian_sd', global_index)]])
@@ -289,7 +304,7 @@ server <- function(input, output, session, data) {
   output$uqPlots <- renderUI({
     data <- uqData()$dist
     variables <- varNums
-    if(!input$displayAll)
+    if(!input$display_all)
       variables <- varNums[varsList()]
     
     if(is.null(data)) {
@@ -311,7 +326,7 @@ server <- function(input, output, session, data) {
   observe({
     data <- uqData()$dist
     variables <- varNums
-    if(!input$displayAll)
+    if(!input$display_all)
       variables <- varNums[varsList()]
     if(!is.null(data)) {
       lapply(variables, function(var) {
@@ -325,7 +340,7 @@ server <- function(input, output, session, data) {
         output[[paste0("uq_plot_", var)]] <- renderPlot({
           hist(filtered_data()[[var]],
                freq = FALSE,
-               col = input$bayHistColor,
+               col = input$hist_color,
                border = "#C0C0C0",
                #type = "l",
                main = "",
@@ -339,10 +354,10 @@ server <- function(input, output, session, data) {
                bty = "o")
           lines(data[[var]][["xOrig"]],
                 data[[var]][["yOrig"]],
-                col = input$bayOrigColor, lwd=2)
+                col = input$orig_color, lwd=2)
           lines(data[[var]][["xResampled"]],
                 data[[var]][["yResampled"]],
-                col = input$bayResampledColor, lwd=2)
+                col = input$resamp_color, lwd=2)
           if (!is.null(forwardUQData()) & !is.null(forwardUQData()[[var]])) {
             lines(forwardUQData()[[var]]$postPoints,
                   forwardUQData()[[var]]$postPdf,
@@ -456,9 +471,9 @@ server <- function(input, output, session, data) {
   #   lapply(uqInputs(), function(input) {
   #     id <- which(uqInputs() == input)
   #     # fluidRow(
-  #     #   column(2, checkboxInput(ns(paste0("fuqConstraintEnable", id)), NULL)),
+  #     #   column(2, checkboxInput(ns(paste0("fuq_constraint_enable", id)), NULL)),
   #     #   column(6, paste(input)),
-  #     #   column(4, textInput(ns(paste0("fuqConstraintValue", id)), NULL, value = toString(apply(filtered_data()[input], 2, mean))))
+  #     #   column(4, textInput(ns(paste0("fuq_constraint_value", id)), NULL, value = toString(apply(filtered_data()[input], 2, mean))))
   #     # )
   #   })
   # })
@@ -470,7 +485,7 @@ server <- function(input, output, session, data) {
         numberOfInputs <- 0
         for (i in 1:length(uqInputs())) {
           global_i = which(uqInputs()[i] == varNames)
-          if (input[[paste0("fuqConstraintEnable", global_i)]]) {
+          if (input[[paste0("fuq_constraint_enable", global_i)]]) {
             numberOfInputs <- numberOfInputs + 1
           }
         }
@@ -494,7 +509,7 @@ server <- function(input, output, session, data) {
     columnsToRemove <- c()
     for (i in 1:length(uqInputs)) {
       global_i = which(uqInputs[i] == varNames)
-      if (input[[paste0("fuqConstraintEnable", global_i)]]) {
+      if (input[[paste0("fuq_constraint_enable", global_i)]]) {
         constrainedInputs <- c(constrainedInputs, uqInputs[i])
       }
       else {
@@ -516,7 +531,7 @@ server <- function(input, output, session, data) {
     observations <- list()
     observationsIndex <- c()
     for (i in 1:length(constrainedInputs)) {
-      observations[[paste(constrainedInputs[i])]] = as.numeric(input[[paste0("fuqConstraintValue", which(constrainedInputs[i] == varNames))]])
+      observations[[paste(constrainedInputs[i])]] = as.numeric(input[[paste0("fuq_constraint_value", which(constrainedInputs[i] == varNames))]])
       observationsIndex <- c(observationsIndex, which(names(originalDataTrimmed) == constrainedInputs[i]))
     }
     observations <- as.data.frame(observations)

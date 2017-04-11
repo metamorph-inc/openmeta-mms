@@ -57,7 +57,7 @@ ui <- function(id) {
             br(),
             # actionButton(ns("single_back_pairs"), "Back"),
             # br(), br(),
-            bsCollapse(id = ns("single_plot_collapse"), open = "Variables",
+            bsCollapse(id = ns("single_plot_collapse"), open = si(ns("single_plot_collapse"), "Variables"),
               bsCollapsePanel("Variables", 
                 selectInput(ns("x_input"), "X-axis", c(), selected=NULL),
                 selectInput(ns("y_input"), "Y-Axis", c(), selected=NULL),
@@ -84,7 +84,7 @@ ui <- function(id) {
               #   actionButton(ns("highlightData"), "Highlight Selection", class = "btn btn-primary")
               # )
               bsCollapsePanel("Overlays", 
-                checkboxInput(ns("add_pareto"), "Add Pareto Plot"),
+                checkboxInput(ns("add_pareto"), "Add Pareto Plot", si(ns("add_pareto"), FALSE)),
                 style = "default")
             )
           ),
@@ -96,7 +96,8 @@ ui <- function(id) {
           )
         )
       ),
-      id = ns("explore_tabset")
+      id = ns("explore_tabset"),
+      selected = si(ns("explore_tabset"), "Pairs")
     )
   )
 }
@@ -275,6 +276,7 @@ server <- function(input, output, session, data) {
   output$single_plot <- renderPlot(SinglePlot())
   
   SinglePlot <- reactive({
+    req(input$x_input)
     if(var_class[input$x_input] == 'factor') {
       plot(data$Filtered()[[paste(input$x_input)]],
            data$Filtered()[[paste(input$y_input)]],
