@@ -130,6 +130,10 @@ namespace CyPhy2Simulink.Simulink
 
     public class SimulinkBlock
     {
+        private static IDictionary<ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel, string> _blockNameCache = new Dictionary<ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel, string>();
+        private static ISet<string> _usedBlockNames = new HashSet<string>();
+        private static Random _random = new Random();
+
         public string Name { get; private set; }
         
         public string BlockType { get; private set; }
@@ -148,7 +152,7 @@ namespace CyPhy2Simulink.Simulink
 
         public static SimulinkBlock FromDomainModel(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel domainModel)
         {
-            var result = new SimulinkBlock(GetParentComponentName(domainModel), domainModel.Attributes.BlockType);
+            var result = new SimulinkBlock(GetBlockName(domainModel), domainModel.Attributes.BlockType);
 
             foreach (var param in domainModel.Children.SimulinkParameterCollection)
             {
@@ -171,9 +175,33 @@ namespace CyPhy2Simulink.Simulink
             return result;
         }
 
-        public static string GetParentComponentName(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel domainModel)
+        public static string GetBlockName(ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel domainModel)
         {
-            return domainModel.ParentContainer.Name;
+            if (_blockNameCache.ContainsKey(domainModel))
+            {
+                return _blockNameCache[domainModel];
+            }
+            else
+            {
+
+                var originalCandidateName = domainModel.ParentContainer.Name;
+                var candidateName = originalCandidateName;
+
+                if (string.IsNullOrWhiteSpace(candidateName))
+                {
+                    throw new ArgumentException(string.Format("Block {0}'s parent has no name", domainModel.Name));
+                }
+
+                while (_usedBlockNames.Contains(candidateName))
+                {
+                    candidateName = string.Format("{0}-{1:X}", originalCandidateName, _random.Next(0xFFFFFF));
+                }
+
+                _usedBlockNames.Add(candidateName);
+                _blockNameCache[domainModel] = candidateName;
+
+                return candidateName;
+            }
         }
 
         public void GenerateSimulinkBlockCode(TextWriter writer)
@@ -239,7 +267,7 @@ namespace CyPhy2Simulink.Simulink
             if (port.Attributes.SimulinkPortDirection == ISIS.GME.Dsml.CyPhyML.Classes.SimulinkPort.AttributesClass.SimulinkPortDirection_enum.@in && port.ParentContainer is ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel)
             {
                 string parentComponentName =
-                    SimulinkBlock.GetParentComponentName((ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel) port.ParentContainer);
+                    SimulinkBlock.GetBlockName((ISIS.GME.Dsml.CyPhyML.Interfaces.SimulinkModel) port.ParentContainer);
                 ConnectedInputPorts.Add(string.Format("{0}/{1}", parentComponentName, port.Attributes.SimulinkPortID));
                 SimulinkGenerator.GMEConsole.Info.WriteLine("Connection: {0}/{1}", parentComponentName, port.Attributes.SimulinkPortID);
             }
