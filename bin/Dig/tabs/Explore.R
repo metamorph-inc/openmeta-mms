@@ -103,30 +103,30 @@ ui <- function(id) {
 }
 
 server <- function(input, output, session, data) {
+  ns <- session$ns
   
   observe({
     isolate({
       updateSelectInput(session,
                         "display",
                         choices = data$meta$preprocessing$var_range,
-                        selected = data$meta$preprocessing$var_range[c(1,2)])
+                        selected = si(ns("display"),
+                                      data$meta$preprocessing$var_range[c(1,2)]))
       updateSelectInput(session,
                         "x_input",
                         choices = data$meta$preprocessing$var_range,
-                        selected = data$meta$preprocessing$var_range[c(1)])
+                        selected = si(ns("x_input"),
+                                      data$meta$preprocessing$var_range[c(1)]))
       updateSelectInput(session,
                         "y_input",
                         choices = data$meta$preprocessing$var_range,
-                        selected = data$meta$preprocessing$var_range[c(2)])
-      # print("Updating Panel Selections...")
-      # updateSelectInput(session, "colVarFactor", choices = varRangeFac())  
-      # updateSelectInput(session, "colVarNum", choices = varRangeNum())#, selected = varRangeNum()[c(1)])
-      # setupToolTip()
+                        selected = si(ns("y_input"),
+                                      data$meta$preprocessing$var_range[c(2)]))
     })
   })
      
   # Pairs Plot Tab -----------------------------------------------------------
-
+  # TODO(tthomas): Restore the ability to have trendlines
   # pairsSetup <- function(...){
   #   if(input$pairs_upper_panel) {
   #     if(input$pairs_trendlines) {
@@ -192,15 +192,6 @@ server <- function(input, output, session, data) {
       table <- "No data points fit the filtering scheme."
     }
     table
-    
-    # COMMENT(tthomas): Left over from the old session import.
-    # if(importFlags$tier1){
-    #   importFlags$tier1 <- FALSE
-    #   importFlags$tier2 <- TRUE
-    #   importFlags$ranking <- TRUE
-    #   importFlags$ranges <- TRUE
-    #   importFlags$bayesian <- TRUE
-    # }
   })
   
   # TODO(wknight): Can we make this a little less hardcoded? Are there any

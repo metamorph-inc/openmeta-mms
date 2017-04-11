@@ -19,7 +19,7 @@ ui <- function(id) {
     wellPanel(
       h4("Data Processing"),
       checkboxInput(ns("use_filtered"), "Apply Filters", value=si(ns("use_filtered"), TRUE)),
-      selectInput(ns("process_method"), "Method", choices = c("None", "TOPSIS"), selected = si(ns("process_method"), "None")),
+      fluidRow(column(4,selectInput(ns("process_method"), "Method", choices = c("None", "TOPSIS"), selected = si(ns("process_method"), "None")))),
       conditionalPanel(condition = paste0("input['", ns("process_method"), "'] != 'None'"),
         # conditionalPanel(condition = paste0("input['", ns("autoRanking"), "'] == false"),
         #   actionButton(ns("applyRanking"), "Apply Ranking"),
@@ -30,7 +30,8 @@ ui <- function(id) {
             selectInput(ns("weightMetrics"),
                         "Ranking Metrics:",
                         c(),
-                        multiple = TRUE),
+                        multiple = TRUE,
+                        selected = si(ns("weightMetrics"), NULL)),
             actionButton(ns("clearMetrics"), "Clear Metrics")
           )
         ),

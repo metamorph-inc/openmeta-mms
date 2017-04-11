@@ -162,8 +162,8 @@ for (i in 1:length(tab_requests)) {
 
 tab_environments <- lapply(tab_files, function(file_name) {
   env <- new.env()
-  source(file_name, local = env)
-  # debugSource(file_name, local = env)
+  # source(file_name, local = env)
+  debugSource(file_name, local = env)
   env
 })
 
@@ -350,11 +350,14 @@ Server <- function(input, output, session) {
   })
   
   # Get Visualizer Framework only list
-  master_saved_inputs <- saved_inputs[unname(sapply(names(saved_inputs), function (name) {!grepl("-", name)}))]
+  if(!is.null(saved_inputs)) {
+    master_saved_inputs <- saved_inputs[unname(sapply(names(saved_inputs), function (name) {!grepl("-", name)}))]
+  }
   
   # Use observes() for restoring tricky saved inputs
   observe({
     lapply(names(master_saved_inputs), function(current_input) {
+    # lapply(names(saved_inputs), function(current_input) {
       if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
         value <- saved_inputs[[current_input]]
         saved_inputs[[current_input]] <<- NULL
@@ -365,6 +368,7 @@ Server <- function(input, output, session) {
         # print(paste0("(", length(saved_inputs), ":", length(master_saved_inputs), ") Applying via Observe('", current_input, "') ", paste(value, collapse = ", ")))
       }
     })
+    # print(paste("Remaining:", length(saved_inputs)))
   })
 
   # Special observe to cover 'footer_collapse'
@@ -753,9 +757,11 @@ Server <- function(input, output, session) {
   # Coloring -----------------------------------------------------------------
   
   updateSelectInput(session, "live_coloring_variable_numeric",
-                    choices = var_range_nums_and_ints)
+                    choices = var_range_nums_and_ints,
+                    selected = si("live_coloring_variable_numeric", var_range_nums_and_ints[0]))
   updateSelectInput(session, "live_color_variable_factor",
-                    choices = var_range_facs)
+                    choices = var_range_facs,
+                    selected = si("live_color_variable_factor", var_range_facs[0]))
   
   observe({
     if (length(data$added$classifications) == 0) {

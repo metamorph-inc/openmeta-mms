@@ -133,10 +133,10 @@ server <- function(input, output, session, data) {
                                         "Uniform",
                                         "Central Composite",
                                         "Opt Latin Hypercube"),
-                            selected = pet$sampling_method)),
+                            selected = si(ns("pet_sampling_method"), pet$sampling_method))),
       column(3, textInput(ns("pet_num_samples"),
                           "New Number of Samples:",
-                          value = pet$num_samples))
+                          value = si(ns("pet_num_samples"), pet$num_samples)))
     )
   })
   
@@ -146,7 +146,7 @@ server <- function(input, output, session, data) {
       column(12, h5(strong("Original PET Name: ")), textOutput(ns("current_pet_name_text")), br()),
       column(12, textInput(ns("newPetName"),
                            "New PET Name:",
-                           value = paste0(pet$pet_name, "_Refined")))
+                           value = si(ns("newPetName"), paste0(pet$pet_name, "_Refined"))))
     )
   })
   
@@ -170,6 +170,9 @@ server <- function(input, output, session, data) {
       refined = paste0("List of ", refined_count, " Configurations.")
     if(refined == "")
       refined = "No configurations available."
+    isolate({
+      selected <- input$new_cfg_ids
+    })
     
     fluidRow(
       column(2, h5(strong("Configuration Name(s)"))),
@@ -181,7 +184,7 @@ server <- function(input, output, session, data) {
              textInput(ns('new_cfg_ids'),
                        NULL,
                        placeholder = "Enter selection",
-                       value = NULL)
+                       value = si(ns('new_cfg_ids'), selected))
       )
     )
   })
@@ -211,23 +214,10 @@ server <- function(input, output, session, data) {
         original_max <- AbbreviateNumber(selection[2])
         refined_min <- AbbreviateNumber(min(FilterData()[var$name]))
         refined_max <-AbbreviateNumber(max(FilterData()[var$name]))
-        # COMMENT(tthomas): Left over from session loading
-        # min_input <- NULL
-        # max_input <- NULL
-        # if(importFlags$ranges){
-        #   max_input <- importData[[paste0('newMax', global_index)]]
-        #   min_input <- importData[[paste0('newMin', global_index)]]
-        #   NULL #This makes sure nothing appears in the UI
-        # }
-        # refined <- FilterData()[var]
-        # if(dim(refined)[1] == 0){
-        #   min_refined <- "No data available in table"
-        #   max_refined <- "No data available in table"
-        # }
-        # else{
-        #   min_refined <- sprintf("%.3e", min(FilterData()[var]))
-        #   max_refined <- sprintf("%.3e", max(FilterData()[var]))
-        # }
+        isolate({
+          selected_min <- input[[paste0('new_min_', var$name)]]
+          selected_max <- input[[paste0('new_max_', var$name)]]
+        })
         fluidRow(
           column(2, h5(strong(var$name))),
           column(1, actionButton(ns(paste0('apply_original_range_', var$name)), 'Apply')),
@@ -240,13 +230,13 @@ server <- function(input, output, session, data) {
                  textInput(ns(paste0('new_min_', var$name)),
                            NULL,
                            placeholder = "Enter min",
-                           value = "") #min_input)
+                           value = si(ns(paste0('new_min_', var$name)), selected_min))
           ),
           column(2,
                  textInput(ns(paste0('new_max_', var$name)),
                            NULL,
                            placeholder = "Enter max",
-                           value = "") #max_input)
+                           value = si(ns(paste0('new_max_', var$name)), selected_max))
           ),
           hr()
         )
@@ -289,13 +279,9 @@ server <- function(input, output, session, data) {
         if(refined_count > max_enums_display)
           refined = paste0("List of ", refined_count, " Enumerations.")
         
-        # if(refined == "")
-        #   refined = "No data available in table"
-        # input_selection <- NULL
-        # if(importFlags$ranges){
-        #   input_selection <- importData[[paste0('newSelection', global_index)]]
-        #   NULL #This makes sure nothing appears in the UI
-        # }
+        isolate({
+          selected <- input[[paste0('new_selection_', var$name)]]
+        })
         
         fluidRow(
           column(2, h5(strong(var$name))),
@@ -307,7 +293,7 @@ server <- function(input, output, session, data) {
                  textInput(ns(paste0('new_selection_', var$name)),
                            NULL,
                            placeholder = "Enter selection",
-                           value = "")
+                           value = si(ns(paste0('new_selection_', var$name)), selected))
           ),
           hr()
         )

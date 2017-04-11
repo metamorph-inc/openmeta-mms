@@ -193,7 +193,7 @@ server <- function(input, output, session, data) {
   })
   
   output$uqControlUI <- renderUI({
-    print("In uqControlUI()")
+    # print("In uqControlUI()")
     var_directions <- c("Input",
                         "Output")
     data_mean <- apply(filtered_data()[varNums], 2, mean)

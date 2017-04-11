@@ -17,13 +17,15 @@ ui <- function(id) {
 }
 
 server <- function(input, output, session, data) {
+  ns <- session$ns
   
   vars <- data$meta$preprocessing$var_range_nums_and_ints
   
   updateSelectInput(session,
                     "sandboxVar",
                     choices = vars,
-                    selected = vars[1])
+                    selected = si(ns("sandboxVar"),
+                                  vars[1]))
   
   output$sandboxPlot <- renderPlot({
     if(input$sandboxVar != "") {
