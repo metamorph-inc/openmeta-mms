@@ -109,19 +109,19 @@ server <- function(input, output, session, data) {
     isolate({
       updateSelectInput(session,
                         "display",
-                        choices = data$meta$preprocessing$var_range,
+                        choices = data$meta$pre$var_range,
                         selected = si(ns("display"),
-                                      data$meta$preprocessing$var_range[c(1,2)]))
+                                      data$meta$pre$var_range[c(1,2)]))
       updateSelectInput(session,
                         "x_input",
-                        choices = data$meta$preprocessing$var_range,
+                        choices = data$meta$pre$var_range,
                         selected = si(ns("x_input"),
-                                      data$meta$preprocessing$var_range[c(1)]))
+                                      data$meta$pre$var_range[c(1)]))
       updateSelectInput(session,
                         "y_input",
-                        choices = data$meta$preprocessing$var_range,
+                        choices = data$meta$pre$var_range,
                         selected = si(ns("y_input"),
-                                      data$meta$preprocessing$var_range[c(2)]))
+                                      data$meta$pre$var_range[c(2)]))
     })
   })
      
@@ -176,7 +176,7 @@ server <- function(input, output, session, data) {
   vars_list <- reactive({
     idx <- NULL
     for(choice in 1:length(input$display)) {
-      mm <- match(input$display[choice],data$meta$preprocessing$var_names)
+      mm <- match(input$display[choice],data$meta$pre$var_names)
       if(mm > 0) { idx <- c(idx,mm) }
     }
     idx
@@ -268,7 +268,7 @@ server <- function(input, output, session, data) {
   
   SinglePlot <- reactive({
     req(input$x_input)
-    if(var_class[input$x_input] == 'factor') {
+    if(data$meta$pre$var_class[input$x_input] == 'factor') {
       plot(data$Filtered()[[paste(input$x_input)]],
            data$Filtered()[[paste(input$y_input)]],
            xlab = paste(input$x_input),

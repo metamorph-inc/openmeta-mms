@@ -70,8 +70,8 @@ server <- function(input, output, session, data) {
   
   ns <- session$ns
 
-  var_names <- data$meta$preprocessing$var_names
-  var_range_nums_and_ints <- data$meta$preprocessing$var_range_nums_and_ints
+  var_names <- data$meta$pre$var_names
+  var_range_nums_and_ints <- data$meta$pre$var_range_nums_and_ints
   
   LocalData <- reactive({
     if (input$use_filtered) {

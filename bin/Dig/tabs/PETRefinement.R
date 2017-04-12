@@ -91,10 +91,10 @@ server <- function(input, output, session, data) {
   ns <- session$ns
 
   FilterData <- data$Filtered
-  var_names <- data$meta$preprocessing$var_names
-  var_class <- data$meta$preprocessing$var_class
-  var_nums <- data$meta$preprocessing$var_nums
-  var_facs <- data$meta$preprocessing$var_facs
+  var_names <- data$meta$pre$var_names
+  var_class <- data$meta$pre$var_class
+  var_nums <- data$meta$pre$var_nums
+  var_facs <- data$meta$pre$var_facs
   
   pet <- data$meta$pet
   numeric_dvs <- unlist(lapply(pet$design_variable_names,

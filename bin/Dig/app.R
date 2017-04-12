@@ -69,7 +69,9 @@ RemoveUnits <- function(name_with_units) {
 
 # For Testing with Ted's 11k dataset
 # Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\11Kresults\\mergedPET.csv")
-Sys.setenv(DIG_INPUT_CSV="")
+# Sys.setenv(DIG_INPUT_CSV="")
+# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Desktop\\11Kresults\\viz_config.json")
+Sys.setenv(DIG_DATASET_CONFIG="")
 
 # Resolve Dataset Configuration ----------------------------------------------
 
@@ -104,14 +106,9 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   }
 } else {
   # Visualizer legacy dataset format
-  raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
-  pet_config_filename <- gsub("mergedPET.csv",
-                              "pet_config.json",
-                              Sys.getenv('DIG_INPUT_CSV'))
-  launch_dir <- dirname(Sys.getenv('DIG_INPUT_CSV'))
-  if (file.exists(pet_config_filename)) {
-    pet_config_present <- TRUE
-  }
+  config_filename <- gsub("mergedPET.csv",
+                          "viz_config.json",
+                          Sys.getenv('DIG_INPUT_CSV'))
   tab_requests <- c("Explore.R",
                     "DataTable.R",
                     "Histogram.R",
@@ -119,9 +116,19 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
                     "Scratch.R",
                     "ParallelAxisPlot.R",
                     "UncertaintyQuantification.R")
+  launch_dir <- dirname(config_filename)
+  raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
+  pet_config_filename <- gsub("mergedPET.csv",
+                              "pet_config.json",
+                              Sys.getenv('DIG_INPUT_CSV'))
+  if (file.exists(pet_config_filename)) {
+    pet_config_present <- TRUE
+  }
+  visualizer_config <- list()
+  visualizer_config$raw_data <- "mergedPET.csv"
+  visualizer_config$pet_config <- "pet_config.json"
+  visualizer_config$tabs <- tab_requests
 }
-
-
 
 si <- function(id, default) {
   # Retrieves saved input state from the previous session for a UI element
@@ -140,18 +147,12 @@ si <- function(id, default) {
     value <- saved_inputs[[id]]
     saved_inputs[[id]] <<- NULL
     value
-    # print(paste0("(", length(saved_inputs),") Applying via si('", id, "') ",toString(value)))
   } else {
-    # print(paste0("si('",id,"',",default,") -- default: ",default))
     default
   }
 }
 
-
-# Load Tabs and Data ---------------------------------------------------------
-
-# Read input dataset file
-raw <- read.csv(raw_data_filename, fill=T)
+# Load Tabs ------------------------------------------------------------------
 
 # Read tab files
 tab_files <- list()
@@ -171,136 +172,156 @@ tab_environments <- lapply(tab_files, function(file_name) {
   env
 })
 
-# Process PET Configuration File ('pet_config_json') -----------------------
+# Data Pre-Processing --------------------------------------------------------
+
+# Read input dataset file
+raw <- read.csv(raw_data_filename, fill=T)
+
+if (!is.null(visualizer_config$processed_pre)
+    && visualizer_config$processed_pre) {
+  pre <- visualizer_config$pre
+  names(pre$var_class) <- pre$var_names
+} else {
+  var_names <- names(raw)
+  var_class <- sapply(raw, class)
+  var_facs <- var_names[var_class == "factor"]
+  var_ints <- var_names[var_class == "integer"]
+  var_nums <- var_names[var_class == "numeric"]
+  var_nums_and_ints <- var_names[var_class == "integer" |
+                                 var_class == "numeric"]
+  abs_max <- apply(raw[var_nums_and_ints], 2, max, na.rm=TRUE)
+  abs_min <- apply(raw[var_nums_and_ints], 2, min, na.rm=TRUE)
+  var_range_nums_and_ints <- var_nums_and_ints[(abs_min != abs_max) &
+                                               (abs_min != Inf)]
+  var_range_facs <- var_facs[apply(raw[var_facs], 2, function(var_fac) {
+                                     length(names(table(var_fac))) > 1
+                                   })]
+  var_range <- c(var_facs, var_nums_and_ints)
+  var_constants <- subset(var_names, !(var_names %in% var_range))
+  
+  pre <- list(var_names=var_names,
+              var_class=var_class,
+              var_facs=var_facs,
+              var_ints=var_ints,
+              var_nums=var_nums,
+              var_nums_and_ints=var_nums_and_ints,
+              abs_min=abs_min,
+              abs_max=abs_max,
+              AbsMax=NULL,
+              AbsMin=NULL,
+              var_range_nums_and_ints=var_range_nums_and_ints,
+              var_range_facs=var_range_facs,
+              var_range=var_range,
+              var_constants=var_constants)
+  visualizer_config$processed_pre <- TRUE
+}
+
+# Process PET Configuration File ('pet_config_json') -------------------------
 
 pet <- NULL
 variables <- NULL
-
-if(pet_config_present) {
-  pet_config <- fromJSON(pet_config_filename)
-  dvs <- pet_config$drivers[[1]]$designVariables
-  design_variable_names <- names(dvs)
-  design_variables <- Map(function(item, name) {
-    new_item <- list()
-    new_item$name <- name
-    if ("RangeMax" %in% names(item)) {
-      new_item$type <- "Numeric"
-    } else {
-      new_item$type <- "Enumeration"
-    }
-    if("type" %in% names(item) && item$type == "enum") {
-      new_item$selection <- paste0(unlist(item$items), collapse=",")
-    } else {
-      new_item$selection <- paste0(c(item$RangeMin, item$RangeMax),
-                                   collapse=",")
-    }
-    new_item
-  }, dvs, names(dvs))
-  objective_names <- names(pet_config$drivers[[1]]$objectives)
-  num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
-  sampling_method <- pet_config$drivers[[1]]$details$DOEType
-  generated_configuration_model <- pet_config$GeneratedConfigurationModel
-  selected_configurations <- pet_config$SelectedConfigurations
-  pet_name <- pet_config$PETName
-  mga_name <- pet_config$MgaFilename
-  
-  pet <- list(sampling_method=sampling_method,
-              num_samples=num_samples,
-              pet_name=pet_name,
-              mga_name=mga_name,
-              generated_configuration_model=generated_configuration_model,
-              selected_configurations=selected_configurations,
-              design_variable_names=design_variable_names,
-              design_variables=design_variables,
-              pet_config=pet_config,
-              pet_config_filename=pet_config_filename)
-  
-  # TODO(tthomas): Clean up the construction of the units list.
-  # Generate units tables.
-  units <- list()
-  reverse_units <- list()
-  for (i in 1:length(design_variable_names))
-  {
-    unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
-    if(is.null(unit) || unit == "") {
-      unit <- ""
-      name_with_units <- design_variable_names[[i]]
-    }
-    else
+if (!is.null(visualizer_config$processed_pet)
+    && visualizer_config$processed_pet
+    && !is.null(visualizer_config$processed_variables)
+    && visualizer_config$processed_variables) {
+  pet <- visualizer_config$pet
+  variables <- visualizer_config$variables
+} else {
+  if(pet_config_present) {
+    pet_config <- fromJSON(pet_config_filename)
+    dvs <- pet_config$drivers[[1]]$designVariables
+    design_variable_names <- names(dvs)
+    design_variables <- Map(function(item, name) {
+      new_item <- list()
+      new_item$name <- name
+      if ("RangeMax" %in% names(item)) {
+        new_item$type <- "Numeric"
+      } else {
+        new_item$type <- "Enumeration"
+      }
+      if("type" %in% names(item) && item$type == "enum") {
+        new_item$selection <- paste0(unlist(item$items), collapse=",")
+      } else {
+        new_item$selection <- paste0(c(item$RangeMin, item$RangeMax),
+                                     collapse=",")
+      }
+      new_item
+    }, dvs, names(dvs))
+    objective_names <- names(pet_config$drivers[[1]]$objectives)
+    num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
+    sampling_method <- pet_config$drivers[[1]]$details$DOEType
+    generated_configuration_model <- pet_config$GeneratedConfigurationModel
+    selected_configurations <- pet_config$SelectedConfigurations
+    pet_name <- pet_config$PETName
+    mga_name <- pet_config$MgaFilename
+    
+    pet <- list(sampling_method=sampling_method,
+                num_samples=num_samples,
+                pet_name=pet_name,
+                mga_name=mga_name,
+                generated_configuration_model=generated_configuration_model,
+                selected_configurations=selected_configurations,
+                design_variable_names=design_variable_names,
+                design_variables=design_variables,
+                pet_config=pet_config,
+                pet_config_filename=pet_config_filename)
+    
+    # TODO(tthomas): Clean up the construction of the units list.
+    # Generate units tables.
+    units <- list()
+    reverse_units <- list()
+    for (i in 1:length(design_variable_names))
     {
-      unit <- gsub("\\*\\*", "^", unit) #replace Python '**' with '^'
-      unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
-      unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
-      name_with_units <- paste0(design_variable_names[i]," (",unit,")")
+      unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
+      if(is.null(unit) || unit == "") {
+        unit <- ""
+        name_with_units <- design_variable_names[[i]]
+      }
+      else
+      {
+        unit <- gsub("\\*\\*", "^", unit) #replace Python '**' with '^'
+        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
+        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
+        name_with_units <- paste0(design_variable_names[i]," (",unit,")")
+      }
+      units[[design_variable_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
+      reverse_units[[name_with_units]] <- design_variable_names[[i]]
     }
-    units[[design_variable_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
-    reverse_units[[name_with_units]] <- design_variable_names[[i]]
-  }
-  for (i in 1:length(objective_names))
-  {
-    unit <- pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
-    if(is.null(unit)) {
-      unit <- ""
-      name_with_units <- objective_names[[i]]
-    }
-    else
+    for (i in 1:length(objective_names))
     {
-      unit <- gsub("\\*\\*", "^", unit)
-      unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
-      unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
-      name_with_units <- paste0(objective_names[i]," (",unit,")")
+      unit <- pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
+      if(is.null(unit)) {
+        unit <- ""
+        name_with_units <- objective_names[[i]]
+      }
+      else
+      {
+        unit <- gsub("\\*\\*", "^", unit)
+        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
+        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
+        name_with_units <- paste0(objective_names[i]," (",unit,")")
+      }
+      units[[objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
+      reverse_units[[name_with_units]] <- objective_names[[i]]
     }
-    units[[objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
-    reverse_units[[name_with_units]] <- objective_names[[i]]
+    
+    # Build variables metadata list.
+    variables <- lapply(names(raw), function(var_name) {
+      if (var_name %in% design_variable_names)
+        type <- "Design Variable"
+      else
+        type <- "Objective"
+      list(name = var_name,
+           name_with_units = AddUnits(var_name),
+           type = type
+      )
+    })
+    names(variables) <- names(raw)
   }
   
-  # Build variables metadata list.
-  variables <- lapply(names(raw), function(var_name) {
-    if (var_name %in% design_variable_names)
-      type <- "Design Variable"
-    else
-      type <- "Objective"
-    list(name = var_name,
-         name_with_units = AddUnits(var_name),
-         type = type
-    )
-  })
-  names(variables) <- names(raw)
+  visualizer_config$processed_pet <- TRUE
+  visualizer_config$processed_variables <- TRUE
 }
-
-# Pre-Processing ----------------------------------------------------------
-
-var_names <- names(raw)
-var_class <- sapply(raw, class)
-var_facs <- var_names[var_class == "factor"]
-var_ints <- var_names[var_class == "integer"]
-var_nums <- var_names[var_class == "numeric"]
-var_nums_and_ints <- var_names[var_class == "integer" |
-                               var_class == "numeric"]
-abs_max <- apply(raw[var_nums_and_ints], 2, max, na.rm=TRUE)
-abs_min <- apply(raw[var_nums_and_ints], 2, min, na.rm=TRUE)
-var_range_nums_and_ints <- var_nums_and_ints[(abs_min != abs_max) &
-                                             (abs_min != Inf)]
-var_range_facs <- var_facs[apply(raw[var_facs], 2, function(var_fac) {
-                                   length(names(table(var_fac))) > 1
-                                 })]
-var_range <- c(var_facs, var_nums_and_ints)
-var_constants <- subset(var_names, !(var_names %in% var_range))
-
-preprocessing <- list(var_names=var_names,
-                      var_class=var_class,
-                      var_facs=var_facs,
-                      var_ints=var_ints,
-                      var_nums=var_nums,
-                      var_nums_and_ints=var_nums_and_ints,
-                      abs_min=abs_min,
-                      abs_max=abs_max,
-                      AbsMax=NULL,
-                      AbsMin=NULL,
-                      var_range_nums_and_ints=var_range_nums_and_ints,
-                      var_range_facs=var_range_facs,
-                      var_range=var_range,
-                      var_constants=var_constants)
 
 # Server ---------------------------------------------------------------------
 
@@ -324,9 +345,12 @@ Server <- function(input, output, session) {
   #  3. Lastly, they are provided a list of saved inputs that they can use
   #     in an observe to cover tricky cases.
   
+  data <- list()
+  
+  
   # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
-    # Prepare inputs and other manually-entered data for saving to file
+    # Prepare inputs and other metadata for saving to visualizer config file
     current_inputs <- isolate(reactiveValuesToList(input))
     current_inputs[["window_width"]] <- NULL
     current_inputs[unlist(lapply(names(current_inputs), function (name) {
@@ -335,20 +359,25 @@ Server <- function(input, output, session) {
       grepl("^tooltip_", name)
     }))] <- NULL
     combined_inputs <- c(saved_inputs,
-                         current_inputs[setdiff(names(current_inputs), names(saved_inputs))])
+                         current_inputs[setdiff(names(current_inputs),
+                                                names(saved_inputs))])
     combined_inputs <- combined_inputs[order(names(combined_inputs))]
     visualizer_config$inputs <- combined_inputs
     visualizer_config$added <- isolate(reactiveValuesToList(data$added))
+    visualizer_config$pet <- data$meta$pet
+    visualizer_config$variables <- data$meta$variables
+    visualizer_config$coloring <- isolate(
+      reactiveValuesToList(data$meta$coloring))
+    data$meta$pre$AbsMax <- NULL
+    data$meta$pre$AbsMin <- NULL
+    visualizer_config$pre <- data$meta$pre
     
-    # Save config and raw files to disk
-    visualizer_config_filename <- file.path('datasets',
-                                            'WindTurbineForOptimization',
-                                            'visualizer_config_session.json')
-    write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE), file=visualizer_config_filename)
-    test_raw_data_filename <- file.path(launch_dir, paste0("test_", visualizer_config$raw_data))
+    write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
+          file=config_filename)
     write.csv(isolate(data$raw$df), file=raw_data_filename, row.names = FALSE)
     print("Session saved.")
     
+    # Clear environment variables -- for development
     Sys.setenv(DIG_INPUT_CSV="")
     Sys.setenv(DIG_DATASET_CONFIG="")
     stopApp()
@@ -375,8 +404,6 @@ Server <- function(input, output, session) {
       # print(paste("Remaining:", length(saved_inputs)))
     })
   }
-  
-  
 
   # Special observe to cover 'footer_collapse'
   observe({
@@ -405,8 +432,8 @@ Server <- function(input, output, session) {
   
   # Generates the sliders and select boxes.
   output$filters <- renderUI({
-    var_selects <- var_range_facs
-    var_sliders <- var_range_nums_and_ints
+    var_selects <- pre$var_range_facs
+    var_sliders <- pre$var_range_nums_and_ints
     
     div(
       fluidRow(
@@ -460,9 +487,9 @@ Server <- function(input, output, session) {
   
   GenerateSliderUI <- function(current, label) {
     
-    if(current %in% var_nums){
-      min <- as.numeric(abs_min[current])
-      max <- as.numeric(abs_max[current])
+    if(current %in% pre$var_nums){
+      min <- as.numeric(pre$abs_min[current])
+      max <- as.numeric(pre$abs_max[current])
       step <- signif(max((max-min)*0.01, abs(min)*0.001, abs(max)*0.001),
                      digits = 4)
       slider_min <- signif((min - step*10), digits = 4)
@@ -470,8 +497,8 @@ Server <- function(input, output, session) {
     }
     else{
       step <- 0
-      slider_min <- as.numeric(abs_min[current])
-      slider_max <- as.numeric(abs_max[current])
+      slider_min <- as.numeric(pre$abs_min[current])
+      slider_max <- as.numeric(pre$abs_max[current])
     }
     
     slider_value <- input[[paste0('filter_', current)]]
@@ -517,13 +544,13 @@ Server <- function(input, output, session) {
   openSliderToolTip <- function(current) {
     # This function calls hide on all slider exact entry windows on a
     # 'double click' and then calls 'show' on the opened one.
-    for(i in 1:length(var_range_nums_and_ints)) {
-      hide(paste0("slider_tooltip_", var_range_nums_and_ints[i]))
+    for(i in 1:length(pre$var_range_nums_and_ints)) {
+      hide(paste0("slider_tooltip_", pre$var_range_nums_and_ints[i]))
     }
     shinyjs::show(paste0("slider_tooltip_", current))
   }
   
-  lapply(var_range_nums_and_ints, function(current) {
+  lapply(pre$var_range_nums_and_ints, function(current) {
     # This handles the processing of exact entry back into the slider.
     # It reacts to either the submit button OR the enter key
     observe({
@@ -550,7 +577,7 @@ Server <- function(input, output, session) {
   
   # This function adds a double click handler to each slider
   observe({
-    lapply(var_range_nums_and_ints, function(current) {
+    lapply(pre$var_range_nums_and_ints, function(current) {
       onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
       inlineCSS(list(.style = "overflow: hidden"))
     })
@@ -558,7 +585,7 @@ Server <- function(input, output, session) {
   
   output$constants <- renderUI({
     fluidRow(
-      lapply(var_constants, function(var_constant) {
+      lapply(pre$var_constants, function(var_constant) {
         column(2,
           p(strong(paste0(var_constant,":")), unname(raw[1,var_constant]))
         )
@@ -567,19 +594,19 @@ Server <- function(input, output, session) {
   })
   
   output$constants_present <- reactive({
-    length(var_constants) > 0
+    length(pre$var_constants) > 0
   })
   
   outputOptions(output, "constants_present", suspendWhenHidden=FALSE)
   
   observeEvent(input$reset_sliders, {
-    for(column in 1:length(var_names)){
-      name <- var_names[column]
-      switch(var_class[column],
+    for(column in 1:length(pre$var_names)){
+      name <- pre$var_names[column]
+      switch(pre$var_class[column],
         "numeric" =
         {
-          max <- as.numeric(unname(data$meta$preprocessing$AbsMax()[var_names[column]]))
-          min <- as.numeric(unname(data$meta$preprocessing$AbsMin()[var_names[column]]))
+          max <- as.numeric(unname(data$meta$pre$AbsMax()[pre$var_names[column]]))
+          min <- as.numeric(unname(data$meta$pre$AbsMin()[pre$var_names[column]]))
           diff <- (max-min)
           if (diff != 0) {
             step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
@@ -588,13 +615,13 @@ Server <- function(input, output, session) {
         },
         "integer" =
         {
-          max <- as.integer(unname(data$meta$preprocessing$AbsMax()[var_names[column]]))
-          min <- as.integer(unname(data$meta$preprocessing$AbsMin()[var_names[column]]))
+          max <- as.integer(unname(data$meta$pre$AbsMax()[pre$var_names[column]]))
+          min <- as.integer(unname(data$meta$pre$AbsMin()[pre$var_names[column]]))
           if(min != max) {
             updateSliderInput(session, paste0('filter_', name), value = c(min, max))
           }
         },
-        "factor"  = updateSelectInput(session, paste0('filter_', name), selected = names(table(data$raw$df[var_names[column]])))
+        "factor"  = updateSelectInput(session, paste0('filter_', name), selected = names(table(data$raw$df[pre$var_names[column]])))
       )
     }
   })
@@ -605,19 +632,19 @@ Server <- function(input, output, session) {
     # This reactive holds the full dataset that has been filtered using the
     # values of the sliders.
     data_filtered <- data$raw$df
-    for(index in 1:length(var_names)) {
-      name <- var_names[index]
+    for(index in 1:length(pre$var_names)) {
+      name <- pre$var_names[index]
       input_name <- paste("filter_", name, sep="")
       selection <- input[[input_name]]
       if(length(selection) != 0) {
-        if(name %in% var_nums_and_ints) {
+        if(name %in% pre$var_nums_and_ints) {
           isolate({
             above <- (data_filtered[[name]] >= selection[1])
             below <- (data_filtered[[name]] <= selection[2])
             in_range <- above & below
           })
         }
-        else if (name %in% var_facs) {
+        else if (name %in% pre$var_facs) {
             selection <- unlist(lapply(selection, function(factor){
                                                     RemoveItemNumber(factor)
                                                   }))
@@ -639,8 +666,9 @@ Server <- function(input, output, session) {
     # This reactive returns a list of all the filter values so a tab can use
     # the information for filtering the raw dataset itself.
     #
-    # Each of the variables will have a "type" that is simply the var_class for
-    # that variable and either "selection" or "min" and "max", e.g.:
+    # Each of the variables will have a "type" that is simply the 
+    # pre$var_class for that variable and either "selection" or "min" and
+    # "max", e.g.:
     # > Filters()$Engine$type
     #   "factor"
     # > Filters()$Engine$selection
@@ -653,13 +681,13 @@ Server <- function(input, output, session) {
     #   210
     
     filters <- list()
-    for(index in 1:length(var_names)) {
-      name <- var_names[index]
+    for(index in 1:length(pre$var_names)) {
+      name <- pre$var_names[index]
       input_name <- paste("filter_", name, sep="")
       selection <- input[[input_name]]
       filters[[name]] <- list()
-      filters[[name]]$type <- var_class[[name]]
-      if(var_class[[name]] == "factor") {
+      filters[[name]]$type <- pre$var_class[[name]]
+      if(pre$var_class[[name]] == "factor") {
         filters[[name]]$selection <- unname(sapply(selection,
                                                    RemoveItemNumber))
       }
@@ -701,9 +729,9 @@ Server <- function(input, output, session) {
           }
           bins <- 30
           req(var)
-          divisor <- (data$meta$preprocessing$AbsMax()[[var]] - data$meta$preprocessing$AbsMin()[[var]]) / bins
-          minimum <- data$meta$preprocessing$AbsMin()[[var]]
-          maximum <- data$meta$preprocessing$AbsMax()[[var]]
+          divisor <- (data$meta$pre$AbsMax()[[var]] - data$meta$pre$AbsMin()[[var]]) / bins
+          minimum <- data$meta$pre$AbsMin()[[var]]
+          maximum <- data$meta$pre$AbsMax()[[var]]
           cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
           if (goal == "Maximize") {
             data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
@@ -765,25 +793,30 @@ Server <- function(input, output, session) {
   # Coloring -----------------------------------------------------------------
   
   updateSelectInput(session, "live_coloring_variable_numeric",
-                    choices = var_range_nums_and_ints,
-                    selected = si("live_coloring_variable_numeric", var_range_nums_and_ints[0]))
+                    choices = pre$var_range_nums_and_ints,
+                    selected = si("live_coloring_variable_numeric", pre$var_range_nums_and_ints[0]))
   updateSelectInput(session, "live_color_variable_factor",
-                    choices = var_range_facs,
-                    selected = si("live_color_variable_factor", var_range_facs[0]))
+                    choices = pre$var_range_facs,
+                    selected = si("live_color_variable_factor", pre$var_range_facs[0]))
   
   observe({
     if (length(data$added$classifications) == 0) {
-      numeric_choices <- as.list(var_range_nums_and_ints)
+      numeric_choices <- as.list(pre$var_range_nums_and_ints)
     } else {
-      numeric_choices <- list(Variables=as.list(var_range_nums_and_ints),
+      numeric_choices <- list(Variables=as.list(pre$var_range_nums_and_ints),
                               Classifications=as.list(names(data$added$classifications)))
     }
     updateSelectInput(session, "live_coloring_variable_numeric",
                       choices = numeric_choices)
   })
   
-  coloring_items <- list()
-  current_coloring <- list()
+  if(is.null(visualizer_config$coloring)) {
+    coloring_items <- list()
+    current_coloring <- list()
+  } else {
+    coloring_items <- visualizer_config$coloring$items
+    current_coloring <- visualizer_config$coloring$current
+  }
   coloring <- reactiveValues(items=coloring_items,
                              current=current_coloring)
   
@@ -884,7 +917,6 @@ Server <- function(input, output, session) {
   # Final Processing ---------------------------------------------------------
   
   # Build the 'data' list that is shared between all tabs.
-  data <- list()
   data$raw <- reactiveValues(df = raw)
   data$Filtered <- FilteredData
   data$Colored <- ColoredData
@@ -895,16 +927,16 @@ Server <- function(input, output, session) {
   data$meta <- list(variables=variables,
                     coloring=coloring,
                     pet=pet,
-                    preprocessing=preprocessing)
+                    pre=pre)
   
-  data$meta$preprocessing$AbsMax <- reactive({
+  data$meta$pre$AbsMax <- reactive({
     classification_names <- names(data$added$classifications)
-    vars <- c(var_nums_and_ints, classification_names)
+    vars <- c(pre$var_nums_and_ints, classification_names)
     apply(data$raw$df[vars], 2, max, na.rm=TRUE)
   })
   
-  data$meta$preprocessing$AbsMin <- reactive({
-    vars <- c(var_nums_and_ints, names(data$added$classifications))
+  data$meta$pre$AbsMin <- reactive({
+    vars <- c(pre$var_nums_and_ints, names(data$added$classifications))
     apply(data$raw$df[vars], 2, min, na.rm=TRUE)
   })
   
