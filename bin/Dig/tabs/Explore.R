@@ -97,7 +97,7 @@ ui <- function(id) {
         )
       ),
       id = ns("explore_tabset"),
-      selected = si(ns("explore_tabset"), "Pairs")
+      selected = si(ns("explore_tabset"), NULL)
     )
   )
 }
