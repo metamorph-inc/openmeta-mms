@@ -67,6 +67,10 @@ RemoveUnits <- function(name_with_units) {
     reverse_units[[name_with_units]]
 }
 
+# For Testing with Ted's 11k dataset
+# Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\11Kresults\\mergedPET.csv")
+Sys.setenv(DIG_INPUT_CSV="")
+
 # Resolve Dataset Configuration ----------------------------------------------
 
 pet_config_present <- FALSE
@@ -87,17 +91,13 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   }
   config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
   visualizer_config <- fromJSON(config_filename)
-  # print(visualizer_config)
   tab_requests <- visualizer_config$tabs
-  # tab_requests <- c("Histogram.R", "CopyOfHistogram.R") # For Debugging Only! <-------------------------------
-  # print(tab_requests)
   saved_inputs <- visualizer_config$inputs
-  # print(saved_inputs)
   launch_dir <- dirname(config_filename)
   raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
-  pet_config_value <- visualizer_config$pet_config
-  if (!is.null(pet_config_value) && pet_config_value != "") {
-    pet_config_filename <- file.path(launch_dir, pet_config_value)
+  pet_config_filename <- visualizer_config$pet_config
+  if (!is.null(pet_config_filename) && pet_config_filename != "") {
+    pet_config_filename <- file.path(launch_dir, pet_config_filename)
     if (file.exists(pet_config_filename)) {
       pet_config_present <- TRUE
     }
@@ -112,13 +112,13 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   if (file.exists(pet_config_filename)) {
     pet_config_present <- TRUE
   }
-  # tab_requests <- c("Explore.R",
-  #                   "DataTable.R",
-  #                   "Histogram.R",
-  #                   "PETRefinement.R",
-  #                   "Scratch.R",
-  #                   "ParallelAxisPlot.R",
-  #                   "UncertaintyQuantification.R")
+  tab_requests <- c("Explore.R",
+                    "DataTable.R",
+                    "Histogram.R",
+                    "PETRefinement.R",
+                    "Scratch.R",
+                    "ParallelAxisPlot.R",
+                    "UncertaintyQuantification.R")
 }
 
 
@@ -126,7 +126,11 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
 si <- function(id, default) {
   # Retrieves saved input state from the previous session for a UI element
   # with a given id. This function should be called in a 'ui' definition
-  # when creating a UI input element
+  # when creating a UI input element.
+  # 
+  # This function deletes the saved value after it is accessed, so each tab
+  # should take care to persist the value through any regeneration of UI
+  # elements.
   #
   # Args:
   #   id: the 'id' to look up in the saved_inputs list
@@ -310,7 +314,7 @@ Server <- function(input, output, session) {
 
   # Session Save/Restore -----------------------------------------------------
 
-  # The save restore functionality relies upon three main mechanisms: 
+  # The save/restore functionality relies upon three main mechanisms: 
   #  1. It saves the values of all the inputs to the visualizer config file
   #     on close by supplying the necessary callback function to
   #     session$onSessionEnded().
@@ -322,7 +326,7 @@ Server <- function(input, output, session) {
   
   # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
-    # Grab all the necessary inputs
+    # Prepare inputs and other manually-entered data for saving to file
     current_inputs <- isolate(reactiveValuesToList(input))
     current_inputs[["window_width"]] <- NULL
     current_inputs[unlist(lapply(names(current_inputs), function (name) {
@@ -330,18 +334,19 @@ Server <- function(input, output, session) {
       # grepl("click", name) ||
       grepl("^tooltip_", name)
     }))] <- NULL
-    
-    # Save unapplied saved inputs
     combined_inputs <- c(saved_inputs,
                          current_inputs[setdiff(names(current_inputs), names(saved_inputs))])
     combined_inputs <- combined_inputs[order(names(combined_inputs))]
-    
-    # Save config file
     visualizer_config$inputs <- combined_inputs
+    visualizer_config$added <- isolate(reactiveValuesToList(data$added))
+    
+    # Save config and raw files to disk
     visualizer_config_filename <- file.path('datasets',
                                             'WindTurbineForOptimization',
                                             'visualizer_config_session.json')
     write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE), file=visualizer_config_filename)
+    test_raw_data_filename <- file.path(launch_dir, paste0("test_", visualizer_config$raw_data))
+    write.csv(isolate(data$raw$df), file=raw_data_filename, row.names = FALSE)
     print("Session saved.")
     
     Sys.setenv(DIG_INPUT_CSV="")
@@ -352,24 +357,26 @@ Server <- function(input, output, session) {
   # Get Visualizer Framework only list
   if(!is.null(saved_inputs)) {
     master_saved_inputs <- saved_inputs[unname(sapply(names(saved_inputs), function (name) {!grepl("-", name)}))]
+    
+    # Use observes() for restoring tricky saved inputs
+    observe({
+      lapply(names(master_saved_inputs), function(current_input) {
+      # lapply(names(saved_inputs), function(current_input) {
+        if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
+          value <- saved_inputs[[current_input]]
+          saved_inputs[[current_input]] <<- NULL
+          master_saved_inputs[[current_input]] <<- NULL
+          updateSelectInput(session,
+                            current_input,
+                            selected = value)
+          # print(paste0("(", length(saved_inputs), ":", length(master_saved_inputs), ") Applying via Observe('", current_input, "') ", paste(value, collapse = ", ")))
+        }
+      })
+      # print(paste("Remaining:", length(saved_inputs)))
+    })
   }
   
-  # Use observes() for restoring tricky saved inputs
-  observe({
-    lapply(names(master_saved_inputs), function(current_input) {
-    # lapply(names(saved_inputs), function(current_input) {
-      if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
-        value <- saved_inputs[[current_input]]
-        saved_inputs[[current_input]] <<- NULL
-        master_saved_inputs[[current_input]] <<- NULL
-        updateSelectInput(session,
-                          current_input,
-                          selected = value)
-        # print(paste0("(", length(saved_inputs), ":", length(master_saved_inputs), ") Applying via Observe('", current_input, "') ", paste(value, collapse = ", ")))
-      }
-    })
-    # print(paste("Remaining:", length(saved_inputs)))
-  })
+  
 
   # Special observe to cover 'footer_collapse'
   observe({
@@ -693,6 +700,7 @@ Server <- function(input, output, session) {
             goal <- scheme$goal
           }
           bins <- 30
+          req(var)
           divisor <- (data$meta$preprocessing$AbsMax()[[var]] - data$meta$preprocessing$AbsMin()[[var]]) / bins
           minimum <- data$meta$preprocessing$AbsMin()[[var]]
           maximum <- data$meta$preprocessing$AbsMax()[[var]]
@@ -849,10 +857,18 @@ Server <- function(input, output, session) {
   
   # Classifications and Sets -------------------------------------------------
   
-  classification_items <- list()
-  set_items <- list()
+  # Blank or saved data
+  if(is.null(visualizer_config$added)) {
+    classification_items <- list()
+    set_items <- list()
+  } else {
+    classification_items <- visualizer_config$added$classifications
+    set_items <- visualizer_config$added$sets
+  }
   added <- reactiveValues(classifications=classification_items,
                           sets=set_items)
+  
+  # Classifications table
   output$no_classifications <- renderText(NoClassifications())
   NoClassifications <- reactive({
     if (length(data$added$classifications) == 0) {
@@ -860,7 +876,6 @@ Server <- function(input, output, session) {
     }
   })
   output$classification_table_output <- renderTable(ClassificationsTable())
-  
   ClassificationsTable <- reactive({
     new_table <- do.call(rbind, data$added$classifications)
     new_table
@@ -875,7 +890,6 @@ Server <- function(input, output, session) {
   data$Colored <- ColoredData
   data$Filters <- Filters
   data$added <- added
-  # data$si <- si
   
   # Build the 'meta' list.
   data$meta <- list(variables=variables,

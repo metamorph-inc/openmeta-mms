@@ -487,7 +487,12 @@ server <- function(input, output, session, data) {
   
   
   observeEvent(input$save_ranking, {
-    name <- paste0("class", input$save_ranking)
+    number <- 1
+    name <- paste0("class", number)
+    while(!is.null(data$added$classifications[[name]])) {
+      number <- number + 1
+      name <- paste0("class", number)
+    }
     mean <- 25 + runif(1) * 50
     sd <- 2 + runif(1) * 3
     data$raw$df[[name]] <<- rnorm(nrow(data$raw$df),
