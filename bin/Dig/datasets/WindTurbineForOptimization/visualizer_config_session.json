@@ -129,5 +129,191 @@
       "shinyjsRandom": 0.5141
     },
     "sliderWidth": 300
-  }
+  },
+  "processed_pre": true,
+  "processed_pet": true,
+  "processed_variables": true,
+  "added": {
+    "sets": [],
+    "classifications": []
+  },
+  "pet": {
+    "sampling_method": "Uniform",
+    "num_samples": "600",
+    "pet_name": "/Testing/Parametric Studies/WindTurbinePET",
+    "mga_name": "C:\\Users\\Tim\\Documents\\wind-turbine\\WindTurbine.mga",
+    "generated_configuration_model": "Exported-Configurations-at--04-15--20-46-05",
+    "selected_configurations": ["28-16", "28-20", "30-16", "30-20", "32-16", "32-20"],
+    "design_variable_names": ["IN_ElemCount", "IN_E11", "IN_E22", "IN_Root_AvgCapMaterialThickness", "IN_Tip_AvgCapMaterialThickness"],
+    "design_variables": {
+      "IN_ElemCount": {
+        "name": "IN_ElemCount",
+        "type": "Numeric",
+        "selection": "5,60"
+      },
+      "IN_E11": {
+        "name": "IN_E11",
+        "type": "Numeric",
+        "selection": "26100,31900"
+      },
+      "IN_E22": {
+        "name": "IN_E22",
+        "type": "Numeric",
+        "selection": "9180,11220"
+      },
+      "IN_Root_AvgCapMaterialThickness": {
+        "name": "IN_Root_AvgCapMaterialThickness",
+        "type": "Numeric",
+        "selection": "77,97"
+      },
+      "IN_Tip_AvgCapMaterialThickness": {
+        "name": "IN_Tip_AvgCapMaterialThickness",
+        "type": "Numeric",
+        "selection": "20,30"
+      }
+    },
+    "pet_config": {
+      "components": {
+        "TestWindTurbine": {
+          "parameters": {
+            "ElemCount": {
+              "source": ["ParameterStudy", "IN_ElemCount"]
+            },
+            "E11": {
+              "source": ["ParameterStudy", "IN_E11"]
+            },
+            "E22": {
+              "source": ["ParameterStudy", "IN_E22"]
+            },
+            "Root_AvgCapMaterialThickness": {
+              "source": ["ParameterStudy", "IN_Root_AvgCapMaterialThickness"]
+            },
+            "Tip_AvgCapMaterialThickness": {
+              "source": ["ParameterStudy", "IN_Tip_AvgCapMaterialThickness"]
+            }
+          },
+          "unknowns": {
+            "TotalCost": {},
+            "TipDeflection": {}
+          },
+          "details": {
+            "directory": "TestBench_TestWindTurbine"
+          }
+        }
+      },
+      "drivers": {
+        "ParameterStudy": {
+          "type": "parameterStudy",
+          "designVariables": {
+            "IN_ElemCount": {
+              "RangeMin": 5,
+              "RangeMax": 60,
+              "units": ""
+            },
+            "IN_E11": {
+              "RangeMin": 26100,
+              "RangeMax": 31900,
+              "units": ""
+            },
+            "IN_E22": {
+              "RangeMin": 9180,
+              "RangeMax": 11220,
+              "units": ""
+            },
+            "IN_Root_AvgCapMaterialThickness": {
+              "RangeMin": 77,
+              "RangeMax": 97,
+              "units": "mm"
+            },
+            "IN_Tip_AvgCapMaterialThickness": {
+              "RangeMin": 20,
+              "RangeMax": 30,
+              "units": "mm"
+            }
+          },
+          "objectives": {
+            "OUT_Blade_Cost_Total": {
+              "source": ["TestWindTurbine", "TotalCost"],
+              "units": "USD"
+            },
+            "OUT_Blade_Tip_Deflection": {
+              "source": ["TestWindTurbine", "TipDeflection"],
+              "units": "mm"
+            }
+          },
+          "details": {
+            "Code": "num_samples=600",
+            "SurrogateType": "None",
+            "DOEType": "Uniform"
+          }
+        }
+      },
+      "GeneratedConfigurationModel": "Exported-Configurations-at--04-15--20-46-05",
+      "SelectedConfigurations": ["28-16", "28-20", "30-16", "30-20", "32-16", "32-20"],
+      "PETName": "/Testing/Parametric Studies/WindTurbinePET",
+      "MgaFilename": "C:\\Users\\Tim\\Documents\\wind-turbine\\WindTurbine.mga"
+    },
+    "pet_config_filename": "datasets/WindTurbineForOptimization/pet_config.json"
+  },
+  "variables": {
+    "CfgID": {
+      "name": "CfgID",
+      "name_with_units": "CfgID",
+      "type": "Objective"
+    },
+    "IN_ElemCount": {
+      "name": "IN_ElemCount",
+      "name_with_units": "IN_ElemCount",
+      "type": "Design Variable"
+    },
+    "IN_E11": {
+      "name": "IN_E11",
+      "name_with_units": "IN_E11",
+      "type": "Design Variable"
+    },
+    "IN_E22": {
+      "name": "IN_E22",
+      "name_with_units": "IN_E22",
+      "type": "Design Variable"
+    },
+    "IN_Root_AvgCapMaterialThickness": {
+      "name": "IN_Root_AvgCapMaterialThickness",
+      "name_with_units": "IN_Root_AvgCapMaterialThickness (mm)",
+      "type": "Design Variable"
+    },
+    "IN_Tip_AvgCapMaterialThickness": {
+      "name": "IN_Tip_AvgCapMaterialThickness",
+      "name_with_units": "IN_Tip_AvgCapMaterialThickness (mm)",
+      "type": "Design Variable"
+    },
+    "OUT_Blade_Cost_Total": {
+      "name": "OUT_Blade_Cost_Total",
+      "name_with_units": "OUT_Blade_Cost_Total (USD)",
+      "type": "Objective"
+    },
+    "OUT_Blade_Tip_Deflection": {
+      "name": "OUT_Blade_Tip_Deflection",
+      "name_with_units": "OUT_Blade_Tip_Deflection (mm)",
+      "type": "Objective"
+    }
+  },
+  "coloring": {
+    "items": [],
+    "current": []
+  },
+  "pre": {
+    "var_names": ["CfgID", "IN_ElemCount", "IN_E11", "IN_E22", "IN_Root_AvgCapMaterialThickness", "IN_Tip_AvgCapMaterialThickness", "OUT_Blade_Cost_Total", "OUT_Blade_Tip_Deflection"],
+    "var_class": ["factor", "integer", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"],
+    "var_facs": "CfgID",
+    "var_ints": "IN_ElemCount",
+    "var_nums": ["IN_E11", "IN_E22", "IN_Root_AvgCapMaterialThickness", "IN_Tip_AvgCapMaterialThickness", "OUT_Blade_Cost_Total", "OUT_Blade_Tip_Deflection"],
+    "var_nums_and_ints": ["IN_ElemCount", "IN_E11", "IN_E22", "IN_Root_AvgCapMaterialThickness", "IN_Tip_AvgCapMaterialThickness", "OUT_Blade_Cost_Total", "OUT_Blade_Tip_Deflection"],
+    "abs_min": [5, 26100.5888, 11245.187, 77.0125, 20.0114, 140075.9776, 1914.6426],
+    "abs_max": [60, 31898.5969, 90101.764, 96.9909, 29.9906, 173356.1676, 2943.2313],
+    "var_range_nums_and_ints": ["IN_ElemCount", "IN_E11", "IN_E22", "IN_Root_AvgCapMaterialThickness", "IN_Tip_AvgCapMaterialThickness", "OUT_Blade_Cost_Total", "OUT_Blade_Tip_Deflection"],
+    "var_range_facs": "CfgID",
+    "var_range": ["CfgID", "IN_ElemCount", "IN_E11", "IN_E22", "IN_Root_AvgCapMaterialThickness", "IN_Tip_AvgCapMaterialThickness", "OUT_Blade_Cost_Total", "OUT_Blade_Tip_Deflection"],
+    "var_constants": []
+  },
+  "augmented_data": "datasets/WindTurbineForOptimization/raw_data_aug.csv"
 }

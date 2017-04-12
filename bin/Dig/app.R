@@ -96,7 +96,12 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
   tab_requests <- visualizer_config$tabs
   saved_inputs <- visualizer_config$inputs
   launch_dir <- dirname(config_filename)
-  raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
+  if(is.null(visualizer_config$augmented_data)) {
+    raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
+  } else {
+    raw_data_filename <- file.path(launch_dir,
+                                   visualizer_config$augmented_data)
+  }
   pet_config_filename <- visualizer_config$pet_config
   if (!is.null(pet_config_filename) && pet_config_filename != "") {
     pet_config_filename <- file.path(launch_dir, pet_config_filename)
@@ -372,9 +377,16 @@ Server <- function(input, output, session) {
     data$meta$pre$AbsMin <- NULL
     visualizer_config$pre <- data$meta$pre
     
+    if(is.null(visualizer_config$augmented_data)) {
+      tentative_filename <- sub(".csv", "_aug.csv", basename(raw_data_filename))
+      # TODO(tthomas): Check if file already exists
+      visualizer_config$augmented_data <- tentative_filename
+    }
+    write.csv(isolate(data$raw$df),
+              file=file.path(launch_dir, visualizer_config$augmented_data),
+              row.names = FALSE)
     write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
           file=config_filename)
-    write.csv(isolate(data$raw$df), file=raw_data_filename, row.names = FALSE)
     print("Session saved.")
     
     # Clear environment variables -- for development
