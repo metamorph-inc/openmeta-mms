@@ -41,31 +41,11 @@ library(shinyjs)
 library(shinyBS)
 library(jsonlite)
 library(topsis)
+source("utils.R")
 
 # Defined Constants ----------------------------------------------------------
 
-abbreviate_length <- 25
-
-# Custom Functions -----------------------------------------------------------
-
-RemoveItemNumber <- function(factor) {sub("[0-9]+. ", "", factor)}
-
-units <- NULL
-reverse_units <- NULL
-
-AddUnits <- function(name) {
-  if(is.null(units) || !(name %in% names(units)))
-    name
-  else
-    units[[name]]$name_with_units
-}
-
-RemoveUnits <- function(name_with_units) {
-  if(is.null(reverse_units) || !(name_with_units %in% names(reverse_units)))
-    name_with_units
-  else
-    reverse_units[[name_with_units]]
-}
+ABBREVIATION_LENGTH <- 25
 
 # For Testing with Ted's 11k dataset
 # Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\11Kresults\\mergedPET.csv")
@@ -110,30 +90,32 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
     }
   }
 } else {
-  # Visualizer legacy dataset format
-  config_filename <- gsub("mergedPET.csv",
-                          "viz_config.json",
-                          Sys.getenv('DIG_INPUT_CSV'))
-  tab_requests <- c("Explore.R",
-                    "DataTable.R",
-                    "Histogram.R",
-                    "PETRefinement.R",
-                    "Scratch.R",
-                    "ParallelAxisPlot.R",
-                    "UncertaintyQuantification.R")
-  launch_dir <- dirname(config_filename)
-  raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
-  pet_config_filename <- gsub("mergedPET.csv",
-                              "pet_config.json",
-                              Sys.getenv('DIG_INPUT_CSV'))
-  if (file.exists(pet_config_filename)) {
-    pet_config_present <- TRUE
-  }
-  visualizer_config <- list()
-  visualizer_config$raw_data <- "mergedPET.csv"
-  visualizer_config$pet_config <- "pet_config.json"
-  visualizer_config$tabs <- tab_requests
+  # # Visualizer legacy dataset format
+  # config_filename <- gsub("mergedPET.csv",
+  #                         "viz_config.json",
+  #                         Sys.getenv('DIG_INPUT_CSV'))
+  # tab_requests <- c("Explore.R",
+  #                   "DataTable.R",
+  #                   "Histogram.R",
+  #                   "PETRefinement.R",
+  #                   "Scratch.R",
+  #                   "ParallelAxisPlot.R",
+  #                   "UncertaintyQuantification.R")
+  # launch_dir <- dirname(config_filename)
+  # raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
+  # pet_config_filename <- gsub("mergedPET.csv",
+  #                             "pet_config.json",
+  #                             Sys.getenv('DIG_INPUT_CSV'))
+  # if (file.exists(pet_config_filename)) {
+  #   pet_config_present <- TRUE
+  # }
+  # visualizer_config <- list()
+  # visualizer_config$raw_data <- "mergedPET.csv"
+  # visualizer_config$pet_config <- "pet_config.json"
+  # visualizer_config$tabs <- tab_requests
 }
+
+# Saved Input Functions ------------------------------------------------------
 
 si <- function(id, default) {
   # Retrieves saved input state from the previous session for a UI element
@@ -157,7 +139,13 @@ si <- function(id, default) {
   }
 }
 
-# Load Tabs ------------------------------------------------------------------
+si_read <- function(id, default) {
+  # Retrieves saved input state from the previous session for a UI element
+  # with a given id but does not consider it 'applied.'
+  saved_inputs[[id]]
+}
+
+# Load Tabs and Data ---------------------------------------------------------
 
 # Read tab files
 tab_files <- list()
@@ -177,16 +165,41 @@ tab_environments <- lapply(tab_files, function(file_name) {
   env
 })
 
-# Data Pre-Processing --------------------------------------------------------
-
 # Read input dataset file
 raw <- read.csv(raw_data_filename, fill=T)
 
-if (!is.null(visualizer_config$processed_pre)
-    && visualizer_config$processed_pre) {
-  pre <- visualizer_config$pre
-  names(pre$var_class) <- pre$var_names
+
+# We've moved!
+
+# Process PET Configuration File ('pet_config.json') -------------------------
+pet <- NULL
+if (!is.null(visualizer_config[["pet"]])) {
+  pet <- visualizer_config$pet
+} else if(pet_config_present) {
+  pet <- BuildPet(pet_config_filename)
+}
+
+# Process Variables ----------------------------------------------------------
+
+variables <- NULL
+if (!is.null(visualizer_config[["variables"]])) {
+  variables <- visualizer_config$variables
 } else {
+  variables <- BuildVariables(pet, names(raw))
+}
+
+# Server ---------------------------------------------------------------------
+
+Server <- function(input, output, session) {
+  # Handles the processing of all UI interactions.
+  #
+  # Args:
+  #   input: the Shiny list of all the UI input elements.
+  #   output: the Shiny list of all the UI output elements.
+  #   session: a handle for the Shiny session.
+
+  # Data Pre-Processing --------------------------------------------------------
+
   var_names <- names(raw)
   var_class <- sapply(raw, class)
   var_facs <- var_names[var_class == "factor"]
@@ -218,215 +231,16 @@ if (!is.null(visualizer_config$processed_pre)
               var_range_facs=var_range_facs,
               var_range=var_range,
               var_constants=var_constants)
-  visualizer_config$processed_pre <- TRUE
-}
-
-# Process PET Configuration File ('pet_config_json') -------------------------
-
-pet <- NULL
-variables <- NULL
-if (!is.null(visualizer_config$processed_pet)
-    && visualizer_config$processed_pet
-    && !is.null(visualizer_config$processed_variables)
-    && visualizer_config$processed_variables) {
-  pet <- visualizer_config$pet
-  variables <- visualizer_config$variables
-} else {
-  if(pet_config_present) {
-    pet_config <- fromJSON(pet_config_filename)
-    dvs <- pet_config$drivers[[1]]$designVariables
-    design_variable_names <- names(dvs)
-    design_variables <- Map(function(item, name) {
-      new_item <- list()
-      new_item$name <- name
-      if ("RangeMax" %in% names(item)) {
-        new_item$type <- "Numeric"
-      } else {
-        new_item$type <- "Enumeration"
-      }
-      if("type" %in% names(item) && item$type == "enum") {
-        new_item$selection <- paste0(unlist(item$items), collapse=",")
-      } else {
-        new_item$selection <- paste0(c(item$RangeMin, item$RangeMax),
-                                     collapse=",")
-      }
-      new_item
-    }, dvs, names(dvs))
-    objective_names <- names(pet_config$drivers[[1]]$objectives)
-    num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
-    sampling_method <- pet_config$drivers[[1]]$details$DOEType
-    generated_configuration_model <- pet_config$GeneratedConfigurationModel
-    selected_configurations <- pet_config$SelectedConfigurations
-    pet_name <- pet_config$PETName
-    mga_name <- pet_config$MgaFilename
-    
-    pet <- list(sampling_method=sampling_method,
-                num_samples=num_samples,
-                pet_name=pet_name,
-                mga_name=mga_name,
-                generated_configuration_model=generated_configuration_model,
-                selected_configurations=selected_configurations,
-                design_variable_names=design_variable_names,
-                design_variables=design_variables,
-                pet_config=pet_config,
-                pet_config_filename=pet_config_filename)
-    
-    # TODO(tthomas): Clean up the construction of the units list.
-    # Generate units tables.
-    units <- list()
-    reverse_units <- list()
-    for (i in 1:length(design_variable_names))
-    {
-      unit <- pet_config$drivers[[1]]$designVariables[[design_variable_names[i]]]$units
-      if(is.null(unit) || unit == "") {
-        unit <- ""
-        name_with_units <- design_variable_names[[i]]
-      }
-      else
-      {
-        unit <- gsub("\\*\\*", "^", unit) #replace Python '**' with '^'
-        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
-        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
-        name_with_units <- paste0(design_variable_names[i]," (",unit,")")
-      }
-      units[[design_variable_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
-      reverse_units[[name_with_units]] <- design_variable_names[[i]]
-    }
-    for (i in 1:length(objective_names))
-    {
-      unit <- pet_config$drivers[[1]]$objectives[[objective_names[i]]]$units
-      if(is.null(unit)) {
-        unit <- ""
-        name_with_units <- objective_names[[i]]
-      }
-      else
-      {
-        unit <- gsub("\\*\\*", "^", unit)
-        unit <- gsub("inch", "in", unit)  #replace 'inch' with 'in' since 'in' is a Python reserved word
-        unit <- gsub("yard", "yd", unit)  #replace 'yard' with 'yd' since 'yd' is an OpenMDAO reserved word
-        name_with_units <- paste0(objective_names[i]," (",unit,")")
-      }
-      units[[objective_names[[i]]]] <- list("unit"=unit, "name_with_units"=name_with_units)
-      reverse_units[[name_with_units]] <- objective_names[[i]]
-    }
-    
-    # Build variables metadata list.
-    variables <- lapply(names(raw), function(var_name) {
-      if (var_name %in% design_variable_names)
-        type <- "Design Variable"
-      else
-        type <- "Objective"
-      list(name = var_name,
-           name_with_units = AddUnits(var_name),
-           type = type
-      )
-    })
-    names(variables) <- names(raw)
-  }
   
-  visualizer_config$processed_pet <- TRUE
-  visualizer_config$processed_variables <- TRUE
-}
-
-# Server ---------------------------------------------------------------------
-
-Server <- function(input, output, session) {
-  # Handles the processing of all UI interactions.
-  #
-  # Args:
-  #   input: the Shiny list of all the UI input elements.
-  #   output: the Shiny list of all the UI output elements.
-  #   session: a handle for the Shiny session.
-
-  # Session Save/Restore -----------------------------------------------------
-
-  # The save/restore functionality relies upon three main mechanisms: 
-  #  1. It saves the values of all the inputs to the visualizer config file
-  #     on close by supplying the necessary callback function to
-  #     session$onSessionEnded().
-  #  2. It provides a function, si(id, default) to the tabs that allows
-  #     them to check for a saved value for a input when creating inputs
-  #     in their 'ui'.
-  #  3. Lastly, they are provided a list of saved inputs that they can use
-  #     in an observe to cover tricky cases.
-  
-  data <- list()
-  
-  
-  # Dispose of this server when the UI is closed
-  session$onSessionEnded(function() {
-    # Prepare inputs and other metadata for saving to visualizer config file
-    current_inputs <- isolate(reactiveValuesToList(input))
-    current_inputs[["window_width"]] <- NULL
-    current_inputs[unlist(lapply(names(current_inputs), function (name) {
-      "shinyActionButtonValue" %in% class(current_inputs[[name]]) ||
-      # grepl("click", name) ||
-      grepl("^tooltip_", name)
-    }))] <- NULL
-    combined_inputs <- c(saved_inputs,
-                         current_inputs[setdiff(names(current_inputs),
-                                                names(saved_inputs))])
-    combined_inputs <- combined_inputs[order(names(combined_inputs))]
-    visualizer_config$inputs <- combined_inputs
-    visualizer_config$added <- isolate(reactiveValuesToList(data$added))
-    visualizer_config$pet <- data$meta$pet
-    visualizer_config$variables <- data$meta$variables
-    visualizer_config$coloring <- isolate(
-      reactiveValuesToList(data$meta$coloring))
-    data$meta$pre$AbsMax <- NULL
-    data$meta$pre$AbsMin <- NULL
-    visualizer_config$pre <- data$meta$pre
-    
-    if(is.null(visualizer_config$augmented_data)) {
-      tentative_filename <- sub(".csv", "_aug.csv", basename(raw_data_filename))
-      # TODO(tthomas): Check if file already exists
-      visualizer_config$augmented_data <- tentative_filename
-    }
-    write.csv(isolate(data$raw$df),
-              file=file.path(launch_dir, visualizer_config$augmented_data),
-              row.names = FALSE)
-    write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
-          file=config_filename)
-    print("Session saved.")
-    
-    # Clear environment variables -- for development
-    Sys.setenv(DIG_INPUT_CSV="")
-    Sys.setenv(DIG_DATASET_CONFIG="")
-    stopApp()
-  })
-  
-  # Get Visualizer Framework only list
-  if(!is.null(saved_inputs)) {
-    master_saved_inputs <- saved_inputs[unname(sapply(names(saved_inputs), function (name) {!grepl("-", name)}))]
-    
-    # Use observes() for restoring tricky saved inputs
-    observe({
-      lapply(names(master_saved_inputs), function(current_input) {
-      # lapply(names(saved_inputs), function(current_input) {
-        if(!is.null(input[[current_input]]) && (current_input %in% names(saved_inputs))) {
-          value <- saved_inputs[[current_input]]
-          saved_inputs[[current_input]] <<- NULL
-          master_saved_inputs[[current_input]] <<- NULL
-          updateSelectInput(session,
-                            current_input,
-                            selected = value)
-          # print(paste0("(", length(saved_inputs), ":", length(master_saved_inputs), ") Applying via Observe('", current_input, "') ", paste(value, collapse = ", ")))
-        }
-      })
-      # print(paste("Remaining:", length(saved_inputs)))
-    })
-  }
-
   # Special observe to cover 'footer_collapse'
   observe({
-    if("footer_collapse" %in% names(saved_inputs)) {
-      open <- saved_inputs$footer_collapse
+    if(!is.null(si_read("footer_collapse"))) {
+      open <- si("footer_collapse")
       if(is.null(unlist(open))) {
         updateCollapse(session, "footer_collapse", close = "Filters")
       } else {
         updateCollapse(session, "footer_collapse", open = open)
       }
-      saved_inputs$footer_collapse <<- NULL
     }
   })
   
@@ -461,12 +275,13 @@ Server <- function(input, output, session) {
     )
   })
 
-  # Slider abbreviation function based off sliderWidth
+  # Slider abbreviation function based off slider_width
+  abbreviation_length <- ABBREVIATION_LENGTH
   AbbreviateLabel <- function(name) {
-    if(!is.null(input$sliderWidth)){
-      abbreviate_length <<- input$sliderWidth/8
+    if(!is.null(input$slider_width)){
+      abbreviation_length <<- input$slider_width/8
     }
-    abbreviate(name, abbreviate_length)
+    abbreviate(name, abbreviation_length)
   }
   
   # Process slider pixel width when opening filters
@@ -804,24 +619,6 @@ Server <- function(input, output, session) {
   
   # Coloring -----------------------------------------------------------------
   
-  updateSelectInput(session, "live_coloring_variable_numeric",
-                    choices = pre$var_range_nums_and_ints,
-                    selected = si("live_coloring_variable_numeric", pre$var_range_nums_and_ints[0]))
-  updateSelectInput(session, "live_color_variable_factor",
-                    choices = pre$var_range_facs,
-                    selected = si("live_color_variable_factor", pre$var_range_facs[0]))
-  
-  observe({
-    if (length(data$added$classifications) == 0) {
-      numeric_choices <- as.list(pre$var_range_nums_and_ints)
-    } else {
-      numeric_choices <- list(Variables=as.list(pre$var_range_nums_and_ints),
-                              Classifications=as.list(names(data$added$classifications)))
-    }
-    updateSelectInput(session, "live_coloring_variable_numeric",
-                      choices = numeric_choices)
-  })
-  
   if(is.null(visualizer_config$coloring)) {
     coloring_items <- list()
     current_coloring <- list()
@@ -872,17 +669,6 @@ Server <- function(input, output, session) {
     })
   })
   
-  observe({
-    isolate({
-      selected <- input$coloring_source
-    })
-    new_choices <- c("None", "Live", names(coloring$items))
-    updateSelectInput(session,
-                      "coloring_source",
-                      choices = new_choices,
-                      selected = selected)
-  })
-  
   output$coloring_legend <- renderUI({
     req(coloring$current$type)
     req(coloring$current$var)
@@ -898,6 +684,48 @@ Server <- function(input, output, session) {
       }
       raw_label
     }
+  })
+  
+  observe({
+    isolate({
+      selected <- input$coloring_source
+    })
+    new_choices <- c("None", "Live", names(coloring$items))
+    if (!is.null(si_read("coloring_source")) &&
+        si_read("coloring_source") %in% new_choices) {
+      selected <- si("coloring_source", NULL)
+    }
+    updateSelectInput(session,
+                      "coloring_source",
+                      choices = new_choices,
+                      selected = selected)
+  })
+  
+  updateSelectInput(session, "live_color_variable_factor",
+                    choices = pre$var_range_facs,
+                    selected = si("live_color_variable_factor", pre$var_range_facs[0]))
+  
+  updateSelectInput(session, "live_coloring_variable_numeric",
+                    choices = pre$var_range_nums_and_ints,
+                    selected = pre$var_range_nums_and_ints[0])
+  
+  observe({
+    isolate({
+      selected <- input$live_coloring_variable_numeric
+    })
+    if (length(data$added$classifications) == 0) {
+      numeric_choices <- as.list(pre$var_range_nums_and_ints)
+    } else {
+      numeric_choices <- list(Variables=as.list(pre$var_range_nums_and_ints),
+                              Classifications=as.list(names(data$added$classifications)))
+    }
+    if (!is.null(si_read("live_coloring_variable_numeric")) &&
+        si_read("live_coloring_variable_numeric") %in% unlist(numeric_choices)) {
+      selected <- si("live_coloring_variable_numeric", NULL)
+    }
+    updateSelectInput(session, "live_coloring_variable_numeric",
+                      choices = numeric_choices,
+                      selected = selected)
   })
   
   # Classifications and Sets -------------------------------------------------
@@ -929,6 +757,7 @@ Server <- function(input, output, session) {
   # Final Processing ---------------------------------------------------------
   
   # Build the 'data' list that is shared between all tabs.
+  data <- list()
   data$raw <- reactiveValues(df = raw)
   data$Filtered <- FilteredData
   data$Colored <- ColoredData
@@ -953,22 +782,76 @@ Server <- function(input, output, session) {
   })
   
   
-  # data$experimental <- list()
-  
-  # Call individual tabs' Server() functions.
-  # lapply(tab_environments, function(custom_env) {
-  #   do.call(custom_env$server,
-  #           list(input, output, session, data))
-  # })
+  # Call each tab's server() function ----------------------------------------
   
   mapply(function(tab_env, id_num) {
-    # do.call(tab_env$server,
-    #         list(input, output, session, data))
-    callModule(tab_env$server, paste(id_num), data)
-  },
-  tab_env=tab_environments,
-  id_num=1:length(tab_environments),
-  SIMPLIFY = FALSE)
+      # do.call(tab_env$server,
+      #         list(input, output, session, data))
+      callModule(tab_env$server, paste(id_num), data)
+    },
+    tab_env=tab_environments,
+    id_num=1:length(tab_environments),
+    SIMPLIFY = FALSE
+  )
+  
+  # Session Save/Restore -----------------------------------------------------
+
+  # The save/restore functionality relies upon three main mechanisms: 
+  #  1. It saves the values of all the inputs to the visualizer config file
+  #     on close by supplying the necessary callback function to
+  #     session$onSessionEnded().
+  #  2. It provides a function, si(id, default) to the tabs that allows
+  #     them to check for a saved value for a input when creating inputs
+  #     in their 'ui'.
+  #  3. Lastly, there are a number of inputs that can't be restored using the
+  #     standard si() function. These special inputs are restored using 
+  #     observe(), isolate(), si_read(), and si() functions and can be found
+  #     throughout the rest of the body of the 'app.R' file.
+  
+  # Dispose of this server when the UI is closed
+  session$onSessionEnded(function() {
+    
+    # Prepare inputs and other metadata for saving to visualizer config file
+    if(is.null(visualizer_config$augmented_data)) {
+      tentative_filename <- sub(".csv", "_aug.csv", basename(raw_data_filename))
+      # TODO(tthomas): Check if file already exists
+      visualizer_config$augmented_data <- tentative_filename
+    }
+    data$meta$pre$AbsMax <- NULL
+    data$meta$pre$AbsMin <- NULL
+    # visualizer_config$pre <- data$meta$pre
+    visualizer_config$variables <- data$meta$variables
+    current_inputs <- isolate(reactiveValuesToList(input))
+    current_inputs[["window_width"]] <- NULL
+    current_inputs[unlist(lapply(names(current_inputs), function (name) {
+      "shinyActionButtonValue" %in% class(current_inputs[[name]]) ||
+      # grepl("click", name) ||
+      grepl("^tooltip_", name)
+    }))] <- NULL
+    combined_inputs <- c(saved_inputs,
+                         current_inputs[setdiff(names(current_inputs),
+                                                names(saved_inputs))])
+    combined_inputs <- combined_inputs[order(names(combined_inputs))]
+    visualizer_config$inputs <- combined_inputs
+    visualizer_config$coloring <- isolate(
+      reactiveValuesToList(data$meta$coloring))
+    visualizer_config$added <- isolate(reactiveValuesToList(data$added))
+    # visualizer_config$pet <- data$meta$pet
+    
+    write.csv(isolate(data$raw$df),
+              file=file.path(launch_dir, visualizer_config$augmented_data),
+              row.names = FALSE)
+    write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
+          file=config_filename)
+    print("Session saved.")
+    
+    # Clear environment variables -- for development
+    Sys.setenv(DIG_INPUT_CSV="")
+    Sys.setenv(DIG_DATASET_CONFIG="")
+    stopApp()
+  })
+  
+  
 }
 
 # UI -------------------------------------------------------------------------
@@ -1017,7 +900,7 @@ ui <- fluidPage(
       bsCollapsePanel("Coloring",
         column(3,
           h4("Coloring Source"),
-          selectInput("coloring_source", "Source", choices = c("None", "Live"), selected = si("coloring_source", "None")),
+          selectInput("coloring_source", "Source", choices = c("None", "Live")),  #, selected = si("coloring_source", "None")),
           htmlOutput("coloring_legend")
         ),
         column(3,
