@@ -10,6 +10,7 @@
       <ComponentGroupRef Id="CyPhy2Schematic"/>
       <ComponentGroupRef Id="LayoutSolver"/>
       <ComponentGroupRef Id="CyPhy2SystemC"/>
+      <ComponentGroupRef Id="CyPhy2Simulink"/>
       <ComponentGroupRef Id="CyPhy2CADPCB"/>
       <ComponentGroupRef Id="SpiceVisualizer"/>
       <ComponentGroupRef Id='tonka_python'/>

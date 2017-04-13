@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <DirectoryRef Id="INSTALLDIR_BIN" />
+</Fragment>
+<Fragment>
+<ComponentGroup Id="CyPhy2Simulink">
+  <Component Id="CyPhy2Simulink.dll" Directory="INSTALLDIR_BIN">
+    <File Id="CyPhy2Simulink.dll" Name="CyPhy2Simulink.dll" KeyPath="yes" Source="../src/CyPhy2Simulink\bin\Release\CyPhy2Simulink.dll" />
+    <Class Id="{8421AAEA-D9D6-44D5-91FE-A01460C1CBB3}" Context="InprocServer32" Description="MGA.Interpreter.CyPhy2Simulink" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="MGA.Interpreter.CyPhy2Simulink" Description="MGA.Interpreter.CyPhy2Simulink" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{8421AAEA-D9D6-44D5-91FE-A01460C1CBB3}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{8421AAEA-D9D6-44D5-91FE-A01460C1CBB3}\InprocServer32" Name="Class" Value="CyPhy2Simulink.CyPhy2SimulinkInterpreter" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{8421AAEA-D9D6-44D5-91FE-A01460C1CBB3}\InprocServer32" Name="Assembly" Value="CyPhy2Simulink, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{8421AAEA-D9D6-44D5-91FE-A01460C1CBB3}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{8421AAEA-D9D6-44D5-91FE-A01460C1CBB3}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2Simulink.dll]" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
+    <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.CyPhy2Simulink'>
+      <RegistryValue Name='Description' Type='string' Value='CyPhy2Simulink'/>
+      <RegistryValue Name='Icon' Type='string' Value='[#CyPhy2Simulink.ico]'/>
+      <RegistryValue Name='Paradigm' Type='string' Value='CyPhyML'/>
+      <RegistryValue Name='Tooltip' Type='string' Value='CyPhy2Simulink'/>
+      <RegistryValue Name='Type' Type='integer' Value='1'/>
+
+      <!-- not Associated -->
+
+    </RegistryKey>
+    <Class Id="{FEDF3A05-DEAC-48DA-A7D6-C992BF957E5A}" Context="InprocServer32" Description="ISIS.META.CyPhy2Simulink_Settings" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="ISIS.META.CyPhy2Simulink_Settings" Description="ISIS.META.CyPhy2Simulink_Settings" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{FEDF3A05-DEAC-48DA-A7D6-C992BF957E5A}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{FEDF3A05-DEAC-48DA-A7D6-C992BF957E5A}\InprocServer32" Name="Class" Value="CyPhy2Simulink.CyPhy2Simulink_Settings" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{FEDF3A05-DEAC-48DA-A7D6-C992BF957E5A}\InprocServer32" Name="Assembly" Value="CyPhy2Simulink, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{FEDF3A05-DEAC-48DA-A7D6-C992BF957E5A}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{FEDF3A05-DEAC-48DA-A7D6-C992BF957E5A}\InprocServer32" Name="CodeBase" Value="file:///[#CyPhy2Simulink.dll]" Type="string" Action="write" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="../src/CyPhy2Simulink/CyPhy2Simulink.ico" />
+  </Component>
+</ComponentGroup>
+</Fragment>
+</Wix>

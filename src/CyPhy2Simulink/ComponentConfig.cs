@@ -27,6 +27,6 @@ namespace GME.CSharp
 
         public const regaccessmode_enum registrationMode = regaccessmode_enum.REGACCESS_SYSTEM;
         public const string progID = "MGA.Interpreter.CyPhy2Simulink";
-        public const string guid = "AF0B9735-FF04-4589-8C56-DC997FB3FA97";
+        public const string guid = "8421AAEA-D9D6-44D5-91FE-A01460C1CBB3";
     }
 }
