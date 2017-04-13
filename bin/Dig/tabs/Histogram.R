@@ -21,11 +21,13 @@ server <- function(input, output, session, data) {
   
   vars <- data$meta$pre$var_range_nums_and_ints
   
-  updateSelectInput(session,
-                    "sandboxVar",
-                    choices = vars,
-                    selected = si(ns("sandboxVar"),
-                                  vars[1]))
+  observe({
+    updateSelectInput(session,
+                      "sandboxVar",
+                      choices = vars(),
+                      selected = si(ns("sandboxVar"),
+                                    vars()[1]))
+  })
   
   output$sandboxPlot <- renderPlot({
     if(input$sandboxVar != "") {

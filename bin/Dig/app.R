@@ -149,12 +149,15 @@ si_read <- function(id, default) {
 
 # Read tab files
 tab_files <- list()
+tab_ids <- list()
 for (i in 1:length(tab_requests)) {
   request <- tab_requests[i]
   if (file.exists(file.path(launch_dir, request))) {
     tab_files <- c(tab_files, file.path(launch_dir, request))
+    tab_ids <- c(tab_ids, sub(".R", "", request))
   } else if (file.exists(file.path('tabs', request))) {
     tab_files <- c(tab_files, file.path('tabs', request))
+    tab_ids <- c(tab_ids, sub(".R", "", request))
   }
 }
 
@@ -197,25 +200,30 @@ Server <- function(input, output, session) {
   #   input: the Shiny list of all the UI input elements.
   #   output: the Shiny list of all the UI output elements.
   #   session: a handle for the Shiny session.
-
+  
   # Data Pre-Processing --------------------------------------------------------
 
-  var_names <- names(raw)
-  var_class <- sapply(raw, class)
-  var_facs <- var_names[var_class == "factor"]
-  var_ints <- var_names[var_class == "integer"]
-  var_nums <- var_names[var_class == "numeric"]
-  var_nums_and_ints <- var_names[var_class == "integer" |
-                                 var_class == "numeric"]
-  abs_max <- apply(raw[var_nums_and_ints], 2, max, na.rm=TRUE)
-  abs_min <- apply(raw[var_nums_and_ints], 2, min, na.rm=TRUE)
-  var_range_nums_and_ints <- var_nums_and_ints[(abs_min != abs_max) &
-                                               (abs_min != Inf)]
-  var_range_facs <- var_facs[apply(raw[var_facs], 2, function(var_fac) {
-                                     length(names(table(var_fac))) > 1
-                                   })]
-  var_range <- c(var_facs, var_nums_and_ints)
-  var_constants <- subset(var_names, !(var_names %in% var_range))
+  var_names <- reactive({names(data$raw$df)})
+  var_class <- reactive({sapply(data$raw$df, class)})
+  var_facs <- reactive({var_names()[var_class() == "factor"]})
+  var_ints <- reactive({var_names()[var_class() == "integer"]})
+  var_nums <- reactive({var_names()[var_class() == "numeric"]})
+  var_nums_and_ints <- reactive({
+    var_names()[var_class() == "integer" | var_class() == "numeric"]})
+  abs_max <- reactive({
+    apply(data$raw$df[var_nums_and_ints()], 2, max, na.rm=TRUE)})
+  abs_min <- reactive({
+    apply(data$raw$df[var_nums_and_ints()], 2, min, na.rm=TRUE)})
+  var_range_nums_and_ints <- reactive({
+    var_nums_and_ints()[(abs_min() != abs_max()) & (abs_min() != Inf)]})
+  var_range_facs <- reactive({
+    var_facs()[apply(data$raw$df[var_facs()], 2,
+                     function(var_fac) {
+                       length(names(table(var_fac))) > 1
+                     })]})
+  var_range <- reactive({c(var_facs(), var_nums_and_ints())})
+  var_constants <- reactive({
+    subset(var_names(), !(var_names() %in% var_range()))})
   
   pre <- list(var_names=var_names,
               var_class=var_class,
@@ -225,8 +233,6 @@ Server <- function(input, output, session) {
               var_nums_and_ints=var_nums_and_ints,
               abs_min=abs_min,
               abs_max=abs_max,
-              AbsMax=NULL,
-              AbsMin=NULL,
               var_range_nums_and_ints=var_range_nums_and_ints,
               var_range_facs=var_range_facs,
               var_range=var_range,
@@ -258,8 +264,8 @@ Server <- function(input, output, session) {
   
   # Generates the sliders and select boxes.
   output$filters <- renderUI({
-    var_selects <- pre$var_range_facs
-    var_sliders <- pre$var_range_nums_and_ints
+    var_selects <- pre$var_range_facs()
+    var_sliders <- pre$var_range_nums_and_ints()
     
     div(
       fluidRow(
@@ -314,9 +320,9 @@ Server <- function(input, output, session) {
   
   GenerateSliderUI <- function(current, label) {
     
-    if(current %in% pre$var_nums){
-      min <- as.numeric(pre$abs_min[current])
-      max <- as.numeric(pre$abs_max[current])
+    if(current %in% pre$var_nums()){
+      min <- as.numeric(pre$abs_min()[current])
+      max <- as.numeric(pre$abs_max()[current])
       step <- signif(max((max-min)*0.01, abs(min)*0.001, abs(max)*0.001),
                      digits = 4)
       slider_min <- signif((min - step*10), digits = 4)
@@ -324,8 +330,8 @@ Server <- function(input, output, session) {
     }
     else{
       step <- 0
-      slider_min <- as.numeric(pre$abs_min[current])
-      slider_max <- as.numeric(pre$abs_max[current])
+      slider_min <- as.numeric(pre$abs_min()[current])
+      slider_max <- as.numeric(pre$abs_max()[current])
     }
     
     slider_value <- input[[paste0('filter_', current)]]
@@ -371,16 +377,16 @@ Server <- function(input, output, session) {
   openSliderToolTip <- function(current) {
     # This function calls hide on all slider exact entry windows on a
     # 'double click' and then calls 'show' on the opened one.
-    for(i in 1:length(pre$var_range_nums_and_ints)) {
-      hide(paste0("slider_tooltip_", pre$var_range_nums_and_ints[i]))
+    for(i in 1:length(pre$var_range_nums_and_ints())) {
+      hide(paste0("slider_tooltip_", pre$var_range_nums_and_ints()[i]))
     }
     shinyjs::show(paste0("slider_tooltip_", current))
   }
   
-  lapply(pre$var_range_nums_and_ints, function(current) {
-    # This handles the processing of exact entry back into the slider.
-    # It reacts to either the submit button OR the enter key
-    observe({
+  observe({
+    lapply(pre$var_range_nums_and_ints(), function(current) {
+      # This handles the processing of exact entry back into the slider.
+      # It reacts to either the submit button OR the enter key
       input[[paste0("submit_", current)]]
       input$last_key_pressed
       
@@ -404,7 +410,7 @@ Server <- function(input, output, session) {
   
   # This function adds a double click handler to each slider
   observe({
-    lapply(pre$var_range_nums_and_ints, function(current) {
+    lapply(pre$var_range_nums_and_ints(), function(current) {
       onevent("dblclick", paste0("filter_", current), openSliderToolTip(current))
       inlineCSS(list(.style = "overflow: hidden"))
     })
@@ -412,7 +418,7 @@ Server <- function(input, output, session) {
   
   output$constants <- renderUI({
     fluidRow(
-      lapply(pre$var_constants, function(var_constant) {
+      lapply(pre$var_constants(), function(var_constant) {
         column(2,
           p(strong(paste0(var_constant,":")), unname(raw[1,var_constant]))
         )
@@ -421,19 +427,19 @@ Server <- function(input, output, session) {
   })
   
   output$constants_present <- reactive({
-    length(pre$var_constants) > 0
+    length(pre$var_constants()) > 0
   })
   
   outputOptions(output, "constants_present", suspendWhenHidden=FALSE)
   
   observeEvent(input$reset_sliders, {
-    for(column in 1:length(pre$var_names)){
-      name <- pre$var_names[column]
-      switch(pre$var_class[column],
+    for(column in 1:length(pre$var_names())){
+      name <- pre$var_names()[column]
+      switch(pre$var_class()[column],
         "numeric" =
         {
-          max <- as.numeric(unname(data$meta$pre$AbsMax()[pre$var_names[column]]))
-          min <- as.numeric(unname(data$meta$pre$AbsMin()[pre$var_names[column]]))
+          max <- as.numeric(unname(data$meta$pre$AbsMax()[pre$var_names()[column]]))
+          min <- as.numeric(unname(data$meta$pre$AbsMin()[pre$var_names()[column]]))
           diff <- (max-min)
           if (diff != 0) {
             step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
@@ -442,13 +448,13 @@ Server <- function(input, output, session) {
         },
         "integer" =
         {
-          max <- as.integer(unname(data$meta$pre$AbsMax()[pre$var_names[column]]))
-          min <- as.integer(unname(data$meta$pre$AbsMin()[pre$var_names[column]]))
+          max <- as.integer(unname(data$meta$pre$AbsMax()[pre$var_names()[column]]))
+          min <- as.integer(unname(data$meta$pre$AbsMin()[pre$var_names()[column]]))
           if(min != max) {
             updateSliderInput(session, paste0('filter_', name), value = c(min, max))
           }
         },
-        "factor"  = updateSelectInput(session, paste0('filter_', name), selected = names(table(data$raw$df[pre$var_names[column]])))
+        "factor"  = updateSelectInput(session, paste0('filter_', name), selected = names(table(data$raw$df[pre$var_names()[column]])))
       )
     }
   })
@@ -459,19 +465,19 @@ Server <- function(input, output, session) {
     # This reactive holds the full dataset that has been filtered using the
     # values of the sliders.
     data_filtered <- data$raw$df
-    for(index in 1:length(pre$var_names)) {
-      name <- pre$var_names[index]
+    for(index in 1:length(pre$var_names())) {
+      name <- pre$var_names()[index]
       input_name <- paste("filter_", name, sep="")
       selection <- input[[input_name]]
       if(length(selection) != 0) {
-        if(name %in% pre$var_nums_and_ints) {
+        if(name %in% pre$var_nums_and_ints()) {
           isolate({
             above <- (data_filtered[[name]] >= selection[1])
             below <- (data_filtered[[name]] <= selection[2])
             in_range <- above & below
           })
         }
-        else if (name %in% pre$var_facs) {
+        else if (name %in% pre$var_facs()) {
             selection <- unlist(lapply(selection, function(factor){
                                                     RemoveItemNumber(factor)
                                                   }))
@@ -494,7 +500,7 @@ Server <- function(input, output, session) {
     # the information for filtering the raw dataset itself.
     #
     # Each of the variables will have a "type" that is simply the 
-    # pre$var_class for that variable and either "selection" or "min" and
+    # pre$var_class() for that variable and either "selection" or "min" and
     # "max", e.g.:
     # > Filters()$Engine$type
     #   "factor"
@@ -508,13 +514,13 @@ Server <- function(input, output, session) {
     #   210
     
     filters <- list()
-    for(index in 1:length(pre$var_names)) {
-      name <- pre$var_names[index]
+    for(index in 1:length(pre$var_names())) {
+      name <- pre$var_names()[index]
       input_name <- paste("filter_", name, sep="")
       selection <- input[[input_name]]
       filters[[name]] <- list()
-      filters[[name]]$type <- pre$var_class[[name]]
-      if(pre$var_class[[name]] == "factor") {
+      filters[[name]]$type <- pre$var_class()[[name]]
+      if(pre$var_class()[[name]] == "factor") {
         filters[[name]]$selection <- unname(sapply(selection,
                                                    RemoveItemNumber))
       }
@@ -701,22 +707,22 @@ Server <- function(input, output, session) {
                       selected = selected)
   })
   
-  updateSelectInput(session, "live_color_variable_factor",
-                    choices = pre$var_range_facs,
-                    selected = si("live_color_variable_factor", pre$var_range_facs[0]))
-  
-  updateSelectInput(session, "live_coloring_variable_numeric",
-                    choices = pre$var_range_nums_and_ints,
-                    selected = pre$var_range_nums_and_ints[0])
+  # updateSelectInput(session, "live_color_variable_factor",
+  #                   choices = pre$var_range_facs(),
+  #                   selected = si("live_color_variable_factor", pre$var_range_facs()[0]))
+  # 
+  # updateSelectInput(session, "live_coloring_variable_numeric",
+  #                   choices = pre$var_range_nums_and_ints(),
+  #                   selected = pre$var_range_nums_and_ints()[0])
   
   observe({
     isolate({
       selected <- input$live_coloring_variable_numeric
     })
     if (length(data$added$classifications) == 0) {
-      numeric_choices <- as.list(pre$var_range_nums_and_ints)
+      numeric_choices <- as.list(pre$var_range_nums_and_ints())
     } else {
-      numeric_choices <- list(Variables=as.list(pre$var_range_nums_and_ints),
+      numeric_choices <- list(Variables=as.list(pre$var_range_nums_and_ints()),
                               Classifications=as.list(names(data$added$classifications)))
     }
     if (!is.null(si_read("live_coloring_variable_numeric")) &&
@@ -772,25 +778,25 @@ Server <- function(input, output, session) {
   
   data$meta$pre$AbsMax <- reactive({
     classification_names <- names(data$added$classifications)
-    vars <- c(pre$var_nums_and_ints, classification_names)
+    vars <- c(pre$var_nums_and_ints(), classification_names)
     apply(data$raw$df[vars], 2, max, na.rm=TRUE)
   })
   
   data$meta$pre$AbsMin <- reactive({
-    vars <- c(pre$var_nums_and_ints, names(data$added$classifications))
+    vars <- c(pre$var_nums_and_ints(), names(data$added$classifications))
     apply(data$raw$df[vars], 2, min, na.rm=TRUE)
   })
   
   
   # Call each tab's server() function ----------------------------------------
   
-  mapply(function(tab_env, id_num) {
+  mapply(function(tab_env, id) {
       # do.call(tab_env$server,
       #         list(input, output, session, data))
-      callModule(tab_env$server, paste(id_num), data)
+      callModule(tab_env$server, paste(id), data)
     },
     tab_env=tab_environments,
-    id_num=1:length(tab_environments),
+    id=tab_ids,
     SIMPLIFY = FALSE
   )
   
@@ -860,10 +866,14 @@ Server <- function(input, output, session) {
 base_tabs <- NULL
 
 print("Tabs:")
-added_tabs <- mapply(function(tab_env, id_num) {
-  print(paste0(id_num, ": ", tab_env$title))
-  tabPanel(tab_env$title, tab_env$ui(paste(id_num)))
-}, tab_env=tab_environments, id_num=1:length(tab_environments), SIMPLIFY = FALSE)
+added_tabs <- mapply(function(tab_env, id) {
+    print(paste0(id, ": ", tab_env$title))
+    tabPanel(tab_env$title, tab_env$ui(paste(id)))
+  },
+  tab_env=tab_environments,
+  id=tab_ids,
+  SIMPLIFY = FALSE
+)
 
 tabset_arguments <- c(unname(base_tabs),
                       unname(added_tabs),

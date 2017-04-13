@@ -64,7 +64,6 @@ AddUnits <- function(name, units) {
 }
   
 BuildVariables <- function(pet, var_names) {
-  print(pet)
   if(is.null(pet)) {
     variables <- lapply(var_names, function(var_name) {
       list(type="Unknown")
