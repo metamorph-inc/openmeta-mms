@@ -7,6 +7,7 @@ using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
 using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
 using CyPhyComponentAuthoring;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Xml;
 using System.Windows.Forms;
 using META;
@@ -64,55 +65,33 @@ namespace CyPhyComponentAuthoring.Modules
 
             try
             {
-                var browser = new SimulinkLibraryBrowser();
 
-                browser.DebugTextBox.Text += "Hello World!\r\n";
-
-                var matlabType = Type.GetTypeFromProgID("Matlab.Application");
-
-                dynamic matlab = Activator.CreateInstance(matlabType);
-                matlab.Execute("load_system('simulink');");
-
-                object result;
-
-                matlab.Feval("find_system", 1, out result, "simulink");
-
-                browser.DebugTextBox.Text += result.GetType().ToString();
-                browser.DebugTextBox.Text += "\r\n\r\n";
-                browser.DebugTextBox.Text += result.ToString();
-                browser.DebugTextBox.Text += "\r\n\r\n";
-
-                var resultArray = (Object[]) result;
-                foreach(var obj in resultArray)
+                using (var browser = new SimulinkLibraryBrowser())
                 {
-                    browser.DebugTextBox.Text += obj.GetType().ToString();
-                    browser.DebugTextBox.Text += "\r\n";
-                    browser.DebugTextBox.Text += obj.ToString();
-                    browser.DebugTextBox.Text += "\r\n";
-
-                    if (obj is Object[,])
+                    using (var simulinkConnector = new SimulinkConnector())
                     {
-                        var objArray = (Object[,]) obj;
-
-                        foreach (var obj2 in objArray)
-                        {
-                            browser.DebugTextBox.Text += "Subobject: ";
-                            browser.DebugTextBox.Text += obj2.GetType().ToString();
-                            browser.DebugTextBox.Text += "\r\n";
-                            browser.DebugTextBox.Text += obj2.ToString();
-                            browser.DebugTextBox.Text += "\r\n";
-                        }
+                        browser.BlockNames = simulinkConnector.ListSystemObjects("simulink").ToList();
                     }
+
+                    var result = browser.ShowDialog();
+
+                    if (result == DialogResult.OK)
+                    {
+                        Logger.WriteInfo("Selected Block: {0}", browser.SelectedBlockName);
+                    }
+                    else
+                    {
+                        Logger.WriteInfo("Simulink import cancelled");
+                    }
+
+                    Logger.WriteInfo("Complete");
                 }
 
-                browser.ShowDialog();
-                Logger.WriteInfo("Complete");
-
-                matlab.Quit();
+                
             }
             catch( Exception e )
             {
-                Logger.WriteError("Error parsing: {0}", e.Message);
+                Logger.WriteError("Error occurred: {0}", e.Message);
 
                 if (ownLogger)
                 {
@@ -212,6 +191,64 @@ namespace CyPhyComponentAuthoring.Modules
                     myComponent.Name);
             }
             return rVal;
+        }
+
+        private class SimulinkConnector : IDisposable
+        {
+            private dynamic _matlabInstance;
+
+            public SimulinkConnector()
+            {
+                _matlabInstance = null;
+
+                int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
+                try
+                {
+                    var matlabType = Type.GetTypeFromProgID("Matlab.Application");
+                    if (matlabType == null)
+                    {
+                        throw new COMException("No type Matlab.Application", REGDB_E_CLASSNOTREG);
+                    }
+                    _matlabInstance = Activator.CreateInstance(matlabType);
+                }
+                catch (COMException e)
+                {
+                    if (e.ErrorCode == REGDB_E_CLASSNOTREG)
+                    {
+                        throw new ApplicationException("Matlab is not installed or registered");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            public IEnumerable<string> ListSystemObjects(string systemName)
+            {
+                _matlabInstance.Execute("load_system('simulink');");
+
+                object result;
+
+                _matlabInstance.Feval("find_system", 1, out result, "simulink");
+
+                //We're going to make some assumptions about the format of this output
+                //'result' is a single-element array, containing an Object[,] which is
+                //an n*1 array containing strings with block names
+                var blockNameArray = ((Object[,]) (((Object[]) result)[0])).Cast<string>().Select(s => s.Replace("\n", " "));
+
+                return blockNameArray;
+            }
+
+            public void Dispose()
+            {
+                if (_matlabInstance != null)
+                {
+                    _matlabInstance.Quit();
+
+                    _matlabInstance = null;
+                }
+            }
         }
         
     }
