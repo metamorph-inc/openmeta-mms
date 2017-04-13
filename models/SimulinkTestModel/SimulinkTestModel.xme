@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{98A7E5CB-8D4D-4C49-8C56-DCD3E6020DF9}" cdate="Tue Apr 11 17:15:14 2017" mdate="Tue Apr 11 17:15:14 2017" version="" metaguid="{6A4988F6-2BA5-034A-269C-7F3F38BF0261}" metaversion="14.13-t15" metaname="CyPhyML">
+<project guid="{E40D954F-B3E9-414E-888E-CA89F445533D}" cdate="Tue Apr 11 17:15:14 2017" mdate="Tue Apr 11 17:15:14 2017" version="" metaguid="{6A4988F6-2BA5-034A-269C-7F3F38BF0261}" metaversion="14.13-t15" metaname="CyPhyML">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
@@ -17428,7 +17428,7 @@ from this design to perform post-processing and compute design metrics.</value>
 				</connection>
 			</model>
 		</folder>
-		<folder id="id-006a-00000004" relid="0x8" childrelidcntr="0x15" kind="Testing" guid="{a7fd9491-aca5-4e67-bcfd-4a3a7397f026}">
+		<folder id="id-006a-00000004" relid="0x8" childrelidcntr="0x16" kind="Testing" guid="{a7fd9491-aca5-4e67-bcfd-4a3a7397f026}">
 			<name>Testing</name>
 			<folder id="id-006a-00000005" relid="0x2" childrelidcntr="0x5" kind="WorkflowDefinitionFolder" guid="{3dc0c3dc-0ba8-4027-8a9d-1c7fcfde1942}">
 				<name>WorkflowDefinitions</name>
@@ -17975,6 +17975,21 @@ from this design to perform post-processing and compute design metrics.</value>
 					<name>TB_Hierarchy</name>
 					<regnode name="TestBenchUniqueName" isopaque="yes">
 						<value>TB_Hierarchy</value>
+					</regnode>
+					<regnode name="borderColor" isopaque="yes">
+						<value>0xa52a00</value>
+					</regnode>
+					<regnode name="color" isopaque="yes">
+						<value>0xffad5b</value>
+					</regnode>
+					<regnode name="itemShadowCast" isopaque="yes">
+						<value>true</value>
+					</regnode>
+					<regnode name="shadowColor" isopaque="yes">
+						<value>0x666666</value>
+					</regnode>
+					<regnode name="shadowThickness" isopaque="yes">
+						<value>12</value>
 					</regnode>
 					<attribute kind="CopyResults" status="meta">
 						<value>false</value>
@@ -18757,8 +18772,23 @@ support prior to R2016b.)</value>
 							</regnode>
 						</regnode>
 					</regnode>
+					<regnode name="borderColor" isopaque="yes">
+						<value>0xa52a00</value>
+					</regnode>
+					<regnode name="color" isopaque="yes">
+						<value>0xffad5b</value>
+					</regnode>
 					<regnode name="description" isopaque="yes">
 						<value></value>
+					</regnode>
+					<regnode name="itemShadowCast" isopaque="yes">
+						<value>true</value>
+					</regnode>
+					<regnode name="shadowColor" isopaque="yes">
+						<value>0x666666</value>
+					</regnode>
+					<regnode name="shadowThickness" isopaque="yes">
+						<value>12</value>
 					</regnode>
 					<attribute kind="CopyResults" status="meta">
 						<value>false</value>
