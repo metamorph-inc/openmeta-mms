@@ -1,6 +1,33 @@
 title <- "Explore"
 footer <- TRUE
 
+plot_markers <- c("Square"=0,
+                  "Circle"=1,
+                  "Triangle Point Up"=2,
+                  "Plus"=3,
+                  "Cross"=4,
+                  "Diamond"=5,
+                  "Triangle Point Down"=6,
+                  "Square Cross"=7,
+                  "Star"=8,
+                  "Diamond Plus"=9,
+                  "Circle Plus"=10,
+                  "Triangles Up And Down"=11,
+                  "Square Plus"=12,
+                  "Circle Cross"=13,
+                  "Square And Triangle Down"=14,
+                  "Filled Square"=15,
+                  "Filled Circle"=16,
+                  "Filled Triangle Point Up"=17,
+                  "Filled Diamond"=18,
+                  "Solid Circle"=19,
+                  "Bullet (Smaller Circle)"=20)  #,
+                  # "Filled Circle Red"=21,
+                  # "Filled Square Red"=22,
+                  # "Filled Diamond Red"=23,
+                  # "Filled Triangle Point Up Red"=24,
+                  # "Filled Triangle Point Down Red"=25)
+
 ui <- function(id) {
   ns <- NS(id)
   
@@ -26,8 +53,7 @@ ui <- function(id) {
               hr(),
               selectInput(ns("pairs_plot_marker"),
                           "Plot Markers:",
-                          c("Circle, Open"=1,
-                            "Circle, Filled"=19),
+                          plot_markers,
                           selected=si(ns("pairs_plot_marker"), 1)),
               sliderInput(ns("pairs_plot_marker_size"), "Marker Size:",
                           min=0.5, max=2.5,
@@ -65,8 +91,7 @@ ui <- function(id) {
               bsCollapsePanel("Markers",
                 selectInput(ns("single_plot_marker"),
                             "Plot Markers:",
-                            c("Circle, Open"=1,
-                              "Circle, Filled"=19),
+                            plot_markers,
                             selected = si(ns("single_plot_marker"), 1)),
                 sliderInput(ns("single_plot_marker_size"), "Marker Size:",
                             min=0.5, max=2.5, value=si(ns("single_plot_marker_size"), 1), step=0.025),
