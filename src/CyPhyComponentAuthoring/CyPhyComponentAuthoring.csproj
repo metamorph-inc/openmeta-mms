@@ -76,6 +76,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUIs\SimulinkParameterPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\SimulinkParameterPicker.Designer.cs">
+      <DependentUpon>SimulinkParameterPicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUIs\SimulinkLibraryBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\EagleDevicePicker.resx">
       <DependentUpon>EagleDevicePicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\SimulinkParameterPicker.resx">
+      <DependentUpon>SimulinkParameterPicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\SimulinkLibraryBrowser.resx">
       <DependentUpon>SimulinkLibraryBrowser.cs</DependentUpon>

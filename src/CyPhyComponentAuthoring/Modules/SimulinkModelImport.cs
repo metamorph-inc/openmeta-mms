@@ -68,23 +68,45 @@ namespace CyPhyComponentAuthoring.Modules
 
                 using (var browser = new SimulinkLibraryBrowser())
                 {
-                    using (var simulinkConnector = new SimulinkConnector())
+                    using (var simulinkConnector = new SimulinkConnector(Logger))
                     {
                         browser.BlockNames = simulinkConnector.ListSystemObjects("simulink").ToList();
-                    }
 
-                    var result = browser.ShowDialog();
 
-                    if (result == DialogResult.OK)
-                    {
-                        Logger.WriteInfo("Selected Block: {0}", browser.SelectedBlockName);
-                    }
-                    else
-                    {
-                        Logger.WriteInfo("Simulink import cancelled");
-                    }
+                        var result = browser.ShowDialog();
 
-                    Logger.WriteInfo("Complete");
+                        if (result == DialogResult.OK)
+                        {
+                            Logger.WriteInfo("Selected Block: {0}", browser.SelectedBlockName);
+
+                            var paramNames = simulinkConnector.ListBlockParameters(browser.SelectedBlockName);
+
+                            using (var paramPicker = new SimulinkParameterPicker())
+                            {
+                                paramPicker.ParamNames = paramNames.ToList();
+
+                                var result2 = paramPicker.ShowDialog();
+
+                                if (result2 == DialogResult.OK)
+                                {
+                                    foreach (var param in paramPicker.SelectedParams)
+                                    {
+                                        Logger.WriteInfo(param);
+                                    }
+                                }
+                                else
+                                {
+                                    Logger.WriteInfo("Simulink import cancelled");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Logger.WriteInfo("Simulink import cancelled");
+                        }
+
+                        Logger.WriteInfo("Complete");
+                    }
                 }
 
                 
@@ -197,8 +219,11 @@ namespace CyPhyComponentAuthoring.Modules
         {
             private dynamic _matlabInstance;
 
-            public SimulinkConnector()
+            private CyPhyGUIs.GMELogger _logger;
+
+            public SimulinkConnector(CyPhyGUIs.GMELogger logger)
             {
+                _logger = logger;
                 _matlabInstance = null;
 
                 int REGDB_E_CLASSNOTREG = unchecked((int)0x80040154);
@@ -240,6 +265,20 @@ namespace CyPhyComponentAuthoring.Modules
                 return blockNameArray;
             }
 
+            public IEnumerable<string> ListBlockParameters(string blockName)
+            {
+                object result;
+                _matlabInstance.Execute(
+                    string.Format("objParams = get_param('{0}', 'ObjectParameters')", blockName));
+                _matlabInstance.Execute("paramNames = fieldnames(objParams)");
+
+                _matlabInstance.GetWorkspaceData("paramNames", "base", out result);
+
+                object[,] resultArray = (object[,]) result;
+
+                return resultArray.Cast<string>();
+            }
+
             public void Dispose()
             {
                 if (_matlabInstance != null)
@@ -253,4 +292,6 @@ namespace CyPhyComponentAuthoring.Modules
         
     }
 }
+
+
 
