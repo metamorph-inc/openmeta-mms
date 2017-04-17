@@ -95,6 +95,7 @@
             this.ParamListBox.Name = "ParamListBox";
             this.ParamListBox.Size = new System.Drawing.Size(656, 394);
             this.ParamListBox.TabIndex = 2;
+            this.ParamListBox.ThreeDCheckBoxes = true;
             // 
             // SimulinkParameterPicker
             // 

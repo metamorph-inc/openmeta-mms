@@ -93,6 +93,11 @@ namespace CyPhyComponentAuthoring.Modules
                                     {
                                         Logger.WriteInfo(param);
                                     }
+
+                                    IDictionary<int, string> inPorts;
+                                    IDictionary<int, string> outPorts;
+
+                                    simulinkConnector.ListPorts(browser.SelectedBlockName, out inPorts, out outPorts);
                                 }
                                 else
                                 {
@@ -215,13 +220,13 @@ namespace CyPhyComponentAuthoring.Modules
             return rVal;
         }
 
-        private class SimulinkConnector : IDisposable
+        public class SimulinkConnector : IDisposable
         {
             private dynamic _matlabInstance;
 
-            private CyPhyGUIs.GMELogger _logger;
+            private CyPhyGUIs.SmartLogger _logger;
 
-            public SimulinkConnector(CyPhyGUIs.GMELogger logger)
+            public SimulinkConnector(CyPhyGUIs.SmartLogger logger)
             {
                 _logger = logger;
                 _matlabInstance = null;
@@ -277,6 +282,103 @@ namespace CyPhyComponentAuthoring.Modules
                 object[,] resultArray = (object[,]) result;
 
                 return resultArray.Cast<string>();
+            }
+
+            public void ListPorts(string blockName, out IDictionary<int,string> inPorts, out IDictionary<int, string> outPorts)
+            {
+                inPorts = new SortedDictionary<int, string>();
+                outPorts= new SortedDictionary<int, string>();
+
+                var parameters = ListBlockParameters(blockName);
+
+                if (!parameters.Contains("PortHandles"))
+                {
+                    //Selected block doesn't have ports and we shouldn't
+                    //try to enumerate them
+                }
+                else
+                {
+                    DebugExecute("portHandles = get_param('{0}', 'PortHandles')", blockName);
+                    DebugExecute("inPortCount = length(portHandles.Inport)");
+                    DebugExecute("outPortCount = length(portHandles.Outport)");
+
+                    object inPortCountObj, outPortCountObj;
+                    _matlabInstance.GetWorkspaceData("inPortCount", "base", out inPortCountObj);
+                    _matlabInstance.GetWorkspaceData("outPortCount", "base", out outPortCountObj);
+
+                    int inPortCount = (int) ((double) inPortCountObj); //inPortCountObj is actually a Double; can't cast directly to int from object
+                    int outPortCount = (int) ((double) outPortCountObj);
+
+                    _logger.WriteDebug("{0} in, {1} out", inPortCount, outPortCount);
+
+                    var inPortNumberObjs = new object[inPortCount];
+                    var inPortNameObjs = new object[inPortCount];
+
+                    for (int i = 1; i <= inPortCount; i++)
+                    {
+                        _logger.WriteDebug("Getting Port {0} Metadata:", i);
+                        DebugExecute("portHandle = portHandles.Inport({0})", i);
+                        DebugExecute("portMeta = get(portHandle)");
+                        DebugExecute("portNumber = portMeta.PortNumber");
+                        DebugExecute("portName = portMeta.Name");
+
+                        //Declaring portNumberObj/portNameObj here only works on one iteration through the loop--
+                        //Matlab COM bug? (We use the arrays above instead)
+                        //object portNumberObj = null, portNameObj = null;
+                        
+                        _matlabInstance.GetWorkspaceData("portNumber", "base", out inPortNumberObjs[i-1]);
+                        _matlabInstance.GetWorkspaceData("portName", "base", out inPortNameObjs[i-1]);
+
+                        int portNumber = (int)((double)inPortNumberObjs[i - 1]);
+                        string portName = (string)inPortNameObjs[i - 1];
+
+                        _logger.WriteDebug("In Port {0} ({1})", portNumber, portName);
+
+                        if (portName == null)
+                        {
+                            portName = "";
+                        }
+
+                        inPorts[portNumber] = portName;
+                    }
+
+                    var outPortNumberObjs = new object[outPortCount];
+                    var outPortNameObjs = new object[outPortCount];
+
+                    for (int i = 1; i <= outPortCount; i++)
+                    {
+                        _logger.WriteDebug("Getting Port {0} Metadata:", i);
+                        DebugExecute("portHandle = portHandles.Outport({0})", i);
+                        DebugExecute("portMeta = get(portHandle)");
+                        DebugExecute("portNumber = portMeta.PortNumber");
+                        DebugExecute("portName = portMeta.Name");
+
+                        //Declaring portNumberObj/portNameObj here only works on one iteration through the loop--
+                        //Matlab COM bug? (We use the arrays above instead)
+                        //object portNumberObj = null, portNameObj = null;
+
+                        _matlabInstance.GetWorkspaceData("portNumber", "base", out outPortNumberObjs[i - 1]);
+                        _matlabInstance.GetWorkspaceData("portName", "base", out outPortNameObjs[i - 1]);
+
+                        int portNumber = (int)((double)outPortNumberObjs[i - 1]);
+                        string portName = (string)outPortNameObjs[i - 1];
+
+                        _logger.WriteDebug("Out Port {0} ({1})", portNumber, portName);
+
+                        if (portName == null)
+                        {
+                            portName = "";
+                        }
+
+                        outPorts[portNumber] = portName;
+                    }
+                }
+            }
+
+            public void DebugExecute(string format, params object[] args)
+            {
+                string output = _matlabInstance.Execute(string.Format(format, args));
+                _logger.WriteDebug(output);
             }
 
             public void Dispose()
