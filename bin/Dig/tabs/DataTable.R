@@ -133,8 +133,8 @@ server <- function(input, output, session, data) {
     saved <- si_read(ns("weightMetrics"))
     if(input$clearMetrics || input$process_method == "None") {
       selected <- NULL
-    } else if (!is.null(saved) && !(length(saved) == 0)
-               && saved %in% var_range_nums_and_ints()) {
+    } else if (!is.null(saved) && ((length(saved) == 0)
+               || saved %in% c(var_range_nums_and_ints(), ""))) {
       selected <- si(ns("weightMetrics"))
     }
     updateSelectInput(session,

@@ -125,7 +125,7 @@
     "filter_OUT_Blade_Cost_Total": [136700, 176700],
     "filter_OUT_Blade_Tip_Deflection": [1812, 3046],
     "footer_collapse": "Coloring",
-    "Histogram-sandboxVar": "class1",
+    "Histogram-variable": "class1",
     "last_key_pressed": 0,
     "live_color_palette": "Rainbow",
     "live_color_rainbow_s": 1,
