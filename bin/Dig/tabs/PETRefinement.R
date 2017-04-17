@@ -91,12 +91,10 @@ server <- function(input, output, session, data) {
   ns <- session$ns
 
   FilterData <- data$Filtered
-  var_names <- data$meta$pre$var_names
-  var_class <- data$meta$pre$var_class
-  var_nums <- data$meta$pre$var_nums
-  var_facs <- data$meta$pre$var_facs
+  var_nums <- isolate(data$pre$var_nums())
+  var_facs <- isolate(data$pre$var_facs())
   
-  pet <- data$meta$pet
+  pet <- isolate(data$meta$pet)
   numeric_dvs <- unlist(lapply(pet$design_variable_names,
                                function (var) {var %in% var_nums}))
   numeric_design_variables <- pet$design_variable_names[numeric_dvs]
@@ -121,9 +119,6 @@ server <- function(input, output, session, data) {
   outputOptions(output, "pet_config_present", suspendWhenHidden=FALSE)
   outputOptions(output, "numeric_design_variables_present", suspendWhenHidden=FALSE)
   outputOptions(output, "enumerated_design_variables_present", suspendWhenHidden=FALSE)
-  
-  
-  all_ranges <- list() #List of all ranges: 1 for all numerics and individual ones for each factor
   
   output$pet_driver_config <- renderUI({
     fluidRow(
@@ -154,8 +149,6 @@ server <- function(input, output, session, data) {
   output$generated_configuration_model_text <- renderText(pet$generated_configuration_model)
   output$mga_filename_text <- renderText(pet$mga_name)
   output$current_pet_name_text <- renderText(pet$pet_name)
-  
-  
   
   output$original_configuration_ranges <- renderUI({
     

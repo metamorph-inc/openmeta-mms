@@ -154,10 +154,10 @@ for (i in 1:length(tab_requests)) {
   request <- tab_requests[i]
   if (file.exists(file.path(launch_dir, request))) {
     tab_files <- c(tab_files, file.path(launch_dir, request))
-    tab_ids <- c(tab_ids, sub(".R", "", request))
+    tab_ids <- c(tab_ids, sub("\\.R$", "", request))
   } else if (file.exists(file.path('tabs', request))) {
     tab_files <- c(tab_files, file.path('tabs', request))
-    tab_ids <- c(tab_ids, sub(".R", "", request))
+    tab_ids <- c(tab_ids, sub("\\.R$", "", request))
   }
 }
 
