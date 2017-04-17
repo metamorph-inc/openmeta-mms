@@ -28,14 +28,14 @@ ui <- function(id) {
         fluidRow(
           conditionalPanel(condition = paste0('input["', 'design_configs_present', '"] == true'),
             column(3,
-              selectInput(ns('designConfigVar'), "Design Configuration Identifier",
+              selectInput(ns('design_config_var'), "Design Configuration Identifier",
                 choices = c(),
                 multiple = F)
             )
           ),
-          conditionalPanel(condition = paste0('input["', ns('design_configs_present'), '"] == true & input["', ns('designConfigVar'), '"] != null'),
+          conditionalPanel(condition = paste0('input["', ns('design_configs_present'), '"] == true & input["', ns('design_config_var'), '"] != null'),
             column(3,
-              selectInput(ns('designConfigChoice'), "Selection",
+              selectInput(ns('design_config_choice'), "Selection",
                 choices = c(),
                 multiple = F)
             )
@@ -48,7 +48,7 @@ ui <- function(id) {
                           value = si(ns('display_all'), TRUE)),
             conditionalPanel(condition = paste0('input["', ns('display_all'), '"] == false'), 
               selectInput(
-                ns('uqDisplayVars'),
+                ns('display_vars'),
                 "Display Variables",
                 choices = c(),
                 multiple = T
@@ -59,21 +59,21 @@ ui <- function(id) {
         fluidRow(
           column(6, 
             wellPanel(h4("Variable Configuration"),
-              uiOutput(ns("uqControlUI")), br()#, height = 200)
+              uiOutput(ns("vars_ui")), br()#, height = 200)
             )
           ),
           column(6,
             wellPanel(h4("Variable Plots"), br(),
-              uiOutput(ns("uqPlots"))
+              uiOutput(ns("vars_plots"))
             )
           )
         ),
-        actionButton(ns('runFUQ'), 'Run Forward UQ')
+        actionButton(ns('run_forward_uq'), 'Run Forward UQ')
       ),
             
       tabPanel("Design Ranking",
         br(),
-        actionButton(ns('runProbability'), 'Compute Probabilities'),
+        actionButton(ns('run_probabilities'), 'Compute Probabilities'),
         br(), br(),
         h4("Weights"),
         wellPanel(
@@ -84,31 +84,31 @@ ui <- function(id) {
             column(4, h5(strong("Impact:"))),
             column(3, h5(strong("Weight:")))
           ), br(),
-          uiOutput(ns("probabilityWeightUI"))
+          uiOutput(ns("probabilities_weight_ui"))
         ),
         h4("Rankings"),
         wellPanel(
-          DT::dataTableOutput(ns("probabilityTable"))
+          DT::dataTableOutput(ns("probabilities_table"))
         )
       ),
-      id = ns("uqTabset"),
-      selected = si(ns("uqTabset"), NULL)
+      id = ns("tabset"),
+      selected = si(ns("tabset"), NULL)
     ),
-    conditionalPanel(paste0("output['", ns('displayQueries'), "']"),
+    conditionalPanel(paste0("output['", ns('display_queries'), "']"),
       hr(),
       h4("Probability Queries:"),
       wellPanel(
         fluidRow(
-          column(1, actionButton(ns('addProbability'), 'Add')),
+          column(1, actionButton(ns('add_probability'), 'Add')),
           column(3, h5(strong("Variable Name:"))),
           column(2, h5(strong("Direction:"))),
           column(2, h5(strong("Threshold:"))),
           column(2, h5(strong("Value:"))),
           column(2)
         ), br(),
-        tags$div(id = 'probabilityUI'),
+        tags$div(id = 'probabilities_ui'),
         hr(),
-        actionButton(ns('runProbabilityQueries'), 'Evaluate')
+        actionButton(ns('run_probabilities_queries'), 'Evaluate')
       )
     ),
     fluidRow(
@@ -131,26 +131,36 @@ ui <- function(id) {
 server <- function(input, output, session, data) {
   ns <- session$ns
   
-  raw_data <- isolate(data$raw$df)
-  raw_info <- data$meta
-  
   makeReactiveBinding("uiInitialized")
   makeReactiveBinding("directions")
   makeReactiveBinding("types")
   makeReactiveBinding("params")
   
-  varNames <- names(raw_data)
-  varClass <- sapply(raw_data,class)
-  varNums <- varNames[varClass != "factor"]
-  varFacs <- varNames[varClass == "factor"]
-  rawAbsMin <- apply(raw_data[varNums], 2, min, na.rm=TRUE)
-  rawAbsMax <- apply(raw_data[varNums], 2, max, na.rm=TRUE)
+  # Get data, isolating it from its reactive context
+  raw_data <- isolate(data$raw$df)
+  raw_info <- data$meta
+  
+  varNames <- isolate({
+    data$pre$var_names()[unlist(lapply(data$pre$var_names(), function(var) {
+      data$meta$variables[[var]]$type == "Design Variable" ||
+      data$meta$variables[[var]]$type == "Objective"
+    }))]
+  })
+  varNums <- isolate({
+    data$pre$var_nums_and_ints()[unlist(lapply(data$pre$var_nums_and_ints(), function(var) {
+      data$meta$variables[[var]]$type == "Design Variable" ||
+      data$meta$variables[[var]]$type == "Objective"
+    }))]
+  })
+  var_facs <- isolate(data$pre$var_facs())
+  abs_min <- isolate(data$pre$abs_min())
+  abs_max <- isolate(data$pre$abs_max())
   
   varsList <- reactive({
     # print("Getting Variable List.")
     idx = NULL
-    for(choice in 1:length(input$uqDisplayVars)) {
-      mm <- match(input$uqDisplayVars[choice],varNums)
+    for(choice in 1:length(input$display_vars)) {
+      mm <- match(input$display_vars[choice],varNums)
       if(mm > 0) { idx <- c(idx,mm) }
     }
     # print(idx)
@@ -158,18 +168,18 @@ server <- function(input, output, session, data) {
   })
   
   observeEvent(input$design_configs_present, {
-    updateSelectInput(session, "designConfigVar", choices = varFacs)
+    updateSelectInput(session, "design_config_var", choices = var_facs)
   })
   
-  observeEvent(input$designConfigVar, {
-    # print(paste(input$designConfigVar))
-    updateSelectInput(session, "designConfigChoice", choices = levels(raw_data[[input$designConfigVar]]))
+  observeEvent(input$design_config_var, {
+    # print(paste(input$design_config_var))
+    updateSelectInput(session, "design_config_choice", choices = levels(raw_data[[input$design_config_var]]))
   })
   
   filtered_data <- reactive({
     filData <- raw_data
-    if(input$design_configs_present & !is.na(input$designConfigVar) & !is.na(input$designConfigChoice)) {
-      filData <- subset(filData, filData[[paste0(input$designConfigVar)]] == input$designConfigChoice)
+    if(input$design_configs_present & !is.na(input$design_config_var) & !is.na(input$design_config_choice)) {
+      filData <- subset(filData, filData[[paste0(input$design_config_var)]] == input$design_config_choice)
     }
     filData
   })
@@ -192,8 +202,8 @@ server <- function(input, output, session, data) {
     output_data
   })
   
-  output$uqControlUI <- renderUI({
-    # print("In uqControlUI()")
+  output$vars_ui <- renderUI({
+    # print("In vars_ui()")
     var_directions <- c("Input",
                         "Output")
     data_mean <- apply(filtered_data()[varNums], 2, mean)
@@ -209,10 +219,19 @@ server <- function(input, output, session, data) {
       #gaussianCondition = toString(paste0("input.gaussian",i," == true"))
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
-      #Defaults
-      this_gaussian <- FALSE
-      this_gauss_mean <- data_mean[[var]]
-      this_sd <- data_sd[[var]]
+      # Persist Values
+      this_gaussian <- isolate(input[[paste0('gaussian_', global_index)]])
+      if(is.null(this_gaussian)) {
+        this_gaussian <- si(ns(paste0('gaussian_', global_index)), FALSE)
+      }
+      this_gaussian_mean <- isolate(input[[paste0('gaussian_mean', global_index)]])
+      if(is.null(this_gaussian_mean)) {
+        this_gaussian_mean <- si(ns(paste0('gaussian_mean', global_index)), data_mean[[var]])
+      }
+      this_gaussian_sd <- isolate(input[[paste0('gaussian_sd', global_index)]])
+      if(is.null(this_gaussian_sd)) {
+        this_gaussian_sd <- si(ns(paste0('gaussian_sd', global_index)), data_sd[[var]])
+      }
       
       #From petConfig.json
       if(raw_info$variables[[var]]$type == "Design Variable") 
@@ -241,20 +260,20 @@ server <- function(input, output, session, data) {
               checkboxInput(
                 inputId = ns(paste0('gaussian_', global_index)),
                 label = "Reshape to Gaussian",
-                value = si(ns(paste0('gaussian_', global_index)), this_gaussian))
+                value = this_gaussian)
             ),
             #conditionalPanel(condition = toString(paste0('input.gaussian', global_index, ' == true')),
               column(4,
                      textInput(ns(paste0('gaussian_mean', global_index)),
                                HTML("&mu;:"),
                                placeholder = "Mean",
-                               value = si(ns(paste0('gaussian_mean', global_index)), this_gauss_mean))
+                               value = si(ns(paste0('gaussian_mean', global_index)), this_gaussian_mean))
               ),
               column(4,
                      textInput(ns(paste0('gaussian_sd',global_index)),
                                HTML("&sigma;:"),
                                placeholder = "StdDev",
-                               value = si(ns(paste0('gaussian_sd',global_index)), this_sd))
+                               value = si(ns(paste0('gaussian_sd',global_index)), this_gaussian_sd))
               )
           #  )
           ),
@@ -274,7 +293,7 @@ server <- function(input, output, session, data) {
         )
       ))
     })
-    # print("Done with uqControlUI()")
+    # print("Done with vars_ui()")
   })
   
   uqCalc <- observe({
@@ -293,15 +312,15 @@ server <- function(input, output, session, data) {
         }
         else {
           types[[var]] <<- "unif"
-          params[[var]]$min <<- unname(rawAbsMin[[var]])
-          params[[var]]$max <<- unname(rawAbsMax[[var]])
+          params[[var]]$min <<- unname(abs_min[[var]])
+          params[[var]]$max <<- unname(abs_max[[var]])
         }
       }
     }
     uiInitialized <<- TRUE
   })
   
-  output$uqPlots <- renderUI({
+  output$vars_plots <- renderUI({
     data <- uqData()$dist
     variables <- varNums
     if(!input$display_all)
@@ -386,18 +405,18 @@ server <- function(input, output, session, data) {
   
   # Uncertainty Quantification Footer -----------------------------------------
   
-  output$displayQueries <- reactive({
-    display <- !(input$uqTabset == "Design Ranking")
+  output$display_queries <- reactive({
+    display <- !(input$tabset == "Design Ranking")
   })
   
-  outputOptions(output, "displayQueries", suspendWhenHidden=FALSE)
+  outputOptions(output, "display_queries", suspendWhenHidden=FALSE)
   
   probabilityQueries <- reactiveValues(rows = c())
   
-  observeEvent(input$addProbability, {
-    id <- input$addProbability
+  observeEvent(input$add_probability, {
+    id <- input$add_probability
     insertUI(
-      selector = '#probabilityUI',
+      selector = '#probabilities_ui',
       ui = tags$div(
         fluidRow(
           column(1, actionButton(ns(paste0('removeProbability', id)), 'Delete')),
@@ -439,7 +458,7 @@ server <- function(input, output, session, data) {
     subset(varNums, inputs)
   })
   
-  runQueries <- observeEvent(input$runProbabilityQueries, {
+  runQueries <- observeEvent(input$run_probabilities_queries, {
     print("Started Calculating Probabilities.")
     lapply(1:length(probabilityQueries$rows), function(i) {
       id <- probabilityQueries$rows[i]
@@ -480,7 +499,7 @@ server <- function(input, output, session, data) {
   
   forwardUQData <- reactive({
     temp_results <- NULL
-    if(input$runFUQ){
+    if(input$run_forward_uq){
       isolate({
         numberOfInputs <- 0
         for (i in 1:length(uqInputs())) {
@@ -542,7 +561,7 @@ server <- function(input, output, session, data) {
   }
     
   #-------------REMOVE ME------------------------
-  # output$fuqPlots <- renderUI({
+  # output$fvars_plots <- renderUI({
   #   data <- forwardUQData()
   #   lapply(uqOutputs(), function(output) {
   #     renderText(paste("Forward UQ plots for", output, "here."))
@@ -551,18 +570,18 @@ server <- function(input, output, session, data) {
   
   # Design Ranking -----------------------------------------------------------
   
-  runFullProbability <- eventReactive(input$runProbability, {
+  runFullProbability <- eventReactive(input$run_probabilities, {
     data <- data.frame(Config = character(0), stringsAsFactors=FALSE)
     for(i in 1:length(probabilityQueries$rows)) {
       id <- probabilityQueries$rows[i]
       data[[paste0('Query', id)]] <- numeric(0)
     }
-    configs <- levels(raw_data[[paste0(input$designConfigVar)]])
+    configs <- levels(raw_data[[paste0(input$design_config_var)]])
     # print(data)
     for (i in 1:length(configs)) {
       config <- configs[i]
       # print(paste(config))
-      configData <- subset(raw_data, raw_data[[paste0(input$designConfigVar)]] == config)
+      configData <- subset(raw_data, raw_data[[paste0(input$design_config_var)]] == config)
       configData <- configData[varNums]
       resampledData <- resampleData(configData, directions, types, params)$dist
       answers <- c(paste0(config))
@@ -587,7 +606,7 @@ server <- function(input, output, session, data) {
     data
   })
   
-  output$probabilityWeightUI <- renderUI({
+  output$probabilities_weight_ui <- renderUI({
     lapply(probabilityQueries$rows, function(id) {
       variable <- input[[paste0('queryVariable', id)]]
       direction <- input[[paste0('queryDirection', id)]]
@@ -632,7 +651,7 @@ server <- function(input, output, session, data) {
     outputData
   })
   
-  output$probabilityTable <- DT::renderDataTable({
+  output$probabilities_table <- DT::renderDataTable({
     topsisProbability()
   })
   
