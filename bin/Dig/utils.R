@@ -96,6 +96,17 @@ BuildVariables <- function(pet, var_names) {
   variables
 }
 
+AddCategories <- function(vars) {
+  var_list <- list()
+  for(i in 1:length(vars)) {
+    type <- vars[[i]]$type
+    if(is.null(var_list[[type]])) {
+      var_list[[type]] <- list()
+    }
+    var_list[[type]] <- c(var_list[[type]], names(vars)[i])
+  }
+  var_list
+}
 # RemoveUnits <- function(name_with_units) {
 #   if(is.null(reverse_units) || !(name_with_units %in% names(reverse_units)))
 #     name_with_units

@@ -139,7 +139,7 @@ si <- function(id, default) {
   }
 }
 
-si_read <- function(id, default) {
+si_read <- function(id) {
   # Retrieves saved input state from the previous session for a UI element
   # with a given id but does not consider it 'applied.'
   saved_inputs[[id]]
@@ -209,21 +209,31 @@ Server <- function(input, output, session) {
   var_ints <- reactive({var_names()[var_class() == "integer"]})
   var_nums <- reactive({var_names()[var_class() == "numeric"]})
   var_nums_and_ints <- reactive({
-    var_names()[var_class() == "integer" | var_class() == "numeric"]})
+    var_names()[var_class() == "integer" | var_class() == "numeric"]
+    })
   abs_max <- reactive({
-    apply(data$raw$df[var_nums_and_ints()], 2, max, na.rm=TRUE)})
+    apply(data$raw$df[var_nums_and_ints()], 2, max, na.rm=TRUE)
+    })
   abs_min <- reactive({
-    apply(data$raw$df[var_nums_and_ints()], 2, min, na.rm=TRUE)})
+    apply(data$raw$df[var_nums_and_ints()], 2, min, na.rm=TRUE)
+    })
   var_range_nums_and_ints <- reactive({
-    var_nums_and_ints()[(abs_min() != abs_max()) & (abs_min() != Inf)]})
+    var_nums_and_ints()[(abs_min() != abs_max()) & (abs_min() != Inf)]
+    })
   var_range_facs <- reactive({
     var_facs()[apply(data$raw$df[var_facs()], 2,
                      function(var_fac) {
                        length(names(table(var_fac))) > 1
-                     })]})
+                     })]
+    })
   var_range <- reactive({c(var_facs(), var_nums_and_ints())})
+  var_range_nums_and_ints_list <- reactive({
+    AddCategories(data$meta$variables[var_range_nums_and_ints()])
+  })
+  var_range_list <- reactive(AddCategories(data$meta$variables[var_range()]))
   var_constants <- reactive({
-    subset(var_names(), !(var_names() %in% var_range()))})
+    subset(var_names(), !(var_names() %in% var_range()))
+  })
   
   pre <- list(var_names=var_names,
               var_class=var_class,
@@ -236,19 +246,9 @@ Server <- function(input, output, session) {
               var_range_nums_and_ints=var_range_nums_and_ints,
               var_range_facs=var_range_facs,
               var_range=var_range,
+              var_range_nums_and_ints_list=var_range_nums_and_ints_list,
+              var_range_list=var_range_list,
               var_constants=var_constants)
-  
-  # Special observe to cover 'footer_collapse'
-  observe({
-    if(!is.null(si_read("footer_collapse"))) {
-      open <- si("footer_collapse")
-      if(is.null(unlist(open))) {
-        updateCollapse(session, "footer_collapse", close = "Filters")
-      } else {
-        updateCollapse(session, "footer_collapse", open = open)
-      }
-    }
-  })
   
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
@@ -261,6 +261,18 @@ Server <- function(input, output, session) {
     display <- (footer_preferences[[input$master_tabset]])
   })
   outputOptions(output, "display_footer", suspendWhenHidden=FALSE)
+  
+  # Special observe to cover 'footer_collapse'
+  observe({
+    if(!is.null(si_read("footer_collapse"))) {
+      open <- si("footer_collapse")
+      if(is.null(unlist(open))) {
+        updateCollapse(session, "footer_collapse", close = "Filters")
+      } else {
+        updateCollapse(session, "footer_collapse", open = open)
+      }
+    }
+  })
   
   # Generates the sliders and select boxes.
   output$filters <- renderUI({
@@ -438,8 +450,8 @@ Server <- function(input, output, session) {
       switch(pre$var_class()[column],
         "numeric" =
         {
-          max <- as.numeric(unname(data$meta$pre$AbsMax()[pre$var_names()[column]]))
-          min <- as.numeric(unname(data$meta$pre$AbsMin()[pre$var_names()[column]]))
+          max <- as.numeric(unname(data$pre$abs_max()[pre$var_names()[column]]))
+          min <- as.numeric(unname(data$pre$abs_min()[pre$var_names()[column]]))
           diff <- (max-min)
           if (diff != 0) {
             step <- max(diff*0.01, abs(min)*0.001, abs(max)*0.001)
@@ -448,8 +460,8 @@ Server <- function(input, output, session) {
         },
         "integer" =
         {
-          max <- as.integer(unname(data$meta$pre$AbsMax()[pre$var_names()[column]]))
-          min <- as.integer(unname(data$meta$pre$AbsMin()[pre$var_names()[column]]))
+          max <- as.integer(unname(data$pre$abs_max()[pre$var_names()[column]]))
+          min <- as.integer(unname(data$pre$abs_min()[pre$var_names()[column]]))
           if(min != max) {
             updateSliderInput(session, paste0('filter_', name), value = c(min, max))
           }
@@ -541,12 +553,12 @@ Server <- function(input, output, session) {
         type <- input$live_coloring_type
       }
       else {
-        type <- coloring$items[[input$coloring_source]]$type
+        type <- data$meta$colorings[[input$coloring_source]]$type
       }
       isolate({
-        coloring$current <- list()
-        coloring$current$name <- input$coloring_source
-        coloring$current$type <- type
+        data$colorings$current <- list()
+        data$colorings$current$name <- input$coloring_source
+        data$colorings$current$type <- type
       })
       switch(type,
         "Max/Min" = 
@@ -556,15 +568,15 @@ Server <- function(input, output, session) {
             goal <- input$live_coloring_max_min
           }
           else {
-            scheme <- coloring$items[[input$coloring_source]]
+            scheme <- data$meta$colorings[[input$coloring_source]]
             var <- scheme$var
             goal <- scheme$goal
           }
           bins <- 30
           req(var)
-          divisor <- (data$meta$pre$AbsMax()[[var]] - data$meta$pre$AbsMin()[[var]]) / bins
-          minimum <- data$meta$pre$AbsMin()[[var]]
-          maximum <- data$meta$pre$AbsMax()[[var]]
+          divisor <- (data$pre$abs_max()[[var]] - data$pre$abs_min()[[var]]) / bins
+          minimum <- data$pre$abs_min()[[var]]
+          maximum <- data$pre$abs_max()[[var]]
           cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
           if (goal == "Maximize") {
             data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
@@ -575,8 +587,8 @@ Server <- function(input, output, session) {
                             cols[max(1, ceiling((maximum - value) / divisor))]}))
           }
           isolate({
-            coloring$current$var <- var
-            coloring$current$goal <- goal
+            data$colorings$current$var <- var
+            data$colorings$current$goal <- goal
           })
         },
         "Discrete" = 
@@ -590,7 +602,7 @@ Server <- function(input, output, session) {
             }
           }
           else {
-            scheme <- coloring$items[[input$coloring_source]]
+            scheme <- data$meta$colorings[[input$coloring_source]]
             var <- scheme$var
             palette_selection <- scheme$palette
             if (palette_selection == "Rainbow") {
@@ -611,8 +623,8 @@ Server <- function(input, output, session) {
             data_colored$color[(data_colored[[var]] == variables_list[i])] <- cols[i]
           }
           isolate({
-            coloring$current$var <- var
-            coloring$current$colors <- cols
+            data$colorings$current$var <- var
+            data$colorings$current$colors <- cols
           })
         }
       )
@@ -626,19 +638,15 @@ Server <- function(input, output, session) {
   # Coloring -----------------------------------------------------------------
   
   if(is.null(visualizer_config$coloring)) {
-    coloring_items <- list()
-    current_coloring <- list()
+    colorings <- list()
   } else {
-    coloring_items <- visualizer_config$coloring$items
-    current_coloring <- visualizer_config$coloring$current
+    colorings <- visualizer_config$coloring
   }
-  coloring <- reactiveValues(items=coloring_items,
-                             current=current_coloring)
   
   output$coloring_table <- renderTable({
-    names <- unlist(lapply(coloring$items,
+    names <- unlist(lapply(data$meta$colorings,
                            function(current) {current$name}))
-    descriptions <- unlist(lapply(coloring$items, function(current) {
+    descriptions <- unlist(lapply(data$meta$colorings, function(current) {
       switch(current$type,
         "Max/Min"={paste0(current$goal, " ", current$var)},
         "Discrete"={paste0(current$var, " with ",
@@ -651,40 +659,41 @@ Server <- function(input, output, session) {
   observeEvent(input$live_coloring_add_classification, {
     isolate({
       name <- input$live_coloring_name
-      if (name != "" && !(name %in% names(coloring$items))) {
+      if (!(name %in% c(names(data$meta$colorings), "", "current"))) {
         switch(input$live_coloring_type,
           "Max/Min"={
-            coloring$items[[name]] <- list()
-            coloring$items[[name]]$name <- name
-            coloring$items[[name]]$type <- "Max/Min"
-            coloring$items[[name]]$var <- input$live_coloring_variable_numeric
-            coloring$items[[name]]$goal <- input$live_coloring_max_min
-            coloring$items[[name]]$slider <- input$col_slider
+            data$meta$colorings[[name]] <- list()
+            data$meta$colorings[[name]]$name <- name
+            data$meta$colorings[[name]]$type <- "Max/Min"
+            data$meta$colorings[[name]]$var <- input$live_coloring_variable_numeric
+            data$meta$colorings[[name]]$goal <- input$live_coloring_max_min
+            data$meta$colorings[[name]]$slider <- input$col_slider
           },
           "Discrete"={
-            coloring$items[[name]] <- list()
-            coloring$items[[name]]$name <- name
-            coloring$items[[name]]$type <- "Discrete"
-            coloring$items[[name]]$var <- input$live_color_variable_factor
-            coloring$items[[name]]$palette <- input$live_color_palette
-            coloring$items[[name]]$rainbow_s <- input$live_color_rainbow_s
-            coloring$items[[name]]$rainbow_v <- input$live_color_rainbow_v
+            data$meta$colorings[[name]] <- list()
+            data$meta$colorings[[name]]$name <- name
+            data$meta$colorings[[name]]$type <- "Discrete"
+            data$meta$colorings[[name]]$var <- input$live_color_variable_factor
+            data$meta$colorings[[name]]$palette <- input$live_color_palette
+            data$meta$colorings[[name]]$rainbow_s <- input$live_color_rainbow_s
+            data$meta$colorings[[name]]$rainbow_v <- input$live_color_rainbow_v
           }
         )
+        updateTextInput(session, "live_coloring_name", value = "")
       }
     })
   })
   
   output$coloring_legend <- renderUI({
-    req(coloring$current$type)
-    req(coloring$current$var)
+    req(data$colorings$current$type)
+    req(data$colorings$current$var)
     req(data$raw$df)
-    if (coloring$current$type == "Discrete") {
-      names <- names(table(data$raw$df[coloring$current$var]))
+    if (data$colorings$current$type == "Discrete") {
+      names <- names(table(data$raw$df[data$colorings$current$var]))
       raw_label <- ""
-      for(i in 1:length(coloring$current$colors)){
+      for(i in 1:length(data$colorings$current$colors)){
         raw_label <- HTML(paste(raw_label, "<font color=",
-                                sub("FF$", "", coloring$current$colors[i]),
+                                sub("FF$", "", data$colorings$current$colors[i]),
                                 "<b>", "&#9632", " ",
                                 names[i], '<br/>'))
       }
@@ -696,7 +705,7 @@ Server <- function(input, output, session) {
     isolate({
       selected <- input$coloring_source
     })
-    new_choices <- c("None", "Live", names(coloring$items))
+    new_choices <- c("None", "Live", names(data$meta$colorings))
     if (!is.null(si_read("coloring_source")) &&
         si_read("coloring_source") %in% new_choices) {
       selected <- si("coloring_source", NULL)
@@ -716,48 +725,46 @@ Server <- function(input, output, session) {
   #                   selected = pre$var_range_nums_and_ints()[0])
   
   observe({
-    isolate({
-      selected <- input$live_coloring_variable_numeric
-    })
-    if (length(data$added$classifications) == 0) {
-      numeric_choices <- as.list(pre$var_range_nums_and_ints())
-    } else {
-      numeric_choices <- list(Variables=as.list(pre$var_range_nums_and_ints()),
-                              Classifications=as.list(names(data$added$classifications)))
-    }
+    selected <- isolate(input$live_coloring_variable_numeric)
     if (!is.null(si_read("live_coloring_variable_numeric")) &&
-        si_read("live_coloring_variable_numeric") %in% unlist(numeric_choices)) {
+        si_read("live_coloring_variable_numeric") %in% c(data$pre$var_range_nums_and_ints(), "")) {
       selected <- si("live_coloring_variable_numeric", NULL)
     }
     updateSelectInput(session, "live_coloring_variable_numeric",
-                      choices = numeric_choices,
+                      choices = data$pre$var_range_nums_and_ints_list(),
                       selected = selected)
   })
   
-  # Classifications and Sets -------------------------------------------------
+  # Sets ---------------------------------------------------------------------
   
   # Blank or saved data
-  if(is.null(visualizer_config$added)) {
-    classification_items <- list()
-    set_items <- list()
+  if(is.null(visualizer_config$sets)) {
+    sets <- list()
   } else {
-    classification_items <- visualizer_config$added$classifications
-    set_items <- visualizer_config$added$sets
+    sets <- visualizer_config$sets
   }
-  added <- reactiveValues(classifications=classification_items,
-                          sets=set_items)
   
   # Classifications table
   output$no_classifications <- renderText(NoClassifications())
   NoClassifications <- reactive({
-    if (length(data$added$classifications) == 0) {
+    if (!any(sapply(data$meta$variables,
+                    function(var) var$type == "Classification"))) {
       "No Classifications Available."
     }
   })
+  
   output$classification_table_output <- renderTable(ClassificationsTable())
+  
   ClassificationsTable <- reactive({
-    new_table <- do.call(rbind, data$added$classifications)
-    new_table
+    new_table <- do.call(rbind, classifications())
+    if (!is.null(new_table)) {
+      new_table <- cbind(name=names(classifications()), new_table)
+    }
+  })
+  
+  classifications <- reactive({
+    data$meta$variables[sapply(data$meta$variables,
+                        function(x) x$type == "Classification")]
   })
   
   # Final Processing ---------------------------------------------------------
@@ -768,25 +775,13 @@ Server <- function(input, output, session) {
   data$Filtered <- FilteredData
   data$Colored <- ColoredData
   data$Filters <- Filters
-  data$added <- added
   
   # Build the 'meta' list.
-  data$meta <- list(variables=variables,
-                    coloring=coloring,
-                    pet=pet,
-                    pre=pre)
-  
-  data$meta$pre$AbsMax <- reactive({
-    classification_names <- names(data$added$classifications)
-    vars <- c(pre$var_nums_and_ints(), classification_names)
-    apply(data$raw$df[vars], 2, max, na.rm=TRUE)
-  })
-  
-  data$meta$pre$AbsMin <- reactive({
-    vars <- c(pre$var_nums_and_ints(), names(data$added$classifications))
-    apply(data$raw$df[vars], 2, min, na.rm=TRUE)
-  })
-  
+  data$meta <- reactiveValues(variables=variables,
+                              colorings=colorings,
+                              pet=pet,
+                              sets=sets)
+  data$pre <- pre
   
   # Call each tab's server() function ----------------------------------------
   
@@ -823,10 +818,14 @@ Server <- function(input, output, session) {
       # TODO(tthomas): Check if file already exists
       visualizer_config$augmented_data <- tentative_filename
     }
-    data$meta$pre$AbsMax <- NULL
-    data$meta$pre$AbsMin <- NULL
-    # visualizer_config$pre <- data$meta$pre
-    visualizer_config$variables <- data$meta$variables
+    # visualizer_config$pre <- data$pre
+    meta <- isolate(reactiveValuesToList(data$meta))
+    visualizer_config$variables <- meta$variables
+    meta$colorings$current <- NULL
+    visualizer_config$colorings <- meta$colorings
+    # visualizer_config$pet <- meta$pet
+    visualizer_config$sets <- meta$sets
+    # visualizer_config$comments <- meta$comments
     current_inputs <- isolate(reactiveValuesToList(input))
     current_inputs[["window_width"]] <- NULL
     current_inputs[unlist(lapply(names(current_inputs), function (name) {
@@ -839,10 +838,6 @@ Server <- function(input, output, session) {
                                                 names(saved_inputs))])
     combined_inputs <- combined_inputs[order(names(combined_inputs))]
     visualizer_config$inputs <- combined_inputs
-    visualizer_config$coloring <- isolate(
-      reactiveValuesToList(data$meta$coloring))
-    visualizer_config$added <- isolate(reactiveValuesToList(data$added))
-    # visualizer_config$pet <- data$meta$pet
     
     write.csv(isolate(data$raw$df),
               file=file.path(launch_dir, visualizer_config$augmented_data),
