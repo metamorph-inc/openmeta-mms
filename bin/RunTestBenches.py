@@ -12,6 +12,7 @@ import unittest
 import nose.core
 import subprocess
 import json
+import itertools
 
 from nose.loader import TestLoader
 from nose.plugins.manager import BuiltinPluginManager
@@ -112,9 +113,13 @@ if __name__ == '__main__':
             master = Dispatch("CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI")
             master.Initialize(project)
 
-            filter = project.CreateFilter()
-            filter.Kind = "TestBench"
-            testBenches = [tb for tb in project.AllFCOs(filter) if not tb.IsLibObject]
+            filters = []
+            for kind in ("TestBench", "CADTestBench", "KinematicTestBench", "BlastTestBench", "BallisticTestBench", "CarTestBench", "CFDTestBench"):
+                filter = project.CreateFilter()
+                filter.Kind = kind
+                filters.append(filter)
+            testBenches = [tb for tb in itertools.chain(*(project.AllFCOs(filter) for filter in filters)) if not tb.IsLibObject]
+            print repr([t.Name for t in testBenches])
             for testBench in testBenches:
                 suts = [sut for sut in testBench.ChildFCOs if sut.MetaRole.Name == 'TopLevelSystemUnderTest']
                 if len(suts) == 0:
