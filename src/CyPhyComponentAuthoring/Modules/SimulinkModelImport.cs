@@ -98,6 +98,9 @@ namespace CyPhyComponentAuthoring.Modules
                                     IDictionary<int, string> outPorts;
 
                                     simulinkConnector.ListPorts(browser.SelectedBlockName, out inPorts, out outPorts);
+
+                                    AddSimulinkObjectToModel(component, browser.SelectedBlockName, paramPicker.SelectedParams,
+                                        inPorts, outPorts);
                                 }
                                 else
                                 {
@@ -136,6 +139,122 @@ namespace CyPhyComponentAuthoring.Modules
             {
                 Logger.Dispose();
                 Logger = null;
+            }
+        }
+
+        public void AddSimulinkObjectToModel(CyPhy.Component component, string blockPath, IEnumerable<string> selectedParams,
+            IDictionary<int, string> inPorts, IDictionary<int, string> outPorts)
+        {
+            const int INNER_LEFT_COLUMN_X = 50;
+            const int INNER_RIGHT_COLUMN_X = 500;
+            const int INNER_VERTICAL_OFFSET = 25;
+            const int INNER_VERTICAL_PARAM_SPACING = 100;
+            const int INNER_VERTICAL_PORT_SPACING = 175;
+
+            const int OUTER_LEFT_COLUMN_HORIZONTAL_OFFSET = -300;
+            const int OUTER_RIGHT_COLUMN_HORIZONTAL_OFFSET = 300;
+            const int OUTER_VERTICAL_PARAM_SPACING = 40;
+            const int OUTER_VERTICAL_PORT_SPACING = 100;
+
+            int baseXPosition, baseYPosition;
+            getNewModelInitialCoordinates(component, out baseXPosition, out baseYPosition);
+
+            int nextInnerLeftYPosition = 0;
+            int nextInnerRightYPosition = 0;
+
+            int nextOuterLeftYPosition = baseYPosition;
+            int nextOuterRightYPosition = baseYPosition;
+
+            CyPhy.SimulinkModel newSimulinkModel = CyPhyClasses.SimulinkModel.Create(component);
+            newSimulinkModel.Name = blockPath;
+            newSimulinkModel.Attributes.BlockType = blockPath;
+            newSimulinkModel.Preferences.PortLabelLength = 0;
+            setFCOPosition(newSimulinkModel.Impl as MgaFCO, baseXPosition, baseYPosition);
+            
+
+            foreach (var param in selectedParams)
+            {
+                CyPhy.SimulinkParameter newParam = CyPhyClasses.SimulinkParameter.Create(newSimulinkModel);
+                newParam.Name = param;
+                setFCOPosition(newParam.Impl as MgaFCO, INNER_LEFT_COLUMN_X, INNER_VERTICAL_OFFSET + nextInnerLeftYPosition);
+
+                CyPhy.Property newProperty = CyPhyClasses.Property.Create(component);
+                newProperty.Name = param;
+                CyPhyClasses.SimulinkParameterPortMap.Connect(newProperty, newParam);
+                setFCOPosition(newProperty.Impl as MgaFCO, baseXPosition + OUTER_LEFT_COLUMN_HORIZONTAL_OFFSET, nextOuterLeftYPosition);
+
+                nextInnerLeftYPosition += INNER_VERTICAL_PARAM_SPACING;
+                nextOuterLeftYPosition += OUTER_VERTICAL_PARAM_SPACING;
+            }
+
+            foreach (var inPort in inPorts)
+            {
+                CyPhy.SimulinkPort newPort = CyPhyClasses.SimulinkPort.Create(newSimulinkModel);
+
+                var portName = inPort.Value;
+                if (string.IsNullOrWhiteSpace(portName))
+                {
+                    portName = string.Format("in-{0}", inPort.Key);
+                }
+                newPort.Name = portName;
+                newPort.Attributes.SimulinkPortDirection = CyPhyClasses.SimulinkPort.AttributesClass.SimulinkPortDirection_enum.@in;
+                newPort.Attributes.SimulinkPortID = inPort.Key.ToString();
+                setFCOPosition(newPort.Impl as MgaFCO, INNER_LEFT_COLUMN_X, INNER_VERTICAL_OFFSET + nextInnerLeftYPosition);
+
+                CyPhy.Connector newConnector = CyPhyClasses.Connector.Create(component);
+                newConnector.Name = portName;
+                CyPhy.SimulinkPort connectorPort = CyPhyClasses.SimulinkPort.Create(newConnector);
+                connectorPort.Name = portName;
+                connectorPort.Attributes.SimulinkPortDirection = CyPhyClasses.SimulinkPort.AttributesClass.SimulinkPortDirection_enum.@in;
+                connectorPort.Attributes.SimulinkPortID = inPort.Key.ToString();
+                CyPhyClasses.PortComposition.Connect(connectorPort, newPort, null, null, component);
+                setFCOPosition(newConnector.Impl as MgaFCO, baseXPosition + OUTER_LEFT_COLUMN_HORIZONTAL_OFFSET, nextOuterLeftYPosition);
+
+                nextInnerLeftYPosition += INNER_VERTICAL_PORT_SPACING;
+                nextOuterLeftYPosition += OUTER_VERTICAL_PORT_SPACING;
+            }
+
+            foreach (var outPort in outPorts)
+            {
+                CyPhy.SimulinkPort newPort = CyPhyClasses.SimulinkPort.Create(newSimulinkModel);
+
+                var portName = outPort.Value;
+                if (string.IsNullOrWhiteSpace(portName))
+                {
+                    portName = string.Format("out-{0}", outPort.Key);
+                }
+                newPort.Name = portName;
+                newPort.Attributes.SimulinkPortDirection = CyPhyClasses.SimulinkPort.AttributesClass.SimulinkPortDirection_enum.@out;
+                newPort.Attributes.SimulinkPortID = outPort.Key.ToString();
+                setFCOPosition(newPort.Impl as MgaFCO, INNER_RIGHT_COLUMN_X, INNER_VERTICAL_OFFSET + nextInnerRightYPosition);
+
+                CyPhy.Connector newConnector = CyPhyClasses.Connector.Create(component);
+                newConnector.Name = portName;
+                CyPhy.SimulinkPort connectorPort = CyPhyClasses.SimulinkPort.Create(newConnector);
+                connectorPort.Name = portName;
+                connectorPort.Attributes.SimulinkPortDirection = CyPhyClasses.SimulinkPort.AttributesClass.SimulinkPortDirection_enum.@out;
+                connectorPort.Attributes.SimulinkPortID = outPort.Key.ToString();
+                CyPhyClasses.PortComposition.Connect(newPort, connectorPort, null, null, component);
+                setFCOPosition(newConnector.Impl as MgaFCO, baseXPosition + OUTER_RIGHT_COLUMN_HORIZONTAL_OFFSET, nextOuterRightYPosition);
+
+                nextInnerRightYPosition += INNER_VERTICAL_PORT_SPACING;
+                nextOuterRightYPosition += OUTER_VERTICAL_PORT_SPACING;
+            }
+        }
+
+        /// <summary>
+        /// Set a First Class Object's visual position in all aspects.
+        /// </summary>
+        /// <param name="myFCO">The FCO whose position will be set. </param>
+        /// <param name="x">The X coordinate to be set. (0 on the left, increasing to the right)</param>
+        /// <param name="y">The Y coordinate. (0 at the top, increasing down)</param>
+
+        public void setFCOPosition(MgaFCO myFCO, int x, int y)
+        {
+            // Set the FCO's coordinates in all aspects.
+            foreach (MgaPart item in (myFCO).Parts)
+            {
+                item.SetGmeAttrs(null, x, y);   // The icon string is null.
             }
         }
 

@@ -380,7 +380,7 @@ namespace CyPhy2Simulink.Simulink
             foreach (var connection in fco.AllDstConnections)
             {
                 var adjacent = (FCO) connection.GenericDstEnd; //Cast to abstract FCO class, rather than interface (hopefully this always works?)
-                if (adjacent.Kind == "Parameter" && !visited.Contains(adjacent)) //Note: GenericDstEnd doesn't give domain-specific objects
+                if ((adjacent.Kind == "Parameter" || adjacent.Kind == "Property") && !visited.Contains(adjacent)) //Note: GenericDstEnd doesn't give domain-specific objects
                 {                                                                // (these are instances of FCO)
                     var result = TryGetTestbenchParamName(adjacent, visited);
                     if (result != null)
@@ -393,7 +393,7 @@ namespace CyPhy2Simulink.Simulink
             foreach (var connection in fco.AllSrcConnections)
             {
                 var adjacent = (FCO)connection.GenericSrcEnd; //Cast to abstract FCO class, rather than interface (hopefully this always works?)
-                if (adjacent.Kind == "Parameter" && !visited.Contains(adjacent))
+                if ((adjacent.Kind == "Parameter" || adjacent.Kind == "Property") && !visited.Contains(adjacent))
                 {
                     var result = TryGetTestbenchParamName(adjacent, visited);
                     if (result != null)
