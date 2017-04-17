@@ -31,7 +31,7 @@ ui <- function(id) {
                         "Ranking Metrics:",
                         c(),
                         multiple = TRUE,
-                        selected = si(ns("weightMetrics"), NULL)),
+                        selected = NULL),
             actionButton(ns("clearMetrics"), "Clear Metrics")
           )
         ),
@@ -70,8 +70,9 @@ server <- function(input, output, session, data) {
   
   ns <- session$ns
 
-  var_names <- data$meta$pre$var_names
-  var_range_nums_and_ints <- data$meta$pre$var_range_nums_and_ints
+  var_names <- data$pre$var_names
+  var_range_nums_and_ints <- data$pre$var_range_nums_and_ints
+  var_range_nums_and_ints_list <- data$pre$var_range_nums_and_ints_list
   
   LocalData <- reactive({
     if (input$use_filtered) {
@@ -119,7 +120,7 @@ server <- function(input, output, session, data) {
     req(input$weightMetrics)
     # print("Getting Metrics List.")
     for(choice in 1:length(input$weightMetrics)) {
-      mm <- match(input$weightMetrics[choice],var_names)
+      mm <- match(input$weightMetrics[choice],var_names())
       if(mm > 0) { idx <- c(idx,mm) }
     }
     # print(idx)
@@ -128,8 +129,18 @@ server <- function(input, output, session, data) {
   
   #Event handler for "clear metrics" button
   observe({
-    if(input$clearMetrics | input$process_method == "None")
-      updateSelectInput(session, "weightMetrics", choices = var_range_nums_and_ints, selected = NULL)
+    selected <- isolate(input$weightMetrics)
+    saved <- si_read(ns("weightMetrics"))
+    if(input$clearMetrics || input$process_method == "None") {
+      selected <- NULL
+    } else if (!is.null(saved) && !(length(saved) == 0)
+               && saved %in% var_range_nums_and_ints()) {
+      selected <- si(ns("weightMetrics"))
+    }
+    updateSelectInput(session,
+                      "weightMetrics",
+                      choices = var_range_nums_and_ints_list(),
+                      selected = selected)
   })
   
   #UI class for each metric UI
@@ -165,7 +176,7 @@ server <- function(input, output, session, data) {
   
   TOPSISMetricUI <- function(current, radio_val, slider_val) {
     
-    varName <- var_names[current]
+    varName <- var_names()[current]
     
     fluidRow(
       column(3, h5(varName)),
@@ -185,7 +196,7 @@ server <- function(input, output, session, data) {
   
   SimpleMetricUI <- function(current, radio_val, slider_val, util_val, func_val) {
     
-    varName <- var_names[current]
+    varName <- var_names()[current]
     transferCondition = toString(paste0("input.util",current," == true"))
     
     fluidRow(
@@ -233,7 +244,7 @@ server <- function(input, output, session, data) {
       color = "#7f7f7f"
     )
     x <- list(
-      title = var_names[current],
+      title = var_names()[current],
       titlefont = f
     )
     y <- list(
@@ -246,7 +257,7 @@ server <- function(input, output, session, data) {
       par(mar = c(4.5,4.5,1,1))
       p <- plot(x = unlist(lapply(names(plot_points), as.numeric)),
                 y = unname(plot_points),
-                xlab = var_names[current],
+                xlab = var_names()[current],
                 ylab = "Score")
       if(length(plot_points) > 1){
         for(i in 1:(length(plot_points)-1)){
@@ -343,13 +354,13 @@ server <- function(input, output, session, data) {
   RankData <- reactive({
     req(MetricsList())
     # print("In calculate ranked data")
-    data <- LocalData()[var_range_nums_and_ints]
+    data <- LocalData()[var_range_nums_and_ints()]
     norm_data <- data.frame(t(t(data)/apply(data,2,max)))
     
     score_data <- sapply(row.names(norm_data) ,function(x) 0)
     
     for(i in 1:length(MetricsList())) {
-      column <- var_names[MetricsList()[i]]
+      column <- var_names()[MetricsList()[i]]
       rank_name <- paste0("rnk", toString(MetricsList()[i]))
       weight <- input[[rank_name]]
       req(weight)
@@ -420,11 +431,11 @@ server <- function(input, output, session, data) {
     req(MetricsList())
     # print("In calculate topsis data")
     # print(names(LocalData()))
-    data <- LocalData()[var_range_nums_and_ints]
+    data <- LocalData()[var_range_nums_and_ints()]
     weights <- NULL
     impacts <- NULL
-    for(i in 1:length(var_range_nums_and_ints)){
-      global_index <- match(var_range_nums_and_ints[i], var_names)
+    for(i in 1:length(var_range_nums_and_ints())){
+      global_index <- match(var_range_nums_and_ints()[i], var_names())
       if(!is.null(input[[paste0("rnk", global_index)]])){
         weights <- c(weights, input[[paste0("rnk", global_index)]])
         impacts <- c(impacts, input[[paste0("sel", global_index)]])
@@ -489,7 +500,7 @@ server <- function(input, output, session, data) {
   observeEvent(input$save_ranking, {
     number <- 1
     name <- paste0("class", number)
-    while(!is.null(data$added$classifications[[name]])) {
+    while(!is.null(data$meta$variables[[name]])) {
       number <- number + 1
       name <- paste0("class", number)
     }
@@ -498,12 +509,10 @@ server <- function(input, output, session, data) {
     data$raw$df[[name]] <<- rnorm(nrow(data$raw$df),
                                   mean=mean,
                                   sd=sd)
+    data$meta$variables[[name]] <- list(type="Classification",
+                                        date=toString(Sys.time()),
+                                        user="tthomas")
     print(paste0("Saved Ranking: ", name))
-    l <- list()
-    l$name <- name
-    l$date <- toString(Sys.time())
-    l$user <- "tthomas"  #data$meta$user
-    data$added$classifications[[name]] <- l
   })
   
 }

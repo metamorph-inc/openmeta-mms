@@ -19,14 +19,19 @@ ui <- function(id) {
 server <- function(input, output, session, data) {
   ns <- session$ns
   
-  vars <- data$meta$pre$var_range_nums_and_ints
+  vars <- data$pre$var_range_nums_and_ints
+  vars_list <- data$pre$var_range_nums_and_ints_list
   
   observe({
+    sandboxVar <- isolate(input$sandboxVar)
+    if (!is.null(si_read(ns("sandboxVar")))
+        && si_read(ns("sandboxVar")) %in% c(data$pre$var_range(), "")) {
+      sandboxVar <- si(ns("sandboxVar"), NULL)
+    }
     updateSelectInput(session,
                       "sandboxVar",
-                      choices = vars(),
-                      selected = si(ns("sandboxVar"),
-                                    vars()[1]))
+                      choices = vars_list(),
+                      selected = sandboxVar)
   })
   
   output$sandboxPlot <- renderPlot({
