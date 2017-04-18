@@ -51,7 +51,7 @@ ABBREVIATION_LENGTH <- 25
 # Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\11Kresults\\mergedPET.csv")
 # Sys.setenv(DIG_INPUT_CSV="")
 # Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Desktop\\11Kresults\\viz_config.json")
-Sys.setenv(DIG_DATASET_CONFIG="")
+# Sys.setenv(DIG_DATASET_CONFIG="")
 
 # Resolve Dataset Configuration ----------------------------------------------
 
