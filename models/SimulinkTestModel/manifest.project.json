@@ -1,0 +1,61 @@
+{
+  "Project": {
+    "Components": [],
+    "DesignSpaceModels": [],
+    "Configurations": [
+      "./designs/PIDControllerReference.adm",
+      "./designs/Multi-instance.adm",
+      "./designs/Multi-endpoint.adm",
+      "./designs/Hierarchy.adm",
+      "./designs/HierarchyWithOutput.adm",
+      "./designs/HierarchyWithOutputForPET.adm",
+      "./designs/UserComponent.adm",
+      "./designs/DuplicateComponentName.adm",
+      "./designs/MultipleHierarchy.adm",
+      "./designs/EmptyComponentName.adm",
+      "./designs/FAIL_WhitespaceComponentName.adm",
+      "./designs/FAIL_EmptyPortID.adm",
+      "./designs/FAIL_EmptyComponentName.adm",
+      "./designs/FAIL_WhitespacePortID.adm",
+      "./designs/FAIL_BadBlockParameter.adm",
+      "./designs/FAIL_BadBlockParameterValue.adm"
+    ],
+    "TestBenches": [
+      "./test-benches/TB_PIDControllerReference.testbench.json",
+      "./test-benches/TB_Multi-instance.testbench.json",
+      "./test-benches/TB_Multi-endpoint.testbench.json",
+      "./test-benches/TB_Hierarchy.testbench.json",
+      "./test-benches/TB_HierarchyWithOutput.testbench.json",
+      "./test-benches/TB_HierarchyWithOutputForPET.testbench.json",
+      "./test-benches/TB_UserComponent.testbench.json",
+      "./test-benches/TB_HierarchyWithOutputCS.testbench.json",
+      "./test-benches/TB_HierarchyWithOutputForPETCS.testbench.json",
+      "./test-benches/TB_UserComponentCS.testbench.json",
+      "./test-benches/TB_DuplicateComponentName.testbench.json",
+      "./test-benches/TB_MultipleHierarchy.testbench.json",
+      "./test-benches/TB_EmptyComponentName.testbench.json",
+      "./test-benches/TB_FAIL_WhitespaceComponentName.testbench.json",
+      "./test-benches/TB_FAIL_EmptyPortID.testbench.json",
+      "./test-benches/TB_FAIL_EmptyComponentName.testbench.json",
+      "./test-benches/TB_FAIL_WhitespacePortID.testbench.json",
+      "./test-benches/TB_FAIL_BadModelParameter.testbench.json",
+      "./test-benches/TB_FAIL_BadBlockParameter.testbench.json",
+      "./test-benches/TB_FAIL_BadBlockParameterValue.testbench.json"
+    ],
+    "Results": {
+      "UrlHints": [
+        "./results/results.metaresults.json"
+      ]
+    },
+    "Requirements": {
+      "UrlHints": [
+        "./requirements/requirements.json"
+      ],
+      "id": "",
+      "vfLink": "",
+      "text": ""
+    },
+    "CyPhyProjectFileName": "SimulinkTestModel.mga",
+    "LastModified": "2017-04-13 12-06-36"
+  }
+}

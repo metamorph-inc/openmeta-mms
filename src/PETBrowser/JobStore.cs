@@ -100,8 +100,9 @@ namespace PETBrowser
             UiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
             TrackedJobs = new List<JobViewModel>();
-            Manager = new JobManagerFramework.JobManager(35010,
-                new JobManagerFramework.JobManager.JobManagerConfiguration(), SelectedThreadCount);
+            Manager = new JobManagerFramework.JobManager(SelectedThreadCount);
+            Manager.Server.IsRemote = false;
+            Manager.LoadSavedJobs();
 
             Manager.JobAdded += Manager_JobAdded;
 

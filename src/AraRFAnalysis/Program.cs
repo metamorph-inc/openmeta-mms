@@ -304,6 +304,7 @@ namespace AraRFAnalysis
             j.WorkingDirectory = Path.GetDirectoryName(filename);
             j.Title = "Ara RF Simulation";
             manager.AddJob(j);
+            dispatch.Done();
         }
     }
 

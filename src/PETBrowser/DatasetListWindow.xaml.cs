@@ -74,6 +74,7 @@ namespace PETBrowser
                 if (instanceManager == null)
                 {
                     this.instanceManager = new SingleInstanceManager();
+                    var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
                     this.instanceManager.OnCreateForWorkingDirectory += (sender, args) =>
                     {
                         Task.Factory.StartNew(() =>
@@ -108,7 +109,7 @@ namespace PETBrowser
                             var newDatasetListWindow = new DatasetListWindow(ViewModel.JobStore, this.instanceManager, args.WorkingDirectory);
                             newDatasetListWindow.Show();
                             newDatasetListWindow.Activate();
-                        }, new CancellationToken(), TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                        }, new CancellationToken(), TaskCreationOptions.None, uiContext);
                     };
                 }
                 else

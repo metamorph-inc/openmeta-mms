@@ -43,7 +43,11 @@ namespace CyPhyMasterInterpreter
         {
             this.Configuration = configuration;
 
-            if (this.OriginalSystemUnderTest.Referred.DesignEntity.ID == configuration.ID)
+            if (this.OriginalSystemUnderTest == null)
+            {
+                // don't need to do anything
+            }
+            else if (this.OriginalSystemUnderTest.Referred.DesignEntity.ID == configuration.ID)
             {
                 this.expandedTestBenchSuite = this.testBenchSuite;
             }
@@ -99,16 +103,11 @@ namespace CyPhyMasterInterpreter
             return workflow;
         }
 
-        public override bool PostToJobManager(JobManagerDispatch manager = null)
+        public override bool PostToJobManager(JobManagerDispatch manager)
         {
             if (this.Interpreters == null)
             {
                 throw new InvalidOperationException("Call RunInterpreters method first.");
-            }
-
-            if (manager == null)
-            {
-                manager = new JobManagerDispatch();
             }
 
             bool success = true;

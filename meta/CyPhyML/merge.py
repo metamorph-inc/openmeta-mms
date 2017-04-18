@@ -6,7 +6,7 @@ git checkout metarefs
 ../../bin/Python27/Scripts/python merge.py "$@"
 ../../bin/Python27/Scripts/python add_folder_treeIcons.py
 ../../bin/Python27/Scripts/python add_folder_treeIcons.py
-cat metarefs_new > metarefs
+# cat metarefs_new > metarefs
 exit 0
 
 bash merge.py --version 14.13-t12

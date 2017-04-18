@@ -33,8 +33,7 @@ namespace CyPhyMasterInterpreter
             if (input == null ||
                 input.Context == null ||
                 input.Groups == null ||
-                input.InterpreterNames == null ||
-                input.Target == null)
+                input.InterpreterNames == null)
             {
                 throw new ArgumentNullException();
             }
@@ -84,6 +83,7 @@ namespace CyPhyMasterInterpreter
                 this.chbShowDirty.Enabled = false;
                 this.lbConfigModels.Enabled = false;
                 this.lbConfigModels.BackColor = Color.LightGray;
+                this.commandLinkRunParallel.Enabled = false;
 
                 foreach (var config in this.m_Input.Groups.SelectMany(x => x.Configurations))
                 {
