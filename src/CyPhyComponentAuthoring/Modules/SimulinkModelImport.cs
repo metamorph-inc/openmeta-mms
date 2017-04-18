@@ -36,10 +36,10 @@ namespace CyPhyComponentAuthoring.Modules
         ]
         public void ImportSimulinkModel_Delegate(object sender, EventArgs e)
         {
-            ImportSimulinkModel(this.GetCurrentComp());
+            ImportSimulinkModel(this.GetCurrentComp(), sender);
         }
 
-        public void ImportSimulinkModel(CyPhy.Component component)
+        public void ImportSimulinkModel(CyPhy.Component component, object sender)
         {
             Boolean ownLogger = false;
 
@@ -63,17 +63,27 @@ namespace CyPhyComponentAuthoring.Modules
                 return;
             }
 
+            Form senderParentForm = null;
+            if (sender is Control)
+            {
+                var senderControl = (Control)sender;
+                senderParentForm = senderControl.FindForm();
+
+                if (senderParentForm != null)
+                {
+                    senderParentForm.UseWaitCursor = true;
+                }
+            }
+
             try
             {
-
                 using (var browser = new SimulinkLibraryBrowser())
                 {
                     using (var simulinkConnector = new SimulinkConnector(Logger))
                     {
                         browser.BlockNames = simulinkConnector.ListSystemObjects("simulink").ToList();
 
-
-                        var result = browser.ShowDialog();
+                        var result = browser.ShowDialog(senderParentForm);
 
                         if (result == DialogResult.OK)
                         {
@@ -85,7 +95,7 @@ namespace CyPhyComponentAuthoring.Modules
                             {
                                 paramPicker.ParamNames = paramNames.ToList();
 
-                                var result2 = paramPicker.ShowDialog();
+                                var result2 = paramPicker.ShowDialog(senderParentForm);
 
                                 if (result2 == DialogResult.OK)
                                 {
@@ -99,7 +109,8 @@ namespace CyPhyComponentAuthoring.Modules
 
                                     simulinkConnector.ListPorts(browser.SelectedBlockName, out inPorts, out outPorts);
 
-                                    AddSimulinkObjectToModel(component, browser.SelectedBlockName, paramPicker.SelectedParams,
+                                    AddSimulinkObjectToModel(component, browser.SelectedBlockName,
+                                        paramPicker.SelectedParams,
                                         inPorts, outPorts);
                                 }
                                 else
@@ -117,9 +128,9 @@ namespace CyPhyComponentAuthoring.Modules
                     }
                 }
 
-                
+
             }
-            catch( Exception e )
+            catch (Exception e)
             {
                 Logger.WriteError("Error occurred: {0}", e.Message);
 
@@ -130,6 +141,13 @@ namespace CyPhyComponentAuthoring.Modules
                 }
 
                 return;
+            }
+            finally
+            {
+                if (senderParentForm != null)
+                {
+                    senderParentForm.UseWaitCursor = false;
+                }
             }
 
             // Find the visual coordinates of where the new SystemC model should be placed.
