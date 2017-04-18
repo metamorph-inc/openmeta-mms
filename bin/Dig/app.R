@@ -147,7 +147,7 @@ si_read <- function(id) {
 
 # Load Tabs and Data ---------------------------------------------------------
 
-# Read tab files
+# Locate tab files
 tab_files <- list()
 tab_ids <- list()
 for (i in 1:length(tab_requests)) {
@@ -161,18 +161,27 @@ for (i in 1:length(tab_requests)) {
   }
 }
 
-tab_environments <- lapply(tab_files, function(file_name) {
-  env <- new.env()
-  # source(file_name, local = env)
-  debugSource(file_name, local = env)
-  env
-})
+# Source tab files
+print("Sourcing Tabs:")
+tab_environments <- mapply(function(file_name, id) {
+    env <- new.env()
+    if(!is.null(visualizer_config$tab_data)) {
+      env$tab_data <- visualizer_config$tab_data[[id]]
+    } else {
+      env$tab_data <- NULL
+    }
+    print(paste0(id))
+    source(file_name, local = env)
+    # debugSource(file_name, local = env)
+    env
+  },
+  file_name=tab_files,
+  id=tab_ids,
+  SIMPLIFY = FALSE
+)
 
 # Read input dataset file
 raw <- read.csv(raw_data_filename, fill=T)
-
-
-# We've moved!
 
 # Process PET Configuration File ('pet_config.json') -------------------------
 pet <- NULL
@@ -783,6 +792,12 @@ Server <- function(input, output, session) {
                               sets=sets)
   data$pre <- pre
   
+  # if(is.null(visualizer_config$tab_data)) {
+  #   data$tab <- list()
+  # } else {
+  #   data$tab <- visualizer_config$tab_data
+  # }
+  
   # Call each tab's server() function ----------------------------------------
   
   mapply(function(tab_env, id) {
@@ -812,13 +827,17 @@ Server <- function(input, output, session) {
   # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
     
-    # Prepare inputs and other metadata for saving to visualizer config file
+    # Save the updated raw data
     if(is.null(visualizer_config$augmented_data)) {
       tentative_filename <- sub(".csv", "_aug.csv", basename(raw_data_filename))
       # TODO(tthomas): Check if file already exists
       visualizer_config$augmented_data <- tentative_filename
     }
-    # visualizer_config$pre <- data$pre
+    write.csv(isolate(data$raw$df),
+              file=file.path(launch_dir, visualizer_config$augmented_data),
+              row.names = FALSE)
+    
+    # Prepare metadata for saving to visualizer config file
     meta <- isolate(reactiveValuesToList(data$meta))
     visualizer_config$variables <- meta$variables
     meta$colorings$current <- NULL
@@ -826,6 +845,8 @@ Server <- function(input, output, session) {
     # visualizer_config$pet <- meta$pet
     visualizer_config$sets <- meta$sets
     # visualizer_config$comments <- meta$comments
+    
+    # Prepare inputs for saving to visualizer config file
     current_inputs <- isolate(reactiveValuesToList(input))
     current_inputs[["window_width"]] <- NULL
     current_inputs[unlist(lapply(names(current_inputs), function (name) {
@@ -839,14 +860,21 @@ Server <- function(input, output, session) {
     combined_inputs <- combined_inputs[order(names(combined_inputs))]
     visualizer_config$inputs <- combined_inputs
     
-    write.csv(isolate(data$raw$df),
-              file=file.path(launch_dir, visualizer_config$augmented_data),
-              row.names = FALSE)
+    # Retrive tab data to save
+    tab_data <- lapply(tab_environments, function(tab_env) {
+      if(!is.null(tab_env$TabData)) {
+        tab_env$TabData()
+      }
+    })
+    names(tab_data) <- tab_ids
+    visualizer_config$tab_data <- tab_data
+    
+    # Save visualizer config file
     write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
           file=config_filename)
     print("Session saved.")
     
-    # Clear environment variables -- for development
+    # Clear environment variables (necessary only for development)
     Sys.setenv(DIG_INPUT_CSV="")
     Sys.setenv(DIG_DATASET_CONFIG="")
     stopApp()
@@ -860,9 +888,7 @@ Server <- function(input, output, session) {
 # Setup UI with requested tabs.
 base_tabs <- NULL
 
-print("Tabs:")
 added_tabs <- mapply(function(tab_env, id) {
-    print(paste0(id, ": ", tab_env$title))
     tabPanel(tab_env$title, tab_env$ui(paste(id)))
   },
   tab_env=tab_environments,

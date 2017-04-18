@@ -5,6 +5,8 @@ uiInitialized <- FALSE
 directions <- list()
 types <- list()
 params <- list()
+probability_queries <- NULL
+query_id <- NULL
 
 title <- "Uncertainty Quantification"
 footer <- FALSE
@@ -185,7 +187,6 @@ server <- function(input, output, session, data) {
     selected <- choices[1]
     saved <- si_read(ns('design_config_choice'))
     if(!is.null(saved) && saved %in% choices) {
-      print("restored design config choice")
       selected <- si(ns('design_config_choice'), NULL)
     }
     updateSelectInput(session,
@@ -203,7 +204,6 @@ server <- function(input, output, session, data) {
        !is.null(input$design_config_choice) &&
        !is.na(input$design_config_choice) &&
        !(input$design_config_choice == "")) {
-      print(input$design_config_choice)
       filData <- subset(filData, filData[[paste0(input$design_config_var)]] == input$design_config_choice)
     }
     filData
@@ -446,10 +446,49 @@ server <- function(input, output, session, data) {
   
   outputOptions(output, "display_queries", suspendWhenHidden=FALSE)
   
-  probabilityQueries <- reactiveValues(rows = c())
+  if(is.empty(tab_data)) {
+    probability_queries <<- reactiveValues(rows = c())
+    query_id <<- 0
+  } else {
+    probability_queries <<- reactiveValues(rows = tab_data$probability_queries)
+    query_id <<- tab_data$query_id
+    lapply(tab_data$probability_queries, function(row) {
+      id <- as.numeric(row)
+      insertUI(
+        selector = '#probabilities_ui',
+        ui = tags$div(
+          fluidRow(
+            column(1, actionButton(ns(paste0('removeProbability', id)), 'Delete')),
+            column(3, selectInput(ns(paste0('queryVariable', id)),
+                                  NULL,
+                                  choices = varNums,
+                                  selected = si(ns(paste0('queryVariable', id)), varNums[[1]]))),
+            column(2, selectInput(ns(paste0('queryDirection', id)),
+                                  NULL,
+                                  choices = c("Above", "Below"),
+                                  selected = si(ns(paste0('queryDirection', id)),"Above"))),
+            column(2, textInput(ns(paste0('queryThreshold', id)),
+                                NULL,
+                                value = si(ns(paste0('queryThreshold', id))))),
+            column(2, textOutput(ns(paste0('queryValue', id)))),
+            column(2)
+          ),
+          id = paste0('probabilityQuery', id)
+        )
+      )
+    })
+    i <- 0
+    while(i < query_id) {
+      si(ns(paste0('queryVariable', i)), NULL)
+      si(ns(paste0('queryDirection', i)), NULL)
+      si(ns(paste0('queryThreshold', i)), NULL)
+      i <- i + 1
+    }
+  }
   
   observeEvent(input$add_probability, {
-    id <- input$add_probability
+    id <- query_id
+    query_id <<- query_id + 1
     insertUI(
       selector = '#probabilities_ui',
       ui = tags$div(
@@ -464,20 +503,20 @@ server <- function(input, output, session, data) {
         id = paste0('probabilityQuery', id)
       )
     )
-    probabilityQueries$rows <<- c(probabilityQueries$rows, toString(id))
+    probability_queries$rows <<- c(probability_queries$rows, toString(id))
   })
   
   removeProbability <- observe({
-    lapply(probabilityQueries$rows, function(id) {
+    lapply(probability_queries$rows, function(id) {
       observeEvent(input[[paste0('removeProbability', id)]], {
         removeUI(
           ## pass in appropriate div id
           selector = paste0('#probabilityQuery', id)
         )
-        if (length(probabilityQueries$rows) == 1) {
-          probabilityQueries$rows <<- NULL
+        if (length(probability_queries$rows) == 1) {
+          probability_queries$rows <<- NULL
         } else {
-          probabilityQueries$rows <<- probabilityQueries$rows[sapply(probabilityQueries$rows, function(x) {x!=id})]
+          probability_queries$rows <<- probability_queries$rows[sapply(probability_queries$rows, function(x) {x!=id})]
         }
       })
     })
@@ -495,8 +534,8 @@ server <- function(input, output, session, data) {
   
   runQueries <- observeEvent(input$run_probabilities_queries, {
     print("Started Calculating Probabilities.")
-    lapply(1:length(probabilityQueries$rows), function(i) {
-      id <- probabilityQueries$rows[i]
+    lapply(1:length(probability_queries$rows), function(i) {
+      id <- probability_queries$rows[i]
       name <- input[[paste0('queryVariable', id)]]
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
@@ -607,8 +646,8 @@ server <- function(input, output, session, data) {
   
   runFullProbability <- eventReactive(input$run_probabilities, {
     data <- data.frame(Config = character(0), stringsAsFactors=FALSE)
-    for(i in 1:length(probabilityQueries$rows)) {
-      id <- probabilityQueries$rows[i]
+    for(i in 1:length(probability_queries$rows)) {
+      id <- probability_queries$rows[i]
       data[[paste0('Query', id)]] <- numeric(0)
     }
     configs <- levels(raw_data[[paste0(input$design_config_var)]])
@@ -620,8 +659,8 @@ server <- function(input, output, session, data) {
       configData <- configData[varNums]
       resampledData <- resampleData(configData, directions, types, params)$dist
       answers <- c(paste0(config))
-      for(j in 1:length(probabilityQueries$rows)) {
-        id <- probabilityQueries$rows[j]
+      for(j in 1:length(probability_queries$rows)) {
+        id <- probability_queries$rows[j]
         name <- input[[paste0('queryVariable', id)]]
         direction <- input[[paste0('queryDirection', id)]]
         threshold <-input[[paste0('queryThreshold', id)]]
@@ -642,7 +681,7 @@ server <- function(input, output, session, data) {
   })
   
   output$probabilities_weight_ui <- renderUI({
-    lapply(probabilityQueries$rows, function(id) {
+    lapply(probability_queries$rows, function(id) {
       variable <- input[[paste0('queryVariable', id)]]
       direction <- input[[paste0('queryDirection', id)]]
       threshold <-input[[paste0('queryThreshold', id)]]
@@ -662,8 +701,8 @@ server <- function(input, output, session, data) {
     decisions <- data.matrix(outputData[,-1])
     weights <- NULL
     impacts <- NULL
-    for(i in 1:length(probabilityQueries$rows)) {
-      id <- probabilityQueries$rows[i]
+    for(i in 1:length(probability_queries$rows)) {
+      id <- probability_queries$rows[i]
       if(input[[paste0("probImpact", id)]] == "Positive")
         impacts <- c(impacts, '+')
       else
@@ -677,10 +716,10 @@ server <- function(input, output, session, data) {
     }
     else {
       if (impacts[1] == "+") {
-        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[rev(order(outputData[[paste0("Query", probabilityQueries$rows[1])]])),])
+        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[rev(order(outputData[[paste0("Query", probability_queries$rows[1])]])),])
       }
       else {
-        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[order(outputData[[paste0("Query", probabilityQueries$rows[1])]]),])
+        outputData <- cbind("Rank" = 1:nrow(decisions), outputData[order(outputData[[paste0("Query", probability_queries$rows[1])]]),])
       }
     }
     outputData
@@ -690,4 +729,9 @@ server <- function(input, output, session, data) {
     topsisProbability()
   })
   
+}
+
+TabData <- function() {
+  list(probability_queries=isolate(probability_queries$rows),
+       query_id=query_id)
 }
