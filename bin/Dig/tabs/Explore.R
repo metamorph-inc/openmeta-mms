@@ -1,7 +1,36 @@
 title <- "Explore"
 footer <- TRUE
 
-ui <- function() {
+plot_markers <- c("Square"=0,
+                  "Circle"=1,
+                  "Triangle Point Up"=2,
+                  "Plus"=3,
+                  "Cross"=4,
+                  "Diamond"=5,
+                  "Triangle Point Down"=6,
+                  "Square Cross"=7,
+                  "Star"=8,
+                  "Diamond Plus"=9,
+                  "Circle Plus"=10,
+                  "Triangles Up And Down"=11,
+                  "Square Plus"=12,
+                  "Circle Cross"=13,
+                  "Square And Triangle Down"=14,
+                  "Filled Square"=15,
+                  "Filled Circle"=16,
+                  "Filled Triangle Point Up"=17,
+                  "Filled Diamond"=18,
+                  "Solid Circle"=19,
+                  "Bullet (Smaller Circle)"=20)  #,
+                  # "Filled Circle Red"=21,
+                  # "Filled Square Red"=22,
+                  # "Filled Diamond Red"=23,
+                  # "Filled Triangle Point Up Red"=24,
+                  # "Filled Triangle Point Down Red"=25)
+
+ui <- function(id) {
+  ns <- NS(id)
+  
   fluidPage(
   	br(),
     tabsetPanel(
@@ -11,37 +40,40 @@ ui <- function() {
             br(),
             wellPanel(
               h4("Plot Options"),
-              selectInput("display",
+              selectInput(ns("display"),
                           "Display Variables:",
                           c(),
-                          multiple = TRUE),
+                          # selected=si(ns("display"), NULL),
+                          multiple=TRUE),
               conditionalPanel(
                 condition = "input.auto_render == false",
-                actionButton("render_plot", "Render Plot"),
+                actionButton(ns("render_plot"), "Render Plot"),
                 br()
               ),
               hr(),
-              selectInput("pairs_plot_marker",
+              selectInput(ns("pairs_plot_marker"),
                           "Plot Markers:",
-                          c("Circle, Open"=1,
-                            "Circle, Filled"=19)),
-              radioButtons("pairs_plot_marker_size", "Marker Size:",
-                           c("Small" = 1, "Medium" = 1.5, "Large" = 2)),
+                          plot_markers,
+                          selected=si(ns("pairs_plot_marker"), 1)),
+              sliderInput(ns("pairs_plot_marker_size"), "Marker Size:",
+                          min=0.5, max=2.5,
+                          value=si(ns("pairs_plot_marker_size"),1),
+                          step=0.025),
               hr(),
               h4("Info"),
-              verbatimTextOutput("pairs_stats")#,
+              verbatimTextOutput(ns("pairs_stats"))#,
               # TODO(tthomas): Add this functionality back in.
               # h4("Download"),
-              # downloadButton('exportData', 'Dataset'), 
+              # downloadButton(ns('exportData'), 'Dataset'), 
               # paste("          "),
-              # downloadButton('exportPlot', 'Plot'), hr(),
-              # actionButton("resetOptions", "Reset to Default Options")
+              # downloadButton(ns('exportPlot'), 'Plot'), hr(),
+              # actionButton(ns("resetOptions"), "Reset to Default Options")
             )
           ),
           column(9,
-              uiOutput("pairs_display_error"),   
-              uiOutput("pairs_filter_error"), 
-              plotOutput("pairs_plot", dblclick = "pairs_click", height = 700)
+              uiOutput(ns("pairs_display_error")),   
+              uiOutput(ns("pairs_filter_error")), 
+              plotOutput(ns("pairs_plot"), dblclick = ns("pairs_click"), height = 700)
           )
         )
       ), 
@@ -49,70 +81,108 @@ ui <- function() {
         fluidRow(
           column(3,
             br(),
-            # actionButton("single_back_pairs", "Back"),
+            # actionButton(ns("single_back_pairs"), "Back"),
             # br(), br(),
-            wellPanel(
-              selectInput("x_input", "X-axis", c()),
-              selectInput("y_input", "Y-Axis", c()),
-              br(),
-              hr(),
-              selectInput("single_plot_marker",
-                          "Plot Markers:",
-                          c("Circle, Open"=1,
-                            "Circle, Filled"=19)),
-              radioButtons("single_plot_marker_size", "Marker Size:",
-                           c("Small" = 1, "Medium" = 1.5, "Large" = 2)),
-              hr(),
-              p(strong("Adjust Sliders to Selection")),
-              actionButton("update_x", "X"),
-              actionButton("update_y", "Y"),
-              actionButton("update_both", "Both")#,
+            bsCollapse(id = ns("single_plot_collapse"), open = si(ns("single_plot_collapse"), "Variables"),
+              bsCollapsePanel("Variables", 
+                selectInput(ns("x_input"), "X-axis", c(), selected=NULL),
+                selectInput(ns("y_input"), "Y-Axis", c(), selected=NULL),
+                style = "default"),
+              bsCollapsePanel("Markers",
+                selectInput(ns("single_plot_marker"),
+                            "Plot Markers:",
+                            plot_markers,
+                            selected = si(ns("single_plot_marker"), 1)),
+                sliderInput(ns("single_plot_marker_size"), "Marker Size:",
+                            min=0.5, max=2.5, value=si(ns("single_plot_marker_size"), 1), step=0.025),
+                style = "default"),
+              bsCollapsePanel("Filter", 
+                p(strong("Adjust Sliders to Selection")),
+                actionButton(ns("update_x"), "X"),
+                actionButton(ns("update_y"), "Y"),
+                actionButton(ns("update_both"), "Both"),
+                style = "default"),
               # TODO(wknight): Restore this functionality.
               # br(), br(),
               # p(strong("Highlight Selection")),
               # bootstrapPage(
-              #   actionButton("highlightData", "Highlight Selection", class = "btn btn-primary")
+              #   actionButton(ns("highlightData"), "Highlight Selection", class = "btn btn-primary")
               # )
+              bsCollapsePanel("Overlays", 
+                checkboxInput(ns("add_pareto"), "Add Pareto Plot", si(ns("add_pareto"), FALSE)),
+                style = "default")
             )
           ),
           column(9,
-            plotOutput("single_plot", click = "plot_click", brush = "plot_brush", height=700)
+            plotOutput(ns("single_plot"), click = ns("plot_click"), brush = ns("plot_brush"), height=700)
           ),
           column(12,
-            verbatimTextOutput("single_info")
+            verbatimTextOutput(ns("single_info"))
           )
         )
       ),
-      id = "explore_tabset"
+      id = ns("explore_tabset"),
+      selected = si(ns("explore_tabset"), NULL)
     )
   )
 }
 
 server <- function(input, output, session, data) {
+  ns <- session$ns
   
   observe({
-    isolate({
-      updateSelectInput(session,
-                        "display",
-                        choices = data$meta$preprocessing$var_range,
-                        selected = data$meta$preprocessing$var_range[c(1,2)])
-      updateSelectInput(session,
-                        "x_input",
-                        choices = data$meta$preprocessing$var_range,
-                        selected = data$meta$preprocessing$var_range[c(1)])
-      updateSelectInput(session,
-                        "y_input",
-                        choices = data$meta$preprocessing$var_range,
-                        selected = data$meta$preprocessing$var_range[c(2)])
-      # print("Updating Panel Selections...")
-      # updateSelectInput(session, "colVarFactor", choices = varRangeFac())  
-      # updateSelectInput(session, "colVarNum", choices = varRangeNum())#, selected = varRangeNum()[c(1)])
-      # setupToolTip()
-    })
+    selected <- isolate(input$display)
+    if(is.null(selected)) {
+      selected <- data$pre$var_range()[c(1,2)]
+    }
+    saved <- si_read(ns("display"))
+    if (is.empty(saved)) {
+      si(ns("display"), NULL)
+    } else if (all(saved %in% c(data$pre$var_range(), ""))) {
+      selected <- si(ns("display"), NULL)
+    }
+    updateSelectInput(session,
+                      "display",
+                      choices = data$pre$var_range_list(),
+                      selected = selected)
+  })
+
+  observe({
+    selected <- isolate(input$x_input)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range()[1]
+    }
+    saved <- si_read(ns("x_input"))
+    if (is.empty(saved)) {
+      si(ns("x_input"), NULL)
+    } else if (saved %in% c(data$pre$var_range(), "")) {
+      selected <- si(ns("x_input"), NULL)
+    }
+    updateSelectInput(session,
+                      "x_input",
+                      choices = data$pre$var_range_list(),
+                      selected = selected)
+  })
+
+  observe({
+    selected <- isolate(input$y_input)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range()[2]
+    }
+    saved <- si_read(ns("y_input"))
+    if (is.empty(saved)) {
+      si(ns("y_input"), NULL)
+    } else if (saved %in% c(data$pre$var_range(), "")) {
+      selected <- si(ns("y_input"), NULL)
+    }
+    updateSelectInput(session,
+                      "y_input",
+                      choices = data$pre$var_range_list(),
+                      selected = selected)
   })
      
   # Pairs Plot Tab -----------------------------------------------------------
-
+  # TODO(tthomas): Restore the ability to have trendlines
   # pairsSetup <- function(...){
   #   if(input$pairs_upper_panel) {
   #     if(input$pairs_trendlines) {
@@ -162,7 +232,7 @@ server <- function(input, output, session, data) {
   vars_list <- reactive({
     idx <- NULL
     for(choice in 1:length(input$display)) {
-      mm <- match(input$display[choice],data$meta$preprocessing$var_names)
+      mm <- match(input$display[choice],data$pre$var_names())
       if(mm > 0) { idx <- c(idx,mm) }
     }
     idx
@@ -171,22 +241,13 @@ server <- function(input, output, session, data) {
   output$pairs_stats <- renderText({
     # print("In render stats")
     if(nrow(data$Filtered()) > 0) {
-      table <- paste0("Total Points: ", nrow(data$raw),
+      table <- paste0("Total Points: ", nrow(data$raw$df),
                       "\nCurrent Points: ", nrow(data$Filtered()))
     }
     else {
       table <- "No data points fit the filtering scheme."
     }
     table
-    
-    # COMMENT(tthomas): Left over from the old session import.
-    # if(importFlags$tier1){
-    #   importFlags$tier1 <- FALSE
-    #   importFlags$tier2 <- TRUE
-    #   importFlags$ranking <- TRUE
-    #   importFlags$ranges <- TRUE
-    #   importFlags$bayesian <- TRUE
-    # }
   })
   
   # TODO(wknight): Can we make this a little less hardcoded? Are there any
@@ -259,15 +320,32 @@ server <- function(input, output, session, data) {
     updateTabsetPanel(session, "explore_tabset", selected = "Pairs Plot")
   })
   
-  output$single_plot <- renderPlot({
-    plot(data$Filtered()[[paste(input$x_input)]],
-         data$Filtered()[[paste(input$y_input)]],
-         xlab = paste(input$x_input),
-         ylab = paste(input$y_input),
-         col = data$Colored()$color,
-         pch = as.numeric(input$single_plot_marker),
-         cex = as.numeric(input$single_plot_marker_size))#,
-         # pch = as.numeric(input$pointStyle))
+  output$single_plot <- renderPlot(SinglePlot())
+  
+  SinglePlot <- reactive({
+    req(input$x_input)
+    if(data$pre$var_class()[input$x_input] == 'factor') {
+      plot(data$Filtered()[[paste(input$x_input)]],
+           data$Filtered()[[paste(input$y_input)]],
+           xlab = paste(input$x_input),
+           ylab = paste(input$y_input),
+           pch = as.numeric(input$single_plot_marker),
+           cex = as.numeric(input$single_plot_marker_size))#,
+           # pch = as.numeric(input$pointStyle))
+    } else {
+      plot(data$Filtered()[[paste(input$x_input)]],
+           data$Filtered()[[paste(input$y_input)]],
+           xlab = paste(input$x_input),
+           ylab = paste(input$y_input),
+           col = data$Colored()$color,
+           pch = as.numeric(input$single_plot_marker),
+           cex = as.numeric(input$single_plot_marker_size))#,
+           # pch = as.numeric(input$pointStyle))
+    }
+    if(input$add_pareto) {
+      # lines()
+      print("Added Pareto")
+    }
   })
   
   output$single_info <- renderPrint({

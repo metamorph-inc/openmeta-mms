@@ -1,32 +1,36 @@
 title <- "Histogram"
+footer <- TRUE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
   
   fluidPage(
     br(),
     column(3,
-      selectInput("sandboxVar", "Histogram Variable:", c())
+      selectInput(ns("sandboxVar"), "Histogram Variable:", c())
     ),
     column(9,
-      plotOutput("sandboxPlot")
+      plotOutput(ns("sandboxPlot"))
     )
   )
   
 }
 
-server <- function(input, output, session, data, info) {
+server <- function(input, output, session, data) {
   
-  varNames <- names(data)
-  varClass <- sapply(data,class)
-  varNums <- varNames[varClass != "factor"]
+  vars <- data$meta$preprocessing$var_range_nums_and_ints
   
-  updateSelectInput(session, "sandboxVar", choices = varNums, selected = varNums[1])
+  updateSelectInput(session,
+                    "sandboxVar",
+                    choices = vars,
+                    selected = vars[1])
   
   output$sandboxPlot <- renderPlot({
-    if(input$sandboxVar != "")
-      hist(data[[input$sandboxVar]],
+    if(input$sandboxVar != "") {
+      hist(data$Filtered()[[input$sandboxVar]],
            main = paste("Histogram of" , paste(input$sandboxVar)),
            xlab = paste(input$sandboxVar))
+    }
   })
   
 }

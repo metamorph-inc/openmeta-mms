@@ -1,34 +1,46 @@
 title <- "Histogram"
 footer <- TRUE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
   
   fluidPage(
     br(),
     column(3,
-      selectInput("sandboxVar", "Histogram Variable:", c())
+      selectInput(ns("variable"), "Histogram Variable:", c())
     ),
     column(9,
-      plotOutput("sandboxPlot")
+      plotOutput(ns("plot"))
     )
   )
   
 }
 
 server <- function(input, output, session, data) {
+  ns <- session$ns
   
-  vars <- data$meta$preprocessing$var_range_nums_and_ints
+  observe({
+    selected <- isolate(input$variable)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range_nums_and_ints()[1]
+    }
+    saved <- si_read(ns("variable"))
+    if (is.empty(saved)) {
+      si(ns("variable"), NULL)
+    } else if (saved %in% c(data$pre$var_range(), "")) {
+      selected <- si(ns("variable"), NULL)
+    }
+    updateSelectInput(session,
+                      "variable",
+                      choices = data$pre$var_range_nums_and_ints_list(),
+                      selected = selected)
+  })
   
-  updateSelectInput(session,
-                    "sandboxVar",
-                    choices = vars,
-                    selected = vars[1])
-  
-  output$sandboxPlot <- renderPlot({
-    if(input$sandboxVar != "") {
-      hist(data$Filtered()[[input$sandboxVar]],
-           main = paste("Histogram of" , paste(input$sandboxVar)),
-           xlab = paste(input$sandboxVar))
+  output$plot <- renderPlot({
+    if(input$variable != "") {
+      hist(data$Filtered()[[input$variable]],
+           main = paste("Histogram of" , paste(input$variable)),
+           xlab = paste(input$variable))
     }
   })
   

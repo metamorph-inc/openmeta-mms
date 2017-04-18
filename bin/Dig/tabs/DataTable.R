@@ -1,59 +1,65 @@
-## Comment: Will Knight.  I have updated the code standard for server side code.
-## Should the same variable formatting be applied to UI stuff...for instance, 'roundTables' to 'round_tables'??
-
 title <- "Data Table"
 footer <- TRUE
 
-ui <- function() {
+ui <- function(id) {
+  ns <- NS(id)
   
   tabPanel("Data Table",
     br(),
-    fluidRow(
-      column(4, 
-        tags$div(title = "Rounds data in all tables to a set number of decimal places", 
-        checkboxInput("roundTables", "Round Data Table", value = FALSE))),
-      column(8, 
-        conditionalPanel("input.roundTables == '1'", 
-          tags$div(title = "Maximum number of decimals to show in data tables.", 
-          sliderInput("numDecimals", "Decimal Places", min = 0, max = 11, step = 1, value = 4))))
-    ),
-    checkboxInput("autoRanking", "Automatic Refresh", value = TRUE),
-    radioButtons("activateRanking", "Output Preference", choices = c("Unranked", "TOPSIS", "Simple Metric w/ TxFx"), selected = "Unranked"),
+    # fluidRow(
+    #   column(4, 
+    #     tags$div(title = "Rounds data in all tables to a set number of decimal places", 
+    #     checkboxInput(ns("roundTables"), "Round Data Table", value = FALSE))),
+    #   column(8, 
+    #     conditionalPanel(paste0("input.", ns("roundTables"), " == '1'"), 
+    #       tags$div(title = "Maximum number of decimals to show in data tables.", 
+    #       sliderInput(ns("numDecimals"), "Decimal Places", min = 0, max = 11, step = 1, value = 4))))
+    # ),
+    # checkboxInput(ns("autoRanking"), "Automatic Refresh", value = TRUE),
     wellPanel(
-      style = "overflow-x:auto",
-      DT::dataTableOutput("dataTable"),
-      downloadButton("exportPoints", "Export Selected Points"), 
-      actionButton("colorRanked", "Color by Selected Rows")
-      #checkboxInput("transpose", "Transpose Table", value = FALSE)
-    ),
-    conditionalPanel(condition = "input.activateRanking != 'Unranked'",
-      wellPanel(
-        conditionalPanel(condition = "input.autoRanking == false",
-          actionButton("applyRanking", "Apply Ranking"),
-          br(), br()
-        ),
+      h4("Data Processing"),
+      checkboxInput(ns("use_filtered"), "Apply Filters", value=si(ns("use_filtered"), TRUE)),
+      fluidRow(column(4,selectInput(ns("process_method"), "Method", choices = c("None", "TOPSIS"), selected = si(ns("process_method"), "None")))),
+      conditionalPanel(condition = paste0("input['", ns("process_method"), "'] != 'None'"),
+        # conditionalPanel(condition = paste0("input['", ns("autoRanking"), "'] == false"),
+        #   actionButton(ns("applyRanking"), "Apply Ranking"),
+        #   br(), br()
+        # ),
         fluidRow(
           column(4,
-            selectInput("weightMetrics",
+            selectInput(ns("weightMetrics"),
                         "Ranking Metrics:",
                         c(),
-                        multiple = TRUE),
-            actionButton("clearMetrics", "Clear Metrics")
+                        multiple = TRUE,
+                        selected = NULL),
+            actionButton(ns("clearMetrics"), "Clear Metrics")
           )
         ),
-        conditionalPanel(condition = "input.weightMetrics != null",
-          hr()),
-        fluidRow(
-          column(3, strong(h4("Variable Name"))),
-          column(2, strong(h4("Ranking Mode"))),
-          conditionalPanel(condition = "input.activateRanking == 'TOPSIS'",
-          column(7, strong(h4("Weight Amount")))),
-          conditionalPanel(condition = "input.activateRanking == 'Simple Metric w/ TxFx'",
-          column(3, strong(h4("Weight Amount"))),
-          column(4, strong(h4("Transfer Function"))))
-        ),
-        uiOutput("rankings")
+        conditionalPanel(condition = paste0("input['", ns("weightMetrics"), "'] != null"),
+          hr(),
+          fluidRow(
+            column(3, strong(h4("Variable Name"))),
+            column(2, strong(h4("Ranking Mode"))),
+            # conditionalPanel(condition = paste0("input['", ns("process_method"), "'] == 'TOPSIS'"),
+              column(7, strong(h4("Weight Amount")))
+            # ),
+            # conditionalPanel(condition = paste0("input['", ns("process_method"), "'] == 'Simple Metric w/ TxFx'"),
+            #   column(3, strong(h4("Weight Amount"))),
+            #   column(4, strong(h4("Transfer Function")))
+            # )
+          ),
+          uiOutput(ns("rankings")),
+          hr(),
+          actionButton(ns("save_ranking"), "Add Ranking as Classification")
+        )
       )
+    ),
+    wellPanel(
+      style = "overflow-x:auto",
+      DT::dataTableOutput(ns("dataTable"))  #,
+      # downloadButton(ns("exportPoints"), "Export Selected Points"), 
+      # actionButton(ns("colorRanked"), "Color by Selected Rows")
+      #checkboxInput(ns("transpose"), "Transpose Table", value = FALSE)
     )
   )
 }
@@ -61,15 +67,21 @@ ui <- function() {
 
 
 server <- function(input, output, session, data) {
+  
+  ns <- session$ns
 
-  var_names <- names(data$raw)
-  var_class <- sapply(data$raw,class)
-  var_num <- var_names[var_class != "factor"]
-
-  varRangeNum <- function(...)
-  {
-    var_num
-  }
+  var_names <- data$pre$var_names
+  var_range_nums_and_ints <- data$pre$var_range_nums_and_ints
+  var_range_nums_and_ints_list <- data$pre$var_range_nums_and_ints_list
+  
+  LocalData <- reactive({
+    if (input$use_filtered) {
+      local_data <- data$Filtered()
+    } else {
+      local_data <- data$raw$df
+    }
+    local_data
+  })
   
   ## Setup Data Frame for Transfer Functions
   transfer_functions <- data.frame()
@@ -78,18 +90,11 @@ server <- function(input, output, session, data) {
   
   makeReactiveBinding("transfer_functions")
   
-  FilterData <- function(...)
-  {
-    data$raw
-  }
-  
-  SlowFilterData <- eventReactive(input$updateDataTable, {
-    FilterData()
+  SlowLocalData <- eventReactive(input$updateDataTable, {
+    LocalData()
     if(input$roundTables)
-      RoundDataFrame(FilterData(), input$numDecimals)
+      RoundDataFrame(LocalData(), input$numDecimals)
   })
-  
-  
   
   RoundDataFrame <- function(x, digits) {
     # round all numeric variables
@@ -101,36 +106,41 @@ server <- function(input, output, session, data) {
   }
   
   output$table <- DT::renderDataTable({
-    print("In render data table")
-    if(input$autoData == TRUE){
-      data <- FilterData()
-    }
-    else {
-      data <- SlowFilterData()
-    }
+    # print("In render data table")
+    local_data <- LocalData()
     if(input$roundTables)
-      data <- RoundDataFrame(FilterData(), input$numDecimals)
+      local_data <- RoundDataFrame(LocalData(), input$numDecimals)
     #data
-    DT::datatable(data, options = list(scrollX = T))
+    DT::datatable(local_data, options = list(scrollX = T))
   })
   
   #Dynamic metrics list
   MetricsList <- reactive({
     idx = NULL
     req(input$weightMetrics)
-    print("Getting Metrics List.")
+    # print("Getting Metrics List.")
     for(choice in 1:length(input$weightMetrics)) {
-      mm <- match(input$weightMetrics[choice],var_names)
+      mm <- match(input$weightMetrics[choice],var_names())
       if(mm > 0) { idx <- c(idx,mm) }
     }
-    print(idx)
+    # print(idx)
     idx
   })
   
   #Event handler for "clear metrics" button
   observe({
-    if(input$clearMetrics | input$activateRanking == "Unranked")
-      updateSelectInput(session, "weightMetrics", choices = varRangeNum(), selected = NULL) 
+    selected <- isolate(input$weightMetrics)
+    saved <- si_read(ns("weightMetrics"))
+    if(input$clearMetrics || input$process_method == "None") {
+      selected <- NULL
+    } else if (!is.null(saved) && ((length(saved) == 0)
+               || saved %in% c(var_range_nums_and_ints(), ""))) {
+      selected <- si(ns("weightMetrics"))
+    }
+    updateSelectInput(session,
+                      "weightMetrics",
+                      choices = var_range_nums_and_ints_list(),
+                      selected = selected)
   })
   
   #UI class for each metric UI
@@ -158,24 +168,24 @@ server <- function(input, output, session, data) {
       func_val <- func
     }
     
-    if(input$activateRanking == 'TOPSIS')
+    if(input$process_method == 'TOPSIS')
       TOPSISMetricUI(current, radio_val, slider_val)
-    else if(input$activateRanking == 'Simple Metric w/ TxFx')
+    else if(input$process_method == 'Simple Metric w/ TxFx')
       SimpleMetricUI(current, radio_val, slider_val, util_val, func_val)
   }
   
   TOPSISMetricUI <- function(current, radio_val, slider_val) {
     
-    varName <- var_names[current]
+    varName <- var_names()[current]
     
     fluidRow(
       column(3, h5(varName)),
-      column(2, radioButtons(paste0('sel', current),
+      column(2, radioButtons(ns(paste0('sel', current)),
                              NULL,
                              choices = c("Min", "Max"),
                              selected = radio_val,
                              inline = TRUE)),
-      column(7, sliderInput(paste0('rnk', current),
+      column(7, sliderInput(ns(paste0('rnk', current)),
                             NULL,
                             step = 0.01,
                             min = 0.01,
@@ -186,32 +196,32 @@ server <- function(input, output, session, data) {
   
   SimpleMetricUI <- function(current, radio_val, slider_val, util_val, func_val) {
     
-    varName <- var_names[current]
+    varName <- var_names()[current]
     transferCondition = toString(paste0("input.util",current," == true"))
     
     fluidRow(
       column(3, h5(varName)),
-      column(2, radioButtons(paste0('sel', current),
+      column(2, radioButtons(ns(paste0('sel', current)),
                              NULL,
                              choices = c("Min", "Max"),
                              selected = radio_val,
                              inline = TRUE)),
-      column(3, sliderInput(paste0('rnk', current),
+      column(3, sliderInput(ns(paste0('rnk', current)),
                             NULL,
                             step = 0.01,
                             min = 0,
                             max = 1,
                             value = slider_val)),
-      column(1, checkboxInput(paste0('util', current),
+      column(1, checkboxInput(ns(paste0('util', current)),
                               "Add Transfer Function",
                               value = util_val)),
       column(3, conditionalPanel(condition = transferCondition,
-                                 textInput(paste0('func', current),
+                                 textInput(ns(paste0('func', current)),
                                            "Enter Data Points",
                                            placeholder = paste0("Value = Score | e.g. ",
-                                                                min(FilterData()[[varName]]),
+                                                                min(LocalData()[[varName]]),
                                                                 " = 1, ",
-                                                                max(FilterData()[[varName]]),
+                                                                max(LocalData()[[varName]]),
                                                                 "= 0.5"),
                                            value = func_val),
                                  UtilityPlot(current)))
@@ -219,7 +229,7 @@ server <- function(input, output, session, data) {
   }
   
   FullMetricUI <- reactive({
-    a <- input$activateRanking # Force reaction
+    a <- input$process_method # Force reaction
     lapply(MetricsList(), function(column) {
       isolate(generateMetricUI(column))
     })
@@ -234,7 +244,7 @@ server <- function(input, output, session, data) {
       color = "#7f7f7f"
     )
     x <- list(
-      title = var_names[current],
+      title = var_names()[current],
       titlefont = f
     )
     y <- list(
@@ -247,7 +257,7 @@ server <- function(input, output, session, data) {
       par(mar = c(4.5,4.5,1,1))
       p <- plot(x = unlist(lapply(names(plot_points), as.numeric)),
                 y = unname(plot_points),
-                xlab = var_names[current],
+                xlab = var_names()[current],
                 ylab = "Score")
       if(length(plot_points) > 1){
         for(i in 1:(length(plot_points)-1)){
@@ -335,7 +345,7 @@ server <- function(input, output, session, data) {
   #Dynamic UI rendering for weighted metrics list
   output$rankings <- renderUI({
     req(MetricsList())
-    print("In render ranking sliders")
+    # print("In render ranking sliders")
     FullMetricUI()
   })
   
@@ -343,14 +353,14 @@ server <- function(input, output, session, data) {
   #Process metric weights
   RankData <- reactive({
     req(MetricsList())
-    print("In calculate ranked data")
-    data <- FilterData()[varRangeNum()]
+    # print("In calculate ranked data")
+    data <- LocalData()[var_range_nums_and_ints()]
     norm_data <- data.frame(t(t(data)/apply(data,2,max)))
     
     score_data <- sapply(row.names(norm_data) ,function(x) 0)
     
     for(i in 1:length(MetricsList())) {
-      column <- var_names[MetricsList()[i]]
+      column <- var_names()[MetricsList()[i]]
       rank_name <- paste0("rnk", toString(MetricsList()[i]))
       weight <- input[[rank_name]]
       req(weight)
@@ -386,7 +396,7 @@ server <- function(input, output, session, data) {
     score <- score_data
     rank <- seq(length(score))
     
-    data <- FilterData()[names(score_data), ]
+    data <- LocalData()[names(score_data), ]
     data <- cbind(rank, score, data)
     data
     
@@ -419,12 +429,13 @@ server <- function(input, output, session, data) {
   
   TOPSISData <- reactive({
     req(MetricsList())
-    print("In calculate topsis data")
-    data <- FilterData()[varRangeNum()]
+    # print("In calculate topsis data")
+    # print(names(LocalData()))
+    data <- LocalData()[var_range_nums_and_ints()]
     weights <- NULL
     impacts <- NULL
-    for(i in 1:length(varRangeNum())){
-      global_index <- match(varRangeNum()[i], var_names)
+    for(i in 1:length(var_range_nums_and_ints())){
+      global_index <- match(var_range_nums_and_ints()[i], var_names())
       if(!is.null(input[[paste0("rnk", global_index)]])){
         weights <- c(weights, input[[paste0("rnk", global_index)]])
         impacts <- c(impacts, input[[paste0("sel", global_index)]])
@@ -440,7 +451,7 @@ server <- function(input, output, session, data) {
     sorted_topsis <- t[order(t$rank),]
     rank <- sorted_topsis$rank
     score <- sorted_topsis$score
-    output_data <- FilterData()[sorted_topsis$alt.row,]
+    output_data <- LocalData()[sorted_topsis$alt.row,]
     output_data <- cbind(rank, score, output_data)
     output_data
   })
@@ -451,24 +462,24 @@ server <- function(input, output, session, data) {
   
   output$dataTable <- DT::renderDataTable({
     if(length(input$weightMetrics) > 0){
-      if(input$activateRanking == 'TOPSIS'){
-        if(input$autoRanking)
+      if(input$process_method == 'TOPSIS'){
+        if(TRUE)  #input$autoRanking)
           data <- TOPSISData()
         else
           data <- SlowTOPSISData()
       }
       else{
-        if(input$autoRanking)
+        if(TRUE)  #input$autoRanking)
           data <- RankData()
         else
           data <- SlowRankData()
       }
     }
     else{
-      data <- FilterData()
+      data <- LocalData()
     }
-    if(input$roundTables)
-      data <- RoundDataFrame(data, input$numDecimals)
+    # if(input$roundTables)
+    #   data <- RoundDataFrame(data, input$numDecimals)
     #if(input$transpose)
     #  data <- t(data)
     data
@@ -478,11 +489,30 @@ server <- function(input, output, session, data) {
   output$exportPoints <- downloadHandler(
     filename = function() { paste('ranked_points-', Sys.Date(), '.csv', sep='') },
     content = function(file) { 
-      if(input$activateRanking != "Unranked")
+      if(input$process_method != "None")
         write.csv(RankData()[input$dataTable_rows_selected, ], file)
       else
-        write.csv(FilterData()[input$dataTable_rows_selected, ], file) 
+        write.csv(LocalData()[input$dataTable_rows_selected, ], file) 
     }
   )
+  
+  
+  observeEvent(input$save_ranking, {
+    number <- 1
+    name <- paste0("class", number)
+    while(!is.null(data$meta$variables[[name]])) {
+      number <- number + 1
+      name <- paste0("class", number)
+    }
+    mean <- 25 + runif(1) * 50
+    sd <- 2 + runif(1) * 3
+    data$raw$df[[name]] <<- rnorm(nrow(data$raw$df),
+                                  mean=mean,
+                                  sd=sd)
+    data$meta$variables[[name]] <- list(type="Classification",
+                                        date=toString(Sys.time()),
+                                        user="tthomas")
+    print(paste0("Saved Ranking: ", name))
+  })
   
 }

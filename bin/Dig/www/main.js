@@ -31,18 +31,18 @@ Shiny.addCustomMessageHandler("update_widths", function(message) {
 function update_slider_width() {
   var $sliders = document.querySelector("#filters").querySelectorAll("div.form-group.shiny-input-container");
 
-  var sliderWidth = 0;
+  var slider_width = 0;
 
   if($sliders.length > 0){
     for(var i = 0; i < $sliders.length; i++) {
-      if($sliders[i].offsetWidth > sliderWidth)
-        sliderWidth = $sliders[i].offsetWidth;
+      if($sliders[i].offsetWidth > slider_width)
+        slider_width = $sliders[i].offsetWidth;
     }
 
-    console.log("sliderWidth");
-    console.log(sliderWidth);
+    console.log("slider_width");
+    console.log(slider_width);
 
-    Shiny.onInputChange("sliderWidth", sliderWidth);
+    Shiny.onInputChange("slider_width", slider_width);
   }
 }
 

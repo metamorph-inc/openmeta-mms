@@ -1,0 +1,5 @@
+{
+  "pet_config": "pet_config.json",
+  "raw_data": "raw_data.csv",
+  "tabs": ["Explore.R", "DataTable.R", "Histogram.R", "PETRefinement.R", "Scratch.R", "UncertaintyQuantification.R"]
+}
