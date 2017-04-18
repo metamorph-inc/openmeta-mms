@@ -26,7 +26,7 @@ ui <- function(id) {
           )
         ),
         fluidRow(
-          conditionalPanel(condition = paste0('input["', 'design_configs_present', '"] == true'),
+          conditionalPanel(condition = paste0('input["', ns('design_configs_present'), '"] == true'),
             column(3,
               selectInput(ns('design_config_var'), "Design Configuration Identifier",
                 choices = c(),
@@ -167,18 +167,43 @@ server <- function(input, output, session, data) {
     idx
   })
   
-  observeEvent(input$design_configs_present, {
-    updateSelectInput(session, "design_config_var", choices = var_facs)
+  observe({
+    input$design_configs_present
+    selected <- var_facs[1]
+    saved <- si_read(ns('design_config_var'))
+    if(!is.null(saved) && saved %in% var_facs) {
+      selected <- si(ns('design_config_var'), NULL)
+    }
+    updateSelectInput(session,
+                      "design_config_var",
+                      choices = var_facs,
+                      selected = selected)
   })
   
-  observeEvent(input$design_config_var, {
-    # print(paste(input$design_config_var))
-    updateSelectInput(session, "design_config_choice", choices = levels(raw_data[[input$design_config_var]]))
+  observe({
+    choices <- levels(raw_data[[input$design_config_var]])
+    selected <- choices[1]
+    saved <- si_read(ns('design_config_choice'))
+    if(!is.null(saved) && saved %in% choices) {
+      print("restored design config choice")
+      selected <- si(ns('design_config_choice'), NULL)
+    }
+    updateSelectInput(session,
+                      "design_config_choice",
+                      choices = choices,
+                      selected = selected)
   })
   
   filtered_data <- reactive({
     filData <- raw_data
-    if(input$design_configs_present & !is.na(input$design_config_var) & !is.na(input$design_config_choice)) {
+    if(input$design_configs_present &&
+       !is.null(input$design_config_var) &&
+       !is.na(input$design_config_var) &&
+       !(input$design_config_var == "") &&
+       !is.null(input$design_config_choice) &&
+       !is.na(input$design_config_choice) &&
+       !(input$design_config_choice == "")) {
+      print(input$design_config_choice)
       filData <- subset(filData, filData[[paste0(input$design_config_var)]] == input$design_config_choice)
     }
     filData
@@ -220,6 +245,14 @@ server <- function(input, output, session, data) {
       #spacefilCondition = toString(paste0("input.gaussian",i," == false"))
       
       # Persist Values
+      this_direction <- isolate(input[[paste0('varDirection', global_index)]])
+      if(is.null(this_direction)) {
+        if(raw_info$variables[[var]]$type == "Design Variable") 
+          this_direction_default <- "Input"
+        else
+          this_direction_default <- "Output"
+        this_direction <- si(ns(paste0('varDirection', global_index)), this_direction_default)
+      }
       this_gaussian <- isolate(input[[paste0('gaussian_', global_index)]])
       if(is.null(this_gaussian)) {
         this_gaussian <- si(ns(paste0('gaussian_', global_index)), FALSE)
@@ -232,12 +265,14 @@ server <- function(input, output, session, data) {
       if(is.null(this_gaussian_sd)) {
         this_gaussian_sd <- si(ns(paste0('gaussian_sd', global_index)), data_sd[[var]])
       }
-      
-      #From petConfig.json
-      if(raw_info$variables[[var]]$type == "Design Variable") 
-        this_direction <- "Input"
-      else
-        this_direction <- "Output"
+      this_constraint <- isolate(input[[paste0("fuq_constraint_enable", global_index)]])
+      if(is.null(this_constraint)) {
+        this_constraint <- si(ns(paste0("fuq_constraint_enable", global_index)), FALSE)
+      }
+      this_constraint_value <- isolate(input[[paste0("fuq_constraint_value", global_index)]])
+      if(is.null(this_constraint_value)) {
+        this_constraint_value <- si(ns(paste0("fuq_constraint_value", global_index)), data_mean[[var]])
+      }
       
       fluidRow(class = "uqVar", column(12,
         # Type select
@@ -249,7 +284,7 @@ server <- function(input, output, session, data) {
                    ns(paste0('varDirection', global_index)),
                    label = var,
                    choices = var_directions,
-                   selected = si(ns(paste0('varDirection', global_index)), this_direction))
+                   selected = this_direction)
           ),
           column(4)
         ),
@@ -267,13 +302,13 @@ server <- function(input, output, session, data) {
                      textInput(ns(paste0('gaussian_mean', global_index)),
                                HTML("&mu;:"),
                                placeholder = "Mean",
-                               value = si(ns(paste0('gaussian_mean', global_index)), this_gaussian_mean))
+                               value = this_gaussian_mean)
               ),
               column(4,
                      textInput(ns(paste0('gaussian_sd',global_index)),
                                HTML("&sigma;:"),
                                placeholder = "StdDev",
-                               value = si(ns(paste0('gaussian_sd',global_index)), this_gaussian_sd))
+                               value = this_gaussian_sd)
               )
           #  )
           ),
@@ -281,11 +316,11 @@ server <- function(input, output, session, data) {
           fluidRow(
             column(4, checkboxInput(inputId = ns(paste0("fuq_constraint_enable", global_index)),
                                     label = "Enable Constraint",
-                                    value = si(ns(paste0("fuq_constraint_enable", global_index)), FALSE))),
+                                    value = this_constraint)),
           #  conditionalPanel(condition = toString(paste0('input.fuq_constraint_enable', global_index, ' == true')),
               column(4, textInput(inputId = ns(paste0("fuq_constraint_value", global_index)),
                                   label = NULL,
-                                  value = si(ns(paste0("fuq_constraint_value", global_index)), data_mean[[var]]))),
+                                  value = this_constraint_value)),
               column(4)
           #  )
             
