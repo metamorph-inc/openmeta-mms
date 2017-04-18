@@ -170,9 +170,9 @@ tab_environments <- mapply(function(file_name, id) {
     } else {
       env$tab_data <- NULL
     }
-    print(paste0(id))
     source(file_name, local = env)
     # debugSource(file_name, local = env)
+    print(paste0(env$title, " (", file_name, ")"))
     env
   },
   file_name=tab_files,
@@ -239,6 +239,9 @@ Server <- function(input, output, session) {
   var_range_nums_and_ints_list <- reactive({
     AddCategories(data$meta$variables[var_range_nums_and_ints()])
   })
+  var_range_facs_list <- reactive({
+    AddCategories(data$meta$variables[var_range_facs()])
+  })
   var_range_list <- reactive(AddCategories(data$meta$variables[var_range()]))
   var_constants <- reactive({
     subset(var_names(), !(var_names() %in% var_range()))
@@ -256,6 +259,7 @@ Server <- function(input, output, session) {
               var_range_facs=var_range_facs,
               var_range=var_range,
               var_range_nums_and_ints_list=var_range_nums_and_ints_list,
+              var_range_facs_list=var_range_facs_list,
               var_range_list=var_range_list,
               var_constants=var_constants)
   
@@ -725,18 +729,31 @@ Server <- function(input, output, session) {
                       selected = selected)
   })
   
-  # updateSelectInput(session, "live_color_variable_factor",
-  #                   choices = pre$var_range_facs(),
-  #                   selected = si("live_color_variable_factor", pre$var_range_facs()[0]))
-  # 
-  # updateSelectInput(session, "live_coloring_variable_numeric",
-  #                   choices = pre$var_range_nums_and_ints(),
-  #                   selected = pre$var_range_nums_and_ints()[0])
+  observe({
+    selected <- isolate(input$live_color_variable_factor)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range_facs()[1]
+    }
+    saved <- si_read("live_color_variable_factor")
+    if (is.empty(saved)) {
+      si("live_color_variable_factor", NULL)
+    } else if (saved %in% c(data$pre$var_range_facs(), "")) {
+      selected <- si("live_color_variable_factor", NULL)
+    }
+    updateSelectInput(session, "live_color_variable_factor",
+                      choices = data$pre$var_range_facs_list(),
+                      selected = selected)
+  })
   
   observe({
     selected <- isolate(input$live_coloring_variable_numeric)
-    if (!is.null(si_read("live_coloring_variable_numeric")) &&
-        si_read("live_coloring_variable_numeric") %in% c(data$pre$var_range_nums_and_ints(), "")) {
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range_nums_and_ints()[1]
+    }
+    saved <- si_read("live_coloring_variable_numeric")
+    if (is.empty(saved)) {
+      si("live_coloring_variable_numeric", NULL)
+    } else if (saved %in% c(data$pre$var_range_nums_and_ints(), "")) {
       selected <- si("live_coloring_variable_numeric", NULL)
     }
     updateSelectInput(session, "live_coloring_variable_numeric",
@@ -791,12 +808,6 @@ Server <- function(input, output, session) {
                               pet=pet,
                               sets=sets)
   data$pre <- pre
-  
-  # if(is.null(visualizer_config$tab_data)) {
-  #   data$tab <- list()
-  # } else {
-  #   data$tab <- visualizer_config$tab_data
-  # }
   
   # Call each tab's server() function ----------------------------------------
   

@@ -132,9 +132,13 @@ server <- function(input, output, session, data) {
   
   observe({
     selected <- isolate(input$display)
+    if(is.null(selected)) {
+      selected <- data$pre$var_range()[c(1,2)]
+    }
     saved <- si_read(ns("display"))
-    if(!is.null(saved) && ((length(saved) == 0)
-       || all(saved %in% c(data$pre$var_range(), "")))) {
+    if (is.empty(saved)) {
+      si(ns("display"), NULL)
+    } else if (all(saved %in% c(data$pre$var_range(), ""))) {
       selected <- si(ns("display"), NULL)
     }
     updateSelectInput(session,
@@ -145,9 +149,13 @@ server <- function(input, output, session, data) {
 
   observe({
     selected <- isolate(input$x_input)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range()[1]
+    }
     saved <- si_read(ns("x_input"))
-    if(!is.null(saved) && ((length(saved) == 0)
-       || saved %in% c(data$pre$var_range(), ""))) {
+    if (is.empty(saved)) {
+      si(ns("x_input"), NULL)
+    } else if (saved %in% c(data$pre$var_range(), "")) {
       selected <- si(ns("x_input"), NULL)
     }
     updateSelectInput(session,
@@ -158,9 +166,13 @@ server <- function(input, output, session, data) {
 
   observe({
     selected <- isolate(input$y_input)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range()[2]
+    }
     saved <- si_read(ns("y_input"))
-    if(!is.null(saved) && ((length(saved) == 0)
-       || saved %in% c(data$pre$var_range(), ""))) {
+    if (is.empty(saved)) {
+      si(ns("y_input"), NULL)
+    } else if (saved %in% c(data$pre$var_range(), "")) {
       selected <- si(ns("y_input"), NULL)
     }
     updateSelectInput(session,

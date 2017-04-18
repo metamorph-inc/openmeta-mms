@@ -21,8 +21,13 @@ server <- function(input, output, session, data) {
   
   observe({
     selected <- isolate(input$variable)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range_nums_and_ints()[1]
+    }
     saved <- si_read(ns("variable"))
-    if (!is.null(saved) && saved %in% c(data$pre$var_range(), "")) {
+    if (is.empty(saved)) {
+      si(ns("variable"), NULL)
+    } else if (saved %in% c(data$pre$var_range(), "")) {
       selected <- si(ns("variable"), NULL)
     }
     updateSelectInput(session,
