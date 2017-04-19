@@ -26,9 +26,9 @@ namespace CyPhy2Simulink.Simulink
             CopySupportFile(outputDirectory, "CreateOrOverwriteModel.m", Resources.CreateOrOverwriteModel);
             CopySupportFile(outputDirectory, "PopulateTestBenchParams.py", Resources.PopulateTestBenchParams);
 
-            CopyCopyFiles(selectedTestBench, outputDirectory);
+            CopyCopyFiles(selectedTestBench, projectDirectory, outputDirectory);
 
-            var postProcessScripts = GetAndCopyPostProcessScripts(selectedTestBench, outputDirectory);
+            var postProcessScripts = GetAndCopyPostProcessScripts(selectedTestBench, projectDirectory, outputDirectory);
 
             using (var writer = File.CreateText(Path.Combine(outputDirectory, "build_simulink.m.in")))
             {
@@ -65,7 +65,7 @@ namespace CyPhy2Simulink.Simulink
             }
         }
 
-        private static IList<string> GetAndCopyPostProcessScripts(TestBench selectedTestBench, string outputDirectory)
+        private static IList<string> GetAndCopyPostProcessScripts(TestBench selectedTestBench, string projectDirectory, string outputDirectory)
         {
             var scripts = new List<string>();
 
@@ -84,7 +84,7 @@ namespace CyPhy2Simulink.Simulink
                         }
                         else
                         {
-                            File.Copy(postprocessItem.Attributes.ScriptPath, Path.Combine(outputDirectory, fileNameOnly));
+                            File.Copy(Path.Combine(projectDirectory, postprocessItem.Attributes.ScriptPath), Path.Combine(outputDirectory, fileNameOnly));
                             scripts.Add(fileNameOnly);
                         }
 
@@ -95,7 +95,7 @@ namespace CyPhy2Simulink.Simulink
             return scripts;
         }
 
-        private static void CopyCopyFiles(TestBench selectedTestBench, string outputDirectory)
+        private static void CopyCopyFiles(TestBench selectedTestBench, string projectDirectory, string outputDirectory)
         {
             foreach (var param in selectedTestBench.Children.ParameterCollection)
             {
@@ -113,7 +113,7 @@ namespace CyPhy2Simulink.Simulink
                             }
                             else
                             {
-                                File.Copy(param.Attributes.Value, Path.Combine(outputDirectory, fileNameOnly));
+                                File.Copy(Path.Combine(projectDirectory, param.Attributes.Value), Path.Combine(outputDirectory, fileNameOnly));
                             }
                         }
                     }
@@ -129,7 +129,7 @@ namespace CyPhy2Simulink.Simulink
                             }
                             else
                             {
-                                File.Copy(param.Attributes.Value, Path.Combine(outputDirectory, fileNameOnly));
+                                File.Copy(Path.Combine(projectDirectory, param.Attributes.Value), Path.Combine(outputDirectory, fileNameOnly));
                             }
                         }
                     }
