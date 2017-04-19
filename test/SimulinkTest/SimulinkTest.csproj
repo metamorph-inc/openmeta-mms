@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{45998568-2ED7-4CD2-98D8-7FE681576180}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SimulinkTest</RootNamespace>
+    <AssemblyName>SimulinkTest</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AvmDdp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\AvmDdp\bin\Release\AvmDdp.dll</HintPath>
+    </Reference>
+    <Reference Include="ComponentLibraryManager, Version=1.0.0.0, Culture=neutral, PublicKeyToken=337c23b846022778, processorArchitecture=MSIL">
+      <HintPath>..\..\src\ComponentLibraryManager\bin\Release\ComponentLibraryManager.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyComponentAuthoring">
+      <HintPath>..\..\src\CyPhyComponentAuthoring\bin\Release\CyPhyComponentAuthoring.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyComponentFidelitySelector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7fd6b6cb7be043b1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\CyPhyComponentFidelitySelector\bin\Release\CyPhyComponentFidelitySelector.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyElaborateCS, Version=2.0.0.0, Culture=neutral, PublicKeyToken=114783b3781a56df, processorArchitecture=MSIL">
+      <HintPath>..\..\src\CyPhyElaborateCS\bin\Release\CyPhyElaborateCS.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyGUIs">
+      <HintPath>..\..\src\CyPhyGUIs\bin\Release\CyPhyGUIs.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyMasterInterpreter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=552171988599f6ff, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\CyPhyMasterInterpreter\bin\Release\CyPhyMasterInterpreter.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyML, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+      <HintPath>..\..\src\CyPhyMLCS\bin\Release\CyPhyML.dll</HintPath>
+    </Reference>
+    <Reference Include="GME, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.MGA, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.MGA.Core, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.MGA.Meta, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.MGA.Parser, Version=1.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="GME.Util, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="MasterInterpreterTest">
+      <HintPath>..\..\test\MasterInterpreterTest\bin\Release\MasterInterpreterTest.exe</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\3rdParty\Json.NET\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.console.clr4.x86">
+      <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.console.clr4.x86.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\CommonFiles\MgaUtils.cs">
+      <Link>MgaUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CommonFiles\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="InterpreterFixtureBaseClass.cs" />
+    <Compile Include="InterpreterTest.cs" />
+    <Compile Include="InterpreterTestBaseClass.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CyPhy2Simulink\CyPhy2Simulink.csproj">
+      <Project>{67864c23-19d6-47d5-848b-a740eece4387}</Project>
+      <Name>CyPhy2Simulink</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
