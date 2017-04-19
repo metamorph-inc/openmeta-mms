@@ -34,7 +34,6 @@ namespace SimulinkTest
         {
             fixture = data;
         }
-        #endregion
 
         public override MgaProject project
         {
@@ -51,40 +50,173 @@ namespace SimulinkTest
                 return fixture.path_Test;
             }
         }
+        #endregion
+
+        #region Testbenches where interpreter should succeed
 
         [Fact]
         public void TestHierarchy()
         {
-            string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
-            string OutputDir = Path.Combine(TestPath,
-                "output",
-                TestName);
-
-            string TestbenchPath = "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_Hierarchy|kind=TestBench|relpos=0";
-
-            var result = RunInterpreterMainAndReturnResult(OutputDir, TestbenchPath);
-
-            Assert.True(result.Success);
-
-            //TODO: Verify that we created all the files we were supposed to
+            AssertTestBenchSucceeds(testName, "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_Hierarchy|kind=TestBench|relpos=0");
         }
+
+        [Fact]
+        public void TestHierarchyWithOutput()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            string outputDir;
+
+            AssertTestBenchSucceeds(testName, "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_HierarchyWithOutput|kind=TestBench|relpos=0", out outputDir);
+            AssertFileExists(outputDir, "convertmat.m"); //Created by CopyFile directive
+            AssertFileExists(outputDir, "ComputeMetrics.py"); //Created by PostProcessing directive
+        }
+
+        [Fact]
+        public void TestHierarchyWithOutputForPet()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            string outputDir;
+
+            AssertTestBenchSucceeds(testName, "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_HierarchyWithOutputForPET|kind=TestBench|relpos=0", out outputDir);
+            AssertFileExists(outputDir, "convertmat.m"); //Created by CopyFile directive
+            AssertFileExists(outputDir, "ComputeMetrics.py"); //Created by PostProcessing directive
+        }
+
+        [Fact]
+        public void TestMultiEndpoint()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            AssertTestBenchSucceeds(testName, "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_Multi-endpoint|kind=TestBench|relpos=0");
+        }
+
+        [Fact]
+        public void TestMultiInstance()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            AssertTestBenchSucceeds(testName, "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_Multi-instance|kind=TestBench|relpos=0");
+        }
+
+        [Fact]
+        public void TestMultipleHierarchy()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            AssertTestBenchSucceeds(testName, "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_MultipleHierarchy|kind=TestBench|relpos=0");
+        }
+
+        [Fact]
+        public void TestPidControllerReference()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            string outputDir;
+
+            AssertTestBenchSucceeds(testName, "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_PIDControllerReference|kind=TestBench|relpos=0", out outputDir);
+            AssertFileExists(outputDir, "my_library.slx"); //Created by CopyFile directive
+        }
+
+        [Fact]
+        public void TestUserComponent()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            string outputDir;
+
+            AssertTestBenchSucceeds(testName, "/@Testing|kind=Testing|relpos=0/@Success|kind=Testing|relpos=0/TB_UserComponent|kind=TestBench|relpos=0", out outputDir);
+            AssertFileExists(outputDir, "my_library.slx"); //Created by UserLibrary directive
+        }
+
+        #endregion
+
+        #region Testbenches where interpeter should fail
 
         [Fact]
         public void TestEmptyComponentName()
         {
-            string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
-            string OutputDir = Path.Combine(TestPath,
-                "output",
-                TestName);
-
-            string TestbenchPath = "/@Testing|kind=Testing|relpos=0/@Fail_Interpreter|kind=Testing|relpos=0/TB_FAIL_EmptyComponentName|kind=TestBench|relpos=0";
-
-            var result = RunInterpreterMainAndReturnResult(OutputDir, TestbenchPath);
-
-            Assert.False(result.Success);
+            AssertTestBenchFails(testName, "/@Testing|kind=Testing|relpos=0/@Fail_Interpreter|kind=Testing|relpos=0/TB_FAIL_EmptyComponentName|kind=TestBench|relpos=0");
         }
+
+        [Fact]
+        public void TestEmptyPortId()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            AssertTestBenchFails(testName, "/@Testing|kind=Testing|relpos=0/@Fail_Interpreter|kind=Testing|relpos=0/TB_FAIL_EmptyPortID|kind=TestBench|relpos=0");
+        }
+
+        [Fact]
+        public void TestWhitespaceComponentName()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            AssertTestBenchFails(testName, "/@Testing|kind=Testing|relpos=0/@Fail_Interpreter|kind=Testing|relpos=0/TB_FAIL_WhitespaceComponentName|kind=TestBench|relpos=0");
+        }
+
+        [Fact]
+        public void TestWhitespacePortId()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            AssertTestBenchFails(testName, "/@Testing|kind=Testing|relpos=0/@Fail_Interpreter|kind=Testing|relpos=0/TB_FAIL_WhitespacePortID|kind=TestBench|relpos=0");
+        }
+
+        #endregion
+
+        #region Helper functions (common asserts used by multiple tests)
+
+        private void AssertTestBenchSucceeds(string testName, string testbenchPath, out string outputDir)
+        {
+            outputDir = Path.Combine(TestPath,
+                "output",
+                testName);
+
+            var result = RunInterpreterMainAndReturnResult(outputDir, testbenchPath);
+
+            Assert.True(result.Success, "Interpreter should succeed");
+
+            AssertCommonSimulinkFilesGenerated(outputDir);
+        }
+
+        private void AssertTestBenchSucceeds(string testName, string testbenchPath)
+        {
+            string dummy;
+            AssertTestBenchSucceeds(testName, testbenchPath, out dummy);
+        }
+
+        private void AssertTestBenchFails(string testName, string testbenchPath)
+        {
+            string outputDir = Path.Combine(TestPath,
+                "output",
+                testName);
+
+            var result = RunInterpreterMainAndReturnResult(outputDir, testbenchPath);
+
+            Assert.False(result.Success, "Interpreter should fail");
+        }
+
+        /*
+         * A number of files should always be generated if the interpreter succeeds--
+         * verify that they're present
+         */
+        private void AssertCommonSimulinkFilesGenerated(string outputDir)
+        {
+            AssertFileExists(outputDir, "build_simulink.m.in");
+            AssertFileExists(outputDir, "run_simulink.m");
+            AssertFileExists(outputDir, "CreateOrOverwriteModel.m");
+            AssertFileExists(outputDir, "PopulateTestBenchParams.py");
+            AssertFileExists(outputDir, "run.cmd");
+        }
+
+        private static void AssertFileExists(string outputDir, string fileName)
+        {
+            Assert.True(File.Exists(Path.Combine(outputDir, fileName)), string.Format("{0} should exist", fileName));
+        }
+
+        #endregion
     }
 
     public class Program

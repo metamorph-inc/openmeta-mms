@@ -66,43 +66,6 @@ namespace SchematicUnitTests
 
             return result;
         }
-
-        public static String RunPlaceOnly(string OutputDir)
-        {
-            string batchFileName = "placeonly.bat";
-            var pathBatchFile = Path.Combine(OutputDir,
-                                             batchFileName);
-            Assert.True(File.Exists(pathBatchFile));
-
-            string generatedBoardFileName = "schema.brd";
-            var pathBoardFile = Path.Combine(OutputDir,
-                                             generatedBoardFileName);
-
-            // Run the "placeonly.bat" batch file
-            var processInfo = new ProcessStartInfo("cmd.exe", "/c \"" + batchFileName + "\"")
-            {
-                WorkingDirectory = OutputDir,
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true
-            };
-
-            using (var process = Process.Start(processInfo))
-            {
-                process.WaitForExit(10000);
-
-                // Read the streams
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-
-                Assert.True(0 == process.ExitCode, output + Environment.NewLine + error);
-            }
-
-            // Check that the "schema.brd" file exists.
-            Assert.True(File.Exists(pathBoardFile), "Failed to generate " + generatedBoardFileName);
-            return pathBoardFile;
-        }
     }
 
     internal static class Utils
