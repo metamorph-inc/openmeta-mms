@@ -47,13 +47,11 @@ source("utils.R")
 
 ABBREVIATION_LENGTH <- 25
 
-# For Testing with Ted's 11k dataset
-# Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\11Kresults\\mergedPET.csv")
-# Sys.setenv(DIG_INPUT_CSV="")
-# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Desktop\\11Kresults\\viz_config.json")
-# Sys.setenv(DIG_DATASET_CONFIG="")
-
 # Resolve Dataset Configuration ----------------------------------------------
+
+# Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\11Kresults\\mergedPET.csv")
+# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Desktop\\11Kresults\\viz_config.json")
+# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\boxpacking\\merged\\15kPoints\\visualizer_config.json")
 
 pet_config_present <- FALSE
 saved_inputs <- NULL
@@ -219,32 +217,42 @@ Server <- function(input, output, session) {
   var_nums <- reactive({var_names()[var_class() == "numeric"]})
   var_nums_and_ints <- reactive({
     var_names()[var_class() == "integer" | var_class() == "numeric"]
-    })
+  })
   abs_max <- reactive({
+    req(var_nums_and_ints())
     apply(data$raw$df[var_nums_and_ints()], 2, max, na.rm=TRUE)
-    })
+  })
   abs_min <- reactive({
+    req(var_nums_and_ints())
     apply(data$raw$df[var_nums_and_ints()], 2, min, na.rm=TRUE)
-    })
+  })
   var_range_nums_and_ints <- reactive({
+    req(var_nums_and_ints())
     var_nums_and_ints()[(abs_min() != abs_max()) & (abs_min() != Inf)]
-    })
+  })
   var_range_facs <- reactive({
+    req(var_facs())
     var_facs()[apply(data$raw$df[var_facs()], 2,
                      function(var_fac) {
                        length(names(table(var_fac))) > 1
                      })]
-    })
+  })
   var_range <- reactive({c(var_facs(), var_nums_and_ints())})
   var_range_nums_and_ints_list <- reactive({
+    req(var_range_nums_and_ints())
     AddCategories(data$meta$variables[var_range_nums_and_ints()])
   })
   var_range_facs_list <- reactive({
+    req(var_range_facs())
     AddCategories(data$meta$variables[var_range_facs()])
   })
   var_range_list <- reactive(AddCategories(data$meta$variables[var_range()]))
   var_constants <- reactive({
-    subset(var_names(), !(var_names() %in% var_range()))
+    if(is.null(var_range())) {
+      var_names()
+    } else {
+      subset(var_names(), !(var_names() %in% var_range()))
+    }
   })
   
   pre <- list(var_names=var_names,
