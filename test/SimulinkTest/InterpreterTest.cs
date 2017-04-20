@@ -165,58 +165,6 @@ namespace SimulinkTest
         }
 
         #endregion
-
-        #region Helper functions (common asserts used by multiple tests)
-
-        private void AssertTestBenchSucceeds(string testName, string testbenchPath, out string outputDir)
-        {
-            outputDir = Path.Combine(TestPath,
-                "output",
-                testName);
-
-            var result = RunInterpreterMainAndReturnResult(outputDir, testbenchPath);
-
-            Assert.True(result.Success, "Interpreter should succeed");
-
-            AssertCommonSimulinkFilesGenerated(outputDir);
-        }
-
-        private void AssertTestBenchSucceeds(string testName, string testbenchPath)
-        {
-            string dummy;
-            AssertTestBenchSucceeds(testName, testbenchPath, out dummy);
-        }
-
-        private void AssertTestBenchFails(string testName, string testbenchPath)
-        {
-            string outputDir = Path.Combine(TestPath,
-                "output",
-                testName);
-
-            var result = RunInterpreterMainAndReturnResult(outputDir, testbenchPath);
-
-            Assert.False(result.Success, "Interpreter should fail");
-        }
-
-        /*
-         * A number of files should always be generated if the interpreter succeeds--
-         * verify that they're present
-         */
-        private void AssertCommonSimulinkFilesGenerated(string outputDir)
-        {
-            AssertFileExists(outputDir, "build_simulink.m.in");
-            AssertFileExists(outputDir, "run_simulink.m");
-            AssertFileExists(outputDir, "CreateOrOverwriteModel.m");
-            AssertFileExists(outputDir, "PopulateTestBenchParams.py");
-            AssertFileExists(outputDir, "run.cmd");
-        }
-
-        private static void AssertFileExists(string outputDir, string fileName)
-        {
-            Assert.True(File.Exists(Path.Combine(outputDir, fileName)), string.Format("{0} should exist", fileName));
-        }
-
-        #endregion
     }
 
     public class Program

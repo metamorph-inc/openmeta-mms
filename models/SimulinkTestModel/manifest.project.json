@@ -18,7 +18,8 @@
       "./designs/FAIL_EmptyComponentName.adm",
       "./designs/FAIL_WhitespacePortID.adm",
       "./designs/FAIL_BadBlockParameter.adm",
-      "./designs/FAIL_BadBlockParameterValue.adm"
+      "./designs/FAIL_BadBlockParameterValue.adm",
+      "./designs/FAIL_BadModelParameter.adm"
     ],
     "TestBenches": [
       "./test-benches/TB_PIDControllerReference.testbench.json",
@@ -55,7 +56,7 @@
       "vfLink": "",
       "text": ""
     },
-    "CyPhyProjectFileName": "SimulinkTestModel.mga",
-    "LastModified": "2017-04-19 17-14-04"
+    "CyPhyProjectFileName": "SimulinkTestModel_test.mga",
+    "LastModified": "2017-04-20 14-59-40"
   }
 }

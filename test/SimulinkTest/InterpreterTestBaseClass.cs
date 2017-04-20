@@ -66,6 +66,90 @@ namespace SchematicUnitTests
 
             return result;
         }
+
+        /**
+         * Runs simulink generator's run.cmd; returns the process exit code
+         */
+        public int RunSimulinkGen(string outputDir)
+        {
+            string batchFileName = "run.cmd";
+            var pathBatchFile = Path.Combine(outputDir,
+                batchFileName);
+            Assert.True(File.Exists(pathBatchFile));
+
+            // Run the "placeonly.bat" batch file
+            var processInfo = new ProcessStartInfo("cmd.exe", "/c \"" + batchFileName + "\"")
+            {
+                WorkingDirectory = outputDir,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true
+            };
+
+            using (var process = Process.Start(processInfo))
+            {
+                process.WaitForExit(10000);
+
+                // Read the streams
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+
+                return process.ExitCode;
+            }
+        }
+
+        #region Helper functions (common asserts used by multiple tests)
+
+        protected void AssertTestBenchSucceeds(string testName, string testbenchPath, out string outputDir)
+        {
+            outputDir = Path.Combine(TestPath,
+                "output",
+                testName);
+
+            var result = RunInterpreterMainAndReturnResult(outputDir, testbenchPath);
+
+            Assert.True(result.Success, "Interpreter should succeed");
+
+            AssertCommonSimulinkFilesGenerated(outputDir);
+        }
+
+        protected void AssertTestBenchSucceeds(string testName, string testbenchPath)
+        {
+            string dummy;
+            AssertTestBenchSucceeds(testName, testbenchPath, out dummy);
+        }
+
+        protected void AssertTestBenchFails(string testName, string testbenchPath)
+        {
+            string outputDir = Path.Combine(TestPath,
+                "output",
+                testName);
+
+            var result = RunInterpreterMainAndReturnResult(outputDir, testbenchPath);
+
+            Assert.False(result.Success, "Interpreter should fail");
+        }
+
+        /*
+         * A number of files should always be generated if the interpreter succeeds--
+         * verify that they're present
+         */
+        protected void AssertCommonSimulinkFilesGenerated(string outputDir)
+        {
+            AssertFileExists(outputDir, "build_simulink.m.in");
+            AssertFileExists(outputDir, "run_simulink.m");
+            AssertFileExists(outputDir, "CreateOrOverwriteModel.m");
+            AssertFileExists(outputDir, "PopulateTestBenchParams.py");
+            AssertFileExists(outputDir, "run.cmd");
+        }
+
+        protected static void AssertFileExists(string outputDir, string fileName)
+        {
+            Assert.True(File.Exists(Path.Combine(outputDir, fileName)), string.Format("{0} should exist", fileName));
+        }
+
+        #endregion
     }
 
     internal static class Utils
