@@ -237,7 +237,7 @@ Server <- function(input, output, session) {
                        length(names(table(var_fac))) > 1
                      })]
   })
-  var_range <- reactive({c(var_facs(), var_nums_and_ints())})
+  var_range <- reactive({c(var_range_facs(), var_range_nums_and_ints())})
   var_range_nums_and_ints_list <- reactive({
     req(var_range_nums_and_ints())
     AddCategories(data$meta$variables[var_range_nums_and_ints()])
