@@ -21,6 +21,7 @@ namespace PETBrowser
     {
         public const string ResultsDirectory = "results";
         public const string ArchiveDirectory = "archive";
+        public const string MergedDirectory = "merged";
         public const string DeletedDirectory = "_deleted";
         private const string MetadataFilename = "results.metaresults.json";
         private const int ProgressUpdateInterval = 100;
@@ -31,6 +32,7 @@ namespace PETBrowser
 
         public List<Dataset> ResultDatasets { get; private set; }
         public List<Dataset> ArchiveDatasets { get; private set; }
+        public List<Dataset> MergedDatasets { get; private set; }
         public List<Dataset> TestbenchDatasets { get; private set; }
 
         public HashSet<string> TrackedResultsFolders { get; private set; }
@@ -44,11 +46,15 @@ namespace PETBrowser
             TrackedResultsFolders = new HashSet<string>();
 
             ResultDatasets = new List<Dataset>();
+            
             TestbenchDatasets = new List<Dataset>();
             LoadResultDatasets(progressCallback);
 
             ArchiveDatasets = new List<Dataset>();
             LoadArchiveDatasets();
+
+            MergedDatasets = new List<Dataset>();
+            LoadMergedDatasets();
         }
 
         private void LoadResultDatasets(ProgressCallback progressCallback)
@@ -188,6 +194,33 @@ namespace PETBrowser
             }
         }
 
+        public void LoadMergedDatasets()
+        {
+            MergedDatasets.Clear();
+
+            var mergedDirectory = Path.Combine(DataDirectory, MergedDirectory);
+
+            if (!Directory.Exists(mergedDirectory))
+            {
+                Directory.CreateDirectory(mergedDirectory);
+            }
+
+            foreach (var directory in Directory.EnumerateDirectories(mergedDirectory))
+            {
+                //Consider a merged directory to be valid if it contains a metadata.json (the others may or may not exist)
+                var mergedPetFile = Path.Combine(directory, "metadata.json");
+                if (File.Exists(mergedPetFile))
+                {
+                    var directoryName = Path.GetFileName(directory);
+                    var newDataset = new Dataset(Dataset.DatasetKind.MergedPet, File.GetCreationTime(mergedPetFile).ToString("yyyy-MM-dd HH-mm-ss"), directoryName);
+                    newDataset.Count++;
+                    newDataset.Folders.Add(directoryName);
+
+                    MergedDatasets.Add(newDataset);
+                }
+            }
+        }
+
         /**
          * Deletes a dataset from results.metaresults.json (or from the Archive folder as appropriate).
          * The caller is responsible for reloading the list of datasets if desired.
@@ -201,6 +234,13 @@ namespace PETBrowser
 
                 var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
                 File.Move(archivePath, Path.Combine(deletedDirectory.FullName, Path.GetFileName(archivePath)));
+            }
+            else if (datasetToDelete.Kind == Dataset.DatasetKind.MergedPet)
+            {
+                var mergedPath = Path.Combine(this.DataDirectory, MergedDirectory, datasetToDelete.Folders[0]);
+
+                var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
+                Directory.Move(mergedPath, Path.Combine(deletedDirectory.FullName, Path.GetFileName(mergedPath)));
             }
             else
             {
@@ -730,7 +770,8 @@ namespace PETBrowser
         {
             PetResult,
             Archive,
-            TestBenchResult
+            TestBenchResult,
+            MergedPet
         }
 
         public DatasetKind Kind { get; set; } 

@@ -846,7 +846,7 @@ models/PET_simple_proof-of-concept/test-benches/
 src/Python27Packages/PCC/PCC/test/PCC_run_mdao/output.csv
 src/Python27Packages/PCC/PCC/test/PCC_run_mdao/parameters.csv
 .DS_Store
-
+.Rproj.user
 meta/CyPhyML/CyPhy-core-old.mga
 meta/CyPhyML/CyPhy-core-old.xme
 meta/CyPhyML/CyPhyML-core.xme.merge-left.left

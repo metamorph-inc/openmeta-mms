@@ -153,7 +153,7 @@
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Bottom">
                             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
-                                <Button x:Name="button" Content="Archive Selected" Margin="0,10,5,10" Click="button_Click" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
+                                <Button x:Name="MergeButton" Content="Merge Selected" Margin="0,10,5,10" Click="MergeButton_OnClick" Padding="5,3" IsEnabled="{Binding DatasetLoaded}"/>
                                 <Button x:Name="AnalysisToolsButton" Margin="5,10,5,10" Padding="5,3" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" IsEnabled="{Binding DatasetLoaded}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
@@ -215,7 +215,6 @@
                                   RowHeight="20"
                                   MaxWidth="2560"
                                   MaxHeight="1600"
-                                  SelectionMode="Single"
                                   EnableRowVirtualization="False"
                                   EnableColumnVirtualization="True"
                                   GridLinesVisibility="Horizontal"
@@ -226,6 +225,10 @@
                                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
                             </DataGrid.HorizontalGridLinesBrush>
                             <DataGrid.Resources>
+                                <ContextMenu x:Key="MergedPetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <MenuItem Header="Refresh" Click="RefreshMergedPet" />
+                                    <MenuItem Header="Delete..." Click="DeletePetItem" />
+                                </ContextMenu>
                                 <ContextMenu x:Key="PetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                     <MenuItem Header="Delete..." Click="DeletePetItem" />
                                 </ContextMenu>
@@ -237,16 +240,11 @@
                                 <DataGridTemplateColumn Header="" Width="30">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" />
+                                            <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" IsEnabled="False" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
-                                    <DataGridTemplateColumn.HeaderTemplate>
-                                        <DataTemplate>
-                                            <CheckBox HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.HeaderTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="DataType" IsReadOnly="True" Width="60"/>
+                                <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="DataType" IsReadOnly="True" Width="65"/>
                                 <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
                                 <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*" SortDirection="Descending" /> <!-- Note: data is actually sorted by the ListCollectionView, in code-behind -->
@@ -256,6 +254,9 @@
                                 <Style TargetType="DataGridRow">
                                     <EventSetter Event="MouseDoubleClick" Handler="showPetDetails"></EventSetter>
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Kind}" Value="MergedPet">
+                                            <Setter Property="ContextMenu" Value="{StaticResource MergedPetRowMenu}" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Kind}" Value="PetResult">
                                             <Setter Property="ContextMenu" Value="{StaticResource PetRowMenu}" />
                                         </DataTrigger>

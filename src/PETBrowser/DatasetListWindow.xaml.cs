@@ -215,36 +215,60 @@ namespace PETBrowser
         {
             try
             {
-                var vis = new VisualizerDialog();
-
-                if (vis.ShowDialog() == true)
+                if (PetGrid.SelectedItems.Count == 1 &&
+                    ((Dataset) PetGrid.SelectedItem).Kind == Dataset.DatasetKind.MergedPet)
                 {
-                    var highlightedDataset = (Dataset)PetGrid.SelectedItem;
-                    var exportPath = this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset, false, vis.CfgID, vis.Alternatives, vis.Optionals);
-                    string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
+                    string vizConfigPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.MergedDirectory, ((Dataset) PetGrid.SelectedItem).Folders[0],
+                        "visualizer_config.json");
+                    LaunchVisualizer(vizConfigPath);
+                }
+                else
+                {
+                    //TODO: for archives/PET results, perform a merge and launch that in the viz
+                    var mergeDialog = new MergeDialog(PetGrid.SelectedItems.Cast<Dataset>(), ViewModel.Store.DataDirectory) { Owner = this };
 
-                    ProcessStartInfo psi = new ProcessStartInfo()
+                    if (mergeDialog.ShowDialog() == true)
                     {
-                        FileName = "cmd.exe",
-                        Arguments = String.Format("/S /C \"\"{0}\" \"{1}\" \"{2}\" > \"{3}\" 2>&1\"", System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), exportPath, META.VersionInfo.MetaPath, logPath),
-                        CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        // WorkingDirectory = ,
-                        // RedirectStandardError = true,
-                        // RedirectStandardOutput = true,
-                        UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
-                    };
-                    var p = new Process();
-                    p.StartInfo = psi;
-                    p.Start();
-
-                    p.Dispose();
+                        ViewModel.ReloadMerged();
+                        string mergedName = mergeDialog.MergedPetName;
+                        string vizConfigPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.MergedDirectory, mergedName,
+                        "visualizer_config.json");
+                        LaunchVisualizer(vizConfigPath);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 ShowErrorDialog("Error", "An error occurred while starting visualizer.", ex.Message, ex.ToString());
             }
+        }
+
+        private void LaunchVisualizer(string vizConfigPath)
+        {
+            Console.WriteLine(vizConfigPath);
+            string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(),
+                "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
+
+            ProcessStartInfo psi = new ProcessStartInfo()
+            {
+                FileName = "cmd.exe",
+                Arguments =
+                    String.Format("/S /C \"\"{0}\" \"{1}\" \"{2}\" > \"{3}\" 2>&1\"",
+                        System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), vizConfigPath,
+                        META.VersionInfo.MetaPath, logPath),
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                // WorkingDirectory = ,
+                // RedirectStandardError = true,
+                // RedirectStandardOutput = true,
+                UseShellExecute = true
+                //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
+            };
+            var p = new Process();
+            p.StartInfo = psi;
+            p.Start();
+
+            p.Dispose();
         }
 
         private void explorerButton_Click(object sender, RoutedEventArgs e)
@@ -317,8 +341,12 @@ namespace PETBrowser
 
         private void DeletePetItem(object sender, RoutedEventArgs e)
         {
-            var selectedDataset = (Dataset) PetGrid.SelectedItem;
-            DeleteItem(selectedDataset);
+            //TODO: handle delete for multiple selection
+            if (PetGrid.SelectedItems.Count == 1)
+            {
+                var selectedDataset = (Dataset) PetGrid.SelectedItem;
+                DeleteItem(selectedDataset);
+            }
         }
 
         private void DeleteTestBenchItem(object sender, RoutedEventArgs e)
@@ -471,6 +499,20 @@ namespace PETBrowser
 
         private void PetGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            foreach(var deselectedObject in e.RemovedItems)
+            {
+                var dataset = (Dataset) deselectedObject;
+
+                dataset.Selected = false;
+            }
+
+            foreach (var selectedObject in e.AddedItems)
+            {
+                var dataset = (Dataset)selectedObject;
+
+                dataset.Selected = true;
+            }
+
             PetDetailsPanel.Children.Clear();
 
             //If we recreate this intermediate panel every time this method's called, we can
@@ -515,6 +557,41 @@ namespace PETBrowser
                                 else
                                 {
                                     var detailsControl = new PetDetailsControl(task.Result, ViewModel);
+
+                                    detailsPanel.Children.Clear();
+                                    detailsPanel.Children.Add(detailsControl);
+                                }
+                            }
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
+                    } else if (selectedDataset.Kind == Dataset.DatasetKind.MergedPet)
+                    {
+                        placeholderPanel.IsLoading = true;
+                        var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
+                            DatasetStore.MergedDirectory);
+
+                        var loadTask = Task<MergedPetDetailsViewModel>.Factory.StartNew(() =>
+                        {
+                            return new MergedPetDetailsViewModel(selectedDataset, resultsDirectory);
+                        });
+
+                        loadTask.ContinueWith(task =>
+                        {
+                            if (!task.IsCanceled)
+                            {
+                                if (task.Exception != null)
+                                {
+                                    placeholderPanel.IsLoading = false;
+                                    placeholderPanel.DisplayText =
+                                        "An error occurred while inspecting selected object: \n";
+
+                                    foreach (var exception in task.Exception.InnerExceptions)
+                                    {
+                                        placeholderPanel.DisplayText += "\n" + exception.Message;
+                                    }
+                                }
+                                else
+                                {
+                                    var detailsControl = new MergedPetDetailsControl(task.Result, ViewModel);
 
                                     detailsPanel.Children.Clear();
                                     detailsPanel.Children.Add(detailsControl);
@@ -804,6 +881,43 @@ namespace PETBrowser
             //TODO: change core count in job manager
             ViewModel.JobStore.SelectedThreadCount = newCount;
         }
+
+        private void MergeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var mergeDialog = new MergeDialog(PetGrid.SelectedItems.Cast<Dataset>(), ViewModel.Store.DataDirectory) { Owner = this };
+
+                mergeDialog.ShowDialog();
+
+                ViewModel.ReloadMerged();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Merge error", "An error occurred while merging results.", ex.Message, ex.ToString());
+            }
+        }
+
+        private void RefreshMergedPet(object sender, RoutedEventArgs e)
+        {
+            //TODO: Refresh multiple selected merged PETs?
+            if (PetGrid.SelectedItems.Count == 1)
+            {
+                try
+                {
+                    var selectedDataset = (Dataset) PetGrid.SelectedItem;
+
+                    PetMerger.RefreshMergedPet(selectedDataset, ViewModel.Store.DataDirectory);
+
+                    //Trigger an update of the details panel
+                    PetGrid_SelectionChanged(this, new SelectionChangedEventArgs(e.RoutedEvent, new Object[0], new Object[0]));
+                }
+                catch (Exception ex)
+                {
+                    ShowErrorDialog("Refresh error", "An error occurred while refreshing the merged PET.", ex.Message, ex.ToString());
+                }
+            }
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
@@ -975,6 +1089,7 @@ namespace PETBrowser
                     PetDatasetsList.Clear();
                     PetDatasetsList.AddRange(Store.ResultDatasets);
                     PetDatasetsList.AddRange(Store.ArchiveDatasets);
+                    PetDatasetsList.AddRange(Store.MergedDatasets);
                     PetDatasets.Refresh();
 
                     TestBenchDatasetsList.Clear();
@@ -996,6 +1111,18 @@ namespace PETBrowser
             PetDatasetsList.Clear();
             PetDatasetsList.AddRange(Store.ResultDatasets);
             PetDatasetsList.AddRange(Store.ArchiveDatasets);
+            PetDatasetsList.AddRange(Store.MergedDatasets);
+            PetDatasets.Refresh();
+        }
+
+        public void ReloadMerged()
+        {
+            Store.LoadMergedDatasets();
+
+            PetDatasetsList.Clear();
+            PetDatasetsList.AddRange(Store.ResultDatasets);
+            PetDatasetsList.AddRange(Store.ArchiveDatasets);
+            PetDatasetsList.AddRange(Store.MergedDatasets);
             PetDatasets.Refresh();
         }
 

@@ -109,6 +109,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EqualityMultiValueConverter.cs" />
+    <Compile Include="MergeDialog.xaml.cs">
+      <DependentUpon>MergeDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MergedPetDetailsViewModel.cs" />
+    <Compile Include="MergedPetDetailsControl.xaml.cs">
+      <DependentUpon>MergedPetDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PetMerger.cs" />
     <Compile Include="VisualizerDialog.xaml.cs">
       <DependentUpon>VisualizerDialog.xaml</DependentUpon>
     </Compile>
@@ -153,6 +161,14 @@
     <Page Include="Icons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MergeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MergedPetDetailsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="PetDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
