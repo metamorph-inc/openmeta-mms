@@ -1,4 +1,4 @@
-## Data Table
+### 'Data Table' Tab
 
 ![Data Table](images/data-table.png)
 
@@ -14,7 +14,7 @@ This feature downloads a .csv file to the hard drive containing all the data on 
 
 Once rows are selected, this feature will turn the app over to the pairs plot tab and color the chosen data points (color is set in the options tab).
 
-### Data Ranking
+#### Data Ranking
 ![Data Ranking](images/data-ranking.png)
 
 **1. Activate Data Rankings**

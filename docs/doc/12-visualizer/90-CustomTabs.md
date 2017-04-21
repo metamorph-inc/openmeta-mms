@@ -26,7 +26,7 @@ The data object contains all the information that a tab needs to interact with t
   * `Colored` - the filtered data that has an added ‘color’ column
   * `Filtered` - the raw data that has been filtered by the different UI elements in the “Filters” section
   * `Filters` - the state of each of the sliders, selectInputs etc. in the “Filters” section of the Visualizer UI.
-    * <variable names>
+    * `<variable names>`
       * `type` - the “R” data-type of the variable, e.g. ‘factor,’ ‘integer,’ or ‘numeric’  
       * `selection` - (if type is ‘factor’), list of all selected choices
       * `min`, `max` - (if type is ‘integer’ or ‘numeric’)
