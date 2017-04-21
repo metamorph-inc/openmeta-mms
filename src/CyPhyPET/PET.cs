@@ -922,7 +922,6 @@ namespace CyPhyPET
 
             config.details = new Dictionary<string, string>()
             {
-                // TODO: maybe generate a relative path instead of making absolute here
                 {"filename", pyFilename}
             };
             config.type = "run_mdao.python_component.PythonComponent";

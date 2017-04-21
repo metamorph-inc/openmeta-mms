@@ -45,6 +45,24 @@ const wchar_t* PETWrapperLookup(_bstr_t& kind) {
 	return NULL;
 }
 
+void invokeCyPhyPETMethod(IMgaFCO* fco, const wchar_t* methodName) {
+	CComDispatchDriver dd;
+	if (SUCCEEDED(dd.CoCreateInstance(L"MGA.Interpreter.CyPhyPET", nullptr, CLSCTX_INPROC))) {
+		IMgaProjectPtr proj = fco->Project;
+		CComPtr<IMgaTerritory> terr;
+		proj->BeginTransactionInNewTerr(TRANSACTION_NON_NESTED, &terr);
+		CComVariant variantFCO = (IDispatch*)fco;
+		dd.Invoke1(methodName, &variantFCO);
+		proj->CommitTransaction();
+	}
+};
+
+void PETRefreshButtonClicked(IMgaFCO* fco) {
+	invokeCyPhyPETMethod(fco, L"RefreshButtonClicked");
+}
+void PETEditButtonClicked(IMgaFCO* fco) {
+	invokeCyPhyPETMethod(fco, L"EditButtonClicked");
+}
 
 class CPMPortLabelPart : public PortLabelPart
 {
@@ -288,11 +306,19 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 	}
 
 	const auto& button = this->button;
-	auto setButtonPosition = [&RightPortsMaxLabelLength, &button](const CSize& size) {
-		if (button) {
+	const auto& button2 = this->button2;
+	auto setButtonPosition = [&RightPortsMaxLabelLength, &button, &button2](const CSize& size) {
+		if (button && button->m_bmp) {
+			// bottom right, left of port names
 			int y = size.cy - button->m_bmp->GetHeight();
-			int x = size.cx - RightPortsMaxLabelLength - button->m_bmp->GetWidth();
+			int x = size.cx - RightPortsMaxLabelLength - button->m_bmp->GetWidth() + 3;
 			button->position = CRect(x, y, x + button->m_bmp->GetWidth(), y + button->m_bmp->GetHeight());
+			if (button2 && button2->m_bmp) {
+				// left of button
+				y -= button->m_bmp->GetHeight() - button2->m_bmp->GetHeight();
+				x -= button2->m_bmp->GetWidth();
+				button2->position = CRect(x, y, x + button2->m_bmp->GetWidth(), y + button2->m_bmp->GetHeight());
+			}
 		}
 	};
 
@@ -525,29 +551,37 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 
 		if (PETWrapperLookup(kind)) {
 			button = std::unique_ptr<ModelButton>(new ModelButton());
+			button->callback = PETRefreshButtonClicked;
+			button2 = std::unique_ptr<ModelButton>(new ModelButton());
+			button2->callback = PETEditButtonClicked;
 
 			if (getFacilities().arePathesValid())
 			{
 				std::vector<CString> vecPathes = getFacilities().getPathes();
 
-				CString strFName = L"refresh.png";
-				auto& m_bmp = button->m_bmp;
-
-				for (unsigned int i = 0; i < vecPathes.size(); i++)
+				CString filenames[] = { L"refresh.png", L"open_button.png" };
+				std::unique_ptr<ModelButton>* buttons[] = { &button, &button2 };
+				for (int i = 0; i < _countof(buttons); i++)
 				{
-					CString imageFileName = vecPathes[i] + strFName;
-					m_bmp = std::unique_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(CStringW(imageFileName)));
-					if (m_bmp && m_bmp->GetLastStatus() == Gdiplus::Ok)
+					CString& strFName = filenames[i];
+					auto& m_bmp = (**buttons[i]).m_bmp;
+
+					for (unsigned int i = 0; i < vecPathes.size(); i++)
 					{
-						UINT widthToSet = m_bmp->GetWidth();
-						UINT heightToSet = m_bmp->GetHeight();
-						ASSERT(widthToSet > 0);	// valid sizes, otherwise AutoRouter fails
-						ASSERT(heightToSet > 0);
-						break;
-					}
-					else
-					{
-						m_bmp = nullptr;
+						CString imageFileName = vecPathes[i] + strFName;
+						m_bmp = std::unique_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(CStringW(imageFileName)));
+						if (m_bmp && m_bmp->GetLastStatus() == Gdiplus::Ok)
+						{
+							UINT widthToSet = m_bmp->GetWidth();
+							UINT heightToSet = m_bmp->GetHeight();
+							ASSERT(widthToSet > 0);	// valid sizes, otherwise AutoRouter fails
+							ASSERT(heightToSet > 0);
+							break;
+						}
+						else
+						{
+							m_bmp = nullptr;
+						}
 					}
 				}
 			}
@@ -681,7 +715,12 @@ bool ModelComplexPart::MouseMoved(UINT nFlags, const CPoint& point, HDC transfor
 bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	HRESULT retVal = S_OK;
-	if (button) {
+	std::unique_ptr<ModelButton>* buttons[] = { &button, &button2, nullptr };
+	for (std::unique_ptr<ModelButton>** it = &buttons[0]; *it; it++) {
+		std::unique_ptr<ModelButton>& button = **it;
+		if (!button || !button->m_bmp) {
+			continue;
+		}
 		//HWND wnd = WindowFromDC(transformHDC);
 		CPoint converted = point;
 		//ClientToScreen(wnd, &converted);
@@ -690,16 +729,7 @@ bool ModelComplexPart::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC
 		buttonPosition.OffsetRect(loc.TopLeft());
 
 		if (buttonPosition.PtInRect(converted)) {
-			CComDispatchDriver dd;
-			if (SUCCEEDED(dd.CoCreateInstance(L"MGA.Interpreter.CyPhyPET", nullptr, CLSCTX_INPROC))) {
-				IMgaProjectPtr proj = m_spFCO->Project;
-				CComPtr<IMgaTerritory> terr;
-				proj->BeginTransactionInNewTerr(TRANSACTION_NON_NESTED, &terr);
-				CComVariant variantFCO = (IDispatch*)m_spFCO.p;
-				dd.Invoke1(L"DecoratorDoubleClick", &variantFCO);
-				proj->CommitTransaction();
-				return true;
-			}
+			button->callback(m_spFCO);
 			return true;
 		}
 	}
@@ -801,7 +831,7 @@ bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC t
 bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	CComPtr<IMgaProject> proj;
-	if (m_spFCO && m_spMetaFCO && SUCCEEDED(m_spFCO->get_Project(&proj)))
+	if (m_spFCO && m_spMetaFCO && SUCCEEDED(m_spFCO->get_Project(&proj))) 
 	{
 		CComPtr<IMgaTerritory> terr;
 		if (kind.length() && kind == L"Data Sheet")
@@ -826,13 +856,14 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& poi
 					docpath += path;
 
 					ShellExecuteW(0, L"open", docpath.c_str(), NULL, NULL, SW_SHOW);
-
+					
 					proj->CommitTransaction();
 					return true;
 				}
 			}
+			// n.b. don't abort, it will Reset the view and destruct this
+			proj->CommitTransaction();
 		}
-
 
 		if (kind.length() && PETWrapperLookup(kind))
 		{
@@ -1566,9 +1597,9 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 				Gdiplus::LinearGradientModeVertical);
 
 			Gdiplus::SolidBrush solidBrush(Gdiplus::Color(GetRValue(m_crBrush), GetGValue(m_crBrush), GetBValue(m_crBrush)));
-
+		
 			Gdiplus::Brush& brush = m_bGradientFill ? (Gdiplus::Brush&)linearGradientBrush : (Gdiplus::Brush&)solidBrush;
-
+		
 			Gdiplus::GraphicsPath path;
 			path.AddArc(location.left, location.top, cornerRadius, cornerRadius, 180, 90);
 			path.AddArc(location.right - cornerRadius, location.top, cornerRadius, cornerRadius, 270, 90);
@@ -1603,6 +1634,10 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 			Gdiplus::Rect grect((int)cRect.left + x, (int)cRect.top + (cRect.Height() - m_prominentAttrsSize.cy) / 2 - (int)m_bmp->GetHeight() / 2,
 				width, height);
 			gdip->DrawImage(m_bmp.get(), grect, 0, 0, (int)m_bmp->GetWidth(), (int)m_bmp->GetHeight(), Gdiplus::UnitPixel);
+		}
+		if (button) {
+			Gdiplus::Rect grect(cRect.left + button->position.left, cRect.top + button->position.top, button->position.Width(), button->position.Height());
+			gdip->DrawImage(button->m_bmp.get(), grect, 0, 0, (int)button->m_bmp->GetWidth(), (int)button->m_bmp->GetHeight(), Gdiplus::UnitPixel);
 		}
 	}
 
@@ -1639,9 +1674,13 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 			gdip->DrawString(static_cast<const wchar_t*>(prominentIt->value), -1, &f, p, &format, &blackBrush);
 			p.Y += 11; // FIXME depends on font
 		}
-		if (button) {
-			Gdiplus::Rect grect(cRect.left + button->position.left, cRect.top + button->position.top, button->position.Width(), button->position.Height());
-			gdip->DrawImage(button->m_bmp.get(), grect, 0, 0, (int)button->m_bmp->GetWidth(), (int)button->m_bmp->GetHeight(), Gdiplus::UnitPixel);
+		std::unique_ptr<ModelButton>* buttons[] = { &button, &button2, nullptr };
+		for (std::unique_ptr<ModelButton>** it = &buttons[0]; *it; it++) {
+			std::unique_ptr<ModelButton>& button = **it;
+			if (button && button->m_bmp) {
+				Gdiplus::Rect grect(cRect.left + button->position.left, cRect.top + button->position.top, button->position.Width(), button->position.Height());
+				gdip->DrawImage(button->m_bmp.get(), grect, 0, 0, (int)button->m_bmp->GetWidth(), (int)button->m_bmp->GetHeight(), Gdiplus::UnitPixel);
+			}
 		}
 	}
 }
@@ -1658,9 +1697,12 @@ void ModelComplexPart::LoadPorts()
 	if(dispPortTxt.Length())
 	{
 		if(dispPortTxt == "false")
-			return;						// do not need ports for this reference: see Meta paradigm ReferTo connection showPorts attribute
+			return;						// do not need ports for this reference: see Meta paradigm ReferTo connection showPorts attribute 
 	}
 
+	if (PETWrapperLookup(kind)) {
+		button = std::unique_ptr<ModelButton>(new ModelButton());
+	}
 
 	CComPtr<IMgaMetaAspect>	spParentAspect;
 	COMTHROW(m_spPart->get_ParentAspect(&spParentAspect));
@@ -1688,16 +1730,16 @@ void ModelComplexPart::LoadPorts()
 		bstrAspect.Empty();
 		COMTHROW( spParentAspect->get_Name(&bstrAspect));
 	}
-
+	
 	CComPtr<IMgaMetaAspect> spAspect;
 	HRESULT hr = spMetaModel->get_AspectByName(bstrAspect, &spAspect);
-
+	
 	if (hr == E_NOTFOUND) {
 	//	hr = spMetaModel->get_AspectByName(CComBSTR(L"All"), &spAspect);
 	}
 	if (hr == E_NOTFOUND) {
 		try {
-			// PETER: If the proper aspect cannot be found, use the first one
+			// PETER: If the proper aspect cannot be found, use the first one			
 			spAspect = NULL;
 			CComPtr<IMgaMetaAspects> spAspects;
 			COMTHROW(spMetaModel->get_Aspects(&spAspects));
@@ -1730,7 +1772,7 @@ void ModelComplexPart::LoadPorts()
 					CComBSTR child_kind_name;
 					COMTHROW(child_meta->get_Name(&child_kind_name));
 					// Only display Propertys and Parameters in ValueFlow, TBValueFlowAspect, All, TestBenchCompositionAspect, and DesignSpace aspects
-					bool display_port =
+					bool display_port = 
 						(child_kind_name != L"Property"
 						  && child_kind_name != L"Parameter"
 						  && child_kind_name != L"CADProperty"
@@ -1753,7 +1795,7 @@ void ModelComplexPart::LoadPorts()
 						&& child_kind_name == L"AggregatePort";
 
 					// In dynamics aspect, Components have only power ports
-					display_port &=
+					display_port &= 
 						( bstrParentAspect != L"Dynamics" || bstrParentAspect != L"All")
 						|| (   child_kind_name == L"HydraulicPowerPort"
 							|| child_kind_name == L"ThermalPowerPort"
@@ -1776,7 +1818,7 @@ void ModelComplexPart::LoadPorts()
 					{
 						display_port = false;
 					}
-
+					
 					if (display_port && m_spFCO->ParentModel && m_spFCO->ParentModel->Meta->Name == _bstr_t(L"Configurations"))
 					{
 						display_port = false;
@@ -1793,7 +1835,7 @@ void ModelComplexPart::LoadPorts()
 						// zolmol, in case regnodes are not present or invalid will throw otherwise
 						if(spPart->GetGmeAttrs(0, &lX, &lY) != S_OK)
 							ASSERT(0);
-
+						
 						//new code
 						CComBSTR bstr;
 						COMTHROW(spMetaPart->get_Name(&bstr));
@@ -1939,7 +1981,7 @@ void ModelComplexPart::ReOrderConnectedOnlyPorts()
 					CComPtr<IMgaFCO> parent = m_parentPart->GetFCO();
 					CComPtr<IMgaModel> grandparent;
 					COMTHROW(parent->get_ParentModel(&grandparent));
-
+	
 					if(l == 0)
 					{
 						needThisPort = (parent == m_spFCO && container == grandparent);
@@ -1956,7 +1998,7 @@ void ModelComplexPart::ReOrderConnectedOnlyPorts()
 			} MGACOLL_ITERATE_END;
 		}
 
-		if(needThisPort)
+		if(needThisPort) 
 		{
 			if ((*ii)->portPart->GetInnerPosition().x <= WIDTH_MODELSIDE ||
 				(*ii)->portPart->GetInnerPosition().x < lMax / 2)
