@@ -33,9 +33,11 @@ server <- function(input, output, session, data) {
   ### ALL Comments by Will Knight
 
   # Prepare the data frame for input into d3 javascript file
-  data_raw <- isolate(data$raw$df)
-  row.names(data_raw) <- NULL
-  d3df <- apply(data_raw, 1, function(row) as.list(row[!is.na(row)]))
+  d3df <- reactive({
+    data_raw <- data$raw$df
+    row.names(data_raw) <- NULL
+    apply(data_raw, 1, function(row) as.list(row[!is.na(row)]))
+  })
   
   # Main rendering of d3 plot
   observe({
@@ -49,7 +51,7 @@ server <- function(input, output, session, data) {
     
     #This line sends the current raw_data to the d3 process.
     # 
-    isolate(session$sendCustomMessage(type="dataframe", d3df))
+    isolate(session$sendCustomMessage(type="dataframe", d3df()))
   })
   
   # Separate handler for adjust sliders

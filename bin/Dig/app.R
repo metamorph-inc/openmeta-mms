@@ -117,8 +117,8 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
 
 si <- function(id, default) {
   # Retrieves saved input state from the previous session for a UI element
-  # with a given id. This function should be called in a 'ui' definition
-  # when creating a UI input element.
+  # with a given id. This function will most often be called in a 'ui(id)'
+  # definition when creating a UI input element.
   # 
   # This function deletes the saved value after it is accessed, so each tab
   # should take care to persist the value through any regeneration of UI
@@ -141,6 +141,14 @@ si_read <- function(id) {
   # Retrieves saved input state from the previous session for a UI element
   # with a given id but does not consider it 'applied.'
   saved_inputs[[id]]
+}
+
+si_clear <- function(id) {
+  # Clears the saved input state from the previous session for a UI element
+  # with a given id.
+  if(!is.null(saved_inputs[[id]])) {
+    saved_inputs[[id]] <<- NULL
+  }
 }
 
 # Load Tabs and Data ---------------------------------------------------------
@@ -287,7 +295,7 @@ Server <- function(input, output, session) {
   observe({
     if(!is.null(si_read("footer_collapse"))) {
       open <- si("footer_collapse")
-      if(is.null(unlist(open))) {
+      if(is.empty(open)) {
         updateCollapse(session, "footer_collapse", close = "Filters")
       } else {
         updateCollapse(session, "footer_collapse", open = open)

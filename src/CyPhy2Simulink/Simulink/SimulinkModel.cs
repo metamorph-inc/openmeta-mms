@@ -213,7 +213,10 @@ namespace CyPhy2Simulink.Simulink
             {
                 if (param.TestBenchParameterName == null)
                 {
-                    writer.WriteLine("set_param([gcs, '/{0}'], '{1}', '{2}');", Name, param.Name, param.Value);
+                    if (!string.IsNullOrWhiteSpace(param.Value))
+                    {
+                        writer.WriteLine("set_param([gcs, '/{0}'], '{1}', '{2}');", Name, param.Name, param.Value);
+                    }
                 }
                 else
                 {

@@ -26,8 +26,8 @@ server <- function(input, output, session, data) {
     }
     saved <- si_read(ns("variable"))
     if (is.empty(saved)) {
-      si(ns("variable"), NULL)
-    } else if (saved %in% c(data$pre$var_range(), "")) {
+      si_clear(ns("variable"))
+    } else if (saved %in% c(data$pre$var_range_nums_and_ints(), "")) {
       selected <- si(ns("variable"), NULL)
     }
     updateSelectInput(session,
@@ -37,11 +37,10 @@ server <- function(input, output, session, data) {
   })
   
   output$plot <- renderPlot({
-    if(input$variable != "") {
-      hist(data$Filtered()[[input$variable]],
-           main = paste("Histogram of" , paste(input$variable)),
-           xlab = paste(input$variable))
-    }
+    req(input$variable)
+    hist(data$Filtered()[[input$variable]],
+         main = paste("Histogram of" , paste(input$variable)),
+         xlab = paste(input$variable))
   })
   
 }

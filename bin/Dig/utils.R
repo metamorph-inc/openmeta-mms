@@ -2,9 +2,7 @@
 
 RemoveItemNumber <- function(factor) {sub("[0-9]+. ", "", factor)}
 
-is.empty <- function(x) {
-  is.null(x) || (is.list(x) && length(x) == 0)
-}
+is.empty <- function(x) {is.null(unlist(x))}
 
 BuildPet <- function(pet_config_filename) {
   pet_config <- fromJSON(pet_config_filename)

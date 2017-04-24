@@ -1,4 +1,4 @@
-## Uncertainty Quantification
+### 'Uncertainty Quantification' Tab
 
 ![UQ](images/uq.png)
 
@@ -11,10 +11,7 @@ When ‘Display All Variables’ is deselected, this box allows users to specify
 **3. Variable Type**
 	This drop down list sets the type of variable we are dealing with.
 
-**4. Add**
-	<insert function here>
-
-**5. Enable Gaussian**
+**4. Enable Gaussian**
 This will setup a gaussian-shaped curve to appear on the plots section (left-hand side of page).
 
 * _Mean:_
