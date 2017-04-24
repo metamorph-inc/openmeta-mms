@@ -107,10 +107,14 @@ def get_unit_for_gme(fco, exponent=1):
     if fco.MetaBase.Name == 'derived_unit':
         for exponent in (ref.GetFloatAttrByNameDisp('exponent') for ref in fco.ChildFCOs):
             if int(exponent) != exponent:
-                raise ValueError('Only integer and inverse integer exponents allowed')
+                raise InvalidGMEUnitException('"{}" has a non-integer exponent. Only integer and inverse integer exponents allowed'.format(fco.Name))
+        if len(fco.ChildFCOs) == 0:
+            raise InvalidGMEUnitException('"{}" has no derived_unit_elements. It must have at least one'.format(fco.Name))
         return reduce_none(operator.mul, (get_unit_for_gme(ref.Referred, int(ref.GetFloatAttrByNameDisp('exponent'))) for ref in fco.ChildFCOs))
     # log('xxx' + fco.MetaBase.Name)
     if fco.MetaBase.Name == 'conversion_based_unit':
+        if len(fco.ChildFCOs) == 0:
+            raise InvalidGMEUnitException('"{}" has no reference_unit. It must have at least one'.format(fco.Name))
         return reduce_none(operator.mul, (get_unit_for_gme(ref.Referred) * ref.GetFloatAttrByNameDisp('conversion_factor') for ref in fco.ChildFCOs)) ** exponent
     raise ValueError(fco.MetaBase.Name)
 
