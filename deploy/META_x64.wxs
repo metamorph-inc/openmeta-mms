@@ -64,7 +64,6 @@
     <WixVariable Id="WixUIBannerBmp" Value="WixUiBanner_mms.bmp" />
     <WixVariable Id="WixUIDialogBmp" Value="WixUIDialog_mms.bmp" />
 
-    <Property Id='ARPPRODUCTICON' Value='META.ico' />
     <Icon Id='META.ico' SourceFile='META.ico' />
 
 
