@@ -63,18 +63,26 @@ dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
 if (dig_dataset_config == "") {
   if(dig_input_csv == "") {
     # Setup one of the test datasets if no input dataset
-    # config_filename=file.path('datasets',
-    #                           'WindTurbineForOptimization',
-    #                           'visualizer_config_session.json',
-    #                           fsep = "\\\\")
-    config_filename=file.path('datasets',
-                              'WindTurbine',
-                              'visualizer_config_session.json',
-                              fsep = "\\\\")
-    # config_filename=file.path('datasets',
-    #                           'TestPETRefinement',
-    #                           'visualizer_config_session.json',
-    #                           fsep = "\\\\")
+    Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
+                                            'Simdis',
+                                            'visualizer_config_dev.json'))
+    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
+    #                                         'WindTurbineForOptimization',
+    #                                         'visualizer_config_session.json'))
+    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
+    #                                         'WindTurbine',
+    #                                         'visualizer_config.json'))
+    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
+    #                                         'TestPETRefinement',
+    #                                         'visualizer_config.json'))
+  }
+  config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
+  visualizer_config <- fromJSON(config_filename)
+  tab_requests <- visualizer_config$tabs
+  saved_inputs <- visualizer_config$inputs
+  launch_dir <- dirname(config_filename)
+  if(is.null(visualizer_config$augmented_data)) {
+    raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
   } else {
     # Visualizer legacy launch format
     csv_dir <- dirname(dig_input_csv)
