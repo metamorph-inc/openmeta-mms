@@ -114,7 +114,7 @@ ui <- function(id) {
             )
           ),
           column(9,
-            plotOutput(ns("single_plot"), click = ns("plot_click"), brush = ns("plot_brush"), height=700)
+            plotOutput(ns("single_plot"), dblclick = ns("plot_dblclick"), click = ns("plot_click"), brush = ns("plot_brush"), height=700)
           ),
           column(12,
             verbatimTextOutput(ns("single_info"))
@@ -123,10 +123,13 @@ ui <- function(id) {
       ),
       tabPanel("Single Point Details",
         fluidRow(
-          column(12,
+          column(6,
             br(),
-            actionButton(ns("launch"), "Launch in SimDis"),
-            verbatimTextOutput(ns("single_details"))
+            selectInput(ns("details_guid"), label = "GUID", choices = c()),
+            # br(),
+            verbatimTextOutput(ns("single_details")),
+            br(),
+            actionButton(ns("launch"), "Launch in SimDis")
           )
         )
       ),
@@ -365,4 +368,42 @@ server <- function(input, output, session, data) {
                  maxpoints = 8))
   })
   
+  # Single Point Details -----------------------------------------------------
+
+  observe({
+    pts <- nearPoints(data$Filtered(),
+                      input$plot_dblclick,
+                      xvar = input$x_input,
+                      yvar = input$y_input,
+                      maxpoints = 1)
+    if(nrow(pts) != 0) {
+      guid <- as.character(unlist(pts[["GUID"]]))
+      updateTabsetPanel(session, "explore_tabset",
+                        selected = "Single Point Details")
+      updateSelectInput(session, "details_guid", selected = guid)
+    }
+  })
+  
+  output$single_details <- renderPrint({
+    req(input$details_guid)
+    data$Filtered()[data$Filtered()$GUID == input$details_guid, ]
+  })
+  
+  observe({
+    selected <- isolate(input$details_guid)
+    choices <- as.character(data$raw$df$GUID)
+    if(is.null(selected) || selected == "") {
+      selected <- choices[1]
+    }
+    saved <- si_read(ns("details_guid"))
+    if (is.empty(saved)) {
+      si(ns("details_guid"), NULL)
+    } else if (saved %in% c(choices, "")) {
+      selected <- si(ns("details_guid"), NULL)
+    }
+    updateSelectInput(session,
+                      "details_guid",
+                      choices = choices,
+                      selected = selected)
+  })
 }
