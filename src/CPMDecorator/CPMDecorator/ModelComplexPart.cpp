@@ -831,7 +831,7 @@ bool ModelComplexPart::MouseLeftButtonUp(UINT nFlags, const CPoint& point, HDC t
 bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& point, HDC transformHDC)
 {
 	CComPtr<IMgaProject> proj;
-	if (m_spFCO && m_spMetaFCO && SUCCEEDED(m_spFCO->get_Project(&proj))) 
+	if (m_spFCO && m_spMetaFCO && SUCCEEDED(m_spFCO->get_Project(&proj)))
 	{
 		CComPtr<IMgaTerritory> terr;
 		if (kind.length() && kind == L"Data Sheet")
@@ -856,7 +856,7 @@ bool ModelComplexPart::MouseLeftButtonDoubleClick(UINT nFlags, const CPoint& poi
 					docpath += path;
 
 					ShellExecuteW(0, L"open", docpath.c_str(), NULL, NULL, SW_SHOW);
-					
+
 					proj->CommitTransaction();
 					return true;
 				}
@@ -1597,9 +1597,9 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 				Gdiplus::LinearGradientModeVertical);
 
 			Gdiplus::SolidBrush solidBrush(Gdiplus::Color(GetRValue(m_crBrush), GetGValue(m_crBrush), GetBValue(m_crBrush)));
-		
+
 			Gdiplus::Brush& brush = m_bGradientFill ? (Gdiplus::Brush&)linearGradientBrush : (Gdiplus::Brush&)solidBrush;
-		
+
 			Gdiplus::GraphicsPath path;
 			path.AddArc(location.left, location.top, cornerRadius, cornerRadius, 180, 90);
 			path.AddArc(location.right - cornerRadius, location.top, cornerRadius, cornerRadius, 270, 90);
@@ -1634,10 +1634,6 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 			Gdiplus::Rect grect((int)cRect.left + x, (int)cRect.top + (cRect.Height() - m_prominentAttrsSize.cy) / 2 - (int)m_bmp->GetHeight() / 2,
 				width, height);
 			gdip->DrawImage(m_bmp.get(), grect, 0, 0, (int)m_bmp->GetWidth(), (int)m_bmp->GetHeight(), Gdiplus::UnitPixel);
-		}
-		if (button) {
-			Gdiplus::Rect grect(cRect.left + button->position.left, cRect.top + button->position.top, button->position.Width(), button->position.Height());
-			gdip->DrawImage(button->m_bmp.get(), grect, 0, 0, (int)button->m_bmp->GetWidth(), (int)button->m_bmp->GetHeight(), Gdiplus::UnitPixel);
 		}
 	}
 
@@ -1697,11 +1693,7 @@ void ModelComplexPart::LoadPorts()
 	if(dispPortTxt.Length())
 	{
 		if(dispPortTxt == "false")
-			return;						// do not need ports for this reference: see Meta paradigm ReferTo connection showPorts attribute 
-	}
-
-	if (PETWrapperLookup(kind)) {
-		button = std::unique_ptr<ModelButton>(new ModelButton());
+			return;						// do not need ports for this reference: see Meta paradigm ReferTo connection showPorts attribute
 	}
 
 	CComPtr<IMgaMetaAspect>	spParentAspect;
@@ -1730,16 +1722,16 @@ void ModelComplexPart::LoadPorts()
 		bstrAspect.Empty();
 		COMTHROW( spParentAspect->get_Name(&bstrAspect));
 	}
-	
+
 	CComPtr<IMgaMetaAspect> spAspect;
 	HRESULT hr = spMetaModel->get_AspectByName(bstrAspect, &spAspect);
-	
+
 	if (hr == E_NOTFOUND) {
 	//	hr = spMetaModel->get_AspectByName(CComBSTR(L"All"), &spAspect);
 	}
 	if (hr == E_NOTFOUND) {
 		try {
-			// PETER: If the proper aspect cannot be found, use the first one			
+			// PETER: If the proper aspect cannot be found, use the first one
 			spAspect = NULL;
 			CComPtr<IMgaMetaAspects> spAspects;
 			COMTHROW(spMetaModel->get_Aspects(&spAspects));
@@ -1772,7 +1764,7 @@ void ModelComplexPart::LoadPorts()
 					CComBSTR child_kind_name;
 					COMTHROW(child_meta->get_Name(&child_kind_name));
 					// Only display Propertys and Parameters in ValueFlow, TBValueFlowAspect, All, TestBenchCompositionAspect, and DesignSpace aspects
-					bool display_port = 
+					bool display_port =
 						(child_kind_name != L"Property"
 						  && child_kind_name != L"Parameter"
 						  && child_kind_name != L"CADProperty"
@@ -1795,7 +1787,7 @@ void ModelComplexPart::LoadPorts()
 						&& child_kind_name == L"AggregatePort";
 
 					// In dynamics aspect, Components have only power ports
-					display_port &= 
+					display_port &=
 						( bstrParentAspect != L"Dynamics" || bstrParentAspect != L"All")
 						|| (   child_kind_name == L"HydraulicPowerPort"
 							|| child_kind_name == L"ThermalPowerPort"
@@ -1818,7 +1810,7 @@ void ModelComplexPart::LoadPorts()
 					{
 						display_port = false;
 					}
-					
+
 					if (display_port && m_spFCO->ParentModel && m_spFCO->ParentModel->Meta->Name == _bstr_t(L"Configurations"))
 					{
 						display_port = false;
@@ -1835,7 +1827,7 @@ void ModelComplexPart::LoadPorts()
 						// zolmol, in case regnodes are not present or invalid will throw otherwise
 						if(spPart->GetGmeAttrs(0, &lX, &lY) != S_OK)
 							ASSERT(0);
-						
+
 						//new code
 						CComBSTR bstr;
 						COMTHROW(spMetaPart->get_Name(&bstr));
@@ -1981,7 +1973,7 @@ void ModelComplexPart::ReOrderConnectedOnlyPorts()
 					CComPtr<IMgaFCO> parent = m_parentPart->GetFCO();
 					CComPtr<IMgaModel> grandparent;
 					COMTHROW(parent->get_ParentModel(&grandparent));
-	
+
 					if(l == 0)
 					{
 						needThisPort = (parent == m_spFCO && container == grandparent);
@@ -1998,7 +1990,7 @@ void ModelComplexPart::ReOrderConnectedOnlyPorts()
 			} MGACOLL_ITERATE_END;
 		}
 
-		if(needThisPort) 
+		if(needThisPort)
 		{
 			if ((*ii)->portPart->GetInnerPosition().x <= WIDTH_MODELSIDE ||
 				(*ii)->portPart->GetInnerPosition().x < lMax / 2)
