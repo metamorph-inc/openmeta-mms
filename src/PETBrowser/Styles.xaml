@@ -5,7 +5,7 @@
     <!-- Solution for .NET 4.0 adapted from here:  http://stackoverflow.com/questions/7998112/datagrids-selected-row-color-when-inactive/8095932#8095932 -->
     <!-- This is simpler in .NET 4.5; override InactiveSelectionHighlightBrush there -->
     <Color x:Key="GridHighlightColor">#66000000</Color>
-    <Color x:Key="InactiveGridHighlightColor">#33000000</Color>
+    <Color x:Key="InactiveGridHighlightColor">#11000000</Color>
     <SolidColorBrush x:Key="GridHighlightBrush" Color="{StaticResource GridHighlightColor}" />
     <SolidColorBrush x:Key="InactiveGridHighlightBrush" Color="{StaticResource InactiveGridHighlightColor}" />
     <Style x:Key="GridStyle" BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
@@ -24,7 +24,7 @@
                 </MultiDataTrigger.Conditions>
                 <MultiDataTrigger.Setters>
                     <Setter Property="Background" Value="{StaticResource InactiveGridHighlightBrush}" />
-                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
                     <Setter Property="BorderBrush" Value="{StaticResource InactiveGridHighlightBrush}" />
                 </MultiDataTrigger.Setters>
             </MultiDataTrigger>
