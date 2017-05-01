@@ -1,8 +1,8 @@
 ## Framework Features
 
-The Visualizer Framework provides an abstraction layer between the Results Browser and the tabs that it hosts. As such it provides the following services to the tabs:
+The Visualizer Framework provides an abstraction layer between the Results Browser and the custom tabs that it hosts. As such it provides the following services to the tabs:
 
-1. Reads in the data and wraps it as a Shiny reactive data frame.
+1. Reads in data and wraps it as a Shiny reactive data frame.
 2. Provides a global concept of _Filtered_ and _Colored_ data that tabs can access.
 3. Provides a place to save user _Comments_ and _Sets_.
 4. Gives tabs the ability to add columns to the raw data frame as _Classifications_.
@@ -14,29 +14,45 @@ To facilitate interaction with the Visualizer framework itself, a footer is prov
 
 The 'Filters' section is the first section in the Visualizer footer.
 
-<img src="images/filters.png" alt="Coloring Panel of Visualizer Footer" style="width: 1459px;"/>
+<img src="images/filters.png" alt="Filters Panel of Visualizer Footer" style="width: 1459px;"/>
 
-**<s>1. View All Filters**
-This selects between displaying ether filters for every variable or just filters for those variables chosen in the pairs tab (see Display Variables).</s>
+**1. View All Filters**
+This selects between displaying either filters for every variable and classification or just filters for those variables currently "selected" in the open tab.
 
 **2. Reset Visible Filters**
-This button will return the visible filters to their original state (fully opened).
+This button will return the visible filters to their original state, i.e. the full range is selected.
 
 **3. Filters**
-These filters (3 filters are shown above in the picture), will carve out the dataset to include only the points that fit within the ranges for each variable.  If you limit the dataset to have 0 points a message will appear in the pairs plot telling you that “there are no data points that fit the current filtering scheme”. 
+These filters exclude from the "Filtered" dataset data points that fall outside of the ranges specified for any of the variable.  Be careful not to exclude all the points in your dataset.
 
 <img src="images/filter_exactentry.png" alt="Exact Entry"/>
 
 **4. Exact Entry Window**
-When a slider is 'double-clicked', a new window opens up allowing the user to specify an exact range for the filter.  The window shows the name of the variable along with text fields for minimum and maximum range.
-
-**5. Apply (exact entry)**
-This button applies the new values set for the filter.  Any field left blank or containing non-numeric numbers is ignored when this button is clicked.
+When a slider is 'double-clicked', a new window opens up allowing the user to enter an exact range for the filter.  The window shows the name of the variable along with text fields for minimum and maximum range. The 'apply' button applies the new values set for the filter; if either or both of the fields are left blank or containing non-numeric numbers, they are ignored when this button is clicked.
 
 ### Coloring
 
 <img src="images/coloring.png" alt="Coloring Panel of Visualizer Footer" style="width: 1459px;"/>
 
+The Coloring Panel allows us to apply live and saved colorings to the data. This information is passed to the tab as an addition column in the data in the `data$Colored` data frame. The "Source" can take one of three options:
+
+1. None: This will assign "black" to the added column in _Colored_. 
+2. Live: This will use the "Live" options that are present here in the Coloring Panel to assign the added column in _Colored_.
+3. <saved>: Different desirable coloring schemes can be saved using the "Add Current 'Live' Coloring" button. These colorings will be persisted across the live of the session and can be applied by selecting them here in the "Source" select input.
+
 ### Classifications
 
-<img src="images/classifications.png" alt="Coloring Panel of Visualizer Footer" style="width: 775px;"/>
+<img src="images/classifications.png" alt="Classifications Panel of Visualizer Footer" style="width: 775px;"/>
+
+The Visualizer allows for tabs to add additional columns to the dataset. These added columns are referred to as "classifications." If one of the tabs selected for the session offers the ability to save classifications, they will appear here.
+
+### Configuration
+
+#### Data Processing
+
+* _Remove Missing:_ This removes rows from the dataset that are incomplete, i.e. one or more entries is missing data.
+* _Remove Outliers:_ This option filters out any rows that include data more than a certain number of standard deviations away from the mean for that variable.  The number of standard deviations used for filtering can be selected using the slider input.
+
+#### About
+
+Information about the current version of the app, date of last release, and support contact information.

@@ -38,37 +38,42 @@ ui <- function(id) {
         fluidRow(
           column(3,
             br(),
-            wellPanel(
-              h4("Plot Options"),
-              selectInput(ns("display"),
-                          "Display Variables:",
-                          c(),
-                          # selected=si(ns("display"), NULL),
-                          multiple=TRUE),
-              conditionalPanel(
-                condition = "input.auto_render == false",
-                actionButton(ns("render_plot"), "Render Plot"),
-                br()
+            bsCollapse(id = ns("pairs_plot_collapse"), open = si(ns("pairs_plot_collapse"), ""),
+              bsCollapsePanel("Variables",
+                selectInput(ns("display"), "Display Variables:", c(),
+                            multiple=TRUE),
+                conditionalPanel(
+                  condition = paste0('input["', ns('auto_render'), '"] == false'),
+                  actionButton(ns("render_plot"), "Render Plot"))
               ),
-              hr(),
-              selectInput(ns("pairs_plot_marker"),
-                          "Plot Markers:",
-                          plot_markers,
-                          selected=si(ns("pairs_plot_marker"), 1)),
-              sliderInput(ns("pairs_plot_marker_size"), "Marker Size:",
-                          min=0.5, max=2.5,
-                          value=si(ns("pairs_plot_marker_size"),1),
-                          step=0.025),
-              hr(),
-              h4("Info"),
-              verbatimTextOutput(ns("pairs_stats"))#,
               # TODO(tthomas): Add this functionality back in.
               # h4("Download"),
               # downloadButton(ns('exportData'), 'Dataset'), 
               # paste("          "),
               # downloadButton(ns('exportPlot'), 'Plot'), hr(),
               # actionButton(ns("resetOptions"), "Reset to Default Options")
-            )
+              bsCollapsePanel("Plot Options",
+                checkboxInput(ns("auto_render"), "Render Automatically",
+                              value = si(ns("auto_render"), TRUE)),
+                checkboxInput(ns("pairs_upper_panel"), "Display Upper Panel",
+                              value = si(ns("pairs_upper_panel"), FALSE)),
+                checkboxInput(ns("pairs_trendlines"), "Add Trendlines",
+                              value = si(ns("pairs_trendlines"), FALSE))
+              ),
+              bsCollapsePanel("Markers",
+                selectInput(ns("pairs_plot_marker"),
+                            "Plot Markers:",
+                            plot_markers,
+                            selected=si(ns("pairs_plot_marker"), 1)),
+                sliderInput(ns("pairs_plot_marker_size"), "Marker Size:",
+                            min=0.5, max=2.5,
+                            value=si(ns("pairs_plot_marker_size"),1),
+                            step=0.025)
+              )
+            ),
+            hr(),
+            h4("Info"),
+            verbatimTextOutput(ns("pairs_stats"))#,
           ),
           column(9,
               uiOutput(ns("pairs_display_error")),   
@@ -181,41 +186,36 @@ server <- function(input, output, session, data) {
                       selected = selected)
   })
      
-  # Pairs Plot Tab -----------------------------------------------------------
-  # TODO(tthomas): Restore the ability to have trendlines
-  # pairsSetup <- function(...){
-  #   if(input$pairs_upper_panel) {
-  #     if(input$pairs_trendlines) {
-  #       p <- pairs(pairs_data()[pairs_vars()], lower.panel = panel.smooth, upper.panel = panel.smooth, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
-  #     }
-  #     else {
-  #       p <- pairs(pairs_data()[pairs_vars()], col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
-  #     }
-  #   }
-  #   else {
-  #     if(input$trendLines) {
-  #       p <- pairs(pairs_data()[pairs_vars()], lower.panel = panel.smooth, upper.panel = NULL, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
-  #     }
-  #     else {
-  #       p <- pairs(pairs_data()[pairs_vars()], upper.panel = NULL, col = pairs_data()$color, pch = as.numeric(input$pointStyle), cex = as.numeric(input$pointSize))
-  #     }
-  #   }
-  #   p
-  # }
-  
   output$pairs_plot <- renderPlot({
     
     # Clear the error messages, if any.
-    output$display_error <- renderText("")
-    output$filter_error <- renderText("")
+    output$pairs_display_error <- renderText("")
+    output$pairs_filter_error <- renderText("")
     
     if (length(input$display) >= 2 & nrow(data$Filtered()) > 0) {
       # pairs_setup()
-      pairs(data$Colored()[vars_list()],
-            upper.panel = NULL,
-            col = data$Colored()$color,
-            pch = as.numeric(input$pairs_plot_marker),
-            cex = as.numeric(input$pairs_plot_marker_size))
+      if(input$pairs_upper_panel) {
+        if(input$pairs_trendlines) {
+          params <- list(upper.panel=panel.smooth, lower.panel=panel.smooth)
+        }
+        else {
+          params <- list()
+        }
+      }
+      else {
+        if(input$pairs_trendlines) {
+          params <- list(lower.panel = panel.smooth, upper.panel = NULL)
+        }
+        else {
+          params <- list(upper.panel = NULL)
+        }
+      }
+      params <- c(params,
+                  list(x=data$Colored()[vars_list()],
+                       col = data$Colored()$color,
+                       pch = as.numeric(input$pairs_plot_marker),
+                       cex = as.numeric(input$pairs_plot_marker_size)))
+      do.call(pairs, params)
     }
     else { 
       if (nrow(data$Colored()) == 0) {
@@ -223,7 +223,7 @@ server <- function(input, output, session, data) {
             "<br/>No data points fit the current filtering scheme.")
       }
       if (length(input$display) < 2) {
-        output$paris_display_error <- renderText(
+        output$pairs_display_error <- renderText(
           "<br/>Please select two or more Display Variables.")
       }
     }

@@ -21,3 +21,8 @@ Sets the standard deviation of the gaussian - default is the standard deviation 
 
 **6. Plots**
 This section displays all the plots-histogram, plot of data set (on a single variable), and a possibly a gaussian.
+
+**Coloring**
+* _Histogram:_ This is the color of the histogram in the bayesian tab.
+* _Original:_ This is the color of the main graph in the bayesian tab.
+*  _Resampled:_ This is the color of the resampled plot in the bayesian tab.

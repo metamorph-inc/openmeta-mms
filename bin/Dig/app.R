@@ -506,6 +506,23 @@ Server <- function(input, output, session) {
     # This reactive holds the full dataset that has been filtered using the
     # values of the sliders.
     data_filtered <- data$raw$df
+    if(input$remove_missing) {
+      data_filtered <- data_filtered[complete.cases(data_filtered), ]
+    }
+    if(input$remove_outliers) {
+      #Filter out rows by standard deviation
+      for(column in 1:length(data$pre$var_range_nums_and_ints())) {
+        a <- sapply(data_filtered[data$pre$var_range_nums_and_ints()[column]],
+          function(x) {
+            m <- mean(x, na.rm = TRUE)
+            s <- sd(x, na.rm = TRUE)
+            x >= m - input$num_sd*s &
+            x <= m + input$num_sd*s
+          }
+        )
+        data_filtered <- subset(data_filtered, a)
+      }
+    }
     for(index in 1:length(pre$var_names())) {
       name <- pre$var_names()[index]
       input_name <- paste("filter_", name, sep="")
@@ -1007,6 +1024,27 @@ ui <- fluidPage(
           column(12,
             textOutput('no_classifications'),
             tableOutput('classification_table_output')
+          )
+        ),
+        style = "default"
+      ),
+      bsCollapsePanel("Configuration",
+        fluidRow(
+          column(3,
+            h4("Data Processing"),
+            checkboxInput("remove_missing", "Remove Missing",
+                          si("remove_missing", FALSE)),
+            checkboxInput("remove_outliers", "Remove Outlier",
+                          si("remove_outliers", FALSE)),
+            sliderInput("num_sd", HTML("&sigma;:"), min = 1, max = 11, step = 0.1,
+                        value = si("num_sd", 6))
+          ),
+          column(3,
+            h4("About"),
+            p(strong("Version:"), "v2.0.0"),
+            p(strong("Date:"), "5/1/2017"),
+            p(strong("Developer:"), "Metamorph Software"),
+            p(strong("Support:"), "tthomas@metamorphsoftware.com")
           )
         ),
         style = "default"

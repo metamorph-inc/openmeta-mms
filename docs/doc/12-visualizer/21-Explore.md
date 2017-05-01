@@ -10,6 +10,10 @@ This is where you set what the variables are displayed on the main plot
 
 This button is available only if ‘automatically rerender plot’ option is unselected.  Clicking this button produces a plot based on current user settings.  As a result of this mode, changing user settings will leave the plot unchanged as a user makes modifications to the app (until clicking this button).
 
+* _Automatically Rerender Plot:_ This option causes the pairs plot to automatically update anytime a setting is changed.  If this box is unselected, a ‘Render Plot’ button appears on the pairs plot tab where the plot will wait to update until a user clicks this button.
+* _Overlay Trendlines:_ Activating this option displays trendlines that fit the data in the pairs plot tab.
+* _Display upper panel:_ Activating this option displays the upper panel of the pairs plot.  
+
 **3. Data Coloring**
 
 * _Max/Min:_ Color the data by setting a range on a specific variable (a range bar and variable picker show up once you select this option).  Default colors are red for points below the range, yellow for points in the range, and green for points above the range.  Colors can be changed in the options tab.
