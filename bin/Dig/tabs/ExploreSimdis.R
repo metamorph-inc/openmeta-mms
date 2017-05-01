@@ -406,4 +406,22 @@ server <- function(input, output, session, data) {
                       choices = choices,
                       selected = selected)
   })
+  
+  observeEvent(input$launch, {
+    print(paste0("Launching Simdis on ", input$details_guid, "..."))
+    local_directory <- dirname(config_filename)
+    asi_filename <- file.path(local_directory,
+                              "artifacts",
+                              input$details_guid,
+                              "test.asi")
+    print(paste0("Calling 'simdis ", asi_filename, "'..."))
+    system2("simdis",
+            args = c(paste0("\"",asi_filename,"\"")),
+            # args = c(asi_filename),
+            stdout = file.path(local_directory,
+                               "VisualizerRunSimdis_stdout.log"),
+            stderr = file.path(local_directory,
+                               "VisualizerRunSimdis_stderr.log"),
+            wait = FALSE)
+  })
 }
