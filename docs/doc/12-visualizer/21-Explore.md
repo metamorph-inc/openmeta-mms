@@ -1,73 +1,60 @@
-### 'Explore' Tab
+### Explore Tab
 
-![Pairs Plot](images/pairs.png)
+The first sub-tab in the _Explore_ tab is the _Pairs Plot_ tab.
 
-**1. Display Variables**
+<img src="images/explore_pairs.png" alt="Pairs Plot Tab of the Explore Tab of Visualizer" style="width: 1205px;"/>
 
-This is where you set what the variables are displayed on the main plot  
+#### Variables
 
-**2. Render Plot**
+* **Display Variables:** This is where you set what the variables are displayed on the main plot  
 
-This button is available only if ‘automatically rerender plot’ option is unselected.  Clicking this button produces a plot based on current user settings.  As a result of this mode, changing user settings will leave the plot unchanged as a user makes modifications to the app (until clicking this button).
+* **Render Plot:** This button is available only if 'Render Automatically' option is unselected.  Clicking this button produces a plot based on current user settings.
 
-* _Automatically Rerender Plot:_ This option causes the pairs plot to automatically update anytime a setting is changed.  If this box is unselected, a ‘Render Plot’ button appears on the pairs plot tab where the plot will wait to update until a user clicks this button.
-* _Overlay Trendlines:_ Activating this option displays trendlines that fit the data in the pairs plot tab.
-* _Display upper panel:_ Activating this option displays the upper panel of the pairs plot.  
+#### Plot Options
 
-**3. Data Coloring**
+* **Render Automatically:** This option causes the pairs plot to automatically update anytime a setting is changed.  If this box is unselected, a ‘Render Plot’ button appears in the _Variables_ panel where the plot will wait to update until a user clicks this button. This is useful when changing the variables for the plot when working with a large dataset or relatively large number of variables.
+* **Overlay Trendlines:** Activating this option displays trendlines pairs plot.
+* **Display upper panel:** Activating this option displays the upper panel as well as the lower panel of the pairs plot. 
 
-* _Max/Min:_ Color the data by setting a range on a specific variable (a range bar and variable picker show up once you select this option).  Default colors are red for points below the range, yellow for points in the range, and green for points above the range.  Colors can be changed in the options tab.
+#### Markers
 
-* _Discrete:_ Color the data by each individual discrete variable.  A variable picker for all the discrete variables in the dataset shows up once you select this option.  The coloring palette can not be modified by the user.
+* **Plot Markers:** This selects the marker used to create the plot.
+* **Marker Size:** This selects the relative size of each of the points.
 
-* _Highlight:_ Color the data by only the points selecting by the highlight brush in the single plot tab.  
+#### Export
 
-**4. Info Pane**
+* **Dataset:** Downloads a csv file containing all the data used to create the current plot.
+* **Plot:** Downloads a pdf of the plot display.
 
-This box shows the information about the data set.  Total points show how many data points are in the set.  Current and visible points show how many points are being used for plotting.  Information on colored points show up once a coloring method is selected.
+#### Info Pane
 
-**5. Update info pane**
+This box shows the information about the data set.  "Total Points" shows how many data points are in the set.  "Current Points" shows how many points are being used for plotting.
 
-This button is available only if ‘automatically refresh info pane’ option is unselected.  Clicking this button causes the info pane to update based on current plotting/filtering.  
+---
 
-**6. Download Dataset/Plot**
+The second sub-tab in the _Explore_ tab is the _Pairs Plot_ tab.
 
-* _Dataset:_ Downloads a csv file containing all the data in the set, post-filtering.
+<img src="images/explore_single.png" alt="Single Plot Tab of the Explore Tab of Visualizer" style="width: 1225px;"/>
 
-* _Plot:_ Downloads a pdf of the plot display [7].
+#### Variables
 
-**7. Reset to Default Options**
+* **X variable:** Set the variable for the x axis.
+* **Y variable:** Set the variable for the y axis.
 
-This button returns the state of the pairs tab to look like the above picture.  It affects items 1, 2, and 3. 
+#### Markers
 
-**8. Plot Display**
+* **Plot Markers:** This selects the marker used to create the plot.
+* **Marker Size:** This selects the relative size of each of the points.
 
-This is where the scatter plot matrix is displayed.
+#### Filter
 
-![Single Plot](images/single.png)
+A user can click and drag a selection on the plot, and once a selection is made, these buttons will adjust the global filters for the x and/or y variable to match the range of the selection.
 
-**1. X variable**
+#### Overlays
 
-Set the variable for the x axis.
+* **Add Pareto Plot:** This enables the addition of a pareto plot and allows you to specify the objectives.
+* **Add Contour Plot:** This enables the addition of a contour plot and allows you to specify the third variable for the contour.
 
-**2. Y variable**
+#### Near Points Info
 
-Set the variable for the y axis.
-
-**3. Adjust sliders**
-
-A user can click and drag on the graph [5], and once a selection is made, these buttons will adjust the filters for the x and/or y variable to only contain the data inside the selection.
-
-**4. Highlight**
-
-Once a user makes a selection by click-and-drag, this button will send the user to the pairs plot tab and color all the data points inside that selection.  Default blue (color can be changed in options tab.
-
-**5. Plot display**
-
-This is where the plot gets displayed.
-
-**6. Near Points Info**
-
-	By clicking on the graph, data points near the click will display their info in this panel.
-
-![Near Points](images/near-info.png)
+By clicking on the graph, data points near the click will display their info in this panel.

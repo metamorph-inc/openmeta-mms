@@ -50,7 +50,7 @@ ui <- function(id) {
                           value = si(ns('display_all'), TRUE)),
             conditionalPanel(condition = paste0('input["', ns('display_all'), '"] == false'), 
               selectInput(
-                ns('display_vars'),
+                ns('display'),
                 "Display Variables",
                 choices = c(),
                 multiple = T
@@ -161,8 +161,9 @@ server <- function(input, output, session, data) {
   varsList <- reactive({
     # print("Getting Variable List.")
     idx = NULL
-    for(choice in 1:length(input$display_vars)) {
-      mm <- match(input$display_vars[choice],varNums)
+    req(length(input$display) > 0)
+    for(choice in 1:length(input$display)) {
+      mm <- match(input$display[choice],varNums)
       if(mm > 0) { idx <- c(idx,mm) }
     }
     # print(idx)
@@ -195,6 +196,21 @@ server <- function(input, output, session, data) {
                       selected = selected)
   })
   
+  observe({
+    choices <- varNums
+    selected <- choices[1]
+    saved <- si_read(ns("display"))
+    if (is.empty(saved)) {
+      si(ns("display"), NULL)
+    } else if (all(saved %in% choices)) {
+      selected <- si(ns("display"), NULL)
+    }
+    updateSelectInput(session,
+                      "display",
+                      choices = choices,
+                      selected = selected)
+  })
+
   filtered_data <- reactive({
     filData <- raw_data
     if(input$design_configs_present &&
@@ -356,11 +372,15 @@ server <- function(input, output, session, data) {
   })
   
   output$vars_plots <- renderUI({
+    print("In vars_plots")
+    print(varsList())
     data <- uqData()$dist
     variables <- varNums
-    if(!input$display_all)
+    print(!input$display_all)
+    if(!input$display_all){
+      print("In not display all")
       variables <- varNums[varsList()]
-    
+    }
     if(is.null(data)) {
       verbatimTextOutput(ns("uq_plot_initializing"))
     }

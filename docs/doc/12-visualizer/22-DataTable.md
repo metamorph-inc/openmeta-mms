@@ -1,42 +1,27 @@
-### 'Data Table' Tab
+### Data Table Tab
 
-![Data Table](images/data-table.png)
+<img src="images/data_table.png" alt="Data Table Tab of Visualizer" style="width: 1240px;"/>
 
-**1. Rank & Score**
+#### Data Processing
 
-These columns appear when data ranking is being used.  The table is sorted by the rank of each data point.  A score between 0 and 1 is assigned to each point based on the data ranking metrics used (see Data Ranking).
+* **Apply Filters:** This checkbox determines whether you are looking at the raw data or data with the global filters applied.
+* **Method:** This select input allows you to select the method, if any, that is used to process the data. Currently the only method that is available is the TOPSIS.
 
-**2. Export selected points**
+#### TOPSIS
 
-This feature downloads a .csv file to the hard drive containing all the data on selected points.  Points are selected by simply clicking a row.
+The Technique for Order of Preference by Similarity to Ideal Solution (TOPSIS) is a multi-criteria decision analysis method, which was originally developed by Hwang and Yoon in 1981 with further developments by Yoon in 1987, and Hwang, Lai and Liu in 1993. (Wikipedia) We rely upon the implementation available in the 'topsis' package on CRAN.
 
-**3. Color by selected row**
+* **Ranking Metrics:** This select input allows the user to specify the metrics of interest.
+* **Clear Metrics:** Clicking this button resets this tab.
+* **Ranking Mode:** This specifies the objective for each of the variables.
+* **Weight Amount:** This specifies the relative weight of each objective.
 
-Once rows are selected, this feature will turn the app over to the pairs plot tab and color the chosen data points (color is set in the options tab).
+The _rank_ and _score_ columns appear when data ranking is being used.  The table is sorted by ascending rank. A score between 0 and 1 is assigned to each point based results of the TOPSIS analysis.
 
-#### Data Ranking
-![Data Ranking](images/data-ranking.png)
+#### Adding Classifications
 
-**1. Activate Data Rankings**
-This checkbox will unveil the ui elements necessary for working with the data ranking system.
+This allows the user to add the ranking column to the global dataset as a _classification_. 
 
-**2. Selected Weighted Metrics**
-Similar to ‘Display Variables’ in the pairs tab, a user can enter all the variables of which they are interested in scoring.  As variables are added, a suite of ui elements will appear for each variable.  
+#### Data Table
 
-**3. Clear Metrics**
-	Clicking this button resets this tab.
-
-**4. Score By**
-	This sets the ranking of a given variable to prioritize high or low values of the dataset. 
-
-**5. Weight**
-	This slider sets the relative impact each variable has on the overall rankings.
-
-**6. Add Transfer Function**
-When selected, a text box appears where a user can enter their own function for scoring the dataset.
-
-**7. Enter Data Points**
-Enter a list of dataset values matched with a score value.  This will create a linear piecewise function that is factored into the overall scoring.  Functions can be defined as PWL(piecewise linear) function with syntax following: x1 =  y1, x2 = y2, ... 
-
-**8. Transfer Function Plot**
-This shows a graphical display of the user-defined transfer function.  Scores will be limited to range of 0 to 1 (i.e. values higher than 1 will be converted to a 1 & values below 0 will be converted to 0).
+The data table itself is interactive and can be sorted and searched.

@@ -1,4 +1,4 @@
-### 'Uncertainty Quantification' Tab
+### Uncertainty Quantification Tab
 
 ![UQ](images/uq.png)
 
@@ -25,4 +25,4 @@ This section displays all the plots-histogram, plot of data set (on a single var
 **Coloring**
 * _Histogram:_ This is the color of the histogram in the bayesian tab.
 * _Original:_ This is the color of the main graph in the bayesian tab.
-*  _Resampled:_ This is the color of the resampled plot in the bayesian tab.
+* _Resampled:_ This is the color of the resampled plot in the bayesian tab.
