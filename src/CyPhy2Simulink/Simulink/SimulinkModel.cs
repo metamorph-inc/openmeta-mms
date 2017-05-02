@@ -73,6 +73,7 @@ namespace CyPhy2Simulink.Simulink
             writer.WriteLine("disp('Generating Simulink model; don''t close this window');");
             writer.WriteLine();
 
+            writer.WriteLine("load_system('simulink');");
             foreach (var lib in UserLibraries)
             {
                 writer.WriteLine("load_system('{0}');", lib);
