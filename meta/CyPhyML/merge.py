@@ -127,7 +127,7 @@ def import_xme(project, filename):
 
 
 def update_core():
-    subprocess.check_call('git checkout --theirs CyPhyML-core.xme', shell=True)
+    subprocess.check_call('git checkout MERGE_HEAD CyPhyML-core.xme', shell=True)
     project = Dispatch("Mga.MgaProject")
     project.Create("MGA=" + "CyPhyML-core.mga", "MetaGME")
     import_xme(project, "CyPhyML-core.xme")
@@ -171,7 +171,7 @@ def switch_lib(from_, to):
 
 
 def update_cyphy(version):
-    subprocess.check_call('git checkout --theirs ./CyPhyML.xme', shell=True)
+    subprocess.check_call('git checkout MERGE_HEAD ./CyPhyML.xme', shell=True)
     project = Dispatch("Mga.MgaProject")
     project.Create("MGA=" + "CyPhyML.mga", "MetaGME")
     import_xme(project, "CyPhyML.xme")
