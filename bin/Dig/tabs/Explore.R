@@ -38,7 +38,9 @@ ui <- function(id) {
         fluidRow(
           column(3,
             br(),
-            bsCollapse(id = ns("pairs_plot_collapse"), open = si(ns("pairs_plot_collapse"), ""),
+            # TODO(tthomas): Fix restore.. OPENMETA-
+            # bsCollapse(id = ns("pairs_plot_collapse"), open = si(ns("pairs_plot_collapse"), "Variables"),
+            bsCollapse(id = ns("pairs_plot_collapse"), open = "Variables",
               bsCollapsePanel("Variables",
                 selectInput(ns("display"), "Display Variables:", c(),
                             multiple=TRUE),
