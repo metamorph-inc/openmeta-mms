@@ -52,9 +52,9 @@
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\3rdParty\Ionic.Zip\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="ISIS.GME.Common, Version=1.0.5.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+    <Reference Include="ISIS.GME.Common, Version=1.0.6.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\src\CyPhyMLCS\ISIS.GME.Common.dll</HintPath>
+      <HintPath>..\..\..\..\externals\common-scripts\ISIS.GME.Common.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
