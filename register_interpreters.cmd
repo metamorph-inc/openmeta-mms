@@ -62,3 +62,4 @@ if exist "src\SubTreeMerge\bin\Release\SubTreeMerge.dll" %windir%\Microsoft.NET\
 if exist "src\ShowNet\bin\Release\ShowNet.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\ShowNet\bin\Release\ShowNet.dll" || exit /b !ERRORLEVEL!
 if exist "src\AcmEditor\bin\Release\AcmEditor.exe" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\AcmEditor\bin\Release\AcmEditor.exe" || exit /b !ERRORLEVEL!
 if exist "src\CyPhyResultsViewer\bin\Release\CyPhyResultsViewer.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\CyPhyResultsViewer\bin\Release\CyPhyResultsViewer.dll" || exit /b !ERRORLEVEL!
+if exist "src\CyPhy2Simulink\bin\Release\CyPhy2Simulink.dll" %windir%\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe /nologo /codebase "src\CyPhy2Simulink\bin\Release\CyPhy2Simulink.dll" || exit /b !ERRORLEVEL!
