@@ -8,7 +8,11 @@ if exist(modelName,'file') == 4
         close_system(modelName,0)
     end
     % delete the file
-    delete([modelName,'.slx']);
+    if verLessThan('matlab', '8.0')
+        delete([modelName, '.mdl']);
+    else
+        delete([modelName,'.slx']);
+    end
 end
 
 handle = new_system(modelName);
