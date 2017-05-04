@@ -46,6 +46,7 @@ source("utils.R")
 # Defined Constants ----------------------------------------------------------
 
 ABBREVIATION_LENGTH <- 25
+SAVE_DIG_INPUT_CSV <- TRUE
 
 # Resolve Dataset Configuration ----------------------------------------------
 
@@ -55,63 +56,73 @@ ABBREVIATION_LENGTH <- 25
 
 pet_config_present <- FALSE
 saved_inputs <- NULL
-if (Sys.getenv('DIG_INPUT_CSV') == "") {
-  # Visualizer 2.0 style input dataset
-  if (Sys.getenv('DIG_DATASET_CONFIG') == "") {
+visualizer_config <- NULL
+
+dig_input_csv <- Sys.getenv('DIG_INPUT_CSV')
+dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
+if (dig_dataset_config == "") {
+  if(dig_input_csv == "") {
     # Setup one of the test datasets if no input dataset
-    Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-                                            'WindTurbineForOptimization',
-                                            'visualizer_config_session.json'))
-    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-    #                                         'WindTurbine',
-    #                                         'visualizer_config.json'))
-    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-    #                                         'TestPETRefinement',
-    #                                         'visualizer_config.json'))
-  }
-  config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
-  visualizer_config <- fromJSON(config_filename)
-  tab_requests <- visualizer_config$tabs
-  saved_inputs <- visualizer_config$inputs
-  launch_dir <- dirname(config_filename)
-  if(is.null(visualizer_config$augmented_data)) {
-    raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
+    config_filename=file.path('datasets',
+                              'WindTurbineForOptimization',
+                              'visualizer_config_session.json',
+                              fsep = "\\\\")
+    # config_filename=file.path('datasets',
+    #                           'WindTurbine',
+    #                           'visualizer_config.json',
+    #                           fsep = "\\\\")
+    # config_filename=file.path('datasets',
+    #                           'TestPETRefinement',
+    #                           'visualizer_config.json',
+    #                           fsep = "\\\\")
   } else {
-    raw_data_filename <- file.path(launch_dir,
-                                   visualizer_config$augmented_data)
-  }
-  pet_config_filename <- visualizer_config$pet_config
-  if (!is.null(pet_config_filename) && pet_config_filename != "") {
-    pet_config_filename <- file.path(launch_dir, pet_config_filename)
-    if (file.exists(pet_config_filename)) {
-      pet_config_present <- TRUE
-    }
+    # Visualizer legacy launch format
+    csv_dir <- dirname(dig_input_csv)
+    config_filename <- file.path(csv_dir,
+                                 sub(".csv",
+                                     "_viz_config.json",
+                                     basename(dig_input_csv)),
+                                 fsep = "\\\\")
+    
   }
 } else {
-  # Visualizer legacy dataset format
-  config_filename <- gsub("mergedPET.csv",
-                          "viz_config.json",
-                          Sys.getenv('DIG_INPUT_CSV'))
-  tab_requests <- c("Explore.R",
-                    "DataTable.R",
-                    "Histogram.R",
-                    "PETRefinement.R",
-                    "Scratch.R",
-                    "ParallelAxisPlot.R",
-                    "UncertaintyQuantification.R")
-  launch_dir <- dirname(config_filename)
-  raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
-  pet_config_filename <- gsub("mergedPET.csv",
-                              "pet_config.json",
-                              Sys.getenv('DIG_INPUT_CSV'))
-  if (file.exists(pet_config_filename)) {
-     pet_config_present <- TRUE
-   }
-  visualizer_config <- list()
-  visualizer_config$raw_data <- "mergedPET.csv"
-  visualizer_config$pet_config <- "pet_config.json"
-  visualizer_config$tabs <- tab_requests
+  config_filename <- gsub("\\\\", "/", dig_dataset_config)
 }
+
+if(file.exists(config_filename)) {
+  visualizer_config <- fromJSON(config_filename)
+} else {
+  visualizer_config <- list()
+  visualizer_config$raw_data <- basename(dig_input_csv)
+  visualizer_config$pet_config <- "pet_config.json"
+  visualizer_config$tabs <- c("Explore.R",
+                              "DataTable.R",
+                              "Histogram.R",
+                              "PETRefinement.R",
+                              "Scratch.R",
+                              "ParallelAxisPlot.R",
+                              "UncertaintyQuantification.R")
+}
+
+tab_requests <- visualizer_config$tabs
+saved_inputs <- visualizer_config$inputs
+launch_dir <- dirname(config_filename)
+if(is.null(visualizer_config$augmented_data)) {
+  raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
+} else {
+  raw_data_filename <- file.path(launch_dir,
+                                 visualizer_config$augmented_data)
+}
+pet_config_filename <- visualizer_config$pet_config
+if (!is.null(pet_config_filename) && pet_config_filename != "") {
+  pet_config_filename <- file.path(launch_dir, pet_config_filename)
+  if (file.exists(pet_config_filename)) {
+    pet_config_present <- TRUE
+  }
+}
+
+
+  
 
 # Saved Input Functions ------------------------------------------------------
 
@@ -914,9 +925,11 @@ Server <- function(input, output, session) {
     visualizer_config$tab_data <- tab_data
     
     # Save visualizer config file
-    write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
-          file=config_filename)
-    print("Session saved.")
+    if(SAVE_DIG_INPUT_CSV || dig_input_csv == "") {
+      write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
+            file=config_filename)
+      print("Session saved.")
+    }
     
     # Clear environment variables (necessary only for development)
     Sys.setenv(DIG_INPUT_CSV="")
