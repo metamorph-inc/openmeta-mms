@@ -6,15 +6,15 @@
     <ComponentGroup Id="Dig_run">
       <Component Id="Dig_run" Directory="dir_bin_Dig" Win64="no">
 
-        <File Id="Dig_run" Name="dig_run.cmd" Source="..\bin\Dig\run.cmd" />
+        <File Id="Dig_run_csvonly" Name="dig_run_csvonly.cmd" Source="..\bin\Dig\run_csvonly.cmd" />
         <!-- Shortcut Id="Dig" Name="Dig" Target="[#fil_f227dfd62793d50722b0175428fecf1c]"/ -->
         <Extension Id="csv">
-            <Verb Id="open" Command="Open" TargetFile="Dig_run" Argument="&quot;%1&quot;" />
+            <Verb Id="open" Command="Open" TargetFile="Dig_run_csvonly" Argument="&quot;%1&quot; &quot;[INSTALLDIR]&quot;" />
         </Extension>
 
         <!-- add to right-click menu in explorer -->
         <RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.csv\shell\edit.Dig" Value="Open with META PET Visualizer" Type="string" />
-        <RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.csv\shell\edit.Dig\command" Value="&quot;[#Dig_run]&quot; &quot;%1&quot;" Type="string" />
+        <RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.csv\shell\edit.Dig\command" Value="&quot;[#Dig_run_csvonly]&quot; &quot;%1&quot; &quot;[INSTALLDIR]&quot;" Type="string" />
 
     </Component>
     </ComponentGroup>
