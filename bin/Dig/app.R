@@ -88,29 +88,29 @@ if (Sys.getenv('DIG_INPUT_CSV') == "") {
     }
   }
 } else {
-  # # Visualizer legacy dataset format
-  # config_filename <- gsub("mergedPET.csv",
-  #                         "viz_config.json",
-  #                         Sys.getenv('DIG_INPUT_CSV'))
-  # tab_requests <- c("Explore.R",
-  #                   "DataTable.R",
-  #                   "Histogram.R",
-  #                   "PETRefinement.R",
-  #                   "Scratch.R",
-  #                   "ParallelAxisPlot.R",
-  #                   "UncertaintyQuantification.R")
-  # launch_dir <- dirname(config_filename)
-  # raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
-  # pet_config_filename <- gsub("mergedPET.csv",
-  #                             "pet_config.json",
-  #                             Sys.getenv('DIG_INPUT_CSV'))
-  # if (file.exists(pet_config_filename)) {
-  #   pet_config_present <- TRUE
-  # }
-  # visualizer_config <- list()
-  # visualizer_config$raw_data <- "mergedPET.csv"
-  # visualizer_config$pet_config <- "pet_config.json"
-  # visualizer_config$tabs <- tab_requests
+  # Visualizer legacy dataset format
+  config_filename <- gsub("mergedPET.csv",
+                          "viz_config.json",
+                          Sys.getenv('DIG_INPUT_CSV'))
+  tab_requests <- c("Explore.R",
+                    "DataTable.R",
+                    "Histogram.R",
+                    "PETRefinement.R",
+                    "Scratch.R",
+                    "ParallelAxisPlot.R",
+                    "UncertaintyQuantification.R")
+  launch_dir <- dirname(config_filename)
+  raw_data_filename <- Sys.getenv('DIG_INPUT_CSV')
+  pet_config_filename <- gsub("mergedPET.csv",
+                              "pet_config.json",
+                              Sys.getenv('DIG_INPUT_CSV'))
+  if (file.exists(pet_config_filename)) {
+     pet_config_present <- TRUE
+   }
+  visualizer_config <- list()
+  visualizer_config$raw_data <- "mergedPET.csv"
+  visualizer_config$pet_config <- "pet_config.json"
+  visualizer_config$tabs <- tab_requests
 }
 
 # Saved Input Functions ------------------------------------------------------
