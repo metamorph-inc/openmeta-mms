@@ -66,6 +66,7 @@ namespace PythonTest
                     "py_modelica",
                     "py_modelica_exporter",
                     "run_mdao",
+                    "run_mdao.cad.update_parameters",
                     "testbenchexecutor",
                     "excel_wrapper",
                     "matlab_wrapper",

@@ -921,3 +921,4 @@ test/InterchangeTest/DesignInterchangeTest/ExportTestModels/DupComponentIDs/test
 test/master_results.xml
 test/results.xml
 .Rproj.user
+models/PET_simple_proof-of-concept/manifest.project.json
