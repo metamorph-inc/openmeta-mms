@@ -34,6 +34,8 @@ namespace PETBrowser
 
         public event EventHandler<JobCompletedEventArgs> JobCompleted;
 
+        public event EventHandler<JobManagerFramework.JobManager.JobCollectionAddedEventArgs> JobCollectionAdded;
+
         private TaskScheduler UiTaskScheduler { get; set; }
 
         public int UnfinishedJobCount
@@ -105,6 +107,7 @@ namespace PETBrowser
             Manager.LoadSavedJobs();
 
             Manager.JobAdded += Manager_JobAdded;
+            Manager.JobCollectionAdded += JobCollectionAddedHandler;
 
             this.TrackedJobsChanged += (sender, args) =>
             {
@@ -152,6 +155,19 @@ namespace PETBrowser
                     
                 };
                 InvokeTrackedJobsChanged();
+            });
+        }
+
+        private void JobCollectionAddedHandler(object o, JobManagerFramework.JobManager.JobCollectionAddedEventArgs jobCollectionAddedEventArgs)
+        {
+            InvokeOnMainThread(() =>
+            {
+                PetMerger.BuildPetDirectory(jobCollectionAddedEventArgs.JobCollection);
+
+                if (JobCollectionAdded != null)
+                {
+                    JobCollectionAdded(this, jobCollectionAddedEventArgs);
+                }
             });
         }
 

@@ -7,6 +7,8 @@ using System.Text;
 using AVM.DDP;
 using CsvHelper;
 using CsvHelper.Configuration;
+using JobManager;
+using JobManagerFramework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -54,7 +56,7 @@ namespace PETBrowser
                 Directory.CreateDirectory(mergedDirectory);
             }
 
-            var mergedPetDirectory = Path.Combine(mergedDirectory, mergedName);
+            var mergedPetDirectory = Path.Combine(mergedDirectory, mergedName); 
             if (Directory.Exists(mergedPetDirectory))
             {
                 throw new InvalidOperationException("A merged PET with this name already exists."); // TODO: use a better exception here
@@ -65,15 +67,13 @@ namespace PETBrowser
 
             try
             {
-                var metadataPath = Path.Combine(tempDirectoryPath, "metadata.json");
                 var exportPath = Path.Combine(tempDirectoryPath, "mergedPET.csv");
                 var mergedPetConfigPath = Path.Combine(tempDirectoryPath, "pet_config.json");
-                var vizConfigPath = Path.Combine(tempDirectoryPath, "visualizer_config.json");
 
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
-                WriteMergedMetadata(metadataPath, datasets);
-                WriteDefaultVizConfig(vizConfigPath);
+
+                BuildSkeletonMergeDirectory(tempDirectoryPath, datasets);
 
                 DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true);
             }
@@ -113,15 +113,12 @@ namespace PETBrowser
 
             try
             {
-                var metadataPath = Path.Combine(tempDirectoryPath, "metadata.json");
                 var exportPath = Path.Combine(tempDirectoryPath, "mergedPET.csv");
                 var mergedPetConfigPath = Path.Combine(tempDirectoryPath, "pet_config.json");
-                var vizConfigPath = Path.Combine(tempDirectoryPath, "visualizer_config.json");
 
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
-                WriteMergedMetadata(metadataPath, datasets);
-                WriteDefaultVizConfig(vizConfigPath);
+                BuildSkeletonMergeDirectory(tempDirectoryPath, datasets);
 
                 DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true, true);
             }
@@ -130,6 +127,103 @@ namespace PETBrowser
                 // Make sure our temp directory is removed, whether we complete successfully or an error occurs
                 Directory.Delete(tempDirectoryPath, true);
             }
+        }
+
+        public static void BuildPetDirectory(JobCollection jobCollection)
+        {
+            if (!(jobCollection is JobServerImpl.JobCollectionImpl))
+            {
+                throw new ArgumentException("Invalid job collection object");
+            }
+            var impl = (JobServerImpl.JobCollectionImpl) jobCollection;
+
+            if (impl.Jobs.Count == 0)
+            {
+                return;
+            }
+
+            var firstJob = impl.Jobs[0];
+            var isPet = File.Exists(Path.Combine(firstJob.WorkingDirectory, "mdao_config.json")); //TODO: Is there a better heuristic to identify a PET?
+
+            if (isPet)
+            {
+                var baseDataDirectory =
+                    Path.GetFullPath(Path.Combine(firstJob.WorkingDirectory, "..",
+                        "..")); //TODO: Need a better way to get the project directory for a PET
+                Console.WriteLine("PET added: base directory: {0}", baseDataDirectory);
+
+                var dataset = new Dataset(Dataset.DatasetKind.PetResult, "", Guid.NewGuid().ToString());
+                dataset.Selected = true;
+                foreach (var job in impl.Jobs)
+                {
+                    var jobWorkingDirectory = Path.GetFileName(job.WorkingDirectory);
+                    var jobDatasetPath = Path.Combine(".", jobWorkingDirectory, "testbench_manifest.json");
+                    dataset.Folders.Add(jobDatasetPath);
+                }
+                var datasets = new Dataset[] {dataset};
+
+                var mergedDirectory = Path.Combine(baseDataDirectory, MergedDirectory);
+
+                if (!Directory.Exists(mergedDirectory))
+                {
+                    Directory.CreateDirectory(mergedDirectory);
+                }
+
+                var tempDirectoryPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                Directory.CreateDirectory(tempDirectoryPath);
+
+                try
+                {
+                    BuildSkeletonMergeDirectory(tempDirectoryPath, datasets);
+
+                    var mergedName = GetMergedPetName(firstJob.TestBenchName, mergedDirectory); //Possible race condition here
+                    var mergedPetDirectory = Path.Combine(mergedDirectory, mergedName);
+
+                    if (Directory.Exists(mergedPetDirectory))
+                    {
+                        throw new InvalidOperationException("A merged PET with this name already exists."); // TODO: use a better exception here
+                    }
+
+                    DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true);
+                }
+                finally
+                {
+                    // Make sure our temp directory is removed, whether we complete successfully or an error occurs
+                    Directory.Delete(tempDirectoryPath, true);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Job added that isn't a PET");
+            }
+        }
+
+        private static string GetMergedPetName(string testBenchName, string mergedDirectory)
+        {
+            if (!Directory.Exists(Path.Combine(mergedDirectory, testBenchName)))
+            {
+                return testBenchName;
+            }
+            else
+            {
+                for (int i = 1; ; i++)
+                {
+                    var candidateName = string.Format("{0} ({1})", testBenchName, i);
+                    if (!Directory.Exists(Path.Combine(mergedDirectory, candidateName)))
+                    {
+                        return candidateName;
+                    }
+                }
+            }
+        }
+
+        private static void BuildSkeletonMergeDirectory(string directoryPath, IEnumerable<Dataset> datasets)
+        {
+            var metadataPath = Path.Combine(directoryPath, "metadata.json");
+            var vizConfigPath = Path.Combine(directoryPath, "visualizer_config.json");
+
+            WriteMergedMetadata(metadataPath, datasets);
+            WriteDefaultVizConfig(vizConfigPath);
         }
 
         private static void WriteMergedMetadata(string filePath, IEnumerable<Dataset> datasets)
@@ -270,10 +364,11 @@ namespace PETBrowser
                 foreach (var header in addedHeaders)
                     headersPresent[header.Key] = false;
 
-                using (var csvFile = new StreamReader(File.Open(csvFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
+                try
                 {
-                    try
+                    using (var csvFile = new StreamReader(File.Open(csvFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
                     {
+                    
                         var csvReader = new CsvReader(csvFile, new CsvConfiguration()
                         {
                             HasHeaderRecord = true
@@ -356,11 +451,16 @@ namespace PETBrowser
                             writer.NextRecord();
                         }
                     }
-                    catch (CsvReaderException e)
-                    {
-                        Console.WriteLine("Invalid CSV found at {0}", csvFileName);
-                        Trace.TraceWarning("Invalid CSV found at {0}", csvFileName);
-                    }
+                }
+                catch (CsvReaderException e)
+                {
+                    Console.WriteLine("Invalid CSV found at {0}", csvFileName);
+                    Trace.TraceWarning("Invalid CSV found at {0}", csvFileName);
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.WriteLine("Missing CSV at {0}", csvFileName);
+                    Trace.TraceWarning("Missing CSV at {0}", csvFileName);
                 }
             }
         }
@@ -400,7 +500,7 @@ namespace PETBrowser
                     using (var configReader = File.OpenText(path))
                     {
                         JsonSerializer serializer = new JsonSerializer();
-                        var petConfig = (PETConfig)serializer.Deserialize(configReader, typeof(PETConfig));
+                        var petConfig = (PETConfig) serializer.Deserialize(configReader, typeof(PETConfig));
 
                         if (mergedConfig == null)
                         {
@@ -422,6 +522,11 @@ namespace PETBrowser
                     }
                 }
                 catch (JsonException e)
+                {
+                    Console.WriteLine("Invalid JSON found at {0}", path);
+                    Trace.TraceWarning("Invalid JSON found at {0}", path);
+                }
+                catch (FileNotFoundException e)
                 {
                     Console.WriteLine("Invalid JSON found at {0}", path);
                     Trace.TraceWarning("Invalid JSON found at {0}", path);

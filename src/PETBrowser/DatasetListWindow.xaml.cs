@@ -568,9 +568,19 @@ namespace PETBrowser
                         placeholderPanel.IsLoading = true;
                         var resultsDirectory = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
                             DatasetStore.MergedDirectory);
+                        var dataDirectory = ViewModel.Store.DataDirectory;
 
                         var loadTask = Task<MergedPetDetailsViewModel>.Factory.StartNew(() =>
                         {
+                            try
+                            {
+                                PetMerger.RefreshMergedPet(selectedDataset, dataDirectory);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("An error occurred while refreshing this merged PET: {0}", ex);
+                            }
+
                             return new MergedPetDetailsViewModel(selectedDataset, resultsDirectory);
                         });
 
@@ -1028,6 +1038,13 @@ namespace PETBrowser
                 }
             };
             JobStore.JobCompleted += (sender, args) =>
+            {
+                if (DatasetLoaded)
+                {
+                    LoadDataset(Store.DataDirectory, exception => Console.WriteLine(exception));
+                }
+            };
+            JobStore.JobCollectionAdded += (sender, args) =>
             {
                 if (DatasetLoaded)
                 {

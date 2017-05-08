@@ -34,6 +34,19 @@ namespace JobManagerFramework
          */
         public event EventHandler<JobAddedEventArgs> JobAdded;
 
+        public class JobCollectionAddedEventArgs : EventArgs
+        {
+            public JobCollection JobCollection { get; set; }
+        }
+
+        /**
+         * Invoked when a new job collection (a PET) is submitted to the job server.
+         * 
+         * May be raised on an arbitrary thread; code that interacts with UI is responsible
+         * for scheduling on the UI thread if needed.
+         */
+        public event EventHandler<JobCollectionAddedEventArgs> JobCollectionAdded;
+
         public class SotAddedEventArgs : EventArgs
         {
             public SoT Sot { get; set; }
@@ -180,8 +193,13 @@ namespace JobManagerFramework
 
             Server.JobAdded += JobAddedHandler;
             Server.SoTAdded += SoTAddedHandler;
+            Server.JobCollectionDone += JobCollectionAddedHandler; //Intentional: JobCollectionDone indicates that the master interpreter
+                                                                   //has finished doing its thing and we can pass the completed job
+                                                                   //collection on to the consumer
             Server.handlersAdded.Set(); // TODO: should we wait until UI has added handlers before setting this?
         }
+
+        
 
         private void InitializePersistence()
         {
@@ -450,6 +468,17 @@ namespace JobManagerFramework
                 {
                     Job = job,
                     Status = status
+                });
+            }
+        }
+
+        private void JobCollectionAddedHandler(JobServerImpl.JobCollectionImpl jobCollectionImpl)
+        {
+            if (JobCollectionAdded != null)
+            {
+                JobCollectionAdded(this, new JobCollectionAddedEventArgs
+                {
+                    JobCollection = jobCollectionImpl
                 });
             }
         }
