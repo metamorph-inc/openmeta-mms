@@ -17,6 +17,13 @@ namespace PETBrowser
 {
     public class MergedPetDetailsViewModel
     {
+        private static readonly HashSet<string> IgnoredMetricNames = new HashSet<string>(new []
+        {
+            "CfgID",
+            "GUID",
+            "DesignContainer"
+        });
+
         public class Metric
         {
             public enum MetricDataType
@@ -206,6 +213,10 @@ namespace PETBrowser
                             RecordCount++;
                             foreach (var header in csvReader.FieldHeaders)
                             {
+                                if (IgnoredMetricNames.Contains(header))
+                                {
+                                    continue;
+                                }
                                 string fieldValue = csvReader.GetField<string>(header);
 
                                 if (fieldValue == "" || fieldValue == "None")
