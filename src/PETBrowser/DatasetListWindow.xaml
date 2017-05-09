@@ -269,13 +269,6 @@
                                 </ContextMenu>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="" Width="30">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" IsEnabled="False" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="DataType" IsReadOnly="True" Width="65"/>
                                 <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
                                 <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
