@@ -129,10 +129,13 @@ namespace PETBrowser
             {
                 var exportPath = Path.Combine(tempDirectoryPath, "mergedPET.csv");
                 var mergedPetConfigPath = Path.Combine(tempDirectoryPath, "pet_config.json");
+                var finalVizConfigPath = Path.Combine(mergedPetDirectory, "visualizer_config.json");
+
+                bool writeVizConfig = !File.Exists(finalVizConfigPath); // Don't overwrite viz config if it already exists
 
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
-                BuildSkeletonMergeDirectory(tempDirectoryPath, datasets, kind);
+                BuildSkeletonMergeDirectory(tempDirectoryPath, datasets, kind, writeVizConfig);
 
                 DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true, true);
             }
@@ -231,13 +234,16 @@ namespace PETBrowser
             }
         }
 
-        private static void BuildSkeletonMergeDirectory(string directoryPath, IEnumerable<Dataset> datasets, MergedPetMetadata.MergedPetKind kind)
+        private static void BuildSkeletonMergeDirectory(string directoryPath, IEnumerable<Dataset> datasets, MergedPetMetadata.MergedPetKind kind, bool writeVizConfig = true)
         {
             var metadataPath = Path.Combine(directoryPath, "metadata.json");
             var vizConfigPath = Path.Combine(directoryPath, "visualizer_config.json");
 
             WriteMergedMetadata(metadataPath, datasets, kind);
-            WriteDefaultVizConfig(vizConfigPath);
+            if (writeVizConfig)
+            {
+                WriteDefaultVizConfig(vizConfigPath);
+            }
         }
 
         private static void WriteMergedMetadata(string filePath, IEnumerable<Dataset> datasets, MergedPetMetadata.MergedPetKind kind)

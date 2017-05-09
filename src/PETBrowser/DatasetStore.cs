@@ -228,7 +228,7 @@ namespace PETBrowser
                             newDataset = new Dataset(Dataset.DatasetKind.Pet,
                                 File.GetCreationTime(mergedPetFile).ToString("yyyy-MM-dd HH-mm-ss"), directoryName);
                         }
-                        newDataset.Count++;
+                        newDataset.Count = metadata.SourceDatasets.Aggregate(0, (total, nextDataset) => total + nextDataset.Folders.Count);
                         newDataset.Folders.Add(directoryName);
 
                         MergedDatasets.Add(newDataset);
