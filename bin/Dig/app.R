@@ -50,7 +50,7 @@ SAVE_DIG_INPUT_CSV <- TRUE
 
 # Resolve Dataset Configuration ----------------------------------------------
 
-# Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\11Kresults\\mergedPET.csv")
+# Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\overall_1_aug.csv")
 # Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Desktop\\11Kresults\\viz_config.json")
 # Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\boxpacking\\merged\\15kPoints\\visualizer_config.json")
 
@@ -63,17 +63,17 @@ dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
 if (dig_dataset_config == "") {
   if(dig_input_csv == "") {
     # Setup one of the test datasets if no input dataset
+    # config_filename=file.path('datasets',
+    #                           'WindTurbineForOptimization',
+    #                           'visualizer_config_session.json',
+    #                           fsep = "\\\\")
     config_filename=file.path('datasets',
-                              'WindTurbineForOptimization',
+                              'WindTurbine',
                               'visualizer_config_session.json',
                               fsep = "\\\\")
     # config_filename=file.path('datasets',
-    #                           'WindTurbine',
-    #                           'visualizer_config.json',
-    #                           fsep = "\\\\")
-    # config_filename=file.path('datasets',
     #                           'TestPETRefinement',
-    #                           'visualizer_config.json',
+    #                           'visualizer_config_session.json',
     #                           fsep = "\\\\")
   } else {
     # Visualizer legacy launch format
@@ -231,41 +231,101 @@ Server <- function(input, output, session) {
 
   var_names <- reactive({names(data$raw$df)})
   var_class <- reactive({sapply(data$raw$df, class)})
-  var_facs <- reactive({var_names()[var_class() == "factor"]})
-  var_ints <- reactive({var_names()[var_class() == "integer"]})
-  var_nums <- reactive({var_names()[var_class() == "numeric"]})
+  var_facs <- reactive({
+    if (any(var_class() == "factor")) {
+      var_names()[var_class() == "factor"]
+    } else {
+      NULL
+    }
+  })
+  var_ints <- reactive({
+    if (any(var_class() == "integer")) {
+      var_names()[var_class() == "integer"]
+    } else {
+      NULL
+    }
+  })
+  var_nums <- reactive({
+    if (any(var_class() == "numeric")) {
+      var_names()[var_class() == "numeric"]
+    } else {
+      NULL
+    }
+  })
   var_nums_and_ints <- reactive({
-    var_names()[var_class() == "integer" | var_class() == "numeric"]
+    selected <- var_class() == "integer" | var_class() == "numeric"
+    if (any(selected)) {
+      var_names()[selected]
+    } else {
+      NULL
+    }
   })
   abs_max <- reactive({
-    req(var_nums_and_ints())
-    apply(data$raw$df[var_nums_and_ints()], 2, max, na.rm=TRUE)
+    if (is.null(var_nums_and_ints())) {
+      NULL
+    } else {
+      apply(data$raw$df[var_nums_and_ints()], 2, max, na.rm=TRUE)
+    }
   })
   abs_min <- reactive({
-    req(var_nums_and_ints())
-    apply(data$raw$df[var_nums_and_ints()], 2, min, na.rm=TRUE)
+    if (is.null(var_nums_and_ints())) {
+      NULL
+    } else {
+      apply(data$raw$df[var_nums_and_ints()], 2, min, na.rm=TRUE)
+    }
   })
   var_range_nums_and_ints <- reactive({
-    req(var_nums_and_ints())
-    var_nums_and_ints()[(abs_min() != abs_max()) & (abs_min() != Inf)]
+    if (is.null(var_nums_and_ints()) ||
+        is.null(abs_min()) ||
+        is.null(abs_max())) {
+      NULL
+    } else {
+      tentative_vars <- var_nums_and_ints()[(abs_min() != abs_max()) &
+                                            (abs_min() != Inf)]
+      if (length(tentative_vars) == 0) {
+        NULL
+      } else {
+        tentative_vars
+      }
+    }
   })
   var_range_facs <- reactive({
-    req(var_facs())
-    var_facs()[apply(data$raw$df[var_facs()], 2,
-                     function(var_fac) {
-                       length(names(table(var_fac))) > 1
-                     })]
+    if(is.null(var_facs())) {
+      NULL
+    } else {
+      tentative_vars <- var_facs()[apply(data$raw$df[var_facs()], 2,
+                                         function(var_fac) {
+                                           length(names(table(var_fac))) > 1
+                                         })]
+      if (length(tentative_vars) == 0) {
+        NULL
+      } else {
+        tentative_vars
+      }
+    }
   })
   var_range <- reactive({c(var_range_facs(), var_range_nums_and_ints())})
   var_range_nums_and_ints_list <- reactive({
-    req(var_range_nums_and_ints())
-    AddCategories(data$meta$variables[var_range_nums_and_ints()])
+    if (is.null(var_range_nums_and_ints())) {
+      NULL
+    } else {
+      AddCategories(data$meta$variables[var_range_nums_and_ints()])
+    }
   })
   var_range_facs_list <- reactive({
-    req(var_range_facs())
-    AddCategories(data$meta$variables[var_range_facs()])
+    if (is.null(var_range_facs())) {
+      NULL
+    } else {
+      AddCategories(data$meta$variables[var_range_facs()])
+    }
   })
-  var_range_list <- reactive(AddCategories(data$meta$variables[var_range()]))
+  var_range_list <- reactive({
+    if (is.null(var_range())) {
+      NULL
+    } else {
+      AddCategories(data$meta$variables[var_range()])
+    }
+  })
   var_constants <- reactive({
     if(is.null(var_range())) {
       var_names()
