@@ -288,6 +288,9 @@
                                         <DataTrigger Binding="{Binding Kind}" Value="MergedPet">
                                             <Setter Property="ContextMenu" Value="{StaticResource MergedPetRowMenu}" />
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Kind}" Value="Pet">
+                                            <Setter Property="ContextMenu" Value="{StaticResource MergedPetRowMenu}" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Kind}" Value="PetResult">
                                             <Setter Property="ContextMenu" Value="{StaticResource PetRowMenu}" />
                                         </DataTrigger>
