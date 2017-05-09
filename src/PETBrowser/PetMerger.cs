@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,16 @@ namespace PETBrowser
 {
     public class MergedPetMetadata
     {
+        public enum MergedPetKind
+        {
+            MergedPet = 0,
+            AutomaticPet = 1
+        }
+
+        [DefaultValue(MergedPetKind.MergedPet)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public MergedPetKind Kind { get; set; }
+
         public List<Dataset> SourceDatasets { get; set; }
 
         public MergedPetMetadata()
@@ -73,7 +84,7 @@ namespace PETBrowser
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
 
-                BuildSkeletonMergeDirectory(tempDirectoryPath, datasets);
+                BuildSkeletonMergeDirectory(tempDirectoryPath, datasets, MergedPetMetadata.MergedPetKind.MergedPet);
 
                 DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true);
             }
@@ -86,7 +97,7 @@ namespace PETBrowser
 
         public static void RefreshMergedPet(Dataset datasetToRefresh, string dataDirectoryPath)
         {
-            if (datasetToRefresh.Kind != Dataset.DatasetKind.MergedPet)
+            if (datasetToRefresh.Kind != Dataset.DatasetKind.MergedPet && datasetToRefresh.Kind != Dataset.DatasetKind.Pet)
             {
                 throw new InvalidOperationException("Only MergedPet datasets can be refreshed.");
             }
@@ -98,12 +109,15 @@ namespace PETBrowser
 
             var datasets = new List<Dataset>();
 
+            MergedPetMetadata.MergedPetKind kind;
+
             using (
                 var reader =
                     File.OpenText(Path.Combine(mergedPetDirectory, "metadata.json")))
             {
                 var serializer = new JsonSerializer();
                 var metadata = (MergedPetMetadata) serializer.Deserialize(reader, typeof(MergedPetMetadata));
+                kind = metadata.Kind;
 
                 datasets.AddRange(metadata.SourceDatasets);
             }
@@ -118,7 +132,7 @@ namespace PETBrowser
 
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
-                BuildSkeletonMergeDirectory(tempDirectoryPath, datasets);
+                BuildSkeletonMergeDirectory(tempDirectoryPath, datasets, kind);
 
                 DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true, true);
             }
@@ -174,7 +188,7 @@ namespace PETBrowser
 
                 try
                 {
-                    BuildSkeletonMergeDirectory(tempDirectoryPath, datasets);
+                    BuildSkeletonMergeDirectory(tempDirectoryPath, datasets, MergedPetMetadata.MergedPetKind.AutomaticPet);
 
                     var mergedName = GetMergedPetName(firstJob.TestBenchName, mergedDirectory); //Possible race condition here
                     var mergedPetDirectory = Path.Combine(mergedDirectory, mergedName);
@@ -217,19 +231,20 @@ namespace PETBrowser
             }
         }
 
-        private static void BuildSkeletonMergeDirectory(string directoryPath, IEnumerable<Dataset> datasets)
+        private static void BuildSkeletonMergeDirectory(string directoryPath, IEnumerable<Dataset> datasets, MergedPetMetadata.MergedPetKind kind)
         {
             var metadataPath = Path.Combine(directoryPath, "metadata.json");
             var vizConfigPath = Path.Combine(directoryPath, "visualizer_config.json");
 
-            WriteMergedMetadata(metadataPath, datasets);
+            WriteMergedMetadata(metadataPath, datasets, kind);
             WriteDefaultVizConfig(vizConfigPath);
         }
 
-        private static void WriteMergedMetadata(string filePath, IEnumerable<Dataset> datasets)
+        private static void WriteMergedMetadata(string filePath, IEnumerable<Dataset> datasets, MergedPetMetadata.MergedPetKind kind)
         {
             var metadata = new MergedPetMetadata();
 
+            metadata.Kind = kind;
             metadata.SourceDatasets.AddRange(datasets);
 
             using (var writer = File.CreateText(filePath))
@@ -349,7 +364,7 @@ namespace PETBrowser
                     {
                         //Don't adjust configuration name if we don't find its directory
                     }
-                } else if (d.Kind == Dataset.DatasetKind.MergedPet)
+                } else if (d.Kind == Dataset.DatasetKind.MergedPet || d.Kind == Dataset.DatasetKind.Pet)
                 {
                     csvFileName = Path.Combine(dataDirectoryPath, DatasetStore.MergedDirectory, folder, "mergedPET.csv");
                 }
@@ -480,7 +495,7 @@ namespace PETBrowser
                             folder.Replace("testbench_manifest.json", "mdao_config.json")));
                     }
                 }
-                else if(d.Kind == Dataset.DatasetKind.MergedPet)
+                else if(d.Kind == Dataset.DatasetKind.MergedPet || d.Kind == Dataset.DatasetKind.Pet)
                 {
                     var path = Path.Combine(dataDirectoryPath, DatasetStore.MergedDirectory, d.Folders[0], "pet_config.json");
 

@@ -211,12 +211,28 @@ namespace PETBrowser
                 var mergedPetFile = Path.Combine(directory, "metadata.json");
                 if (File.Exists(mergedPetFile))
                 {
-                    var directoryName = Path.GetFileName(directory);
-                    var newDataset = new Dataset(Dataset.DatasetKind.MergedPet, File.GetCreationTime(mergedPetFile).ToString("yyyy-MM-dd HH-mm-ss"), directoryName);
-                    newDataset.Count++;
-                    newDataset.Folders.Add(directoryName);
+                    using (var reader = File.OpenText(mergedPetFile))
+                    {
+                        var serializer = new JsonSerializer();
+                        var metadata = (MergedPetMetadata)serializer.Deserialize(reader, typeof(MergedPetMetadata));
 
-                    MergedDatasets.Add(newDataset);
+                        var directoryName = Path.GetFileName(directory);
+                        Dataset newDataset;
+                        if (metadata.Kind == MergedPetMetadata.MergedPetKind.MergedPet)
+                        {
+                            newDataset = new Dataset(Dataset.DatasetKind.MergedPet,
+                                File.GetCreationTime(mergedPetFile).ToString("yyyy-MM-dd HH-mm-ss"), directoryName);
+                        }
+                        else
+                        {
+                            newDataset = new Dataset(Dataset.DatasetKind.Pet,
+                                File.GetCreationTime(mergedPetFile).ToString("yyyy-MM-dd HH-mm-ss"), directoryName);
+                        }
+                        newDataset.Count++;
+                        newDataset.Folders.Add(directoryName);
+
+                        MergedDatasets.Add(newDataset);
+                    }
                 }
             }
         }
@@ -235,7 +251,7 @@ namespace PETBrowser
                 var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
                 File.Move(archivePath, Path.Combine(deletedDirectory.FullName, Path.GetFileName(archivePath)));
             }
-            else if (datasetToDelete.Kind == Dataset.DatasetKind.MergedPet)
+            else if (datasetToDelete.Kind == Dataset.DatasetKind.MergedPet || datasetToDelete.Kind == Dataset.DatasetKind.Pet)
             {
                 var mergedPath = Path.Combine(this.DataDirectory, MergedDirectory, datasetToDelete.Folders[0]);
 
@@ -768,10 +784,11 @@ namespace PETBrowser
 
         public enum DatasetKind
         {
-            PetResult,
-            Archive,
-            TestBenchResult,
-            MergedPet
+            PetResult = 0,
+            Archive = 1,
+            TestBenchResult = 2,
+            MergedPet = 3,
+            Pet = 4
         }
 
         public DatasetKind Kind { get; set; } 

@@ -103,7 +103,7 @@ namespace PETBrowser
             MgaFilename = "";
             MgaFilePath = "";
             PetPath = "";
-            if (DetailsDataset.Kind == Dataset.DatasetKind.MergedPet)
+            if (DetailsDataset.Kind == Dataset.DatasetKind.MergedPet || DetailsDataset.Kind == Dataset.DatasetKind.Pet)
             {
                 var datasetPath = System.IO.Path.Combine(mergedDirectory, DetailsDataset.Folders[0]);
 
