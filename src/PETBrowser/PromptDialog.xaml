@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PETBrowser"
-        mc:Ignorable="d" ResizeMode="NoResize" SizeToContent="WidthAndHeight" ShowInTaskbar="False">
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <StackPanel >
-        <Label x:Name="label" Content="Archive name:" Margin="25,10,30,0"/>
+        <Label x:Name="label" Content="New name:" Margin="25,10,30,0"/>
         <TextBox x:Name="textBox" Height="23" TextWrapping="Wrap" Margin="30,0,30,20" Width="300"/>
         <StackPanel Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">

@@ -946,6 +946,27 @@ namespace PETBrowser
             ViewModel.ShowLegacyPets = !ViewModel.ShowLegacyPets;
             ViewModel.FilterPets(PetSearchTextBox.Text);
         }
+
+        private void RenameMergedPet(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var selectedDataset = (Dataset) PetGrid.SelectedItem;
+                var renameDialog = new PromptDialog { Owner = this, Text = selectedDataset.Name};
+
+                bool? result = renameDialog.ShowDialog();
+
+                if (result == true && renameDialog.Text != selectedDataset.Name)
+                {
+                    PetMerger.RenameMergedPet(selectedDataset, renameDialog.Text, ViewModel.Store.DataDirectory);
+                    ViewModel.ReloadMerged();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Rename error", "An error occurred while renaming this PET.", ex.Message, ex.ToString());
+            }
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged

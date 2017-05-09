@@ -630,5 +630,18 @@ namespace PETBrowser
                 }
             }
         }
+
+        public static void RenameMergedPet(Dataset dataset, string newName, string dataDirectory)
+        {
+            var originalPath = Path.Combine(dataDirectory, MergedDirectory, dataset.Name);
+            var newPath = Path.Combine(dataDirectory, MergedDirectory, newName);
+
+            if (Directory.Exists(newPath))
+            {
+                throw new ArgumentException("A merged PET by this name already exists.");
+            }
+
+            Directory.Move(originalPath, newPath);
+        }
     }
 }

@@ -40,5 +40,11 @@ namespace PETBrowser
         {
             this.DialogResult = false;
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.textBox.Focus();
+            this.textBox.SelectAll();
+        }
     }
 }

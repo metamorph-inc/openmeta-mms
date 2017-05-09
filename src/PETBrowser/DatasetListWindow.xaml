@@ -258,6 +258,7 @@
                             <DataGrid.Resources>
                                 <ContextMenu x:Key="MergedPetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                     <MenuItem Header="Refresh" Click="RefreshMergedPet" />
+                                    <MenuItem Header="Rename..." Click="RenameMergedPet" />
                                     <MenuItem Header="Delete..." Click="DeletePetItem" />
                                 </ContextMenu>
                                 <ContextMenu x:Key="PetRowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
