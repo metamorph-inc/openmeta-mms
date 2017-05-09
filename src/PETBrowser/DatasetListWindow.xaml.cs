@@ -422,7 +422,14 @@ namespace PETBrowser
                 {
                     //Delete the item
                     Console.WriteLine("Remove");
-                    ViewModel.DeleteItem(datasetToDelete);
+                    try
+                    {
+                        ViewModel.DeleteItem(datasetToDelete);
+                    }
+                    catch (IOException e)
+                    {
+                        ShowErrorDialog("Error", "An error occurred while deleting this dataset.", e.Message, e.ToString());
+                    }
                 }
             }
         }
@@ -928,6 +935,12 @@ namespace PETBrowser
                 }
             }
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowLegacyPets = !ViewModel.ShowLegacyPets;
+            ViewModel.FilterPets(PetSearchTextBox.Text);
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
@@ -1002,6 +1015,15 @@ namespace PETBrowser
             set { PropertyChanged.ChangeAndNotify(ref _projectPath, value, () => ProjectPath); }
         }
 
+        private bool _showLegacyPets;
+
+        public bool ShowLegacyPets
+        {
+            get { return _showLegacyPets; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _showLegacyPets, value, () => ShowLegacyPets); }
+        }
+
         public DatasetListWindowViewModel(JobStore jobStore)
         {
             Store = null;
@@ -1010,6 +1032,7 @@ namespace PETBrowser
             LoadProgressCount = 0;
             LoadTotalCount = 1;
             ProjectPath = "No project loaded";
+            ShowLegacyPets = false;
             PetDatasetsList = new List<Dataset>();
             PetDatasets = new ListCollectionView(PetDatasetsList);
             PetDatasets.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Descending));
@@ -1017,6 +1040,8 @@ namespace PETBrowser
             TestBenchDatasetsList = new List<Dataset>();
             TestBenchDatasets = new ListCollectionView(TestBenchDatasetsList);
             TestBenchDatasets.SortDescriptions.Add(new SortDescription("Time", ListSortDirection.Descending));
+
+            FilterPets("");
 
             AnalysisTools = new AnalysisTools();
 
@@ -1145,16 +1170,36 @@ namespace PETBrowser
 
         public void FilterPets(string filter)
         {
+            var showLegacyPets = ShowLegacyPets;
+
             if (string.IsNullOrWhiteSpace(filter))
             {
-                PetDatasets.Filter = null;
+                if (showLegacyPets)
+                {
+                    PetDatasets.Filter = null;
+                }
+                else
+                {
+                    PetDatasets.Filter = o =>
+                    {
+                        var dataset = (Dataset) o;
+                        return dataset.Kind != Dataset.DatasetKind.PetResult;
+                    };
+                }
             }
             else
             {
                 PetDatasets.Filter = o =>
                 {
                     var dataset = (Dataset) o;
-                    return ContainsIgnoreCase(dataset.Name, filter);
+                    if (showLegacyPets)
+                    {
+                        return ContainsIgnoreCase(dataset.Name, filter);
+                    }
+                    else
+                    {
+                        return dataset.Kind != Dataset.DatasetKind.PetResult && ContainsIgnoreCase(dataset.Name, filter);
+                    }
                 };
             }
         }
