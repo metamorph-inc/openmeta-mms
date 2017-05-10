@@ -150,7 +150,7 @@
                                 <Button BorderThickness="0" Background="{x:Null}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" IsTabStop="False" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" Padding="5,3">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Source="{StaticResource SettingsIcon}"></Image>
+                                            <Image Source="{StaticResource SettingsIcon}" />
                                             <Path Margin="6,0,0,0" VerticalAlignment="Center" Width="6" Stretch="Uniform" HorizontalAlignment="Right" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z ">
                                                 <Path.Style>
                                                     <Style TargetType="Path">
@@ -269,9 +269,34 @@
                                 </ContextMenu>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Kind}" ClipboardContentBinding="{x:Null}" Header="DataType" IsReadOnly="True" Width="65"/>
-                                <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="60"/>
-                                <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="300"/>
+                                <DataGridTemplateColumn Header="" Width="30">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Kind}" Value="Pet">
+                                                                <Setter Property="Source" Value="{StaticResource PetIcon}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Kind}" Value="MergedPet">
+                                                                <Setter Property="Source" Value="{StaticResource MergedPetIcon}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Kind}" Value="Archive">
+                                                                <Setter Property="Source" Value="{StaticResource ArchiveIcon}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Kind}" Value="PetResult">
+                                                                <Setter Property="Source" Value="{StaticResource PetResultIcon}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding Count}" ClipboardContentBinding="{x:Null}" Header="Count" IsReadOnly="True" Width="50"/>
+                                <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Name" IsReadOnly="True" Width="400"/>
                                 <DataGridTextColumn Binding="{Binding Time}" ClipboardContentBinding="{x:Null}" Header="Time" IsReadOnly="True" Width="*" SortDirection="Descending" /> <!-- Note: data is actually sorted by the ListCollectionView, in code-behind -->
                             </DataGrid.Columns>
 
