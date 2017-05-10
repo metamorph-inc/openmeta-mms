@@ -286,13 +286,12 @@ namespace CyPhyPETTest
         public void PET_File_Recorder_via_MasterInterpreter()
         {
             string objectAbsPath = "/@Testing/@ParametricExploration/@TestFileRecorder";
-            string configAbsPath = "/@Designs/@Box";
 
             //Run CyPhyPET
             var result = CyPhyMasterInterpreterRunner.RunMasterInterpreterAndReturnResults(
                 projectPath: this.mgaFile,
                 absPath: objectAbsPath,
-                configPath: configAbsPath,
+                configPath: objectAbsPath,
                 postToJobManager: false,
                 keepTempModels: false);
 
