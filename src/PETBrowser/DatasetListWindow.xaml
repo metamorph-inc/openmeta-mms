@@ -278,15 +278,19 @@
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Kind}" Value="Pet">
                                                                 <Setter Property="Source" Value="{StaticResource PetIcon}" />
+                                                                <Setter Property="ToolTip" Value="PET" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Kind}" Value="MergedPet">
                                                                 <Setter Property="Source" Value="{StaticResource MergedPetIcon}" />
+                                                                <Setter Property="ToolTip" Value="Merged PET" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Kind}" Value="Archive">
                                                                 <Setter Property="Source" Value="{StaticResource ArchiveIcon}" />
+                                                                <Setter Property="ToolTip" Value="Archive" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Kind}" Value="PetResult">
                                                                 <Setter Property="Source" Value="{StaticResource PetResultIcon}" />
+                                                                <Setter Property="ToolTip" Value="Legacy PET" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
