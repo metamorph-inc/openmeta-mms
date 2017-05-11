@@ -23,13 +23,6 @@ OBJTYPE_CONNECTION = 4
 OBJTYPE_SET = 5
 OBJTYPE_FOLDER = 6
 
-vu_rev = '4fbabdd2ecfc24cbe3c452b716a14f7989c4ce2a'
-# vu_rev = open(subprocess.check_output('git rev-parse --show-toplevel').strip() + '/.git/MERGE_HEAD', 'rb').read().strip()
-# subprocess.check_call('git show {}:./CyPhyML-core.xme > CyPhyML-core.xme'.format(vu_rev), shell=True)
-# subprocess.check_call('git show {}:./CyPhyML.xme > CyPhyML.xme'.format(vu_rev), shell=True)
-
-
-
 
 @contextlib.contextmanager
 def in_tx(project):
@@ -166,6 +159,7 @@ def switch_lib(from_, to):
                         child.Referred = project.RootFolder.GetObjectByPathDisp(new_referred_path)
                     except:
                         log('Cannot switch <a href="mga:{}">{}</a> to {}'.format(child.ID, child.AbsPath, new_referred_path))
+                        raise
 
     switch_children(project.RootFolder)
 
@@ -178,6 +172,12 @@ def update_cyphy(version):
 
     do_mods(project, cyphy_mods)
 
+    with in_tx(project):
+        for lib in (l for l in project.RootFolder.ChildFolders if l.LibraryName):
+            original_lib_relid = lib.RelID
+            lib.RefreshLibrary(lib.LibraryName)
+            lib = project.RootFolder.ChildObjectByRelID(original_lib_relid)
+
     import_xme(project, "CyPhyML-tonka.xme")
 
     with in_tx(project):
@@ -188,11 +188,9 @@ def update_cyphy(version):
         assert len(libs) == 2
         libs.sort(key=lambda lib: lib.ID)
         original_lib, copy_lib = libs
+        print(original_lib.AbsPath)
+        print(copy_lib.AbsPath)
 
-        # RefreshLibrary fails because xme import reassigns the GUIDs
-        # original_lib_relid = original_lib.RelID
-        # original_lib.RefreshLibrary(original_lib.LibraryName)
-        # original_lib = project.RootFolder.ChildObjectByRelID(original_lib_relid)
         switch_lib(from_=copy_lib, to=original_lib)
         copy_lib.DestroyObject()
         metaint_currentobj = project.RootFolder.GetObjectByPathDisp("/@Ports")
