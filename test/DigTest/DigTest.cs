@@ -77,7 +77,6 @@ namespace DigTest
             }
         }
 
-        [Fact(Skip = "OldVisualizer")]
         void OldVisualizer()
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
