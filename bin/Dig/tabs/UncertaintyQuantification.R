@@ -579,12 +579,13 @@ server <- function(input, output, session, data) {
                              data$yResampled,
                              min(data$xResampled),
                              as.numeric(threshold))
-      
-      print(paste("Query: ", name, direction, threshold, value))
-      
+      value <- max(0,min(1,value))
       if (direction == "Above") {
         value <- (1-value)
       }
+      
+      print(paste("Query: ", name, direction, threshold, value))
+      
       output[[paste0('queryValue', id)]] <- renderText(toString(value))
     })
     print("Probabilites Calculated.")
@@ -702,6 +703,7 @@ server <- function(input, output, session, data) {
                                resampledData[[name]][["yResampled"]],
                                min(resampledData[[name]][["xResampled"]]),
                                as.numeric(threshold))
+        value <- max(0,min(1,value))
         if (direction == "Above") {
           value <- (1-value)
         }
