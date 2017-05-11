@@ -114,18 +114,22 @@ ui <- function(id) {
       )
     ),
     fluidRow(
-	    column(4, tags$div(title = "Color of ranked data points.",
+	    column(3, tags$div(title = "Color of histogram bars",
 	    	colourpicker::colourInput(ns("hist_color"),
 	    	                          "Histogram",
 	    	                          si(ns("hist_color"), "wheat")))),
-	    column(4, tags$div(title = "Color of ranked data points.",
+	    column(3, tags$div(title = "Color of the PDF used to reshape the data",
 	      colourpicker::colourInput(ns("orig_color"),
-	                                "Original",
+	                                "Reshaping Distribution",
 	                                si(ns("orig_color"), "#000000")))),
-	    column(4, tags$div(title = "Color of ranked data points.",
+	    column(3, tags$div(title = "Color of the PDF that represents the resampled data",
 	      colourpicker::colourInput(ns("resamp_color"),
-	                                "Resampled",
-	                                si(ns("resamp_color"), "#5CC85C"))))
+	                                "Resampled Distribution",
+	                                si(ns("resamp_color"), "#5CC85C")))),
+	    column(3, tags$div(title = "Color of forward uncertainty quantification posterior",
+	      colourpicker::colourInput(ns("post_color"),
+	                                "Posterior Distribution",
+	                                si(ns("post_color"), "orange"))))
     )
   )
 }
@@ -444,7 +448,7 @@ server <- function(input, output, session, data) {
           if (!is.null(forwardUQData()) & !is.null(forwardUQData()[[var]])) {
             lines(forwardUQData()[[var]]$postPoints,
                   forwardUQData()[[var]]$postPdf,
-                  col="orange", lwd=2)
+                  col=input$post_color, lwd=2)
           }
           box(which = "plot", lty = "solid", lwd=2, col=boxColor(var))
         }, height = 248)
