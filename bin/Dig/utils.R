@@ -115,3 +115,42 @@ AddCategories <- function(vars) {
 #   else
 #     reverse_units[[name_with_units]]
 # }
+
+GetConfigFolders <- function(current_dir) {
+  # print(paste0("GetConfigFolders(", current_dir, ")"))
+  metadata_filename <- file.path(current_dir,"metadata.json")
+  folders <- list()
+  if(file.exists(metadata_filename)) {
+    metadata <- fromJSON(metadata_filename)
+    # print(metadata)
+    if(!is.null(metadata$SourceDatasets$Folders)) {
+      # print(metadata$SourceDatasets$Folders)
+      folders <- c(folders, metadata$SourceData$Folders)
+    } else {
+      print("Multiple folders not currently supported.")
+    }
+  }
+  folders
+}
+
+FindGUIDFolders <- function(results_dir, config_folders) {
+  guid_folders <- list()
+  for (i in 1:length(config_folders)) {
+    artifacts_folder <- normalizePath(file.path(results_dir,
+                                                dirname(config_folders[[i]]),
+                                                'artifacts'))
+    guids <- list.files(artifacts_folder)
+    # print(guids)
+    if(length(guids) != 0) {
+      print(paste0(artifacts_folder,": ",length(guids)," points."))
+      for (j in 1:length(guids)) {
+        guid <- guids[[j]]
+        guid_folders[[guid]] <- normalizePath(file.path(artifacts_folder,
+                                                        guid))
+      }
+    }
+  }
+  guid_folders
+}
+
+

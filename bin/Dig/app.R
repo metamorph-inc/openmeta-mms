@@ -53,6 +53,7 @@ SAVE_DIG_INPUT_CSV <- TRUE
 # Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\overall_1_aug.csv")
 # Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Desktop\\11Kresults\\viz_config.json")
 # Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\boxpacking\\merged\\15kPoints\\visualizer_config.json")
+Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\sydatsa-model\\merged\\PETGenSimdis (2)\\visualizer_config.json")
 
 pet_config_present <- FALSE
 saved_inputs <- NULL
@@ -63,26 +64,18 @@ dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
 if (dig_dataset_config == "") {
   if(dig_input_csv == "") {
     # Setup one of the test datasets if no input dataset
-    Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-                                            'Simdis',
-                                            'visualizer_config_dev.json'))
-    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-    #                                         'WindTurbineForOptimization',
-    #                                         'visualizer_config_session.json'))
-    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-    #                                         'WindTurbine',
-    #                                         'visualizer_config.json'))
-    # Sys.setenv(DIG_DATASET_CONFIG=file.path('datasets',
-    #                                         'TestPETRefinement',
-    #                                         'visualizer_config.json'))
-  }
-  config_filename <- gsub("\\\\", "/", Sys.getenv('DIG_DATASET_CONFIG'))
-  visualizer_config <- fromJSON(config_filename)
-  tab_requests <- visualizer_config$tabs
-  saved_inputs <- visualizer_config$inputs
-  launch_dir <- dirname(config_filename)
-  if(is.null(visualizer_config$augmented_data)) {
-    raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
+    # config_filename=file.path('datasets',
+    #                           'WindTurbineForOptimization',
+    #                           'visualizer_config_session.json',
+    #                           fsep = "\\\\")
+    config_filename=file.path('datasets',
+                              'WindTurbine',
+                              'visualizer_config_session.json',
+                              fsep = "\\\\")
+    # config_filename=file.path('datasets',
+    #                           'TestPETRefinement',
+    #                           'visualizer_config_session.json',
+    #                           fsep = "\\\\")
   } else {
     # Visualizer legacy launch format
     csv_dir <- dirname(dig_input_csv)
@@ -205,6 +198,17 @@ if(!is.null(visualizer_config$augmented_data)) {
   augmented <- read.csv(augmented_filename, fill=T)
   extra <- raw[!(raw$GUID %in% augmented$GUID),]
   raw <- rbind(augmented, extra)
+}
+
+# Build Artifact Folders Dictionary
+
+# Locate folder
+guid_folders <- list()
+
+if(file.exists(file.path(launch_dir, 'metadata.json'))) {
+  config_folders <- GetConfigFolders(launch_dir)
+  results_dir <- file.path(launch_dir,"..","..","results")
+  guid_folders <- FindGUIDFolders(results_dir, config_folders)
 }
 
 # Process PET Configuration File ('pet_config.json') -------------------------
