@@ -1,5 +1,5 @@
 {
   "pet_config": "pet_config.json",
   "raw_data": "mergedPET.csv",
-  "tabs": ["ExploreSimdis.R"]
+  "tabs": ["Explore.R"]
 }
