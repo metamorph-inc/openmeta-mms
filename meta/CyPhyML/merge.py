@@ -199,6 +199,11 @@ def update_cyphy(version):
 
     project.Save()
 
+    with in_tx(project):
+        for fco in project.AllFCOs(project.CreateFilter()):
+            if fco.ObjType == OBJTYPE_REFERENCE and fco.Referred is None:
+                raise ValueError('Null reference {}'.format(fco.AbsPath))
+
     metaint = Dispatch("MGA.Interpreter.MetaInterpreter")
     metaint.InvokeEx(project, metaint_currentobj, Dispatch("Mga.MgaFCOs"), 128)
     # launcher = win32com.client.DispatchEx("Mga.MgaLauncher")
