@@ -115,7 +115,9 @@ ui <- function(id) {
               # bootstrapPage(
               #   actionButton(ns("highlightData"), "Highlight Selection", class = "btn btn-primary")
               # )
-              bsCollapsePanel("Overlays", 
+              bsCollapsePanel("Overlays",
+                checkboxInput(ns("add_contour"), "Add Contour Plot", si(ns("add_contour"), FALSE)),
+                selectInput(ns("contour_var"), "Contour Variable", c(), selected=NULL),
                 checkboxInput(ns("add_pareto"), "Add Pareto Plot", si(ns("add_pareto"), FALSE)),
                 style = "default")
             )
@@ -184,6 +186,23 @@ server <- function(input, output, session, data) {
     }
     updateSelectInput(session,
                       "y_input",
+                      choices = data$pre$var_range_list(),
+                      selected = selected)
+  })
+     
+  observe({
+    selected <- isolate(input$contour_var)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range()[1]
+    }
+    saved <- si_read(ns("contour_var"))
+    if (is.empty(saved)) {
+      si(ns("contour_var"), NULL)
+    } else if (saved %in% c(data$pre$var_range(), "")) {
+      selected <- si(ns("contour_var"), NULL)
+    }
+    updateSelectInput(session,
+                      "contour_var",
                       choices = data$pre$var_range_list(),
                       selected = selected)
   })
@@ -325,18 +344,20 @@ server <- function(input, output, session, data) {
   output$single_plot <- renderPlot(SinglePlot())
   
   SinglePlot <- reactive({
-    req(input$x_input)
+    req(input$x_input, input$y_input)
+    x_data <- data$Filtered()[[paste(input$x_input)]]
+    y_data <- data$Filtered()[[paste(input$y_input)]]
     if(data$pre$var_class()[input$x_input] == 'factor') {
-      plot(data$Filtered()[[paste(input$x_input)]],
-           data$Filtered()[[paste(input$y_input)]],
+      plot(x_data,
+           y_data,
            xlab = paste(input$x_input),
            ylab = paste(input$y_input),
            pch = as.numeric(input$single_plot_marker),
            cex = as.numeric(input$single_plot_marker_size))#,
            # pch = as.numeric(input$pointStyle))
     } else {
-      plot(data$Filtered()[[paste(input$x_input)]],
-           data$Filtered()[[paste(input$y_input)]],
+      plot(x_data,
+           y_data,
            xlab = paste(input$x_input),
            ylab = paste(input$y_input),
            col = data$Colored()$color,
@@ -347,6 +368,22 @@ server <- function(input, output, session, data) {
     if(input$add_pareto) {
       # lines()
       print("Added Pareto")
+    }
+    if(input$add_contour) {
+      data.loess <- loess(paste0(input$contour_var, "~",
+                                 input$x_input, "*",
+                                 input$y_input),
+                          data = data$Filtered())
+      x_grid <- seq(min(x_data),
+                    max(x_data),
+      			        (max(x_data)-min(x_data))/50)
+      y_grid <- seq(min(y_data),
+                    max(y_data),
+      			        (max(y_data)-min(y_data))/50)
+      data.fit <- expand.grid(x = x_grid, y = y_grid)
+      colnames(data.fit) <- c(paste(input$x_input), paste(input$y_input))
+      my.matrix <- predict(data.loess, newdata = data.fit)
+      contour(x = x_grid, y = y_grid, z = my.matrix, add = TRUE)
     }
   })
   
