@@ -357,9 +357,16 @@ server <- function(input, output, session, data) {
       directions[[var]] <<- input[[paste0('varDirection', global_index)]]
       if (directions[[var]] == "Input") {
         if(input[[paste0('gaussian_', global_index)]]) {
-          types[[var]] <<- "norm"
-          params[[var]]$mean <<- as.numeric(input[[paste0('gaussian_mean', global_index)]])
-          params[[var]]$stdDev <<- as.numeric(input[[paste0('gaussian_sd', global_index)]])
+          input_mean <- as.numeric(input[[paste0('gaussian_mean', global_index)]])
+          input_sd <- as.numeric(input[[paste0('gaussian_sd', global_index)]])
+          var_sd <- sd(filtered_data()[[var]])
+          if(!is.na(input_mean) && !is.na(input_sd) &&
+             input_mean > abs_min[[var]] && input_mean < abs_max[[var]] &&
+             input_sd > 0.1*var_sd && input_sd < 1.1*var_sd) {
+            types[[var]] <<- "norm"
+            params[[var]]$mean <<- input_mean
+            params[[var]]$stdDev <<- input_sd
+          }
         }
         else {
           types[[var]] <<- "unif"
@@ -372,11 +379,11 @@ server <- function(input, output, session, data) {
   })
   
   output$vars_plots <- renderUI({
-    print("In vars_plots")
-    print(varsList())
+    # print("In vars_plots")
+    # print(varsList())
     data <- uqData()$dist
     variables <- varNums
-    print(!input$display_all)
+    # print(!input$display_all)
     if(!input$display_all){
       print("In not display all")
       variables <- varNums[varsList()]
@@ -426,9 +433,11 @@ server <- function(input, output, session, data) {
                #asp = 1.3,
                breaks = 30,
                bty = "o")
-          lines(data[[var]][["xOrig"]],
-                data[[var]][["yOrig"]],
-                col = input$orig_color, lwd=2)
+          if (directions[[var]] == "Input") {
+            lines(data[[var]][["xOrig"]],
+                  data[[var]][["yOrig"]],
+                  col = input$orig_color, lwd=2)
+          }
           lines(data[[var]][["xResampled"]],
                 data[[var]][["yResampled"]],
                 col = input$resamp_color, lwd=2)
