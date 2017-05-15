@@ -17,7 +17,7 @@ We must first convert our _component assembly_ to a _design container_ and then 
 
 1. Open up ***SimpleLEDCircuit*** and make sure nothing in the canvas is selected.
 2. Click the **Design Space Refractorer** icon (3 blue colored boxes).![Design Space Refactorer icon](images/03-03-ds-refactor-icon.png)
-3. Go to the **GME Browser** Window and locate the ***NewDC\_\_SimpleLEDCircuit*** inside the blue folder.
+3. Go to the **GME Browser** Window and locate and expand the blue ***NewDS\_\_SimpleLEDCircuit*** folder.
 4. Double-click ***NewDC\_\_SimpleLEDCircuit*** to open it.
 
 ![New Design Space](images/03-05-new-dc.png)
