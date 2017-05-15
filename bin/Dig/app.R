@@ -53,7 +53,8 @@ SAVE_DIG_INPUT_CSV <- TRUE
 # Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\overall_1_aug.csv")
 # Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Desktop\\11Kresults\\viz_config.json")
 # Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\boxpacking\\merged\\15kPoints\\visualizer_config.json")
-Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\sydatsa-model\\merged\\PETGenSimdis (2)\\visualizer_config.json")
+# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\sydatsa-model\\merged\\TestMerge\\visualizer_config.json")
+# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\sydatsa-model\\merged\\PETGenSimdis (2)\\visualizer_config.json")
 
 pet_config_present <- FALSE
 saved_inputs <- NULL
@@ -205,10 +206,13 @@ if(!is.null(visualizer_config$augmented_data)) {
 # Locate folder
 guid_folders <- list()
 
+print("Locating Artifacts:")
 if(file.exists(file.path(launch_dir, 'metadata.json'))) {
   config_folders <- GetConfigFolders(launch_dir)
+  print(paste("Config Folders:", length(config_folders)))
   results_dir <- file.path(launch_dir,"..","..","results")
   guid_folders <- FindGUIDFolders(results_dir, config_folders)
+  print(paste("GUID Folders:", length(guid_folders)))
 }
 
 # Process PET Configuration File ('pet_config.json') -------------------------
