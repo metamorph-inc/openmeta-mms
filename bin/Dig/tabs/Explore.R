@@ -421,7 +421,7 @@ server <- function(input, output, session, data) {
     if(nrow(pts) != 0) {
       guid <- as.character(unlist(pts[["GUID"]]))
       updateTabsetPanel(session, "explore_tabset",
-                        selected = "Single Point Details")
+                        selected = "Point Details")
       updateSelectInput(session, "details_guid", selected = guid)
     }
   })
