@@ -138,7 +138,10 @@ ui <- function(id) {
             # br(),
             verbatimTextOutput(ns("point_details")),
             br(),
-            actionButton(ns("launch"), "Launch in SimDis")
+            conditionalPanel(
+                  condition = paste0('output["', ns('found_simdis'), '"] == true'),
+                  actionButton(ns("launch_simdis"), "Launch in SimDis")
+            )
           )
         )
       ),
@@ -451,35 +454,33 @@ server <- function(input, output, session, data) {
                       selected = selected)
   })
   
-  observeEvent(input$launch, {
+  output$found_simdis <- reactive({
+    guid_folder <- guid_folders[[input$details_guid]]
+    if(!is.null(guid_folder) &&
+       "simdis.zip" %in% tolower(list.files(guid_folder))) {
+      TRUE
+    } else {
+      FALSE
+    }
+  })
+  outputOptions(output, "found_simdis", suspendWhenHidden=FALSE)
+  
+  observeEvent(input$launch_simdis, {
     print(paste0("Launching Simdis on ", input$details_guid, "..."))
     
-    # Locate folder
-    guid_folder <- guid_folders[[input$details_guid]]
-    print(guid_folder)
-    files <- list.files(guid_folder)
-    if("SIMDIS.zip" %in% files) {
-      # Extract Zip
-      
-      unzip(file.path(guid_folder,"SIMDIS.zip"), exdir = tempdir())
-      
-      # Execute SIMDIS
-      asi_filename <- file.path(tempdir(), "simulation.asi", fsep="\\")
-      # asi_filename <- file.path(local_directory,
-      #                           "artifacts",
-      #                           input$details_guid,
-      #                           "test.asi")
-      print(paste0("Calling 'simdis ", asi_filename, "'..."))
-      system2("simdis",
-              args = c(paste0("\"",asi_filename,"\"")),
-              # args = c(asi_filename),
-              stdout = file.path(launch_dir,
-                                 "VisualizerRunSimdis_stdout.log"),
-              stderr = file.path(launch_dir,
-                                 "VisualizerRunSimdis_stderr.log"),
-              wait = FALSE)
-    } else {
-      print("'SIMDIS.zip' not found.")
-    }
+    # Extract Zip
+    unzip(file.path(guid_folders[[input$details_guid]], "SIMDIS.zip"),
+          exdir = tempdir())
+    
+    # Execute SIMDIS
+    asi_filename <- file.path(tempdir(), "simulation.asi", fsep="\\")
+    print(paste0("Calling 'simdis ", asi_filename, "'..."))
+    system2("simdis",
+            args = c(paste0("\"",asi_filename,"\"")),
+            stdout = file.path(launch_dir,
+                               "VisualizerRunSimdis_stdout.log"),
+            stderr = file.path(launch_dir,
+                               "VisualizerRunSimdis_stderr.log"),
+            wait = FALSE)
   })
 }
