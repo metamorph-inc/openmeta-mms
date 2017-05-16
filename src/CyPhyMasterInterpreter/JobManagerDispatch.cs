@@ -123,7 +123,7 @@ namespace CyPhyMasterInterpreter
         }
 
         JobServer Server;
-        JobCollection JobCollection;
+        public JobCollection JobCollection;
         public bool Started { get; private set; }
 
         public void StartJobManager(string projectDirectory)
