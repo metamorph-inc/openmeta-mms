@@ -162,6 +162,7 @@
         /// True if this class should dispose the logger.
         /// </summary>
         private bool LoggerDisposeRequired { get; set; }
+        public List<string> ConfigurationNames { get; private set; }
 
         /// <summary>
         /// Disposes the logger if it needs to be disposed.
@@ -309,6 +310,8 @@
 
                             results.SelectedConfigurations.Append(selectedGmeObject as MgaFCO);
                         }
+
+                        this.ConfigurationNames = selectionResult.ConfigurationGroups.SelectMany(group => group.Configurations).Select(fco => fco.Name).ToList();
                     });
                 }
                 else if (dialogResult == System.Windows.Forms.DialogResult.Yes)
@@ -1217,6 +1220,7 @@
 
             Exception exceptionToThrow = null;
 
+            IAsyncResult createJobManagerResult = null;
             try
             {
                 this.Logger.WriteDebug("Turning off addons for performance reasons: {0}", string.Join(", ", this.addonNames));
@@ -1226,8 +1230,8 @@
                 {
                     this.Manager = new JobManagerDispatch();
                     this.Manager.StartJobManager(MgaExtensions.MgaExtensions.GetProjectDirectoryPath(this.Project));
+                    this.Manager.JobCollection.ConfigurationNames = this.ConfigurationNames;
                 };
-                IAsyncResult createJobManagerResult = null;
                 if (postToJobManager && this.Manager == null)
                 {
                     createJobManagerResult = createJobManager.BeginInvoke(null, null);
@@ -1495,6 +1499,10 @@
             }
             finally
             {
+                if (createJobManagerResult != null)
+                {
+                    createJobManagerResult.AsyncWaitHandle.WaitOne();
+                }
                 // clean up if interpreter is canceled
                 this.ExecuteInTransaction(context, () =>
                 {
