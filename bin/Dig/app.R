@@ -107,12 +107,7 @@ if(file.exists(config_filename)) {
 tab_requests <- visualizer_config$tabs
 saved_inputs <- visualizer_config$inputs
 launch_dir <- dirname(config_filename)
-if(is.null(visualizer_config$augmented_data)) {
-  raw_data_filename <- file.path(launch_dir, visualizer_config$raw_data)
-} else {
-  raw_data_filename <- file.path(launch_dir,
-                                 visualizer_config$augmented_data)
-}
+
 pet_config_filename <- visualizer_config$pet_config
 if (!is.null(pet_config_filename) && pet_config_filename != "") {
   pet_config_filename <- file.path(launch_dir, pet_config_filename)
@@ -120,9 +115,6 @@ if (!is.null(pet_config_filename) && pet_config_filename != "") {
     pet_config_present <- TRUE
   }
 }
-
-
-  
 
 # Saved Input Functions ------------------------------------------------------
 
@@ -198,7 +190,14 @@ tab_environments <- mapply(function(file_name, id) {
 )
 
 # Read input dataset file
-raw <- read.csv(raw_data_filename, fill=T)
+raw <- read.csv(file.path(launch_dir, visualizer_config$raw_data), fill=T)
+if(!is.null(visualizer_config$augmented_data)) {
+  augmented_filename <- file.path(launch_dir,
+                                  visualizer_config$augmented_data)
+  augmented <- read.csv(augmented_filename, fill=T)
+  extra <- raw[!(raw$GUID %in% augmented$GUID),]
+  raw <- rbind(augmented, extra)
+}
 
 # Process PET Configuration File ('pet_config.json') -------------------------
 pet <- NULL
@@ -944,9 +943,8 @@ Server <- function(input, output, session) {
     
     # Save the updated raw data
     if(is.null(visualizer_config$augmented_data)) {
-      tentative_filename <- sub(".csv", "_aug.csv", basename(raw_data_filename))
-      # TODO(tthomas): Check if file already exists
-      visualizer_config$augmented_data <- tentative_filename
+      visualizer_config$augmented_data <- sub(".json", "_data.csv",
+                                              basename(config_filename))
     }
     write.csv(isolate(data$raw$df),
               file=file.path(launch_dir, visualizer_config$augmented_data),
