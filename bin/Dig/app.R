@@ -201,11 +201,7 @@ if(!is.null(visualizer_config$augmented_data)) {
   raw <- rbind(augmented, extra)
 }
 
-# Build Artifact Folders Dictionary
-
-# Locate folder
-guid_folders <- list()
-
+# Locate Artifacts
 print("Locating Artifacts:")
 if(file.exists(file.path(launch_dir, 'metadata.json'))) {
   config_folders <- GetConfigFolders(launch_dir)
