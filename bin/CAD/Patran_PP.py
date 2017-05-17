@@ -354,23 +354,23 @@ class PatranPostProcess:
 
             for metric in tb_metrics:
                 metric_id = metric['ID']
-                metrid_name =  metric['Name']
-                print metrid_name
+                metric_name =  metric['Name']
+                print metric_name
                 print globalMetrics
-                if ( metrid_name.lower() == "fea_total_volume" or metrid_name.lower() == "fea_total_mass" ):
-                    if (  metrid_name.lower() == "fea_total_volume" ):
+                if ( metric_name.lower() == "fea_total_volume" or metric_name.lower() == "fea_total_mass" ):
+                    if (  metric_name.lower() == "fea_total_volume" ):
                         metric_value = globalMetrics.get("TotalVolume".lower())
                     else:
                         metric_value = globalMetrics.get("TotalMass".lower())
                     if metric_value is None:
-                        msg = "{} did not contain a Value for metric name for FEA_Total_Volume/FEA_Total_Mass {}.".format()
-                        self.write_failed_and_exit()
+                        msg = "Testbench did not contain a value for {}".format("FEA_Total_Volume" if metric_name.lower() == "fea_total_volume" else "Mass")
+                        self.write_failed_and_exit(msg)
                 else:
                     associated_comp_id = metric_id_to_comp_id.get(metric_id)
                     metric_value = comp_id_to_value.get(associated_comp_id)
                     if metric_value is None:
-                        msg = "{} did not contain a Value for Component ID {}.".format()
-                        self.write_failed_and_exit()
+                        msg = "{} did not contain a value for Component ID {}.".format(metric_name, associated_comp_id)
+                        self.write_failed_and_exit(msg)
 
                 metric['Value'] = metric_value
 
