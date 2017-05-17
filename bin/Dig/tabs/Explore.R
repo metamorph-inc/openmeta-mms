@@ -193,17 +193,17 @@ server <- function(input, output, session, data) {
   observe({
     selected <- isolate(input$contour_var)
     if(is.null(selected) || selected == "") {
-      selected <- data$pre$var_range()[1]
+      selected <- data$pre$var_range_nums_and_ints()[1]
     }
     saved <- si_read(ns("contour_var"))
     if (is.empty(saved)) {
       si(ns("contour_var"), NULL)
-    } else if (saved %in% c(data$pre$var_range(), "")) {
+    } else if (saved %in% c(data$pre$var_range_nums_and_ints(), "")) {
       selected <- si(ns("contour_var"), NULL)
     }
     updateSelectInput(session,
                       "contour_var",
-                      choices = data$pre$var_range_list(),
+                      choices = data$pre$var_range_nums_and_ints_list(),
                       selected = selected)
   })
      
@@ -369,7 +369,8 @@ server <- function(input, output, session, data) {
       # lines()
       print("Added Pareto")
     }
-    if(input$add_contour) {
+    if(input$add_contour &&
+       !(input$contour_var %in% c(input$x_input, input$y_input))) {
       data.loess <- loess(paste0(input$contour_var, "~",
                                  input$x_input, "*",
                                  input$y_input),
@@ -383,7 +384,9 @@ server <- function(input, output, session, data) {
       data.fit <- expand.grid(x = x_grid, y = y_grid)
       colnames(data.fit) <- c(paste(input$x_input), paste(input$y_input))
       my.matrix <- predict(data.loess, newdata = data.fit)
-      contour(x = x_grid, y = y_grid, z = my.matrix, add = TRUE)
+      # filled.contour(x = x_grid, y = y_grid, z = my.matrix, add = TRUE, color.palette = terrain.colors)
+      contour(x = x_grid, y = y_grid, z = my.matrix, add = TRUE,
+              col="darkblue", labcex=1.35, lwd = 1.5, method="edge")
     }
   })
   
