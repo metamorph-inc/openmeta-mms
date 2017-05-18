@@ -140,6 +140,7 @@ ui <- function(id) {
             br(),
             conditionalPanel(
                   condition = paste0('output["', ns('found_simdis'), '"] == true'),
+                  selectInput(ns("file_simdis"), NULL, c(), NULL),
                   actionButton(ns("launch_simdis"), "Launch in SimDis")
             )
           )
@@ -458,6 +459,11 @@ server <- function(input, output, session, data) {
     guid_folder <- guid_folders[[input$details_guid]]
     if(!is.null(guid_folder) &&
        "simdis.zip" %in% tolower(list.files(guid_folder))) {
+      choices <- unzip(file.path(guid_folder, "simdis.zip"), list = TRUE)$Name
+      choices <- choices[grepl(".asi$", choices) | grepl(".spy$", choices)]
+      updateSelectInput(session, "file_simdis",
+                        choices = choices,
+                        selected = choices[1])
       TRUE
     } else {
       FALSE
@@ -473,7 +479,7 @@ server <- function(input, output, session, data) {
           exdir = tempdir())
     
     # Execute SIMDIS
-    asi_filename <- file.path(tempdir(), "simulation.asi", fsep="\\")
+    asi_filename <- file.path(tempdir(), input$file_simdis, fsep="\\")
     print(paste0("Calling 'simdis ", asi_filename, "'..."))
     system2("simdis",
             args = c(paste0("\"",asi_filename,"\"")),
