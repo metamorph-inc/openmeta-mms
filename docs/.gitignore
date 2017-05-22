@@ -9,3 +9,4 @@ doc/10-connectors/requirements/
 processed_doc/
 out/
 _build/
+*.md

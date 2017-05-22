@@ -1,3 +1,5 @@
+.. _resultsbrowser:
+
 Results Browser
 ===============
 

@@ -10,6 +10,6 @@ Welcome to OpenMETA's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   intro
+   introduction/introduction
    resultsbrowser/resultsbrowser
    visualizer/visualizer
