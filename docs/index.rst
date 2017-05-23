@@ -17,3 +17,4 @@ Welcome to OpenMETA's documentation!
    integrateddomains/integrateddomains
    resultsbrowser/resultsbrowser
    visualizer/visualizer
+   reference/reference

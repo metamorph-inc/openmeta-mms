@@ -6,8 +6,11 @@ def convert_ref(line):
         m = re.search('<img src="(.+)" alt="(.+)" style="width: (.+);"/>', line)
         return "\n.. image:: {}\n   :alt: {}\n   :width: {}\n".format(m.group(1), m.group(2), m.group(3))
     elif line.startswith("!["):
-        m = re.search('\[(.+)\]\((.+)\)', line)
-        return ".. image:: {}\n   :alt: {}\n".format(m.group(2), m.group(1))
+        m = re.search('\[(.*)\]\((.+)\)', line)
+        if m.group(1) == "":
+            return ".. image:: {}\n".format(m.group(2))
+        else:
+            return ".. image:: {}\n   :alt: {}\n".format(m.group(2), m.group(1))
     else:
         return line
 

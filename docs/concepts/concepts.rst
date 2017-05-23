@@ -41,10 +41,10 @@ location of the symbols in a schematic do not necessary correlate with
 the physical location of the components. META currently uses **Eagle**
 models to represent a component's schematic model.
 
-.. image:: images/01-eagle-model-of-diode.png
+.. figure:: images/01-eagle-model-of-diode.png
    :alt: Diode Model in EAGLE
 
-*EAGLE Model of a Light-Emitting Diode (LED)*
+   *EAGLE Model of a Light-Emitting Diode (LED)*
 
 NGSPICE Models
 ^^^^^^^^^^^^^^
@@ -73,10 +73,10 @@ Modelica ports and parameters. These ports represent the dynamics
 interfaces for the represented component, while the parameters capture
 the elements of the model that may be altered.
 
-.. image:: images/01-diode-in-modelica.png
+.. figure:: images/01-diode-in-modelica.png
    :alt: Diode Model in Modelica
 
-*Modelica Model of a Diode*
+   *Modelica Model of a Diode*
 
 SystemC Models
 ^^^^^^^^^^^^^^
@@ -118,10 +118,10 @@ module development, OpenEMS allows us to evaluate antenna performance
 (Zin, S11, directivity, etc.) and estimate the maximum SAR prior to
 production and FCC regulatory testing.
 
-.. image:: images/01-inverted-f.png
+.. figure:: images/01-inverted-f.png
    :alt: Stripline antenna model in OpenEMS
 
-*RF model of a 2.4 GHz Inverted-F antenna*
+   *RF model of a 2.4 GHz Inverted-F antenna*
 
 CAD Models
 ^^^^^^^^^^
@@ -140,10 +140,10 @@ required to define interfaces between components. The block can also
 contain parameters, which can be used to change the geometry of the
 model based on values given in a design.
 
-.. image:: images/01-01-led-cad-model.png
+.. figure:: images/01-01-led-cad-model.png
    :alt: LED CAD model
 
-*CAD model of a Light-Emitting Diode (LED)*
+   *CAD model of a Light-Emitting Diode (LED)*
 
 Properties & Parameters
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -168,10 +168,10 @@ designer's selection. The calculated mass can be assigned to a parameter
 of the dynamics model, ensuring that the correct inertia is used when
 simulating its behavior.
 
-.. image:: images/01-01-properties-of-a-resistor.png
+.. figure:: images/01-01-properties-of-a-resistor.png
    :alt: Resistor properties
 
-*Properties of a resistor*
+   *Properties of a resistor*
 
 Connectors
 ^^^^^^^^^^
@@ -290,10 +290,10 @@ consideration, a mechanism is also needed to limit the design space to a
 manageable size. For this purpose, design space *constraints* can be
 specified and evaluated by the Design Space Exploration Tool (DESERT).
 
-.. image:: images/01-03-design-alternatives-in-gme.png
+.. figure:: images/01-03-design-alternatives-in-gme.png
    :alt: Design alternatives in GME
 
-*Design Alternatives captured in the META tool*
+   *Design Alternatives captured in the META tool*
 
 Design space constraints are simple, static operations & equations that
 can be specified for the properties and identities of components, as
@@ -302,10 +302,10 @@ properties can include total weight and cost, thresholds on a component
 property, or identity. An example of an identity constraint is that a
 designer would want all four tires on a truck to be of the same type.
 
-.. image:: images/01-03-property-constraint.png
+.. figure:: images/01-03-property-constraint.png
    :alt: Design alternatives in GME
 
-*A property constraint in the META tool*
+   *A property constraint in the META tool*
 
 The DESERT Tool uses scalable techniques to apply these constraints to
 very large design spaces to rapidly prune the choices to a manageable
@@ -361,12 +361,12 @@ system requirement. The parts of a Test Bench include:
    designs). In the case of a design space, the test bench can be
    applied over the entire set of feasible designs.
 
-.. image:: images/01-04-example-test-bench.png
+.. figure:: images/01-04-example-test-bench.png
    :alt: example test bench
 
-*An example test bench: **NewDC\_\_SimpleLEDCircuit** is the **System
-Under Test**, while the other **Test Components** provide the
-**Wraparound Environment**.*
+   *An example test bench: **NewDC\_\_SimpleLEDCircuit** is the **System
+   Under Test**, while the other **Test Components** provide the
+   **Wraparound Environment**.*
 
 Ara Test Benches
 ~~~~~~~~~~~~~~~~
