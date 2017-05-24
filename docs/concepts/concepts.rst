@@ -6,9 +6,9 @@ Modeling Concepts
 Components
 ----------
 
-The **component** is the atomic model construct in OpenMETA, and they serve
-as the basis for the multi-domain nature of the tools. Components are
-relevant to virtually every aspect of OpenMETA.
+The **component** is the atomic model construct in OpenMETA, and it serves
+as the basis for the multi-domain nature of the tools. Components touch
+virtually every other concept in OpenMETA.
 
 What's Inside a Component Model?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,21 +26,36 @@ also has connectors, which allow connection to other components.
 .. figure:: images/LED_Diagram_lores.png
    :align: center
 
-   *OpenMETA Component Model of an LED*
+   *Concept drawing of an OpenMETA Component Model of an LED*
 
 The OpenMETA Component Model aggregates these various models, providing a
 single set of properties and connectors. When two components are
 composed via these connectors, they are joined in many analysis domains
 at once.
 
+The figure below shows a simple capacitor component as represented in OpenMETA.
+
+.. _capacitor:
+
+.. figure:: images/capacitor.png
+   :align: center
+
+   *OpenMETA Model of a Capacitor*
+
 Domain-Specific Models
 ~~~~~~~~~~~~~~~~~~~~~~
 
 For each of the domains represented in the component model, there is a
-domain-specific model representation that exposes the necessary features of that
-domain.
+domain-specific model that exposes the necessary features of that domain.
 
-.. note:: Insert a reasonable example model here.
+For example, in the :ref:`capacitor` figure above we see that this capacitor has both an EDA and a
+SPICE model. The EDA model exposes the two pins which represent the phyiscal
+pads of the part footprint on a printed circuit board (PCB) to which other components need to
+connect. The SPICE model also exposes the two pins of the component but additionally exposes four values
+needed to construct an accurate representation of the capacitor in the SPICE
+domain. The **properties** that specify the appropriate values for the SPICE
+model as well as a number of other **properties** that describe this
+component are described in the next subsection.
 
 Properties & Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,24 +80,23 @@ designer's selection. The calculated mass can be assigned to a parameter
 of the dynamics model, ensuring that the correct inertia is used when
 simulating its behavior.
 
-.. figure:: images/01-01-properties-of-a-resistor.png
-   :alt: Resistor properties
-
-   *Properties of a resistor*
+.. note:: Insert an image of the drive train component.
 
 Connectors
 ~~~~~~~~~~
 
-META components also contains **connectors**, which define interfaces
+OpenMETA components also contains **connectors**, which define interfaces
 across multiple domain models. For the case of an electrical pin
 connecting to a printed circuit board (PCB), the joining of two
 connectors can capture the geometry (the center axis and mount plane
 where the pin and board meet) and the schematic diagram relation (which
 pins/nets are being joined) at the same time.
 
-In the screenshot below, the connector ***Cathode*** represents both an
-electrical terminal from the ***SchematicModel*** and an electrical
-interfaces from the ***ModelicaModel***.
+In the screenshot below, the connector **Cathode** represents both an
+electrical terminal from the **SchematicModel** and an electrical
+interfaces from the **ModelicaModel**.
+
+.. note:: We need to update this image to include the new *Connector* look.
 
 .. image:: images/01-01-connectors-in-LED-model.png
    :alt: Connectors in LED model
@@ -90,9 +104,6 @@ interfaces from the ***ModelicaModel***.
 The simplified diagram below abstractly shows the structure of a similar
 component, with its individual domain-specific interfaces grouped into
 connectors.
-
-.. image:: images/LED_Diagram_lores.png
-   :alt: Image
 
 Component Composition
 ~~~~~~~~~~~~~~~~~~~~~
@@ -109,28 +120,31 @@ objects that share a common definition. The **role** objects within each
 **connector** instance are mapped to the **Modelica connectors** of each
 component's Modelica model. In the generated Modelica model, the
 corresponding Modelica class representing each component is
-instantiated, and their connectors are joined by following the *Modelica
-Connector -> Role -> Connector -> Connector -> Role -> Modelica
-Connector* chain from the source META composition.
+instantiated, and their connectors are joined by following the :menuselection:`Modelica
+Connector --> Role --> Connector --> Connector --> Role --> Modelica
+Connector` chain from the source OpenMETA composition.
 
-.. image:: images/CompositionExample.png
+.. figure:: images/CompositionExample.png
+   :align: center
    :alt: Composition Example
+
+   *Example of Composition*
 
 Modeling Systems
 ----------------
 
-The first step in designing a system in META is creating a model of the
+The first step in designing a system in OpenMETA is creating a model of the
 system. A model is defined as an abstract representation of the design.
 A model is *abstract* if it does not contain all details about the
 system, but contains sufficient detail to express design choices with a
 minimal amount of effort. This level of detail is controlled by the
 designer, allowing a rapid definition of conceptual designs, with
-addition of detail as the design is refined. The META Language has been
+addition of detail as the design is refined. The OpenMETA Language has been
 designed to strike a compromise between the conceptual and detailed
 models. These compromises will be clarified as we review the language
 and tools.
 
-META emphasizes a component-based design methodology. Therefore,
+OpenMETA emphasizes a component-based design methodology. Therefore,
 following the previous section's discussion of the modeling of a
 component, we will describe component connectivity, testing models, and
 design spaces.
@@ -144,7 +158,7 @@ components that implement a desired function or behavior. For example,
 the subsystem could produce torque to create acceleration of a vehicle,
 or it could produce air flow to cool a heat exchanger.
 
-In META models, component assemblies are built by creating references to
+In OpenMETA models, component assemblies are built by creating references to
 one or more components and then creating relationships between their
 interfaces.
 
@@ -169,12 +183,12 @@ several drawbacks:
 -  The design is applicable to a single target use, and can require
    substantial rework for other applications.
 
-Instead, META introduces the concept of a *design space*. The design
+Instead, OpenMETA introduces the concept of a *design space*. The design
 space allows the models to contain multiple alternatives for components
 and assemblies. Any component or assembly can be substituted for another
 component or assembly with the same interface.
 
-The META model editor offers a simple syntax for expressing design
+The OpenMETA model editor offers a simple syntax for expressing design
 options. An *alternative* container is used to contain each valid
 option. The container presents a consistent interface with the outside
 system, while inside it contains mappings from its interface to the
@@ -190,7 +204,7 @@ specified and evaluated by the Design Space Exploration Tool (DESERT).
 .. figure:: images/01-03-design-alternatives-in-gme.png
    :alt: Design alternatives in GME
 
-   *Design Alternatives captured in the META tool*
+   *Design Alternatives captured in the OpenMETA tool*
 
 Design space constraints are simple, static operations & equations that
 can be specified for the properties and identities of components, as
@@ -202,7 +216,7 @@ designer would want all four tires on a truck to be of the same type.
 .. figure:: images/01-03-property-constraint.png
    :alt: Design alternatives in GME
 
-   *A property constraint in the META tool*
+   *A property constraint in the OpenMETA tool*
 
 The DESERT Tool uses scalable techniques to apply these constraints to
 very large design spaces to rapidly prune the choices to a manageable
@@ -226,10 +240,10 @@ adaptable and flexible designs.
 Test Benches
 ------------
 
-In the META Tools, a **Test Bench** is a virtual environment used to run
+In the OpenMETA Tools, a **Test Bench** is a virtual environment used to run
 experiments on a system. Test benches define a testing context for a
 system, providing sources of stimulus and loading elements that gather
-experimental data. In META, a user can dictate the test conditions for
+experimental data. In OpenMETA, a user can dictate the test conditions for
 their experiment themselves or choose from a library of pre-configured
 test benches that represent design requirements or other criteria. In
 addition to the configuration of test conditions, the user can customize
@@ -237,7 +251,7 @@ the data gathered through the execution of a test bench.
 
 While most test benches are used to perform analyses, other test benches
 perform design services for the user. For example, a user that has
-completed a META design can run a test bench to auto-generate a
+completed a OpenMETA design can run a test bench to auto-generate a
 schematic of their design. Additionally, the user can run a CAD assembly
 test bench to build a 3D model of their design.
 
@@ -261,6 +275,7 @@ system requirement. The parts of a Test Bench include:
 .. figure:: images/01-04-example-test-bench.png
    :alt: example test bench
 
-   *An example test bench: **NewDC\_\_SimpleLEDCircuit** is the **System
-   Under Test**, while the other **Test Components** provide the
-   **Wraparound Environment**.*
+   *An Example Test Bench*
+
+   **NewDC\_\_SimpleLEDCircuit** is the **System Under Test**, while the other
+   **Test Components** provide the **Wraparound Environment**.
