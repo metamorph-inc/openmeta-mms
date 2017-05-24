@@ -3,6 +3,14 @@
 Integrated Domains
 ==================
 
+There are many domains that have been integrated with the OpenMETA toolset. The
+following chapters describe a few of the more significant ones:
+
+-  :ref:`cad`
+-  :ref:`eda`
+-  :ref:`modelica`
+-  :ref:`spice`
+
 .. note:: Take content from old 'Chapter 7: Domains'.
 
 General

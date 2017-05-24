@@ -9,12 +9,16 @@ Welcome to OpenMETA's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
+
    introduction/introduction
    concepts/concepts
    ledtutorial/ledtutorial
    walkthroughs/walkthroughs
    integrateddomains/integrateddomains
+   integrateddomains/cad
+   integrateddomains/eda
+   integrateddomains/modelica
+   integrateddomains/spice
    resultsbrowser/resultsbrowser
    visualizer/visualizer
    reference/reference
