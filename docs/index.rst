@@ -18,3 +18,4 @@ Welcome to OpenMETA's documentation!
    resultsbrowser/resultsbrowser
    visualizer/visualizer
    reference/reference
+   connectors/connectors

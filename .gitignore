@@ -901,6 +901,7 @@ src/DesignSpaceHelper/ComponentLib_i.c
 src/DesignSpaceHelper/ComponentLib_p.c
 src/DesignSpaceHelper/Release/
 src/MetaLink/Release/
+src/MetaLink/meta-protobuf/cpp-proj/meta-link-creo/
 src/Release/
 src/UdmComparator/Release/
 src/ipch/

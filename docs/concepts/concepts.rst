@@ -1,18 +1,21 @@
 .. _concepts:
 
-Concepts
-========
+Modeling Concepts
+=================
 
-.. note:: This needs to be cleaned a littl bit, but overall
-   it is a good start.
+Components
+----------
 
-Model Types
------------
+The **component** is the atomic model construct in OpenMETA, and they serve
+as the basis for the multi-domain nature of the tools. Components are
+relevant to virtually every aspect of OpenMETA.
 
 What's Inside a Component Model?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Inside a component, you will typically see a schematic model, CAD model,
+Inside a component, you will typically see one or more domain models
+and a number of interfaces exposing parts of the component the containing
+environment. For example, you could have a schematic model, CAD model,
 and Modelica model, along with many properties, connectors, and other
 essential parts. The component model captures several qualities of the
 physical component, including its geometry (3-dimensional CAD model),
@@ -20,133 +23,27 @@ its dynamic behavior (an acausal power flow and transfer function), and
 its numerical properties (characteristics such as weight). The component
 also has connectors, which allow connection to other components.
 
-.. image:: images/LED_Diagram_lores.png
-   :alt: Image
+.. figure:: images/LED_Diagram_lores.png
+   :align: center
 
-The META Component Model aggregates these various models, providing a
+   *OpenMETA Component Model of an LED*
+
+The OpenMETA Component Model aggregates these various models, providing a
 single set of properties and connectors. When two components are
 composed via these connectors, they are joined in many analysis domains
 at once.
 
-Component Model Assets
+Domain-Specific Models
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Schematic Models
-^^^^^^^^^^^^^^^^
+For each of the domains represented in the component model, there is a
+domain-specific model representation that exposes the necessary features of that
+domain.
 
-**Schematics** represent the elements of an electrical system using
-abstracted symbols of components. Schematics excel at providing a clean,
-efficient view of an electronic system. In electronic design the
-location of the symbols in a schematic do not necessary correlate with
-the physical location of the components. META currently uses **Eagle**
-models to represent a component's schematic model.
-
-.. figure:: images/01-eagle-model-of-diode.png
-   :alt: Diode Model in EAGLE
-
-   *EAGLE Model of a Light-Emitting Diode (LED)*
-
-NGSPICE Models
-^^^^^^^^^^^^^^
-
-**SPICE** is a time-tested simulation tool for electronic circuits.
-`NGSPICE <http://ngspice.sourceforge.net>`__ is an open-source version
-that is used by the META tools. META components can use **NGSPICE**
-models to represent their electrical behavior. They can do this by
-either parameterizing common SPICE primitives or by providing their own
-implementations in standalone files.
-
-Modelica Models
-^^^^^^^^^^^^^^^
-
-The dynamics of a system are expressed in the Modelica language, which
-uses a mix of *causal* relationships (directional input or output is
-assigned to each port) and *acausal* relationships (power flows in
-either direction based on the context, as in most physical systems).
-Modelica models are used to simultaneously model components of multiple
-engineering domains such as electrical, hydraulic, mechanical, and
-thermal. For the purposes of Ara modules, we will be focusing on the
-power and thermal abilities provided by the Modelica solver.
-
-Within META components are Modelica models that contain a set of
-Modelica ports and parameters. These ports represent the dynamics
-interfaces for the represented component, while the parameters capture
-the elements of the model that may be altered.
-
-.. figure:: images/01-diode-in-modelica.png
-   :alt: Diode Model in Modelica
-
-   *Modelica Model of a Diode*
-
-SystemC Models
-^^^^^^^^^^^^^^
-
-`SystemC <http://www.accellera.org/downloads/standards/systemc>`__ is a
-versatile discrete event simulation framework for developing event-based
-behavioral models of hardware, software and testbench components. These
-models are captured in C++ using the SystemC class library, utility
-functions and macros. The library also contains a discrete event
-scheduler for executing the models. The models can be captured at
-arbitrary levels of abstraction, but *cycle-accurate* and
-*transaction-level* (TLM) models are the most typical. Due to the
-discrete event model of computation, the simulation is executed in
-*logical* time and is not tied to the wall clock (*real time*). Each and
-every event in SystemC has a well-defined timestamp in the simulated
-clock domain. Concurrency is a simulated concept, the actual execution
-of the simulator engine is single threaded by design. In the Ara
-development ecosystem, SystemC is well suited for capturing and
-experimenting with new peripheral modules, bus protocols and embedded
-software (*firmware*) and to validate interaction patterns among these
-and with the applications running on the core platform.
-
-RF Models
-^^^^^^^^^
-
-An RF model of a META component comprises three-dimensional geometric
-shapes associated with materials of different electromagnetic
-properties. The META tools currently support models that are in the
-CSXCAD format supported by the **OpenEMS** simulator.
-`OpenEMS <http://openems.de>`__ uses a finite-difference time-domain
-(FDTD) approach, where the problem space is first discretized along a
-rectilinear grid, then the electric (E) and magnetic (H) fields are
-cyclically updated in each timestep, for each grid point, using a
-finite-difference approach. As the direct simulation output is the
-*time-domain* evolution of the fields, frequency-domain characteristics
-of the model are deduced from the Fourier-transformed response to an
-adequately constructed excitation signal. In the context of the Ara
-module development, OpenEMS allows us to evaluate antenna performance
-(Zin, S11, directivity, etc.) and estimate the maximum SAR prior to
-production and FCC regulatory testing.
-
-.. figure:: images/01-inverted-f.png
-   :alt: Stripline antenna model in OpenEMS
-
-   *RF model of a 2.4 GHz Inverted-F antenna*
-
-CAD Models
-^^^^^^^^^^
-
-The precise three-dimensional geometry of a META component is expressed
-with a **CAD model**. Key connection points on the component are marked
-with *datums*, which are joined with the datums of other connected
-components to generate a three-dimensional model of a system. By relying
-on these connection points, instead of on relative-position offsets, a
-component can be composed with many different types of components
-automatically.
-
-CAD model elements within META components contain references to any
-datums *(planes, axis, coordinate systems, and points)* that are
-required to define interfaces between components. The block can also
-contain parameters, which can be used to change the geometry of the
-model based on values given in a design.
-
-.. figure:: images/01-01-led-cad-model.png
-   :alt: LED CAD model
-
-   *CAD model of a Light-Emitting Diode (LED)*
+.. note:: Insert a reasonable example model here.
 
 Properties & Parameters
-^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Components will typically contain a number of different **properties**
 and **parameters**. Properties and parameters are ways of capturing
@@ -174,7 +71,7 @@ simulating its behavior.
    *Properties of a resistor*
 
 Connectors
-^^^^^^^^^^
+~~~~~~~~~~
 
 META components also contains **connectors**, which define interfaces
 across multiple domain models. For the case of an electrical pin
@@ -367,165 +264,3 @@ system requirement. The parts of a Test Bench include:
    *An example test bench: **NewDC\_\_SimpleLEDCircuit** is the **System
    Under Test**, while the other **Test Components** provide the
    **Wraparound Environment**.*
-
-Ara Test Benches
-~~~~~~~~~~~~~~~~
-
-The following test bench types are available for Ara Module Developers:
-
--  **Schematic Generation**: Takes an existing META design and generates
-   an EAGLE circuit schematic.
-
--  **Board Fit**: Runs a PCB layout tool to assess if the module design
-   will fit on a standard Ara chip size.
-
--  **CAD Assembly**: Using PCB layout information, this test bench
-   assembles a CAD model of the design.
-
--  **Thermal Test**: Uses Modelica to to assess the runtime temperatures
-   of components. Returns temperatures and limit violations.
-
--  **Power Usage**: Uses Modelica to estimate power usage of the module
-   design.
-
--  **SystemC Tests**: Executing cycle-accurate and/or transaction-level
-   simulation of digital test benches and component assemblies.
-
--  **RF Analysis**: Performs EM-field simulations to derive antenna
-   parameters and estimate the maximum SAR.
-
--  **Android Emulator**: Uses the Eclipse's Android emulator to simulate
-   the software & hardware interaction of elements. Software crashes and
-   other issues can be predicted this way. This is an extension of the
-   SystemC testing framework with a special communication bridge
-   component to the Android Emulator or to a physical phone.
-
--  **Cost Estimation**: Generates a bill of materials (BOM) and
-   estimates cost and lead time for designs.
-
--  **Acoustic Analysis**: *Under development*.
-
--  **Finite Element Analysis**: *Under development*.
-
--  **Firmware Generation**: *Under development*.
-
-Additionally, test benches can be used to run simple customized tests on
-many designs using Python post-processing "blocks". Existing test
-benches can be modified for the user's purposes.
-
-Connectors
-----------
-
-**Connectors** are a powerful concept for raising the level of
-abstraction for component composition. Think of them like a *bus* that
-can aggregate multiple **Ports**, each with a **Role**.
-
-An Example
-~~~~~~~~~~
-
-Consider the following example. In the component assembly
-***Assembly***, there are two component instances called
-***Component1*** and ***Component2***. They are both instances of
-***SampleComponent***. Each has a *connector* called ***Connector***.
-They are joined together within the assembly.
-
-.. image:: images/10-example-assemblyview.png
-
-If we navigate inside ***SampleComponent***, we can see its connector.
-
-.. image:: images/10-example-connector-within-component.png
-
-If we navigate inside ***Connector***, we can see the *ports* that make
-up its *Roles*. Each *role* is a port of a specific type, and has a
-unique name.
-
-In this example, we have:
-
--  A *ModelicaConnector* with role ***ModelicaConnector1***
--  A *ModelicaConnector* with role ***ModelicaConnector2***
--  A *Pin* with role ***Pin1***
--  A *Pin* with role ***Pin2***
--  A *SystemCPort* with role ***SystemCPort***
-
-.. image:: images/10-example-connector-internals.png
-
-By aggregating all of these port types into a single *connector*, we're
-able to connect them to another component all at once. By joining these
-two connectors, we are "virtually" connecting all the role ports as
-well.
-
-Effectively, this model is equivalent to the "elaborated" version
-depicted below, but using only 1 connection instead of 5.
-
-.. image:: images/10-example-elaborated.png
-
-Mixed Compositions
-~~~~~~~~~~~~~~~~~~
-
-The top structure is equivalent with the bottom structure. Note that
-***Connector*** within the component assembly ***MixedComposition*** is
-identical to ***Connector*** within ***SubAsm***.
-
-.. image:: images/10-mixed-composition--original.png
-
-.. image:: images/10-mixed-composition--elaborated.png
-
-Exceptional Cases
-~~~~~~~~~~~~~~~~~
-
-It's best practice for *connectors* to be identical on both sides of a
-*connector composition*. However, the **META** tools will try to resolve
-ambiguous matches.
-
-Names of Roles Don't Match
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-If the name of a role within the first connector doesn't any role names
-in a second connector, the **META** tools will try to find a match.
-
-1. Within the first connector, is the role the only one of its port
-   type?
-
-   -  *e.g.: Is it the only Pin within the first connector?*
-   -  If not, ***can't match***
-
-2. Does the second connector have a role of the same port type?
-
-   -  *e.g.: Does the second connector have a role of type Pin?*
-   -  If not, ***can't match***
-
-3. Is that role's port type unique within the second connector?
-
-   -  *e.g.: Is it the only Pin within the second connector?*
-   -  If not, ***can't match***
-
-4. If all of the above, ***match the two roles***.
-
-Consider this example. Two *component assemblies* are composed via
-***SubAsm1***'s ***Connector1*** and ***SubAsm2***'s ***Connector2***.
-
-.. image:: images/10-exceptional--mismatched-names--assembly.png
-
-Looking inside each connector, we see that they each have one *role* of
-each port type, but their names are different.
-
-.. image:: images/10-exceptional--mismatched-names--connector2.png
-
-.. image:: images/10-exceptional--mismatched-names--connector1.png
-
-Since each role's port type is unique within its connector, the **META**
-tools will try to match up the roles. The equivalent "elaborated"
-version is depicted below. Note especially the console messages, which
-tell us that a **non-name match** was established between these ports.
-
-.. image:: images/10-exceptional--mismatched-names--elaborated.png
-
-The warning tells us which *roles* from which *connectors* were matched
-due to this inference, instead of by name:
-
-::
-
-    [Warning] Non-name match: Port 1ModelicaConnector in Connector Connector1 and Port 2ModelicaConnector in Connector Connector2 
-    [Warning] Non-name match: Port 1Pin in Connector Connector1 and Port 2Pin in Connector Connector2 
-    [Warning] Non-name match: Port 1SystemCPort in Connector Connector1 and Port 2SystemCPort in Connector Connector2 
-
