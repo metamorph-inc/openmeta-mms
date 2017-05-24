@@ -115,7 +115,6 @@ def build_msi():
     gen_dir_wxi.main(r"..\docs\out\html_documentation")
     gen_dir_wxi.gen_dir_from_vc(r"..\WebGME",)
     gen_dir_wxi.gen_dir_from_vc(r"..\meta\CyPhyML\icons",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\models\MassSpringDamper",)
     gen_dir_wxi.gen_dir_from_vc(r"..\models\Validation",)
     gen_dir_wxi.gen_dir_from_vc(r"..\bin", diskId='3')
     gen_dir_wxi.gen_dir_from_vc(r"..\ModelicaWrapperTemplates",)
