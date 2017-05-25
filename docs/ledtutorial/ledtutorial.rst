@@ -20,8 +20,8 @@ Getting Started
 ---------------
 
 To view all the results of this tutorial you should install Autodesk EAGLE as
-described in the :ref:`integrateddomains` chapter. You will still be able to
-complete the whole tutorial without EAGLE if you choose not to install it.
+described in the :ref:`eda` subchapter. If you choose not to install EAGLE, you
+will still be able to complete the whole tutorial.
 
 Downloading the Tutorial Zip File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

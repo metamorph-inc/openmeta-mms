@@ -14,11 +14,7 @@ Welcome to OpenMETA's documentation!
    concepts/concepts
    ledtutorial/ledtutorial
    walkthroughs/walkthroughs
-   integrateddomains/integrateddomains
-   integrateddomains/cad
-   integrateddomains/eda
-   integrateddomains/modelica
-   integrateddomains/spice
+   domains/domains
    resultsbrowser/resultsbrowser
    visualizer/visualizer
    reference/reference

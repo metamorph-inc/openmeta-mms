@@ -1,4 +1,0 @@
-.. _spice:
-
-Domain: SPICE
-=============

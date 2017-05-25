@@ -1,4 +1,0 @@
-.. _modelica:
-
-Domain: Modelica
-================
