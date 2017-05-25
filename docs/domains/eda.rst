@@ -1,14 +1,22 @@
 .. _eda:
 
-Electronics Design Automation (EDA)
+Electronic Design Automation (EDA)
 ===================================
 
-Electronics Design Automation (EDA) is...
+Electronic Design Automation (EDA) tools enable the design and manufacture of
+electronic systems and integrated circuits. [1]_ In the integration of EDA tools
+with OpenMETA we all the capture of `Schematic Models`_ for each of the
+components used in a model and expose the pins of the component to be used
+for the composition in a design.
 
 Autodesk Eagle
 ~~~~~~~~~~~~~~
 
-`Autodesk Eagle <https://www.autodesk.com/products/eagle/overview>`_ is a free schematic and layout editor for electronic circuit design and the creation of Printed Circuit Boards (PCBs). When used in conjunction with OpenMETA, the user is able compose designs using a rich library of components in the tools and automatically generate ``.brd`` files from the model.
+`Autodesk Eagle <https://www.autodesk.com/products/eagle/overview>`_ is a free
+schematic and layout editor for electronic circuit design and the creation of
+Printed Circuit Boards (PCBs). When used in conjunction with OpenMETA, the user
+is able compose designs using a rich library of components in the tools and
+automatically generate ``.brd`` files from the model.
 
 We recommend using the latest version of the EAGLE tools that can
 be found on the `Autodesk Eagle Download Page
@@ -29,5 +37,20 @@ models to represent a component's schematic model.
 
    *EAGLE Model of a Light-Emitting Diode (LED)*
 
-BOM Analysis
-~~~~~~~~~~~~
+Bill of Materials Analysis
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When a component is created and a Schematic Model is added using the
+Component Authoring Tool, OpenMETA automatically generates and populates a
+collection of propertiesbased on the provided part number when a Schematic
+Model.
+
+These part numbers are later used to quickly generate a Bill of Materials
+(BOM) from the parts present in a particular design. This feature relies upon
+open `Octopart <https://octopart.com/>`_ API.
+
+------
+
+**Footnotes**
+
+.. [1] `<https://en.wikipedia.org/wiki/Electronic_design_automation>`_
