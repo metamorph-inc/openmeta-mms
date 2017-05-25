@@ -11,6 +11,7 @@ Welcome to OpenMETA's documentation!
    :caption: Contents:
 
    introduction/introduction
+   installation/installation
    concepts/concepts
    ledtutorial/ledtutorial
    walkthroughs/walkthroughs
