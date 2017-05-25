@@ -34,9 +34,32 @@ Benefits of OpenMETA
    components from outside of our library.
 -  Gauge the cost of ideas before designs are finalized.
 
-Getting Started
----------------
+How to Use This Documentation
+-----------------------------
 
-#. Install the tools by navigating to the the `OpenMETA Page <http:www.metamorphsoftware.com/openmeta/>`_ on the Metamorph website.
-#. Do the tutorial
-#. Continue reading documentation and playing with advanced examples.
+This documentation should be used a both an installation guide and primer for
+those who are beginning to learn OpenMETA as well as a reference guide for
+experience users.
+
+The :ref:`installation` chapter explains all you need to know to set up the
+tools on your computer.
+
+The :ref:`concepts` and :ref:`ledtutorial` chapters explain the key concepts
+and modeling elements used when building and editing OpenMETA models and then
+guide the user through the building and analysis of a simple LED example model.
+
+The :ref:`walkthroughs` chapter showcases a couple of example models that
+demonstrate the power of the OpenMETA tools.
+
+The :ref:`domains` chapter enumerates all the major domains that have been
+integrated with OpenMETA; covers how to configure these domain-specific external
+tools to work with OpenMETA; and explains the domain-specific
+model elements, attributes, and principles for each domain.
+
+The :ref:`resultsbrowser` and :ref:`visualizer` chapters describe the tools
+provided with OpenMETA to manage and visualize the generated Test Bench and
+Parametric Exploration Tool results.
+
+Finally, the :ref:`reference` and :ref:`connectors` appendices are used for
+reference and understanding of some of the more complex concepts within
+OpenMETA.
