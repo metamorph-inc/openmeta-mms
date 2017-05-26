@@ -3,6 +3,14 @@
 Modelica
 ================
 
+OpenModelica is an open-source Modelica-based modeling and simulation environment intended for industrial and academic usage. META uses OpenModelica for physics simulations, including mechanical, thermal, and power analysis.
+
+Installation
+^^^^^^^^^^^^
+
+1. Download `OpenModelica <https://build.openmodelica.org/omc/builds/windows/releases/1.9.1/beta2/OpenModelica-1.9.1-Beta2-revision-19512.exe>`_.
+2. Run the executable.
+
 Modelica Models
 ^^^^^^^^^^^^^^^
 

@@ -3,59 +3,7 @@ Chapter 2: Installation and Setup {#installation-and-setup}
 
 This chapter will help you ensure your computer has the proper resources for the Metamorphosys tools, and guide you through the process of acquiring and setting up the software.
 
-
-## Verify System Requirements
-
-In order to run the META tools your computer must have the following requirements:
-
-1. **A 64-bit Windows 7 or 8 PC Platform**
-
-	*How to tell if your Windows computer is 64-bit:*
-
-	1. Open System by clicking the Start button, right-clicking Computer, and then clicking Properties.
-	2. Under *System*, you can view the system type.
-
-2. **6 GB RAM minimum (8 GB RAM recommended)**
-3. **At least 10GB of spare hard disk space**
-
-	More than 50GB is recommended
-
-4. **Google Chrome**
-
-	Download and install <b>[Google Chrome](https://www.google.com/intl/en/chrome/browser/)</b>
-
-5. **Windows .NET Framework 4.0 or 4.5**
-
-    (Windows 8 and 8.1 have .NET Framework 4.5 installed by default)
-
-	*How to tell if your computer has Windows .NET Framework 4.0 installed:*
-
-	1. Open your Control Panel by clicking the Start button and then clicking Control Panel.
-	2. Click Uninstall a Program to view your list of installed programs.
-	3. If Windows .NET Framework 4.0 is not on your list of installed programs, you can download it [here](http://www.microsoft.com/en-us/download/details.aspx?id=17851).
-
-## Install Tools
-Once you've verified that your system meets these requirements, **install the following programs in the order listed below**. The first three installers are required to complete the tutorial in the next chapter. You can install the other tools later on.
-
 ## Tools Required For Tutorial
-
-**Note: You will need to install these tools in the order seen below**
-
-**1) Generic Modeling Environment (GME)**
-
-GME is a configurable toolkit for creating domain-specific models and program synthesis environments. The META tools are built on top of the GME platform.
-
-[<b>Download GME Installer</b>](http://repo.isis.vanderbilt.edu/GME/14.7.28/GME_x64-14.7.28.msi) 
-
-Remember to install GME **before installing the META core.**
-
-**2) Metamorphosys Core**
- 
-The **Metamorphosys Core** (aka META Core) contains the primary set of interpreters and tools for assembling models and running simulations.
-
-[<b>Download META (Windows-Beta) Installer</b>](http://docs.metamorphsoftware.com/alpha-releases/meta-tools/META_x64_beta_1994.msi)
-
-Note: Remember to install GME **before** installing the META core.
 
 **3) EAGLE**
 
@@ -65,12 +13,6 @@ EAGLE (Easily Applicable Graphical Layout Editor) is an electronic design automa
 
 ## Additional Tools
 
-### OpenModelica
-
-OpenModelica is an open-source Modelica-based modeling and simulation environment intended for industrial and academic usage. META uses OpenModelica for physics simulations, including mechanical, thermal, and power analysis.
-
-[Download OpenModelica](https://build.openmodelica.org/omc/builds/windows/releases/1.9.1/beta2/OpenModelica-1.9.1-Beta2-revision-19512.exe).
-
 ### Visual Studio Express
 
 **Visual Studio Express** is a software development tool suite provided by **Microsoft**. **META** uses **Visual Studio** to compile **SystemC** simulations. The included IDE may also be useful for writing firmware to be included in a design.
@@ -78,7 +20,7 @@ OpenModelica is an open-source Modelica-based modeling and simulation environmen
 [Download Visual Studio Express](http://www.visualstudio.com/en-us/downloads/download-visual-studio-vs#DownloadFamilies_4) by selecting the ***Visual C++ 2010 Express*** option and clicking <i>"Install Now"</i>.
 
 
-###Android SDK 
+###Android SDK
 This optional tool is used for developing, building and deploying Android applications. The command line SDK is also bundled with the Eclipse-based Android Developer Tools (ADT), a complete IDE for these development tasks. Finally, the included Android Emulator (based on QEMU) can be used to execute Android applications which interact with SystemC peripheral models. The necessary communication bridge and SystemC simulator is included in META Core package.
 
 
@@ -124,7 +66,3 @@ NOTE:</b> The CadQuery library must be copied into the "<FreeCAD_Install_Dir/>Mo
 | **Manufacturing Example** | [download](http://docs.metamorphsoftware.com/alpha-releases/design-models/manufacturing_example.zip) | A META design project used to demonstrate the generation of files for submitting a design to a circuit board fabricator.
 
 - - -
-
-
-
-

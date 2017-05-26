@@ -141,12 +141,14 @@ with links to manufacturers' SPICE-model download pages:
 http://www.5spice.com/links.htm
 
 If a manufacturer-supplied open-source model is not available, there are
-still several possibilities, listed in no particular order: - an open
-SPICE model for the component, created by someone other than the
-manufacturer, might be available online, - a SPICE model for an
-electrically similar component might be substituted, - a simple SPICE
-model might be approximated from the component's datasheet specs, - a
-SPICE model might be developed from measured component characteristics.
+still several possibilities, listed in no particular order:
+
+-  an open SPICE model for the component, created by someone other than the
+   manufacturer, might be available online,
+-  a SPICE model for an electrically similar component might be substituted,
+-  a simple SPICE model might be approximated from the component's datasheet
+   specs,
+-  a SPICE model might be developed from measured component characteristics.
 
 Required and recommended features of CIR files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,7 +250,7 @@ A CIR file using an initial ".SUBCKT" containing multiple ".MODEL"
 definitions, is shown in **Figure 5**. This CIR file models the Vishay
 Siliconix Si8808DB N-Channel MOSFET.
 
-.. image:: images/06-04-complex-600-Cir.png
+.. figure:: images/06-04-complex-600-Cir.png
    :alt: image
 
    Figure 5: A MOSFET CIR file using ".SUBCKT" and ".MODEL" definitions
