@@ -16,6 +16,7 @@ Welcome to OpenMETA's documentation!
    ledtutorial/ledtutorial
    walkthroughs/walkthroughs
    domains/domains
+   testbenches/00-TestBenches
    resultsbrowser/resultsbrowser
    visualizer/visualizer
    reference/reference
