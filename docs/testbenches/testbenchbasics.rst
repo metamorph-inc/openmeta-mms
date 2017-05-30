@@ -67,4 +67,4 @@ Manager** window.
     For more information on using the *Project Analyzer*, see `Project
     Analyzer <@ref%20project-analyzer>`__.
 
-    .. |MasterInterpreter Icon| image:: images/11-00-master-interpreter-icon.png
+.. |MasterInterpreter Icon| image:: images/11-00-master-interpreter-icon.png
