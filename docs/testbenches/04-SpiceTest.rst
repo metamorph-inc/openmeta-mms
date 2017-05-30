@@ -33,7 +33,7 @@ The initial test bench is configured to run for 1 second with a 10us
 The value of this attribute must be a valid ``.TRAN`` statement.
 
 This statement specifies the time interval over which the transient
-analysis takes place, and the time increments. The format is as follows:
+analysis takes place, and the time increments. The format is as follows [1]_:
 
 ``.TRAN TSTEP TSTOP <TSTART <TMAX>> <UIC>``
 
