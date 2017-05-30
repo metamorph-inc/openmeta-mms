@@ -1,3 +1,5 @@
+.. _testbenches:
+
 Test Benches
 ============
 

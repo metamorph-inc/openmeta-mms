@@ -51,15 +51,20 @@ guide the user through the building and analysis of a simple LED example model.
 The :ref:`walkthroughs` chapter showcases a couple of example models that
 demonstrate the power of the OpenMETA tools.
 
-The :ref:`domains` chapter enumerates all the major domains that have been
-integrated with OpenMETA; covers how to configure these domain-specific external
-tools to work with OpenMETA; and explains the domain-specific
-model elements, attributes, and principles for each domain.
+The :ref:`domains` chapter enumerates all the major
+domains that have been integrated with OpenMETA, covers how to configure these
+domain-specific external tools to work with OpenMETA, and explains the
+domain-specific model elements, attributes, and principles for each domain.
+Then the :ref:`testbenches` chapter describes how to run testbenches that
+generate and execute models in tools from the various domains.
 
 The :ref:`resultsbrowser` and :ref:`visualizer` chapters describe the tools
 provided with OpenMETA to manage and visualize the generated Test Bench and
 Parametric Exploration Tool results.
 
-Finally, the :ref:`reference` and :ref:`connectors` appendices are used for
+The :ref:`reference` and :ref:`connectors` appendices are used for
 reference and understanding of some of the more complex concepts within
 OpenMETA.
+
+Finally, the :ref:`olddocs` chapter links to the old version of the
+documentation.
