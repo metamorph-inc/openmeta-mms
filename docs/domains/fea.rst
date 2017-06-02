@@ -6,16 +6,16 @@ Finite-Element Analysis (FEA)
 Overview
 --------
 
-This chapter will serve as a tutorial that demonstrates the FEA analysis aspect of CyPhy. We will build a simple FEA testbench using a
+This chapter will serve as a tutorial that demonstrates the FEA analysis aspect of OpenMETA. We will build a simple FEA TestBench using a
 basic Creo model. This tutorial uses the skills learned in Chapter 3:
 LED Tutorial,so you'll need to have completed that chapter prior to
 attempting this one. Through this tutorial you will learn how to:
 
 -  Build a Component for a solid model
 -  Build a Component Assembly for a solid model
--  Build an FEA testbench
+-  Build an FEA TestBench
 -  Generate results
--  Perform solid analysis and simulation on testbench
+-  Perform solid analysis and simulation on TestBench
 
 Downloading the Tutorial Zip File
 ---------------------------------
@@ -34,14 +34,14 @@ Setting Up Directory
 *Note: Be sure all the files (e.g. "components folder", ``.xme`` file)
 are in the same directory throughout the tutorial.*
 
-Generic Process for an FEA testbench
+Generic Process for an FEA TestBench
 ------------------------------------
 
-The FEA testbench in CyPhy works much like all the other testbenches do,
+The FEA TestBench in OpenMETA works much like all the other TestBenches do,
 in that it requires a referenced component assembly. The general
-structure follows the trend: **Testbench -> Component assembly ->
+structure follows the trend: **TestBench -> Component assembly ->
 component -> Creo 3.0 model**. We will start our work from the bottom
-and build up to the testbench. Since the Creo.prt file is provided in
+and build up to the TestBench. Since the Creo.prt file is provided in
 the download, we will begin with building the component.
 
 Building a CAD Component
@@ -72,7 +72,7 @@ This process breaks down into the following steps:
 Creating a New Component
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-A component houses the Creo part reference, as well as defining objects for the Model. This is the smallest piece of the FEA testbench hierarchy, so it must be developed first.
+A component houses the Creo part reference, as well as defining objects for the Model. This is the smallest piece of the FEA TestBench hierarchy, so it must be developed first.
 
 1.  In your **GME Browser**, open the ***RootFolder*** by left-clicking
     the plus box to the left of the name.
@@ -120,14 +120,14 @@ points on the center of every face of the cube in the Creo model.
    
 While they are defined in the model, they have not yet been defined in our
 component.
-
-1. Select the `solid modeling` tab of the **Part Browser**
-2. Find the **point** object and drag and drop into the component
+1. Connect (Ctrl+2) the **PTC_Material_Name** to the Parameter with the matching name in the `CAD Model`
+2. Select the `solid modeling` tab of the **Part Browser**
+3. Find the **point** object and drag and drop into the component
    workspace
-3. Repeat this process 6 more times (one for every reference point on
+4. Repeat this process 6 more times (one for every reference point on
    the model) and rename all points to match the names of the points in
    the model
-4. Enter **connect mode** (Ctrl+2) and connect all these points to their
+5. Enter **connect mode** (Ctrl+2) and connect all these points to their
    corresponding points as **Port Composition** in the CADModel
 
 .. figure:: images/IMAGE2.png
@@ -290,7 +290,7 @@ Building the Component Assembly
 
 We have successfully created the CyPhy Component which can be used to
 edit the Creo model directly, with added parameters and internal Creo
-relationships. If you recall, the Testbench requires a Referenced
+relationships. If you recall, the TestBench requires a Referenced
 **Component Assembly** and not a Component directly. This allows for the
 user to test a *Design Space* (multiple configurations) of a model instead of each configuration
 individually. The following steps will walk you through the construction of
@@ -308,20 +308,139 @@ a CyPhy component assembly
    
 `NOTE: There must be a blue circle in the top right corner with an R inside, idicating that this is a reference to the component`
 
-We have just created a reference to the Component **Simple\_Cube** inside of our Component Assembly. The object here can be edited by parameters or other objects linked in the assembly or in a testbench so long as they are connected properly. Now that the component is referenced, we need to expose these surface points so that they can be used by the FEA testbench.
+We have just created a reference to the Component **Simple\_Cube** inside of our Component Assembly. The object here can be edited by parameters or other objects linked in the assembly or in a TestBench so long as they are connected properly. Now that the component is referenced, we need to expose these surface points so that they can be used by the FEA TestBench.
 
-6. Redirect back to the **Simple_Cube** component
-7. select all the **Surf_Ref** points created earlier and copy them with `Ctrl+c`
-8. Direct back into **Cube_Assembly** and Paste the points with `Ctrl+v`
+7. Redirect back to the **Simple_Cube** component
+8. select all the **Surf_Ref** points created earlier and copy them with `Ctrl+c`
+9. Direct back into **Cube_Assembly** and Paste the points with `Ctrl+v`
 
 We have copied over all the necessary points while also keeping the same order, saving us time in the future. 
 
-9. Connect all the points to thier reference points in the ComponentReference
+10. Connect all the points to thier reference points in the ComponentReference
 
 .. figure:: images/IMAGE12.png
    :alt: Solid Modeling Demo
 
-We have now exposed the surface reference points of the Creo model through the **Component Reference** in the **Component Assembly**. This allows us to reference these points directly in our FEA testbench. Now that both the Component and Component Assembly are built, it is time to create the FEA testbench.
+We have now exposed the surface reference points of the Creo model through the **Component Reference** in the **Component Assembly**. This allows us to reference these points directly in our FEA TestBench. Now that both the Component and Component Assembly are built, it is time to create the FEA TestBench.
 
-Building the Testbench
+Building the TestBench
 ----------------------
+TestBenches can be as simple as a few blocks for computation, or complex as many references that send and recieve data from different programs to compute large scale behavioral studies. The generic FEA TestBench consists of:
+
+* Tool Features
+* System Under Test
+* Test Injection Points
+
+Tool Features
+^^^^^^^^^^^^^
+
+Before we can start building the TestBench, we have to give it a home folder.
+
+1. Right-click on **Root folder -> Insert folder ->Testing**
+2. Right-click on **Testing -> Insert model ->StructuralFEATestBench**
+3. Rename this **Simple_Cube_FEA**
+4. Double left-click **Simple_Cube_FEA** to open the blank TestBench canvas
+5. In the `Part Browser`, locate **Mesh Parameters** and drag it into the workspace
+6. Select the **Mesh Parameters** and change the values in the **Attributes tab** of the Object Inspector as shown below
+
+.. figure:: images/IMAGE12_5.png
+   :alt: Solid Modeling Demo
+   
+7. In the `Part Browser`, locate **WorkflowRef** and drag it into the workspace
+8. In the `GME Browser` Right-click on **Testing -> Insert folder -> Workflow Definitions**
+9. Right-click on **Workflow Definitions -> Insert model -> Workflow**
+10. Rename this `Workflow` **CADAssembly**
+11. Right-click on **CADAssembly -> Insert atom -> Task -> CyPhy2CAD**
+
+.. figure:: images/IMAGE12_75.png
+   :alt: Solid Modeling Demo
+
+12. Redirect back t0 **Simple_Cube_FEA**, locate the **WorkflowRef** in the `Part Browser` and drag it into the workspace
+13. Left-click the **CADAssembly** `workflow` and drop it on top of the WorkflowRef
+14. Rename the 'WorkflowRef` **CADAssembly**
+
+.. figure:: images/IMAGE12_9.png
+   :alt: Solid Modeling Demo
+
+The added **Mesh Parameters** allows us to specify to Patran, the meshing software, how we want to generate the mesh. The **CADAssembly** WorkflowRef tells our tool what task it needs to execute to properly run the FEA TestBench.
+   
+System Under Test
+^^^^^^^^^^^^^^^^^
+
+A **SystemUnderTest** part tells the tool what we are trying to analyze in the TestBench. This acts much like a reference to our **Cube_Assembly** `Component Assembly`, which is in turn a reference to our **Simple_Cube** `Component`.
+
+1. in the `Part Browser` locate the object **System Under Test**, drag and drop this into the workspace
+2. In the GME Browser, left click the Cube_Assembly and drop it ontop of the **System Under Test**
+
+.. figure:: images/IMAGE13.png
+   :alt: Solid Modeling Demo
+   
+`NOTE: There must be a blue circle in the top right corner with an R inside, idicating that this is a reference to the Component Assembly`
+
+We have now told the tool what to analyze but we haven't specified how to do so yet. To do that we need an **TestInjectionPoint**
+
+Test Injection Point
+^^^^^^^^^^^^^^^^^^^^
+
+We will now specify what is happening to the CAD model we have referenced, and where these actions are taking place on the model. For our FEA analysis we care greatly about how the part reacts when loaded under certian conditions. or simplicity, the Cube will be fixed at its base, while having a downward load applied to the top. Imagine this like placing a large book over the entire top surface of a table, and analyzing how the table responds to the newly applied load. From intuition, we know it is most accurate to treat this as a pressure (Weight of book / Area of cube). 
+
+1. Locate the **TestInjectionPoint** in the `Part Browser` and drag it into the workspace
+2. Left-click **Cube_Assembly** and drop it ontop of the `TestInjectionPoint`
+
+.. figure:: images/IMAGE14.png
+   :alt: Solid Modeling Demo
+
+`NOTE: There must be a blue circle in the top right corner with an R inside, idicating that this is a reference to the component. If the Surface_reference_points are not fully displaying thier names, change the **Port Label Length** in the preferences tab of the object inspector to 0.`
+
+3. In the `Part Browser` locate the **Face** oject and drag it into the workspace. Change the `Face Icon name` in the `Preferences` tab of the `Object Inspector` to **Surface.png**
+4. Double left-click the face to edit. Inside, drop a **ReferencePoint**
+5. Direct back to **Simple_Cube_FEA** and copy this edited **Face** and paste 1 more (for the bottom and top faces of the cube)
+6. Rename the faces **Face_Ref_Top** and **Face_Ref_Bottom**
+6. Connect these faces to **SURF_REF_TOP** and **SURF_REF_BOTTOM**
+7. In the `Part Browser` locate the **DisplacementConstraint** oject and drag it into the workspace.
+8. Double left-click the **DisplacementConstraint** to edit it. add in a **Rotation** and **Translation** part
+9. Select the rotation part, and in the `Attributes` tab of the`Object Inspector` change the X,Y,Z directions from **Scalar** to **Free**
+
+.. figure:: images/IMAGE15.png
+   :alt: Solid Modeling Demo
+
+10. Direct back to the `Simple_Cube_FEA` and connect the **DisplacementConstraint** to **Face_Ref_Bottom**
+11. In the `Part Browser`, drag and drop the **PressureLoadParam** into the workspace
+12. Double left-click the **PressureLoadParam** and add in a **PressureLoad**
+13. In the 'Object Inspector` set the `value` to **15**
+14. To assign proper units: left-click the plus box next to **UnitLibrary QUDT-> TypeSpecifications-> Units**. Locate MegaPascals and drop it ontop of the **PressureLoad**
+
+.. figure:: images/IMAGE16.png
+   :alt: Solid Modeling Demo
+   
+15. Copy (Ctrl+C) the Pressure load and Paste it inside of **Simple_Cube_FEA**
+16. Connect this to the **PressureLoadParam**
+
+.. figure:: images/IMAGE17.png
+   :alt: Solid Modeling Demo
+   
+We have now specified that we want to place a 15MPa pressure over the entire top surface of the cube while keeping the entire bottom surface from translating in any direction. Next we must specify how we want to solve this and what data we want to solve for.
+
+1. Left-click on blanks space; in the `Object Inspector` change the `Solver Type` to **PATRAN_NASTRAN** and the `ElementType` to **Plate4**
+2. In the `Part Browser` add a **StructuralFEAComputation**. Double left-click to edit the part.
+3. Add in a **FactorOfSaftey** and **MisesStress** aspect, then redirect to `Simple_Cube_FEA`
+4. Connect the **TestInjectionPoint** to the **StructuralFEAComputation** by clicking on the box border of both
+
+.. figure:: images/IMAGE18.png
+   :alt: Solid Modeling Demo
+   
+5. In the `Part Browser` add in 2 **Metric** parts. Rename these **FactorOfSaftey**** and **MisesStress**
+6. Connect these to their **StructuralFEAComputation** counterparts
+
+.. figure:: images/IMAGE19.png
+   :alt: Solid Modeling Demo
+
+In general, when condcuting an FEA TestBench, we are interested in simulating a load and seeing the reaction of a part. In our case, we only want to see values that do not exceed the ultimate strength of the Cube. We can set this as a **Metric Constraint** that limits values to always exceed a factor of safety of 1.0
+   
+7. In the `Part Browser` locate and add a **Metric Constraint**
+8. Rename this **ReserveFactorRequirement**
+9. set the `TargetVaule` to **1.0**
+10. Connect this to the **FactorOfSaftey** metric
+
+This does not change how the user views the data but how the TestBench Manifest sorts data. This is generally good practice as it will help debug a design space if parts continually fail the factor of saftey requirement.
+ 
