@@ -278,7 +278,16 @@ CADModel as shown by the **Chain** from **MaterialContents\_Front** to
 
 .. figure:: images/IMAGE10.png
    :alt: Solid Modeling Demo
-   
+5. Connect **MaterialContents_Front** to **Face\_Ref\_Front**
+
+.. figure:: images/IMAGE10_5.png
+   :alt: Solid Modeling Demo
+
+6. Repeat this step for every `MaterialContents` and its corresponding face.
+
+.. figure:: images/IMAGE10_75.png
+   :alt: Solid Modeling Demo
+
 Now all of the MaterialContents objects are connected as needed. They
 reference the same point as their corresponding face object, and point
 in the direct of the previous Material Contents Object to the
@@ -442,5 +451,7 @@ In general, when condcuting an FEA TestBench, we are interested in simulating a 
 9. set the `TargetVaule` to **1.0**
 10. Connect this to the **FactorOfSaftey** metric
 
-This does not change how the user views the data but how the TestBench Manifest sorts data. This is generally good practice as it will help debug a design space if parts continually fail the factor of saftey requirement.
- 
+This does not change how the user views the data but how the TestBench Manifest sorts data. This is generally good practice as it will help debug a design space if parts continually fail the factor of saftey requirement. Our now Complete TestBench should look like this:
+
+.. figure:: images/IMAGE20.png
+   :alt: Solid Modeling Demo
