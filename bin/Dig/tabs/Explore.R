@@ -269,7 +269,7 @@ server <- function(input, output, session, data) {
   vars_list <- reactive({
     idx <- NULL
     for(choice in 1:length(input$display)) {
-      mm <- match(input$display[choice],data$pre$var_names())
+      mm <- match(input$display[choice],names(data$raw$df))
       if(mm > 0) { idx <- c(idx,mm) }
     }
     idx

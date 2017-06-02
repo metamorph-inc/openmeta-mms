@@ -240,8 +240,11 @@ Server <- function(input, output, session) {
   
   # Data Pre-Processing --------------------------------------------------------
 
-  var_names <- reactive({names(data$raw$df)})
-  var_class <- reactive({sapply(data$raw$df, class)})
+  var_class <- reactive({
+    df_class <- sapply(data$raw$df, class)
+    df_class[-which(names(df_class) %in% c("GUID", "CfgID"))]
+  })
+  var_names <- reactive({names(var_class())})
   var_facs <- reactive({
     if (any(var_class() == "factor")) {
       var_names()[var_class() == "factor"]
