@@ -1,3 +1,6 @@
+require(jpeg)
+require(png)
+
 title <- "Explore"
 footer <- TRUE
 
@@ -137,11 +140,27 @@ ui <- function(id) {
             selectInput(ns("details_guid"), label = "GUID", choices = c()),
             # br(),
             verbatimTextOutput(ns("point_details")),
-            br(),
+            
             conditionalPanel(
                   condition = paste0('output["', ns('found_simdis'), '"] == true'),
+                  br(),
+                  h4("SIMDIS"),
                   selectInput(ns("file_simdis"), NULL, c(), NULL),
                   actionButton(ns("launch_simdis"), "Launch in SimDis")
+            ),
+            conditionalPanel(
+                  condition = paste0('output["', ns('found_images'), '"] == true'),
+                  br(),
+                  h4("Images"),
+                  selectInput(ns("file_images"), NULL, c(), NULL),
+                  actionButton(ns("launch_images"), "Launch in Viewer")
+            )
+          ),
+          column(6,
+            br(),
+            conditionalPanel(
+                  condition = paste0('output["', ns('found_images'), '"] == true'),
+                  tags$div(imageOutput(ns("image")), style="text-align: center;")
             )
           )
         )
@@ -489,4 +508,49 @@ server <- function(input, output, session, data) {
                                "VisualizerRunSimdis_stderr.log"),
             wait = FALSE)
   })
+  
+  output$found_images <- reactive({
+    guid_folder <- guid_folders[[input$details_guid]]
+    if(!is.null(guid_folder) &&
+       "images.zip" %in% tolower(list.files(guid_folder))) {
+      choices <- unzip(file.path(guid_folder, "images.zip"), list = TRUE)$Name
+      choices <- choices[grepl(".png$", choices) | grepl(".jpg$", choices)]
+      unzip(file.path(guid_folders[[input$details_guid]], "images.zip"),
+            exdir = tempdir())
+      updateSelectInput(session, "file_images",
+                        choices = choices,
+                        selected = choices[1])
+      TRUE
+    } else {
+      FALSE
+    }
+  })
+  outputOptions(output, "found_images", suspendWhenHidden=FALSE)
+  
+  output$image <- renderImage({
+    req(input$file_images)
+    path <- file.path(tempdir(), input$file_images, fsep="\\")
+    max_width  <- session$clientData[[paste0('output_', ns("image"), "_width")]]
+    max_height <- session$clientData[[paste0('output_', ns("image"), "_height")]]
+    if (grepl(".png$", input$file_images)) {
+      type <- "image/png"
+      dims <- dim(png::readPNG(path))
+    } else {
+      type <- "image/jpg"
+      dims <- dim(jpeg::readJPEG(path))
+    }
+    print(paste("mh:", max_height, "mw:", max_width))
+    print(paste("h:", dims[1], "w:", dims[2]))
+    if(max_width/max_height>dims[1]/dims[2]) {
+      list(src = path,
+           contentType = "image/png",
+           height = max_height,
+           align = "center")
+    } else {
+      list(src = path,
+           contentType = "image/png",
+           width = max_width)
+    }
+    
+  }, deleteFile = FALSE)
 }
