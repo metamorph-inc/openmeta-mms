@@ -62,6 +62,9 @@ namespace PETBrowser
                 {
                     Manager.LocalConcurrentThreads = value;
                 }
+
+                Properties.Settings.Default.SelectedThreadCount = value;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -92,11 +95,15 @@ namespace PETBrowser
         public JobStore()
         {
             PhysicalCoreCount = LocalPool.GetNumberOfPhysicalCores();
-            SelectedThreadCount = PhysicalCoreCount; //TODO: load setting from a previous session?
-            ThreadOptionsList = Enumerable.Range(1, USER_THREAD_COUNT_MAX).ToList();
-            if (SelectedThreadCount > USER_THREAD_COUNT_MAX)
+            SelectedThreadCount = Properties.Settings.Default.SelectedThreadCount; //TODO: load setting from a previous session?
+            if (SelectedThreadCount == 0)
             {
-                ThreadOptionsList.Add(SelectedThreadCount);
+                SelectedThreadCount = PhysicalCoreCount;
+            }
+            ThreadOptionsList = Enumerable.Range(1, USER_THREAD_COUNT_MAX).ToList();
+            if (PhysicalCoreCount > USER_THREAD_COUNT_MAX)
+            {
+                ThreadOptionsList.Add(PhysicalCoreCount);
             }
 
             UiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
