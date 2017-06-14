@@ -134,39 +134,42 @@ ui <- function(id) {
         )
       ),
       tabPanel("Point Details",
-        fluidRow(
-          column(6,
-            br(),
-            selectInput(ns("details_guid"), label = "GUID", choices = c()),
-            # br(),
-            verbatimTextOutput(ns("point_details")),
-            
-            conditionalPanel(
-                  condition = paste0('output["', ns('found_simdis'), '"] == true'),
-                  br(),
-                  h4("SIMDIS"),
-                  selectInput(ns("file_simdis"), NULL, c(), NULL),
-                  actionButton(ns("launch_simdis"), "Launch in SimDis")
-            ),
-            conditionalPanel(
-                  condition = paste0('output["', ns('found_images'), '"] == true'),
-                  br(),
-                  h4("Images"),
-                  selectInput(ns("file_images"), NULL, c(), NULL),
-                  actionButton(ns("launch_images"), "Launch in Viewer")
+        uiOutput(ns("guids_error")), 
+        conditionalPanel(
+          condition = paste0('output["', ns('guids_present'), '"] == true'),
+          fluidRow(
+            column(12,
+              br(),
+              selectInput(ns("details_guid"), label = "GUID", choices = c(), NULL),
+              verbatimTextOutput(ns("point_details"))
             )
-          ),
-          column(6,
-            br(),
-            conditionalPanel(
-                  condition = paste0('output["', ns('found_images'), '"] == true'),
-                  tags$div(imageOutput(ns("image")), style="text-align: center;")
+          )
+        ),
+        conditionalPanel(
+          condition = paste0('output["', ns('found_simdis'), '"] == true'),
+          hr(),
+          fluidRow(
+            column(12, h4("SIMDIS")),
+            column(3, selectInput(ns("file_simdis"), NULL, c(), NULL)),
+            column(3, actionButton(ns("launch_simdis"), "Launch in SimDis"))
+          )
+        ),
+        conditionalPanel(
+          condition = paste0('output["', ns('found_images'), '"] == true'),
+          hr(),
+          fluidRow(
+            column(3, h4("Images"),
+              selectInput(ns("file_images"), NULL, c(), NULL),
+              actionButton(ns("launch_images"), "Launch in Viewer")
+            ),
+            column(9, br(),
+              tags$div(imageOutput(ns("image"), click = ns("image_click")), style="text-align: center;")
             )
           )
         )
       ),
-      id = ns("explore_tabset"),
-      selected = si(ns("explore_tabset"), NULL)
+      id = ns("tabset"),
+      selected = if (!is.null(si_read(ns("tabset"))) && si_read(ns("tabset")) == "Point Details") "Single Plot" else si(ns("tabset"), NULL) #COMMENT(tthomas): Avoid bug with 'Point Details' tab being selected on launch.
     )
   )
 }
@@ -181,7 +184,7 @@ server <- function(input, output, session, data) {
     }
     saved <- si_read(ns("display"))
     if (is.empty(saved)) {
-      si(ns("display"), NULL)
+      si_clear(ns("display"))
     } else if (all(saved %in% c(data$pre$var_range(), ""))) {
       selected <- si(ns("display"), NULL)
     }
@@ -191,57 +194,6 @@ server <- function(input, output, session, data) {
                       selected = selected)
   })
 
-  observe({
-    selected <- isolate(input$x_input)
-    if(is.null(selected) || selected == "") {
-      selected <- data$pre$var_range()[1]
-    }
-    saved <- si_read(ns("x_input"))
-    if (is.empty(saved)) {
-      si(ns("x_input"), NULL)
-    } else if (saved %in% c(data$pre$var_range(), "")) {
-      selected <- si(ns("x_input"), NULL)
-    }
-    updateSelectInput(session,
-                      "x_input",
-                      choices = data$pre$var_range_list(),
-                      selected = selected)
-  })
-
-  observe({
-    selected <- isolate(input$y_input)
-    if(is.null(selected) || selected == "") {
-      selected <- data$pre$var_range()[2]
-    }
-    saved <- si_read(ns("y_input"))
-    if (is.empty(saved)) {
-      si(ns("y_input"), NULL)
-    } else if (saved %in% c(data$pre$var_range(), "")) {
-      selected <- si(ns("y_input"), NULL)
-    }
-    updateSelectInput(session,
-                      "y_input",
-                      choices = data$pre$var_range_list(),
-                      selected = selected)
-  })
-     
-  observe({
-    selected <- isolate(input$contour_var)
-    if(is.null(selected) || selected == "") {
-      selected <- data$pre$var_range_nums_and_ints()[1]
-    }
-    saved <- si_read(ns("contour_var"))
-    if (is.empty(saved)) {
-      si(ns("contour_var"), NULL)
-    } else if (saved %in% c(data$pre$var_range_nums_and_ints(), "")) {
-      selected <- si(ns("contour_var"), NULL)
-    }
-    updateSelectInput(session,
-                      "contour_var",
-                      choices = data$pre$var_range_nums_and_ints_list(),
-                      selected = selected)
-  })
-     
   output$pairs_plot <- renderPlot({
     
     # Clear the error messages, if any.
@@ -357,7 +309,7 @@ server <- function(input, output, session, data) {
       if(!is.null(x_var) & !is.null(y_var)){
         updateSelectInput(session, "x_input", selected = x_var)
         updateSelectInput(session, "y_input", selected = y_var)
-        updateTabsetPanel(session, "explore_tabset", selected = "Single Plot")
+        updateTabsetPanel(session, "tabset", selected = "Single Plot")
         break
       }
       xlimits <- xlimits + plot + buffer
@@ -372,8 +324,59 @@ server <- function(input, output, session, data) {
   
   # Single Plot Tab ----------------------------------------------------------
 
+  observe({
+    selected <- isolate(input$x_input)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range()[1]
+    }
+    saved <- si_read(ns("x_input"))
+    if (is.empty(saved)) {
+      si_clear(ns("x_input"))
+    } else if (saved %in% c(data$pre$var_range(), "")) {
+      selected <- si(ns("x_input"), NULL)
+    }
+    updateSelectInput(session,
+                      "x_input",
+                      choices = data$pre$var_range_list(),
+                      selected = selected)
+  })
+
+  observe({
+    selected <- isolate(input$y_input)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range()[2]
+    }
+    saved <- si_read(ns("y_input"))
+    if (is.empty(saved)) {
+      si_clear(ns("y_input"))
+    } else if (saved %in% c(data$pre$var_range(), "")) {
+      selected <- si(ns("y_input"), NULL)
+    }
+    updateSelectInput(session,
+                      "y_input",
+                      choices = data$pre$var_range_list(),
+                      selected = selected)
+  })
+     
+  observe({
+    selected <- isolate(input$contour_var)
+    if(is.null(selected) || selected == "") {
+      selected <- data$pre$var_range_nums_and_ints()[1]
+    }
+    saved <- si_read(ns("contour_var"))
+    if (is.empty(saved)) {
+      si_clear(ns("contour_var"))
+    } else if (saved %in% c(data$pre$var_range_nums_and_ints(), "")) {
+      selected <- si(ns("contour_var"), NULL)
+    }
+    updateSelectInput(session,
+                      "contour_var",
+                      choices = data$pre$var_range_nums_and_ints_list(),
+                      selected = selected)
+  })
+     
   observeEvent(input$single_back_pairs, {
-    updateTabsetPanel(session, "explore_tabset", selected = "Pairs Plot")
+    updateTabsetPanel(session, "tabset", selected = "Pairs Plot")
   })
   
   output$single_plot <- renderPlot(SinglePlot())
@@ -433,8 +436,26 @@ server <- function(input, output, session, data) {
                  maxpoints = 8))
   })
   
-  # Single Point Details -----------------------------------------------------
+  # Point Details -----------------------------------------------------
 
+  observe({
+    selected <- isolate(input$details_guid)
+    choices <- as.character(data$raw$df$GUID)
+    if(is.null(selected) || selected == "") {
+      selected <- choices[1]
+    }
+    saved <- si_read(ns("details_guid"))
+    if (is.empty(saved)) {
+      si_clear(ns("details_guid"))
+    } else if (saved %in% c(choices, "")) {
+      selected <- si(ns("details_guid"), NULL)
+    }
+    updateSelectInput(session,
+                      "details_guid",
+                      choices = choices,
+                      selected = selected)
+  })
+  
   observe({
     pts <- nearPoints(data$Filtered(),
                       input$plot_dblclick,
@@ -443,7 +464,7 @@ server <- function(input, output, session, data) {
                       maxpoints = 1)
     if(nrow(pts) != 0) {
       guid <- as.character(unlist(pts[["GUID"]]))
-      updateTabsetPanel(session, "explore_tabset",
+      updateTabsetPanel(session, "tabset",
                         selected = "Point Details")
       updateSelectInput(session, "details_guid", selected = guid)
     }
@@ -456,22 +477,18 @@ server <- function(input, output, session, data) {
     data[!(names(data) == "GUID")]
   })
   
-  observe({
-    selected <- isolate(input$details_guid)
-    choices <- as.character(data$raw$df$GUID)
-    if(is.null(selected) || selected == "") {
-      selected <- choices[1]
+  output$guids_present <- reactive({
+    "GUID" %in% names(data$raw$df) && length(data$raw$df$GUID) > 0
+  })
+  outputOptions(output, "guids_present", suspendWhenHidden=FALSE)
+  
+  
+  output$guids_error <- reactive({
+    if ("GUID" %in% names(data$raw$df) && length(data$raw$df$GUID)>0) {
+      renderText("")
+    } else {
+      renderText("No GUIDs found in this dataset.")
     }
-    saved <- si_read(ns("details_guid"))
-    if (is.empty(saved)) {
-      si(ns("details_guid"), NULL)
-    } else if (saved %in% c(choices, "")) {
-      selected <- si(ns("details_guid"), NULL)
-    }
-    updateSelectInput(session,
-                      "details_guid",
-                      choices = choices,
-                      selected = selected)
   })
   
   output$found_simdis <- reactive({
@@ -480,9 +497,13 @@ server <- function(input, output, session, data) {
        "simdis.zip" %in% tolower(list.files(guid_folder))) {
       choices <- unzip(file.path(guid_folder, "simdis.zip"), list = TRUE)$Name
       choices <- choices[grepl(".asi$", choices) | grepl(".spy$", choices)]
+      selected <- isolate(input$file_simdis)
+      if(!(selected %in% choices)) {
+        selected <- choices[1]
+      }
       updateSelectInput(session, "file_simdis",
                         choices = choices,
-                        selected = choices[1])
+                        selected = selected)
       TRUE
     } else {
       FALSE
@@ -515,11 +536,15 @@ server <- function(input, output, session, data) {
        "images.zip" %in% tolower(list.files(guid_folder))) {
       choices <- unzip(file.path(guid_folder, "images.zip"), list = TRUE)$Name
       choices <- choices[grepl(".png$", choices) | grepl(".jpg$", choices)]
+      selected <- isolate(input$file_images)
+      if(!(selected %in% choices)) {
+        selected <- choices[1]
+      }
       unzip(file.path(guid_folders[[input$details_guid]], "images.zip"),
-            exdir = tempdir())
+            exdir = tempdir(), overwrite = TRUE)
       updateSelectInput(session, "file_images",
                         choices = choices,
-                        selected = choices[1])
+                        selected = selected)
       TRUE
     } else {
       FALSE
@@ -528,7 +553,7 @@ server <- function(input, output, session, data) {
   outputOptions(output, "found_images", suspendWhenHidden=FALSE)
   
   output$image <- renderImage({
-    req(input$file_images)
+    req(input$file_images, input$details_guid)
     path <- file.path(tempdir(), input$file_images, fsep="\\")
     max_width  <- session$clientData[[paste0('output_', ns("image"), "_width")]]
     max_height <- session$clientData[[paste0('output_', ns("image"), "_height")]]
@@ -539,8 +564,8 @@ server <- function(input, output, session, data) {
       type <- "image/jpg"
       dims <- dim(jpeg::readJPEG(path))
     }
-    print(paste("mh:", max_height, "mw:", max_width))
-    print(paste("h:", dims[1], "w:", dims[2]))
+    # print(paste("mh:", max_height, "mw:", max_width))
+    # print(paste("h:", dims[1], "w:", dims[2]))
     if(max_width/max_height>dims[1]/dims[2]) {
       list(src = path,
            contentType = "image/png",
@@ -553,4 +578,21 @@ server <- function(input, output, session, data) {
     }
     
   }, deleteFile = FALSE)
+  
+  observeEvent(input$image_click, {
+    req(input$image_click, input$details_guid)
+    guid_folder <- guid_folders[[input$details_guid]]
+    choices <- unzip(file.path(guid_folder, "images.zip"), list = TRUE)$Name
+    num_selected <- match(isolate(input$file_images), choices)
+    center  <- session$clientData[[paste0('output_', ns("image"), "_width")]]/2
+    if (input$image_click$x < center) {
+      num_selected <- num_selected - 1
+    } else {
+      num_selected <- num_selected + 1
+    }
+    num_selected <- ((num_selected + length(choices) - 1) %% length(choices)) + 1
+    updateSelectInput(session, "file_images",
+                      choices = choices,
+                      selected = choices[num_selected])
+  })
 }

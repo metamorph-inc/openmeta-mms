@@ -203,12 +203,15 @@ if(!is.null(visualizer_config$augmented_data)) {
 
 # Locate Artifacts
 print("Locating Artifacts:")
+guid_folders <- NULL
 if(file.exists(file.path(launch_dir, 'metadata.json'))) {
   config_folders <- GetConfigFolders(launch_dir)
   print(paste("Config Folders:", length(config_folders)))
   results_dir <- file.path(launch_dir,"..","..","results")
   guid_folders <- FindGUIDFolders(results_dir, config_folders)
   print(paste("GUID Folders:", length(guid_folders)))
+} else {
+  print("No Artifacts Found.")
 }
 
 # Process PET Configuration File ('pet_config.json') -------------------------
