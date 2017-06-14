@@ -19,4 +19,5 @@ Welcome to OpenMETA's documentation!
    testbenches/00-TestBenches
    resultsbrowser/resultsbrowser
    visualizer/visualizer
+   utilities/utilities
    appendices/appendices
