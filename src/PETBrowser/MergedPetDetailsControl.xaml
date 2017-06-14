@@ -125,10 +125,10 @@
                                         <Style TargetType="Image">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding VisualizerNotRunning}" Value="True">
-                                                    <Setter Property="Source" Value="{StaticResource PetIcon}" />
+                                                    <Setter Property="Source" Value="{StaticResource VisualizerSessionIcon}" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding VisualizerNotRunning}" Value="False">
-                                                    <Setter Property="Source" Value="{StaticResource MergedPetIcon}" />
+                                                    <Setter Property="Source" Value="{StaticResource VisualizerSessionRunningIcon}" />
                                                     <Setter Property="ToolTip" Value="Session running" />
                                                 </DataTrigger>
                                             </Style.Triggers>

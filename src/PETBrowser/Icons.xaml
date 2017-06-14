@@ -293,4 +293,112 @@
             </DrawingGroup>
         </DrawingImage.Drawing>
     </DrawingImage>
+
+    <DrawingImage x:Key="VisualizerSessionIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                <DrawingGroup Transform="0.9375,0,0,0.916667,0.5,0.666667">
+                    <GeometryDrawing Brush="#FFEBEBEB">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#FF000000" Thickness="1.08" StartLineCap="Round" EndLineCap="Round" LineJoin="Miter" />
+                        </GeometryDrawing.Pen>
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="0,2,16,12" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="4,0,0,4,-21,-31">
+                    <GeometryDrawing Brush="#FF262626">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="0.25" RadiusY="0.25" Center="6.75,9.75" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="4,0,0,4,-18,-30">
+                    <GeometryDrawing Brush="#FF262626">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="0.25" RadiusY="0.25" Center="6.75,9.75" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="4,0,0,4,-15,-32">
+                    <GeometryDrawing Brush="#FF262626">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="0.25" RadiusY="0.25" Center="6.75,9.75" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <GeometryDrawing Geometry="F0 M16,16z M0,0z M3.5,6.5L3.5,11.5 12.5,11.5">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#FF808080" Thickness="1" StartLineCap="Square" EndLineCap="Square" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <DrawingGroup Transform="0.933333,0,0,1,0.533333,0.5">
+                    <GeometryDrawing Brush="#FF373797">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="0.5,2.5,15,2" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="VisualizerSessionRunningIcon">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                <DrawingGroup Transform="0.9375,0,0,0.916667,0.5,0.666667">
+                    <GeometryDrawing Brush="#FFEBEBEB">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#FF000000" Thickness="1.08" StartLineCap="Round" EndLineCap="Round" LineJoin="Miter" />
+                        </GeometryDrawing.Pen>
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="0,2,16,12" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="4,0,0,4,-21,-31">
+                    <GeometryDrawing Brush="#FF262626">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="0.25" RadiusY="0.25" Center="6.75,9.75" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="4,0,0,4,-18,-30">
+                    <GeometryDrawing Brush="#FF262626">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="0.25" RadiusY="0.25" Center="6.75,9.75" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="4,0,0,4,-15,-32">
+                    <GeometryDrawing Brush="#FF262626">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="0.25" RadiusY="0.25" Center="6.75,9.75" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <GeometryDrawing Geometry="F0 M16,16z M0,0z M3.5,6.5L3.5,11.5 12.5,11.5">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#FF808080" Thickness="1" StartLineCap="Square" EndLineCap="Square" LineJoin="Miter" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <DrawingGroup Transform="0.933333,0,0,1,0.533333,0.5">
+                    <GeometryDrawing Brush="#FF373797">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="0.5,2.5,15,2" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="7.65404E-17,1.25,-1.28571,7.87273E-17,23.2143,-5.25">
+                    <GeometryDrawing Brush="#FF37843C" Geometry="F0 M16,16z M0,0z M11,6L15,13 7,13 11,6z">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#FFFFFFFF" Thickness="0.79" StartLineCap="Square" EndLineCap="Square" LineJoin="Round" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="1.06667,0,0,1.06667,-0.533333,-0.533333" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
 </ResourceDictionary>
