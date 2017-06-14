@@ -447,25 +447,8 @@ namespace PETBrowser
                 dataset.Selected = true;
             }
 
-            var oldDetailsDockPanel = PetDetailsPanel.Children[0];
-            if (oldDetailsDockPanel is DockPanel)
-            {
-                var oldDetailsPanel = ((DockPanel) oldDetailsDockPanel).Children[0];
-
-                if (oldDetailsPanel is MergedPetDetailsControl)
-                {
-                    PetDetailsPanel.Children.Clear();
-                    ((MergedPetDetailsControl) oldDetailsPanel).Dispose();
-                }
-                else
-                {
-                    PetDetailsPanel.Children.Clear();
-                }
-            }
-            else
-            {
-                PetDetailsPanel.Children.Clear();
-            }
+            
+            PetDetailsPanel.Children.Clear();
 
             //If we recreate this intermediate panel every time this method's called, we can
             //avoid displaying the wrong results if the user changes focus while data's loading

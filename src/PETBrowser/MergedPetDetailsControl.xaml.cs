@@ -21,7 +21,7 @@ namespace PETBrowser
     /// <summary>
     /// Interaction logic for PetDetailsControl.xaml
     /// </summary>
-    public partial class MergedPetDetailsControl : UserControl, IDisposable
+    public partial class MergedPetDetailsControl : UserControl
     {
         public MergedPetDetailsViewModel ViewModel
         {
@@ -36,6 +36,11 @@ namespace PETBrowser
             this.ViewModel = mergedPetDetailsViewModel;
             this.DatasetViewModel = datasetViewModel;
             InitializeComponent();
+
+            Unloaded += (sender, args) =>
+            {
+                ViewModel.Dispose();
+            };
         }
 
 
@@ -108,11 +113,6 @@ namespace PETBrowser
             {
                 ShowErrorDialog("Session creation error", "An error occurred while creating a new Visualizer session.", ex.Message, ex.ToString());
             }
-        }
-
-        public void Dispose()
-        {
-            ViewModel.Dispose();
         }
     }
 }
