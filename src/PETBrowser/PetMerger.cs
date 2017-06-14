@@ -261,7 +261,7 @@ namespace PETBrowser
             }
         }
 
-        private static void WriteDefaultVizConfig(string vizConfigPath)
+        public static void WriteDefaultVizConfig(string vizConfigPath)
         {
             var config = new VisualizerConfig();
             config.PetConfig = "pet_config.json";

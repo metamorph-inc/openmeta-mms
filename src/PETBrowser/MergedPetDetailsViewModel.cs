@@ -85,12 +85,28 @@ namespace PETBrowser
             }
         }
 
+        public class VisualizerSession
+        {
+            public string DisplayName { get; set; }
+            public string ConfigPath { get; set; }
+            public DateTime DateModified { get; set; }
+
+            public VisualizerSession(string displayName, string configPath, DateTime dateModified)
+            {
+                DisplayName = displayName;
+                ConfigPath = configPath;
+                DateModified = dateModified;
+            }
+        }
+
         public Dataset DetailsDataset { get; set; }
         public string MgaFilename { get; set; }
         public string MgaFilePath { get; set; }
         public string PetPath { get; set; }
         public int RecordCount { get; set; }
         public ICollectionView Metrics { get; set; }
+        public List<VisualizerSession> VisualizerSessionsList { get; set; }
+        public ICollectionView VisualizerSessions { get; set; }
         private string MergedDirectory { get; set; }
 
         public string CreatedTime
@@ -145,10 +161,64 @@ namespace PETBrowser
                 }
 
                 ComputeStatistics();
+                VisualizerSessionsList = GetVisualizerSessions(mergedDirectory);
+                VisualizerSessions = new ListCollectionView(VisualizerSessionsList);
+                VisualizerSessions.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
             }
             else
             {
             }
+        }
+
+        public string CreateNewVisualizerSession(string name)
+        {
+            var baseDirectory = Path.Combine(MergedDirectory, DetailsDataset.Folders[0]);
+            var newSessionFileName = string.Format("{0}-visualizer_config.json", name);
+            var newSessionPath = Path.Combine(baseDirectory, newSessionFileName);
+
+            if (File.Exists(newSessionPath))
+            {
+                throw new InvalidOperationException("A visualizer session with this name already exists.");
+            }
+
+            PetMerger.WriteDefaultVizConfig(newSessionPath);
+
+            //Reload visualizer session list
+            VisualizerSessionsList.Clear();
+            VisualizerSessionsList.AddRange(GetVisualizerSessions(MergedDirectory));
+            VisualizerSessions.Refresh();
+
+            return newSessionPath;
+        }
+
+        private List<VisualizerSession> GetVisualizerSessions(string mergedDirectory)
+        {
+            var result = new List<VisualizerSession>();
+
+            var baseDirectory = Path.Combine(mergedDirectory, DetailsDataset.Folders[0]);
+
+            var defaultVizConfigPath = Path.Combine(baseDirectory, "visualizer_config.json");
+
+            if (File.Exists(defaultVizConfigPath))
+            {
+                var dateModified = File.GetLastWriteTime(defaultVizConfigPath);
+                result.Add(new VisualizerSession("Default", defaultVizConfigPath, dateModified));
+            }
+
+            var vizConfigFiles = Directory.EnumerateFiles(baseDirectory, "*-visualizer_config.json");
+
+            foreach (var vizConfigPath in vizConfigFiles)
+            {
+                Console.WriteLine(vizConfigPath);
+                var vizFileName = Path.GetFileName(vizConfigPath);
+                var sessionName = vizFileName.Remove(vizFileName.LastIndexOf("-visualizer_config.json", StringComparison.Ordinal));
+                Console.WriteLine(sessionName);
+
+                var dateModified = File.GetLastWriteTime(vizConfigPath);
+                result.Add(new VisualizerSession(sessionName, vizConfigPath, dateModified));
+            }
+
+            return result;
         }
 
         private void ComputeStatistics()

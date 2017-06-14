@@ -6,10 +6,11 @@
         xmlns:local="clr-namespace:PETBrowser"
         mc:Ignorable="d"
         d:DesignWidth="600"
-        d:DesignHeight="350">
+        d:DesignHeight="550">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Icons.xaml" />
                 <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -17,7 +18,9 @@
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -93,5 +96,29 @@
                 </GroupStyle>
             </DataGrid.GroupStyle>
         </DataGrid>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3" Text="Visualizer&#xD;&#xA;Sessions" TextAlignment="Right"/>
+        <DockPanel Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4">
+            <StackPanel Margin="0"  DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="NewSessionButton" Margin="4,4,4,0" Padding="5,3" Click="NewSessionButton_Click">New Session…</Button>
+                <Button x:Name="LaunchVisualizerButton" Margin="4,4,0,0" Padding="5,3" Click="LaunchVisualizerButton_Click" IsEnabled="{Binding SelectedItems.Count, ElementName=VisualizerSessionsGrid}">Launch in Visualizer</Button>
+            </StackPanel>
+            <DataGrid x:Name="VisualizerSessionsGrid" ItemsSource="{Binding VisualizerSessions}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{StaticResource GridStyle}">
+                <DataGrid.HorizontalGridLinesBrush>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+                </DataGrid.HorizontalGridLinesBrush>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="" Width="30">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{StaticResource PetIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding DisplayName}" Header="Name" IsReadOnly="True" SortDirection="Ascending" Width="*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding DateModified}" Header="Last Used Time" IsReadOnly="True" Width="130"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
     </Grid>
 </UserControl>
