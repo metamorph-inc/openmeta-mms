@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Icons.xaml" />
                 <ResourceDictionary Source="Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <local:CountAndBoolMultiValueConverter x:Key="CountAndBoolMultiValueConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="0">
@@ -101,7 +102,15 @@
         <DockPanel Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4">
             <StackPanel Margin="0"  DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="NewSessionButton" Margin="4,4,4,0" Padding="5,3" Click="NewSessionButton_Click">New Session…</Button>
-                <Button x:Name="LaunchVisualizerButton" Margin="4,4,0,0" Padding="5,3" Click="LaunchVisualizerButton_Click" IsEnabled="{Binding SelectedItems.Count, ElementName=VisualizerSessionsGrid}">Launch in Visualizer</Button>
+                <Button x:Name="LaunchVisualizerButton" Margin="4,4,0,0" Padding="5,3" Content="Launch in Visualizer" Click="LaunchVisualizerButton_Click">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource CountAndBoolMultiValueConverter}">
+                            <Binding Path="SelectedItems.Count" ElementName="VisualizerSessionsGrid" />
+                            <Binding Path="SelectedItem.VisualizerNotRunning" ElementName="VisualizerSessionsGrid" />
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                    
+                </Button>
             </StackPanel>
             <DataGrid x:Name="VisualizerSessionsGrid" ItemsSource="{Binding VisualizerSessions}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{StaticResource GridStyle}">
                 <DataGrid.HorizontalGridLinesBrush>
@@ -111,7 +120,21 @@
                     <DataGridTemplateColumn Header="" Width="30">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="{StaticResource PetIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" />
+                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding VisualizerNotRunning}" Value="True">
+                                                    <Setter Property="Source" Value="{StaticResource PetIcon}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding VisualizerNotRunning}" Value="False">
+                                                    <Setter Property="Source" Value="{StaticResource MergedPetIcon}" />
+                                                    <Setter Property="ToolTip" Value="Session running" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

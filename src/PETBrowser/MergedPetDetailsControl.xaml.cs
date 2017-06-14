@@ -21,7 +21,7 @@ namespace PETBrowser
     /// <summary>
     /// Interaction logic for PetDetailsControl.xaml
     /// </summary>
-    public partial class MergedPetDetailsControl : UserControl
+    public partial class MergedPetDetailsControl : UserControl, IDisposable
     {
         public MergedPetDetailsViewModel ViewModel
         {
@@ -37,6 +37,8 @@ namespace PETBrowser
             this.DatasetViewModel = datasetViewModel;
             InitializeComponent();
         }
+
+
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -81,41 +83,12 @@ namespace PETBrowser
         private void LaunchVisualizerButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedConfig = (MergedPetDetailsViewModel.VisualizerSession) VisualizerSessionsGrid.SelectedItem;
+            selectedConfig.VisualizerNotRunning = false;
 
-            LaunchVisualizer(selectedConfig.ConfigPath);
+            VisualizerLauncher.LaunchVisualizer(selectedConfig.ConfigPath);
         }
 
-        private void LaunchVisualizer(string vizConfigPath)
-        {
-            Console.WriteLine(vizConfigPath);
-            string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(),
-                "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
-
-            ProcessStartInfo psi = new ProcessStartInfo()
-            {
-                FileName = "cmd.exe",
-                Arguments =
-                    String.Format("/S /C \"\"{0}\" \"{1}\" \"{2}\" > \"{3}\" 2>&1\"",
-                        System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), vizConfigPath,
-                        META.VersionInfo.MetaPath, logPath),
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                // WorkingDirectory = ,
-                // RedirectStandardError = true,
-                // RedirectStandardOutput = true,
-                UseShellExecute = true
-                //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
-            };
-            var p = new Process();
-            p.StartInfo = psi;
-            p.EnableRaisingEvents = true;
-            p.Start();
-
-            //TODO: Track when visualizer closes so we know when it's safe to open the same session again
-            //p.Exited += (sender, args) => Console.WriteLine("Process exited");
-
-            p.Dispose();
-        }
+        
 
         private void NewSessionButton_Click(object sender, RoutedEventArgs e)
         {
@@ -135,6 +108,11 @@ namespace PETBrowser
             {
                 ShowErrorDialog("Session creation error", "An error occurred while creating a new Visualizer session.", ex.Message, ex.ToString());
             }
+        }
+
+        public void Dispose()
+        {
+            ViewModel.Dispose();
         }
     }
 }

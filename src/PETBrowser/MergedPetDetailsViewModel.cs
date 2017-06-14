@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 
 namespace PETBrowser
 {
-    public class MergedPetDetailsViewModel
+    public class MergedPetDetailsViewModel : IDisposable
     {
         private static readonly HashSet<string> IgnoredMetricNames = new HashSet<string>(new []
         {
@@ -85,17 +85,31 @@ namespace PETBrowser
             }
         }
 
-        public class VisualizerSession
+        public class VisualizerSession : INotifyPropertyChanged
         {
-            public string DisplayName { get; set; }
-            public string ConfigPath { get; set; }
-            public DateTime DateModified { get; set; }
+            public event PropertyChangedEventHandler PropertyChanged;
 
-            public VisualizerSession(string displayName, string configPath, DateTime dateModified)
+            public string DisplayName { get; private set; }
+            public string ConfigPath { get; private set; }
+            public DateTime DateModified { get; private set; }
+
+            private bool _visualizerNotRunning;
+
+            public bool VisualizerNotRunning
+            {
+                get { return _visualizerNotRunning; }
+                set
+                {
+                    PropertyChanged.ChangeAndNotify(ref _visualizerNotRunning, value, () => VisualizerNotRunning);
+                }
+            }
+
+            public VisualizerSession(string displayName, string configPath, DateTime dateModified, bool visualizerNotRunning)
             {
                 DisplayName = displayName;
                 ConfigPath = configPath;
                 DateModified = dateModified;
+                VisualizerNotRunning = visualizerNotRunning;
             }
         }
 
@@ -164,10 +178,18 @@ namespace PETBrowser
                 VisualizerSessionsList = GetVisualizerSessions(mergedDirectory);
                 VisualizerSessions = new ListCollectionView(VisualizerSessionsList);
                 VisualizerSessions.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+
+                VisualizerLauncher.VisualizerExited += OnVisualizerExited;
             }
             else
             {
             }
+        }
+
+        private void OnVisualizerExited(object sender, VisualizerLauncher.VisualizerExitedEventArgs visualizerExitedEventArgs)
+        {
+            Console.WriteLine("OnVisualizerExited");
+            VisualizerSessionsList.FindAll(session => session.ConfigPath == visualizerExitedEventArgs.ConfigPath).ForEach(session => session.VisualizerNotRunning = true);
         }
 
         public string CreateNewVisualizerSession(string name)
@@ -202,7 +224,8 @@ namespace PETBrowser
             if (File.Exists(defaultVizConfigPath))
             {
                 var dateModified = File.GetLastWriteTime(defaultVizConfigPath);
-                result.Add(new VisualizerSession("Default", defaultVizConfigPath, dateModified));
+                var visualizerRunning = VisualizerLauncher.IsVisualizerRunningForConfig(defaultVizConfigPath);
+                result.Add(new VisualizerSession("Default", defaultVizConfigPath, dateModified, !visualizerRunning));
             }
 
             var vizConfigFiles = Directory.EnumerateFiles(baseDirectory, "*-visualizer_config.json");
@@ -215,7 +238,8 @@ namespace PETBrowser
                 Console.WriteLine(sessionName);
 
                 var dateModified = File.GetLastWriteTime(vizConfigPath);
-                result.Add(new VisualizerSession(sessionName, vizConfigPath, dateModified));
+                var visualizerRunning = VisualizerLauncher.IsVisualizerRunningForConfig(vizConfigPath);
+                result.Add(new VisualizerSession(sessionName, vizConfigPath, dateModified, !visualizerRunning));
             }
 
             return result;
@@ -349,6 +373,11 @@ namespace PETBrowser
             Metrics.GroupDescriptions.Add(new PropertyGroupDescription("Kind"));
             Metrics.SortDescriptions.Add(new SortDescription("Kind", ListSortDirection.Ascending));
             Metrics.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+        }
+
+        public void Dispose()
+        {
+            VisualizerLauncher.VisualizerExited -= OnVisualizerExited;
         }
     }
 }

@@ -120,6 +120,7 @@
     <Compile Include="VisualizerDialog.xaml.cs">
       <DependentUpon>VisualizerDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VisualizerLauncher.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
