@@ -81,8 +81,8 @@ ui <- function(id) {
             verbatimTextOutput(ns("pairs_stats"))#,
           ),
           column(9,
-              uiOutput(ns("pairs_display_error")),   
-              uiOutput(ns("pairs_filter_error")), 
+              htmlOutput(ns("pairs_display_error")),   
+              htmlOutput(ns("pairs_filter_error")), 
               plotOutput(ns("pairs_plot"), dblclick = ns("pairs_click"), height = 700)
           )
         )
@@ -126,6 +126,7 @@ ui <- function(id) {
             )
           ),
           column(9,
+            htmlOutput(ns("single_filter_error")),
             plotOutput(ns("single_plot"), dblclick = ns("plot_dblclick"), click = ns("plot_click"), brush = ns("plot_brush"), height=700)
           ),
           column(12,
@@ -134,7 +135,7 @@ ui <- function(id) {
         )
       ),
       tabPanel("Point Details",
-        uiOutput(ns("guids_error")), 
+        htmlOutput(ns("guids_error")), 
         conditionalPanel(
           condition = paste0('output["', ns('guids_present'), '"] == true'),
           fluidRow(
@@ -199,11 +200,11 @@ server <- function(input, output, session, data) {
 
   output$pairs_plot <- renderPlot({
     
-    # Clear the error messages, if any.
-    output$pairs_display_error <- renderText("")
-    output$pairs_filter_error <- renderText("")
-    
     if (length(input$display) >= 2 & nrow(data$Filtered()) > 0) {
+      # Clear the error messages, if any.
+      output$pairs_display_error <- renderUI(tagList(""))
+      output$pairs_filter_error <- renderUI(tagList(""))
+      
       # pairs_setup()
       if(input$pairs_upper_panel) {
         if(input$pairs_trendlines) {
@@ -228,14 +229,16 @@ server <- function(input, output, session, data) {
                        cex = as.numeric(input$pairs_plot_marker_size)))
       do.call(pairs, params)
     }
-    else { 
-      if (nrow(data$Colored()) == 0) {
-        output$pairs_filter_error <- renderText(
-            "<br/>No data points fit the current filtering scheme.")
-      }
+    else {
       if (length(input$display) < 2) {
-        output$pairs_display_error <- renderText(
-          "<br/>Please select two or more Display Variables.")
+        output$pairs_display_error <- renderUI(
+          tagList(br(), "Please select two or more Display Variables.")
+        )
+      }
+      if (nrow(data$Filtered()) == 0) {
+        output$pairs_filter_error <- renderUI(
+          tagList(br(), "No data points fit the current filtering scheme.")
+        )
       }
     }
   })
@@ -386,48 +389,58 @@ server <- function(input, output, session, data) {
   
   SinglePlot <- reactive({
     req(input$x_input, input$y_input)
-    x_data <- data$Filtered()[[paste(input$x_input)]]
-    y_data <- data$Filtered()[[paste(input$y_input)]]
-    if(data$pre$var_class()[input$x_input] == 'factor') {
-      plot(x_data,
-           y_data,
-           xlab = paste(input$x_input),
-           ylab = paste(input$y_input),
-           pch = as.numeric(input$single_plot_marker),
-           cex = as.numeric(input$single_plot_marker_size))#,
-           # pch = as.numeric(input$pointStyle))
-    } else {
-      plot(x_data,
-           y_data,
-           xlab = paste(input$x_input),
-           ylab = paste(input$y_input),
-           col = data$Colored()$color,
-           pch = as.numeric(input$single_plot_marker),
-           cex = as.numeric(input$single_plot_marker_size))#,
-           # pch = as.numeric(input$pointStyle))
-    }
-    if(input$add_pareto) {
-      # lines()
-      print("Added Pareto")
-    }
-    if(input$add_contour &&
-       !(input$contour_var %in% c(input$x_input, input$y_input))) {
-      data.loess <- loess(paste0(input$contour_var, "~",
-                                 input$x_input, "*",
-                                 input$y_input),
-                          data = data$Filtered())
-      x_grid <- seq(min(x_data),
-                    max(x_data),
-      			        (max(x_data)-min(x_data))/50)
-      y_grid <- seq(min(y_data),
-                    max(y_data),
-      			        (max(y_data)-min(y_data))/50)
-      data.fit <- expand.grid(x = x_grid, y = y_grid)
-      colnames(data.fit) <- c(paste(input$x_input), paste(input$y_input))
-      my.matrix <- predict(data.loess, newdata = data.fit)
-      # filled.contour(x = x_grid, y = y_grid, z = my.matrix, add = TRUE, color.palette = terrain.colors)
-      contour(x = x_grid, y = y_grid, z = my.matrix, add = TRUE,
-              col="darkblue", labcex=1.35, lwd = 1.5, method="edge")
+    if(nrow(data$Filtered()) == 0) {
+      output$single_filter_error <- renderUI(
+        tagList(br(), "No data points fit the current filtering scheme.")
+      )
+      NULL
+    } else
+    {
+      output$single_filter_error <- renderUI(tagList(""))
+      
+      x_data <- data$Filtered()[[paste(input$x_input)]]
+      y_data <- data$Filtered()[[paste(input$y_input)]]
+      if(data$pre$var_class()[input$x_input] == 'factor') {
+        plot(x_data,
+             y_data,
+             xlab = paste(input$x_input),
+             ylab = paste(input$y_input),
+             pch = as.numeric(input$single_plot_marker),
+             cex = as.numeric(input$single_plot_marker_size))#,
+             # pch = as.numeric(input$pointStyle))
+      } else {
+        plot(x_data,
+             y_data,
+             xlab = paste(input$x_input),
+             ylab = paste(input$y_input),
+             col = data$Colored()$color,
+             pch = as.numeric(input$single_plot_marker),
+             cex = as.numeric(input$single_plot_marker_size))#,
+             # pch = as.numeric(input$pointStyle))
+      }
+      if(input$add_pareto) {
+        # lines()
+        print("Added Pareto")
+      }
+      if(input$add_contour &&
+         !(input$contour_var %in% c(input$x_input, input$y_input))) {
+        data.loess <- loess(paste0(input$contour_var, "~",
+                                   input$x_input, "*",
+                                   input$y_input),
+                            data = data$Filtered())
+        x_grid <- seq(min(x_data),
+                      max(x_data),
+        			        (max(x_data)-min(x_data))/50)
+        y_grid <- seq(min(y_data),
+                      max(y_data),
+        			        (max(y_data)-min(y_data))/50)
+        data.fit <- expand.grid(x = x_grid, y = y_grid)
+        colnames(data.fit) <- c(paste(input$x_input), paste(input$y_input))
+        my.matrix <- predict(data.loess, newdata = data.fit)
+        # filled.contour(x = x_grid, y = y_grid, z = my.matrix, add = TRUE, color.palette = terrain.colors)
+        contour(x = x_grid, y = y_grid, z = my.matrix, add = TRUE,
+                col="darkblue", labcex=1.35, lwd = 1.5, method="edge")
+      }
     }
   })
   
@@ -486,11 +499,13 @@ server <- function(input, output, session, data) {
   outputOptions(output, "guids_present", suspendWhenHidden=FALSE)
   
   
-  output$guids_error <- reactive({
-    if ("GUID" %in% names(data$raw$df) && length(data$raw$df$GUID)>0) {
-      renderText("")
+  observe({
+    if ("GUID" %in% names(data$raw$df) && length(data$raw$df$GUID) > 0) {
+      output$guids_error <- renderUI(tagList(""))
     } else {
-      renderText("No GUIDs found in this dataset.")
+      output$guids_error <- renderUI(
+        tagList(br(), "No GUIDs found in this dataset.")
+      )
     }
   })
   
@@ -587,7 +602,6 @@ server <- function(input, output, session, data) {
     choices <- unzip(file.path(guid_folders[[input$details_guid]], "images.zip"), list = TRUE)$Name
     message <- paste0("Image ", match(input$file_images, choices),
                       " of ", length(choices), ".")
-    print(message)
     output$image_info <- renderUI({tagList(p(message), br())})
   })
   
