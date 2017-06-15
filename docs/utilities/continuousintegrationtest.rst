@@ -22,7 +22,7 @@ Next, we need to configure Jenkins to run the utility script that will automatic
 
 Add an **Execute Windows batch command** build step to the Jenkins job.
 
-.. code-block:: cmd
+.. code-block:: bat
    :linenos:
 
    "C:\Program Files (x86)\META\bin\Python27\Scripts\python" "C:\Program Files (x86)\META\bin\RunTestBenches.py" --max_configs 2 CyPhy_Model\ExampleSat_3_1.xme -- -s --with-xunit
