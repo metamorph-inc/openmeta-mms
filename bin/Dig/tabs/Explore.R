@@ -471,7 +471,7 @@ server <- function(input, output, session, data) {
   
   output$point_details <- renderPrint({
     req(input$details_guid)
-    data <- data$Filtered()[data$Filtered()$GUID == input$details_guid, ]
+    data <- data$raw$df[data$raw$df$GUID == input$details_guid, ]
     row.names(data) <- ""
     t(data[!(names(data) == "GUID")])
   })
