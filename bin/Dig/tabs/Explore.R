@@ -159,7 +159,11 @@ ui <- function(id) {
           hr(),
           fluidRow(
             column(3, h4("Images"),
-              selectInput(ns("file_images"), NULL, c(), NULL)
+              selectInput(ns("file_images"), NULL, c(), NULL),
+              wellPanel(
+                uiOutput(ns("image_info")),
+                p("Click on the left or right of the image to cycle through the pictures.")
+              )
             ),
             column(9, br(),
               tags$div(imageOutput(ns("image"), click = ns("image_click")), style="text-align: center;")
@@ -577,6 +581,15 @@ server <- function(input, output, session, data) {
     }
     
   }, deleteFile = FALSE)
+  
+  observe({
+    req(input$file_images, guid_folders, input$details_guid)
+    choices <- unzip(file.path(guid_folders[[input$details_guid]], "images.zip"), list = TRUE)$Name
+    message <- paste0("Image ", match(input$file_images, choices),
+                      " of ", length(choices), ".")
+    print(message)
+    output$image_info <- renderUI({tagList(p(message), br())})
+  })
   
   observeEvent(input$image_click, {
     req(input$image_click, input$details_guid)
