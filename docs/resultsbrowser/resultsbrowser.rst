@@ -18,9 +18,9 @@ features of the Results Browser.
 Toolbar
 -------
 
-.. image:: images/toolbar.png
+.. image:: images/Toolbar.png
    :alt: Toolbar
-   :width: 954px
+   :width: 390.5px
 
 **New Window:** This button will open a new instance of the Results Browser.
 
@@ -37,10 +37,21 @@ folders from the ``results/`` folder to the ``_deleted/`` folder. If you
 want to totally delete old data, you can remove this folder after using
 the Cleanup button.
 
+Status Bar
+----------
+
+.. image:: images/SimultaneousProcesses.png
+   :alt: Status Bar: Simultaneous Processes
+   :width: 186.5px
+
+The maximum number of simultaneous processes used by the Job Manager can be
+adjusted from the status bar when no jobs are running.  This defaults to the
+number of logical processors.
+
 PET Tab
 -------
 
-.. image:: images/pettab.png
+.. image:: images/PetTab.png
    :alt: PET Tab
    :width: 954px
 
@@ -54,34 +65,54 @@ Column Headers
 
 **Dataset Types:**
 
--  PetResult: These are results that were aggregated from a single
-   execution of the Master Interpreter and are linked together only by
-   sharing the same created timestamp. They are spread out across a
-   number of unique folders in the results directory that correspond
-   directly to the number of configurations that were executed by the
-   master interpreter.
--  MergedPet: These are results that that were processed from one or
-   more PetResult entries. The Reslts Browser creates these MergedPet
-   entries by merging the data from the source PetResult(s) and placing
-   that resulting .csv file along with a number of metadata files into a
-   single unique folder in the ./merged folder in the project directory.
-   When a PetResult is launched into the Visualizer, the user will be
-   prompted to enter a name as a MergedPet must be created now before
-   lanuching the Visualizer.
--  Archive: These are archives of PET Results that were created with the
-   'Archive Selected' button [deprecated with OpenMETA 0.11] at the
-   bottom of the PET Dataset Pane. They reside in .csv format in the
-   ./archive folder in the root of the project
+-  |PET_ICON| **PET**: These are results from a single execution of the Master
+   Interpreter within a PET context.
+-  |MERGED_PET_ICON| **Merged PET**: These are results that that were combined
+   from one or more other result sets, with the Merge Selected button.  They may
+   be refreshed by right-clicking and selecting "Refresh" from the context menu.
+-  |ARCHIVE_ICON| **Archive**: These are archives of PET Results that were
+   created with the 'Archive Selected' button [deprecated with OpenMETA 0.11] at
+   the bottom of the PET Dataset Pane. They reside in .csv format in the
+   ./archive folder in the root of the project.  Archives must be converted to
+   the new Merged PET format (using the "Merge Selected" button while the
+   archive is selected) before they can be launched in the visualizer.
+-  |PET_RESULT_ICON| **Legacy PET**: These are PET entries created using earlier
+   versions of the results browser, which must be merged (using the "Merge
+   Selected" button) before they can be launched in the visualizer.  These are
+   only shown when "Show Legacy PETs" is checked in the Settings
+   (|SETTINGS_ICON|) menu.
 
 **Count:** This shows the number of discrete configurations that were executed for
-a given PetResult. (For an 'Archive' or 'MergedPet' this will always be
+a given PET. (For an 'Archive' or 'MergedPet' this will always be
 1.)
 
-**Name:** This name is taken from the OpenMETA model at the time of execution by
-the Master Interpreter
+**Name:** This is the name of the PET, which is either taken from the PET name
+in the OpenMETA model, or specified by the user if the result has been renamed
+or merged.
 
 **Time:** This is the time that the PET execution was initiated by the Master
 Interpreter.
+
+.. |PET_ICON| image:: images/icons/PET.svg
+      :alt: PET Icon
+      :width: 16px
+
+.. |MERGED_PET_ICON| image:: images/icons/MergedPET.svg
+      :alt: Merged PET Icon
+      :width: 16px
+
+.. |ARCHIVE_ICON| image:: images/icons/Archive.svg
+      :alt: Archive Icon
+      :width: 16px
+
+.. |PET_RESULT_ICON| image:: images/icons/PETResult.svg
+      :alt: Legacy PET Icon
+      :width: 16px
+
+.. |SETTINGS_ICON| image:: images/icons/Settings_16x.svg
+      :alt: Settings Icon
+      :width: 16px
+
 
 Action Buttons
 ^^^^^^^^^^^^^^
@@ -97,6 +128,22 @@ dataset(s) after prompting the user to created a MergedPet. If more than
 one is selected it will attempt to merge them. If none are selected, it
 will launch the highlighted dataset.
 
+Context Menu
+^^^^^^^^^^^^
+
+Right-clicking a PET or Merged PET will display a context menu:
+
+.. image:: images/PetTabContextMenu.png
+   :alt: PET Tab Context Menu
+   :width: 537.5px
+
+**Refresh**:  Updates the selected dataset to include the latest data from its
+source datasets.
+
+**Rename...**:  Renames the selected dataset.
+
+**Delete...**: Deletes the selected dataset.
+
 PET Details Pane
 ~~~~~~~~~~~~~~~~
 
@@ -110,15 +157,27 @@ PET Dataset Pane. The displayed information in the header includes:
 -  Count of the individual points sampled in this PET
 -  Count of the discrete configurations evaluated
 
-Below the header is a summary of the dataset. Each of the
+Below the header is a summary of the dataset's metrics. Each of the
 DesignVariables and Objectives are listed along with the minimum,
 average, and maximum values represented in the dataset.
 
-Test Bench Tab
---------------
+For PETs and Merged PETs, a list of saved visualizer sessions is also displayed
+in this pane.  To launch a session, select a session from the list and click
+"Launch in Visualizer"; sessions with a |VISUALIZER_SESSION_RUNNING_ICON| icon
+are already running and cannot be launched again (close the browser tab to
+relaunch).  To create a new session, click "New Session..." and specify a
+session name; this will create a new visualizer session with the default
+configuration.
 
-.. image:: images/testbenchtab.png
-   :alt: Test Bench Tab
+.. |VISUALIZER_SESSION_RUNNING_ICON| image:: images/icons/VisualizerSessionRunning.svg
+      :alt: Visualizer Session Running Icon
+      :width: 16px
+
+Test Benches Tab
+----------------
+
+.. image:: images/TestBenchesTab.png
+   :alt: Test Benches Tab
    :width: 954px
 
 Test Bench List Pane
@@ -182,8 +241,8 @@ sections provides information that is encoded in the
 Active Jobs Tab
 ---------------
 
-.. image:: images/activejobs.png
-   :alt: Active Jobs
+.. image:: images/JobsTab.png
+   :alt: Active Jobs Tab
    :width: 957px
 
 Active Jobs List Pane
