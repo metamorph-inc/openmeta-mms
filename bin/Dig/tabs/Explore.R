@@ -159,8 +159,7 @@ ui <- function(id) {
           hr(),
           fluidRow(
             column(3, h4("Images"),
-              selectInput(ns("file_images"), NULL, c(), NULL),
-              actionButton(ns("launch_images"), "Launch in Viewer")
+              selectInput(ns("file_images"), NULL, c(), NULL)
             ),
             column(9, br(),
               tags$div(imageOutput(ns("image"), click = ns("image_click")), style="text-align: center;")
@@ -474,7 +473,7 @@ server <- function(input, output, session, data) {
     req(input$details_guid)
     data <- data$Filtered()[data$Filtered()$GUID == input$details_guid, ]
     row.names(data) <- ""
-    data[!(names(data) == "GUID")]
+    t(data[!(names(data) == "GUID")])
   })
   
   output$guids_present <- reactive({
