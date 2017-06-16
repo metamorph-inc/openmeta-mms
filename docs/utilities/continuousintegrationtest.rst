@@ -35,7 +35,7 @@ Let's break down this command:
 - ``--max_configs 2``: If a Test Bench has a Design Space as its System Under Test, choose at most 2 configurations to test
 - ``CyPhy_Model\ExampleSat_3_1.xme``: This is the path to the OpenMETA model to test
 - ``--``: Parameters after this mark are passed to the Python *nose* testing framework
-- ``-s``: Don’t capture stdout (any stdout output will be printed immediately)
+- ``-s``: Donâ€™t capture stdout (any stdout output will be printed immediately)
 - ``--with-xunit``: Produce a JUnit-compatible XML file as output
 - ``exit /b 0``: This causes a build with out-of-spec values to be marked as "Unstable". Otherwise, it will be marked as "Failed", which makes it hard to distinguish from cases where the tests could not run.
 
