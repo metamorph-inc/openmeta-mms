@@ -147,15 +147,6 @@ ui <- function(id) {
           )
         ),
         conditionalPanel(
-          condition = paste0('output["', ns('found_simdis'), '"] == true'),
-          hr(),
-          fluidRow(
-            column(12, h4("SIMDIS")),
-            column(3, selectInput(ns("file_simdis"), NULL, c(), NULL)),
-            column(3, actionButton(ns("launch_simdis"), "Launch in SimDis"))
-          )
-        ),
-        conditionalPanel(
           condition = paste0('output["', ns('found_images'), '"] == true'),
           hr(),
           fluidRow(
@@ -163,12 +154,21 @@ ui <- function(id) {
               selectInput(ns("file_images"), NULL, c(), NULL),
               wellPanel(
                 uiOutput(ns("image_info")),
-                p("Click on the left or right of the image to cycle through the pictures.")
+                p("Click on the left or right of the displayed image to cycle through available images.")
               )
             ),
             column(9, br(),
               tags$div(imageOutput(ns("image"), click = ns("image_click")), style="text-align: center;")
             )
+          )
+        ),
+        conditionalPanel(
+          condition = paste0('output["', ns('found_simdis'), '"] == true'),
+          hr(),
+          fluidRow(
+            column(12, h4("SIMDIS")),
+            column(3, selectInput(ns("file_simdis"), NULL, c(), NULL)),
+            column(3, actionButton(ns("launch_simdis"), "Launch in SIMDIS"))
           )
         )
       ),
@@ -582,9 +582,8 @@ server <- function(input, output, session, data) {
       type <- "image/jpg"
       dims <- dim(jpeg::readJPEG(path))
     }
-    # print(paste("mh:", max_height, "mw:", max_width))
-    # print(paste("h:", dims[1], "w:", dims[2]))
-    if(max_width/max_height>dims[1]/dims[2]) {
+    # print(paste("AspectRatioFrame:", max_width/max_height, "ARSource:", dims[2]/dims[1]))
+    if(max_width/max_height>dims[2]/dims[1]) {
       list(src = path,
            contentType = "image/png",
            height = max_height,
@@ -601,7 +600,7 @@ server <- function(input, output, session, data) {
     req(input$file_images, guid_folders, input$details_guid)
     choices <- unzip(file.path(guid_folders[[input$details_guid]], "images.zip"), list = TRUE)$Name
     message <- paste0("Image ", match(input$file_images, choices),
-                      " of ", length(choices), ".")
+                      " of ", length(choices))
     output$image_info <- renderUI({tagList(p(message), br())})
   })
   
