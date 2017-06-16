@@ -61,7 +61,7 @@
   </Target>
 
   <Target Name="GenerateDocumentation">
-    <Exec Command="..\bin\Python27\Scripts\python.exe build.py" WorkingDirectory="$(MSBuildThisFileDirectory)\docs"/>
+    <Exec Command="make.bat html" WorkingDirectory="$(MSBuildThisFileDirectory)\docs"/>
   </Target>
   
   <Target Name="All" DependsOnTargets="Install_PythonLibs;MetaLink;CyPhyML;DownloadNuGetPackages;GenerateDocumentation">
