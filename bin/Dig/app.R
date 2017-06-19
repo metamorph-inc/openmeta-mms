@@ -50,12 +50,6 @@ SAVE_DIG_INPUT_CSV <- TRUE
 
 # Resolve Dataset Configuration ----------------------------------------------
 
-# Sys.setenv(DIG_INPUT_CSV="C:\\Users\\Tim\\Desktop\\overall_1_aug.csv")
-# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Desktop\\11Kresults\\viz_config.json")
-# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\boxpacking\\merged\\15kPoints\\visualizer_config.json")
-# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\sydatsa-model\\merged\\TestMerge\\visualizer_config.json")
-# Sys.setenv(DIG_DATASET_CONFIG="C:\\Users\\Tim\\Documents\\sydatsa-model\\merged\\PETGenSimdis (2)\\visualizer_config.json")
-
 pet_config_present <- FALSE
 saved_inputs <- NULL
 visualizer_config <- NULL
@@ -65,17 +59,17 @@ dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
 if (dig_dataset_config == "") {
   if(dig_input_csv == "") {
     # Setup one of the test datasets if no input dataset
-    # config_filename=file.path('datasets',
-    #                           'WindTurbineForOptimization',
-    #                           'visualizer_config_session.json',
-    #                           fsep = "\\\\")
     config_filename=file.path('datasets',
-                              'WindTurbine',
-                              'visualizer_config_session.json',
+                              'WindTurbineForOptimization',
+                              'visualizer_config.json',
                               fsep = "\\\\")
     # config_filename=file.path('datasets',
+    #                           'WindTurbine',
+    #                           'visualizer_config.json',
+    #                           fsep = "\\\\")
+    # config_filename=file.path('datasets',
     #                           'TestPETRefinement',
-    #                           'visualizer_config_session.json',
+    #                           'visualizer_config.json',
     #                           fsep = "\\\\")
   } else {
     # Visualizer legacy launch format

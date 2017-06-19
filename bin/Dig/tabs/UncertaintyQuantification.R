@@ -158,7 +158,7 @@ server <- function(input, output, session, data) {
       data$meta$variables[[var]]$type == "Objective"
     }))]
   })
-  var_facs <- isolate(data$pre$var_facs())
+  var_facs <- c(isolate(data$pre$var_facs()), "CfgID")
   abs_min <- isolate(data$pre$abs_min())
   abs_max <- isolate(data$pre$abs_max())
   
