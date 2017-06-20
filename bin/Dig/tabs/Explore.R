@@ -119,6 +119,8 @@ ui <- function(id) {
               #   actionButton(ns("highlightData"), "Highlight Selection", class = "btn btn-primary")
               # )
               bsCollapsePanel("Overlays",
+                checkboxInput(ns("add_regression"), "Add Regression", si(ns("add_regression"), FALSE)),
+                selectInput(ns("regression_type"), "Regression Type", c("Linear", "Quadratic", "Exponential"), selected=si(ns("regression_type"), "Linear")),
                 checkboxInput(ns("add_contour"), "Add Contour Plot", si(ns("add_contour"), FALSE)),
                 selectInput(ns("contour_var"), "Contour Variable", c(), selected=NULL),
                 checkboxInput(ns("add_pareto"), "Add Pareto Plot", si(ns("add_pareto"), FALSE)),
@@ -421,6 +423,51 @@ server <- function(input, output, session, data) {
       if(input$add_pareto) {
         # lines()
         print("Added Pareto")
+      }
+      if(input$add_regression) {
+        fit_data <- data$Filtered()
+        switch(input$regression_type,
+          "Linear" = {
+            print("Added Linear Regression")
+            fit <- lm(formula = paste(input$y_input, "~", input$x_input), data=fit_data)
+            print(cor(fit_data[[input$x_input]], fit_data[[input$y_input]]))
+            abline(fit, col="darkblue")
+            function_text <- paste0(input$y_input, " = ",
+                                    format(fit$coefficients[[input$x_input]], digits=4), "*", input$x_input,
+                                    " + ", format(fit$coefficients[["(Intercept)"]], digits=4))
+          },
+          "Quadratic" = {
+            fit_data[["Square"]] <- fit_data[[input$x_input]]^2
+            fit <- lm(formula = paste0(input$y_input, "~", input$x_input, "+Square"), data=fit_data)
+            print(summary(fit))
+            x_vals <- seq(min(fit_data[[input$x_input]]),max(fit_data[[input$x_input]]),length.out=100)
+            predict_input <- list()
+            predict_input[[input$x_input]] <- x_vals
+            predict_input[["Square"]] <- x_vals^2
+            y_vals <- predict(fit, predict_input)
+            lines(x_vals, y_vals, col="darkblue")
+            function_text <- paste0(input$y_input, " = ",
+                                    format(fit$coefficients[["Square"]], digits=4), "*", input$x_input, "^2", " + ",
+                                    format(fit$coefficients[[input$x_input]], digits=4), "*", input$x_input, " + ",
+                                    format(fit$coefficients[["(Intercept)"]], digits=4))
+          },
+          "Exponential" = {
+            x_vals <- seq(min(fit_data[[input$x_input]]),max(fit_data[[input$x_input]]),length.out=100)
+            fit_data <- fit_data[fit_data[[input$y_input]] > 0, ]
+            fit <- lm(formula = paste0("log(", input$y_input, ")~", input$x_input), data=fit_data)
+            print(summary(fit))
+            predict_input <- list()
+            predict_input[[input$x_input]] <- x_vals
+            y_vals <- exp(predict(fit, predict_input))
+            lines(x_vals, y_vals, col="darkblue")
+            function_text <- paste0(input$y_input, " = e^(",
+                                    format(fit$coefficients[[input$x_input]], digits=4), "*", input$x_input, " + ",
+                                    format(fit$coefficients[["(Intercept)"]], digits=4), ")")
+          }
+        )
+        legend("topleft", bty="n", legend=c(paste(input$regression_type, "Regression"),
+                                            paste("Adjusted R-squared:",format(summary(fit)$adj.r.squared, digits=4)),
+                                            paste("Function:", function_text)))
       }
       if(input$add_contour &&
          !(input$contour_var %in% c(input$x_input, input$y_input))) {
