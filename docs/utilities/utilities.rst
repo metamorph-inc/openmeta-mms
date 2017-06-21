@@ -10,3 +10,4 @@ continuous integration, refactoring, and more.
    :maxdepth: 1
 
    continuousintegrationtest
+   runonhpc
