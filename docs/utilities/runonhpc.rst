@@ -28,7 +28,7 @@ Log in to your Linux or HPC environment. Use these commands to create a Python v
 
        cd ~
        python -m virtualenv openmeta-venv
-       openmeta-venv/pip install -i https://pypi.metamorphsoftware.com run_mdao testbenchexecutor
+       openmeta-venv/pip install --extra-index-url https://pypi.metamorphsoftware.com run_mdao
 
     .. note::
        Because of differences between computing environments, you may need to follow additional steps to install specific Python packages that are required by these two.
