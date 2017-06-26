@@ -3,6 +3,9 @@ OpenMETA is an integrated, open-source, model-based platform used to design and 
 
 This repository is a fork of OpenMETA that includes extensions developed by MetaMorph, Inc.
 
+The core OpenMETA codebase is available here:
+https://github.com/metamorph-inc/meta-core
+
 ## Obtaining OpenMETA
 The easiest way to get started with OpenMETA is to download an installer for Windows. OpenMETA installers for Windows are frequently released by MetaMorph, Inc at their website:
 http://www.metamorphsoftware.com/openmeta/
