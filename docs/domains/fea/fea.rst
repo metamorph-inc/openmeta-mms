@@ -7,20 +7,23 @@ Overview
 --------
 
 OpenMETA is capable of executing an FEA analysis on a CAD model.
-The workflow follows these steps:
+The diagram and the description below details the full workflow.
 
-1. Assemble a specified OpenMETA Component Assembly using PTC Creo.
-2. Export a list of named points and a Parasolid file of the model.
-3. Import the model into Patran.
-4. Mesh the model and export images of the result.
-5. Attach material properties, constraints, and loads to the model and prepare
-   a deck for analysis using *Nastran Soln 101*.
-6. Execute and review the Nastran analysis.
+1. The OpenMETA Master Interpreter generates an execution directory with
+   everything needed to execute the job.
+2. All the composed parts specified in the OpenMETA Component Assembly
+   are assembled using PTC Creo.
+3. Creo exports a list of named points and a Parasolid file of the model.
+4. MSC Patran imports the model, converting the geometry to surfaces.
+5. The model is meshed and Patran exports images of the resulting mesh.
+6. Patran attaches material properties, constraints, and loads to the model
+   based on the contructs in the OpenMETA model and prepares a deck for
+   analysis using Nastran.
+7. Nastran executes the analysis.
+8. Patran opens the Nastran results, performs post-processing, and generates
+   contour plot images of the stress.
 
-
-These steps are labeled in the diagram below.
-
-.. figure:: images/fea_workflow_diagram.png
+.. figure:: images/OpenMETAStructuralFEATestBench.svg
 
    Diagram of the OpenMETA Structural FEA Test Bench Workflow
 
