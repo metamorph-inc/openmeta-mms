@@ -15,9 +15,8 @@ The workflow follows these steps:
 4. Mesh the model and export images of the result.
 5. Attach material properties, constraints, and loads to the model and prepare
    a deck for analysis using *Nastran Soln 101*.
-6. Execute the Nastran analysis.
-7. Perform post-processing on the Nastran results and generate images of the
-   results.
+6. Execute and review the Nastran analysis.
+
 
 These steps are labeled in the diagram below.
 

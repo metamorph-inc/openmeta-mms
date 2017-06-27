@@ -108,7 +108,7 @@ We have now specified that we want to place a 15MPa pressure over the entire top
 .. figure:: images/IMAGE18.png
    :alt: Solid Modeling Demo
 
-5. In the Part Browser add two (2) **Metric** parts. Rename these **FactorOfSaftey**** and **MisesStress**
+5. In the Part Browser add two (2) **Metric** parts. Rename these **FactorOfSaftey** and **MisesStress**
 6. Connect these to their **StructuralFEAComputation** counterparts
 
 .. figure:: images/IMAGE19.png

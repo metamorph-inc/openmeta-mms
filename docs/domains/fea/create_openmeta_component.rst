@@ -30,7 +30,7 @@ Creating a New OpenMETA Component
 
 A component houses the Creo part reference, as well as defining objects for the Model. This is the smallest piece of the FEA TestBench hierarchy, so it must be developed first.
 
-1. In your **GME Browser**, open the ***RootFolder*** by left-clicking
+1. In your **GME Browser**, open the *RootFolder* by left-clicking
    the plus box to the left of the name.
 2. Right-click **RootFolder -> Insert folder -> Component Assembly**.
 3. Right-click **RootFolder -> Insert folder -> Components**.
@@ -121,7 +121,7 @@ After completing these steps, your component should be ordered like the
 follwoing image.
 
 .. note:: Decending order is important here as it will make later steps
-   much more intuitive.*
+   much more intuitive.
 
 .. figure:: images/IMAGE3.png
    :alt: Solid Modeling Demo
