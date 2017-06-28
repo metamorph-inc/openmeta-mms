@@ -46,6 +46,9 @@ namespace PETBrowser
         [JsonProperty(PropertyName = "tabs")]
         public List<string> Tabs { get; set; }
 
+        [JsonProperty(PropertyName = "design_tree")]
+        public string DesignTree { get; set; }
+
         public VisualizerConfig()
         {
             Tabs = new List<string>();
@@ -83,6 +86,7 @@ namespace PETBrowser
 
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
+                MergeDesignTrees(tempDirectoryPath, datasets, dataDirectoryPath, null);
 
                 BuildSkeletonMergeDirectory(tempDirectoryPath, datasets, MergedPetMetadata.MergedPetKind.MergedPet);
 
@@ -130,11 +134,14 @@ namespace PETBrowser
                 var exportPath = Path.Combine(tempDirectoryPath, "mergedPET.csv");
                 var mergedPetConfigPath = Path.Combine(tempDirectoryPath, "pet_config.json");
                 var finalVizConfigPath = Path.Combine(mergedPetDirectory, "visualizer_config.json");
+                var finalDesignTreePath = Path.Combine(mergedPetDirectory, "design_tree.json");
 
                 bool writeVizConfig = !File.Exists(finalVizConfigPath); // Don't overwrite viz config if it already exists
 
                 WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
+                MergeDesignTrees(tempDirectoryPath, datasets, dataDirectoryPath, ReadDesignTree(finalDesignTreePath));
+
                 BuildSkeletonMergeDirectory(tempDirectoryPath, datasets, kind, writeVizConfig);
 
                 DirectoryCopy(tempDirectoryPath, mergedPetDirectory, true, true);
@@ -192,6 +199,9 @@ namespace PETBrowser
                 try
                 {
                     BuildSkeletonMergeDirectory(tempDirectoryPath, datasets, MergedPetMetadata.MergedPetKind.AutomaticPet);
+
+                    string designTreePath = Path.Combine(tempDirectoryPath, "design_tree.json");
+                    WriteDesignTree(designTreePath, jobCollection.Designs);
 
                     var mergedName = GetMergedPetName(firstJob.TestBenchName, mergedDirectory); //Possible race condition here
                     var mergedPetDirectory = Path.Combine(mergedDirectory, mergedName);
@@ -267,12 +277,75 @@ namespace PETBrowser
             config.PetConfig = "pet_config.json";
             config.RawData = "mergedPET.csv";
             config.Tabs = new List<string> { "Explore.R", "DataTable.R", "PETRefinement.R" };
+            config.DesignTree = "design_tree.json";
 
             using (var writer = File.CreateText(vizConfigPath))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Formatting = Formatting.Indented;
                 serializer.Serialize(writer, config);
+            }
+        }
+
+        private static void WriteDesignTree(string designTreeJsonPath, Dictionary<string, MetaTBManifest.DesignType> designs)
+        {
+            using (var writer = File.CreateText(designTreeJsonPath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Formatting = Formatting.Indented;
+                serializer.Serialize(writer, designs);
+            }
+        }
+
+        private static void MergeDesignTrees(string mergedDirectoryPath, List<Dataset> datasets, string dataDirectoryPath, Dictionary<string, MetaTBManifest.DesignType> originalDesignTree)
+        {
+            Dictionary<string, MetaTBManifest.DesignType> mergedDesignTree;
+            if (originalDesignTree != null)
+            {
+                mergedDesignTree = originalDesignTree;
+            }
+            else
+            {
+                mergedDesignTree = new Dictionary<string, MetaTBManifest.DesignType>();
+            }
+
+            foreach (var dataset in datasets)
+            {
+                if (dataset.Kind == Dataset.DatasetKind.Pet || dataset.Kind == Dataset.DatasetKind.MergedPet)
+                {
+                    var datasetDesignTreeJsonPath =
+                        Path.Combine(dataDirectoryPath, DatasetStore.MergedDirectory, dataset.Folders[0],
+                            "design_tree.json");
+
+                    var datasetDesignTree = ReadDesignTree(datasetDesignTreeJsonPath);
+
+                    foreach (var key in datasetDesignTree.Keys)
+                    {
+                        mergedDesignTree[key] = datasetDesignTree[key];
+                    }
+                }
+            }
+
+            var mergedDesignTreePath = Path.Combine(mergedDirectoryPath, "design_tree.json");
+            WriteDesignTree(mergedDesignTreePath, mergedDesignTree);
+        }
+
+        private static Dictionary<string, MetaTBManifest.DesignType> ReadDesignTree(string path)
+        {
+            if (File.Exists(path))
+            {
+                using (var reader = File.OpenText(path))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    var designTree = (Dictionary<string, MetaTBManifest.DesignType>) serializer.Deserialize(reader,
+                        typeof(Dictionary<string, MetaTBManifest.DesignType>));
+                    return designTree;
+                }
+            }
+            else
+            {
+                //Design tree doesn't exist; return an empty one
+                return new Dictionary<string, MetaTBManifest.DesignType>();
             }
         }
 
