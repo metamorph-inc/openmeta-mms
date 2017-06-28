@@ -1,4 +1,4 @@
-.. _build_openmeta_component_assembly:
+.. _fea_build_openmeta_component_assembly:
 
 Building the Component Assembly
 -------------------------------

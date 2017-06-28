@@ -3,9 +3,6 @@
 Finite-Element Analysis (FEA)
 =============================
 
-Overview
---------
-
 OpenMETA is capable of executing an FEA analysis on a CAD model.
 The diagram and the description below details the full workflow.
 
@@ -27,21 +24,17 @@ The diagram and the description below details the full workflow.
 
    Diagram of the OpenMETA Structural FEA Test Bench Workflow
 
-Tutorial
---------
-
-This rest of this section will serve as a tutorial that demonstrates the FEA
+This rest of this sub-chapter will serve as a tutorial that demonstrates the FEA
 analysis capability of OpenMETA. This tutorial builds upon the skills learned
 in :ref:`ledtutorial` chapter, so it may be necessary to complete that chapter
 prior to attempting this one.
 
 .. toctree::
    :maxdepth: 1
-   :caption: Tutorial Parts
+   :caption: Sections
 
-   tutorial_preparation
-   create_openmeta_component
-   build_openmeta_component_assembly
-   build_fea_testbench
-..   generate_results
-..   perform_analysis
+   fea_tutorial_preparation
+   fea_create_openmeta_component
+   fea_build_openmeta_component_assembly
+   fea_build_fea_testbench
+   fea_perform_analysis

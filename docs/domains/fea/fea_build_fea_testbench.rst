@@ -1,4 +1,4 @@
-.. _build_fea_testbench:
+.. _fea_build_fea_testbench:
 
 Building the Test Bench
 -----------------------

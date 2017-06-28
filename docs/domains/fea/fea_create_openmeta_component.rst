@@ -1,4 +1,4 @@
-.. _create_openmeta_component:
+.. _fea_create_openmeta_component:
 
 Building a CAD Component
 ------------------------
