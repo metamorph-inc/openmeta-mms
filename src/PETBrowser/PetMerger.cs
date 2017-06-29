@@ -84,7 +84,7 @@ namespace PETBrowser
                 var exportPath = Path.Combine(tempDirectoryPath, "mergedPET.csv");
                 var mergedPetConfigPath = Path.Combine(tempDirectoryPath, "pet_config.json");
 
-                WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
+                WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, false, false);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
                 MergeDesignTrees(tempDirectoryPath, datasets, dataDirectoryPath, null);
 
@@ -138,7 +138,7 @@ namespace PETBrowser
 
                 bool writeVizConfig = !File.Exists(finalVizConfigPath); // Don't overwrite viz config if it already exists
 
-                WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, true, true);
+                WriteSelectedDatasetsToCsv(exportPath, true, datasets, dataDirectoryPath, true, false, false);
                 WriteSummarizedPetConfig(mergedPetConfigPath, datasets, dataDirectoryPath);
                 MergeDesignTrees(tempDirectoryPath, datasets, dataDirectoryPath, ReadDesignTree(finalDesignTreePath));
 
