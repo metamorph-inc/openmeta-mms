@@ -175,6 +175,44 @@ namespace DesignSpaceTest
             }, null);
         }
 
+        [Fact]
+        void TestCAExport_DomainModel()
+        {
+            DesertTestBase("/@DesignSpaces/@DesignContainer_DomainModel", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
+            }, configurations =>
+            {
+                Assert.Equal(2, configurations.Children.CWCCollection.Count());
+
+                foreach (var cwc in configurations.Children.CWCCollection)
+                {
+                    //Verify that we generated both ComponentAssemblies
+                    Assert.Equal(1, cwc.DstConnections.Config2CACollection.Count());
+                    var caConn = cwc.DstConnections.Config2CACollection.First();
+                    // ((MgaModel)ca.Impl).GetDescendantFCOs(project.CreateFilter()).Count
+                    var ca = ISIS.GME.Dsml.CyPhyML.Classes.ComponentAssemblyRef.Cast(caConn.DstEnd.Impl).Referred.ComponentAssembly;
+                    Assert.Equal(1, ca.Children.ConnectorCollection.Count());
+
+                    //Now look inside the CA and see if we generated the GenericDomainModel
+                    //We should have exactly one
+                    var genericDomainModels = ca.Children.GenericDomainModelCollection;
+                    Assert.Equal(1, genericDomainModels.Count());
+                    //Now validate its metadata
+                    var genericDomainModel = genericDomainModels.First();
+                    Assert.Equal("OutsideGenericDomainModel", genericDomainModel.Name);
+                    Assert.Equal("ArbitraryDomain", genericDomainModel.Attributes.Domain);
+                    Assert.Equal("ArbitraryType", genericDomainModel.Attributes.Type);
+
+                    //Verify that the generic domain model's ports and connections were copied
+                    var ports = genericDomainModel.Children.GenericDomainModelPortCollection;
+                    Assert.Equal(1, ports.Count());
+                    Assert.Equal(1, ports.First().AllSrcConnections.Count());
+                }
+            });
+        }
+
         private MgaProject project { get { return (MgaProject)fixture.proj; } }
 
         ToyDSFixture fixture;
