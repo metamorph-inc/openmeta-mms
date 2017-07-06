@@ -88,7 +88,7 @@ namespace BinPackTest
 
             var occupied = manifest.Metrics.First(m => m.Name.StartsWith("pct_occupied_"));
             Assert.NotNull(occupied);
-            Assert.DoesNotThrow(() => float.Parse(occupied.Value, CultureInfo.InvariantCulture));
+            Assert.DoesNotThrow(() => float.Parse((string)occupied.Value, CultureInfo.InvariantCulture));
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace BinPackTest
 
             var occupied = manifest.Metrics.First(m => m.Name.StartsWith("pct_occupied_"));
             Assert.NotNull(occupied);
-            Assert.DoesNotThrow(() => float.Parse(occupied.Value, CultureInfo.InvariantCulture));
+            Assert.DoesNotThrow(() => float.Parse((string)occupied.Value, CultureInfo.InvariantCulture));
         }
 
         [Fact]
