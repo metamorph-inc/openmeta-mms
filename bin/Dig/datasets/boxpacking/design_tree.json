@@ -1,0 +1,230 @@
+{
+  "cfg1": {
+    "Name": "MyBoxChoices",
+    "Type": "Compound",
+    "Children": [
+      {
+        "Name": "Thing2",
+        "Type": "Optional",
+        "Children": [
+          {
+            "Name": "Box4",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      },
+      {
+        "Name": "Thing1",
+        "Type": "Alternative",
+        "Children": [
+          {
+            "Name": "Box2",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "Box3",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "Box1",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "cfg2": {
+    "Name": "MyBoxChoices",
+    "Type": "Compound",
+    "Children": [
+      {
+        "Name": "Thing2",
+        "Type": "Optional",
+        "Children": [
+          {
+            "Name": "Box4",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      },
+      {
+        "Name": "Thing1",
+        "Type": "Alternative",
+        "Children": [
+          {
+            "Name": "Box1",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "Box2",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "Box3",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "cfg3": {
+    "Name": "MyBoxChoices",
+    "Type": "Compound",
+    "Children": [
+      {
+        "Name": "Thing2",
+        "Type": "Optional",
+        "Children": [
+          {
+            "Name": "Box4",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      },
+      {
+        "Name": "Thing1",
+        "Type": "Alternative",
+        "Children": [
+          {
+            "Name": "Box1",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "Box2",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "Box3",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "cfg4": {
+    "Name": "MyBoxChoices",
+    "Type": "Compound",
+    "Children": [
+      {
+        "Name": "Thing2",
+        "Type": "Optional",
+        "Children": [
+          {
+            "Name": "Box4",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      },
+      {
+        "Name": "Thing1",
+        "Type": "Alternative",
+        "Children": [
+          {
+            "Name": "Box1",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "Box2",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "Box3",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "cfg5": {
+    "Name": "MyBoxChoices",
+    "Type": "Compound",
+    "Children": [
+      {
+        "Name": "Thing2",
+        "Type": "Optional",
+        "Children": [
+          {
+            "Name": "Box4",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      },
+      {
+        "Name": "Thing1",
+        "Type": "Alternative",
+        "Children": [
+          {
+            "Name": "Box1",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "Box2",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "Box3",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "cfg6": {
+    "Name": "MyBoxChoices",
+    "Type": "Compound",
+    "Children": [
+      {
+        "Name": "Thing2",
+        "Type": "Optional",
+        "Children": [
+          {
+            "Name": "Box4",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      },
+      {
+        "Name": "Thing1",
+        "Type": "Alternative",
+        "Children": [
+          {
+            "Name": "Box1",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "Box2",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "Box3",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      }
+    ]
+  }
+}

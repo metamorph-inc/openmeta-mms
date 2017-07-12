@@ -365,6 +365,45 @@ Server <- function(input, output, session) {
               var_range_list=var_range_list,
               var_constants=var_constants)
   
+  # Design Configs for Filters -----------------------------------------------
+  
+  observe({
+    names <- names(DesignConfigs())
+    config_tree <- DesignConfigs()[[names[1]]]
+    session$sendCustomMessage(type = "setup_design_configurations", config_tree)
+  })
+  
+  DesignConfigs <- reactive({
+    if(file.exists(file.path(launch_dir, "design_tree.json"))) {
+      design_configs <- fromJSON(file.path(launch_dir, "design_tree.json"), simplifyDataFrame = FALSE)
+    } else {
+      NULL
+    }
+  })
+  
+  # observe(print(DesignConfigs()))
+  
+  # observe({print(paste("SDC:",paste(SelectedDesignConfigs(),collapse=",")))})
+
+  SelectedDesignConfigs <- reactive({
+    # print(input$filter_design_config_tree)
+    if(!is.null(input$filter_design_config_tree)) {
+      names <- names(DesignConfigs())
+      passing <- sapply(names, function(name) {
+        filter_tree <- input$filter_design_config_tree
+        current_tree <- DesignConfigs()[[name]]
+        compare_node(current_tree, filter_tree)
+      })
+      if(any(passing)) {
+        names[passing]
+      } else {
+        NULL
+      }
+    } else {
+      NULL
+    }
+  })
+  
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
   # Lets the UI know if a tab has requested the 'Filters' footer.  
@@ -406,33 +445,6 @@ Server <- function(input, output, session) {
         })
       )
     )
-  })
-  
-  observe({
-    names <- names(data$meta$pet$selected_configurations)
-    config_tree <- data$meta$pet$selected_configurations[[names[1]]]
-    session$sendCustomMessage(type = "setup_design_configurations", config_tree)
-  })
-  
-  # observe({print(paste("SDC:",paste(SelectedDesignConfigs(),collapse=",")))})
-
-  SelectedDesignConfigs <- reactive({
-    # print(input$filter_design_config_tree)
-    if(!is.null(input$filter_design_config_tree)) {
-      names <- names(data$meta$pet$selected_configurations)
-      passing <- sapply(names, function(name) {
-        filter_tree <- input$filter_design_config_tree
-        current_tree <- data$meta$pet$selected_configurations[[name]]
-        compare_node(current_tree, filter_tree)
-      })
-      if(any(passing)) {
-        names[passing]
-      } else {
-        NULL
-      }
-    } else {
-      NULL
-    }
   })
   
   # Slider abbreviation function based off slider_width
