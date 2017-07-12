@@ -1,0 +1,5 @@
+{
+  "pet_config": "pet_config.json",
+  "raw_data": "mergedPET.csv",
+  "tabs": ["Explore.R", "DataTable.R", "PETRefinement.R"]
+}

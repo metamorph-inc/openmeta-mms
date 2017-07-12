@@ -60,9 +60,13 @@ if (dig_dataset_config == "") {
   if(dig_input_csv == "") {
     # Setup one of the test datasets if no input dataset
     config_filename=file.path('datasets',
-                              'WindTurbineForOptimization',
+                              'boxpacking',
                               'visualizer_config.json',
                               fsep = "\\\\")
+    # config_filename=file.path('datasets',
+    #                           'WindTurbineForOptimization',
+    #                           'visualizer_config.json',
+    #                           fsep = "\\\\")
     # config_filename=file.path('datasets',
     #                           'WindTurbine',
     #                           'visualizer_config.json',
@@ -403,7 +407,34 @@ Server <- function(input, output, session) {
       )
     )
   })
+  
+  observe({
+    names <- names(data$meta$pet$selected_configurations)
+    config_tree <- data$meta$pet$selected_configurations[[names[1]]]
+    session$sendCustomMessage(type = "setup_design_configurations", config_tree)
+  })
+  
+  # observe({print(paste("SDC:",paste(SelectedDesignConfigs(),collapse=",")))})
 
+  SelectedDesignConfigs <- reactive({
+    # print(input$filter_design_config_tree)
+    if(!is.null(input$filter_design_config_tree)) {
+      names <- names(data$meta$pet$selected_configurations)
+      passing <- sapply(names, function(name) {
+        filter_tree <- input$filter_design_config_tree
+        current_tree <- data$meta$pet$selected_configurations[[name]]
+        compare_node(current_tree, filter_tree)
+      })
+      if(any(passing)) {
+        names[passing]
+      } else {
+        NULL
+      }
+    } else {
+      NULL
+    }
+  })
+  
   # Slider abbreviation function based off slider_width
   abbreviation_length <- ABBREVIATION_LENGTH
   AbbreviateLabel <- function(name) {
@@ -432,7 +463,7 @@ Server <- function(input, output, session) {
       # selected_value <- items
       selected_value <- si(paste0('filter_', current), items)
     
-    column(2, selectInput(inputId = paste0('filter_', current),
+    column(3, selectInput(inputId = paste0('filter_', current),
                           label = current,
                           multiple = TRUE,
                           selectize = FALSE,
@@ -469,7 +500,7 @@ Server <- function(input, output, session) {
     }
     
     
-      column(2,
+      column(3,
              # Hidden well panel for slider tooltip
              wellPanel(id = paste0("slider_tooltip_", current),
                        style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
@@ -604,6 +635,9 @@ Server <- function(input, output, session) {
         )
         data_filtered <- subset(data_filtered, a)
       }
+    }
+    if("CfgID" %in% names(data_filtered)) {
+      data_filtered <- subset(data_filtered, data_filtered$CfgID %in% SelectedDesignConfigs())
     }
     for(index in 1:length(pre$var_names())) {
       name <- pre$var_names()[index]
@@ -1032,6 +1066,11 @@ tabset_arguments <- c(unname(base_tabs),
 ui <- fluidPage(
   useShinyjs(),
   tags$script(src = "main.js"),
+  
+  tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "DesignConfig.css")),
+  tags$script(src = "d3.v3.min.js"),
+  tags$script(src = "design_config_selector.js"),
+  
   titlePanel("Visualizer"),
   
   # Generates the master tabset from the user-defined tabs provided.
@@ -1048,7 +1087,10 @@ ui <- fluidPage(
                  actionButton("reset_sliders", "Reset Visible Filters")),
         hr(),
         
-        uiOutput("filters"),
+        fluidRow(
+          column(3, tags$label("Design Configuration Tree"), tags$div(id="design_configurations")),
+          column(9, uiOutput("filters"))
+        ),
         conditionalPanel("output.constants_present",
           h3("Constants:"),
           uiOutput("constants")

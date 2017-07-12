@@ -1,0 +1,286 @@
+{
+  "components": {
+    "ExtractDimensions": {
+      "parameters": {
+        "ignore": {
+          "source": ["ParameterStudy", "ignore"]
+        }
+      },
+      "unknowns": {
+        "B1M": {},
+        "B2M": {},
+        "B2L": {},
+        "B2W": {},
+        "B1H": {},
+        "B1L": {},
+        "B2H": {},
+        "B1W": {}
+      },
+      "details": {
+        "directory": "TestBench_ExtractDimensions"
+      }
+    },
+    "PythonWrapper": {
+      "parameters": {
+        "W2": {
+          "source": ["ExtractDimensions", "B2W"]
+        },
+        "W1": {
+          "source": ["ExtractDimensions", "B1W"]
+        },
+        "L2": {
+          "source": ["ExtractDimensions", "B2L"]
+        },
+        "L1": {
+          "source": ["ExtractDimensions", "B1L"]
+        },
+        "H2": {
+          "source": ["ExtractDimensions", "B2H"]
+        },
+        "H1": {
+          "source": ["ExtractDimensions", "B1H"]
+        }
+      },
+      "unknowns": {
+        "Height": {},
+        "Volume": {},
+        "Length": {},
+        "Width": {}
+      },
+      "details": {
+        "filename": "C:\\Users\\Tim\\Documents\\boxpacking\\optimizeContainerPET.py"
+      },
+      "type": "run_mdao.python_component.PythonComponent"
+    }
+  },
+  "drivers": {
+    "ParameterStudy": {
+      "type": "parameterStudy",
+      "designVariables": {
+        "ignore": {
+          "RangeMin": 1.0,
+          "RangeMax": 1.0
+        }
+      },
+      "objectives": {
+        "Length": {
+          "source": ["PythonWrapper", "Length"]
+        },
+        "Width": {
+          "source": ["PythonWrapper", "Width"]
+        },
+        "Height": {
+          "source": ["PythonWrapper", "Height"]
+        },
+        "Volume": {
+          "source": ["PythonWrapper", "Volume"]
+        }
+      },
+      "constraints": {},
+      "intermediateVariables": {},
+      "details": {
+        "Code": "num_samples=2",
+        "SurrogateType": "None",
+        "DOEType": "Full Factorial"
+      }
+    }
+  },
+  "recorders": null,
+  "GeneratedConfigurationModel": "Exported-Configurations-at--01-09--11-22-34",
+  "SelectedDesignConfigurations": {
+    "cfg1": {
+      "Name": "MyBoxChoices",
+      "Type": "Compound",
+      "Children": [{
+          "Name": "Thing2",
+          "Type": "Optional",
+          "Children": [{
+              "Name": "Box4",
+              "Type": "Component",
+              "Selected": false
+            }
+          ]
+        }, {
+          "Name": "Thing1",
+          "Type": "Alternative",
+          "Children": [{
+              "Name": "Box1",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box2",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box3",
+              "Type": "Component",
+              "Selected": true
+            }
+          ]
+        }
+      ]
+    },
+    "cfg2": {
+      "Name": "MyBoxChoices",
+      "Type": "Compound",
+      "Children": [{
+          "Name": "Thing2",
+          "Type": "Optional",
+          "Children": [{
+              "Name": "Box4",
+              "Type": "Component",
+              "Selected": true
+            }
+          ]
+        }, {
+          "Name": "Thing1",
+          "Type": "Alternative",
+          "Children": [{
+              "Name": "Box2",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box1",
+              "Type": "Component",
+              "Selected": true
+            }, {
+              "Name": "Box3",
+              "Type": "Component",
+              "Selected": false
+            }
+          ]
+        }
+      ]
+    },
+    "cfg3": {
+      "Name": "MyBoxChoices",
+      "Type": "Compound",
+      "Children": [{
+          "Name": "Thing2",
+          "Type": "Optional",
+          "Children": [{
+              "Name": "Box4",
+              "Type": "Component",
+              "Selected": false
+            }
+          ]
+        }, {
+          "Name": "Thing1",
+          "Type": "Alternative",
+          "Children": [{
+              "Name": "Box1",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box2",
+              "Type": "Component",
+              "Selected": true
+            }, {
+              "Name": "Box3",
+              "Type": "Component",
+              "Selected": false
+            }
+          ]
+        }
+      ]
+    },
+    "cfg4": {
+      "Name": "MyBoxChoices",
+      "Type": "Compound",
+      "Children": [{
+          "Name": "Thing2",
+          "Type": "Optional",
+          "Children": [{
+              "Name": "Box4",
+              "Type": "Component",
+              "Selected": false
+            }
+          ]
+        }, {
+          "Name": "Thing1",
+          "Type": "Alternative",
+          "Children": [{
+              "Name": "Box2",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box3",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box1",
+              "Type": "Component",
+              "Selected": true
+            }
+          ]
+        }
+      ]
+    },
+    "cfg5": {
+      "Name": "MyBoxChoices",
+      "Type": "Compound",
+      "Children": [{
+          "Name": "Thing2",
+          "Type": "Optional",
+          "Children": [{
+              "Name": "Box4",
+              "Type": "Component",
+              "Selected": true
+            }
+          ]
+        }, {
+          "Name": "Thing1",
+          "Type": "Alternative",
+          "Children": [{
+              "Name": "Box1",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box3",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box2",
+              "Type": "Component",
+              "Selected": true
+            }
+          ]
+        }
+      ]
+    },
+    "cfg6": {
+      "Name": "MyBoxChoices",
+      "Type": "Compound",
+      "Children": [{
+          "Name": "Thing2",
+          "Type": "Optional",
+          "Children": [{
+              "Name": "Box4",
+              "Type": "Component",
+              "Selected": true
+            }
+          ]
+        }, {
+          "Name": "Thing1",
+          "Type": "Alternative",
+          "Children": [{
+              "Name": "Box1",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box2",
+              "Type": "Component",
+              "Selected": false
+            }, {
+              "Name": "Box3",
+              "Type": "Component",
+              "Selected": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "PETName": "/Testing/ParametricExploration/PackBoxesDS",
+  "MgaFilename": "C:\\Users\\Tim\\Documents\\boxpacking\\boxpacking.mga"
+}
