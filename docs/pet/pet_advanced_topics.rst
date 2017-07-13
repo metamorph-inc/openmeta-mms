@@ -1,0 +1,154 @@
+.. _pet_advanced_topics:
+
+Advanced Topics
+===============
+
+Nesting PETs within PETs
+------------------------
+
+.. note:: This feature and accompanying documentation will be added with the
+   next release of OpenMETA. Please check back later for updates!
+
+.. ADD: Section explaining PET nesting and giving some example applications.
+.. mention version of OpenMETA where PET nesting was introduced: "As of OpenMETA Version #.##..."
+
+
+Optimization
+------------
+
+.. TODO: Fill out the subsection topics outlined below.
+
+Hot Start
+~~~~~~~~~
+
+.. note:: This feature and accompanying documentation will be added with the
+   next release of OpenMETA. Please check back later for updates!
+
+
+Setting Initial Conditions
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note:: This feature and accompanying documentation will be added with the
+   next release of OpenMETA. Please check back later for updates!
+
+
+Adding Design Variable Constraints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A constrained optimization problem is one where an Objective
+is being minimized with respect to Design Variables that are
+restricted to a specific range.
+
+*E.g. one might wish to minimize
+a car's fuel consumption per mile with respect to tire radius while
+requiring that the tire radius remain between 13" and 17".*
+
+OpenMETA supports constrained optimization via the Optimizer PET Driver's
+COBYLA Function (COBYLA = Constrained Optimization BY Linear Approximation);
+however, the user must manually connect each Design Variable to a matching
+Optimizer Constraint and set the Optimizer Constraint's MinValue and(or)
+MaxValue to the Design Variable's desired minimum and maximum values.
+
+.. figure:: images/AddingDesignVariableConstraint_1.png
+   :alt: text
+
+.. figure:: images/AddingDesignVariableConstraint_2.png
+   :alt: text
+
+   TireRadius's desired range entered into corresponding Optimizer Constraint's Attributes
+
+.. figure:: images/AddingDesignVariableConstraint_3.png
+   :alt: text
+
+   TireRadius Design Variable connected directly to corresponding Optimizer Constraint
+
+(In contrast no such workaround is needed if the Parameter Study PET Driver
+is being used).
+
+Checking Optimization Results
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Optimizer PET Driver is a powerful tool but it cannot be used blindly.
+
+Some functions (in particular non-convex functions) are quite difficult to optimize,
+and the Optimizer may not be able to reliably locate the global minimum.
+
+The Optimizer PET Driver may...
+
+- fail to converge within the maximum number of iterations
+- locate a local minimum and not the global minimum
+- violate Optimizer Constraints in order to converge
+
+The user must make sure that the final answer provided by the Optimizer
+does not significantly violate any of the Objective Constraints and that
+the Optimizer converged before executing the maximum number of iterations.
+
+If the function contains numerous minima/maxima, the user might consider
+exploring the design space with another PET Driver (such as the Parameter Study)
+or setting up a multi-start Optimization problem by nesting the Optimizer PET
+inside a higher-level PET with a Parameter Study Driver providing different initial
+values to the Optimizer PET's Design Variables.
+
+.. ADD: Quick example/tutorial of multi-start optimization
+
+Scaling/Normalizing Design Variables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Optimizer PET Driver may struggle to converge if it contains Design Variables
+with ranges that differ by several orders of magnitude.
+
+*E.g. one might wish to optimize a car's fuel consumption per mile with respect
+to tire radius and weight, where tire radius can vary from 13" to 17" and weight
+can vary from 3200 lbs. to 4200 lbs. The range of the weight Design Variable is
+more than two orders of magnitude greater than the range of the tire radius
+Design Variable. Since the difference in magnitudes between the two Design Variable
+is so great, the Optimizer may struggle to successfully converge in this case.*
+
+Therefore, it is generally good practice to *rescale* or *normalize* Design Variables
+with ranges that differ by several orders of magnitude (or more).
+
+*E.g. in the car example above, the user could rescale the tire radius Design Variable
+(+ associated Optimizer Constraint - this is a constrained optimization problem!)
+to vary from 130 to 170 units and the weight Design Variable
+(+ associated Optimizer Constraint!) to vary from 320 to 420 units. The user could
+then insert PythonWrapper components to undo the scaling between the Design Variables
+and the CarExample PythonWrapper.*
+
+.. figure:: images/ScalingDesignVariables_1.png
+   :alt: text
+
+.. caption
+
+.. figure:: images/ScalingDesignVariables_2.png
+   :alt: text
+
+   Scaled TireRadius Design Variable
+
+.. figure:: images/ScalingDesignVariables_3.png
+   :alt: text
+
+   Scaled Weight Design Variable
+
+.. figure:: images/ScalingDesignVariables_4.png
+   :alt: text
+
+   Scaled TireRadius Constraint
+
+.. figure:: images/ScalingDesignVariables_5.png
+   :alt: text
+
+   Scaled Weight Constraint
+
+.. figure:: images/ScalingDesignVariables_6.png
+   :alt: text
+
+   Undoing scaling for system analysis
+
+.. note:: You would have to generate **DivideBy10** and **MultiplyBy10** blocks
+   yourself. See the :ref:`pet_analysis_blocks_python_wrappers` section for
+   details on creating your own Python Wrapper blocks.
+
+Optimizing Non-convex Functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note:: This section is under construction. Please check back later for updates!

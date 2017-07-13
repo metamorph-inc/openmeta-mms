@@ -13,10 +13,11 @@ Welcome to OpenMETA's documentation!
    introduction/introduction
    installation/installation
    concepts/concepts
-   ledtutorial/ledtutorial
+   tutorials/tutorials
    walkthroughs/walkthroughs
    domains/domains
    testbenches/00-TestBenches
+   pet/pet
    resultsbrowser/resultsbrowser
    visualizer/visualizer
    utilities/utilities
