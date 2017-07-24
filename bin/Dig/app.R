@@ -398,7 +398,7 @@ Server <- function(input, output, session) {
       ),
       fluidRow(
         lapply(var_sliders, function(var_slider) {
-          GenerateSliderUI(var_slider, AbbreviateLabel(var_slider))
+          GenerateSliderUI(var_slider)
         })
       )
     )
@@ -441,7 +441,7 @@ Server <- function(input, output, session) {
     )
   }
   
-  GenerateSliderUI <- function(current, label) {
+  GenerateSliderUI <- function(current) {
     
     if(current %in% pre$var_nums()){
       min <- as.numeric(pre$abs_min()[current])
@@ -473,14 +473,14 @@ Server <- function(input, output, session) {
              # Hidden well panel for slider tooltip
              wellPanel(id = paste0("slider_tooltip_", current),
                        style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
-                       h4(label),
+                       h4(data$meta$variables[[current]]$name_with_units),
                        textInput(paste0("tooltip_min_", current), "Min:"),
                        textInput(paste0("tooltip_max_", current), "Max:"),
                        actionButton(paste0("submit_", current), "Apply","success")
              ),
              # The slider itself
              sliderInput(paste0('filter_', current),
-                         label,
+                         AbbreviateLabel(current),
                          step = step,
                          min = slider_min,
                          max = slider_max,

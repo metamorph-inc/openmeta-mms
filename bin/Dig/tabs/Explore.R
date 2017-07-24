@@ -63,7 +63,9 @@ ui <- function(id) {
                 checkboxInput(ns("pairs_upper_panel"), "Display Upper Panel",
                               value = si(ns("pairs_upper_panel"), FALSE)),
                 checkboxInput(ns("pairs_trendlines"), "Add Trendlines",
-                              value = si(ns("pairs_trendlines"), FALSE))
+                              value = si(ns("pairs_trendlines"), FALSE)),
+                checkboxInput(ns("pairs_units"), "Display Units",
+                              value = si(ns("pairs_units"), TRUE))
               ),
               bsCollapsePanel("Markers",
                 selectInput(ns("pairs_plot_marker"),
@@ -224,8 +226,14 @@ server <- function(input, output, session, data) {
           params <- list(upper.panel = NULL)
         }
       }
+      pairs_data <- data$Colored()[vars_list()]
+      if(input$pairs_units) {
+        names(pairs_data) <- sapply(names(pairs_data), function(name) {
+          data$meta$variables[[name]]$name_with_units
+        })
+      }
       params <- c(params,
-                  list(x=data$Colored()[vars_list()],
+                  list(x = pairs_data,
                        col = data$Colored()$color,
                        pch = as.numeric(input$pairs_plot_marker),
                        cex = as.numeric(input$pairs_plot_marker_size)))
@@ -402,24 +410,18 @@ server <- function(input, output, session, data) {
       
       x_data <- data$Filtered()[[paste(input$x_input)]]
       y_data <- data$Filtered()[[paste(input$y_input)]]
-      if(data$pre$var_class()[input$x_input] == 'factor') {
-        plot(x_data,
-             y_data,
-             xlab = paste(input$x_input),
-             ylab = paste(input$y_input),
-             pch = as.numeric(input$single_plot_marker),
-             cex = as.numeric(input$single_plot_marker_size))#,
-             # pch = as.numeric(input$pointStyle))
-      } else {
-        plot(x_data,
-             y_data,
-             xlab = paste(input$x_input),
-             ylab = paste(input$y_input),
-             col = data$Colored()$color,
-             pch = as.numeric(input$single_plot_marker),
-             cex = as.numeric(input$single_plot_marker_size))#,
-             # pch = as.numeric(input$pointStyle))
+      params <- list(x = x_data,
+                     y = y_data,
+                     xlab = paste(data$meta$variables[[input$x_input]]$name_with_units),
+                     ylab = paste(data$meta$variables[[input$y_input]]$name_with_units),
+                     pch = as.numeric(input$single_plot_marker),
+                     cex = as.numeric(input$single_plot_marker_size))#,
+                     # pch = as.numeric(input$pointStyle))
+      if(data$pre$var_class()[input$x_input] != 'factor') {
+        params <- c(params, list(col = data$Colored()$color))
       }
+      do.call(plot, params)
+      
       if(input$add_pareto) {
         # lines()
         print("Added Pareto")
@@ -492,11 +494,14 @@ server <- function(input, output, session, data) {
   })
   
   output$single_info <- renderPrint({
-    t(nearPoints(data$Filtered(),
-                 input$plot_click,
-                 xvar = input$x_input,
-                 yvar = input$y_input,
-                 maxpoints = 8))
+    near_points <- nearPoints(data$Filtered(),
+                              input$plot_click,
+                              xvar = input$x_input,
+                              yvar = input$y_input,
+                              maxpoints = 8)
+    names(near_points) <- sapply(names(near_points),
+      function(name) {data$meta$variables[[name]]$name_with_units})
+    t(near_points)
   })
   
   # Point Details -----------------------------------------------------
@@ -535,9 +540,12 @@ server <- function(input, output, session, data) {
   
   output$point_details <- renderPrint({
     req(input$details_guid)
-    data <- data$raw$df[data$raw$df$GUID == input$details_guid, ]
-    row.names(data) <- ""
-    t(data[!(names(data) == "GUID")])
+    single_point <- data$raw$df[data$raw$df$GUID == input$details_guid, ]
+    row.names(single_point) <- ""
+    names(single_point) <- sapply(names(single_point), function(name) {
+      data$meta$variables[[name]]$name_with_units
+    })
+    t(single_point[!(names(single_point) == "GUID")])
   })
   
   output$guids_present <- reactive({
