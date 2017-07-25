@@ -52,11 +52,16 @@ forwardUq = function(originalData, resampledData, rho, observations, observation
       
       condMu = yPred[i, j, 1]
       condSigma = yPred[i, j, 2]
-      tempResult$postPoints = densityInverseCdf(originalData[[originalIndex]], uPoints)
-      pdfPostPoints = dnorm(qnorm(uPoints, mean=condMu, sd=condSigma), mean=condMu, sd=condSigma)
-      postFunction = approxfun(tempResult$postPoints, pdfPostPoints, yleft=0, yright=0)
-      area = integrate(postFunction, min(tempResult$postPoints), max(tempResult$postPoints))$value
-      tempResult$postPdf = pdfPostPoints / area
+      
+      original_min = min(resampledData[[originalIndex]])
+      original_max = max(resampledData[[originalIndex]])
+      margins = (original_max - original_min)*0.3
+      
+      min = original_min - margins
+      max = original_max + margins
+      
+      tempResult$postPoints = seq(min, max, (max - min)/511)
+      tempResult$postPdf = dnorm(tempResult$postPoints, mean=condMu, sd=condSigma)
       observationResult[[originalName]] = tempResult
     }
     result[[i]] = observationResult
