@@ -97,7 +97,7 @@ ui <- function(id) {
             # br(), br(),
             bsCollapse(id = ns("single_plot_collapse"), open = si(ns("single_plot_collapse"), "Variables"),
               bsCollapsePanel("Variables", 
-                selectInput(ns("x_input"), "X-axis", c(), selected=NULL),
+                selectInput(ns("x_input"), "X-Axis", c(), selected=NULL),
                 selectInput(ns("y_input"), "Y-Axis", c(), selected=NULL),
                 style = "default"),
               bsCollapsePanel("Markers",
