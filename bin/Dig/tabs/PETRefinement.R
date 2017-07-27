@@ -353,7 +353,7 @@ server <- function(input, output, session, data) {
       system2("..\\Python27\\Scripts\\python.exe",
               args = c("..\\UpdatePETParameters.py",
                        "--pet-config",
-                       pet_refined_filename,
+                       paste0("\"",pet_refined_filename,"\""),
                        "--new-name",
                        paste0("\"",input$newPetName,"\"")),
               stdout = file.path(results_directory, "UpdatePETParameters_stdout.log"),
