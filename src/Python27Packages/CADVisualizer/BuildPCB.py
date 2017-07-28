@@ -100,7 +100,7 @@ def generate_assembly(doc, component_dict):
     placeholders = 0
     
     imported_cad = {}
-    for p in layout.packages:
+    for p in sorted(layout.packages, reverse=True, key=lambda p: p.width * p.height):
         if p.guid in subcircuit_pkgs:
             continue
 
