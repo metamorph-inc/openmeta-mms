@@ -39,8 +39,14 @@ class TestBenchTest(unittest.TestCase):
         if not result.Success:
             self.fail(result.Exception)
 
-        subprocess.check_call((os.path.join(meta_path, r'bin\Python27\Scripts\python.exe'), '-m', 'testbenchexecutor', 'testbench_manifest.json'),
-            cwd=result.OutputDirectory)
+        try:
+            subprocess.check_call((os.path.join(meta_path, r'bin\Python27\Scripts\python.exe'), '-m', 'testbenchexecutor', '--detailed-errors', 'testbench_manifest.json'),
+                cwd=result.OutputDirectory)
+        except:
+            failed_txt = os.path.join(result.OutputDirectory, '_FAILED.txt')
+            if os.path.isfile(failed_txt):
+                print(open(failed_txt, 'r').read())
+            raise
         print 'Output directory is {}'.format(result.OutputDirectory)
 
         with open(os.path.join(result.OutputDirectory, 'testbench_manifest.json')) as manifest_file:
@@ -67,7 +73,11 @@ class TestBenchTest(unittest.TestCase):
                         test = self.assertLessEqual
                     else:
                         test = self.assertAlmostEqual
-                    test(float(metric['Value']), target_value, 'Metric {} failed'.format(metric['Name']))
+                    try:
+                        value_float = float(metric['Value'])
+                    except ValueError:
+                        self.fail('Metric {} has value "{}" that is not a number'.format(metric['Name'], metric['Value']))
+                    test(value_float, target_value, 'Metric {} failed'.format(metric['Name']))
 
         finally:
             project.AbortTransaction()
