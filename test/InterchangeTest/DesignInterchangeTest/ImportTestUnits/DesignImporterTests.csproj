@@ -71,9 +71,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\src\CommonFiles\MgaUtils.cs">
-      <Link>MgaUtils.cs</Link>
-    </Compile>
     <Compile Include="LayoutJson.cs" />
     <Compile Include="DesignWithFiles.cs" />
     <Compile Include="Description.cs" />

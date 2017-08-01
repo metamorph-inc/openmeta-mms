@@ -679,6 +679,8 @@ namespace CyPhyComponentImporter
             avm.Component ac_import = (avm.Component)serializer.Deserialize(xmlReader);
             return ac_import;
         }
+
+        [ComVisible(false)]
         public List<string> Errors = new List<string>();
 
         private void CheckAndWarnOnSchemaVersion(avm.Component ac_import)
