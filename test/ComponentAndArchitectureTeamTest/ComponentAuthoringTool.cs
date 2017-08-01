@@ -1237,9 +1237,8 @@ namespace ComponentAndArchitectureTeamTest
                                 String.Format("{0} Resource should have had value {1}; instead found {2}", datasheetResource.Name, "doc\\Datasheet.pdf", datasheetResource.Attributes.Path)
                                 );
 
-                    // 3. Verify the registry entry exists
-                    Assert.True(comp.Children.PropertyCollection.Count() == 7, String.Format("OctoPart query did not create the expected number of CyPhy properties (7). Properties created: {0}",
-                                                                                              comp.Children.PropertyCollection.Count()));
+                    Assert.Equal(new string[] { "ram_bytes", "number_of_bits", "lifecycle_status", "pin_count", "rohs_status", "clock_speed", "reach_svhc_compliance", "octopart_mpn" }.OrderBy(n => n),
+                        comp.Children.PropertyCollection.Select(p => p.Name).OrderBy(n => n));
                 }
                 finally
                 {
