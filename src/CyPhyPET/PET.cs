@@ -551,8 +551,6 @@ namespace CyPhyPET
 
         public void GenerateDriverCode()
         {
-            this.RunCommand = "python -E -m run_mdao";
-
             // Generate Driver
             if (this.theDriver == DriverType.PCC)
             {
