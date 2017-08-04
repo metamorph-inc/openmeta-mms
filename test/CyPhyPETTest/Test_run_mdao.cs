@@ -169,6 +169,47 @@ namespace CyPhyPETTest
         }
 
         [Fact]
+        public void OptimizationInitialConditionProfiling_OptimizationProblem()
+        {
+            string outputDir = GetCurrentMethod();
+            string petExperimentPath = "/@Testing/@PETHierarchy/@OptimizationInitialConditionProfiling/@OptimizationProblem";
+
+            Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
+            var result = DynamicsTeamTest.CyPhyPETRunner.RunReturnFull(outputDir, mgaFile, petExperimentPath);
+
+            Assert.True(result.Item2.Success, "CyPhyPET failed.");
+
+            var configContents = File.ReadAllText(Path.Combine(result.Item1.OutputDirectory, "mdao_config.json"));
+            var config = JsonConvert.DeserializeObject<AVM.DDP.PETConfig>(configContents);
+
+            Assert.Equal(new string[] { "Optimizer", "x" }, config.components["Paraboloid"].parameters["x"].source);
+
+            Assert.Equal(new string[] { "Paraboloid", "f_xy" }, config.drivers["Optimizer"].objectives["f_xy"].source);
+
+            return;
+        }
+
+        [Fact]
+        [Trait("THIS", "ONE")]
+        public void StringEnumDriver()
+        {
+            string outputDir = GetCurrentMethod();
+            string petExperimentPath = "/@Testing/@PETHierarchy/@StringEnumDriver";
+
+            Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
+            var result = DynamicsTeamTest.CyPhyPETRunner.RunReturnFull(outputDir, mgaFile, petExperimentPath);
+
+            Assert.True(result.Item2.Success, "CyPhyPET failed.");
+
+            var configContents = File.ReadAllText(Path.Combine(result.Item1.OutputDirectory, "mdao_config.json"));
+            var config = JsonConvert.DeserializeObject<AVM.DDP.PETConfig>(configContents);
+
+            Assert.Equal("u\"one\"", config.subProblems["ParametricExploration"].problemInputs["ProblemInput"].value);
+            Assert.Equal(true, config.subProblems["ParametricExploration"].problemInputs["ProblemInput"].pass_by_obj);
+        }
+        
+
+        [Fact]
         public void Test_CyPhyPET_unit_matcher()
         {
             var project = new MgaProject();
@@ -443,6 +484,8 @@ namespace CyPhyPETTest
             {
                 System.Reflection.Assembly.GetAssembly(typeof(Workflow_PET_Test)).CodeBase.Substring("file:///".Length),
                 //"/noshadow",
+                // [Trait("THIS", "ONE")]
+                // "/trait", "THIS=ONE",
             });
             Console.In.ReadLine();
             //System.Console.Out.WriteLine("HEllo World");

@@ -31,8 +31,12 @@ namespace CyPhyPET
         private enum DriverType { PCC, Optimizer, ParameterStudy };
         private DriverType theDriver;
         private CyPhy.ParametricExploration pet;
+        private MgaFCO rootPET;
         public string outputDirectory { get; set; }
         private string testBenchOutputDir;
+
+        public static readonly ISet<string> testbenchtypes = GetDerivedTypeNames(typeof(CyPhy.TestBenchType));
+        public static readonly ISet<string> petWrapperTypes = GetDerivedTypeNames(typeof(CyPhy.ParametricTestBench));
 
         private PETConfig _config;
         public PETConfig config
@@ -104,10 +108,11 @@ namespace CyPhyPET
 
         }
 
-        public PET(MgaFCO currentFCO, CyPhyGUIs.GMELogger logger)
+        public PET(MgaFCO rootPET, MgaFCO currentFCO, CyPhyGUIs.GMELogger logger)
         {
             this.Logger = logger;
             this.pet = CyPhyClasses.ParametricExploration.Cast(currentFCO);
+            this.rootPET = rootPET;
         }
 
         public void Initialize()
@@ -282,68 +287,8 @@ namespace CyPhyPET
             {
                 var configVariable = new PETConfig.DesignVariable();
                 setUnit(designVariable.Referred.unit, configVariable);
+                ParseDesignVariableRange(designVariable, configVariable);
                 config.designVariables.Add(designVariable.Name, configVariable);
-
-                var range = designVariable.Attributes.Range;
-                var oneValue = new System.Text.RegularExpressions.Regex(
-                    // start with previous match. match number or string
-                    "\\G(" +
-                    // number:
-                    // TODO: scientific notation?
-                    // TODO: a la NumberStyles.AllowThousands?
-                    "[+-]?(?:\\d*[.])?\\d+" + "|" +
-                    // string: match \ escape sequence, or anything but \ or "
-                    "\"(?:\\\\(?:\\\\|\"|/|b|f|n|r|t|u\\d{4})|[^\\\\\"])*\"" +
-                    // match ends with ; or end of string
-                    ")(?:;|$)");
-                /*
-                Print(oneValue.Matches("12;"));
-                Print(oneValue.Matches("12.2;"));
-                Print(oneValue.Matches("\"\""));
-                Print(oneValue.Matches("\";asdf;asd\""));
-                Print(oneValue.Matches("\"\\\"\"")); // \"
-                Print(oneValue.Matches("\"\\\\\"")); // \\
-                Print(oneValue.Matches("\"\\n\"")); // \n
-                Print(oneValue.Matches("\"\\n\";\"\";\"asdf\""));
-                Print(oneValue.Matches("\"\\\"")); // \ => false
-                Print(oneValue.Matches("\"\"\"")); // " => false
-                */
-                MatchCollection matches = oneValue.Matches(range);
-                if (matches.Count > 0)
-                {
-                    var items = matches.Cast<Match>().Select(x => x.Groups[1].Value).Select(x =>
-                        x[0] == '"' ? (string)JsonConvert.DeserializeObject(x) :
-                            (object)Double.Parse(x, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture)
-                        ).ToList();
-                    // special-case: a single number produces a double range
-                    if (matches.Count == 1 && matches[0].Groups[1].Value[0] != '"')
-                    {
-                        configVariable.RangeMin = (double)items[0];
-                        configVariable.RangeMax = (double)items[0];
-                    }
-                    else
-                    {
-                        configVariable.items = items;
-                        configVariable.type = "enum";
-                    }
-                }
-                else if (designVariable.Attributes.Range.Contains(","))
-                {
-                    var range_split = designVariable.Attributes.Range.Split(new char[] { ',' });
-                    if (range_split.Length == 2)
-                    {
-                        configVariable.RangeMin = Double.Parse(range_split[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
-                        configVariable.RangeMax = Double.Parse(range_split[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
-                    }
-                }
-                else
-                {
-                    throw new ApplicationException(String.Format("Cannot parse Design Variable Range '{0}'. ", designVariable.Attributes.Range) +
-                        "Double ranges are specified by an un-quoted value or two un-quoted values separated by commas. " +
-                        "Enumerations are specified by one double-quoted value or two or more double-quoted values separated by semicolons. " +
-                        "E.g.: '2.0,2.5' or '\"Low\";\"Medium\";\"High\"'"
-                        );
-                }
             }
             foreach (var objective in driver.Children.ObjectiveCollection)
             {
@@ -366,6 +311,70 @@ namespace CyPhyPET
             }
 
             return config;
+        }
+
+        private static void ParseDesignVariableRange(CyPhy.DesignVariable designVariable, DesignVariable configVariable)
+        {
+            var range = designVariable.Attributes.Range;
+            var oneValue = new System.Text.RegularExpressions.Regex(
+                // start with previous match. match number or string
+                "\\G(" +
+                // number:
+                // TODO: scientific notation?
+                // TODO: a la NumberStyles.AllowThousands?
+                "[+-]?(?:\\d*[.])?\\d+" + "|" +
+                // string: match \ escape sequence, or anything but \ or "
+                "\"(?:\\\\(?:\\\\|\"|/|b|f|n|r|t|u\\d{4})|[^\\\\\"])*\"" +
+                // match ends with ; or end of string
+                ")(?:;|$)");
+            /*
+            Print(oneValue.Matches("12;"));
+            Print(oneValue.Matches("12.2;"));
+            Print(oneValue.Matches("\"\""));
+            Print(oneValue.Matches("\";asdf;asd\""));
+            Print(oneValue.Matches("\"\\\"\"")); // \"
+            Print(oneValue.Matches("\"\\\\\"")); // \\
+            Print(oneValue.Matches("\"\\n\"")); // \n
+            Print(oneValue.Matches("\"\\n\";\"\";\"asdf\""));
+            Print(oneValue.Matches("\"\\\"")); // \ => false
+            Print(oneValue.Matches("\"\"\"")); // " => false
+            */
+            MatchCollection matches = oneValue.Matches(range);
+            if (matches.Count > 0)
+            {
+                var items = matches.Cast<Match>().Select(x => x.Groups[1].Value).Select(x =>
+                    x[0] == '"' ? (string)JsonConvert.DeserializeObject(x) :
+                        (object)Double.Parse(x, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture)
+                    ).ToList();
+                // special-case: a single number produces a double range
+                if (matches.Count == 1 && matches[0].Groups[1].Value[0] != '"')
+                {
+                    configVariable.RangeMin = (double)items[0];
+                    configVariable.RangeMax = (double)items[0];
+                }
+                else
+                {
+                    configVariable.items = items;
+                    configVariable.type = "enum";
+                }
+            }
+            else if (designVariable.Attributes.Range.Contains(","))
+            {
+                var range_split = designVariable.Attributes.Range.Split(new char[] { ',' });
+                if (range_split.Length == 2)
+                {
+                    configVariable.RangeMin = Double.Parse(range_split[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
+                    configVariable.RangeMax = Double.Parse(range_split[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
+                }
+            }
+            else
+            {
+                throw new ApplicationException(String.Format("Cannot parse Design Variable Range '{0}'. ", designVariable.Attributes.Range) +
+                    "Double ranges are specified by an un-quoted value or two un-quoted values separated by commas. " +
+                    "Enumerations are specified by one double-quoted value or two or more double-quoted values separated by semicolons. " +
+                    "E.g.: '2.0,2.5' or '\"Low\";\"Medium\";\"High\"'"
+                    );
+            }
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -492,20 +501,21 @@ namespace CyPhyPET
 
         private string[] GetSourcePath(MgaReference refe, MgaFCO port)
         {
-            MgaConnPoint sources;
+            IEnumerable<MgaConnPoint> sources;
             if (refe != null)
             {
-                sources = port.PartOfConns.Cast<MgaConnPoint>().Where(cp => cp.References != null && cp.References.Count > 0 && cp.References[1].ID == refe.ID && cp.ConnRole == "dst").FirstOrDefault();
+                sources = port.PartOfConns.Cast<MgaConnPoint>().Where(cp => cp.References != null && cp.References.Count > 0 && cp.References[1].ID == refe.ID && cp.ConnRole == "dst");
             }
             else
             {
-                sources = port.PartOfConns.Cast<MgaConnPoint>().Where(cp => (cp.References == null || cp.References.Count == 0) && cp.ConnRole == "dst").FirstOrDefault();
+                sources = port.PartOfConns.Cast<MgaConnPoint>().Where(cp => (cp.References == null || cp.References.Count == 0) && cp.ConnRole == "dst");
             }
-            if (sources == null)
+            sources = sources.Where(s => getAncestors(s.Owner).Select(x => x.ID).Contains(rootPET.ID));
+            if (sources.Count() == 0)
             {
                 return null;
             }
-            var source = (MgaSimpleConnection)sources.Owner;
+            var source = (MgaSimpleConnection)sources.First().Owner;
             // top-level ParametricExploration: ignore top-level ProblemInput and ProblemOutputs
             if (config != null &&
                 source.Src.ParentModel.ID == pet.ID &&
@@ -801,9 +811,7 @@ namespace CyPhyPET
                 if (desVarSources.Count() > 0)
                 {
                     var desVar = desVarSources.First();
-                    // FIXME: get from desVar attribute
-                    problemInput.value = "0.0";
-                    problemInput.pass_by_obj = false;
+                    SetProblemInputValueFromDesignVariable(problemInput, desVar);
                 }
                 else
                 {
@@ -820,9 +828,9 @@ namespace CyPhyPET
                     {
                         if (testbenchtypes.Contains(realSourceParent.Meta.Name))
                         {
-                            // FIXME read DesignVariable to get type
+                            // FIXME is this right?
                             problemInput.value = "0.0";
-                            problemInput.pass_by_obj = false;
+                            problemInput.pass_by_obj = true;
                         }
                         else if (realSource.Meta.Name == typeof(CyPhy.Metric).Name)
                         {
@@ -858,8 +866,55 @@ namespace CyPhyPET
             }
         }
 
-        readonly ISet<string> testbenchtypes = GetDerivedTypeNames(typeof(CyPhy.TestBenchType));
-        // readonly ISet<string> petWrapperTypes = GetDerivedTypeNames(typeof(CyPhy.ParametricTestBench));
+        private static void SetProblemInputValueFromDesignVariable(SubProblem.ProblemInput problemInput, MgaFCO desVar)
+        {
+            var configDesignVariable = new DesignVariable();
+            ParseDesignVariableRange(CyPhyClasses.DesignVariable.Cast(desVar), configDesignVariable);
+            if (configDesignVariable.items != null)
+            {
+                if (configDesignVariable.items[0] is string)
+                {
+                    // FIXME: should be Python-style string; this is wrong for codepoints > 0x10000
+                    problemInput.value = String.Format("u{0}", JsonConvert.SerializeObject(configDesignVariable.items[0]));
+                    problemInput.pass_by_obj = true;
+                }
+                else
+                {
+                    problemInput.value = FormatDoubleForPython((double)configDesignVariable.items[0]);
+                    problemInput.pass_by_obj = false;
+                }
+            }
+            else
+            {
+                problemInput.value = FormatDoubleForPython((double)(configDesignVariable.RangeMin +
+                    (configDesignVariable.RangeMax - configDesignVariable.RangeMin) / 2));
+                problemInput.pass_by_obj = false;
+            }
+        }
+
+        private static string FormatDoubleForPython(double v)
+        {
+            if (Double.IsNaN(v))
+            {
+                return "float(\"nan\")";
+            }
+            // (0.0).ToString returns 0, which Python parses as int
+            if (v == Math.Floor(v))
+            {
+                return v.ToString() + ".0";
+            }
+            if (Double.IsPositiveInfinity(v))
+            {
+                return "float(\"inf\")";
+            }
+            if (Double.IsNegativeInfinity(v))
+            {
+                return "float(\"-inf\")";
+            }
+
+            // G17 ensures enough precision to parse the same value
+            return v.ToString("G17", CultureInfo.InvariantCulture);
+        }
 
         private static ISet<string> GetDerivedTypeNames(Type type)
         {
