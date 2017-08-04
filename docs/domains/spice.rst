@@ -77,7 +77,7 @@ The most relevant items are explained as follows:
    *Component Model*. Additional details about using the CAT to add a
    SPICE model to a component are described later in a section titled,
    "Adding a SPICE model using CAT".
--  The blue rectangle in **Figure 1.** represents a component model.
+-  The blue rectangle in **Figure 1** represents a component model.
 -  The yellow "Copy of CIR file" in the blue component model represents
    a copy of the Ngspice CIR file on the left. This copy was made by the
    CAT during component creation, and is physically stored with the
@@ -107,8 +107,8 @@ through SPICE, to simulate the system-under-test's electrical behavior.
 For details of how to do this, see *Chapter 10: Ara Test Bench Guide.*
 
 Theoretically, if all the SPICE component models in a system have an
-appropriate CIR file, then this allows the electrical simulation of the
-complete system. Otherwise, a more-limited divide-and-conquer strategy
+appropriate CIR file, then this allows for the electrical simulation of the
+complete system. Otherwise, a more focused divide-and-conquer strategy
 may be appropriate. Practical difficulties modeling a complete design
 include:
 
@@ -221,10 +221,9 @@ capacitor and three parasitic elements, as follows:
 -  R2 is an equivalent series resistance.
 -  L1 is the lead inductance.
 
-Other equivalent circuits for this capacitor are also possible, with
-varying numbers of parasitic elements and degrees of accuracy. But,
-exploring model-accuracy tradeoffs is beyond the scope of this
-subchapter.
+Other equivalent circuits for this capacitor with varying numbers of 
+parasitic elements and degrees of accuracy are also possible; however,
+exploring model-accuracy tradeoffs is beyond the scope of this subchapter.
 
 A 2N222A using a ".MODEL" statement
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

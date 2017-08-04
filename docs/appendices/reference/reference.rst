@@ -25,7 +25,7 @@ multiple designs.
    **Component:** an individual model in META.
 
 This represents the physical and geometric simulation of an object so
-that is can be modeled in how it relates to other objects and/or its
+that it can be modeled in how it relates to other objects and/or its
 environment.
 
 *Example:* The wheel of a car. This is only a single piece of what is
@@ -61,7 +61,7 @@ Properties and Parameters define the characteristics of the components
 and sometimes let the user specify some of their own.
 
 Constraints put limits on properties and parameters in order to filter
-out too expensive, unwanted, or out of stock components from the
+out too expensive, unwanted, or out-of-stock components from the
 possible range of designs. This range is called the Design Space, and
 the separate designs are configurations.
 
@@ -223,7 +223,7 @@ Component Assemblies
 
 Component assemblies are similar to components, but are made up of
 several components and their connections. A component assembly can be
-opened by double clicking on it in either the main editor window or the
+opened by double-clicking on it in either the main editor window or the
 GME Browser.
 
 When a component assembly is opened, the components it is comprised of

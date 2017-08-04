@@ -10,9 +10,9 @@ SystemC is a versatile discrete event simulation framework for
 developing event-based behavioral models of hardware, software and
 testbench components. In the Tonka development ecosystem, SystemC is
 well suited for capturing and experimenting with new peripheral modules,
-bus protocols and embedded software (*firmware*) and to validate
-interaction patterns among these and with the applications running on
-the core platform.
+bus protocols and embedded software (*firmware*). SystemC can also validate
+interaction patterns both among the aforementioned modules, protocols, and
+software as well as with applications running on the core platform.
 
 SystemC Models
 ~~~~~~~~~~~~~~
@@ -51,7 +51,7 @@ for existing ones, the following steps should be executed (e.g. for
    support on-demand compilation of these models in the testbenches
 -  A surrogate model has to be created in CyPhyML, capturing important
    interface-level information of the model. This includes the ports of
-   the module, its parameters and the header file (``ComponentX.h``)
+   the module, its parameters, and the header file (``ComponentX.h``),
    which needs to be included in any testbench or assembly which uses
    this component.
 
@@ -101,22 +101,22 @@ objects:
    is ignored.
 -  *Definition*: not used by the generator
 -  *DefinitionNotes*: not used by the generator
--  *Directionality*: wether the port is input, output or bi-directional.
-   In connectors or places, where the directionality can/should be
-   inferred, use *not\_applicable*.
+-  *Directionality*: whether the port is input, output or bi-directional.
+   In connectors (or places where the directionality can/should be
+   inferred) use *not\_applicable*.
 -  *InstanceNotes*: not used by the generator
 -  *Function*: this provides some hint for the code generator, marking
    special *clock* and *reset* ports for streamlined testbench
    generation
 
-Note, that SystemC port can be agregated in ``Connector`` objects along
+Note, that SystemC port can be aggregated in ``Connector`` objects along
 with other port/interface objects of various design aspects. This is
 indeed the preferred way to expose ports from the component model.
 
 SystemC Model Library
 ~~~~~~~~~~~~~~~~~~~~~
 
-The current code generators require that all SystemC models are built
+The current code generators require that all SystemC models be built
 and linked in the *TonkaSCLib* static library. This can be done, but
 adding the models to the SystemC solution. The infrastructure also
 provides a compiled version of the standard *SystemC Library* (current

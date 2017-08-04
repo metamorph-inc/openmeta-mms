@@ -37,11 +37,11 @@ Benefits of OpenMETA
 How to Use This Documentation
 -----------------------------
 
-This documentation should be used a both an installation guide and primer for
+This documentation should be used as both an installation guide and primer for
 those who are beginning to learn OpenMETA as well as a reference guide for
-experience users.
+experienced users.
 
-The :ref:`installation` chapter explains all you need to know to set up the
+The :ref:`installation` chapter explains how to set up the OpenMETA
 tools on your computer.
 
 The :ref:`concepts` and :ref:`tutorials` chapters explain the key concepts
@@ -57,6 +57,11 @@ domain-specific external tools to work with OpenMETA, and explains the
 domain-specific model elements, attributes, and principles for each domain.
 Then the :ref:`testbenches` chapter describes how to run testbenches that
 generate and execute models in tools from the various domains.
+
+The :ref:`pet` chapter covers OpenMETA's multi-disciplinary analysis tool.
+This tool allows for analysis blocks from multiple domains to be composed
+in a single analysis workflow. :ref:`pet_drivers` allow for Design of
+Experiments and Optimizations to be executed on these workflows.
 
 The :ref:`resultsbrowser` and :ref:`visualizer` chapters describe the tools
 provided with OpenMETA to manage and visualize the generated Test Bench and

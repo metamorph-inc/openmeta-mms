@@ -23,6 +23,9 @@ A³ Vahana Trade Study
 
 The Vahana Trade Study conducted by A³ explored the design space of two
 architecturally different vertical-takeoff-and-landing (VTOL) aircraft. We took
-the open-source MATLAB codes used for the trade study and incorportated them
-into the OpenMETA tools to show how the tools all for a much more detailed and
-in-depth look at the trade space.
+the open-source MATLAB scripts used for the trade study and incorporated them
+into the OpenMETA environment where we used the Parametric Exploration Tool (PET) 
+to perform similar analyses of the Vahana model. The OpenMETA Vahana project is
+hosted `here <https://github.com/metamorph-inc/openmeta-vahana>` on GitHub.
+
+.. note:: The OpenMETA Vahana project is still in progress.

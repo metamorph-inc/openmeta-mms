@@ -14,7 +14,7 @@ The diagram and the description below details the full workflow.
 4. MSC Patran imports the model, converting the geometry to surfaces.
 5. The model is meshed and Patran exports images of the resulting mesh.
 6. Patran attaches material properties, constraints, and loads to the model
-   based on the contructs in the OpenMETA model and prepares a deck for
+   based on the constructs in the OpenMETA model and prepares a deck for
    analysis using Nastran.
 7. Nastran executes the analysis.
 8. Patran opens the Nastran results, performs post-processing, and generates
@@ -24,9 +24,9 @@ The diagram and the description below details the full workflow.
 
    Diagram of the OpenMETA Structural FEA Test Bench Workflow
 
-This rest of this sub-chapter will serve as a tutorial that demonstrates the FEA
-analysis capability of OpenMETA. This tutorial builds upon the skills learned
 in :ref:`led_tutorial`, so it may be necessary to complete that chapter
+The rest of this sub-chapter will serve as a tutorial that demonstrates the FEA
+analysis capabilities of OpenMETA. This tutorial builds upon the skills learned
 prior to attempting this one.
 
 .. toctree::

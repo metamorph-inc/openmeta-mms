@@ -20,6 +20,9 @@ Congfiguration Instructions
 1. Install Creo.
 2. ...
 
+.. ADD: Instructions on how to configure Creo for used
+   with OpenMETA.
+
 CAD Models
 ~~~~~~~~~~
 
@@ -27,9 +30,9 @@ The precise three-dimensional geometry of a META component is expressed
 with a **CAD model**. Key connection points on the component are marked
 with *datums*, which are joined with the datums of other connected
 components to generate a three-dimensional model of a system. By relying
-on these connection points, instead of on relative-position offsets, a
-component can be composed with many different types of components
-automatically.
+on these connection points, instead of relative-position offsets, a
+complex component can be automatically composed out of different types of 
+other simpler components.
 
 CAD model elements within META components contain references to any
 datums *(planes, axis, coordinate systems, and points)* that are

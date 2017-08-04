@@ -4,10 +4,10 @@ Electronic Design Automation (EDA)
 ===================================
 
 Electronic Design Automation (EDA) tools enable the design and manufacture of
-electronic systems and integrated circuits. [1]_ In the integration of EDA tools
-with OpenMETA we all the capture of `Schematic Models`_ for each of the
-components used in a model and expose the pins of the component to be used
-for the composition in a design.
+electronic systems and integrated circuits. [1]_ In OpenMETA's integration of 
+EDA tools, we capture the `Schematic Models`_ for all of the components used
+in a model and expose the pins of each component to be used for the composition
+in a design.
 
 Autodesk Eagle
 ~~~~~~~~~~~~~~
@@ -42,12 +42,12 @@ Bill of Materials Analysis
 
 When a component is created and a Schematic Model is added using the
 Component Authoring Tool, OpenMETA automatically generates and populates a
-collection of propertiesbased on the provided part number when a Schematic
+collection of properties based on the provided part number of the Schematic
 Model.
 
 These part numbers are later used to quickly generate a Bill of Materials
 (BOM) from the parts present in a particular design. This feature relies upon
-open `Octopart <https://octopart.com/>`_ API.
+the `Octopart <https://octopart.com/>`_ API.
 
 Modeling Guidelines
 ~~~~~~~~~~~~~~~~~~~
@@ -57,8 +57,8 @@ anzuwendender grafischer Layout-Editor) is a PCB-design software
 application by CadSoft that is used by the CyPhy modeling environment.
 
 **EAGLE Devices** are electrical parts as found in an Eagle component
-library. Each EAGLE device has associated with it a schematic
-**symbol**, a PCB footprint called a **package**, and other information
+library. Each EAGLE device has an associated schematic called a
+**"symbol"**, a PCB footprint called a **"package"**, and other information
 such as the mapping between the pins of the symbol and the pads of the
 package.
 
@@ -74,14 +74,17 @@ for modeling devices in Eagle.
 Subsection Organization
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-The EAGLE library presents three different editing views: 1. Edit a
-Symbol -- Used to design the schematic symbol, indicating schematic
-pins; 2. Edit a Package -- Used to design the PCB footprint, including
-SMD lands, through-hole pads, and silk screens; 3. Edit a Device -- Used
-to name and describe the device, select the symbol and package
-associated with the device, and map symbol pins to package pads.
+The EAGLE library presents three different editing modes: 
 
-The icons used to switch between these views is shown in the figure
+1. **Edit a Symbol** -- Used to design the schematic symbol, indicating schematic
+   pins
+2. **Edit a Package** -- Used to design the PCB footprint, including
+   SMD lands, through-hole pads, and silk screens
+3. **Edit a Device** -- Used to name and describe the device,
+   select the symbol and package associated with the device,
+   and map symbol pins to package pads.
+
+The icons used to switch between these views are shown in the figure
 below.
 
 .. figure:: images/06-01-icons.png
@@ -90,8 +93,8 @@ below.
    EAGLE 6.5.0 library action-toolbar icons that select either the symbol,
    package, or device editing modes.
 
-The remainder of this subchapter is organized into three sections,
-providing guidelines corresponding to each of those three editing views.
+The remaining three sections of this subchapter provide guidelines on
+each of EAGLE's three editing views.
 
 Editing a symbol
 ~~~~~~~~~~~~~~~~
@@ -170,7 +173,7 @@ Drawing footprint patterns on EAGLE layers
 EAGLE allows 2-D graphics to be drawn on EAGLE layers, that will
 eventually be processed to create files useful for automated PCB
 fabrication and assembly. These EAGLE layers are related to but not
-necessarily the same as PCB layers, sine multiple EAGLE CAD layers may
+necessarily the same as PCB layers, since multiple EAGLE CAD layers may
 be combined to form a tooling file for a single PCB layer. The most
 common output file format is extended Gerber format, which contains a
 vector-graphic represention of photolithographic artwork. The following
@@ -403,8 +406,8 @@ In general, silkscreen artwork: - should not be placed over copper pads
 and lands, - should avoid excessively tiny text, and - should allow for
 registration tolerances.
 
-The minimum allowed width of silkscreen lines, and the registration
-tolerances of the silkscreen relative to the board, vary depending on
+The minimum allowed width of silkscreen lines and the registration
+tolerances of the silkscreen relative to the board vary depending on
 the PCB manufacturer. Based on the capabilities of a few representative
 PCB manufacturers, the following guidelines are suggested:
 
@@ -412,7 +415,7 @@ PCB manufacturers, the following guidelines are suggested:
    appear on EAGLE layer 21 ("tPlace"), except for the component reference
    designator, which will be indicated via the placeholder text ">NAME" on
    Eagle layer 25 ("tNames").
-*  For components that may be two small to
+*  For components that may be too small to
    have printed silkscreen outlines, component outlines may be added to
    EAGLE layer 51 ("tDocu"), for component assembly drawings.
 *  There should be a minimum of 0.2 mm clearance between silkscreen ink and
@@ -444,7 +447,7 @@ Editing devices
    inch with the grid display on, to help verify that all symbol pins
    are on a 0.1" grid.
 -  The symbol should be placed in the device symbol window so that the
-   symbol is porperly located relative to the centroid of the symbol
+   symbol is properly positioned relative to the centroid of the symbol
    window.
 -  Component reference designators, such as "R2" and "C10", typically
    consist of one or two letters (the prefix) followed by a number. The

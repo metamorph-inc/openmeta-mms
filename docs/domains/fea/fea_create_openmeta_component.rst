@@ -118,7 +118,7 @@ Face
 5. Rename these faces as "Face\_Ref\_Front, Face\_Ref\_Back, ..."
 
 After completing these steps, your component should be ordered like the
-follwoing image.
+following image.
 
 .. note:: Decending order is important here as it will make later steps
    much more intuitive.
@@ -147,9 +147,9 @@ Material Contents
    MaterialContents\_Back, ... etc"
 
 After completing these steps, your component should be ordered like the
-follwoing image.
+following image.
 
-... note:: Decending order is important here as it will make later steps
+.. note:: Decending order is important here as it will make later steps
    much more intuitive.
 
 .. figure:: images/IMAGE5.png

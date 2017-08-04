@@ -4,7 +4,7 @@ Visualize
 **Location:** ``TestBenches / AraTestBenches / Visualizer``
 
 These test benches are designed to generate a 3-D model based on an
-EAGLE schematic and board file. It assembles the CAD models of the
+EAGLE schematic and board file. They assemble the CAD models of the
 components in the CyPhy model by considering the coordinates of each
 component's position on the PCB.
 
@@ -38,7 +38,7 @@ ensure the assembly does not contain any overlapping components. The
 analysis will be executed if a Parameter is placed in the test bench and
 named **INTERFERENCE_CHECK**. A report (interference_report.log) is
 generated describing any interferences that are calculated. Please note
-that this analysis may several minutes to complete depending on the size
+that this analysis may take several minutes to complete depending on the size
 of the assembly.
 
 Metrics

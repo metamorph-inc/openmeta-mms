@@ -72,7 +72,11 @@ Using the terminal to your Linux/HPC environment, navigate to this location. Run
    cd <path_to_results_folder>
    ~/openmeta-venv/bin/python -m testbenchexecutor testbench_manifest.json
 
-The Test Bench may take some time to run. Once it is complete, launch or refresh OpenMETA's **Results Browser** to inspect the results of the analysis. Because the analysis results are within the project directory, they will be accessible in the same was as analyses performed locally in the Windows environment.
+The Test Bench may take some time to run. Once it is complete, launch or refresh
+OpenMETA's **Results Browser** to inspect the results of the analysis. 
+Because the analysis results are within the project directory, they will be
+accessible in the same Results Browser as analyses performed locally in the
+Windows environment.
 
 .. figure:: images/linux-hpc-results-browser.png
    :alt: Test Bench results in the Results Browser
@@ -105,4 +109,7 @@ We recommend studying the ``rsync`` command before using it for this purpose. Us
 
    rsync -a <username>@<remote_host>:<remote_project_directory> <project_directory>
 
-Launch or refresh OpenMETA's **Results Browser** to inspect the results of the analysis. Because the analysis results are within the project directory, they will be accessible in the same was as analyses performed locally in the Windows environment.
+Launch or refresh OpenMETA's **Results Browser** to inspect the results of the analysis.
+Because the analysis results are within the project directory,
+they will be accessible in the same Results Browser as analyses performed locally in the
+Windows environment.

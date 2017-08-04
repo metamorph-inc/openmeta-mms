@@ -18,8 +18,7 @@ Configure
 ~~~~~~~~~
 
 First, you'll need to create a copy of one of the ***PlaceAndRoute***
-test benches. For instructions, refer to the section `Using Test
-Benches <@ref%20using-test-benches>`__.
+test benches. For instructions, refer to the section :ref:`testbenchbasics`.
 
 PCB Component
 ^^^^^^^^^^^^^
@@ -37,7 +36,7 @@ peek inside a PCB component defining a 4-layer PCB board is shown below:
 
 If a PCB is to have power layers/regions defined, a connector in the PCB
 component must be present to define the mapping of CyPhy signals to
-EagleCAD polygon layers, that typically represent power plane
+EagleCAD polygon layers that typically represent power plane
 layers/regions in a PCB. The polygon layers are defined in the
 ***boardTemplate*** EagleCAD file (see table below). The EagleCAD net
 name of the polygon layers is exposed by the pin names in the EDA model
@@ -179,7 +178,7 @@ specified using the ***designRules*** parameter. If the
 embedded in the board template are used. If no board template is
 provided, then the EAGLE's default design rules are used.
 
-The autorouter obeys the design rules rules while building the signal
+The autorouter obeys the design rules while building the signal
 routing for the board.
 
 Board Dimensions
