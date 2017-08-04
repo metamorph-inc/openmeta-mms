@@ -12,8 +12,6 @@ drag it onto the PET canvas.
 .. figure:: images/parameterstudy_tutorial_19.png
    :alt: text
 
-.. caption
-
 2. Double-click on the **ParameterStudy** model.
 
 A window with a blank canvas will open up.
@@ -23,8 +21,6 @@ A window with a blank canvas will open up.
 
 .. figure:: images/parameterstudy_tutorial_20.png
    :alt: text
-
-.. caption
 
 We want this ParameterStudy Driver to provide the paraboloid.py script
 in the PythonWrapper Component with varying "x" and "y" inputs and then record
@@ -39,8 +35,6 @@ drag it onto the ParameterStudy canvas.
 .. figure:: images/parameterstudy_tutorial_21.png
    :alt: text
 
-.. caption
-
 4. Left-click the newly added **DesignVariable** to select it.
 5. Left-click on the "DesignVariable" label and change it to "x".
 
@@ -49,16 +43,12 @@ drag it onto the ParameterStudy canvas.
 .. figure:: images/parameterstudy_tutorial_22.png
    :alt: text
 
-.. caption
-
 6. Left-click on the Design Variable **x** to select it.
 7. Locate the **Range** field under **Attributes** in the **Object Inspector** window.
 8. Set **x**'s range by entering "**-50,+50**" in the **Range** field.
 
 .. figure:: images/parameterstudy_tutorial_23.png
    :alt: text
-
-.. caption
 
 9. Repeat Steps 24-29 to add a second Design Variable **y** with a range of
 **-50,+50** as well.
@@ -68,8 +58,6 @@ drag it onto the ParameterStudy canvas.
 
 .. figure:: images/parameterstudy_tutorial_24.png
    :alt: text
-
-.. caption
 
 Add an Objective to the Driver
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,8 +72,6 @@ drag it onto the ParameterStudy canvas.
 
 11. Change **Objective**'s name to **f_xy**.
 
-.. caption
-
 .. figure:: images/parameterstudy_tutorial_26.png
    :alt: text
 
@@ -93,19 +79,13 @@ drag it onto the ParameterStudy canvas.
 13. Locate the **Code** field under **Attributes** in the **Object Inspector** window.
 14. Enter "**num_samples=31**" in the **Code** field
 
-.. caption
-
 .. figure:: images/parameterstudy_tutorial_27.png
    :alt: text
-
-.. caption
 
 15. Select **Full Factorial** for **DOE Type:** field.
 
 .. figure:: images/parameterstudy_tutorial_28.png
    :alt: text
-
-.. caption
 
 We have set our **ParameterStudy** Driver to use a **Full Factorial** method
 with 31 samples per independent design variable. Given our two design
@@ -133,8 +113,6 @@ are now exposed as ports on the outside of the ParameterStudy model.
 .. figure:: images/parameterstudy_tutorial_29.png
    :alt: text
 
-.. caption
-
 .. note:: Sometimes, changes inside a block such as a Design Variable name change
    are not immediately reflected in the main PET canvas.
    If this happens, left-click the **Repaint** icon on the **Modeling** toolbar
@@ -142,5 +120,3 @@ are now exposed as ports on the outside of the ParameterStudy model.
 
    .. figure:: images/parameterstudy_tutorial_29_a.png
       :alt: text
-
-      .. caption

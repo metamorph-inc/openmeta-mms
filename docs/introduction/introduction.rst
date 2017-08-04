@@ -44,7 +44,7 @@ experience users.
 The :ref:`installation` chapter explains all you need to know to set up the
 tools on your computer.
 
-The :ref:`concepts` and :ref:`ledtutorial` chapters explain the key concepts
+The :ref:`concepts` and :ref:`tutorials` chapters explain the key concepts
 and modeling elements used when building and editing OpenMETA models and then
 guide the user through the building and analysis of a simple LED example model.
 

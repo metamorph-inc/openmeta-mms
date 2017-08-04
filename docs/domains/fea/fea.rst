@@ -26,7 +26,7 @@ The diagram and the description below details the full workflow.
 
 This rest of this sub-chapter will serve as a tutorial that demonstrates the FEA
 analysis capability of OpenMETA. This tutorial builds upon the skills learned
-in :ref:`ledtutorial` chapter, so it may be necessary to complete that chapter
+in :ref:`led_tutorial`, so it may be necessary to complete that chapter
 prior to attempting this one.
 
 .. toctree::

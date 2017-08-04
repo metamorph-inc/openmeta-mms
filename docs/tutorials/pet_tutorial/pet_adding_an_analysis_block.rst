@@ -87,8 +87,8 @@ your GME project folder.
 .. figure:: images/parameterstudy_tutorial_14.png
    :alt: text
 
-   .. note:: If you are using Notepad, make sure **Save as type** is
-   	set to ``All Files (*.*)``.
+.. note:: If you are using Notepad, make sure **Save as type** is
+   set to ``All Files (*.*)``.
 
 7. Return to GME.
 8. Double-click on the **PythonWrapper** Component in the PET canvas.

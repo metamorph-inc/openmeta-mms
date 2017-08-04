@@ -60,8 +60,6 @@ Starting with the 1k resistor:
    the design space matches the paradigm: :menuselection:`P1_Resistor_1k -->
    resistor_X --> Anode_Resistor_1k`
 
-__ populate_the_component_assembly_
-
 .. image:: images/03-05-new-dc-resistors.png
    :alt: Resistors in New Design Space
 
