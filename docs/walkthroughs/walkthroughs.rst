@@ -3,18 +3,25 @@
 Walkthroughs
 ============
 
-.. note:: More content for this section is coming soon.
+Each of the models below serves as a realistic example of using OpenMETA to
+describe and design a complex system. We encourage you to clone each of the
+repositories provided, explore the models, and experiment with changes of your
+own!
+
 
 .. _spacecraft_model:
 
 Spacecraft Model
 ----------------
 
-The OpenMETA Spacecraft project is an open source project hosted
+The OpenMETA Spacecraft project is an open-source project developed by
+Metamorph to demonstrate the concepts of OpenMETA with a system model of a
+ficticious satellite.  The system model includes both CAD models and
+OpenModelica models for a joint phyical and electrical analysis of the craft.
+
+This project is hosted
 `here <https://github.com/metamorph-inc/openmeta-spacecraft-study>`_ on GitHub.
-This project demonstrates the concepts of OpenMETA with a ficticious satellite
-and includes CAD models as well as OpenModelica models for a joint phyical and
-electrical analysis of the craft.
+
 
 .. _vahana_study:
 
@@ -24,8 +31,8 @@ A³ Vahana Trade Study
 The Vahana Trade Study conducted by A³ explored the design space of two
 architecturally different vertical-takeoff-and-landing (VTOL) aircraft. We took
 the open-source MATLAB scripts used for the trade study and incorporated them
-into the OpenMETA environment where we used the Parametric Exploration Tool (PET) 
-to perform similar analyses of the Vahana model. The OpenMETA Vahana project is
-hosted `here <https://github.com/metamorph-inc/openmeta-vahana>` on GitHub.
+into the OpenMETA environment where we used the Parametric Exploration Tool (PET)
+to perform similar analyses of the Vahana model.
 
-.. note:: The OpenMETA Vahana project is still in progress.
+The OpenMETA Vahana project is
+hosted `here <https://github.com/metamorph-inc/openmeta-vahana>`_ on GitHub.

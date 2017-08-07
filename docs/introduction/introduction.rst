@@ -58,10 +58,11 @@ domain-specific model elements, attributes, and principles for each domain.
 Then the :ref:`testbenches` chapter describes how to run testbenches that
 generate and execute models in tools from the various domains.
 
-The :ref:`pet` chapter covers OpenMETA's multi-disciplinary analysis tool.
-This tool allows for analysis blocks from multiple domains to be composed
-in a single analysis workflow. :ref:`pet_drivers` allow for Design of
-Experiments and Optimizations to be executed on these workflows.
+The :ref:`pet` chapter covers OpenMETA's multi-disciplinary analysis framework.
+PETs allows for OpenMETA testbenches and external tools from multiple
+domains to be composed as analysis blocks in a single analysis workflow.
+These workflows can then be executed using design of experiments or
+optimization drivers.
 
 The :ref:`resultsbrowser` and :ref:`visualizer` chapters describe the tools
 provided with OpenMETA to manage and visualize the generated Test Bench and
