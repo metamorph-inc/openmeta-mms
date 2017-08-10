@@ -5,10 +5,10 @@ Results Browser
 
 The OpenMETA tools enable the generation of large amounts of data
 through the execution of the various domain models. These amount of
-results analyses can be further exacerbated with design space modeling
-and the Parametric Explorations Tool.
+analyses results can be further exacerbated with design space modeling
+and the Parametric Exploration Tool.
 
-To manage and visualize the results of OpenMETA generated analyses we
+To manage and visualize the results of OpenMETA generated analyses, we
 created the :ref:`resultsbrowser` and :ref:`visualizer`, respectively.
 
 The Results Browser provides a layer of management and organization
@@ -90,7 +90,7 @@ a given PET. (For an 'Archive' or 'MergedPet' this will always be
 in the OpenMETA model, or specified by the user if the result has been renamed
 or merged.
 
-**Time:** This is the time that the PET execution was initiated by the Master
+**Time:** This is the time at which the PET execution was initiated by the Master
 Interpreter.
 
 .. |PET_ICON| image:: images/icons/PET.svg
@@ -125,7 +125,7 @@ folder in the ./merged folder in the project directory that includes a
 
 **Open Selected in Visualizer:** This button will launch the visualizer with selected (checked)
 dataset(s) after prompting the user to created a MergedPet. If more than
-one is selected it will attempt to merge them. If none are selected, it
+one is selected, it will attempt to merge them. If none are selected, it
 will launch the highlighted dataset.
 
 Context Menu
@@ -200,10 +200,10 @@ execution by the Master Interpreter
 values are as follows:
 
 -  Unexecuted: The job was aborted before it was executed.
--  Failed: The job was exectuted, but an error was encountered.
--  OK: The job was exectuted without errors.
+-  Failed: The job was executed, but an error was encountered.
+-  OK: The job was executed without errors.
 
-**Time:** This is the time that the Test Bench execution was initiated by the
+**Time:** This is the time at which the Test Bench execution was initiated by the
 Master Interpreter.
 
 Action Buttons

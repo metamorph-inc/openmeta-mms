@@ -193,6 +193,15 @@ namespace CyPhyMetaLink
                 catch (Exception e)
                 {
                     GMEConsole.Error.WriteLine("Error processing MetaLink message: " + e.Message);
+                    try
+                    {
+                        File.AppendAllText(Path.Combine(this.GetProjectDir(), "log",
+                            String.Format("MetaLink_error_{0}.log", Process.GetCurrentProcess().Id)),
+                            "Error processing MetaLink message: " + e.ToString());
+                    }
+                    catch
+                    {
+                    }
                     // FIXME: who knows what state we're in now. Should we disconnect from MetaLink?
                     /*
                      * TODO: send debug info back to ISIS

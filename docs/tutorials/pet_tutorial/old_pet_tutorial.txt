@@ -1,0 +1,1088 @@
+.. _pet_tutorial:
+
+PET Tutorial
+============
+
+Parameter Study
+---------------
+
+In this tutorial, we will use a Parameter Study Driver to analyze
+a Paraboloid across a range of x and y values.
+
+Create a new OpenMETA Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. ADD: more of these headings throughout the tutorial
+
+1. Start GME.
+2. Within GME, open the **File** menu and select **New Project...**.
+
+.. figure:: images/parameterstudy_tutorial_1.png
+   :alt: text
+
+.. Creating a New Project in GME
+
+The **Select Paradigm** menu will popup.
+
+3. Double-click **CyPhyML**.
+
+.. figure:: images/parameterstudy_tutorial_2.png
+   :alt: text
+
+.. Selecting a Paradigm
+
+4. Select **Create project file** and click **Next**.
+
+.. figure:: images/parameterstudy_tutorial_3.png
+   :alt: text
+
+.. caption
+
+5. **Save** the project file as "**parameterstudy-tutorial**".
+
+.. figure:: images/parameterstudy_tutorial_4.png
+   :alt: text
+
+.. caption
+
+Create a new PET within the Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+6. Inside the **GME Browser** window, right-click on the **RootFolder**
+and select **Insert Folder->Testing**.
+
+.. figure:: images/parameterstudy_tutorial_5.png
+   :alt: text
+
+.. caption
+
+7. Right-click on the newly created **Testing** folder and select
+**Insert Folder->Parametric Exploration**.
+
+.. figure:: images/parameterstudy_tutorial_6.png
+   :alt: text
+
+.. caption
+
+8. Right-click on the newly created **Parametric Exploration** folder
+and select **Insert Model->Parametric Exploration**.
+
+.. figure:: images/parameterstudy_tutorial_7.png
+   :alt: text
+
+.. caption
+
+9. Double-click on the newly created **ParametricExploration** model
+to open it in the main GME window. It should appear as a blank canvas.
+
+.. figure:: images/parameterstudy_tutorial_8.png
+   :alt: text
+
+.. caption
+
+10. Select the **ParametricExploration** model by either left-clicking
+on the blank canvas you opened in Step 9 or left-clicking the
+the **Parametric Exploration** model within the **GME Browser** window
+11. Change the name of the model to "**parameterstudy-tutorial**" within the
+**Object Inspector** window
+
+.. figure:: images/parameterstudy_tutorial_9.png
+   :alt: text
+
+.. caption
+
+Add a PythonWrapper Analysis Block to the PET
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+At this point in the tutorial, we have created a PET
+(**parameterstudy-tutorial**) in GME; however, our PET is empty (and useless).
+Let's add a model that we can analyze to **parametricstudy-tutorial**.
+
+11. Locate the **PythonWrapper** within the **Part Browser** window (you may have to
+scroll down to find it).
+
+.. figure:: images/parameterstudy_tutorial_10.png
+   :alt: text
+
+.. caption
+
+12. Left-click on the **PythonWrapper** icon and drag it onto the PET canvas.
+
+.. figure:: images/parameterstudy_tutorial_10_a.png
+   :alt: text
+
+.. caption
+
+The PythonWrapper Component allows Python scripts that are formatted to run
+within the underlying OpenMDAO framework to run within OpenMETA. We are going
+to model our Paraboloid via a Python script and then load that script into
+the PythonWrapper Component in our PET.
+
+13. Open Notepad (or your favorite text editor) and copy-paste in the code below.
+
+.. highlight:: python
+.. :linenothreshold: 5
+
+::
+
+	from __future__ import print_function
+	from openmdao.api import Component
+	from pprint import pprint
+
+	''' First, let's create the component defining our system. We'll call it 'Paraboloid'. '''
+	class Paraboloid(Component):
+		''' Evaluates the equation f(x,y) = (x-3)^2 +xy +(y+4)^2 - 3 '''
+
+		def __init__(self):
+			super(Paraboloid, self).__init__()
+
+			''' Inputs to the PythonWrapper Component are added here as params '''
+			self.add_param('x', val=0.0)
+			self.add_param('y', val=0.0)
+
+			''' Outputs from the PythonWrapper Component are added here as unknowns '''
+			self.add_output('f_xy', shape=1)
+
+		def solve_nonlinear(self, params, unknowns, resids):
+			''' This is where we describe the system that we want to add to OpenMETA '''
+			''' f(x,y) = (x-3)^2 + xy + (y+4)^2 - 3 '''
+
+			x = params['x']
+			y = params['y']
+
+			f_xy = (x-3.0)**2 + x*y + (y+4.0)**2 - 3.0
+
+			unknowns['f_xy'] = f_xy
+
+			''' This is an equivalent expression to the one above
+			unknowns['f_xy'] = (params['x']-3.0)**2 + params['x']*y + (params['y']+4.0)**2 - 3.0
+			'''
+
+.. figure:: images/parameterstudy_tutorial_11.png
+   :alt: text
+
+.. caption
+
+15. Select **File->Save As...**
+
+.. figure:: images/parameterstudy_tutorial_12.png
+   :alt: text
+
+.. caption
+
+16. A **Save As** window will appear. Make a new folder named **scripts** within
+your GME project folder.
+
+.. figure:: images/parameterstudy_tutorial_13.png
+   :alt: text
+
+17. Save the file as "**paraboloid.py**" within the scripts folder.
+
+.. note:: If you are using Notepad, make sure **Save as type:** is
+	set to **All Files (".")**
+
+.. caption
+
+.. figure:: images/parameterstudy_tutorial_14.png
+   :alt: text
+
+.. caption
+
+18. Return to GME.
+19. Double-click on the **PythonWrapper** Component in the PET canvas.
+
+.. figure:: images/parameterstudy_tutorial_15.png
+   :alt: text
+
+.. caption
+
+A file explorer will open.
+
+20. Navigate to the location of **paraboloid.py**.
+21. Select **paraboloid.py** and click **Open**.
+
+.. figure:: images/parameterstudy_tutorial_16.png
+   :alt: text
+
+.. caption
+
+The **PythonWrapper** Component model will change. Notice that the
+params and unknowns from the paraboloid.py script are now exposed as
+ports on the outside of the **PythonWrapper** Component model
+
+.. figure:: images/parameterstudy_tutorial_17.png
+   :alt: text
+
+.. caption
+
+Also, remember that the PET's hierarchy can be viewed in the **GME Browser**
+window.
+
+.. figure:: images/parameterstudy_tutorial_18.png
+   :alt: text
+
+.. caption
+
+Adding a Parameter Study Driver to the PET
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+22. Left-click on the **ParameterStudy** icon in the **Part Browser** and
+drag it onto the PET canvas.
+
+.. figure:: images/parameterstudy_tutorial_19.png
+   :alt: text
+
+.. caption
+
+23. Double-click on the **ParameterStudy** model.
+
+A window with a blank canvas will open up.
+
+.. note:: You can quickly switch between windows via the tabs located
+   above the canvas.
+
+.. figure:: images/parameterstudy_tutorial_20.png
+   :alt: text
+
+.. caption
+
+We want this ParameterStudy Driver to provide the paraboloid.py script
+in the PythonWrapper Component with varying "x" and "y" inputs and then record
+the resulting "f_xy" output for each set of inputs.
+
+24. Left-click on the **Design Variable** icon in the **Part Browser** and
+drag it onto the ParameterStudy canvas.
+
+.. figure:: images/parameterstudy_tutorial_21.png
+   :alt: text
+
+.. caption
+
+25. Left-click the newly added **DesignVariable** to select it.
+26. Left-click on the "DesignVariable" label and change it to "x".
+
+.. note:: The name can also be changed in the **Object Inspector** window
+
+.. figure:: images/parameterstudy_tutorial_22.png
+   :alt: text
+
+.. caption
+
+27. Left-click on the Design Variable **x** to select it.
+28. Locate the **Range** field under **Attributes** in the **Object Inspector** window.
+29. Set **x**'s range by entering "**-50,+50**" in the **Range** field.
+
+.. figure:: images/parameterstudy_tutorial_23.png
+   :alt: text
+
+.. caption
+
+30. Repeat Steps 24-29 to add a second Design Variable **y** with a range of
+**-50,+50** as well.
+
+.. note:: Zoom in and out of the canvas by rolling the mousewheel while
+   holding down :kbd:`control`.
+
+.. figure:: images/parameterstudy_tutorial_24.png
+   :alt: text
+
+.. caption
+
+Now, we need to add an **Objective** to record the output of **paraboloid.py**.
+
+31. Left-click on the **Objective** icon in the **Part Browser** and
+drag it onto the ParameterStudy canvas.
+
+.. figure:: images/parameterstudy_tutorial_25.png
+   :alt: text
+
+32. Change **Objective**'s name to **f_xy**.
+
+.. caption
+
+.. figure:: images/parameterstudy_tutorial_26.png
+   :alt: text
+
+33. Left-click on the **Parameter Study** canvas to select it.
+34. Locate the **Code** field under **Attributes** in the **Object Inspector** window.
+35. Enter "**num_samples=11**" in the **Code** field
+
+.. caption
+
+.. figure:: images/parameterstudy_tutorial_27.png
+   :alt: text
+
+.. caption
+
+36. Select **Full Factorial** for **DOE Type:** field.
+
+.. figure:: images/parameterstudy_tutorial_28.png
+   :alt: text
+
+.. caption
+
+We have set our **Parameter Study** Driver to use a **Full Factorial** method
+with 11 samples per independent design variable. Given our two design
+variables **x** and **y**, the **Parameter Study** will conduct a Full Factorial
+experiment with 121 total input combinations, e.g. (-50,-50), (-50,-40), ...,
+(50,50).
+
+.. note:: If we had selected the **Uniform** DOE Type, the Parameter Study would
+   generate only 11 input combinations (regardless of the number of Design Variables).
+
+.. note:: The **FullFactorial** DOE Type becomes cumbersome as the number of Design Variables
+   increases.
+
+   E.g. If there were 6 Design Variables in this examples, then
+   **Parameter Study** would attempt to test 1,771,561 input combinations and probably
+   fail due to a memory error!
+
+   As the number of Design Variables increases, it is often
+   more efficient to use one of the other DOE Types and/or reduce the size of the design space.
+
+37. Open the **parameterstudy-tutorial** window.
+
+Notice that Design Variables **x** and **y** as well as the Objective **f_xy**
+are now exposed as ports on the outside of the Parameter Study model.
+
+.. figure:: images/parameterstudy_tutorial_29.png
+   :alt: text
+
+.. caption
+
+.. note:: Sometimes, changes inside a block such as a Design Variable name change
+   are not immediately reflected in the main PET canvas.
+   If this happens, left-click the **Repaint** icon on the **Modeling** toolbar
+   to manually refresh the canvas.
+
+.. figure:: images/parameterstudy_tutorial_29_a.png
+   :alt: text
+
+.. caption
+
+Making connections within the PET
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now the PET contains both an Analysis block and a Driver. The last step before analysis
+is to make connections within the PET canvas.
+
+38. Left-click the **Connect Mode** icon on the **Modeling** toolbar. **Connect Mode**
+is used to make connections between models on the PET canvas.
+
+.. figure:: images/parameterstudy_tutorial_30.png
+   :alt: text
+
+.. caption
+
+39. With **Connect Mode** selected, left-click on **Parameter Study**'s exposed
+Design Variable **x**.
+
+.. figure:: images/parameterstudy_tutorial_31.png
+   :alt: text
+
+.. caption
+
+40. Now left-click on **Python Wrapper**'s Parameter **x**.
+
+A line will appear indicating that the two ports are now connected.
+
+.. figure:: images/parameterstudy_tutorial_32.png
+   :alt: text
+
+.. caption
+
+41. Connect **Parameter Study.x** to **Python Wrapper.y**.
+42. Connect **Python Wrapper.f_xy** to **Parameter Study.f_xy**.
+
+Now everything is connected!
+
+.. figure:: images/parameterstudy_tutorial_33.png
+   :alt: text
+
+.. caption
+
+43. Let's give the Python Wrapper Component a more descriptive name.
+Naming becomes more important in larger PETs with dozens of
+Analysis Blocks.
+
+.. figure:: images/parameterstudy_tutorial_34.png
+   :alt: text
+
+.. caption
+
+44. Change the Python Wrapper Component's name to **Paraboloid**.
+
+.. figure:: images/parameterstudy_tutorial_35.png
+   :alt: text
+
+.. caption
+
+Running a PET Analysis
+~~~~~~~~~~~~~~~~~~~~~~
+
+Now that the PET has been set up, it is time to run it.
+
+45. Left-click on the **CyPhy Master Interpreter** icon
+on the **Components** toolbar.
+
+.. figure:: images/parameterstudy_tutorial_36.png
+   :alt: text
+
+.. caption
+
+The **CyPhy Master Interpreter** window will open up.
+
+46. Make sure the **Post to META Job Manager** checkbox is selected.
+47. Select **OK**.
+
+.. figure:: images/parameterstudy_tutorial_37.png
+   :alt: text
+
+.. caption
+
+The **Results Browser** will open up. Our PET is listed under
+the **Active Jobs** tab. The Blue shading means that it is running.
+
+.. figure:: images/parameterstudy_tutorial_38.png
+   :alt: text
+
+.. caption
+
+When the PET finishes running successfully, its shading will turn yellow.
+
+.. note:: If the shading is red, the then the run failed and a log
+   file has been generated.
+
+48. Left-click on the **PET** tab within the **Results Browser**.
+
+.. figure:: images/parameterstudy_tutorial_39.png
+   :alt: text
+
+.. caption
+
+49. Left-click **parameterstudy-tutorial** to display run information
+on the right pane.
+
+.. figure:: images/parameterstudy_tutorial_40.png
+   :alt: text
+
+.. caption
+
+Some pertinent information:
+
+* At the upper-right of the pane, **121 records** indicates the number
+  of datasets generated by the run. This is what we expected from a Full Factorial
+  DOE with 2 Design Variables sampled at 11 levels each.
+* Under the **Objective** category of the **Metrics** windows, we see that for all
+  the input combinations the minimum **f_xy** value recorded was -18, the maximum
+  **f_xy** value recorded was 7622, and the average **f_xy** value recorded was 2022.
+
+.. figure:: images/parameterstudy_tutorial_40_a.png
+   :alt: text
+
+.. caption
+
+Using the Visualizer
+~~~~~~~~~~~~~~~~~~~~
+
+Data from each PET run is stored in a .csv file in the GME results folder;
+however, OpenMETA has a built-in data visualizer for analysis and filtering.
+
+50. Left-click **Launch in Visualizer** in the bottom-right corner of the
+**Results Browser**.
+
+A browser window will open with the Visualizer.
+
+51. Navigate to the **Pairs Plot** tab of the **Explore** tab.
+
+.. figure:: images/parameterstudy_tutorial_41.png
+   :alt: text
+
+.. caption
+
+52. Clear the default contents of the **Design Variables:** field in the **Variables** section.
+
+.. figure:: images/parameterstudy_tutorial_42.png
+   :alt: text
+
+.. caption
+
+53. Add **x**, **y**, and **f_xy** to the **Design Variables:** field in that order.
+
+.. figure:: images/parameterstudy_tutorial_43.png
+   :alt: text
+
+.. caption
+
+The resulting Visualizer graph should look like the one below.
+The x-y graph clearly shows the Full Factorial distribution of **x**
+and **y** Design Variable values while the x-f_xy and y-f_xy graphs
+suggest that **f_xy**'s minimum is found when both **x** and **y** are near
+the middle of their respective ranges.
+
+.. figure:: images/parameterstudy_tutorial_44.png
+   :alt: text
+
+.. caption
+
+54. Left-click the **Single Plot** tab of the **Explore** tab.
+55. Within the **Variables** section, left-click on the **X-axis** menu and select **x**.
+56. Within the **Variables** section, left-click on the **Y-axis** menu and select **y**.
+
+.. figure:: images/parameterstudy_tutorial_46_a.png
+   :alt: text
+
+.. caption
+
+Since the **x** and **y** values were selected using a Full Factorial method,
+the resulting plot is not very interesting.
+
+.. figure:: images/parameterstudy_tutorial_46.png
+   :alt: text
+
+.. caption
+
+57. Left-click on the **Overlays** section of **Single Plot**
+58. Select **f_xy** in the **Contour Variable** menu.
+59. Check the **Add Contour Plot** box
+
+.. figure:: images/parameterstudy_tutorial_47_a.png
+   :alt: text
+
+.. caption
+
+We have now added a contour plot overlay to our graph.
+The graphs shows us that **f_xy** appears to have a global
+minimum somewhere around **(7,-8)**.
+
+.. figure:: images/parameterstudy_tutorial_47.png
+   :alt: text
+
+.. caption
+
+Refining the PET
+~~~~~~~~~~~~~~~~
+
+That seems interesting, let's see if it isn't possible to
+improve this analysis.
+
+60. Close the Visualizer and go back to **parameterstudy-tutorial**
+in GME.
+
+.. figure:: images/parameterstudy_tutorial_49.png
+   :alt: text
+
+.. caption
+
+61. Left-click on the **ParameterStudy**.
+62. In the **Object Inspector** window, change the text in the **Code** field
+    to **num_samples=31**.
+
+Now when we run the PET, it will set up a Full Factorial parameter study
+with 31*31 = 961 input combinations.
+
+.. figure:: images/parameterstudy_tutorial_49_a.png
+   :alt: text
+
+63. Repeat Steps 45-49 to rerun the PET with these new settings.
+
+Notice that the most recent run is called **parameterstudy-tutorial(1)**
+in the **PET** tab of the **Results Browser**.
+
+.. caption
+
+64. Left-click on **parameterstudy-tutorial(1)** in the **PET** tab of the **Results Browser** to select it.
+65. Left-click on **Launch in Visualizer**.
+66. Navigate to the **Pairs Plot** tab of the **Explore** tab
+67. Enter **x**, **y**, and **f_xy** in the **Design Variables:** field of the **Variables** section.
+
+.. figure:: images/parameterstudy_tutorial_52_a.png
+   :alt: text
+
+.. caption
+
+Since we increased the number of data points from 121 to 961, the resolution
+of the graphs has also increased.
+
+.. figure:: images/parameterstudy_tutorial_52.png
+   :alt: text
+
+.. caption
+
+68. Add a contour plot overlay by repeating Steps 54-59.
+
+.. figure:: images/parameterstudy_tutorial_53.png
+   :alt: text
+
+.. caption
+
+Let's filter the results data to focus in on **f_xy**'s apparent global minimum
+
+69. Left-click on the **Filters** section at the bottom of the Visualizer.
+
+.. figure:: images/parameterstudy_tutorial_54.png
+   :alt: text
+
+.. caption
+
+70. Double-click on the **f_xy** slider bar. A floating box will appear.
+71. Enter **100** in the **Max:** field and select **Apply**.
+
+Doing this displays only the results entries where **f_xy** is less than 100.
+
+.. figure:: images/parameterstudy_tutorial_55.png
+   :alt: text
+
+.. caption
+
+The resulting graph is shown below. We've effectively "zoomed in"
+on the region of interest.
+
+.. figure:: images/parameterstudy_tutorial_55_a.png
+   :alt: text
+
+.. caption
+
+72. Go back to **parameterstudy-tutorial** in GME
+
+.. note:: Alternatively, you can refine a PET using the **PET Refinement**
+   tab in the Visualizer.
+
+73. Left-click on the **ParameterStudy**.
+74. In the **Object Inspector** window, change the text in the **Code** field
+    to **num_samples=111**.
+
+Now when we run the PET, it will set up a Full Factorial parameter study
+with 111*111 = 12,321 input combinations.
+
+.. figure:: images/parameterstudy_tutorial_56_a.png
+   :alt: text
+
+.. caption
+
+75. Repeat Steps 45-50 to rerun the PET with these new settings.
+
+.. figure:: images/parameterstudy_tutorial_57.png
+   :alt: text
+
+.. caption
+
+76. Repeat Steps 54-59 to add a contour plot overlay.
+
+.. figure:: images/parameterstudy_tutorial_58.png
+   :alt: text
+
+.. caption
+
+77. Left-click on the **Filters** section at the bottom of the Visualizer.
+78. Double-click on the **f_xy** slider bar. A floating box will appear.
+79. Enter **-20** in the **Max:** field and select **Apply**.
+
+.. figure:: images/parameterstudy_tutorial_59.png
+   :alt: text
+
+.. caption
+
+From the resulting graph, the global minimum of **f_xy** appears to
+lie in the region bounded by **5<x<9** and **-10<y<-6**.
+
+.. figure:: images/parameterstudy_tutorial_60.png
+   :alt: text
+
+.. caption
+
+As interesting as graphs are, sometimes actual values are more useful.
+
+80. Left-click on the **Data Table** tab of the Visualizer.
+
+This will display the results records in a table format.
+
+.. note:: Although we changed tabs in the Visualizer, the data filters set
+   in Steps 77-79 using the **Filters** section are still in effect. To
+   view *all* the results records, undo those changes.
+
+.. figure:: images/parameterstudy_tutorial_61_a.png
+   :alt: text
+
+.. caption
+
+81. Left-click on the **f_xy** column header to sort the results in ascending order.
+
+Based on the sampled points, the global minimum of **f_xy** appears to occur
+around the **x** and **y** values of **6** and **-7** respectively.
+
+.. figure:: images/parameterstudy_tutorial_61_b.png
+   :alt: text
+
+.. caption
+
+**Congratulations!** You have successfully completed the **Parameter Study PET Tutorial**.
+
+----
+
+Optimizer
+---------
+
+In this tutorial, we will use an Optimizer driver to find
+the x and y values that minimize f_xy.
+
+In the previous Parameter Study Tutorial, we used the Parameter Study
+driver to obtain the x and y values needed to minimize f_xy. That method
+was rather ineffecient as it relied on a brute force sampling (12,321 samples)
+of the design space in order to obtain a reasonable estimate of the optimal
+x and y values.
+
+In this tutorial, we will introduce the Optimizer driver. The Optimizer driver
+is better suited for optimization/minimization problems.
+
+.. note:: This tutorial builds on the preceding Parameter Study tutorial.
+   You will need to have completed Steps 1-21 of the Parameter Study tutorial
+   before you start this tutorial.
+
+Open an existing OpenMETA Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the **parameterstudy-tutorial.mga** GME project from the Parameter
+Study tutorial is still open, then you can skip Steps 1-3.
+
+1. Start GME.
+2. Within GME, open the **File** menu and select **Open Project...**.
+3. Left-click on the **parameterstudy-tutorial.mga** file that you created
+   in the last tutorial then select **Open**.
+
+.. figure:: images/optimizer_tutorial_1.png
+   :alt: text
+
+.. caption
+
+Create a new PET within the Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+4. Inside the **GME Browser** window, right-click on the
+**RootFolder->Testing->Parametric Exploration** folder and select
+**Insert Model->Parametric Exploration**.
+
+.. figure:: images/optimizer_tutorial_1_a.png
+   :alt: text
+
+.. caption
+
+5. Change the name of the newly created **ParametricExploration** model to
+"**optimizer-tutorial**".
+
+.. figure:: images/optimizer_tutorial_2.png
+   :alt: text
+
+.. caption
+
+6. Double-click on **optimizer-tutorial** to open it in the main GME window.
+It should appear as a blank canvas.
+
+.. figure:: images/optimizer_tutorial_2_a.png
+   :alt: text
+
+.. caption
+
+Instead of redoing work, let's copy our existing work from the Parameter Study tutorial.
+
+7. Inside the **GME Browser** window, double-click on the
+**RootFolder->Testing->Parametric Exploration->parameterstudy-tutorial**
+to open it in a window.
+
+.. figure:: images/optimizer_tutorial_3.png
+   :alt: text
+
+.. caption
+
+8. Left-click and drag within **parameterstudy-tutorial**'s canvas to select everything.
+9. Press :kbd:`(control-c)` to copy the selected area.
+
+.. figure:: images/optimizer_tutorial_4.png
+   :alt: text
+
+.. caption
+
+10. Return to the **optimizer-tutorial** canvas and press :kbd:`(control-v)`
+to paste **ParameterStudy** and **Paraboloid** into **optimizer-tutorial**.
+
+.. figure:: images/optimizer_tutorial_5.png
+   :alt: text
+
+.. caption
+
+Now, we don't actually need **ParameterStudy** since the plan is to use
+an Optimizer driver instead.
+
+11. Left-click on **ParameterStudy** and press :kbd:`(delete)`.
+
+.. figure:: images/optimizer_tutorial_6.png
+   :alt: text
+
+.. caption
+
+Adding an Optimizer Driver to the PET
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+12. Left-click on the **Optimizer** icon in the **Part Browser** and drag it onto the PET canvas.
+
+.. figure:: images/optimizer_tutorial_7.png
+   :alt: text
+
+.. caption
+
+.. figure:: images/optimizer_tutorial_7_a.png
+   :alt: text
+
+.. caption
+
+13. Double-click on the **Optimizer** model.
+
+A window with a blank canvas will open up.
+
+.. figure:: images/optimizer_tutorial_8.png
+   :alt: text
+
+.. caption
+
+14. Left-click on the **Design Variable** icon in the **Part Browser**
+and drag it onto the Optimizer canvas.
+
+.. figure:: images/optimizer_tutorial_9.png
+   :alt: text
+
+.. caption
+
+15. Left-click the newly added **DesignVariable** to select it.
+16. Left-click on the “DesignVariable” label and change it to “x”.
+
+.. figure:: images/optimizer_tutorial_10_a.png
+   :alt: text
+
+.. caption
+
+17. Left-click on the Design Variable **x** to select it.
+18. Locate the **Range** field under **Attributes** in the **Object Inspector** window.
+19. Set **x**’s range by entering “**-50,+50**” in the Range field.
+
+.. figure:: images/optimizer_tutorial_10.png
+   :alt: text
+
+.. caption
+
+20. Repeat Steps 14-19 to add a second Design Variable **y** with a range of **-50,+50** as well.
+
+.. figure:: images/optimizer_tutorial_11.png
+   :alt: text
+
+.. caption
+
+21. Left-click on the **Objective** icon in the **Part Browser** and drag it onto the Optimizer canvas.
+22. Change **Objectives**'s name to "**f_xy**".
+
+.. figure:: images/optimizer_tutorial_12.png
+   :alt: text
+
+.. caption
+
+23. Left-click on the **Optimizer Constraint** icon in the **Part Browser** and drag it onto the Optimizer canvas.
+24. Change **Optimizer Constraint**'s name to "**x_con**".
+
+.. figure:: images/optimizer_tutorial_13_a.png
+   :alt: text
+
+.. caption
+
+25. Left-click on the Optimizer Constraint **x_con** to select it.
+26. Locate the **MaxValue** and **MinValue** fields under **Attributes** in the **Objective Inspector** window.
+27. Enter "**+50**" and "**-50**" in **MaxValue** and **MinValue**'s respective fields.
+
+.. figure:: images/optimizer_tutorial_13.png
+   :alt: text
+
+.. caption
+
+28. Repeat Steps 23-27 to add a second Optimizer Constraint **y_con** with
+a MaxValue of **+50** and a MinValue of **-50**.
+
+.. figure:: images/optimizer_tutorial_14.png
+   :alt: text
+
+.. caption
+
+29. Left-click on the **Optimizer** canvas to select it.
+30. Select **COBYLA** for the **Function:** field.
+
+.. note:: **COBYLA** stands for Constrained Optimization BY Linear Approximation and
+  is the default Optimizer function in OpenMETA since it does not require defined
+  gradients / Jacobian matrices in order to work.
+
+.. figure:: images/optimizer_tutorial_15.png
+   :alt: text
+
+.. caption
+
+31. Open the **optimizer-tutorial** window
+
+Notice that Design Variables **x** and **y**, Optimizer Constraints **x_con**
+and **y_con**, and the Objective **f_xy** are now exposed as ports on the
+outside of the Optimizer model.
+
+.. figure:: images/optimizer_tutorial_16.png
+   :alt: text
+
+.. caption
+
+Making connections within the PET
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+32. Left-click the **Connect Mode** icon on the **Modeling** toolbar.
+
+.. figure:: images/optimizer_tutorial_16_a.png
+   :alt: text
+
+.. caption
+
+33. Using **Connect Mode**, connect **Optimizer**'s Design Variables
+**x** and **y** to **Paraboloid**'s Parameters **x** and **y**.
+
+.. figure:: images/optimizer_tutorial_17.png
+   :alt: text
+
+.. caption
+
+34. Connect **Optimizer**'s Design Variables **x** and **y** to
+**Optimizer**'s Optimizer Constraints **x_con** and **y_con**.
+
+.. figure:: images/optimizer_tutorial_18.png
+   :alt: text
+
+.. caption
+
+35. Connect **Paraboloid**'s Metric **f_xy** to **Optimizer**'s
+Objective **f_xy**.
+
+.. figure:: images/optimizer_tutorial_19.png
+   :alt: text
+
+.. caption
+
+Now everything is connected!
+
+Running a PET Analysis
+~~~~~~~~~~~~~~~~~~~~~~
+
+Now that the PET has been set up, it is time to run it.
+
+36. Left-click on the **CyPhy Master Interpreter** icon on the **Components** toolbar.
+
+.. figure:: images/optimizer_tutorial_20.png
+   :alt: text
+
+.. caption
+
+The **CyPhy Master Interpreter** window will open up.
+
+37. Make sure the **Post to META Job Manager** checkbox is selected.
+38. Select **OK**.
+
+.. figure:: images/optimizer_tutorial_21.png
+   :alt: text
+
+.. caption
+
+The **Results Browser** will open up.
+
+.. figure:: images/optimizer_tutorial_22.png
+   :alt: text
+
+.. caption
+
+39. Left-click on the **PET** tab within the **Results Browser**.
+
+.. figure:: images/optimizer_tutorial_23.png
+   :alt: text
+
+.. caption
+
+
+40. Left-click **optimizer-tutorial** to display run information on the right pane.
+
+.. figure:: images/optimizer_tutorial_23_a.png
+   :alt: text
+
+.. caption
+
+Some pertinent information:
+
+* **optimizer-tutorial** generated **58** records, meaning that
+  it converged in **58** iterations.
+
+* Under the **Objective** category of **Metrics** window,
+  we see that the Optimizer Driver found a minimum **f_xy**
+  value of **-27.33**
+
+Compared to **parameterstudy-tutorial**, **optimizer-tutorial** found
+**f_xy**'s minimum much more efficiently and accurately.
+
+.. note:: The (dis)advantage of using an Optimizer Driver
+   is that it will not explore nearly as much of the design space as a
+   Parameter Study Driver will.
+
+Visualizer Analysis
+~~~~~~~~~~~~~~~~~~~
+
+41. Left-click **Launch in Visualizer** in the bottom-right corner of the **Results Browser**.
+
+A browser window will open with the Visualizer.
+
+42. Navigate to the **Pairs Plot** tab of the **Explore** tab.
+43. Clear the default contents of the **Design Variables:** field in the **Variables** section.
+44. Add **x**, **y**, and **f_xy** to the **Design Variables:** field.
+
+.. figure:: images/optimizer_tutorial_24_a.png
+   :alt: text
+
+.. caption
+
+The graphs show how **x** and **y** had their values changed by
+the Optimizer Driver as **f_xy**'s value was minimized.
+
+.. figure:: images/optimizer_tutorial_24.png
+   :alt: text
+
+.. caption
+
+45. Left-click on the **Data Table** tab of the Visualizer.
+
+This will display the result records in a table format.
+
+.. figure:: images/optimizer_tutorial_25.png
+   :alt: text
+
+.. caption
+
+By default, the results are sorted in ascending order by iteration.
+
+.. figure:: images/optimizer_tutorial_25_a.png
+   :alt: text
+
+.. caption
+
+46. Left-click on the **f_xy** column header to sort the results in ascending order.
+
+The Optimizer found a minimum value of **-27.33** for **f_xy** at **x = 6.67**
+and **y = -7.33**.
+
+.. figure:: images/optimizer_tutorial_26_a.png
+   :alt: text
+
+.. caption
+
+**Congratulations!** You have successfully completed the **Optimizer PET Tutorial**.
+
+----
+
+Design of Experiments (DOE)
+---------------------------
+
+.. note:: This section is under construction. Check back later
+   for updates!

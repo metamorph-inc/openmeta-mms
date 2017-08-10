@@ -13,7 +13,9 @@ the FDTD simulation space reduced to the size of the Ara endo. The
 entire Ara endo and a head phantom, over which the SAR is calculated.
 
 For details on using the RF analysis interpreter, refer to section
-`CyPhy2RF <@ref%20cyphy2rf>`__.
+CyPhy2RF.
+
+.. FIXME: `CyPhy2RF <@ref%20cyphy2rf>`__.
 
 Configure
 ~~~~~~~~~

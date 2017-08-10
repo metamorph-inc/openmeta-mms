@@ -12,7 +12,7 @@ individually. The following steps will walk you through the construction of
 a CyPhy component assembly
 
 1. In the GME Browser, right-click **Component Assemblies -> insert model -> Component Assembly**
-2. Rename This **Cube_Assembly**
+2. Rename it as **Cube_Assembly**
 3. Double left-click **Cube_Assembly** to open the blank component canvas
 4. In the Part Browser under the `All` tab, find the **ComponentRef** and drag and drop into the workspace
 5. In the GME Browser, left click the **Simple_Cube** component and drop it ontop of the **ComponentRef**
@@ -31,9 +31,11 @@ We have just created a reference to the Component **Simple_Cube** inside of our 
 
 We have copied over all the necessary points while also keeping the same order, saving us time in the future.
 
-10. Connect all the points to thier reference points in the ComponentReference
+10. Connect all the points to their reference points in the ComponentReference
 
 .. figure:: images/IMAGE12.png
    :alt: Solid Modeling Demo
 
-We have now exposed the surface reference points of the Creo model through the **Component Reference** in the **Component Assembly**. This allows us to reference these points directly in our FEA TestBench. Now that both the Component and Component Assembly are built, it is time to create the FEA TestBench.
+We have now exposed the surface reference points of the Creo model through the **Component Reference**
+in the **Component Assembly**. This allows us to reference these points directly in our FEA TestBench.
+Now that both the Component and Component Assembly are built, it is time to create the FEA TestBench.

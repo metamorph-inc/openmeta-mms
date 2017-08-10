@@ -62,7 +62,7 @@ Coloring
    :width: 1459px
 
 The *Coloring* panel allows us to apply live and saved colorings to the
-data. This information is passed to the tab as an addition column in the
+data. This information is passed to the tab as an additional column in the
 data in the ``data$Colored`` data frame. The "Source" can take one of
 three options:
 

@@ -15,13 +15,14 @@ Configure
 ~~~~~~~~~
 
 First, you'll need to create a copy of the **SPICETest** test bench. For
-instructions, refer to the section `Using Test
-Benches <@ref%20using-test-benches>`__.
+instructions, refer to the section :ref:`testbenchbasics`.
 
 The design under test must be connected to the **PwrGnd** connector of
 the **EndoDC5V** test component.
 
-|Configured SPICEtest test bench| *A correctly-configured copy of the
+|Configured SPICEtest test bench|
+
+*A correctly-configured copy of the
 SPICEtest test bench, with ModuleDesign as the system under test.*
 
 Setting Simulation Time
@@ -33,7 +34,7 @@ The initial test bench is configured to run for 1 second with a 10us
 The value of this attribute must be a valid ``.TRAN`` statement.
 
 This statement specifies the time interval over which the transient
-analysis takes place, and the time increments. The format is as follows [1]_:
+analysis takes place and the time increments. The format is as follows [1]_:
 
 ``.TRAN TSTEP TSTOP <TSTART <TMAX>> <UIC>``
 
@@ -52,7 +53,7 @@ analysis takes place, and the time increments. The format is as follows [1]_:
 Test Components
 ~~~~~~~~~~~~~~~
 
-***EndoDC5V** provides electrical *\ 5V\* and *Ground* via the
+**EndoDC5V** provides electrical *5V* and *Ground* via the
 **PwrGnd** connector. The design under test must be connected to this
 connector. This test component also monitors the current and power draw
 of the module, and uses this information to populate the **MaxPower**

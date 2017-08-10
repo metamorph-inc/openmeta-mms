@@ -21,4 +21,4 @@ Launching the Project
    this location later in the tutorial.
 
 .. note:: Be sure all the files (e.g. "components folder", ``.xme`` file)
-   are in the same directory throughout the tutorial.*
+   are in the same directory throughout the tutorial.

@@ -18,8 +18,7 @@ Configure
 ~~~~~~~~~
 
 First, you'll need to create a copy of the ***CostEstimation*** test
-bench. For instructions, refer to the section `Using Test
-Benches <@ref%20using-test-benches>`__.
+bench. For instructions, refer to the section :ref:`testbenchbasics`.
 
 To configure this *test bench* we need to select the design quantity
 that will form the basis of the cost estimate. The higher the number of

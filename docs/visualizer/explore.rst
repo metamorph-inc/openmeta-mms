@@ -8,7 +8,7 @@ given dataset.
 
 The `Pairs Plot Tab`_ tab provides a way to explore
 overall trends in the data. The `Single Plot Tab`_ tab offers the additional
-visualization aides such as contour and pareto plots to be overlaid on a plot of
+visualization aids such as contour and pareto plots to be overlaid on a plot of
 two specific variables. Lastly, the `Point Details Tab`_ tab allows for view or
 launching artifacts from a specific data point in the dataset.
 
@@ -78,8 +78,8 @@ The second sub-tab in the Explore tab is the Single Plot tab.
 Variables
 ^^^^^^^^^
 
--  **X variable:** Set the variable for the x axis.
--  **Y variable:** Set the variable for the y axis.
+-  **X-axis:** Set the variable for the x axis.
+-  **Y-axis:** Set the variable for the y axis.
 
 Markers
 ^^^^^^^
