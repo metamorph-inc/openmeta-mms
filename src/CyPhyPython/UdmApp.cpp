@@ -258,12 +258,12 @@ void Main(const std::string& meta_path, CComPtr<IMgaProject> project, CComPtr<IM
 		// n.b. don't use Py_GetPath(), since it may read garbage from HKCU\Software\Python\PythonCore\2.7\PythonPath
 		newpath = meta_path + "\\bin\\Python" CYPHY_PYTHON_VERSION "\\Scripts\\python" CYPHY_PYTHON_VERSION ".zip";
 		newpath = newpath + separator + meta_path + "\\bin\\Python" CYPHY_PYTHON_VERSION "\\Scripts";
+		newpath = newpath + separator + meta_path + "\\bin\\Python" CYPHY_PYTHON_VERSION "\\Lib";
 		newpath = newpath + separator + meta_path + "\\bin";
 	}
 	else {
 		newpath = path;
 	}
-	//newpath += separator + "C:\\Program Files\\ISIS\\Udm\\bin";
 
 	PySys_SetPath(const_cast<char*>(newpath.c_str()));
 

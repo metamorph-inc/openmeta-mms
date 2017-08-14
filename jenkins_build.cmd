@@ -10,7 +10,8 @@ pushd %~dp0
 pushd test
 del *_result.xml *_results.xml
 del results\*_result.xml
-..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml_parallel.py tests.xunit tests_cadcreo.xunit tests_tonka.xunit || exit /b !ERRORLEVEL!
+rem TODO: convert models\MDB\**prt.* models\MetaLinkTest\**prt** to commercial Creo and use tests_cadcreo.xunit
+..\bin\Python27\Scripts\Python.exe run_tests_console_output_xml_parallel.py tests.xunit tests_tonka.xunit || exit /b !ERRORLEVEL!
 popd
 
 @rem BUILD INSTALLER

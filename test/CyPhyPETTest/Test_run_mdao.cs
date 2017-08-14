@@ -110,6 +110,106 @@ namespace CyPhyPETTest
         }
 
         [Fact]
+        public void OptimizationProblemWithExposedInitialConditions()
+        {
+            string outputDir = GetCurrentMethod();
+            string petExperimentPath = "/@Testing/@PETHierarchy/@" + GetCurrentMethod();
+
+            Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
+            var result = DynamicsTeamTest.CyPhyPETRunner.RunReturnFull(outputDir, mgaFile, petExperimentPath);
+
+            Assert.True(result.Item2.Success, "CyPhyPET failed.");
+
+            var configContents = File.ReadAllText(Path.Combine(result.Item1.OutputDirectory, "mdao_config.json"));
+            var config = JsonConvert.DeserializeObject<AVM.DDP.PETConfig>(configContents);
+
+            Assert.Equal(new string[] { "Optimizer", "x" }, config.components["Paraboloid"].parameters["x"].source);
+            Assert.Equal(new string[] { "Optimizer", "y" }, config.components["Paraboloid"].parameters["y"].source);
+
+
+            return;
+        }
+
+        [Fact]
+        public void OptimizationInitialConditionProfiling()
+        {
+            string outputDir = GetCurrentMethod();
+            string petExperimentPath = "/@Testing/@PETHierarchy/@" + GetCurrentMethod();
+
+            Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
+            var result = DynamicsTeamTest.CyPhyPETRunner.RunReturnFull(outputDir, mgaFile, petExperimentPath);
+
+            Assert.True(result.Item2.Success, "CyPhyPET failed.");
+
+            var configContents = File.ReadAllText(Path.Combine(result.Item1.OutputDirectory, "mdao_config.json"));
+            var config = JsonConvert.DeserializeObject<AVM.DDP.PETConfig>(configContents);
+
+            Assert.Equal(new string[] { "ParameterStudy", "x_0" }, config.components["SaveTime"].parameters["pass_in"].source);
+            Assert.Equal(new string[] { "OptimizationProblem", "f_xy" }, config.components["MeasureTime"].parameters["finished"].source);
+
+            Assert.Equal(new string[] { "OptimizationProblem", "f_xy" }, config.drivers["ParameterStudy"].objectives["f_xy"].source);
+            Assert.Equal(new string[] { "MeasureTime", "time" }, config.drivers["ParameterStudy"].objectives["Time"].source);
+
+            Assert.Equal(new string[] { "x_0" }, config.subProblems["OptimizationProblem"].components["Paraboloid"].parameters["x"].source);
+
+            Assert.Equal(new string[] { "ParameterStudy", "y_0" }, config.subProblems["OptimizationProblem"].problemInputs["y_0"].outerSource);
+            Assert.Equal(new string[] { "Optimizer", "y" }, config.subProblems["OptimizationProblem"].problemInputs["y_0"].innerSource);
+            Assert.Equal(false, config.subProblems["OptimizationProblem"].problemInputs["y_0"].pass_by_obj);
+            Assert.Equal("0.0", config.subProblems["OptimizationProblem"].problemInputs["y_0"].value);
+
+            Assert.Equal(false, config.subProblems["OptimizationProblem"].problemInputs["x_0"].pass_by_obj);
+            Assert.Equal("0.0", config.subProblems["OptimizationProblem"].problemInputs["x_0"].value);
+
+            Assert.Equal(new string[] { "x_0" }, config.subProblems["OptimizationProblem"].problemOutputs["x_f"]);
+            Assert.Equal(new string[] { "Paraboloid", "f_xy" }, config.subProblems["OptimizationProblem"].problemOutputs["f_xy"]);
+
+            Assert.Equal(new string[] { "Paraboloid", "f_xy" }, config.subProblems["OptimizationProblem"].drivers["Optimizer"].objectives["f_xy"].source);
+
+            return;
+        }
+
+        [Fact]
+        public void OptimizationInitialConditionProfiling_OptimizationProblem()
+        {
+            string outputDir = GetCurrentMethod();
+            string petExperimentPath = "/@Testing/@PETHierarchy/@OptimizationInitialConditionProfiling/@OptimizationProblem";
+
+            Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
+            var result = DynamicsTeamTest.CyPhyPETRunner.RunReturnFull(outputDir, mgaFile, petExperimentPath);
+
+            Assert.True(result.Item2.Success, "CyPhyPET failed.");
+
+            var configContents = File.ReadAllText(Path.Combine(result.Item1.OutputDirectory, "mdao_config.json"));
+            var config = JsonConvert.DeserializeObject<AVM.DDP.PETConfig>(configContents);
+
+            Assert.Equal(new string[] { "Optimizer", "x" }, config.components["Paraboloid"].parameters["x"].source);
+
+            Assert.Equal(new string[] { "Paraboloid", "f_xy" }, config.drivers["Optimizer"].objectives["f_xy"].source);
+
+            return;
+        }
+
+        [Fact]
+        [Trait("THIS", "ONE")]
+        public void StringEnumDriver()
+        {
+            string outputDir = GetCurrentMethod();
+            string petExperimentPath = "/@Testing/@PETHierarchy/@StringEnumDriver";
+
+            Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
+            var result = DynamicsTeamTest.CyPhyPETRunner.RunReturnFull(outputDir, mgaFile, petExperimentPath);
+
+            Assert.True(result.Item2.Success, "CyPhyPET failed.");
+
+            var configContents = File.ReadAllText(Path.Combine(result.Item1.OutputDirectory, "mdao_config.json"));
+            var config = JsonConvert.DeserializeObject<AVM.DDP.PETConfig>(configContents);
+
+            Assert.Equal("u\"one\"", config.subProblems["ParametricExploration"].problemInputs["ProblemInput"].value);
+            Assert.Equal(true, config.subProblems["ParametricExploration"].problemInputs["ProblemInput"].pass_by_obj);
+        }
+        
+
+        [Fact]
         public void Test_CyPhyPET_unit_matcher()
         {
             var project = new MgaProject();
@@ -384,6 +484,8 @@ namespace CyPhyPETTest
             {
                 System.Reflection.Assembly.GetAssembly(typeof(Workflow_PET_Test)).CodeBase.Substring("file:///".Length),
                 //"/noshadow",
+                // [Trait("THIS", "ONE")]
+                // "/trait", "THIS=ONE",
             });
             Console.In.ReadLine();
             //System.Console.Out.WriteLine("HEllo World");

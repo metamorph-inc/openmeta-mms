@@ -317,12 +317,19 @@ models/PET_simple_proof-of-concept/Constants_fail_array/
 models/PET_simple_proof-of-concept/Constants_fail_float/
 models/PET_simple_proof-of-concept/Constants_fail_string/
 models/PET_simple_proof-of-concept/Support_FEA_Test_Bench/
+models/PET_simple_proof-of-concept/OptimizationInitialConditionProfiling/
+models/PET_simple_proof-of-concept/OptimizationInitialConditionProfiling_OptimizationProblem/
+models/PET_simple_proof-of-concept/OptimizationProblemWithExposedInitialConditions/
+models/PET_simple_proof-of-concept/StringEnumDriver/
 models/PET_simple_proof-of-concept/*.tmp
 deploy/CAD_Installs/WiX.Toolset.*/
 deploy/CAD_Installs/META.CADCreoParametricMetaLink.*/
 deploy/CAD_Installs/META.CadCreoParametricCreateAssembly.*/
 deploy/CAD_Installs/META.ExtractACM-XMLfromCreoModels.*/
-deploy/CAD_Installs/Proe ISIS Extensions/0Readme - CreateAssembly.txt
+bin/CAD/Creo/0Readme - CreateAssembly.txt
+bin/CAD/Creo/bin/CADCreoParametricCreateAssembly.exe
+bin/CAD/Creo/bin/CADCreoParametricMetaLink.exe
+bin/CAD/Creo/bin/ExtractACM-XMLfromCreoModels.exe
 deploy/DesignDataPackage_python.wxi
 deploy/MassSpringDamper.wxi
 deploy/MaterialLibraryInterface.wxi
@@ -330,6 +337,7 @@ deploy/ModelicaWrapperTemplates.wxi
 deploy/PCC.wxi
 deploy/Proe_ISIS_Extensions_x64.wxi
 deploy/WebGME.wxi
+deploy/Redist/
 deploy/analysis_tool_CFD.wxi
 deploy/analysis_tool_CarAnalysis.wxi
 deploy/analysis_tool_ExamplePython.wxi
