@@ -63,26 +63,14 @@ if (dig_dataset_config == "") {
   if(dig_input_csv == "") {
     # Setup one of the test datasets if no input dataset
     config_filename=file.path('datasets',
-                              'boxpacking',
+                              'WindTurbineForOptimization',
                               'visualizer_config.json',
                               fsep = "\\\\")
-    # config_filename=file.path('datasets',
-    #                           'WindTurbineForOptimization',
-    #                           'visualizer_config.json',
-    #                           fsep = "\\\\")
-    # config_filename=file.path('datasets',
-    #                           'WindTurbine',
-    #                           'visualizer_config.json',
-    #                           fsep = "\\\\")
-    # config_filename=file.path('datasets',
-    #                           'TestPETRefinement',
-    #                           'visualizer_config.json',
-    #                           fsep = "\\\\")
   } else {
     # Visualizer legacy launch format
     csv_dir <- dirname(dig_input_csv)
     config_filename <- file.path(csv_dir,
-                                 sub(".csv",
+                                 sub("\\.csv$",
                                      "_viz_config.json",
                                      basename(dig_input_csv)),
                                  fsep = "\\\\")
@@ -100,9 +88,6 @@ if(file.exists(config_filename)) {
   visualizer_config$tabs <- c("Explore.R",
                               "DataTable.R",
                               "Histogram.R",
-                              "PETRefinement.R",
-                              "Scratch.R",
-                              "ParallelAxisPlot.R",
                               "UncertaintyQuantification.R")
 }
 
@@ -267,7 +252,10 @@ Server <- function(input, output, session) {
 
   var_class <- reactive({
     df_class <- sapply(data$raw$df, class)
-    df_class[-which(names(df_class) %in% c("GUID", "CfgID"))]
+    if (any(names(df_class) %in% c("GUID", "CfgID"))) {
+      df_class <- df_class[-which(names(df_class) %in% c("GUID", "CfgID"))]
+    }
+    df_class
   })
   var_names <- reactive({names(var_class())})
   var_facs <- reactive({
