@@ -367,10 +367,19 @@ Server <- function(input, output, session) {
   
   # Design Configs for Filters -----------------------------------------------
   
+  SelectAllComponents <- function(node) {
+    if(node[['Type']] == "Component") {
+      node[['Selected']] <- TRUE
+    } else {
+      node[['Children']] <- lapply(node[['Children']], SelectAllComponents)
+    }
+    node
+  }
+  
   observe({
     if(is.empty(visualizer_config$config_tree)) {
       names <- names(DesignConfigs())
-      config_tree <- DesignConfigs()[[names[1]]]
+      config_tree <- SelectAllComponents(DesignConfigs()[[names[1]]])
     } else {
       config_tree <- visualizer_config$config_tree
     }
@@ -603,6 +612,7 @@ Server <- function(input, output, session) {
   outputOptions(output, "constants_present", suspendWhenHidden=FALSE)
   
   observeEvent(input$reset_sliders, {
+    session$sendCustomMessage(type = "select_all_design_configurations", "")
     for(column in 1:length(pre$var_names())){
       name <- pre$var_names()[column]
       switch(pre$var_class()[column],

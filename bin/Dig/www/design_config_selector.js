@@ -17,34 +17,42 @@ var diagonal = d3.svg.diagonal()
 var svg;
 
 Shiny.addCustomMessageHandler("setup_design_configurations", function(message) {
-    if(svg == null) {
-      
-      div_width = document.getElementById("design_configurations").offsetWidth;
-      //console.log(div_width);
-      div_width = 220;
-      width = div_width - my_margin.left - my_margin.right;
-      barWidth = width * 0.8;
-      //console.log(div_width, width, barWidth);
-      
-      svg = d3.select("#design_configurations").append("svg")
-           .attr("id", "design_configurations_svg")
-           .attr("width", div_width)
-         .append("g")
-           .attr("transform", "translate(" + my_margin.left + "," + my_margin.top + ")");
-      
-      footer_message = message;
-      root = jQuery.extend(true, {}, message);
-      
-      root.x0 = 0;
-      root.y0 = 0;
-      //select_all(root);
-      collapse_default(root);
-      
-      copy_message(root, footer_message);
-      Shiny.onInputChange("filter_design_config_tree", footer_message);
-    } else {
-      console.log("Error: 'setup_design_configurations' was called more than once from Shiny.");
-    }
+  console.log(typeof svg, svg);
+  if(svg === undefined) {
+    
+    div_width = document.getElementById("design_configurations").offsetWidth;
+    //console.log(div_width);
+    div_width = 220;
+    width = div_width - my_margin.left - my_margin.right;
+    barWidth = width * 0.8;
+    //console.log(div_width, width, barWidth);
+    
+    svg = d3.select("#design_configurations").append("svg")
+         .attr("id", "design_configurations_svg")
+         .attr("width", div_width)
+       .append("g")
+         .attr("transform", "translate(" + my_margin.left + "," + my_margin.top + ")");
+    
+    footer_message = message;
+    root = jQuery.extend(true, {}, message);
+    
+    root.x0 = 0;
+    root.y0 = 0;
+    //select_all(root);
+    collapse_default(root);
+    
+    copy_message(root, footer_message);
+    Shiny.onInputChange("filter_design_config_tree", footer_message);
+  } else {
+    console.log("Error: 'setup_design_configurations' was called more than once from Shiny.");
+  }
+});
+
+Shiny.addCustomMessageHandler("select_all_design_configurations", function(message) {
+  select_all(root);
+  update(root, root);
+  copy_message(root, footer_message);
+  Shiny.onInputChange("filter_design_config_tree", footer_message);
 });
 
 // Shiny.addCustomMessageHandler("addnode", function(message) {
