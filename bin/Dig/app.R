@@ -47,10 +47,12 @@ source("utils.R")
 
 ABBREVIATION_LENGTH <- 25
 SAVE_DIG_INPUT_CSV <- TRUE
+FILTER_WIDTH_IN_COLUMNS <- 2
 
 # Resolve Dataset Configuration ----------------------------------------------
 
 pet_config_present <- FALSE
+design_tree_present <- FALSE
 saved_inputs <- NULL
 visualizer_config <- NULL
 
@@ -114,6 +116,12 @@ if (!is.null(pet_config_filename) && pet_config_filename != "") {
   if (file.exists(pet_config_filename)) {
     pet_config_present <- TRUE
   }
+}
+
+design_tree_filename <- file.path(launch_dir, "design_tree.json")
+if (file.exists(design_tree_filename)) {
+  design_tree_present <- TRUE
+  FILTER_WIDTH_IN_COLUMNS <- 3
 }
 
 # Saved Input Functions ------------------------------------------------------
@@ -377,18 +385,20 @@ Server <- function(input, output, session) {
   }
   
   observe({
-    if(is.empty(visualizer_config$config_tree)) {
-      names <- names(DesignConfigs())
-      config_tree <- SelectAllComponents(DesignConfigs()[[names[1]]])
-    } else {
-      config_tree <- visualizer_config$config_tree
+    if(design_tree_present) {
+      if(is.empty(visualizer_config$config_tree)) {
+        names <- names(DesignConfigs())
+        config_tree <- SelectAllComponents(DesignConfigs()[[names[1]]])
+      } else {
+        config_tree <- visualizer_config$config_tree
+      }
+      session$sendCustomMessage(type = "setup_design_configurations", config_tree)
     }
-    session$sendCustomMessage(type = "setup_design_configurations", config_tree)
   })
   
   DesignConfigs <- reactive({
-    if(file.exists(file.path(launch_dir, "design_tree.json"))) {
-      design_configs <- fromJSON(file.path(launch_dir, "design_tree.json"), simplifyDataFrame = FALSE)
+    if(design_tree_present) {
+      design_configs <- fromJSON(design_tree_filename, simplifyDataFrame = FALSE)
     } else {
       NULL
     }
@@ -413,7 +423,15 @@ Server <- function(input, output, session) {
         NULL
       }
     } else {
-      NULL
+      if ("CfgID" %in% names(data$raw$df) && is.null(DesignConfigs())) {
+        if(pet_config_present) {
+          pet$selected_configurations
+        } else {
+          unique(data$raw$df[['CfgID']])
+        }
+      } else {
+        NULL
+      }
     }
   })
   
@@ -488,12 +506,13 @@ Server <- function(input, output, session) {
       # selected_value <- items
       selected_value <- si(paste0('filter_', current), items)
     
-    column(3, selectInput(inputId = paste0('filter_', current),
-                          label = current,
-                          multiple = TRUE,
-                          selectize = FALSE,
-                          choices = items,
-                          selected = selected_value)
+    column(FILTER_WIDTH_IN_COLUMNS,
+           selectInput(inputId = paste0('filter_', current),
+                       label = current,
+                       multiple = TRUE,
+                       selectize = FALSE,
+                       choices = items,
+                       selected = selected_value)
     )
   }
   
@@ -525,7 +544,7 @@ Server <- function(input, output, session) {
     }
     
     
-      column(3,
+      column(FILTER_WIDTH_IN_COLUMNS,
              # Hidden well panel for slider tooltip
              wellPanel(id = paste0("slider_tooltip_", current),
                        style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
@@ -1114,10 +1133,16 @@ ui <- fluidPage(
                  actionButton("reset_sliders", "Reset Visible Filters")),
         hr(),
         
-        fluidRow(
-          column(3, tags$label("Design Configuration Tree"), tags$div(id="design_configurations")),
-          column(9, uiOutput("filters"))
-        ),
+        if(design_tree_present) {
+          fluidRow(
+            column(3, tags$label("Design Configuration Tree"), tags$div(id="design_configurations")),
+            column(9, uiOutput("filters"))
+          )
+        } else {
+          fluidRow(
+            column(12, uiOutput("filters"))
+          )
+        },
         conditionalPanel("output.constants_present",
           h3("Constants:"),
           uiOutput("constants")

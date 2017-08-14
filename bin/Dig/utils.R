@@ -29,7 +29,7 @@ BuildPet <- function(pet_config_filename) {
   num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
   sampling_method <- pet_config$drivers[[1]]$details$DOEType
   generated_configuration_model <- pet_config$GeneratedConfigurationModel
-  selected_configurations <- pet_config$SelectedDesignConfigurations
+  selected_configurations <- pet_config$SelectedConfigurations
   pet_name <- pet_config$PETName
   mga_name <- pet_config$MgaFilename
   
