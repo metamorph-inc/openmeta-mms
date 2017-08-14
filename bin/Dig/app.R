@@ -90,7 +90,7 @@ if (dig_dataset_config == "") {
 }
 
 if(file.exists(config_filename)) {
-  visualizer_config <- fromJSON(config_filename)
+  visualizer_config <- fromJSON(config_filename, simplifyDataFrame=FALSE)
 } else {
   visualizer_config <- list()
   visualizer_config$raw_data <- basename(dig_input_csv)
@@ -368,8 +368,12 @@ Server <- function(input, output, session) {
   # Design Configs for Filters -----------------------------------------------
   
   observe({
-    names <- names(DesignConfigs())
-    config_tree <- DesignConfigs()[[names[1]]]
+    if(is.empty(visualizer_config$config_tree)) {
+      names <- names(DesignConfigs())
+      config_tree <- DesignConfigs()[[names[1]]]
+    } else {
+      config_tree <- visualizer_config$config_tree
+    }
     session$sendCustomMessage(type = "setup_design_configurations", config_tree)
   })
   
@@ -1016,6 +1020,7 @@ Server <- function(input, output, session) {
     # visualizer_config$pet <- meta$pet
     visualizer_config$sets <- meta$sets
     # visualizer_config$comments <- meta$comments
+    visualizer_config$config_tree <- isolate(input$filter_design_config_tree)
     
     # Prepare inputs for saving to visualizer config file
     current_inputs <- isolate(reactiveValuesToList(input))

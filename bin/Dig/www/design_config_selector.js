@@ -16,39 +16,32 @@ var diagonal = d3.svg.diagonal()
 
 var svg;
 
-// d3.json("design.json", function(error, design) {
-// d3.json("design_large.json", function(error, design) {
-  // if (error) throw error;
-
-  // design.x0 = 0;
-  // design.y0 = 0;
-
-  // root = design;
-  // collapse_default();
-// });
-
 Shiny.addCustomMessageHandler("setup_design_configurations", function(message) {
     if(svg == null) {
+      
       div_width = document.getElementById("design_configurations").offsetWidth;
-      console.log(div_width);
+      //console.log(div_width);
       div_width = 220;
       width = div_width - my_margin.left - my_margin.right;
       barWidth = width * 0.8;
-      console.log(div_width, width, barWidth);
+      //console.log(div_width, width, barWidth);
+      
       svg = d3.select("#design_configurations").append("svg")
            .attr("id", "design_configurations_svg")
            .attr("width", div_width)
          .append("g")
            .attr("transform", "translate(" + my_margin.left + "," + my_margin.top + ")");
-      message.x0 = 0;
-      message.y0 = 0;
-      root = message;
-      select_all(root);
-      console.log(root);
-      collapse_default();
-      var clean = root;
-      clean_tree(clean);
-      Shiny.onInputChange("filter_design_config_tree", clean);
+      
+      footer_message = message;
+      root = jQuery.extend(true, {}, message);
+      
+      root.x0 = 0;
+      root.y0 = 0;
+      //select_all(root);
+      collapse_default(root);
+      
+      copy_message(root, footer_message);
+      Shiny.onInputChange("filter_design_config_tree", footer_message);
     } else {
       console.log("Error: 'setup_design_configurations' was called more than once from Shiny.");
     }
@@ -61,23 +54,10 @@ Shiny.addCustomMessageHandler("setup_design_configurations", function(message) {
 //     new_object.Type = "Component"
 //     new_object.Selected = true;
 //     root.push(new_object)
-//     update(root);
+//     update(root, root);
 // });
 
-// function update_tree(d, d_new) {
-//   if(d.Type == "Component") {
-//     d.Selected = d_new.Selected;
-//   } else {
-//     if(d.Children) {
-//       d.Children.
-//     } else {
-//
-//     }
-//   }
-//
-// }
-
-function update(source) {
+function update(root, source) {
 
   // Compute the flattened node list. TODO use d3.layout.hierarchy.
   var nodes = tree.nodes(root);
@@ -85,7 +65,7 @@ function update(source) {
   // Workaround to provide sorted list on startup.
   nodes = tree.nodes(root);
 
-  var height = nodes.length * barHeight *1.3 + my_margin.top + my_margin.bottom;
+  var height = nodes.length * barHeight * 1.3 + my_margin.top + my_margin.bottom;
 
   d3.select("svg").transition()
       .duration(duration)
@@ -182,33 +162,55 @@ function update(source) {
 
 // Toggle Children on click.
 function click(d) {
-  //if (d.Children) {
-  //  d._Children = d.Children;
-  //  d.Children = null;
-  //} else {
-  //  d.Children = d._Children;
-  //  d._Children = null;
-  //}
-  if (d.Selected != null) {
-    if (d.Selected == true) {
+  if (d.Children) {
+    d._Children = d.Children;
+    d.Children = null;
+  } else {
+    d.Children = d._Children;
+    d._Children = null;
+  }
+  if (d.Selected !== null) {
+    if (d.Selected === true) {
       d.Selected = false;
     } else {
       d.Selected = true;
     }
   }
   // Redraw the graph
-  update(d);
+  update(root, d);
   // Send updated tree to Shiny
-  var clean = root;
-  clean_tree(clean);
-  Shiny.onInputChange("filter_design_config_tree", clean);
+  copy_message(root, footer_message);
+  Shiny.onInputChange("filter_design_config_tree", footer_message);
+}
+
+function copy_message(src, dest) {
+  //console.log(src.Name, dest.Name);
+  if(dest.hasOwnProperty('Selected')) {
+    if (dest.Selected !== src.Selected) {
+      console.log("Setting " + dest.Name + " to " + src.Selected);
+      dest.Selected = src.Selected;
+    }
+  } else {
+    for (var d in dest.Children) {
+      for (var s in src.Children) {
+        if (src.Children[s].Name === dest.Children[d].Name) {
+          copy_message(src.Children[s], dest.Children[d]);
+        }
+      }
+      for (var s_ in src._Children) {
+        if (src._Children[s_].Name === dest.Children[d].Name) {
+          copy_message(src._Children[s_], dest.Children[d]);
+        }
+      }
+    }
+  }
 }
 
 function color(d) {
   if(d.Type == "Compound") return d.Children ? "#F2F1E1" : "#E5E4D5";
   if(d.Type == "Alternative") return d.Children ? "#CBDFBD" : "#C3D6B6";
   if(d.Type == "Optional") return d.Children ? "#E6EFE9" : "#D9E2DC";
-  if(d.Type == "Component") return d.Selected == true ? "#D4E09B" : "#F2B79F";
+  if(d.Type == "Component") return d.Selected === true ? "#D4E09B" : "#F2B79F";
 }
 
 function name(d) {
@@ -239,21 +241,6 @@ function expand(d) {
   }
 }
 
-function clean_tree(d) {
-  if(d._Children) {
-    d.Children = d._Children;
-    d._Children = null;
-  }
-  if(d.Children) {
-    d.Children.forEach(clean_tree);
-  }
-  for(var key in d) {
-    if(key != "Type" && key != "Name" && key != "Selected" && key != "Children") {
-      delete d[key];
-    }
-  }
-}
-
 function select_all(d) {
   if(d.Children) {
     d.Children.forEach(select_all);
@@ -266,18 +253,19 @@ function select_all(d) {
   }
 }
 
-function collapse_all() {
+function collapse_all(root) {
   collapse(root, 0, 0);
-  update(root);
+  update(root, root);
 }
 
-function collapse_default() {
+function collapse_default(root) {
   expand(root);
   collapse(root, 2, 3);
-  update(root);
+  update(root, root);
 }
 
-function expand_all() {
+function expand_all(root) {
   expand(root);
-  update(root);
+  update(root, root);
 }
+
