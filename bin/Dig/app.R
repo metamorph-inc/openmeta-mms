@@ -55,6 +55,7 @@ pet_config_present <- FALSE
 design_tree_present <- FALSE
 saved_inputs <- NULL
 visualizer_config <- NULL
+design_tree <- NULL
 
 dig_input_csv <- Sys.getenv('DIG_INPUT_CSV')
 dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
@@ -85,7 +86,6 @@ if (dig_dataset_config == "") {
                                      "_viz_config.json",
                                      basename(dig_input_csv)),
                                  fsep = "\\\\")
-    
   }
 } else {
   config_filename <- gsub("\\\\", "/", dig_dataset_config)
@@ -121,7 +121,6 @@ if (!is.null(pet_config_filename) && pet_config_filename != "") {
 design_tree_filename <- file.path(launch_dir, "design_tree.json")
 if (file.exists(design_tree_filename)) {
   design_tree_present <- TRUE
-  FILTER_WIDTH_IN_COLUMNS <- 3
 }
 
 # Saved Input Functions ------------------------------------------------------
@@ -198,6 +197,7 @@ tab_environments <- mapply(function(file_name, id) {
 )
 
 # Read input dataset file
+print("Reading raw data...")
 raw <- read.csv(file.path(launch_dir, visualizer_config$raw_data), fill=T)
 if(!is.null(visualizer_config$augmented_data)) {
   augmented_filename <- file.path(launch_dir,
@@ -221,6 +221,8 @@ if(file.exists(file.path(launch_dir, 'metadata.json'))) {
 }
 
 # Process PET Configuration File ('pet_config.json') -------------------------
+
+print("Processing 'pet_config.json'...")
 pet <- NULL
 if (!is.null(visualizer_config[["pet"]])) {
   pet <- visualizer_config$pet
@@ -230,11 +232,25 @@ if (!is.null(visualizer_config[["pet"]])) {
 
 # Process Variables ----------------------------------------------------------
 
+print("Processing variables...")
 variables <- NULL
 if (!is.null(visualizer_config[["variables"]])) {
   variables <- visualizer_config$variables
 } else {
   variables <- BuildVariables(pet, names(raw))
+}
+
+# Process Design Tree ('design_tree.json') -------------------------
+
+print("Processing 'design_tree.json'...")
+if (design_tree_present) {
+  design_tree <- fromJSON(design_tree_filename, simplifyDataFrame = FALSE)
+  if (is.empty(design_tree)) {
+    design_tree <- NULL
+    design_tree_present <- FALSE
+  } else {
+    FILTER_WIDTH_IN_COLUMNS <- 3
+  }
 }
 
 # Server ---------------------------------------------------------------------
@@ -375,20 +391,10 @@ Server <- function(input, output, session) {
   
   # Design Configs for Filters -----------------------------------------------
   
-  SelectAllComponents <- function(node) {
-    if(node[['Type']] == "Component") {
-      node[['Selected']] <- TRUE
-    } else {
-      node[['Children']] <- lapply(node[['Children']], SelectAllComponents)
-    }
-    node
-  }
-  
   observe({
     if(design_tree_present) {
       if(is.empty(visualizer_config$config_tree)) {
-        names <- names(DesignConfigs())
-        config_tree <- SelectAllComponents(DesignConfigs()[[names[1]]])
+        config_tree <- SelectAllComponents(design_tree[[names(design_tree)[1]]])
       } else {
         config_tree <- visualizer_config$config_tree
       }
@@ -396,25 +402,15 @@ Server <- function(input, output, session) {
     }
   })
   
-  DesignConfigs <- reactive({
-    if(design_tree_present) {
-      design_configs <- fromJSON(design_tree_filename, simplifyDataFrame = FALSE)
-    } else {
-      NULL
-    }
-  })
-  
-  # observe(print(DesignConfigs()))
-  
   # observe({print(paste("SDC:",paste(SelectedDesignConfigs(),collapse=",")))})
 
   SelectedDesignConfigs <- reactive({
     # print(input$filter_design_config_tree)
     if(!is.null(input$filter_design_config_tree)) {
-      names <- names(DesignConfigs())
+      names <- names(design_tree)
       passing <- sapply(names, function(name) {
         filter_tree <- input$filter_design_config_tree
-        current_tree <- DesignConfigs()[[name]]
+        current_tree <- design_tree[[name]]
         compare_node(current_tree, filter_tree)
       })
       if(any(passing)) {
@@ -423,7 +419,7 @@ Server <- function(input, output, session) {
         NULL
       }
     } else {
-      if ("CfgID" %in% names(data$raw$df) && is.null(DesignConfigs())) {
+      if ("CfgID" %in% names(data$raw$df) && is.null(design_tree)) {
         if(pet_config_present) {
           pet$selected_configurations
         } else {

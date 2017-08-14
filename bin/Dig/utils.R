@@ -181,4 +181,13 @@ compare_children <- function(cur_children, fil_children) {
   result
 }
 
+SelectAllComponents <- function(node) {
+  if(node[['Type']] == "Component") {
+    node[['Selected']] <- TRUE
+  } else {
+    node[['Children']] <- lapply(node[['Children']], SelectAllComponents)
+  }
+  node
+}
 
+  
