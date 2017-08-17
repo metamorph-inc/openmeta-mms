@@ -49,6 +49,7 @@ namespace DigTest
                 }
                 catch (OpenQA.Selenium.StaleElementReferenceException)
                 {
+                    //Thread.Sleep(100);
                     if (--tries == 0)
                     {
                         throw;
@@ -242,18 +243,35 @@ namespace DigTest
         }
 
         [Fact()]
-        void DigRuns()
+        void GenericCSVLaunch()
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
-            File.Copy(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config.json"),
-                      Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config_test.json"),
-                      overwrite: true);
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
-            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
-                options))
+            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
-                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config_test.json"));
+                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/GenericCSV/2010_Census_Populations_by_Zip_Code.csv"), true);
+                driver.Navigate().GoToUrl(wrapper.url);
+                IWait<IWebDriver> wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
+                Assert.True(wait0.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
+                Assert.Equal("Visualizer", driver.Title);
+                IWait<IWebDriver> wait1 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                Assert.True(wait1.Until(driver1 => driver.FindElement(By.Id("Explore-pairs_stats")).Text.Contains("Total Points: 319")));
+                Assert.True(wait1.Until(driver1 => driver.FindElement(By.Id("Explore-pairs_stats")).Text.Contains("Current Points: 316")));
+            }
+            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/GenericCSV/2010_Census_Populations_by_Zip_Code_viz_config.json"));
+            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/GenericCSV/2010_Census_Populations_by_Zip_Code_viz_config_data.csv"));
+        }
+
+        [Fact()]
+        void OpenmetaCSVLaunch()
+        {
+            var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
+            options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
+            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
+            using (DigWrapper wrapper = new DigWrapper())
+            {
+                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/OpenmetaCSV/windturbine_merged.csv"), true);
                 driver.Navigate().GoToUrl(wrapper.url);
                 IWait<IWebDriver> wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
                 Assert.True(wait0.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
@@ -261,131 +279,309 @@ namespace DigTest
                 IWait<IWebDriver> wait1 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                 Assert.True(wait1.Until(driver1 => driver.FindElement(By.Id("Explore-pairs_stats")).Text.Contains("Total Points: 5000")));
             }
-            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config_test.json"));
-            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/raw_data_aug.csv"));
+            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/OpenmetaCSV/windturbine_merged_viz_config.json"));
+            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/OpenmetaCSV/windturbine_merged_viz_config_data.csv"));
         }
 
         [Fact()]
-        void SessionRestore()
+        void ResultsBrowserJSONLaunch()
         {
             // TODO(tthomas): Add testing of additional UI elements
-            
+
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
-            File.Copy(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config.json"),
-                      Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config_test.json"),
+            File.Copy(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config.json"),
+                      Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"),
                       overwrite: true);
-            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
-                options))
+            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
-                // Open and make changes
-                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config_test.json"));
+                // Launch first session
+                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
                 driver.Navigate().GoToUrl(wrapper.url);
+
+                // Test "Explore.R"
                 IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                 Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
                 IWebElement display_select = driver.FindElement(By.XPath("//select[@id='Explore-display']/following::div"));
                 display_select.Click();
                 IWebElement display_input = display_select.FindElement(By.XPath("//input"));
                 display_input.SendKeys(Keys.ArrowRight);
-                display_input.SendKeys("rho");
+                display_input.SendKeys("OUT");
                 display_input.SendKeys(Keys.Enter);
                 display_input.SendKeys(Keys.ArrowRight);
-                display_input.SendKeys("PowerOutput");
+                display_input.SendKeys("OUT");
                 display_input.SendKeys(Keys.Enter);
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='modelica.jturbine']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='modelica.ratio']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='modelica.rho']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='tl_peakPowerOutput.output']")));
+                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='IN_HubMaterial']")));
+                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='IN_ElemCount']")));
+                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='OUT_Blade_Cost_Total']")));
+                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='OUT_Blade_Tip_Deflection']")));
+
+
+                // Test "DataTable.R"
+
+
+                // Test "Histogram.R"
+
+
+                // Test "PETRefinement.R"
+                driver.FindElement(By.LinkText("PET Refinement")).Click();
+                wait10.Until(ExpectedConditions.ElementExists(By.Id("PETRefinement-apply_original_cfg_ids")));
+                driver.FindElement(By.Id("PETRefinement-apply_original_cfg_ids")).Click();
+                driver.FindElement(By.Id("PETRefinement-apply_all_original_numeric")).Click();
+                driver.FindElement(By.Id("PETRefinement-apply_all_original_enum")).Click();
+                driver.FindElement(By.Id("PETRefinement-apply_refined_range_IN_E11")).Click();
+                driver.FindElement(By.Id("PETRefinement-apply_refined_range_IN_Root_AvgCapMaterialThickness")).Click();
+                Assert.Equal("600", driver.FindElement(By.Id("PETRefinement-pet_num_samples")).GetAttribute("value"));
+                Assert.Equal("28-16, 28-20, 30-16, 30-20, 32-16, 32-20", driver.FindElement(By.Id("PETRefinement-new_cfg_ids")).GetAttribute("value"));
+                Assert.Equal("5", driver.FindElement(By.Id("PETRefinement-new_min_IN_ElemCount")).GetAttribute("value"));
+                Assert.Equal("31898.59688", driver.FindElement(By.Id("PETRefinement-new_max_IN_E11")).GetAttribute("value"));
+                Assert.Equal("9180", driver.FindElement(By.Id("PETRefinement-new_min_IN_E22")).GetAttribute("value"));
+                Assert.Equal("77.01253438", driver.FindElement(By.Id("PETRefinement-new_min_IN_Root_AvgCapMaterialThickness")).GetAttribute("value"));
+                Assert.Equal("30", driver.FindElement(By.Id("PETRefinement-new_max_IN_Tip_AvgCapMaterialThickness")).GetAttribute("value"));
+                Assert.Equal("Steel, Aluminum", driver.FindElement(By.Id("PETRefinement-new_selection_IN_HubMaterial")).GetAttribute("value"));
+                Assert.Equal("/Testing/Parametric Studies/WindTurbinePET_Refined", driver.FindElement(By.Id("PETRefinement-newPetName")).GetAttribute("value"));
+
+                //// Test "UncertaintyQuantification.R"
+                //IWait<IWebDriver> wait30 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
+
+                //wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
+                //driver.Navigate().GoToUrl(wrapper.url);
+                //Assert.True(wait30.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
+                //Assert.Equal("Visualizer", driver.Title);
+
+                //driver.FindElement(By.XPath("//a[@data-value=\"Uncertainty Quantification\"]")).Click();
+                //driver.FindElement(By.Id("UncertaintyQuantification-design_configs_present")).Click();
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/../../../..")).Displayed));
+                //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div")).Click();
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div/div[2]")).Displayed));
+                //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div/div[2]//div[@data-value='32-16']")).Click();
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
+
+                //// Forward UQ
+                //driver.FindElement(By.Id("UncertaintyQuantification-fuq_constraint_enable2")).Click();
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-fuq_constraint_enable2")).Selected));
+                //driver.FindElement(By.Id("UncertaintyQuantification-run_forward_uq")).Click();
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
+
+                ////// Add Probability Query
+                //driver.FindElement(By.Id("UncertaintyQuantification-add_probability")).Click();
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-queryThreshold0")).Displayed));
+
+                //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div")).Click();
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div/div[2]")).Displayed));
+                //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div/div[2]//div[@data-value='OUT_Blade_Tip_Deflection']")).Click();
+
+
+
+                ////driver.FindElement(By.XPath("//select[@data-value='OUT_Blade_Tip_Deflection']")).Click();
+
+                //driver.FindElement(By.Id("UncertaintyQuantification-queryThreshold0")).SendKeys("2400");
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.CssSelector("#UncertaintyQuantification-queryThreshold0")).GetAttribute("value") == "2400"));
+
+                ////// Evaluate current probability Query
+                //driver.FindElement(By.Id("UncertaintyQuantification-run_probabilities_queries")).Click();
+                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-queryValue0")).Displayed));
+                //Assert.True(wait30.Until(driver1 => float.Parse(driver.FindElement(By.Id("UncertaintyQuantification-queryValue0")).Text) < 0.35));
+
+                /////*      DESIGN RANKING TAB      */
+                ////driver.FindElement(By.CssSelector("#uqTabset > li:nth-child(2) > a")).Click();
+
+                ////IWait<IWebDriver> UQ_wait4 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                ////Assert.True(UQ_wait4.Until(driver1 => driver.FindElement(By.CssSelector("#runProbability")).Displayed));
+                ////driver.FindElement(By.CssSelector("#runProbability")).Click();
+
+                /////*
+                ////IWait<IWebDriver> UQ_wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                ////Assert.True(UQ_wait5.Until(driver1 => driver.FindElement(By.CssSelector("#probabilityTable")).Displayed));
+                ////*/
+
+                // Return to "Explore.R" tab
+                driver.FindElement(By.LinkText("Explore")).Click();
+                wait10.Until(driver1 => driver.FindElement(By.XPath("//select[@id='Explore-display']/following::div")).Displayed);
+                
+                FooterSet(driver);
+
                 Thread.Sleep(300); //For shiny to catch up, find a better way
+
                 driver.Close();
             }
+
+            // Launch second session
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
                options))
             using (DigWrapper wrapper = new DigWrapper())
             {
                 // Reload to check changes
-                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config_test.json"));
+                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
                 driver.Navigate().GoToUrl(wrapper.url);
                 IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                 Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
                 Assert.Equal(driver.FindElements(By.XPath(".//select[@id='Explore-display']/../div/div[1]/div")).Count, 4);
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='modelica.jturbine']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='modelica.ratio']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='modelica.rho']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='tl_peakPowerOutput.output']")));
+                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='IN_HubMaterial']")));
+                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='IN_ElemCount']")));
+                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='OUT_Blade_Cost_Total']")));
+                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='OUT_Blade_Tip_Deflection']")));
                 driver.Close();
             }
-            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/visualizer_config_test.json"));
-            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/raw_data_aug.csv"));
+
+            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
+            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test_data.csv"));
         }
 
-        [Fact(Skip = "Flaky")]
-        void UncertaintyQuantification()
+        class ShinySelectInput
         {
-            File.Copy(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config.json"),
-                      Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"),
-                      overwrite: true);
-            var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
-            options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
-            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
-                options))
-            using (DigWrapper wrapper = new DigWrapper())
+            private string id;
+            private IWebDriver driver;
+            private IWebElement div;
+            private string path_to_selected;
+            private IWait<IWebDriver> wait;
+            private string path_to_choices;
+
+            public ShinySelectInput(IWebDriver driver, string id)
             {
-                IWait<IWebDriver> wait30 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
-
-                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
-                driver.Navigate().GoToUrl(wrapper.url);
-                Assert.True(wait30.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
-                Assert.Equal("Visualizer", driver.Title);
-
-                driver.FindElement(By.XPath("//a[@data-value=\"Uncertainty Quantification\"]")).Click();
-                driver.FindElement(By.Id("UncertaintyQuantification-design_configs_present")).Click();
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/../../../..")).Displayed));
-                driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div")).Click();
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div/div[2]")).Displayed));
-                driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div/div[2]//div[@data-value='32-16']")).Click();
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
-
-                // Forward UQ
-                driver.FindElement(By.Id("UncertaintyQuantification-fuq_constraint_enable2")).Click();
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-fuq_constraint_enable2")).Selected));
-                driver.FindElement(By.Id("UncertaintyQuantification-run_forward_uq")).Click();
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
-
-                //// Add Probability Query
-                driver.FindElement(By.Id("UncertaintyQuantification-add_probability")).Click();
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-queryThreshold0")).Displayed));
-
-                driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div")).Click();
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div/div[2]")).Displayed));
-                driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div/div[2]//div[@data-value='OUT_Blade_Tip_Deflection']")).Click();
-
-                
-
-                //driver.FindElement(By.XPath("//select[@data-value='OUT_Blade_Tip_Deflection']")).Click();
-
-                driver.FindElement(By.Id("UncertaintyQuantification-queryThreshold0")).SendKeys("2400");
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.CssSelector("#UncertaintyQuantification-queryThreshold0")).GetAttribute("value") == "2400"));
-                    
-                //// Evaluate current probability Query
-                driver.FindElement(By.Id("UncertaintyQuantification-run_probabilities_queries")).Click();
-                Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-queryValue0")).Displayed));
-                Assert.True(wait30.Until(driver1 => float.Parse(driver.FindElement(By.Id("UncertaintyQuantification-queryValue0")).Text) < 0.35));
-
-                ///*      DESIGN RANKING TAB      */
-                //driver.FindElement(By.CssSelector("#uqTabset > li:nth-child(2) > a")).Click();
-
-                //IWait<IWebDriver> UQ_wait4 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                //Assert.True(UQ_wait4.Until(driver1 => driver.FindElement(By.CssSelector("#runProbability")).Displayed));
-                //driver.FindElement(By.CssSelector("#runProbability")).Click();
-
-                ///*
-                //IWait<IWebDriver> UQ_wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                //Assert.True(UQ_wait5.Until(driver1 => driver.FindElement(By.CssSelector("#probabilityTable")).Displayed));
-                //*/
+                this.driver = driver;
+                this.id = id;
+                this.div = driver.FindElement(By.Id(id)).FindElement(By.XPath(".."));
+                this.path_to_choices = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div", id);
+                this.path_to_selected = string.Concat(path_to_choices, "[@class='option selected']");
+                this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(11.0));
+                if (this.div.FindElement(By.XPath(this.path_to_choices)).GetAttribute("data-value") == null)
+                {
+                    var new_base = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div/div", id);
+                    this.path_to_choices = string.Concat(new_base, "[@class='option selected' or @class='option']");
+                    this.path_to_selected = string.Concat(new_base, "[@class='option selected']");
+                }
             }
+
+            public string GetCurrentSelection()
+            {
+                this.wait.Until(ExpectedConditions.ElementExists(By.XPath(this.path_to_selected)));
+                return this.div.FindElement(By.XPath(this.path_to_selected)).GetAttribute("data-value");
+            }
+
+            public IWebElement GetDiv()
+            {
+                return this.div;
+            }
+
+            private IEnumerable<IWebElement> GetAllChoiceDivs()
+            {
+                var choices = this.div.FindElements(By.XPath(this.path_to_choices));
+                return choices;
+            }
+
+            public IEnumerable<string> GetAllChoices()
+            {
+                // TODO(tthomas): Find a way to turn the retry logic into a function.
+                IEnumerable<string> choices;
+                int tries = 3;
+                while (true)
+                {
+                    try
+                    {
+                        choices = from choice_div in this.div.FindElements(By.XPath(this.path_to_choices))
+                                  select choice_div.GetAttribute("data-value");
+                        break;
+                    }
+                    catch (OpenQA.Selenium.NoSuchElementException)
+                    {
+                        Thread.Sleep(300);
+                        if (--tries == 0)
+                        {
+                            throw;
+                        }
+                    }
+                }
+                return choices;
+            }
+
+            public void SetCurrentSelection(string v)
+            {
+                this.div.Click();
+                var choices = this.GetAllChoiceDivs();
+                var to_select = from choice in choices
+                                where choice.GetAttribute("data-value") == v
+                                select choice;
+                this.wait.Until(driver1 => to_select.First().Displayed);
+                to_select.First().Click();
+            }
+        }
+
+        private void FooterSet(IWebDriver driver)
+        {
+            // TODO(tthomas): Add testing of additional UI elements
+            
+            // Test Footer
+
+            IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
+
+            // Filters
+            IWebElement elemcountslider = driver.FindElement(By.Id("filter_IN_ElemCount")).FindElement(By.XPath(".."));
+            if (!elemcountslider.Displayed)
+            {
+                RetryStaleElement(() => driver.FindElement(By.LinkText("Filters")).Click());
+                wait10.Until(driver1 => elemcountslider.Displayed);
+            }
+
+            Actions dblclick_elemcountslider = new Actions(driver).DoubleClick(elemcountslider);
+            RetryStaleElement(() => dblclick_elemcountslider.Build().Perform());
+            //catch (StaleElementReferenceException e)
+            //catch (NoSuchElementException e)
+            //catch (Exception e)
+            wait10.Until(driver1 => driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).Displayed);
+            driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).Clear();
+            driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).SendKeys("20");
+            driver.FindElement(By.Id("submit_IN_ElemCount")).Click();
+            Thread.Sleep(1500);
+
+            IWebElement costslider = driver.FindElement(By.Id("filter_OUT_Blade_Cost_Total")).FindElement(By.XPath(".."));
+            wait10.Until(driver1 => costslider.Displayed);
+
+            string jsToBeExecuted = string.Format("window.scroll(0, {0});", costslider.Location.Y);
+            ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecuted);
+                
+            Actions dblclick_costslider = new Actions(driver).DoubleClick(costslider);
+            RetryStaleElement(() => dblclick_costslider.Build().Perform());
+            //catch (StaleElementReferenceException e)
+            //catch (NoSuchElementException e)
+            //catch (Exception e)
+            wait10.Until(driver1 => driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).Displayed);
+            driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).Clear();
+            driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).SendKeys("150000");
+            driver.FindElement(By.Id("submit_OUT_Blade_Cost_Total")).Click();
+            Thread.Sleep(1500);
+
+            // Coloring
+            driver.FindElement(By.LinkText("Coloring")).Click();
+            var coloring_source = new ShinySelectInput(driver, "coloring_source");
+            wait10.Until(driver1 => coloring_source.GetDiv().Displayed);
+            Assert.Equal("None", coloring_source.GetCurrentSelection());
+            Assert.Equal(2, coloring_source.GetAllChoices().Count());
+            Assert.Equal("None, Live", string.Join(", ", coloring_source.GetAllChoices().ToArray()));
+            coloring_source.SetCurrentSelection("Live");
+            var colored_variable = new ShinySelectInput(driver, "live_coloring_variable_numeric");
+            var choices = colored_variable.GetAllChoices();
+            Assert.Equal("IN_ElemCount, IN_E11, IN_E22, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", colored_variable.GetAllChoices().ToArray()));
+            colored_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
+            driver.FindElement(By.Id("live_coloring_name")).Clear();
+            driver.FindElement(By.Id("live_coloring_name")).SendKeys("Test");
+            driver.FindElement(By.Id("live_coloring_add_classification")).Click();
+            wait10.Until(driver1 => coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1);
+            Assert.True(coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1);
+
+            // Classifications
+            driver.FindElement(By.LinkText("Classifications")).Click();
+            wait10.Until(driver1 => driver.FindElement(By.Id("no_classifications")).Displayed);
+            Assert.Equal("No Classifications Available.", driver.FindElement(By.Id("no_classifications")).Text);
+
+            // Configuration
+            driver.FindElement(By.LinkText("Configuration")).Click();
+            wait10.Until(driver1 => driver.FindElement(By.Id("remove_missing")).Displayed);
+            Assert.Equal("false", driver.FindElement(By.Id("remove_missing")).GetAttribute("data-shinyjs-resettable-value"));
+            Assert.Equal("false", driver.FindElement(By.Id("remove_outliers")).GetAttribute("data-shinyjs-resettable-value"));
         }
 
         class DigWrapper : IDisposable
@@ -395,7 +591,7 @@ namespace DigTest
             public string url;
             Process proc;
 
-            public void Start(string input_json)
+            public void Start(string input_filename, bool from_csv = false)
             {
                 Process proc = new Process();
                 proc.StartInfo.Arguments = "--no-save --no-restore -e \"shiny::runApp('Dig',display.mode='normal',quiet=FALSE, launch.browser=FALSE)\"";
@@ -405,8 +601,15 @@ namespace DigTest
                 proc.StartInfo.RedirectStandardOutput = true;
                 proc.StartInfo.RedirectStandardError = true;
                 proc.StartInfo.WorkingDirectory = Path.Combine(META.VersionInfo.MetaPath, @"bin");
-                //proc.StartInfo.EnvironmentVariables["DIG_INPUT_CSV"] = input_csv;
-                proc.StartInfo.EnvironmentVariables["DIG_DATASET_CONFIG"] = input_json;
+                if (from_csv)
+                {
+                    proc.StartInfo.EnvironmentVariables["DIG_INPUT_CSV"] = input_filename;
+                }
+                else
+                {
+                    proc.StartInfo.EnvironmentVariables["DIG_DATASET_CONFIG"] = input_filename;
+                }
+                
                 ManualResetEvent task = new ManualResetEvent(false);
                 using (task)
                 {

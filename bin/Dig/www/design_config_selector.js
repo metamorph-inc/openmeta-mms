@@ -17,7 +17,6 @@ var diagonal = d3.svg.diagonal()
 var svg;
 
 Shiny.addCustomMessageHandler("setup_design_configurations", function(message) {
-  console.log(typeof svg, svg);
   if(svg === undefined) {
     
     svg = d3.select("#design_configurations").append("svg")

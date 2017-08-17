@@ -4,8 +4,6 @@
   "tabs": [
     "Explore.R",
     "DataTable.R",
-    "Histogram.R",
-    "PETRefinement.R",
-    "UncertaintyQuantification.R"
+    "PETRefinement.R"
   ]
 }
