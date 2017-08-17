@@ -1,0 +1,6 @@
+config/
+designs/
+manifest.project.json
+requirements/
+results/
+test-benches/
