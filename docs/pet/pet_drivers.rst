@@ -353,7 +353,8 @@ will appear as a port on the Optimizer's PET model and PET Analysis
 Blocks can be connected to it.
 
 An Optimizer Constraint allows designated system outputs to influence
-the optimization process.
+the optimization process - if *(and this is an important if)* the 
+optimization method being used supports constraints!
 
 Adding an Optimizer Constraint to an Optimizer Driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -400,19 +401,62 @@ Optimizer Attributes
 Code
 ^^^^
 
-Entering **maxiter=** followed by an integer number
+*COBYLA*
+
+Entering **maxiter=** followed by an integer 
 (e.g. **maxiter=500**) sets the maximum number of iterations
 that the Optimizer driver will perform when attempting to converge.
-By default, **maxiter** has a value of **200**.
+[Default: **200**]
 
 Entering **tol=** followed by a number (e.g. **tol=0.01**)
-sets the optimization tolerance. By default, **tol** has
-a value of **1e-4**.
+sets the optimization tolerance. [Default: **1e-4**]
 
-Custom
-^^^^^^
+*Bayesian Optimization*
 
-.. note:: This section is under construction. Please come back later for updates!
+Entering **n_iterations=** followed by an integer 
+(e.g. **n_iterations=200**) sets the number of target function
+evaluations. [Default: **190**]
+
+Entering **n_iter_relearn=** followed by an integer 
+(e.g. **n_iter_relearn=20** sets the number of iterations
+between re-learning kernal parameters. If **n_iter_relearn=0**
+then there will be no relearning. [Default: **50**]
+
+Entering **n_inner_iterations=** followed by an integer
+(e.g. **n_inner_iterations=**) sets the maximum number
+of iterations (per dimension) to optimize the acquisition
+function. [Default: **500**]
+
+Entering **n_init_samples=** followed by an integer
+(e.g. **n_init_samples=20**) sets the initial set of samples
+/ target function evaluations. [Default: **10**]
+
+Entering **epsilon=** followed by a double between 0.0 and 1.0
+inclusive (e.g. **epsilon=0.3**) set the probability of
+performing a random (blind) evaluation of the target function.
+Higher values result in more forced exploration whereas lower
+values result in a greater exploitation of the learned model.
+[Default: **0.0** (epsilon-greedy disabled)]
+
+.. note:: For more information on each parameter, additional
+   parameters not covered here, the BayesOpt method library,
+   and Bayesian optimization in general, please visit
+   https://rmcantin.bitbucket.io/html/usemanual.html#params
+   and its related pages.
+
+Custom Optimizer
+^^^^^^^^^^^^^^^^
+
+*Bayesian Optimization*
+
+To use the BayesOpt Bayesian optimizer, enter
+**bayesopt_openmdao.bayesopt_optimizer.BayesoptOptimizer**
+in this attribute field
+
+The user will also need to
+install the BayesOpt package by running 
+**"c:\Program Files (x86)\META\bin\Python27\Scripts\python.exe" -m pip install --user bayesopt_openmdao**
+in cmd.
 
 Function
 ^^^^^^^^
@@ -424,13 +468,16 @@ COBYLA
 ******
 
 Selecting COBYLA will use the COBYLA function built into SciPy's
-`optimize` library. COBYLA allows optimization without defined gradients
-(or Jacobian matrixes).
+`optimize` library. COBYLA supports constrained optimization without 
+defined gradients (or Jacobian matrixes).
 
 Custom
 ******
 
-.. note:: This section is under construction. Please check back later for updates!
+Selecting Custom will allow the use of other third-party optimizers
+such as the
+`BayesOpt <https://rmcantin.bitbucket.io/html/index.html>`_ 
+Bayesian optimization method which supports unconstrained optimization.
 
 PCC
 ---
