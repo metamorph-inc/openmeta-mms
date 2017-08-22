@@ -296,6 +296,8 @@ namespace DigTest
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
+                var all_variable_names = "IN_ElemCount, IN_E11, IN_E22, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
+
                 // Launch first session
                 wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
                 driver.Navigate().GoToUrl(wrapper.url);
@@ -319,9 +321,25 @@ namespace DigTest
 
 
                 // Test "DataTable.R"
+                driver.FindElement(By.LinkText("Data Table")).Click();
+                wait10.Until(driver1 => driver.FindElement(By.Id("DataTable-use_filtered")).Displayed);
+                Assert.Equal("true", driver.FindElement(By.Id("DataTable-use_filtered")).GetAttribute("data-shinyjs-resettable-value"));
+                var process_method = new ShinySelectInput(driver, "DataTable-process_method");
+                Assert.Equal("None", process_method.GetCurrentSelection());
+                process_method.SetCurrentSelection("TOPSIS");
+
+                var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
+                //Assert.Equal(all_variable_names, string.Join(", ", weight_metrics.GetRemainingChoices().ToArray()));
+                weight_metrics.AppendSelection("IN_E11");
+                //Thread.Sleep(1000000);
 
 
                 // Test "Histogram.R"
+                driver.FindElement(By.LinkText("Histogram")).Click();
+                wait10.Until(ExpectedConditions.ElementExists(By.Id("Histogram-variable")));
+                var histogram_variable = new ShinySelectInput(driver, "Histogram-variable");
+                Assert.Equal(all_variable_names, string.Join(", ", histogram_variable.GetAllChoices().ToArray()));
+                histogram_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
 
 
                 // Test "PETRefinement.R"
@@ -434,42 +452,52 @@ namespace DigTest
         {
             private string id;
             private IWebDriver driver;
-            private IWebElement div;
-            private string path_to_selected;
             private IWait<IWebDriver> wait;
-            private string path_to_choices;
+            private string div;
+            private string choices;
+            private string selected;
 
             public ShinySelectInput(IWebDriver driver, string id)
             {
                 this.driver = driver;
                 this.id = id;
-                this.div = driver.FindElement(By.Id(id)).FindElement(By.XPath(".."));
-                this.path_to_choices = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div", id);
-                this.path_to_selected = string.Concat(path_to_choices, "[@class='option selected']");
+                this.div = string.Format("//select[@id='{0}']/..", id);
+                var master_div = this.driver.FindElement(By.XPath(this.div));
+                this.choices = this.div + "/select/following::div[1]/div[2]/div[1]/div";
+                this.selected = choices + "[@class='option selected']";
                 this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(11.0));
-                if (this.div.FindElement(By.XPath(this.path_to_choices)).GetAttribute("data-value") == null)
+                try
+                {
+                    this.driver.FindElement(By.XPath(this.choices));
+                }
+                catch (OpenQA.Selenium.NoSuchElementException)
+                {
+                    // Force the choices to appear.
+                    master_div.Click();
+                    master_div.Click();
+                }
+                if (this.driver.FindElement(By.XPath(this.choices)).GetAttribute("data-value") == null)
                 {
                     var new_base = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div/div", id);
-                    this.path_to_choices = string.Concat(new_base, "[@class='option selected' or @class='option']");
-                    this.path_to_selected = string.Concat(new_base, "[@class='option selected']");
+                    this.choices = new_base + "[@class='option selected' or @class='option']";
+                    this.selected = new_base + "[@class='option selected']";
                 }
             }
 
             public string GetCurrentSelection()
             {
-                this.wait.Until(ExpectedConditions.ElementExists(By.XPath(this.path_to_selected)));
-                return this.div.FindElement(By.XPath(this.path_to_selected)).GetAttribute("data-value");
+                this.wait.Until(ExpectedConditions.ElementExists(By.XPath(this.selected)));
+                return this.driver.FindElement(By.XPath(this.selected)).GetAttribute("data-value");
             }
 
             public IWebElement GetDiv()
             {
-                return this.div;
+                return this.driver.FindElement(By.XPath(this.div));
             }
 
             private IEnumerable<IWebElement> GetAllChoiceDivs()
             {
-                var choices = this.div.FindElements(By.XPath(this.path_to_choices));
-                return choices;
+                return this.driver.FindElements(By.XPath(this.choices));
             }
 
             public IEnumerable<string> GetAllChoices()
@@ -481,7 +509,7 @@ namespace DigTest
                 {
                     try
                     {
-                        choices = from choice_div in this.div.FindElements(By.XPath(this.path_to_choices))
+                        choices = from choice_div in this.driver.FindElements(By.XPath(this.choices))
                                   select choice_div.GetAttribute("data-value");
                         break;
                     }
@@ -499,13 +527,110 @@ namespace DigTest
 
             public void SetCurrentSelection(string v)
             {
-                this.div.Click();
+                var master_div = this.driver.FindElement(By.XPath(this.div));
+                master_div.Click();
                 var choices = this.GetAllChoiceDivs();
                 var to_select = from choice in choices
                                 where choice.GetAttribute("data-value") == v
                                 select choice;
                 this.wait.Until(driver1 => to_select.First().Displayed);
                 to_select.First().Click();
+            }
+        }
+
+        class ShinySelectMultipleInput
+        {
+            private IWebDriver driver;
+            private string id;
+            private string div;
+            private string input;
+            private string choices;
+            private string selected;
+            private WebDriverWait wait;
+
+            public ShinySelectMultipleInput(IWebDriver driver, string id)
+            {
+                this.driver = driver;
+                this.id = id;
+                this.div = string.Format("//select[@id='{0}']/..", id);
+                var master_div = this.driver.FindElement(By.XPath(this.div));
+                this.input = this.div + "/div[1]/div[1]/input";
+                this.choices = this.div + "/div[1]/div[2]/div/div";
+                this.selected = this.choices + "[@class='option selected']";
+                this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(11.0));
+                try
+                {
+                    this.driver.FindElement(By.XPath(this.choices));
+                }
+                catch (OpenQA.Selenium.NoSuchElementException)
+                {
+                    // Force the choices to appear.
+                    master_div.Click();
+                }
+                if (this.driver.FindElement(By.XPath(this.choices)).GetAttribute("data-value") == null)
+                {
+                    this.choices = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div/div[@class='option selected' or @class='option']", id);
+                    this.selected = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div/div[@class='option selected' or @class='option']", id); //"[@class='option selected']";
+                }
+            }
+
+            public IEnumerable<string> GetCurrentSelection()
+            {
+                IEnumerable<string> selected = null;
+                try
+                {
+                    selected = from selected_div in this.driver.FindElements(By.XPath(this.selected))
+                               select selected_div.GetAttribute("data-value");
+                    return selected; 
+                } 
+                catch (OpenQA.Selenium.NoSuchElementException)
+                {
+                    return null;
+                }
+            }
+
+            public IWebElement GetDiv()
+            {
+                return this.driver.FindElement(By.XPath(this.div));
+            }
+
+            private IEnumerable<IWebElement> GetAllChoiceDivs()
+            {
+                return this.driver.FindElements(By.XPath(this.choices));
+            }
+
+            public IEnumerable<string> GetRemainingChoices()
+            {
+                // TODO(tthomas): Find a way to turn the retry logic into a function.
+                IEnumerable<string> choices;
+                Thread.Sleep(3000);
+                int tries = 3;
+                while (true)
+                {
+                    try
+                    {
+                        choices = from choice_div in this.driver.FindElements(By.XPath(this.choices))
+                                  select choice_div.GetAttribute("data-value");
+                        break;
+                    }
+                    catch (OpenQA.Selenium.NoSuchElementException)
+                    {
+                        Thread.Sleep(300);
+                        if (--tries == 0)
+                        {
+                            throw;
+                        }
+                    }
+                }
+                return choices;
+            }
+            
+            public void AppendSelection(string v)
+            {
+                var input = this.driver.FindElement(By.XPath(this.input));
+                input.SendKeys(Keys.ArrowRight);
+                input.SendKeys(v);
+                input.SendKeys(Keys.Enter);
             }
         }
 
