@@ -380,7 +380,7 @@ that can be set by the user. The Optimizer Driver will do its best
 to keep system outputs connected to a Optimizer Constraint within
 the bound(s) defined by the **MinValue** and **MaxValue** attributes.
 
-To set an Optimizer Constraint's MinValue and(or) MaxValue attributes:
+To set an Optimizer Constraint's MinValue and/or MaxValue attributes:
 
 #. Left-click on the Optimizer Constraint
    and edit the **MinValue** attribute in the **Object Inspector**.
@@ -401,7 +401,8 @@ Optimizer Attributes
 Code
 ^^^^
 
-*COBYLA*
+COBYLA
+******
 
 Entering **maxiter=** followed by an integer 
 (e.g. **maxiter=500**) sets the maximum number of iterations
@@ -411,7 +412,8 @@ that the Optimizer driver will perform when attempting to converge.
 Entering **tol=** followed by a number (e.g. **tol=0.01**)
 sets the optimization tolerance. [Default: **1e-4**]
 
-*Bayesian Optimization*
+Bayesian Optimization
+*********************
 
 Entering **n_iterations=** followed by an integer 
 (e.g. **n_iterations=200**) sets the number of target function
@@ -454,9 +456,11 @@ To use the BayesOpt Bayesian optimizer, enter
 in this attribute field
 
 The user will also need to
-install the BayesOpt package by running 
-**"c:\Program Files (x86)\META\bin\Python27\Scripts\python.exe" -m pip install --user bayesopt_openmdao**
-in cmd.
+install the BayesOpt package by running the following command in a Command Prompt:
+
+.. code::
+
+   "C:\Program Files (x86)\META\bin\Python27\Scripts\python.exe" -m pip install --user bayesopt_openmdao
 
 Function
 ^^^^^^^^
