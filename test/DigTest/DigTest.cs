@@ -24,6 +24,7 @@ namespace DigTest
             int ret = Xunit.ConsoleClient.Program.Main(new string[] {
                 System.Reflection.Assembly.GetAssembly(typeof(DigTest)).CodeBase.Substring("file:///".Length),
                 //"/noshadow",
+                //"/trait", "Category=ResultsBrowser"
             });
             Console.In.ReadLine();
         }
@@ -284,6 +285,7 @@ namespace DigTest
         }
 
         [Fact()]
+        [Trait("Category","ResultsBrowser")]
         void ResultsBrowserJSONLaunch()
         {
             // TODO(tthomas): Add testing of additional UI elements
@@ -297,54 +299,42 @@ namespace DigTest
             using (DigWrapper wrapper = new DigWrapper())
             {
                 var all_variable_names = "IN_ElemCount, IN_E11, IN_E22, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
-
+                IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+                
                 // Launch first session
                 wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
                 driver.Navigate().GoToUrl(wrapper.url);
 
                 // Test "Explore.R"
-                IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                 Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
-                IWebElement display_select = driver.FindElement(By.XPath("//select[@id='Explore-display']/following::div"));
-                display_select.Click();
-                IWebElement display_input = display_select.FindElement(By.XPath("//input"));
-                display_input.SendKeys(Keys.ArrowRight);
-                display_input.SendKeys("OUT");
-                display_input.SendKeys(Keys.Enter);
-                display_input.SendKeys(Keys.ArrowRight);
-                display_input.SendKeys("OUT");
-                display_input.SendKeys(Keys.Enter);
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='IN_HubMaterial']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='IN_ElemCount']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='OUT_Blade_Cost_Total']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='OUT_Blade_Tip_Deflection']")));
+                var display = new ShinySelectMultipleInput(driver, "Explore-display");
+                display.AppendSelection("OUT");
+                display.AppendSelection("OUT");
 
 
                 // Test "DataTable.R"
-                driver.FindElement(By.LinkText("Data Table")).Click();
-                wait10.Until(driver1 => driver.FindElement(By.Id("DataTable-use_filtered")).Displayed);
+                ShinyUtilities.SwitchTabs(driver, "Data Table");
                 Assert.Equal("true", driver.FindElement(By.Id("DataTable-use_filtered")).GetAttribute("data-shinyjs-resettable-value"));
                 var process_method = new ShinySelectInput(driver, "DataTable-process_method");
                 Assert.Equal("None", process_method.GetCurrentSelection());
                 process_method.SetCurrentSelection("TOPSIS");
 
                 var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
-                //Assert.Equal(all_variable_names, string.Join(", ", weight_metrics.GetRemainingChoices().ToArray()));
-                weight_metrics.AppendSelection("IN_E11");
-                //Thread.Sleep(1000000);
+                //Assert.Equal(all_variable_names, string.Join(", ", weight_metrics.GetRemainingChoices().ToArray())); <-- Broken right now.
+                weight_metrics.AppendSelection("OUT_Blade");
+                weight_metrics.AppendSelection("OUT_Blade");
 
 
                 // Test "Histogram.R"
-                driver.FindElement(By.LinkText("Histogram")).Click();
-                wait10.Until(ExpectedConditions.ElementExists(By.Id("Histogram-variable")));
+                ShinyUtilities.SwitchTabs(driver, "Histogram");
                 var histogram_variable = new ShinySelectInput(driver, "Histogram-variable");
                 Assert.Equal(all_variable_names, string.Join(", ", histogram_variable.GetAllChoices().ToArray()));
                 histogram_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
 
 
                 // Test "PETRefinement.R"
-                driver.FindElement(By.LinkText("PET Refinement")).Click();
-                wait10.Until(ExpectedConditions.ElementExists(By.Id("PETRefinement-apply_original_cfg_ids")));
+                ShinyUtilities.SwitchTabs(driver, "PET Refinement");
+                wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
                 driver.FindElement(By.Id("PETRefinement-apply_original_cfg_ids")).Click();
                 driver.FindElement(By.Id("PETRefinement-apply_all_original_numeric")).Click();
                 driver.FindElement(By.Id("PETRefinement-apply_all_original_enum")).Click();
@@ -360,15 +350,14 @@ namespace DigTest
                 Assert.Equal("Steel, Aluminum", driver.FindElement(By.Id("PETRefinement-new_selection_IN_HubMaterial")).GetAttribute("value"));
                 Assert.Equal("/Testing/Parametric Studies/WindTurbinePET_Refined", driver.FindElement(By.Id("PETRefinement-newPetName")).GetAttribute("value"));
 
+
                 //// Test "UncertaintyQuantification.R"
                 //IWait<IWebDriver> wait30 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
 
-                //wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
-                //driver.Navigate().GoToUrl(wrapper.url);
                 //Assert.True(wait30.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
                 //Assert.Equal("Visualizer", driver.Title);
 
-                //driver.FindElement(By.XPath("//a[@data-value=\"Uncertainty Quantification\"]")).Click();
+                ShinyUtilities.SwitchTabs(driver, "Uncertainty Quantification");
                 //driver.FindElement(By.Id("UncertaintyQuantification-design_configs_present")).Click();
                 //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
                 //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/../../../..")).Displayed));
@@ -416,9 +405,8 @@ namespace DigTest
                 ////*/
 
                 // Return to "Explore.R" tab
-                driver.FindElement(By.LinkText("Explore")).Click();
-                wait10.Until(driver1 => driver.FindElement(By.XPath("//select[@id='Explore-display']/following::div")).Displayed);
-                
+                ShinyUtilities.SwitchTabs(driver, "Explore");
+
                 FooterSet(driver);
 
                 Thread.Sleep(300); //For shiny to catch up, find a better way
@@ -436,202 +424,22 @@ namespace DigTest
                 driver.Navigate().GoToUrl(wrapper.url);
                 IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                 Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
-                Assert.Equal(driver.FindElements(By.XPath(".//select[@id='Explore-display']/../div/div[1]/div")).Count, 4);
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='IN_HubMaterial']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='IN_ElemCount']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='OUT_Blade_Cost_Total']")));
-                wait10.Until(ExpectedConditions.ElementExists(By.XPath("//select[@id='Explore-display']/following::div/div//div[@data-value='OUT_Blade_Tip_Deflection']")));
+                var display = new ShinySelectMultipleInput(driver, "Explore-display");
+                Assert.Equal("IN_HubMaterial, IN_ElemCount, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
+
+                // Test Data Table
+                ShinyUtilities.SwitchTabs(driver, "Data Table");
+                var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
+                Assert.Equal("OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+                wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("DataTable-clearMetrics"))).Click();
+                Thread.Sleep(300); // FIXME: Apply the correct wait statement here instead of a Thread.Sleep() call.
+                Assert.Equal("", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+
                 driver.Close();
             }
 
             File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
             File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test_data.csv"));
-        }
-
-        class ShinySelectInput
-        {
-            private string id;
-            private IWebDriver driver;
-            private IWait<IWebDriver> wait;
-            private string div;
-            private string choices;
-            private string selected;
-
-            public ShinySelectInput(IWebDriver driver, string id)
-            {
-                this.driver = driver;
-                this.id = id;
-                this.div = string.Format("//select[@id='{0}']/..", id);
-                var master_div = this.driver.FindElement(By.XPath(this.div));
-                this.choices = this.div + "/select/following::div[1]/div[2]/div[1]/div";
-                this.selected = choices + "[@class='option selected']";
-                this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(11.0));
-                try
-                {
-                    this.driver.FindElement(By.XPath(this.choices));
-                }
-                catch (OpenQA.Selenium.NoSuchElementException)
-                {
-                    // Force the choices to appear.
-                    master_div.Click();
-                    master_div.Click();
-                }
-                if (this.driver.FindElement(By.XPath(this.choices)).GetAttribute("data-value") == null)
-                {
-                    var new_base = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div/div", id);
-                    this.choices = new_base + "[@class='option selected' or @class='option']";
-                    this.selected = new_base + "[@class='option selected']";
-                }
-            }
-
-            public string GetCurrentSelection()
-            {
-                this.wait.Until(ExpectedConditions.ElementExists(By.XPath(this.selected)));
-                return this.driver.FindElement(By.XPath(this.selected)).GetAttribute("data-value");
-            }
-
-            public IWebElement GetDiv()
-            {
-                return this.driver.FindElement(By.XPath(this.div));
-            }
-
-            private IEnumerable<IWebElement> GetAllChoiceDivs()
-            {
-                return this.driver.FindElements(By.XPath(this.choices));
-            }
-
-            public IEnumerable<string> GetAllChoices()
-            {
-                // TODO(tthomas): Find a way to turn the retry logic into a function.
-                IEnumerable<string> choices;
-                int tries = 3;
-                while (true)
-                {
-                    try
-                    {
-                        choices = from choice_div in this.driver.FindElements(By.XPath(this.choices))
-                                  select choice_div.GetAttribute("data-value");
-                        break;
-                    }
-                    catch (OpenQA.Selenium.NoSuchElementException)
-                    {
-                        Thread.Sleep(300);
-                        if (--tries == 0)
-                        {
-                            throw;
-                        }
-                    }
-                }
-                return choices;
-            }
-
-            public void SetCurrentSelection(string v)
-            {
-                var master_div = this.driver.FindElement(By.XPath(this.div));
-                master_div.Click();
-                var choices = this.GetAllChoiceDivs();
-                var to_select = from choice in choices
-                                where choice.GetAttribute("data-value") == v
-                                select choice;
-                this.wait.Until(driver1 => to_select.First().Displayed);
-                to_select.First().Click();
-            }
-        }
-
-        class ShinySelectMultipleInput
-        {
-            private IWebDriver driver;
-            private string id;
-            private string div;
-            private string input;
-            private string choices;
-            private string selected;
-            private WebDriverWait wait;
-
-            public ShinySelectMultipleInput(IWebDriver driver, string id)
-            {
-                this.driver = driver;
-                this.id = id;
-                this.div = string.Format("//select[@id='{0}']/..", id);
-                var master_div = this.driver.FindElement(By.XPath(this.div));
-                this.input = this.div + "/div[1]/div[1]/input";
-                this.choices = this.div + "/div[1]/div[2]/div/div";
-                this.selected = this.choices + "[@class='option selected']";
-                this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(11.0));
-                try
-                {
-                    this.driver.FindElement(By.XPath(this.choices));
-                }
-                catch (OpenQA.Selenium.NoSuchElementException)
-                {
-                    // Force the choices to appear.
-                    master_div.Click();
-                }
-                if (this.driver.FindElement(By.XPath(this.choices)).GetAttribute("data-value") == null)
-                {
-                    this.choices = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div/div[@class='option selected' or @class='option']", id);
-                    this.selected = string.Format("//select[@id='{0}']/following::div[1]/div[2]/div[1]/div/div[@class='option selected' or @class='option']", id); //"[@class='option selected']";
-                }
-            }
-
-            public IEnumerable<string> GetCurrentSelection()
-            {
-                IEnumerable<string> selected = null;
-                try
-                {
-                    selected = from selected_div in this.driver.FindElements(By.XPath(this.selected))
-                               select selected_div.GetAttribute("data-value");
-                    return selected; 
-                } 
-                catch (OpenQA.Selenium.NoSuchElementException)
-                {
-                    return null;
-                }
-            }
-
-            public IWebElement GetDiv()
-            {
-                return this.driver.FindElement(By.XPath(this.div));
-            }
-
-            private IEnumerable<IWebElement> GetAllChoiceDivs()
-            {
-                return this.driver.FindElements(By.XPath(this.choices));
-            }
-
-            public IEnumerable<string> GetRemainingChoices()
-            {
-                // TODO(tthomas): Find a way to turn the retry logic into a function.
-                IEnumerable<string> choices;
-                Thread.Sleep(3000);
-                int tries = 3;
-                while (true)
-                {
-                    try
-                    {
-                        choices = from choice_div in this.driver.FindElements(By.XPath(this.choices))
-                                  select choice_div.GetAttribute("data-value");
-                        break;
-                    }
-                    catch (OpenQA.Selenium.NoSuchElementException)
-                    {
-                        Thread.Sleep(300);
-                        if (--tries == 0)
-                        {
-                            throw;
-                        }
-                    }
-                }
-                return choices;
-            }
-            
-            public void AppendSelection(string v)
-            {
-                var input = this.driver.FindElement(By.XPath(this.input));
-                input.SendKeys(Keys.ArrowRight);
-                input.SendKeys(v);
-                input.SendKeys(Keys.Enter);
-            }
         }
 
         private void FooterSet(IWebDriver driver)
