@@ -390,19 +390,29 @@ To set an Optimizer Constraint's MinValue and/or MaxValue attributes:
 #. Repeat this process for the Optimizer Constraint's maximum value.
 
 
-Optimizer Attributes
+Optimizer Types
 ~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: images/OptimizerAttributes.png
-   :alt: text
+The OpenMETA Optimizer supports a couple different optimization methods.
+Users can change the optimization method and related settings by
+selecting (or opening) the Optimizer Driver and editing its attributes
+in the Object Inspector.
 
-   An Optimizer's Attributes
-
-Code
-^^^^
+The following optimization methods are currently supported in OpenMETA...
 
 COBYLA
-******
+^^^^^^
+
+Uses the COBYLA function in SciPy's
+`optimize` library. COBYLA supports constrained optimization without 
+defined gradients (or Jacobian matrixes).
+
+.. figure:: images/COBYLAOptimizerAttributes.png
+   :alt: text
+
+   A COBYLA Optimizer's Attributes
+
+*Code*
 
 Entering **maxiter=** followed by an integer 
 (e.g. **maxiter=500**) sets the maximum number of iterations
@@ -412,8 +422,26 @@ that the Optimizer driver will perform when attempting to converge.
 Entering **tol=** followed by a number (e.g. **tol=0.01**)
 sets the optimization tolerance. [Default: **1e-4**]
 
-Bayesian Optimization
-*********************
+*Custom Optimizer*
+
+Leave this field blank.
+
+*Function*
+
+Select **COBYLA**.
+
+BayesOpt
+^^^^^^^^
+
+Uses the `BayesOpt <https://rmcantin.bitbucket.io/html/index.html>`_
+Bayesian optimization library. BayesOpt supports unconstrained optimization.
+
+.. figure:: images/BayesOptOptimizerAttributes.png
+   :alt: text
+
+   A BayesOpt Optimizer's Attributes
+
+*Code*
 
 Entering **n_iterations=** followed by an integer 
 (e.g. **n_iterations=200**) sets the number of target function
@@ -446,42 +474,22 @@ values result in a greater exploitation of the learned model.
    https://rmcantin.bitbucket.io/html/usemanual.html#params
    and its related pages.
 
-Custom Optimizer
-^^^^^^^^^^^^^^^^
+*Custom Optimizer*
 
-*Bayesian Optimization*
-
-To use the BayesOpt Bayesian optimizer, enter
+Enter
 **bayesopt_openmdao.bayesopt_optimizer.BayesoptOptimizer**
 in this attribute field
 
-The user will also need to
+You will also need to
 install the BayesOpt package by running the following command in a Command Prompt:
 
 .. code::
 
    "C:\Program Files (x86)\META\bin\Python27\Scripts\python.exe" -m pip install --user bayesopt_openmdao
 
-Function
-^^^^^^^^
+*Function*
 
-The Function menu allows the user to set the optimization function
-to be used.
-
-COBYLA
-******
-
-Selecting COBYLA will use the COBYLA function built into SciPy's
-`optimize` library. COBYLA supports constrained optimization without 
-defined gradients (or Jacobian matrixes).
-
-Custom
-******
-
-Selecting Custom will allow the use of other third-party optimizers
-such as the
-`BayesOpt <https://rmcantin.bitbucket.io/html/index.html>`_ 
-Bayesian optimization method which supports unconstrained optimization.
+Select **Custom**.
 
 PCC
 ---
