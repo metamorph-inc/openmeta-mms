@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="10mm"
+   height="10mm"
+   viewBox="0 0 10 10"
+   version="1.1"
+   id="svg5189"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="lock.svg">
+  <title
+     id="title5193">OpenMETA Compound Container</title>
+  <defs
+     id="defs5183" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="90.509668"
+     inkscape:cx="17.41984"
+     inkscape:cy="14.371384"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="5120"
+     inkscape:window-height="2763"
+     inkscape:window-x="-13"
+     inkscape:window-y="-13"
+     inkscape:window-maximized="1"
+     inkscape:snap-grids="true"
+     showguides="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid5851" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5186">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>OpenMETA Compound Container</dc:title>
+        <dc:date>August 25, 2017</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Tim Thomas</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>All Rights Reserved</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>openmeta</rdf:li>
+            <rdf:li>compound</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-287)">
+    <path
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#4d4d4d;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5.91496086;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10.19999981;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       d="M 19.060547 5.3515625 C 17.214597 5.3515625 15.36288 5.9477316 13.929688 7.2128906 C 12.496495 8.4780497 11.552734 10.43152 11.552734 12.792969 L 11.552734 16.882812 C 10.132593 17.100373 9.0417916 18.317755 9.0429688 19.798828 L 9.0429688 29.792969 C 9.0416482 31.42837 10.368516 32.755229 12.003906 32.753906 L 25.998047 32.753906 C 27.633437 32.755229 28.960305 31.42837 28.958984 29.792969 L 28.958984 19.798828 C 28.960162 18.317755 27.869361 17.100373 26.449219 16.882812 L 26.449219 12.792969 C 26.449219 10.43152 25.506663 8.4834555 24.09375 7.21875 C 22.680837 5.9540445 20.857388 5.3515625 19.060547 5.3515625 z M 19.060547 8.2382812 C 20.201206 8.2382812 21.346507 8.6396929 22.167969 9.375 C 22.98943 10.110269 23.554687 11.154355 23.554688 12.792969 L 23.554688 16.837891 L 14.447266 16.837891 L 14.447266 12.792969 C 14.447266 11.154355 15.009364 10.117666 15.841797 9.3828125 C 16.67423 8.6479968 17.843996 8.2382812 19.060547 8.2382812 z M 18.986328 21.710938 C 19.589524 21.700633 20.081466 22.191709 20.072266 22.794922 L 20.072266 24.972656 C 20.696539 25.343226 21.11914 26.018848 21.119141 26.796875 C 21.119139 27.967848 20.172907 28.914062 19.001953 28.914062 C 17.830999 28.914062 16.875002 27.967848 16.875 26.796875 C 16.875001 26.018237 17.302413 25.343026 17.929688 24.972656 L 17.929688 22.794922 C 17.9207 22.203232 18.394602 21.717036 18.986328 21.710938 z "
+       transform="matrix(0.26458333,0,0,0.26458333,0,287)"
+       id="path32" />
+    <ellipse
+       style="opacity:0;fill:#b45050;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path34"
+       cx="5.0270834"
+       cy="290.38541"
+       rx="2.3812501"
+       ry="0.92604166" />
+    <ellipse
+       style="opacity:0;fill:#b45050;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path39"
+       cx="5.0270834"
+       cy="289.59167"
+       rx="2.1166668"
+       ry="1.8520914" />
+  </g>
+</svg>

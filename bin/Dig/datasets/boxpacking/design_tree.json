@@ -34,6 +34,11 @@
             "Selected": false
           }
         ]
+      },
+      {
+        "Name": "ShippingLabel",
+        "Type": "Component",
+        "Selected": true
       }
     ]
   },
@@ -72,6 +77,11 @@
             "Selected": false
           }
         ]
+      },
+      {
+        "Name": "ShippingLabel",
+        "Type": "Component",
+        "Selected": true
       }
     ]
   },
@@ -110,6 +120,11 @@
             "Selected": false
           }
         ]
+      },
+      {
+        "Name": "ShippingLabel",
+        "Type": "Component",
+        "Selected": true
       }
     ]
   },
@@ -148,6 +163,11 @@
             "Selected": false
           }
         ]
+      },
+      {
+        "Name": "ShippingLabel",
+        "Type": "Component",
+        "Selected": true
       }
     ]
   },
@@ -186,6 +206,11 @@
             "Selected": false
           }
         ]
+      },
+      {
+        "Name": "ShippingLabel",
+        "Type": "Component",
+        "Selected": true
       }
     ]
   },
@@ -224,6 +249,11 @@
             "Selected": true
           }
         ]
+      },
+      {
+        "Name": "ShippingLabel",
+        "Type": "Component",
+        "Selected": true
       }
     ]
   }
