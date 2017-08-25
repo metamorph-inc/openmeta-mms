@@ -3,34 +3,105 @@
 Advanced Topics
 ===============
 
-Nesting PETs within PETs
-------------------------
-
-.. note:: This feature and accompanying documentation will be added with the
-   next release of OpenMETA. Please check back later for updates!
-
-.. ADD: Section explaining PET nesting and giving some example applications.
-.. mention version of OpenMETA where PET nesting was introduced: "As of OpenMETA Version #.##..."
-
-
 Optimization
 ------------
 
 .. TODO: Fill out the subsection topics outlined below.
 
-Hot Start
-~~~~~~~~~
+Hot Start vs. Cold Start
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. note:: This feature and accompanying documentation will be added with the
-   next release of OpenMETA. Please check back later for updates!
+It is fairly common to have an Optimizer PET Driver that 
+runs repeatedly as part of a larger Design of Experiments
+(e.g. see :ref:`pet_nesting_with_drivers`).
 
+In these situations the user can choose between "Hot Start"
+and "Cold Start." 
 
+What is "Hot Start"
+^^^^^^^^^^^^^^^^^^^
+
+In "Hot Start," each time the nested Optimizer
+PET is called by the higher-level Parameter Study PET, it
+starts the optimization process using the final Design Variable
+values that it solved for during the last Parameter Study iteration.
+
+.. figure:: images/NestedPETsWithDrivers_1.png
+   :alt: text
+
+   The TopLevel PET contains a Parameter Study Driver and a nested OptimizerPET
+
+.. figure:: images/NestedPETsWithDrivers_2.png
+   :alt: text
+
+   The OptimizerPET contains an Optimizer Driver and a Python Wrapper Component
+
+In the "Hot Start" example above, for the first iteration of the TopLevel PET's
+Parameter Study Driver, the Optimizer PET starts the optimization process
+using the Design Variable **y**'s initial value of 0.0; however, for each subsequent
+iteration of the top-level Parameter Study Driver, the lower-level Optimizer Driver
+uses the previous iteration's final value of **y** as its starting point.
+
+For many cases, "Hot Start" is faster and more efficient. Because the top-level
+Parameter Study Driver generally changes its Design Variables in an incremental fashion,
+the lower-level Optimizer Driver's previous solution is usually much closer to the new
+solution vs. whatever its initial Design Variable values were.
+
+"Hot Start" is the default behavior for the Optimizer PET Driver's 
+COBYLA optimization method.
+
+What is "Cold Start"
+^^^^^^^^^^^^^^^^^^^^
+
+In "Cold Start," each time the nested Optimizer PET is called by the higher-level
+Parameter Study PET, it starts the optimization process using the same initial
+Design Variable values.
+
+.. figure:: images/NestedPETsWithDriversColdStart_1.png
+   :alt: text
+
+   The TopLevel PET contains a Parameter Study Driver, a Constants block, and a nested OptimizerPET
+
+.. figure:: images/NestedPETsWithDriversColdStart_2.png
+   :alt: text
+
+   The OptimizerPET contains an Optimizer Driver and a Python Wrapper Component
+
+In the "Cold Start" example above, the lower-level Optimizer Driver's Design Variable
+**y** is connected directly to the Problem Input **y**, which is being driven
+from the Constants block in the top-level PET.
+
+As a result, for every iteration of TopLevel PET's Parameter Study Driver, the Optimizer
+PET starts its optimization process using the same starting point for its Design Variable **y**.
+
+The advantage of "Cold Start" is that it prevents individual optimizations from interfering with
+one another. Occasionally, with the Optimizer Driver's COBYLA method, an optimizer run can diverge,
+causing the Design Variable values to violate their range constraints. In a "Hot Start" setup, one
+divergence will likely "ruin" all subsequent Optimizer Driver runs, but in a "Cold Start" setup, the
+forced restart limits the impact of outliers on the entire set of results.
+   
 Setting Initial Conditions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. note:: This feature and accompanying documentation will be added with the
-   next release of OpenMETA. Please check back later for updates!
+Occasionally, an optimization problem's objective function will feature numerous local minima
+(or maxima), making it harder to find a global minimum using just an Optimizer Driver.
 
+In these situations, it may be useful to nest a PET with an Optimizer Driver inside another
+PET with a Parameter Study Driver as shown below.
+
+.. figure:: images/InitialConditions_1.png
+   :alt: text
+
+   The TopLevel PET contains a Parameter Study Driver and a nested OptimizerPET
+
+.. figure:: images/InitialConditions_2.png
+   :alt: text
+
+   The OptimizerPET contains an Optimizer Driver and a Python Wrapper Component
+
+The Parameter Study Driver in the top-level PET varies the initial values of **x** and **y**.
+These are then passed into the lower-level PET to provide the Optimizer PET with different
+starting points each time. This strategy increases the chances of finding the global minima.
 
 Adding Design Variable Constraints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

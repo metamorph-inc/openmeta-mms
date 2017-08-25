@@ -50,7 +50,7 @@ drag it onto the ParameterStudy canvas.
 .. figure:: images/parameterstudy_tutorial_23.png
    :alt: text
 
-9. Repeat Steps 24-29 to add a second Design Variable **y** with a range of
+9. Repeat steps 3-8 to add a second Design Variable **y** with a range of
 **-50,+50** as well.
 
 .. note:: Zoom in and out of the canvas by rolling the mousewheel while
