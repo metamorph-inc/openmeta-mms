@@ -67,6 +67,20 @@ server <- function(input, output, session, data) {
     session$sendCustomMessage(type="dvarsChanged", jsonlite::toJSON(vars$dv))
   })
   
+  observeEvent(input$angularRequest, {
+    if(!is.null(input$angularRequest) && input$angularRequest != "") {
+      print("Received request from browser")
+      print(input$angularRequest)
+      
+      if(input$angularRequest$command == "echo") {
+        session$sendCustomMessage(type="angularResponse", list(
+          id=input$angularRequest$id,
+          data=input$angularRequest$data
+        ))
+      }
+    }
+  })
+  
   observeEvent(input$messageFromBrowser, {
     print("Rx")
     if(!is.null(input$messageFromBrowser) && input$messageFromBrowser != "") {
