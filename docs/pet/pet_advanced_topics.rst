@@ -18,8 +18,8 @@ runs repeatedly as part of a larger Design of Experiments
 In these situations the user can choose between "Hot Start"
 and "Cold Start." 
 
-What is "Hot Start"
-^^^^^^^^^^^^^^^^^^^
+What is "Hot Start?"
+^^^^^^^^^^^^^^^^^^^^
 
 In "Hot Start," each time the nested Optimizer
 PET is called by the higher-level Parameter Study PET, it
@@ -50,8 +50,8 @@ solution vs. whatever its initial Design Variable values were.
 "Hot Start" is the default behavior for the Optimizer PET Driver's 
 COBYLA optimization method.
 
-What is "Cold Start"
-^^^^^^^^^^^^^^^^^^^^
+What is "Cold Start?"
+^^^^^^^^^^^^^^^^^^^^^
 
 In "Cold Start," each time the nested Optimizer PET is called by the higher-level
 Parameter Study PET, it starts the optimization process using the same initial

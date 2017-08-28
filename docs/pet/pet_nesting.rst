@@ -4,11 +4,11 @@ PET Nesting
 ===========
 
 PET Nesting allows the user to place a PET inside another PET
-and make connections between two PETs using the Problem Input 
-and Problem Output components.
+and make connections between two PETs using the **Problem Input** 
+and **Problem Output** atoms.
 
-With PET Nesting, the user can add additional levels of encapsulation
-and composability to a model.
+With PET Nesting, the user can add encapsulation
+and composability to an analysis workflow model.
 
 Adding a new PET to another PET
 -------------------------------
@@ -77,17 +77,17 @@ By default, Problem Inputs expect to pass the double data type (e.g. 0.0).
 If the Problem Input must pass another data type (e.g. a PET Analysis block
 in the nested PET requires a string input), then an example of that data type
 must be entered in the Problem Input's **Value** attribute via the 
-**Object Inspector.** 
+**Object Inspector**. 
 
-Under certain conditions, the Master Interpreter may
-prompt you to enter example data types for all Problem Inputs (including
-doubles) in a nested PET!
+.. note:: Under certain conditions, the Master Interpreter may
+   prompt you to enter example data types for all Problem Inputs (including
+   doubles) in a nested PET.
 
 Example **Value** attribute entries are as follows:
 
 - To pass the double type, enter **0.0**
 - To pass the int type, enter **1**
-- To pass the string type, enter **u'unicode**
+- To pass the string type, enter **u'unicode'**
 
 .. figure:: images/SettingProblemInputValueAttribute.png
    :alt: text
@@ -136,11 +136,12 @@ of hierarchy is easy to set up as shown below.
    The OptimizerPET contains an Optimizer Driver and a Python Wrapper Component
 
 In the example above, the TopLevel PET provides the OptimizerPET a different value
-of x for each iteration of its Parameter Study Driver.
+of ``x`` for each iteration of its Parameter Study Driver.
 
-The OptimizerPET's Optimizer Driver finds the minimum value of f_xy for that value of x
-by varying its Design Variable y. The final optimized f_xy and y values are passed back
-up to the TopLevel PET where they are recorded by its Parameter Study driver.
+The OptimizerPET's Optimizer Driver finds the minimum value of ``f_xy`` for
+the given value of ``x`` by varying its Design Variable ``y``. The final
+optimized ``f_xy`` and ``y`` values are passed back up to the TopLevel PET
+where they are recorded by its Parameter Study driver.
 
 .. note:: Only the final result (of OptimizerPET's many iterations) is recorded by the TopLevel
    PET's Parameter Study Driver.
