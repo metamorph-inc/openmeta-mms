@@ -353,7 +353,8 @@ will appear as a port on the Optimizer's PET model and PET Analysis
 Blocks can be connected to it.
 
 An Optimizer Constraint allows designated system outputs to influence
-the optimization process.
+the optimization process - if *(and this is an important if)* the 
+optimization method being used supports constraints!
 
 Adding an Optimizer Constraint to an Optimizer Driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -379,7 +380,7 @@ that can be set by the user. The Optimizer Driver will do its best
 to keep system outputs connected to a Optimizer Constraint within
 the bound(s) defined by the **MinValue** and **MaxValue** attributes.
 
-To set an Optimizer Constraint's MinValue and(or) MaxValue attributes:
+To set an Optimizer Constraint's MinValue and/or MaxValue attributes:
 
 #. Left-click on the Optimizer Constraint
    and edit the **MinValue** attribute in the **Object Inspector**.
@@ -389,48 +390,106 @@ To set an Optimizer Constraint's MinValue and(or) MaxValue attributes:
 #. Repeat this process for the Optimizer Constraint's maximum value.
 
 
-Optimizer Attributes
+Optimizer Types
 ~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: images/OptimizerAttributes.png
-   :alt: text
+The OpenMETA Optimizer supports a couple different optimization methods.
+Users can change the optimization method and related settings by
+selecting (or opening) the Optimizer Driver and editing its attributes
+in the Object Inspector.
 
-   An Optimizer's Attributes
-
-Code
-^^^^
-
-Entering **maxiter=** followed by an integer number
-(e.g. **maxiter=500**) sets the maximum number of iterations
-that the Optimizer driver will perform when attempting to converge.
-By default, **maxiter** has a value of **200**.
-
-Entering **tol=** followed by a number (e.g. **tol=0.01**)
-sets the optimization tolerance. By default, **tol** has
-a value of **1e-4**.
-
-Custom
-^^^^^^
-
-.. note:: This section is under construction. Please come back later for updates!
-
-Function
-^^^^^^^^
-
-The Function menu allows the user to set the optimization function
-to be used.
+The following optimization methods are currently supported in OpenMETA...
 
 COBYLA
-******
+^^^^^^
 
-Selecting COBYLA will use the COBYLA function built into SciPy's
-`optimize` library. COBYLA allows optimization without defined gradients
-(or Jacobian matrixes).
+Uses the COBYLA function in SciPy's
+`optimize` library. COBYLA supports constrained optimization without 
+defined gradients (or Jacobian matrixes).
 
-Custom
-******
+.. figure:: images/COBYLAOptimizerAttributes.png
+   :alt: text
 
-.. note:: This section is under construction. Please check back later for updates!
+   A COBYLA Optimizer's Attributes
+
+*Code*
+
+Entering **maxiter=** followed by an integer 
+(e.g. **maxiter=500**) sets the maximum number of iterations
+that the Optimizer driver will perform when attempting to converge.
+[Default: **200**]
+
+Entering **tol=** followed by a number (e.g. **tol=0.01**)
+sets the optimization tolerance. [Default: **1e-4**]
+
+*Custom Optimizer*
+
+Leave this field blank.
+
+*Function*
+
+Select **COBYLA**.
+
+BayesOpt
+^^^^^^^^
+
+Uses the `BayesOpt <https://rmcantin.bitbucket.io/html/index.html>`_
+Bayesian optimization library. BayesOpt supports unconstrained optimization.
+
+.. figure:: images/BayesOptOptimizerAttributes.png
+   :alt: text
+
+   A BayesOpt Optimizer's Attributes
+
+*Code*
+
+Entering **n_iterations=** followed by an integer 
+(e.g. **n_iterations=200**) sets the number of target function
+evaluations. [Default: **190**]
+
+Entering **n_iter_relearn=** followed by an integer 
+(e.g. **n_iter_relearn=20** sets the number of iterations
+between re-learning kernal parameters. If **n_iter_relearn=0**
+then there will be no relearning. [Default: **50**]
+
+Entering **n_inner_iterations=** followed by an integer
+(e.g. **n_inner_iterations=**) sets the maximum number
+of iterations (per dimension) to optimize the acquisition
+function. [Default: **500**]
+
+Entering **n_init_samples=** followed by an integer
+(e.g. **n_init_samples=20**) sets the initial set of samples
+/ target function evaluations. [Default: **10**]
+
+Entering **epsilon=** followed by a double between 0.0 and 1.0
+inclusive (e.g. **epsilon=0.3**) set the probability of
+performing a random (blind) evaluation of the target function.
+Higher values result in more forced exploration whereas lower
+values result in a greater exploitation of the learned model.
+[Default: **0.0** (epsilon-greedy disabled)]
+
+.. note:: For more information on each parameter, additional
+   parameters not covered here, the BayesOpt method library,
+   and Bayesian optimization in general, please visit
+   https://rmcantin.bitbucket.io/html/usemanual.html#params
+   and its related pages.
+
+*Custom Optimizer*
+
+Enter
+**bayesopt_openmdao.bayesopt_optimizer.BayesoptOptimizer**
+in this attribute field
+
+You will also need to
+install the BayesOpt package by running the following command in a Command Prompt:
+
+.. code::
+
+   "C:\Program Files (x86)\META\bin\Python27\Scripts\python.exe" -m pip install --user bayesopt_openmdao
+
+*Function*
+
+Select **Custom**.
 
 PCC
 ---
