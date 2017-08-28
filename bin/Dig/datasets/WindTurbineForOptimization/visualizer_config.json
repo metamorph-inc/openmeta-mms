@@ -1,13 +1,148 @@
 {
   "pet_config": "pet_config.json",
   "raw_data": "raw_data.csv",
-  "tabs": [
-    "Explore.R",
-    "DataTable.R",
-    "Histogram.R",
-    "PETRefinement.R",
-    "Scratch.R",
-    "ParallelAxisPlot.R",
-    "UncertaintyQuantification.R"
-  ]
+  "tabs": ["Explore.R", "DataTable.R", "Histogram.R", "PETRefinement.R", "Scratch.R", "ParallelAxisPlot.R", "UncertaintyQuantification.R", "SurrogateModeling.R"],
+  "augmented_data": "visualizer_config_data.csv",
+  "variables": {
+    "CfgID": {
+      "type": "Unknown",
+      "units": {},
+      "name_with_units": "CfgID"
+    },
+    "IN_ElemCount": {
+      "type": "Design Variable",
+      "units": "",
+      "name_with_units": "IN_ElemCount"
+    },
+    "IN_E11": {
+      "type": "Design Variable",
+      "units": "",
+      "name_with_units": "IN_E11"
+    },
+    "IN_E22": {
+      "type": "Design Variable",
+      "units": "",
+      "name_with_units": "IN_E22"
+    },
+    "IN_Root_AvgCapMaterialThickness": {
+      "type": "Design Variable",
+      "units": "mm",
+      "name_with_units": "IN_Root_AvgCapMaterialThickness (mm)"
+    },
+    "IN_Tip_AvgCapMaterialThickness": {
+      "type": "Design Variable",
+      "units": "mm",
+      "name_with_units": "IN_Tip_AvgCapMaterialThickness (mm)"
+    },
+    "OUT_Blade_Cost_Total": {
+      "type": "Objective",
+      "units": "USD",
+      "name_with_units": "OUT_Blade_Cost_Total (USD)"
+    },
+    "OUT_Blade_Tip_Deflection": {
+      "type": "Objective",
+      "units": "mm",
+      "name_with_units": "OUT_Blade_Tip_Deflection (mm)"
+    }
+  },
+  "colorings": [],
+  "sets": [],
+  "inputs": {
+    "coloring_source": "None",
+    "DataTable-process_method": "None",
+    "DataTable-use_filtered": true,
+    "DataTable-weightMetrics": {},
+    "Explore-add_contour": false,
+    "Explore-add_pareto": false,
+    "Explore-add_regression": false,
+    "Explore-auto_render": true,
+    "Explore-contour_var": "IN_ElemCount",
+    "Explore-details_guid": "",
+    "Explore-display": ["IN_ElemCount", "IN_E11"],
+    "Explore-file_images": "",
+    "Explore-file_simdis": "",
+    "Explore-pairs_click": {},
+    "Explore-pairs_plot_collapse": {},
+    "Explore-pairs_plot_marker": "1",
+    "Explore-pairs_plot_marker_size": 1,
+    "Explore-pairs_trendlines": false,
+    "Explore-pairs_units": true,
+    "Explore-pairs_upper_panel": false,
+    "Explore-regression_type": "Linear",
+    "Explore-single_plot_collapse": "Variables",
+    "Explore-single_plot_marker": "1",
+    "Explore-single_plot_marker_size": 1,
+    "Explore-tabset": "Pairs Plot",
+    "Explore-x_input": "IN_ElemCount",
+    "Explore-y_input": "IN_E11",
+    "filter_IN_E11": [25520, 32480],
+    "filter_IN_E22": [3359, 97990],
+    "filter_IN_ElemCount": [5, 60],
+    "filter_IN_Root_AvgCapMaterialThickness": [75.01, 98.99],
+    "filter_IN_Tip_AvgCapMaterialThickness": [19.01, 30.99],
+    "filter_OUT_Blade_Cost_Total": [136700, 176700],
+    "filter_OUT_Blade_Tip_Deflection": [1812, 3046],
+    "footer_collapse": {},
+    "Histogram-variable": "IN_ElemCount",
+    "last_key_pressed": 0,
+    "live_color_palette": "Rainbow",
+    "live_color_rainbow_s": 1,
+    "live_color_rainbow_v": 1,
+    "live_color_variable_factor": "",
+    "live_coloring_max_min": "Maximize",
+    "live_coloring_name": "",
+    "live_coloring_type": "Max/Min",
+    "live_coloring_variable_numeric": "IN_ElemCount",
+    "master_tabset": "Surrogate Modeling",
+    "messageFromBrowser": "Hello World",
+    "num_sd": 6,
+    "remove_missing": false,
+    "remove_outliers": false,
+    "slider_width": 205,
+    "someText": "Hello World",
+    "SurrogateModeling-indepVar_11": 5,
+    "SurrogateModeling-indepVar_12": 4,
+    "SurrogateModeling-indepVar_13": 7,
+    "SurrogateModeling-indepVar_21": 2,
+    "SurrogateModeling-indepVar_22": 5,
+    "SurrogateModeling-indepVar_23": 8,
+    "SurrogateModeling-indepVar_31": 3,
+    "SurrogateModeling-indepVar_32": 6,
+    "SurrogateModeling-indepVar_33": 9,
+    "SurrogateModeling-indepVar_41": 0,
+    "SurrogateModeling-indepVar_42": 0,
+    "SurrogateModeling-indepVar_43": 0,
+    "SurrogateModeling-indepVar_51": 0,
+    "SurrogateModeling-indepVar_52": 0,
+    "SurrogateModeling-indepVar_53": 0,
+    "SurrogateModeling-indepVar_61": 0,
+    "SurrogateModeling-indepVar_62": 0,
+    "SurrogateModeling-indepVar_63": 0,
+    "SurrogateModeling-messageFromBrowser": "Hello World",
+    "SurrogateModeling-someText": "faafkl",
+    "SurrogateModeling-test": 14123564,
+    "UncertaintyQuantification-design_config_choice": "28-16",
+    "UncertaintyQuantification-design_config_var": "",
+    "UncertaintyQuantification-design_configs_present": false,
+    "UncertaintyQuantification-display": "IN_ElemCount",
+    "UncertaintyQuantification-display_all": true,
+    "UncertaintyQuantification-hist_color": "#F5DEB3",
+    "UncertaintyQuantification-orig_color": "#000000",
+    "UncertaintyQuantification-post_color": "#FFA500",
+    "UncertaintyQuantification-resamp_color": "#5CC85C",
+    "UncertaintyQuantification-tabset": "Weighting"
+  },
+  "tab_data": {
+    "Explore": {},
+    "DataTable": {},
+    "Histogram": {},
+    "PETRefinement": {},
+    "Scratch": {},
+    "ParallelAxisPlot": {},
+    "UncertaintyQuantification": {
+      "probability_queries": {},
+      "query_id": 0
+    },
+    "SurrogateModeling": {}
+  }
 }

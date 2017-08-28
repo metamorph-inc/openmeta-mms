@@ -1,3 +1,10 @@
+iframe {
+  width: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
 table.uq-predictions-table {
   width: auto !important;
 }

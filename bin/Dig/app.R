@@ -62,14 +62,14 @@ dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
 if (dig_dataset_config == "") {
   if(dig_input_csv == "") {
     # Setup one of the test datasets if no input dataset
-    config_filename=file.path('datasets',
-                              'boxpacking',
-                              'visualizer_config.json',
-                              fsep = "\\\\")
     # config_filename=file.path('datasets',
-    #                           'WindTurbineForOptimization',
+    #                           'boxpacking',
     #                           'visualizer_config.json',
-    #                           fsep = "\\\\")
+    #                           fsep = "/")
+    config_filename=file.path('datasets',
+                              'WindTurbineForOptimization',
+                              'visualizer_config.json',
+                              fsep = "/")
     # config_filename=file.path('datasets',
     #                           'WindTurbine',
     #                           'visualizer_config.json',

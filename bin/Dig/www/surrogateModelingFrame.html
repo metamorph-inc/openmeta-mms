@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <!--<script src="/public/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/public/bower_components/angular/angular.js"></script>
+    <script src="/public/bower_components/angular-route/angular-route.min.js"></script>
+    <script src="/public/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="/public/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="/public/bower_components/angular-rangeslider/angular.rangeSlider.js"></script>
+    <script src="/public/bower_components/plotly.js/dist/plotly.min.js"></script>
+    <script src="/public/js/ng-file-upload.js"></script>
+    <script src="/public/js/app.js"></script>-->
+    <script src="shared/jquery.min.js"></script>
+    <script src="third_party/angular.min.js"></script>
+    <script src="third_party/ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <script src="surrogateModelingNgApp.js"></script>
+    <script src="third_party/iframeResizer.contentWindow.min.js"></script>
+    <link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="shared/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="surrogateModelingStyle.css">
+    <title>Surrogate Modeling</title>
+</head>
+
+<body ng-app="surrogateApp">
+  <div ng-controller="surrogateListCtrl">
+    <h1>Hello World ({{test}})</h1>
+    <p>This is content.</p>
+    <ul>
+      <li>Some</li>
+      <li>Long</li>
+      <li>List</li>
+      <li>Of</li>
+      <li>Items</li>
+    </ul>
+  </div>
+  
+  <script type="text/ng-template" id="myModalContent.html">
+      <div class="modal-header">
+          <h3 class="modal-title" id="modal-title">I'm a modal!</h3>
+      </div>
+      <div class="modal-body" id="modal-body">
+          <ul>
+              <li ng-repeat="item in $ctrl.items">
+                  <a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>
+              </li>
+          </ul>
+          Selected: <b>{{ $ctrl.selected.item }}</b>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+          <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+      </div>
+  </script>
+</body>
+</html>
