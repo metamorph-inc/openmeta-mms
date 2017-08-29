@@ -30,15 +30,14 @@ Part Browser and onto the PET canvas.
 Design Variable
 ~~~~~~~~~~~~~~~
 
-A Design Variable is an atom that can be placed inside a Parameter Study.
 A Design Variable placed inside a Parameter Study will appear as a port
 on the Parameter Study's PET model and can be connected to PET Analysis
 Blocks.
 
 Over the course of a PET run, a Parameter Study Driver
 typically changes each Design Variable's value many times in order to
-provide the system being analyzed with different inputs - of course the
-Design Variables have to be connected to PET Analysis blocks for this to work!
+provide the system being analyzed with different inputs. The Driver's Design
+Variables may be connected to the inputs of PET Analysis Blocks.
 
 .. figure:: images/DesignVariable.png
    :alt: text
@@ -80,7 +79,6 @@ To set a Design Variable's range:
 Objective
 ~~~~~~~~~
 
-An Objective is an atom that can be placed inside a Parameter Study.
 An Objective placed inside a Parameter Study will appear as a port
 on the Parameter Study's PET model and PET Analysis Blocks can be
 connected to it.
@@ -215,15 +213,13 @@ Part Browser and onto the PET canvas.
 Design Variable
 ~~~~~~~~~~~~~~~
 
-A Design Variable is an atom that can be placed inside an Optimizer.
 A Design Variable placed inside a Optimizer will appear as a port
 on the Parameter Study's PET model and can be connected to PET Analysis
 Blocks.
 
 Over the course of a PET run, a Optimizer Driver
 changes each Design Variable's value many times in order to
-minimize the Objective - of course the Design Variables have to be
-connected to PET Analysis blocks for this to work!
+minimize the Objective. The inputs of PET Analysis Blocks can be connected to it.
 
 .. figure:: images/DesignVariableOptimizer.png
    :alt: text
@@ -267,14 +263,13 @@ To set a Design Variable's range:
    Optimizer only sets the default optimization starting point for that
    variable to be the (minimum+maximum)/2.
 
-.. warning:: Unfortunately (and non-intuitively) setting a Design Variable's
-   range DOES NOT keep the Optimizer from setting the Design Variable's value
-   outside of that range during the optimization process. In order to properly
-   constrain Design Variables **for now**, the user must add an additional
-   Constraint atom to the Optimizer Driver for each constrained Design Variable,
-   set that Constraint atom's **MinValue** and **MaxValue** attributes to the desired
+.. warning:: Setting a Design Variable's range DOES NOT keep the Optimizer from setting 
+   the Design Variable's value outside of that range during the optimization process. 
+   In order to properly constrain Design Variables, the user must add an additional
+   Constraint to the Optimizer Driver for each constrained Design Variable,
+   set that Constraint's **MinValue** and **MaxValue** attributes to the desired
    Design Variable bounds, and connect the Design Variable to the Constraint using
-   Connect Mode at the PET level (i.e. outside of the Optimizer).
+   Connect Mode at the PET level *(i.e. outside of the Optimizer)*.
 
 .. figure:: images/DesignVariableOptimizerWorkaround.png
    :alt: text
@@ -287,7 +282,6 @@ To set a Design Variable's range:
 Objective
 ~~~~~~~~~
 
-An Objective is an atom that can be placed inside an Optimizer.
 An Objective placed inside an Optimizer will appear as a port
 on the Optimizer's PET model and PET Analysis Blocks can be
 connected to it.
@@ -317,8 +311,7 @@ the **Objective** icon from the Part Browser and onto the Optimizer canvas.
 Intermediate Variable
 ~~~~~~~~~~~~~~~~~~~~~
 
-An Intermediate Variable is an atom that can be placed inside an
-Optimizer. An Intermediate Variable placed inside an Optimizer
+An Intermediate Variable placed inside an Optimizer
 will appear as a port on the Optimizer's PET model and PET
 Analysis Blocks can be connected to it.
 
@@ -347,8 +340,7 @@ the **Intermediate Variable** icon from the Part Browser and onto the Optimizer 
 Optimizer Constraint
 ~~~~~~~~~~~~~~~~~~~~
 
-An Optimizer Constraint is an atom that can be placed inside an
-Optimizer. At Optimizer Constraint placed inside an Optimizer
+At Optimizer Constraint placed inside an Optimizer
 will appear as a port on the Optimizer's PET model and PET Analysis
 Blocks can be connected to it.
 
@@ -393,17 +385,15 @@ To set an Optimizer Constraint's MinValue and/or MaxValue attributes:
 Optimizer Types
 ~~~~~~~~~~~~~~~~~~~~
 
-The OpenMETA Optimizer supports a couple different optimization methods.
-Users can change the optimization method and related settings by
+The OpenMETA Optimizer comes with two different optimization methods, and can be extended
+by users to include more. Users can change the optimization method and related settings by
 selecting (or opening) the Optimizer Driver and editing its attributes
 in the Object Inspector.
-
-The following optimization methods are currently supported in OpenMETA...
 
 COBYLA
 ^^^^^^
 
-Uses the COBYLA function in SciPy's
+This Optimizer Uses the COBYLA function in SciPy's
 `optimize` library. COBYLA supports constrained optimization without 
 defined gradients (or Jacobian matrixes).
 
@@ -433,7 +423,7 @@ Select **COBYLA**.
 BayesOpt
 ^^^^^^^^
 
-Uses the `BayesOpt <https://rmcantin.bitbucket.io/html/index.html>`_
+This Optimizer uses the `BayesOpt <https://rmcantin.bitbucket.io/html/index.html>`_
 Bayesian optimization library. BayesOpt supports unconstrained optimization.
 
 .. figure:: images/BayesOptOptimizerAttributes.png
