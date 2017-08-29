@@ -66,6 +66,10 @@ if (dig_dataset_config == "") {
                               'WindTurbineForOptimization',
                               'visualizer_config.json',
                               fsep = "\\\\")
+    # config_filename=file.path('datasets',
+    #                           'boxpacking',
+    #                           'visualizer_config.json',
+    #                           fsep = "\\\\")
   } else {
     # Visualizer legacy launch format
     csv_dir <- dirname(dig_input_csv)
