@@ -31,8 +31,8 @@ When the PET finishes running successfully, its shading will turn green.
    :alt: text
 
 .. note:: If the shading is red, then the run failed and a _FAILED.txt
-   file with error codes has been generated in the run's folder -
-   located in the results folder of the GME project's root directory.
+   file with error codes has been generated in the run's folder. To access
+   this folder, double-click on the job.
 
 4. Left-click on the **PET** tab within the **Results Browser**.
 
