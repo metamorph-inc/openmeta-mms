@@ -13,3 +13,15 @@ table.surrogate-table tbody td {
 table.surrogate-table tbody td small {
     color: #888;
 }
+
+.discrete-var-chooser h4 {
+  margin-top: auto;
+}
+
+.discrete-var-chooser .form-group {
+  padding-right: 1em;
+}
+
+.discrete-var-chooser .form-control {
+  width: 200px;
+}

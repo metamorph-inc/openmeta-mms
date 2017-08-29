@@ -1,1 +1,8 @@
+body {
+  padding-top: 1em;
+}
 
+div.container-fluid {
+  padding-left: 0px;
+  padding-right: 0px;
+}

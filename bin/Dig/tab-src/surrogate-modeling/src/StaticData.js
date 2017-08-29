@@ -2,14 +2,14 @@ const StaticData = {
   independentVarNames: ["Some Var 1", "Some Var 2", "Some Var 3"],
   dependentVarNames: ["Dep Var 1", "Dep Var 2"],
   independentVarData: [
-    [1.0, 2.0, 3.0],
-    [4.0, 5.0, 6.0],
-    [7.0, 8.0, 9.0]
+    [1.342, 2.622, 3.3429],
+    [4.4921, 5.42112, 6.32],
+    [7.0, 8.323, 9.9084]
   ],
   dependentVarData: [
-    [[1.0, 2.0], [2.0, 3.0]],
-    [[4.0, 5.0], [6.0, 7.0]],
-    [[8.0, 9.0], [10.0, 11.0]]
+    [[1.3290, 2.123], [2.382, 3.348]],
+    [[4.324, 5.1], [6.953]],
+    [[8.3248, 9.39048204], [10.49, 11.4932]]
   ],
   discreteIndependentVars: [
     {

@@ -8,8 +8,8 @@ ui <- function(id) {
 
   fluidPage(
     br(),
-    textInput(ns("someText"), label="Text to pass to Angular"),
-    actionButton(ns("incrementButton"), label="Increment something"),
+    #textInput(ns("someText"), label="Text to pass to Angular"),
+    #actionButton(ns("incrementButton"), label="Increment something"),
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "surrogateModelingStyle.css")),
     tags$head(tags$script(src="third_party/iframeResizer.min.js")),
     tags$head(tags$style("iframe { width: 100%; }")),

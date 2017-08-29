@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { FormControl, Button, Glyphicon } from 'react-bootstrap';
+import { FormControl, Glyphicon } from 'react-bootstrap';
+import TooltipButton from './TooltipButton';
 
 class DependentVarCell extends Component {
   render() {
@@ -18,23 +19,21 @@ class DependentVarCell extends Component {
 
 class SurrogateTableRow extends Component {
   render() {
-    const self = this;
-
-    const indepVarCells = self.props.independentVarData.map(function(value, index) {
+    const indepVarCells = this.props.independentVarData.map((value, index) => {
       return <td key={index}><FormControl type="number" value={value} /></td>;
     });
 
-    const depVarCells = self.props.dependentVarData.map(function(varData, index) {
+    const depVarCells = this.props.dependentVarData.map((varData, index) => {
       return <DependentVarCell key={index} varData={varData} />;
     });
 
     return (
       <tr>
-        <td><Button bsStyle="info" bsSize="small"><Glyphicon glyph="search" /></Button></td>
+        <td><TooltipButton bsStyle="info" bsSize="small" tooltipText="Row details"><Glyphicon glyph="search" /></TooltipButton></td>
         {indepVarCells}
-        <td><Button bsStyle="primary" bsSize="small"><Glyphicon glyph="question-sign" /><Glyphicon glyph="chevron-right" /></Button></td>
+        <td><TooltipButton bsStyle="primary" bsSize="small" tooltipText="Predict"><Glyphicon glyph="question-sign" /><Glyphicon glyph="chevron-right" /></TooltipButton></td>
         {depVarCells}
-        <td><Button bsStyle="danger" bsSize="small"><Glyphicon glyph="remove" /></Button></td>
+        <td><TooltipButton bsStyle="danger" bsSize="small" tooltipText="Delete row"><Glyphicon glyph="remove" /></TooltipButton></td>
       </tr>
     );
   }

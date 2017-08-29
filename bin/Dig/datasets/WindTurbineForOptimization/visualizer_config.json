@@ -89,7 +89,7 @@
     "filter_IN_Tip_AvgCapMaterialThickness": [19.01, 30.99],
     "filter_OUT_Blade_Cost_Total": [136700, 176700],
     "filter_OUT_Blade_Tip_Deflection": [1812, 3046],
-    "footer_collapse": "Configuration",
+    "footer_collapse": {},
     "Histogram-variable": "IN_ElemCount",
     "last_key_pressed": 0,
     "live_color_palette": "Rainbow",
