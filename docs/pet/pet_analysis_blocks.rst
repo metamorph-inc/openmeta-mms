@@ -110,7 +110,7 @@ Part Browser and onto the PET canvas.
 
 A PythonWrapper can be loaded with specially-formatted python scripts.
 
-Below is a template PythonWrapper script:
+Below is a template PythonWrapper OpenMDAO Component script:
 
 .. highlight:: python
 .. :linenothreshold: 5
@@ -150,6 +150,9 @@ Below is a template PythonWrapper script:
 			unknowns['f_xy'] = (params['x']-3.0)**2 + params['x']*y + (params['y']+4.0)**2 - 3.0
 			'''
 
+.. note:: For more information on OpenMDAO Component scripts and how to write them, reference
+   the OpenMDAO documentation: http://openmdao.readthedocs.io/en/1.7.3/usr-guide/basics.html#component
+			
 Loading PythonWrappers
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -169,7 +172,14 @@ file explorer to select the Python script to be added to the PET.
 Reloading PythonWrappers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-To reload a PythonWrapper, left-click on the |RELOAD| icon.
+.. note:: You have to manually reload PythonWrappers whenever you
+   change the exposed Params and Unknowns within the Python script.
+   
+   Reloading also allows you to quickly switch between different
+   versions of a Python script in your PET.
+
+To load a PythonWrapper with a different Python script (or reload the same script), 
+left-click on the |RELOAD| button and select the desired Python file.
 
 .. |RELOAD| image:: images/icons/reload.png
       :alt: Load icon
@@ -184,9 +194,6 @@ To reload a PythonWrapper, left-click on the |RELOAD| icon.
    :alt: text
 
    A PythonWrapper loaded with a Python script
-
-.. note:: You have to manually reload PythonWrappers whenever you
-   change the exposed Params and Unknowns within the Python script.
 
 Editing PythonWrappers
 ~~~~~~~~~~~~~~~~~~~~~~

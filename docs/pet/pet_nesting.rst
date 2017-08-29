@@ -73,9 +73,9 @@ the **Part Browser** and onto the PET canvas.
 Setting a Problem Input's Value Attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, Problem Inputs expect to pass the double data type (e.g. 0.0).
-If the Problem Input must pass another data type (e.g. a PET Analysis block
-in the nested PET requires a string input), then an example of that data type
+By default, Problem Inputs expect to pass the double data type *(e.g. 0.0)*.
+If the Problem Input must pass another data type *(e.g. a PET Analysis block
+in the nested PET requires a string input)*, then an example of that data type
 must be entered in the Problem Input's **Value** attribute via the 
 **Object Inspector**. 
 

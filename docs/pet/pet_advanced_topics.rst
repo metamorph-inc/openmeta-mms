@@ -13,7 +13,7 @@ Hot Start vs. Cold Start
 
 It is fairly common to have an Optimizer PET Driver that 
 runs repeatedly as part of a larger Design of Experiments
-(e.g. see :ref:`pet_nesting_with_drivers`).
+*(e.g. see :ref:`pet_nesting_with_drivers`)*.
 
 In these situations the user can choose between "Hot Start"
 and "Cold Start." 
@@ -110,7 +110,7 @@ A constrained optimization problem is one where an Objective
 is being minimized with respect to Design Variables that are
 restricted to a specific range.
 
-*E.g. one might wish to minimize
+*For example, one might wish to minimize
 a car's fuel consumption per mile with respect to tire radius while
 requiring that the tire radius remain between 13" and 17".*
 
@@ -168,7 +168,7 @@ Scaling/Normalizing Design Variables
 The Optimizer PET Driver may struggle to converge if it contains Design Variables
 with ranges that differ by several orders of magnitude.
 
-*E.g. one might wish to optimize a car's fuel consumption per mile with respect
+*For example, one might wish to optimize a car's fuel consumption per mile with respect
 to tire radius and weight, where tire radius can vary from 13" to 17" and weight
 can vary from 3200 lbs. to 4200 lbs. The range of the weight Design Variable is
 more than two orders of magnitude greater than the range of the tire radius
@@ -178,7 +178,7 @@ is so great, the Optimizer may struggle to successfully converge in this case.*
 Therefore, it is generally good practice to *rescale* or *normalize* Design Variables
 with ranges that differ by several orders of magnitude (or more).
 
-*E.g. in the car example above, the user could rescale the tire radius Design Variable
+*For example, in the car problem above, the user could rescale the tire radius Design Variable
 (+ associated Optimizer Constraint - this is a constrained optimization problem!)
 to vary from 130 to 170 units and the weight Design Variable
 (+ associated Optimizer Constraint!) to vary from 320 to 420 units. The user could

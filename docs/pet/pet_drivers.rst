@@ -163,8 +163,7 @@ the PET will test the following *(x,y)* inputs: *(-10,-10), (-10,0),
 Central Composite
 *****************
 
-We don't actually know how this doohickey works (or if it even works), but you
-are welcome to give it a go and let us know what you find.
+This DOE type is currently unsupported.
 
 Opt Latin Hypercube
 *******************
