@@ -1,0 +1,15 @@
+table.surrogate-table {
+  width: auto !important;
+}
+
+table.surrogate-table thead th {
+    text-align: center;
+}
+
+table.surrogate-table tbody td {
+    vertical-align:  middle;
+}
+
+table.surrogate-table tbody td small {
+    color: #888;
+}
