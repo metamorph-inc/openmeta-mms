@@ -98,9 +98,8 @@ experiment with 961 total input combinations.
 .. note:: The **FullFactorial** DOE Type becomes cumbersome as the number of Design Variables
    increases.
 
-   E.g. If there were 6 Design Variables in this examples, then
-   **ParameterStudy** would attempt to test 887,503,681 input combinations and probably
-   fail due to a memory error!
+   For example, if there were 6 Design Variables in this examples, then
+   **ParameterStudy** would attempt to test 887,503,681 input combinations!
 
    As the number of Design Variables increases, it is often
    more efficient to use one of the other DOE Types and/or reduce the size of the design space.
