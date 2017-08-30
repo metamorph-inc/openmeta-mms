@@ -82,6 +82,15 @@ namespace DigTest
                         throw;
                     }
                 }
+                catch (OpenQA.Selenium.StaleElementReferenceException)
+                {
+                    Thread.Sleep(300);
+                    if (--tries == 0)
+                    {
+                        throw;
+                    }
+                }
+
             }
             return choices;
         }
