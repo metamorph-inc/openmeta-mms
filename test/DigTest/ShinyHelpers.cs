@@ -70,8 +70,13 @@ namespace DigTest
             {
                 try
                 {
-                    choices = from choice_div in this.driver.FindElements(By.XPath(this.choices))
-                              select choice_div.GetAttribute("data-value");
+                    var choices_divs = this.driver.FindElements(By.XPath(this.choices));
+                    var choices_list = new List<string>();
+                    for(var i = 0; i < choices_divs.Count(); i++)
+                    {
+                        choices_list.Add(choices_divs[i].GetAttribute("data-value"));
+                    }
+                    choices = choices_list.AsEnumerable();
                     break;
                 }
                 catch (OpenQA.Selenium.NoSuchElementException)
@@ -90,7 +95,6 @@ namespace DigTest
                         throw;
                     }
                 }
-
             }
             return choices;
         }
