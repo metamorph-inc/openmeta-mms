@@ -67,16 +67,39 @@ server <- function(input, output, session, data) {
     session$sendCustomMessage(type="dvarsChanged", jsonlite::toJSON(vars$dv))
   })
 
-  observeEvent(input$angularRequest, {
-    if(!is.null(input$angularRequest) && input$angularRequest != "") {
+  observeEvent(input$externalRequest, {
+    if(!is.null(input$externalRequest) && input$externalRequest != "") {
       print("Received request from browser")
-      print(input$angularRequest)
+      print(input$externalRequest)
 
-      if(input$angularRequest$command == "echo") {
-        session$sendCustomMessage(type="angularResponse", list(
-          id=input$angularRequest$id,
-          data=input$angularRequest$data
+      if(input$externalRequest$command == "echo") {
+        session$sendCustomMessage(type="externalResponse", list(
+          id=input$externalRequest$id,
+          data=input$externalRequest$data
         ))
+      } else if(input$externalRequest$command == "listIndependentVars") {
+        session$sendCustomMessage(type="externalResponse", list(
+          id=input$externalRequest$id,
+          data=data$pre$var_range_nums_and_ints_list()[['Design Variable']]
+        ))
+      } else if(input$externalRequest$command == "listDependentVars") {
+        session$sendCustomMessage(type="externalResponse", list(
+          id=input$externalRequest$id,
+          data=data$pre$var_range_nums_and_ints_list()[['Objective']]
+        ))
+      } else if(input$externalRequest$command == "getDiscreteVarInfo") {
+        configs = data$meta$pet$selected_configurations
+        configIdObject = list(varName="CfgId", selected=configs[0], available=configs)
+        discreteVarsList = lapply(data$pre$var_range_facs_list()[["Design Variable"]], function(name) {
+          options = names(table(raw[[name]]))
+          newVar = list(varName=name, selected=options[0], available=options)
+          return(newVar)
+        })
+        session$sendCustomMessage(type="externalResponse", list(
+          id=input$externalRequest$id,
+          data=c(list(configIdObject), discreteVarsList)
+        ))
+        # browser()
       }
     }
   })
