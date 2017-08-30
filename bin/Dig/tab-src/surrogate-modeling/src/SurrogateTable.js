@@ -4,21 +4,37 @@ import { Row, Col, Table, Button, Glyphicon } from 'react-bootstrap';
 import SurrogateTableRow from './SurrogateTableRow';
 
 class SurrogateTable extends Component {
+  handleIndependentVarChange = (row, column, newValue) => {
+    this.props.onIndependentVarChange(row, column, newValue);
+  }
+
+  handleDeleteButtonClick = (row) => {
+    this.props.onDeleteButtonClick(row);
+  }
+
+  handleAddRowButtonClick = () => {
+    this.props.onAddRow();
+  }
+
   render() {
     const headerRow = [];
 
     headerRow.push(<th key="infoHead" />);
-    const indepVarHeader = this.props.data.independentVarNames.map((varName, index) => {
+    const indepVarHeader = this.props.independentVarNames.map((varName, index) => {
       return <th key={index}>{varName}</th>;
     });
     headerRow.push(<th />);
-    const depVarHeader = this.props.data.dependentVarNames.map((varName, index) => {
+    const depVarHeader = this.props.dependentVarNames.map((varName, index) => {
       return (<th key={index}>{varName}</th>);
     });
     headerRow.push(<th />);
 
-    const rows = this.props.data.independentVarData.map((indepVarRow, index) => {
-      return <SurrogateTableRow key={index} independentVarData={indepVarRow} dependentVarData={this.props.data.dependentVarData[index]} />;
+    const rows = this.props.independentVarData.map((indepVarRow, index) => {
+      return <SurrogateTableRow key={index}
+        independentVarData={indepVarRow}
+        dependentVarData={this.props.dependentVarData[index]}
+        onIndependentVarChange={(col, newValue) => this.handleIndependentVarChange(index, col, newValue)}
+        onDeleteButtonClick={() => this.handleDeleteButtonClick(index)} />;
     });
 
     return(
@@ -43,7 +59,7 @@ class SurrogateTable extends Component {
       </Row>
       <Row>
         <Col md={12}>
-          <Button bsStyle="success"><Glyphicon glyph="plus" /> Add row</Button>
+          <Button bsStyle="success" onClick={()=>this.handleAddRowButtonClick()}><Glyphicon glyph="plus" /> Add row</Button>
         </Col>
       </Row>
       </div>

@@ -18,9 +18,22 @@ class DependentVarCell extends Component {
 };
 
 class SurrogateTableRow extends Component {
+  handleIndependentVarChange = (i, ev) => {
+    const parsedNumber = Number(ev.target.value);
+    if(Number.isNaN(parsedNumber)) {
+      console.log("Invalid number");
+    } else {
+      this.props.onIndependentVarChange(i, parsedNumber);
+    }
+  };
+
+  handleDeleteButtonClick = () => {
+    this.props.onDeleteButtonClick();
+  };
+
   render() {
     const indepVarCells = this.props.independentVarData.map((value, index) => {
-      return <td key={index}><FormControl type="number" value={value} /></td>;
+      return <td key={index}><FormControl type="number" value={value} onChange={(ev) => this.handleIndependentVarChange(index, ev)}/></td>;
     });
 
     const depVarCells = this.props.dependentVarData.map((varData, index) => {
@@ -33,7 +46,7 @@ class SurrogateTableRow extends Component {
         {indepVarCells}
         <td><TooltipButton bsStyle="primary" bsSize="small" tooltipText="Predict"><Glyphicon glyph="question-sign" /><Glyphicon glyph="chevron-right" /></TooltipButton></td>
         {depVarCells}
-        <td><TooltipButton bsStyle="danger" bsSize="small" tooltipText="Delete row"><Glyphicon glyph="remove" /></TooltipButton></td>
+        <td><TooltipButton bsStyle="danger" bsSize="small" tooltipText="Delete row" onClick={() => this.handleDeleteButtonClick()}><Glyphicon glyph="remove" /></TooltipButton></td>
       </tr>
     );
   }
