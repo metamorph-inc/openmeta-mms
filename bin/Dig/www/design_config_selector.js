@@ -1,5 +1,5 @@
 var my_margin = {top: 20, right: 10, bottom: 10, left: 10},
-    div_width, width, barWidth,
+    barWidth = 200,
     barHeight = 20;
 
 var i = 0,
@@ -20,16 +20,9 @@ Shiny.addCustomMessageHandler("setup_design_configurations", function(message) {
   console.log(typeof svg, svg);
   if(svg === undefined) {
     
-    div_width = document.getElementById("design_configurations").offsetWidth;
-    //console.log(div_width);
-    div_width = 220;
-    width = div_width - my_margin.left - my_margin.right;
-    barWidth = width * 0.8;
-    //console.log(div_width, width, barWidth);
-    
     svg = d3.select("#design_configurations").append("svg")
          .attr("id", "design_configurations_svg")
-         .attr("width", div_width)
+         .attr("width", "100%")
        .append("g")
          .attr("transform", "translate(" + my_margin.left + "," + my_margin.top + ")");
     
@@ -38,7 +31,7 @@ Shiny.addCustomMessageHandler("setup_design_configurations", function(message) {
     
     root.x0 = 0;
     root.y0 = 0;
-    //select_all(root);
+    add_locks(root, "", 0);
     collapse_default(root);
     
     copy_message(root, footer_message);
@@ -109,8 +102,22 @@ function update(root, source) {
 
   nodeEnter.append("text")
       .attr("dy", 3.5)
-      .attr("dx", 5.5)
+      .attr("dx", 5.5 + barHeight) //function(d) { return 5.5 + (d.locked ? 2 : 1) * barHeight; })
       .text(name);
+
+  nodeEnter.filter(function(d) {
+        return d.locked === true;
+      })
+      .append("image")
+      .attr("xlink:href", "lock.svg")
+      .attr("height", barHeight)
+      .attr("transform", "translate(" + (barWidth-barHeight) + "," + (-barHeight/2) + ")");
+  
+  nodeEnter.append("image")
+      .attr("class", "type-icon")
+      .attr("xlink:href", icon)
+      .attr("height", barHeight)
+      .attr("transform", "translate(2.5," + (-barHeight/2) + ")");
 
   // Transition nodes to their new position.
   nodeEnter.transition()
@@ -124,6 +131,9 @@ function update(root, source) {
       .style("opacity", 1)
     .select("rect")
       .style("fill", color);
+  
+  node.select("image.type-icon")
+      .attr("xlink:href", icon);
 
   // Transition exiting nodes to the parent's new position.
   node.exit().transition()
@@ -177,7 +187,7 @@ function click(d) {
     d.Children = d._Children;
     d._Children = null;
   }
-  if (d.Selected !== null) {
+  if (d.Selected !== null && d.locked !== true) {
     if (d.Selected === true) {
       d.Selected = false;
     } else {
@@ -215,10 +225,24 @@ function copy_message(src, dest) {
 }
 
 function color(d) {
-  if(d.Type == "Compound") return d.Children ? "#F2F1E1" : "#E5E4D5";
-  if(d.Type == "Alternative") return d.Children ? "#CBDFBD" : "#C3D6B6";
-  if(d.Type == "Optional") return d.Children ? "#E6EFE9" : "#D9E2DC";
+  if(d.Type != "Component") return d.Children ? "#F2F1E1" : "#E5E4D5";
   if(d.Type == "Component") return d.Selected === true ? "#D4E09B" : "#F2B79F";
+}
+
+function icon(d) {
+  if (d.Type == "Component") {
+    if (d.Selected === true) {
+      return "checkmark.svg";
+    } else {
+      return "red_x.svg";
+    }
+  } else if (d.Type == "Compound") {
+    return "compound.svg";
+  } else if (d.Type == "Alternative") {
+    return "alternative.svg";
+  } else if (d.Type == "Optional") {
+    return "optional.svg";
+  }
 }
 
 function name(d) {
@@ -226,6 +250,17 @@ function name(d) {
     return d.Name;
   } else {
     return d.Name + " (" + d.Type + ")";
+  }
+}
+
+function add_locks(node, parent_type, siblings) {
+  node.locked = false;
+  if(node.Type === "Component") {
+    if (parent_type === "Compound" || (parent_type === "Alternative" && siblings === 1)) {
+      node.locked = true;
+    }
+  } else {
+    node.Children.forEach(function(d) {add_locks(d, node.Type, node.Children.length)});
   }
 }
 
