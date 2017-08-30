@@ -26,15 +26,17 @@ A browser window will open with the Visualizer.
 
 .. figure:: images/parameterstudy_tutorial_43.png
    :alt: text
- 
-Each individual window plots the PET results across
+
+In the resulting matrix of scatter plots,
+each individual scatter plot displays the PET results across
 two different variables. The horizontal axis titles are at the top of each column,
 the vertical axis titles are to the right of each row,
 the vertical scale is on the left, and the horizontal scale
-is on the bottom.
+is on the bottom. This technique allows all of the relationships between
+pairs of variables to be displayed on one screen.
 
 The **x vs. y** plot clearly shows the full factorial distribution of the **x**
-and **y** Design Variable values
+and **y** Design Variable values.
 
 The **x vs. f_xy** and **y vs. f_xy** plots
 suggest that **f_xy**'s minimum is found when both **x** and **y** are near
