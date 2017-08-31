@@ -4,6 +4,7 @@
   "tabs": [
     "Explore.R",
     "DataTable.R",
-    "PETRefinement.R"
+    "PETRefinement.R",
+    "SurrogateModeling.R"
   ]
 }
