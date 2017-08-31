@@ -31,16 +31,16 @@ following variable and function definitions present to be valid:
 -  ``server(input, output, session, data)``: This function is passed the
    following parameters:
 
--  ``input``: This is the Shiny 'input' list. You will use this to
-   access inputs generated in the UI.
--  ``output``: This is the Shiny 'output' list. You will use this to
-   assign values to outputs referenced in the UI.
--  ``session``: This is the Shiny 'session' object. It is used to access
-   the 'ns' function and is consumed by some of the advanced Shiny
-   functions.
--  ``data``: This data frame includes the raw data that was passed to
-   the Visualizer by the Results Browser as well as a host of other
-   relevant metadata about the dataset. See below for more infomation.
+   -  ``input``: This is the Shiny 'input' list. You will use this to
+      access inputs generated in the UI.
+   -  ``output``: This is the Shiny 'output' list. You will use this to
+      assign values to outputs referenced in the UI.
+   -  ``session``: This is the Shiny 'session' object. It is used to access
+      the 'ns' function and is consumed by some of the advanced Shiny
+      functions.
+   -  ``data``: This data frame includes the raw data that was passed to
+      the Visualizer by the Results Browser as well as a host of other
+      relevant metadata about the dataset. See below for more infomation.
 
 The 'data' Object
 -----------------
@@ -196,7 +196,8 @@ with an explanation for each of the objects.
       reactive value.
 
 E.g. In your ``server`` function, you could find the type of the first
-variable by evaluating ``data$meta$variables[[1]]$type``. You could also
+variable by evaluating ``data$meta$variables[[1]]$type`` in either a
+reactive context or within an ``isolate()`` call. You could also
 find a list of all the variables that are factors, i.e. discrete
 choices, in the ``data$raw$df`` data frame by evaluating
 ``data$pre$var_facs()``
@@ -333,14 +334,14 @@ Creating the File
 ~~~~~~~~~~~~~~~~~
 
 Navigate to ``C:\Program Files (x86)\META\bin\Dig\tabs\`` to see all the
-currently configured user-defined tabs. Each file here corresponds to a
-single tab in the Visualizer. To create a tab of your own simply copy
-the example tab from ``./examples`` to this folder and modify it to suit
+currently-configured user-defined tabs. Each file here corresponds to a
+single tab in the Visualizer. To create a tab of your own, simply make a
+copy of the ``Histogram.R`` (or other) file and modify it to suit
 your needs. The next time you launch the Visualizer, your tab will be
 included in the tabset.
 
-*Note: The tabs are added in the order that they appear in this
-directory, so it may be useful to prepend an number to the filename.*
+.. note:: The tabs are added in the order that they appear in this
+   directory, so it may be useful to prepend an number to the filename.
 
 Developing your Application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
