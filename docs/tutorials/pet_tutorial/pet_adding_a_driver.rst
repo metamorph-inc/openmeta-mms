@@ -50,7 +50,7 @@ drag it onto the ParameterStudy canvas.
 .. figure:: images/parameterstudy_tutorial_23.png
    :alt: text
 
-9. Repeat Steps 24-29 to add a second Design Variable **y** with a range of
+9. Repeat steps 3-8 to add a second Design Variable **y** with a range of
 **-50,+50** as well.
 
 .. note:: Zoom in and out of the canvas by rolling the mousewheel while
@@ -98,9 +98,8 @@ experiment with 961 total input combinations.
 .. note:: The **FullFactorial** DOE Type becomes cumbersome as the number of Design Variables
    increases.
 
-   E.g. If there were 6 Design Variables in this examples, then
-   **ParameterStudy** would attempt to test 887,503,681 input combinations and probably
-   fail due to a memory error!
+   For example, if there were 6 Design Variables in this examples, then
+   **ParameterStudy** would attempt to test 887,503,681 input combinations!
 
    As the number of Design Variables increases, it is often
    more efficient to use one of the other DOE Types and/or reduce the size of the design space.

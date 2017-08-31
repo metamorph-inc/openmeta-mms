@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="10mm"
+   height="10mm"
+   viewBox="0 0 10 10"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="checkmark.svg">
+  <title
+     id="title3701">Checkmark</title>
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect3707"
+       is_visible="true"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="22.4"
+     inkscape:cx="13.282602"
+     inkscape:cy="19.095752"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:pagecheckerboard="true"
+     inkscape:window-width="5120"
+     inkscape:window-height="2763"
+     inkscape:window-x="-13"
+     inkscape:window-y="-13"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Checkmark</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Tim Thomas</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:date>August 25, 2017</dc:date>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>All Rights Reserved</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>checkmark</rdf:li>
+            <rdf:li>green</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-287)">
+    <path
+       style="fill:#5fb661;fill-opacity:1;stroke:#000000;stroke-width:0.42791361;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 3.4550294,294.31579 c 0.1552244,0.23033 0.4656159,0.69092 0.6854832,0.9267 0.2198674,0.23578 0.348556,0.24642 0.5758356,-0.28409 0.2272797,-0.53051 0.556051,-1.60986 1.2762672,-2.65458 0.7202161,-1.04471 1.8340097,-2.06021 2.1698222,-2.73621 0.3358125,-0.676 -0.1051507,-1.01353 -0.9713342,-0.28377 -0.8661834,0.72976 -2.1549908,2.52445 -3.0114835,3.12579 -0.8564927,0.60135 -1.2787262,0.007 -1.6439237,-0.0892 -0.3651975,-0.0966 -0.6723716,0.30343 -0.5351569,0.68176 0.1372147,0.37833 0.7174467,0.73032 1.0083562,0.9068 0.2909095,0.17647 0.2909095,0.17645 0.4461339,0.40679 z"
+       id="path3705"
+       inkscape:connector-curvature="0"
+       inkscape:path-effect="#path-effect3707"
+       inkscape:original-d="m 3.299805,294.08545 c 0.3107085,0.4605 0.6210998,0.92109 0.9314307,1.38215 0.1292826,0.009 0.257875,0.0208 0.3859783,0.0319 0.3267776,-1.0715 0.6555497,-2.15085 0.982491,-3.2255 1.113119,-1.0149 2.2269125,-2.0304 3.3395492,-3.04483 -0.4408129,-0.33781 -0.8817753,-0.67534 -1.3235079,-1.01306 -1.2907764,1.79753 -2.5795876,3.59221 -3.8701145,5.38919 -0.4222421,-0.59451 -0.8444783,-1.18845 -1.2671725,-1.78249 -0.3079251,0.40107 -0.6150972,0.80109 -0.9243133,1.20369 0.5837745,0.35376 1.1640043,0.70575 1.745659,1.05897 z"
+       sodipodi:nodetypes="cccccccccc" />
+  </g>
+</svg>

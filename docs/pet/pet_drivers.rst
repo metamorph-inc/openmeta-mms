@@ -30,15 +30,14 @@ Part Browser and onto the PET canvas.
 Design Variable
 ~~~~~~~~~~~~~~~
 
-A Design Variable is an atom that can be placed inside a Parameter Study.
 A Design Variable placed inside a Parameter Study will appear as a port
 on the Parameter Study's PET model and can be connected to PET Analysis
 Blocks.
 
 Over the course of a PET run, a Parameter Study Driver
 typically changes each Design Variable's value many times in order to
-provide the system being analyzed with different inputs - of course the
-Design Variables have to be connected to PET Analysis blocks for this to work!
+provide the system being analyzed with different inputs. The Driver's Design
+Variables may be connected to the inputs of PET Analysis Blocks.
 
 .. figure:: images/DesignVariable.png
    :alt: text
@@ -80,7 +79,6 @@ To set a Design Variable's range:
 Objective
 ~~~~~~~~~
 
-An Objective is an atom that can be placed inside a Parameter Study.
 An Objective placed inside a Parameter Study will appear as a port
 on the Parameter Study's PET model and PET Analysis Blocks can be
 connected to it.
@@ -165,8 +163,7 @@ the PET will test the following *(x,y)* inputs: *(-10,-10), (-10,0),
 Central Composite
 *****************
 
-We don't actually know how this doohickey works (or if it even works), but you
-are welcome to give it a go and let us know what you find.
+This DOE type is currently unsupported.
 
 Opt Latin Hypercube
 *******************
@@ -215,15 +212,13 @@ Part Browser and onto the PET canvas.
 Design Variable
 ~~~~~~~~~~~~~~~
 
-A Design Variable is an atom that can be placed inside an Optimizer.
 A Design Variable placed inside a Optimizer will appear as a port
 on the Parameter Study's PET model and can be connected to PET Analysis
 Blocks.
 
 Over the course of a PET run, a Optimizer Driver
 changes each Design Variable's value many times in order to
-minimize the Objective - of course the Design Variables have to be
-connected to PET Analysis blocks for this to work!
+minimize the Objective. The inputs of PET Analysis Blocks can be connected to it.
 
 .. figure:: images/DesignVariableOptimizer.png
    :alt: text
@@ -267,14 +262,13 @@ To set a Design Variable's range:
    Optimizer only sets the default optimization starting point for that
    variable to be the (minimum+maximum)/2.
 
-.. warning:: Unfortunately (and non-intuitively) setting a Design Variable's
-   range DOES NOT keep the Optimizer from setting the Design Variable's value
-   outside of that range during the optimization process. In order to properly
-   constrain Design Variables **for now**, the user must add an additional
-   Constraint atom to the Optimizer Driver for each constrained Design Variable,
-   set that Constraint atom's **MinValue** and **MaxValue** attributes to the desired
+.. warning:: Setting a Design Variable's range DOES NOT keep the Optimizer from setting 
+   the Design Variable's value outside of that range during the optimization process. 
+   In order to properly constrain Design Variables, the user must add an additional
+   Constraint to the Optimizer Driver for each constrained Design Variable,
+   set that Constraint's **MinValue** and **MaxValue** attributes to the desired
    Design Variable bounds, and connect the Design Variable to the Constraint using
-   Connect Mode at the PET level (i.e. outside of the Optimizer).
+   Connect Mode at the PET level *(i.e. outside of the Optimizer)*.
 
 .. figure:: images/DesignVariableOptimizerWorkaround.png
    :alt: text
@@ -287,7 +281,6 @@ To set a Design Variable's range:
 Objective
 ~~~~~~~~~
 
-An Objective is an atom that can be placed inside an Optimizer.
 An Objective placed inside an Optimizer will appear as a port
 on the Optimizer's PET model and PET Analysis Blocks can be
 connected to it.
@@ -317,8 +310,7 @@ the **Objective** icon from the Part Browser and onto the Optimizer canvas.
 Intermediate Variable
 ~~~~~~~~~~~~~~~~~~~~~
 
-An Intermediate Variable is an atom that can be placed inside an
-Optimizer. An Intermediate Variable placed inside an Optimizer
+An Intermediate Variable placed inside an Optimizer
 will appear as a port on the Optimizer's PET model and PET
 Analysis Blocks can be connected to it.
 
@@ -347,8 +339,7 @@ the **Intermediate Variable** icon from the Part Browser and onto the Optimizer 
 Optimizer Constraint
 ~~~~~~~~~~~~~~~~~~~~
 
-An Optimizer Constraint is an atom that can be placed inside an
-Optimizer. At Optimizer Constraint placed inside an Optimizer
+At Optimizer Constraint placed inside an Optimizer
 will appear as a port on the Optimizer's PET model and PET Analysis
 Blocks can be connected to it.
 
@@ -393,17 +384,15 @@ To set an Optimizer Constraint's MinValue and/or MaxValue attributes:
 Optimizer Types
 ~~~~~~~~~~~~~~~~~~~~
 
-The OpenMETA Optimizer supports a couple different optimization methods.
-Users can change the optimization method and related settings by
+The OpenMETA Optimizer comes with two different optimization methods, and can be extended
+by users to include more. Users can change the optimization method and related settings by
 selecting (or opening) the Optimizer Driver and editing its attributes
 in the Object Inspector.
-
-The following optimization methods are currently supported in OpenMETA...
 
 COBYLA
 ^^^^^^
 
-Uses the COBYLA function in SciPy's
+This Optimizer Uses the COBYLA function in SciPy's
 `optimize` library. COBYLA supports constrained optimization without 
 defined gradients (or Jacobian matrixes).
 
@@ -414,13 +403,12 @@ defined gradients (or Jacobian matrixes).
 
 *Code*
 
-Entering **maxiter=** followed by an integer 
-(e.g. **maxiter=500**) sets the maximum number of iterations
-that the Optimizer driver will perform when attempting to converge.
-[Default: **200**]
-
-Entering **tol=** followed by a number (e.g. **tol=0.01**)
-sets the optimization tolerance. [Default: **1e-4**]
+==================  =====================================================================  =======
+Name                Description                                                            Default
+==================  =====================================================================  =======
+maxiter             maximum number of iterations when attempting to converge               200
+tol                 optimization tolerance                                                 1e-4
+==================  =====================================================================  =======
 
 *Custom Optimizer*
 
@@ -433,7 +421,7 @@ Select **COBYLA**.
 BayesOpt
 ^^^^^^^^
 
-Uses the `BayesOpt <https://rmcantin.bitbucket.io/html/index.html>`_
+This Optimizer uses the `BayesOpt <https://rmcantin.bitbucket.io/html/index.html>`_
 Bayesian optimization library. BayesOpt supports unconstrained optimization.
 
 .. figure:: images/BayesOptOptimizerAttributes.png
@@ -443,32 +431,23 @@ Bayesian optimization library. BayesOpt supports unconstrained optimization.
 
 *Code*
 
-Entering **n_iterations=** followed by an integer 
-(e.g. **n_iterations=200**) sets the number of target function
-evaluations. [Default: **190**]
+==================  =====================================================================  =======
+Name                Description                                                            Default
+==================  =====================================================================  =======
+n_iterations        number of target function evaluations                                  190
+n_iter_relearn      number of iterations between re-learning kernel parameters             50
+n_inner_iterations  max iterations (per dimension) to optimize the acquisition function    500
+n_init_samples      initial set of samples / target function evaluations                   10
+epsilon             probability of performing a random (blind) target function evaluation  0.0
+==================  =====================================================================  =======
 
-Entering **n_iter_relearn=** followed by an integer 
-(e.g. **n_iter_relearn=20** sets the number of iterations
-between re-learning kernal parameters. If **n_iter_relearn=0**
-then there will be no relearning. [Default: **50**]
+.. note:: If **n_iter_relearn=0** then there will be no relearning.
 
-Entering **n_inner_iterations=** followed by an integer
-(e.g. **n_inner_iterations=**) sets the maximum number
-of iterations (per dimension) to optimize the acquisition
-function. [Default: **500**]
+   **epsilon** can be given a double value between 0.0 and 1.0 inclusive.
+   Higher values result in more forced exploration whereas lower values result 
+   in a greater exploitation of the learned model.
 
-Entering **n_init_samples=** followed by an integer
-(e.g. **n_init_samples=20**) sets the initial set of samples
-/ target function evaluations. [Default: **10**]
-
-Entering **epsilon=** followed by a double between 0.0 and 1.0
-inclusive (e.g. **epsilon=0.3**) set the probability of
-performing a random (blind) evaluation of the target function.
-Higher values result in more forced exploration whereas lower
-values result in a greater exploitation of the learned model.
-[Default: **0.0** (epsilon-greedy disabled)]
-
-.. note:: For more information on each parameter, additional
+   For more information on each parameter, additional
    parameters not covered here, the BayesOpt method library,
    and Bayesian optimization in general, please visit
    https://rmcantin.bitbucket.io/html/usemanual.html#params

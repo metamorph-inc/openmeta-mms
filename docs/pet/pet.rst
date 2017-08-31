@@ -18,4 +18,5 @@ executing it, and analysing the results.
 
    pet_analysis_blocks
    pet_drivers
+   pet_nesting
    pet_advanced_topics

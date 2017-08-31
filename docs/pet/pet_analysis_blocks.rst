@@ -32,10 +32,10 @@ Before adding an Excel Spreadsheet, you must name all the cells that you desire
 to be exposed in the Excel Wrapper analysis block. You can do this in Excel in
 one of two ways:
 
-#. Selecting a cell and then typing a name in the **Name Box** in the upper left
-   portion of the Excel window.
+#. selecting a cell and then typing a name in the **Name Box** in the upper left
+   portion of the Excel window, or
 
-#. Or using the **Name Manager** tool in the **Formula** tab on the ribbon.
+#. using the **Name Manager** tool in the **Formula** tab on the ribbon.
 
 Any cells that are formulas will be interpreted as outputs; all others will be
 interpreted as inputs.
@@ -50,9 +50,8 @@ Adding Excel Wrappers to a PET
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To add an Excel Wrapper to a PET, simply drag the Excel Wrapper icon from the
-Part Browser and onto the PET canvas. Then, to load an Excel Wrapper
-double-click on the Excel Wrapper and use the **Open** dialogue to select the
-Excel file to be added to the PET.
+Part Browser and onto the PET canvas. Double-click on the Excel Wrapper and use 
+the **Open** dialogue to select the Excel file to be added to the PET.
 
 .. figure:: images/ExcelWrapperAddition.png
    :alt: text
@@ -109,9 +108,9 @@ Part Browser and onto the PET canvas.
 
    A PythonWrapper in a PET
 
-PythonWrapper can be loaded with specially formatted python scripts.
+A PythonWrapper can be loaded with specially-formatted python scripts.
 
-Below is a template PythonWrapper script:
+Below is a template PythonWrapper OpenMDAO Component script:
 
 .. highlight:: python
 .. :linenothreshold: 5
@@ -151,6 +150,9 @@ Below is a template PythonWrapper script:
 			unknowns['f_xy'] = (params['x']-3.0)**2 + params['x']*y + (params['y']+4.0)**2 - 3.0
 			'''
 
+.. note:: For more information on OpenMDAO Component scripts and how to write them, reference
+   the OpenMDAO documentation: http://openmdao.readthedocs.io/en/1.7.3/usr-guide/basics.html#component
+			
 Loading PythonWrappers
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -170,7 +172,14 @@ file explorer to select the Python script to be added to the PET.
 Reloading PythonWrappers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-To reload a PythonWrapper, left-click on the |RELOAD| icon.
+.. note:: You have to manually reload PythonWrappers whenever you
+   change the exposed Params and Unknowns within the Python script.
+   
+   Reloading also allows you to quickly switch between different
+   versions of a Python script in your PET.
+
+To load a PythonWrapper with a different Python script (or reload the same script), 
+left-click on the |RELOAD| button and select the desired Python file.
 
 .. |RELOAD| image:: images/icons/reload.png
       :alt: Load icon
@@ -185,9 +194,6 @@ To reload a PythonWrapper, left-click on the |RELOAD| icon.
    :alt: text
 
    A PythonWrapper loaded with a Python script
-
-.. note:: You have to manually reload PythonWrappers whenever you
-   change the exposed Params and Unknowns within the Python script.
 
 Editing PythonWrappers
 ~~~~~~~~~~~~~~~~~~~~~~

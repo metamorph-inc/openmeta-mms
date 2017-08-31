@@ -6,8 +6,6 @@
     "DataTable.R",
     "Histogram.R",
     "PETRefinement.R",
-    "Scratch.R",
-    "ParallelAxisPlot.R",
     "UncertaintyQuantification.R",
     "SurrogateModeling.R"
   ]

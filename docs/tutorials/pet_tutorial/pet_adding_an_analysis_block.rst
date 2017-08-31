@@ -25,8 +25,11 @@ scroll down to find it).
 The PythonWrapper Component allows Python scripts that are formatted to run
 within the underlying OpenMDAO framework to be exposed as a block within
 OpenMETA. We are going
-to model our Paraboloid via a Python script and then load that script into
+to model our Paraboloid using a Python script and then load that script into
 the PythonWrapper Component in our PET.
+
+.. note:: For more information on OpenMDAO Component scripts and how to write them, 
+   reference the OpenMDAO documentation: http://openmdao.readthedocs.io/en/1.7.3/usr-guide/basics.html#component
 
 3. Open Notepad (or your favorite text editor) and copy-paste in the code below.
 

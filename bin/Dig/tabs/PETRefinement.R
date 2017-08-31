@@ -183,7 +183,7 @@ server <- function(input, output, session, data) {
   })
   
   observeEvent(input$apply_original_cfg_ids, {
-    original <- toString(paste(names(pet$selected_configurations), collapse = ", "))
+    original <- toString(paste(pet$selected_configurations, collapse = ", "))
     updateTextInput(session, 'new_cfg_ids', value = original)
   })
   
