@@ -56,134 +56,144 @@ by the Visualizer framework. Below is a mapping of the data structure
 with an explanation for each of the objects.
 
 -  ``data`` - contains all the passed objects
--  ``Colored`` - the filtered data that has an added ‘color’ column
--  ``Filtered`` - the raw data that has been filtered by the different
-   UI elements in the “Filters” section
--  ``Filters`` - the state of each of the sliders, selectInputs etc. in
-   the “Filters” section of the Visualizer UI.
 
-   -  ``<variable names>``
-   -  ``type`` - the “R” data-type of the variable, e.g. ‘factor,’
-      ‘integer,’ or ‘numeric’
-   -  ``selection`` - (if type is ‘factor’), list of all selected
-      choices
-   -  ``min``, ``max`` - (if type is ‘integer’ or ‘numeric’)
+   -  ``Colored`` - the filtered data that has an added ‘color’ column
 
--  ``meta``
+   -  ``Filtered`` - the raw data that has been filtered by the different
+      UI elements in the “Filters” section
+   
+   -  ``Filters`` - the state of each of the sliders, selectInputs, etc. in
+      the “Filters” section of the Visualizer UI
 
-   -  ``coloring``
-   -  ``<coloring names>``
+      -  ``<variable names>``
+   
+         -  ``type`` - the “R” data-type of the variable, e.g. ‘factor,’
+            ‘integer,’ or ‘numeric’
+         -  ``selection`` - (if type is ‘factor’), list of all selected
+            choices
+         -  ``min``, ``max`` - (if type is ‘integer’ or ‘numeric’)
 
-      -  ``name`` - name of the coloring scheme
-      -  ``type`` - ‘Max/Min’ or ‘Discrete
-      -  ``var`` - the name of the variable that is the basis of the
-         coloring
-      -  ``goal`` - (for ‘Max/Min’) ‘Maximize or ‘Minimize’
-      -  ``palette`` - (for ‘Discrete’) ‘Rainbow,’ ‘Heat,’ ‘Terrain,’
-         ‘Topo,’ or ‘Cm’
-      -  ``rainbow_s`` - (if ‘Rainbow’ for palette) the saturation for
-         the palette
-      -  ``rainbow_v`` - (if ‘Rainbow’ for palette) the value/brightness
-         for the palette
+   -  ``meta``
 
-   -  ``current``
+      -  ``coloring``
+   
+         -  ``<coloring names>``
 
-      -  ``name`` - name of the coloring scheme
-      -  ``type`` - ‘Max/Min’ or ‘Discrete’
-      -  ``var`` - the name of the variable that is the basis of the
-         coloring
-      -  ``goal`` - (if type is ‘Max/Min’) ‘Maximize’ or ‘Minimize’
-      -  ``colors`` - (if type is ‘Discrete’, list) the list of the
-         colors used for each variable
+            -  ``name`` - name of the coloring scheme
+            -  ``type`` - ‘Max/Min’ or ‘Discrete
+            -  ``var`` - the name of the variable that is the basis of the
+               coloring
+            -  ``goal`` - (for ‘Max/Min’) ‘Maximize or ‘Minimize’
+            -  ``palette`` - (for ‘Discrete’) ‘Rainbow,’ ‘Heat,’ ‘Terrain,’
+               ‘Topo,’ or ‘Cm’
+            -  ``rainbow_s`` - (if ‘Rainbow’ for palette) the saturation for
+               the palette
+            -  ``rainbow_v`` - (if ‘Rainbow’ for palette) the value/brightness
+               for the palette
 
-   -  ``comments`` [Not yet implemented]
-   -  ``<comment ids>``
+         -  ``current``
 
-      -  ``id`` - a guid associated with the comment
-      -  ``username`` - the username of the user who wrote the comment
-      -  ``date`` - the date the comment was added
-      -  ``text`` - a guid associated with the comment
-      -  ``object`` - (optional) the object(s) referenced in the comment
+            -  ``name`` - name of the coloring scheme
+            -  ``type`` - ‘Max/Min’ or ‘Discrete’
+            -  ``var`` - the name of the variable that is the basis of the
+               coloring
+            -  ``goal`` - (if type is ‘Max/Min’) ‘Maximize’ or ‘Minimize’
+            -  ``colors`` - (if type is ‘Discrete’, list) the list of the
+               colors used for each variable
 
-   -  ``pet`` - contains information about the PET that generated these
-      results
-   -  ``sampling_method`` - (string) ‘Full Factorial,’ ‘Central
-      Composite,’ ‘Opt Latin Hypercube’, or ‘Uniform’
-   -  ``num_samples`` - (integer) the ‘num\_samples’ value from the
-      ‘code’ field in the OpenMETA model
-   -  ``pet_name`` - (string) the name of the ‘Parametric Exploration’
-      in the OpenMETA model
-   -  ``mga_name`` - (string) the name of the .mga file within which the
-      PET resides
-   -  ``generated_configuration_model`` - (string) the name of the
-      ‘Generated Configuration Model’ created by the DESERT tool that
-      was selected for the execution of this PET
-   -  ``selected_configurations`` - (list) the names of each of the
-      configurations that were chosen for this PET execution
-   -  ``design_variable_names`` - (list) the names of all variables that
-      were of type ‘Design Variable’
-   -  ``design_variables`` - (list) detailed information about the
-      variables that were of type ‘Design Variable’
-   -  ``objective_names`` - (list) the names of all variables that were
-      of type ‘Objective’
-   -  ``pet_config`` - (data frame) the parsed pet\_config.json file.
-   -  ``pet_config_filename`` - (string) the filename of the
-      'pet\_config.json' file relative to the location of the
-      'visualizer\_config.json' file.
-   -  ``sets`` [Not yet implemented]
-   -  ``<set names>``
+      -  ``comments`` [Not yet implemented]
+   
+         -  ``<comment ids>``
 
-      -  ``name`` - name of the set
-      -  ``username`` - the username of the user who created the set
-      -  ``date`` - the date the set was added
-      -  ``objects`` - the different objects in the set, most often
-         design configurations
+            -  ``id`` - a guid associated with the comment
+            -  ``username`` - the username of the user who wrote the comment
+            -  ``date`` - the date the comment was added
+            -  ``text`` - a guid associated with the comment
+            -  ``object`` - (optional) the object(s) referenced in the comment
 
-   -  ``variables``
-   -  ``<variable names>``
+      -  ``pet`` - contains information about the PET that generated these
+         results
+      
+         -  ``sampling_method`` - (string) ‘Full Factorial,’ ‘Central
+            Composite,’ ‘Opt Latin Hypercube’, or ‘Uniform’
+         -  ``num_samples`` - (integer) the ‘num\_samples’ value from the
+            ‘code’ field in the OpenMETA model
+         -  ``pet_name`` - (string) the name of the ‘Parametric Exploration’
+            in the OpenMETA model
+         -  ``mga_name`` - (string) the name of the .mga file within which the
+            PET resides
+         -  ``generated_configuration_model`` - (string) the name of the
+            ‘Generated Configuration Model’ created by the DESERT tool that
+            was selected for the execution of this PET
+         -  ``selected_configurations`` - (list) the names of each of the
+            configurations that were chosen for this PET execution
+         -  ``design_variable_names`` - (list) the names of all variables that
+            were of type ‘Design Variable’
+         -  ``design_variables`` - (list) detailed information about the
+            variables that were of type ‘Design Variable’
+         -  ``objective_names`` - (list) the names of all variables that were
+            of type ‘Objective’
+         -  ``pet_config`` - (data frame) the parsed pet\_config.json file.
+         -  ``pet_config_filename`` - (string) the filename of the
+            'pet\_config.json' file relative to the location of the
+            'visualizer\_config.json' file.
+         
+      -  ``sets`` [Not yet implemented]
+   
+         -  ``<set names>``
 
-      -  ``name`` - corresponds to variable in ``data$raw`` df
-      -  ``name_with_units`` - unit appended in parentheses
-      -  ``type`` - 'Unknown', ‘Design Variable’, ‘Objective’, or
-         'Classification'
-      -  ``username`` - the username of the user who wrote the comment
-      -  ``date`` - the date the comment was added
+            -  ``name`` - name of the set
+            -  ``username`` - the username of the user who created the set
+            -  ``date`` - the date the set was added
+            -  ``objects`` - the different objects in the set, most often
+               design configurations
 
--  ``pre`` - basic preprocessing reactives to simplify interaction with
-   the data
+      -  ``variables``
+   
+         -  ``<variable names>``
 
-   -  ``var_names()`` - (list) original names of all the variables in
-      the input data set
-   -  ``var_class()`` - (list) the class (or type) of each of the
-      variables
-   -  ``var_facs()`` - (list) names of all the variables of class
-      ‘factor’
-   -  ``var_ints()`` - (list) names of all the variables of class
-      ‘integer’
-   -  ``var_nums()`` - (list) names of all the variables of class
-      ‘numeric’
-   -  ``var_nums_and_ints()`` - (list) names of all the variables of
-      class ‘numeric’ or ‘integer’
-   -  ``abs_max()``, ``abs_min()`` - (list) the maximum and minimum
-      values for each variables in var\_nums\_and\_ints
-   -  ``var_range_nums_and_ints()`` - (list) names of all the variables
-      of class ‘numeric’ or integer’ that vary across some range, i.e.
-      are not constants
-   -  ``var_range_facs()`` - (list) names of all the variables of class
-      ‘factor’ that vary across some range, i.e. are not constants
-   -  ``var_range()`` - (list) names of all variables that vary across
-      some range, i.e. are not constants
-   -  ``var_range_nums_and_ints_list()`` - (list of lists)
-      ``var_range_nums_and_ints()`` sorted into lists by type.
-   -  ``var_range_facs_list()`` - (list of lists) ``var_range_facs()``
-      sorted into lists by type.
-   -  ``var_range_list()`` - (list of lists) ``var_range()`` sorted into
-      lists by type.
-   -  ``var_constants()`` - (list) names of the variables of any class
-      that don’t vary in the dataset.
+            -  ``name`` - corresponds to variable in ``data$raw`` df
+            -  ``name_with_units`` - unit appended in parentheses
+            -  ``type`` - 'Unknown', ‘Design Variable’, ‘Objective’, or
+               'Classification'
+            -  ``username`` - the username of the user who wrote the comment
+            -  ``date`` - the date the comment was added
 
--  ``raw$df`` - the raw data with no filtering or coloring applied as a
-   reactive value.
+   -  ``pre`` - basic preprocessing reactives to simplify interaction with
+      the data
+
+      -  ``var_names()`` - (list) original names of all the variables in
+         the input data set
+      -  ``var_class()`` - (list) the class (or type) of each of the
+         variables
+      -  ``var_facs()`` - (list) names of all the variables of class
+         ‘factor’
+      -  ``var_ints()`` - (list) names of all the variables of class
+         ‘integer’
+      -  ``var_nums()`` - (list) names of all the variables of class
+         ‘numeric’
+      -  ``var_nums_and_ints()`` - (list) names of all the variables of
+         class ‘numeric’ or ‘integer’
+      -  ``abs_max()``, ``abs_min()`` - (list) the maximum and minimum
+         values for each variables in var\_nums\_and\_ints
+      -  ``var_range_nums_and_ints()`` - (list) names of all the variables
+         of class ‘numeric’ or integer’ that vary across some range, i.e.
+         are not constants
+      -  ``var_range_facs()`` - (list) names of all the variables of class
+         ‘factor’ that vary across some range, i.e. are not constants
+      -  ``var_range()`` - (list) names of all variables that vary across
+         some range, i.e. are not constants
+      -  ``var_range_nums_and_ints_list()`` - (list of lists)
+         ``var_range_nums_and_ints()`` sorted into lists by type.
+      -  ``var_range_facs_list()`` - (list of lists) ``var_range_facs()``
+         sorted into lists by type.
+      -  ``var_range_list()`` - (list of lists) ``var_range()`` sorted into
+         lists by type.
+      -  ``var_constants()`` - (list) names of the variables of any class
+         that don’t vary in the dataset.
+
+   -  ``raw$df`` - the raw data with no filtering or coloring applied as a
+      reactive value.
 
 E.g. In your ``server`` function, you could find the type of the first
 variable by evaluating ``data$meta$variables[[1]]$type``. You could also
@@ -343,8 +353,8 @@ should be able to open the ``Dig.Rprog`` project file at
 directly from RStudio.
 
 To enable breakpoints in RStudio in your tab file code you will have to
-uncomment (Ctrl-Shift-C) the ``debugSource`` call towards the top of
-``server.R`` file.
+comment (:kbd:`Control-Shift-C`) the ``debug`` call and uncomment the 
+``debugSource`` calls towards the top of ``server.R`` file.
 
 .. code:: R
 
@@ -357,8 +367,8 @@ uncomment (Ctrl-Shift-C) the ``debugSource`` call towards the top of
     176|    } else {
     177|      env$tab_data <- NULL
     178|    }
-    179|    source(file_name, local = env)
-    180|    # debugSource(file_name, local = env)
+    179|    # source(file_name, local = env)
+    180|    debugSource(file_name, local = env)
     181|    print(paste0(env$title, " (", file_name, ")"))
     182|    env
     183|  },
@@ -366,3 +376,8 @@ uncomment (Ctrl-Shift-C) the ``debugSource`` call towards the top of
     185|  id=tab_ids,
     186|  SIMPLIFY = FALSE
     187|)
+
+In some cases you may not experience proper breaking behaviour using standard
+breakpoints. You can place a ``broswer()`` call in your code at the location
+you desire to break, and this should result in the execution pausing and an
+interactive prompt being shown when the call is reached.
