@@ -1,4 +1,12 @@
 const StaticData = {
+  independentVarNames: [],
+  dependentVarNames: [],
+  independentVarData: [],
+  dependentVarData: [],
+  discreteIndependentVars: []
+};
+
+export const ExampleData = {
   independentVarNames: ["Some Var 1", "Some Var 2", "Some Var 3"],
   dependentVarNames: ["Dep Var 1", "Dep Var 2"],
   independentVarData: [

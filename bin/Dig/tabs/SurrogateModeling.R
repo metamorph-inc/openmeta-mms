@@ -99,7 +99,6 @@ server <- function(input, output, session, data) {
           id=input$externalRequest$id,
           data=c(list(configIdObject), discreteVarsList)
         ))
-        # browser()
       }
     }
   })
