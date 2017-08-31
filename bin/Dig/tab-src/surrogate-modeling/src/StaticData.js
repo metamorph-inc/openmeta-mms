@@ -1,3 +1,5 @@
+import { DependentVarState } from './Enums';
+
 const StaticData = {
   independentVarNames: [],
   dependentVarNames: [],
@@ -6,7 +8,7 @@ const StaticData = {
   discreteIndependentVars: []
 };
 
-export const ExampleData = {
+const ExampleData = {
   independentVarNames: ["Some Var 1", "Some Var 2", "Some Var 3"],
   dependentVarNames: ["Dep Var 1", "Dep Var 2"],
   independentVarData: [
@@ -15,9 +17,9 @@ export const ExampleData = {
     [7.0, 8.323, 9.9084]
   ],
   dependentVarData: [
-    [[1.3290, 2.123], [2.382, 3.348]],
-    [[4.324, 5.1], [6.953]],
-    [[8.3248, 9.39048204], [10.49, 11.4932]]
+    [[DependentVarState.COMPUTED, 1.3290, 2.123], [DependentVarState.COMPUTED, 2.382, 3.348]],
+    [[DependentVarState.COMPUTING, 4.324, 5.1], [DependentVarState.COMPUTING, 6.953]],
+    [[DependentVarState.STALE, 8.3248, 9.39048204], [DependentVarState.STALE, 10.49, 11.4932]]
   ],
   discreteIndependentVars: [
     {
@@ -39,3 +41,4 @@ export const ExampleData = {
 };
 
 export default StaticData;
+export { ExampleData };

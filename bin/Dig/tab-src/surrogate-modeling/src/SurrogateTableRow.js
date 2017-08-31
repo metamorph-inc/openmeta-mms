@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
 import { FormControl, Glyphicon } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
+import { DependentVarState } from './Enums';
 
 class DependentVarCell extends Component {
   render() {
+    let cellClass = "";
+
+    if(this.props.varData[0] === DependentVarState.STALE) {
+      cellClass = "warning";
+    } else if(this.props.varData[0] === DependentVarState.COMPUTING) {
+      cellClass = "info";
+      return(
+        <td className={cellClass}>
+          Computing...
+        </td>
+      );
+    }
     return(
-      <td>
-        {this.props.varData[0]}
-        {this.props.varData.length > 1 ? (
+      <td className={cellClass}>
+        {this.props.varData[1]}
+        {this.props.varData.length > 2 ? (
           <div>
-            <small>&sigma; {this.props.varData[1]}</small>
+            <small>&sigma; {this.props.varData[2]}</small>
           </div>
         ): null}
       </td>
@@ -26,6 +39,10 @@ class SurrogateTableRow extends Component {
       this.props.onIndependentVarChange(i, parsedNumber);
     }
   };
+
+  handlePredictButtonClick = () => {
+    this.props.onPredictButtonClick();
+  }
 
   handleDeleteButtonClick = () => {
     this.props.onDeleteButtonClick();
@@ -44,7 +61,7 @@ class SurrogateTableRow extends Component {
       <tr>
         <td><TooltipButton bsStyle="info" bsSize="small" tooltipText="Row details"><Glyphicon glyph="search" /></TooltipButton></td>
         {indepVarCells}
-        <td><TooltipButton bsStyle="primary" bsSize="small" tooltipText="Predict"><Glyphicon glyph="question-sign" /><Glyphicon glyph="chevron-right" /></TooltipButton></td>
+        <td><TooltipButton bsStyle="primary" bsSize="small" tooltipText="Predict" onClick={() => this.handlePredictButtonClick()}><Glyphicon glyph="question-sign" /><Glyphicon glyph="chevron-right" /></TooltipButton></td>
         {depVarCells}
         <td><TooltipButton bsStyle="danger" bsSize="small" tooltipText="Delete row" onClick={() => this.handleDeleteButtonClick()}><Glyphicon glyph="remove" /></TooltipButton></td>
       </tr>

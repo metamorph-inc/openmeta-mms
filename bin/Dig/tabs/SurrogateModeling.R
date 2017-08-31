@@ -1,3 +1,5 @@
+library(DiceKriging)
+
 title <- "Surrogate Modeling"
 footer <- TRUE
 
@@ -89,19 +91,58 @@ server <- function(input, output, session, data) {
         ))
       } else if(input$externalRequest$command == "getDiscreteVarInfo") {
         configs = data$meta$pet$selected_configurations
-        configIdObject = list(varName="CfgId", selected=configs[0], available=configs)
+        configIdObject = list(varName="CfgID", selected=configs[[1]], available=configs)
         discreteVarsList = lapply(data$pre$var_range_facs_list()[["Design Variable"]], function(name) {
           options = names(table(raw[[name]]))
-          newVar = list(varName=name, selected=options[0], available=options)
+          newVar = list(varName=name, selected=options[[1]], available=options)
           return(newVar)
         })
         session$sendCustomMessage(type="externalResponse", list(
           id=input$externalRequest$id,
           data=c(list(configIdObject), discreteVarsList)
         ))
+      } else if(input$externalRequest$command == "evaluateSurrogateAtPoints") {
+        result = evaluateSurrogate(input$externalRequest$data$independentVars,
+                          input$externalRequest$data$discreteVars)
+        session$sendCustomMessage(type="externalResponse", list(
+          id=input$externalRequest$id,
+          data=result
+        ))
       }
     }
   })
+  
+  evaluateSurrogate <- function(indepVars, discreteVars) {
+    trainingData = data$Filtered()
+    for(discreteVar in discreteVars) {
+      trainingData = trainingData[trainingData[discreteVar$varName] == discreteVar$selected, ]
+    }
+    trainingDataIndep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])]
+    trainingDataDep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Objective']])]
+    
+    ivarDf = data.frame(indepVars)
+    names(ivarDf) = unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])
+    
+    resultArray = array(rep(0, nrow(ivarDf) * ncol(trainingDataDep) * 3), c(nrow(ivarDf), ncol(trainingDataDep), 3))
+    
+    # Need at least two training points (I think?)
+    if(nrow(trainingDataIndep) < (ncol(trainingDataIndep) + ncol(trainingDataDep))) {
+      # TODO: Figure out error handling/messaging; for now, we return a "stale"
+      # result set with values of 0
+      return(resultArray)
+    }
+    
+    for(colIndex in 1:ncol(trainingDataDep)) {
+      model = km(design=trainingDataIndep, response=trainingDataDep[, colIndex])
+      predictResults = predict(model, ivarDf, type='SK')
+      
+      resultArray[, colIndex, 1] = rep(2, nrow(ivarDf)) # COMPUTED from DependentVarState enum
+      resultArray[, colIndex, 2] = predictResults$mean
+      resultArray[, colIndex, 3] = predictResults$sd
+    }
+    
+    return(resultArray)
+  }
 
   observeEvent(input$messageFromBrowser, {
     print("Rx")

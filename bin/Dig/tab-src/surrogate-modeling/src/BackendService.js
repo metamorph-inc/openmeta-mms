@@ -1,4 +1,5 @@
 import { ExampleData } from './StaticData';
+import { DependentVarState } from './Enums';
 
 class BackendService {
   constructor() {
@@ -102,7 +103,45 @@ class BackendService {
         }
       });
     } else {
-      return Promise.resolve([ExampleData.discreteIndependentVars]);
+      return Promise.resolve(ExampleData.discreteIndependentVars);
+    }
+  }
+
+  evaluateSurrogateAtPoints(independentVars, discreteVars) {
+    console.log(discreteVars);
+
+    if(this.hasShiny) {
+      const requestArgs = {
+        independentVars: independentVars,
+        discreteVars: discreteVars
+      };
+
+      return this.makeShinyRequest('evaluateSurrogateAtPoints', requestArgs).then((result) => {
+        // Because Shiny serializes empty lists as null
+        if(result === null) {
+          return [];
+        } else {
+          return result;
+        }
+      });
+    } else {
+      console.log(independentVars);
+      const dependentVarsLength = ExampleData.dependentVarNames.length;
+
+      const resultArray = Array(independentVars.length);
+
+      for(let i = 0; i < resultArray.length; i++) {
+        resultArray[i] = Array(dependentVarsLength);
+        for(let j = 0; j < resultArray[i].length; j++) {
+          resultArray[i][j] = [DependentVarState.COMPUTED, 1.0, 1.0];
+        }
+      }
+
+      console.log(resultArray);
+
+      return new Promise((resolve, reject) => {
+        window.setTimeout(() => resolve(resultArray), 1000);
+      });
     }
   }
 }

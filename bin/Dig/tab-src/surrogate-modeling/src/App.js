@@ -8,6 +8,7 @@ import DiscreteVariableChooser from './DiscreteVariableChooser';
 import SurrogateTable from './SurrogateTable';
 
 import StaticData from './StaticData';
+import { DependentVarState } from './Enums';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
@@ -50,9 +51,40 @@ class App extends Component {
 
     newIndependentVarData[row][column] = newValue;
 
-    this.setState({
-      independentVarData: newIndependentVarData
+    //TODO: probably a little more efficient to check to see if we've already
+    //      marked these as stale and not update if they already are
+    const newDependentVarData = cloneDeep(this.state.dependentVarData);
+    newDependentVarData[row].forEach(function(col) {
+      col[0] = DependentVarState.STALE;
     });
+
+    this.setState({
+      independentVarData: newIndependentVarData,
+      dependentVarData: newDependentVarData
+    });
+  }
+
+  handlePredictButtonClick = (row) => {
+    const selectedIndependentVarRow = this.state.independentVarData[row];
+
+    const newDependentVarData = cloneDeep(this.state.dependentVarData);
+    newDependentVarData[row].forEach(function(col) {
+      col[0] = DependentVarState.COMPUTING;
+    });
+
+    this.setState({
+      dependentVarData: newDependentVarData
+    });
+
+    this.props.service.evaluateSurrogateAtPoints([selectedIndependentVarRow], this.state.discreteIndependentVars)
+      .then((resultingDependentVars) => {
+        const newDependentVarData = cloneDeep(this.state.dependentVarData);
+        newDependentVarData[row] = resultingDependentVars[0];
+
+        this.setState({
+          dependentVarData: newDependentVarData
+        });
+      });
   }
 
   handleDeleteButtonClick = (row) => {
@@ -75,7 +107,7 @@ class App extends Component {
     newIndependentVarData.push(Array(this.state.independentVarNames.length).fill(0.0));
 
     const newDependentVarData = cloneDeep(this.state.dependentVarData);
-    newDependentVarData.push(Array(this.state.dependentVarNames.length).fill([0.0, 0.0]));
+    newDependentVarData.push(Array(this.state.dependentVarNames.length).fill([DependentVarState.STALE, 0.0, 0.0]));
 
     this.setState({
       independentVarData: newIndependentVarData,
@@ -87,7 +119,17 @@ class App extends Component {
     const newDiscreteIndependentVars = cloneDeep(this.state.discreteIndependentVars);
     newDiscreteIndependentVars[varIndex].selected = newValue;
 
+    //TODO: probably a little more efficient to check to see if we've already
+    //      marked these as stale and not update if they already are
+    const newDependentVarData = cloneDeep(this.state.dependentVarData);
+    newDependentVarData.forEach(function(row) {
+      row.forEach(function(col) {
+        col[0] = DependentVarState.STALE;
+      });
+    });
+
     this.setState({
+      dependentVarData: newDependentVarData,
       discreteIndependentVars: newDiscreteIndependentVars
     });
   }
@@ -112,6 +154,7 @@ class App extends Component {
                 dependentVarData={this.state.dependentVarData}
 
                 onIndependentVarChange={(col, row, newValue) => this.handleIndependentVarChange(col, row, newValue)}
+                onPredictButtonClick={(row) => this.handlePredictButtonClick(row)}
                 onDeleteButtonClick={(row) => this.handleDeleteButtonClick(row)}
                 onAddRow={() => this.handleAddRow()} />
             </Col>
