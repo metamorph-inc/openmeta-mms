@@ -130,6 +130,9 @@
         <Directory Id="ApplicationProgramsFolder" Name="META"/>
       </Directory>
     </Directory>
+    <DirectoryRef Id="dir_bin_Dig_www">
+        <Directory Id="SurrogateModeling" />
+    </DirectoryRef>
 
     <!-- =========================================================== -->
     <!-- MERGE MODULES -->
