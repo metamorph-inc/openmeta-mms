@@ -1,0 +1,45 @@
+DiceKriging             Kriging Methods for Computer Experiments
+SCAD                    Penalty function
+affineScalingFun        Scaling function (affine case)
+affineScalingGrad       Gradient of the Scaling function (affine case)
+checkNames              Consistency test between the column names of
+                        two matrices
+coef                    Get coefficients values
+computeAuxVariables     Auxiliary variables for kriging
+covAffineScaling-class
+                        Class "covAffineScaling"
+covIso-class            Class of tensor-product spatial covariances
+                        with isotropic range
+covKernel-class         Class "covKernel"
+covMat1Mat2             Cross covariance matrix
+covMatrix               Covariance matrix
+covParametersBounds     Boundaries for covariance parameters
+covScaling-class        Class "covScaling"
+covTensorProduct-class
+                        Class of tensor-product spatial covariances
+covUser-class           Class "covUser"
+inputnames              Get the input variables names
+kernelname              Get the kernel name
+km                      Fit and/or create kriging models
+km-class                Kriging models class
+kmData                  Fit and/or create kriging models
+leaveOneOut.km          Leave-one-out for a km object
+leaveOneOutFun          Leave-one-out least square criterion of a km
+                        object
+leaveOneOutGrad         Leave-one-out least square criterion -
+                        Analytical gradient
+logLik                  log-likelihood of a km object
+logLikFun               Concentrated log-likelihood of a km object
+ninput                  Get the spatial dimension
+nuggetflag              Get the nugget flag
+nuggetvalue             Get or set the nugget value
+plot                    Diagnostic plot for the validation of a km
+                        object
+predict                 Predict values and confidence intervals at
+                        newdata for a km object
+scalingFun              Scaling function
+scalingGrad             Gradient of the dimensional Scaling function
+show,km-method          Print values of a km object
+simulate                Simulate GP values at any given set of points
+                        for a km object
+update                  Update of a kriging model

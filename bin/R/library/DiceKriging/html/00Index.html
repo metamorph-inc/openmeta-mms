@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Kriging Methods for Computer Experiments</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Kriging Methods for Computer Experiments
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;DiceKriging&rsquo; version 1.5.5</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="#A">A</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#I">I</a>
+<a href="#K">K</a>
+<a href="#L">L</a>
+<a href="#N">N</a>
+<a href="#P">P</a>
+<a href="#S">S</a>
+<a href="#U">U</a>
+<a href="#V">V</a>
+</p>
+
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="affineScalingFun.html">affineScalingFun</a></td>
+<td>Scaling function (affine case)</td></tr>
+<tr><td style="width: 25%;"><a href="affineScalingGrad.html">affineScalingGrad</a></td>
+<td>Gradient of the Scaling function (affine case)</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="checkNames.html">checkNames</a></td>
+<td>Consistency test between the column names of two matrices</td></tr>
+<tr><td style="width: 25%;"><a href="coef.html">coef</a></td>
+<td>Get coefficients values</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">coef-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">coef-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">coef-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">coef-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covUser-class.html">coef-method</a></td>
+<td>Class "covUser"</td></tr>
+<tr><td style="width: 25%;"><a href="km-class.html">coef-method</a></td>
+<td>Kriging models class</td></tr>
+<tr><td style="width: 25%;"><a href="computeAuxVariables.html">computeAuxVariables</a></td>
+<td>Auxiliary variables for kriging</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">covAffineScaling-class</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">covIso-class</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covKernel-class.html">covKernel-class</a></td>
+<td>Class "covKernel"</td></tr>
+<tr><td style="width: 25%;"><a href="covMat1Mat2.html">covMat1Mat2</a></td>
+<td>Cross covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">covMat1Mat2-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">covMat1Mat2-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">covMat1Mat2-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">covMat1Mat2-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covUser-class.html">covMat1Mat2-method</a></td>
+<td>Class "covUser"</td></tr>
+<tr><td style="width: 25%;"><a href="covMatrix.html">covMatrix</a></td>
+<td>Covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">covMatrix-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">covMatrix-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">covMatrix-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">covMatrix-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covUser-class.html">covMatrix-method</a></td>
+<td>Class "covUser"</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">covMatrixDerivative-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">covMatrixDerivative-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">covMatrixDerivative-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">covMatrixDerivative-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">covparam2vect-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">covparam2vect-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">covparam2vect-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">covparam2vect-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covParametersBounds.html">covParametersBounds</a></td>
+<td>Boundaries for covariance parameters</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">covParametersBounds-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">covParametersBounds-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">covParametersBounds-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">covParametersBounds-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">covScaling-class</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">covTensorProduct-class</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covUser-class.html">covUser-class</a></td>
+<td>Class "covUser"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">covVector.dx-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">covVector.dx-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="DiceKriging-package.html">DiceKriging</a></td>
+<td>Kriging Methods for Computer Experiments</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="inputnames.html">inputnames</a></td>
+<td>Get the input variables names</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">inputnames-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">inputnames-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">inputnames-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">inputnames-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+</table>
+
+<h2><a name="K">-- K --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="kernelname.html">kernelname</a></td>
+<td>Get the kernel name</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">kernelname-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">kernelname-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">kernelname-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">kernelname-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="km.html">km</a></td>
+<td>Fit and/or create kriging models</td></tr>
+<tr><td style="width: 25%;"><a href="km-class.html">km-class</a></td>
+<td>Kriging models class</td></tr>
+<tr><td style="width: 25%;"><a href="kmData.html">kmData</a></td>
+<td>Fit and/or create kriging models</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="leaveOneOut.km.html">leaveOneOut.km</a></td>
+<td>Leave-one-out for a km object</td></tr>
+<tr><td style="width: 25%;"><a href="leaveOneOutFun.html">leaveOneOutFun</a></td>
+<td>Leave-one-out least square criterion of a km object</td></tr>
+<tr><td style="width: 25%;"><a href="leaveOneOutGrad.html">leaveOneOutGrad</a></td>
+<td>Leave-one-out least square criterion - Analytical gradient</td></tr>
+<tr><td style="width: 25%;"><a href="logLik.km.html">logLik</a></td>
+<td>log-likelihood of a km object</td></tr>
+<tr><td style="width: 25%;"><a href="logLik.km.html">logLik-method</a></td>
+<td>log-likelihood of a km object</td></tr>
+<tr><td style="width: 25%;"><a href="logLik.km.html">logLik.km</a></td>
+<td>log-likelihood of a km object</td></tr>
+<tr><td style="width: 25%;"><a href="logLikFun.html">logLikFun</a></td>
+<td>Concentrated log-likelihood of a km object</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="ninput.html">ninput</a></td>
+<td>Get the spatial dimension</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">ninput-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">ninput-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">ninput-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">ninput-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="nuggetflag.html">nuggetflag</a></td>
+<td>Get the nugget flag</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">nuggetflag-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">nuggetflag-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">nuggetflag-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">nuggetflag-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covUser-class.html">nuggetflag-method</a></td>
+<td>Class "covUser"</td></tr>
+<tr><td style="width: 25%;"><a href="nuggetvalue.html">nuggetvalue</a></td>
+<td>Get or set the nugget value</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">nuggetvalue-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">nuggetvalue-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">nuggetvalue-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">nuggetvalue-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covUser-class.html">nuggetvalue-method</a></td>
+<td>Class "covUser"</td></tr>
+<tr><td style="width: 25%;"><a href="nuggetvalue.html">nuggetvalue&lt;-</a></td>
+<td>Get or set the nugget value</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">nuggetvalue&lt;--method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">nuggetvalue&lt;--method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">nuggetvalue&lt;--method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">nuggetvalue&lt;--method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covUser-class.html">nuggetvalue&lt;--method</a></td>
+<td>Class "covUser"</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="plot.km.html">plot</a></td>
+<td>Diagnostic plot for the validation of a km object</td></tr>
+<tr><td style="width: 25%;"><a href="plot.km.html">plot-method</a></td>
+<td>Diagnostic plot for the validation of a km object</td></tr>
+<tr><td style="width: 25%;"><a href="plot.km.html">plot.km</a></td>
+<td>Diagnostic plot for the validation of a km object</td></tr>
+<tr><td style="width: 25%;"><a href="predict.km.html">predict</a></td>
+<td>Predict values and confidence intervals at newdata for a km object</td></tr>
+<tr><td style="width: 25%;"><a href="predict.km.html">predict-method</a></td>
+<td>Predict values and confidence intervals at newdata for a km object</td></tr>
+<tr><td style="width: 25%;"><a href="predict.km.html">predict.km</a></td>
+<td>Predict values and confidence intervals at newdata for a km object</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="SCAD.html">SCAD</a></td>
+<td>Penalty function</td></tr>
+<tr><td style="width: 25%;"><a href="scalingFun.html">scalingFun</a></td>
+<td>Scaling function</td></tr>
+<tr><td style="width: 25%;"><a href="scalingGrad.html">scalingGrad</a></td>
+<td>Gradient of the dimensional Scaling function</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">show-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">show-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">show-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">show-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+<tr><td style="width: 25%;"><a href="covUser-class.html">show-method</a></td>
+<td>Class "covUser"</td></tr>
+<tr><td style="width: 25%;"><a href="show.km.html">show-method</a></td>
+<td>Print values of a km object</td></tr>
+<tr><td style="width: 25%;"><a href="simulate.km.html">simulate</a></td>
+<td>Simulate GP values at any given set of points for a km object</td></tr>
+<tr><td style="width: 25%;"><a href="simulate.km.html">simulate-method</a></td>
+<td>Simulate GP values at any given set of points for a km object</td></tr>
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">summary-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">summary-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">summary-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">summary-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="update.km.html">update</a></td>
+<td>Update of a kriging model</td></tr>
+<tr><td style="width: 25%;"><a href="update.km.html">update-method</a></td>
+<td>Update of a kriging model</td></tr>
+<tr><td style="width: 25%;"><a href="update.km.html">update.km</a></td>
+<td>Update of a kriging model</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="covAffineScaling-class.html">vect2covparam-method</a></td>
+<td>Class "covAffineScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covIso-class.html">vect2covparam-method</a></td>
+<td>Class of tensor-product spatial covariances with isotropic range</td></tr>
+<tr><td style="width: 25%;"><a href="covScaling-class.html">vect2covparam-method</a></td>
+<td>Class "covScaling"</td></tr>
+<tr><td style="width: 25%;"><a href="covTensorProduct-class.html">vect2covparam-method</a></td>
+<td>Class of tensor-product spatial covariances</td></tr>
+</table>
+</body></html>
