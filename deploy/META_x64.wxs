@@ -131,7 +131,7 @@
       </Directory>
     </Directory>
     <DirectoryRef Id="dir_bin_Dig_www">
-        <Directory Id="SurrogateModeling" />
+        <Directory Id="SurrogateModeling" Name="SurrogateModeling" />
     </DirectoryRef>
 
     <!-- =========================================================== -->
