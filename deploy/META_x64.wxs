@@ -371,6 +371,7 @@
       <ComponentGroupRef Id="CyPhyTestBenchImporter" />
       <ComponentGroupRef Id='dot_bin'/>
       <ComponentGroupRef Id='bin'/>
+      <ComponentGroupRef Id='SurrogateModeling'/>
       <ComponentGroupRef Id='analysis_tools'/>
       <ComponentRef Id='META_PATH'/>
       <ComponentRef Id='META_VERSION'/>

@@ -117,6 +117,7 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\meta\CyPhyML\icons",)
     gen_dir_wxi.gen_dir_from_vc(r"..\models\Validation",)
     gen_dir_wxi.gen_dir_from_vc(r"..\bin", diskId='3')
+    gen_dir_wxi.main(r"..\bin\Dig\www\SurrogateModeling", diskId='3')
     gen_dir_wxi.gen_dir_from_vc(r"..\ModelicaWrapperTemplates",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\chipfit_display",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\layout_json",)

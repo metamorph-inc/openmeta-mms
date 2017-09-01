@@ -19,3 +19,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+node-v6.11.2-win-x86.zip
+node-v6.11.2-win-x86/
