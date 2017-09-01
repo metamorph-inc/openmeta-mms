@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{2EEBA9B8-F5C9-42BD-A957-C2E4C3FDCA15}" cdate="Wed Aug 23 15:46:50 2017" mdate="Wed Aug 23 15:46:50 2017" version="" metaguid="{C84D2738-4519-44F2-B4C1-114F73567576}" metaversion="" metaname="MetaGME">
+<project guid="{1947EC70-3991-47A3-A846-1AFDAB8912FD}" cdate="Fri Sep 01 12:44:15 2017" mdate="Fri Sep 01 12:44:15 2017" version="" metaguid="{C84D2738-4519-44F2-B4C1-114F73567576}" metaversion="" metaname="MetaGME">
 	<name>CyPhyML-core</name>
 	<comment></comment>
 	<author></author>
