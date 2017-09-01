@@ -346,11 +346,19 @@ server <- function(input, output, session, data) {
   
   observeEvent(input$run_ranges, {
     if (!is.null(pet$pet_config_filename)) {
+      start.time <- Sys.time()
+      job_count <- length(unlist(strsplit(input$new_cfg_ids, ",")))
+      showNotification(id="test",
+                       paste0(start.time,
+                              ": Master Interpreter started creating ",
+                              job_count,
+                              " job(s)."),
+                       duration=NULL)
       results_directory <- dirname(pet_config_filename)
       project_directory <- dirname(results_directory)
       pet_refined_filename <- file.path(results_directory, "pet_config_refined.json")
       ExportRangesFunction(pet_refined_filename)
-      system2("..\\Python27\\Scripts\\python.exe",
+      rc <- system2("..\\Python27\\Scripts\\python.exe",
               args = c("..\\UpdatePETParameters.py",
                        "--pet-config",
                        paste0("\"",pet_refined_filename,"\""),
@@ -358,7 +366,20 @@ server <- function(input, output, session, data) {
                        paste0("\"",input$newPetName,"\"")),
               stdout = file.path(results_directory, "UpdatePETParameters_stdout.log"),
               stderr = file.path(results_directory, "UpdatePETParameters_stderr.log"),
-              wait = FALSE)
+              wait = TRUE)
+      # removeNotification(id="test")
+      end.time <- Sys.time()
+      if(rc == 0) {
+        showNotification(paste0(end.time,
+                                ": Successfully created ",
+                                job_count,
+                                " job(s) after ",
+                                round(end.time-start.time, digits = 2),
+                                " s!"),
+                         duration = NULL)
+      } else {
+        showNotification("Execution Failed!", duration = NULL)
+      }
     }
   })
   
