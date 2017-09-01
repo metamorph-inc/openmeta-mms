@@ -115,7 +115,7 @@ server <- function(input, output, session, data) {
   evaluateSurrogate <- function(indepVars, discreteVars) {
     trainingData = data$Filtered()
     for(discreteVar in discreteVars) {
-      trainingData = trainingData[trainingData[discreteVar$varName] == discreteVar$selected, ]
+      trainingData = trainingData[trainingData[[discreteVar$varName]] == discreteVar$selected, ]
     }
     trainingDataIndep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])]
     trainingDataDep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Objective']])]
