@@ -702,6 +702,13 @@ Server <- function(input, output, session) {
     data_filtered
   })
   
+  observe({
+    output$filters_stats <- renderText(
+      paste0("Current Points: ",nrow(FilteredData()), " / ", nrow(data$raw$df),
+             "  ( ", round(100*nrow(FilteredData())/nrow(data$raw$df), digits = 2),
+             "% )"))
+  })
+  
   Filters <- reactive({
     # This reactive returns a list of all the filter values so a tab can use
     # the information for filtering the raw dataset itself.
@@ -1118,7 +1125,9 @@ ui <- fluidPage(
         # tags$div(title = "Activate to show filters for all dataset variables.",
         #          checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
         tags$div(title = "Return visible sliders to default state.",
+                 style="display: inline-block", 
                  actionButton("reset_sliders", "Reset Visible Filters")),
+        tags$div(style="display: inline-block; padding: 7px 30px 7px 30px", textOutput("filters_stats")),
         hr(),
         
         if(design_tree_present) {
