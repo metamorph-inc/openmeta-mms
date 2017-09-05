@@ -380,6 +380,7 @@ server <- function(input, output, session, data) {
                          duration = NULL)
       } else {
         showNotification("Execution Failed!", duration = NULL)
+        # shell.exec(results_directory)
       }
     }
   })
