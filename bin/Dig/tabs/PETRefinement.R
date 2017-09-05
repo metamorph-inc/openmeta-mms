@@ -91,12 +91,12 @@ server <- function(input, output, session, data) {
   ns <- session$ns
 
   FilterData <- data$Filtered
-  var_nums <- isolate(data$pre$var_nums())
+  var_nums_and_ints <- isolate(data$pre$var_nums_and_ints())
   var_facs <- isolate(data$pre$var_facs())
   
   pet <- isolate(data$meta$pet)
   numeric_dvs <- unlist(lapply(pet$design_variable_names,
-                               function (var) {var %in% var_nums}))
+                               function (var) {var %in% var_nums_and_ints}))
   numeric_design_variables <- pet$design_variable_names[numeric_dvs]
   enumerated_dvs <- unlist(lapply(pet$design_variable_names,
                                   function (var) {var %in% var_facs}))
@@ -205,6 +205,7 @@ server <- function(input, output, session, data) {
         selection <- unlist(strsplit(var$selection, "\\,"))
         original_min <- AbbreviateNumber(selection[1])
         original_max <- AbbreviateNumber(selection[2])
+        req(nrow(FilterData())>0)
         refined_min <- AbbreviateNumber(min(FilterData()[var$name]))
         refined_max <-AbbreviateNumber(max(FilterData()[var$name]))
         isolate({
