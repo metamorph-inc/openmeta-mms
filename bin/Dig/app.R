@@ -1034,7 +1034,8 @@ Server <- function(input, output, session) {
     }
     write.csv(isolate(data$raw$df),
               file=file.path(launch_dir, visualizer_config$augmented_data),
-              row.names = FALSE)
+              row.names = FALSE,
+              quote = FALSE)
     
     # Prepare metadata for saving to visualizer config file
     meta <- isolate(reactiveValuesToList(data$meta))
