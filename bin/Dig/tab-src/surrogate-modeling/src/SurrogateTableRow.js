@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FormControl, Glyphicon } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
+import RowDetailsModalButton from './RowDetailsModalButton';
 import { DependentVarState } from './Enums';
 
 class DependentVarCell extends Component {
@@ -59,7 +60,15 @@ class SurrogateTableRow extends Component {
 
     return (
       <tr>
-        <td><TooltipButton bsStyle="info" bsSize="small" tooltipText="Row details"><Glyphicon glyph="search" /></TooltipButton></td>
+        <td>
+          <RowDetailsModalButton
+          independentVarNames={this.props.independentVarNames}
+          dependentVarNames={this.props.dependentVarNames}
+          independentVarData={this.props.independentVarData}
+          dependentVarData={this.props.dependentVarData}
+          onIndependentVarChange={(i, ev) => this.handleIndependentVarChange(i, ev)}
+          onPredictButtonClick={this.handlePredictButtonClick} />
+        </td>
         {indepVarCells}
         <td><TooltipButton bsStyle="primary" bsSize="small" tooltipText="Predict" onClick={() => this.handlePredictButtonClick()}><Glyphicon glyph="question-sign" /><Glyphicon glyph="chevron-right" /></TooltipButton></td>
         {depVarCells}

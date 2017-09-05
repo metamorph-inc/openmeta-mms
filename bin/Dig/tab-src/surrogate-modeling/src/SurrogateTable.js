@@ -35,6 +35,8 @@ class SurrogateTable extends Component {
 
     const rows = this.props.independentVarData.map((indepVarRow, index) => {
       return <SurrogateTableRow key={index}
+        independentVarNames={this.props.independentVarNames}
+        dependentVarNames={this.props.dependentVarNames}
         independentVarData={indepVarRow}
         dependentVarData={this.props.dependentVarData[index]}
         onIndependentVarChange={(col, newValue) => this.handleIndependentVarChange(index, col, newValue)}

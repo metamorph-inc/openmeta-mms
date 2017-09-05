@@ -25,3 +25,12 @@ table.surrogate-table tbody td small {
 .discrete-var-chooser .form-control {
   width: 200px;
 }
+
+.row-details-modal {
+  width: 95%;
+}
+
+.row-details-modal h4 {
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+}
