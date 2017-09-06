@@ -493,20 +493,19 @@ server <- function(input, output, session, data) {
   
   observeEvent(input$save_ranking, {
     number <- 1
-    name <- paste0("class", number)
+    name <- paste0("rank", number)
     while(!is.null(data$meta$variables[[name]])) {
       number <- number + 1
-      name <- paste0("class", number)
+      name <- paste0("rank", number)
     }
-    mean <- 25 + runif(1) * 50
-    sd <- 2 + runif(1) * 3
-    data$raw$df[[name]] <<- rnorm(nrow(data$raw$df),
-                                  mean=mean,
-                                  sd=sd)
     data$meta$variables[[name]] <- list(type="Classification",
                                         date=toString(Sys.time()),
                                         name_with_units=name,
                                         user=Sys.info()[["user"]])
+    new_column <- RankData()[c("rank", "GUID")]
+    names(new_column) <- c(name, "GUID")
+    # merge based on GUID
+    print(head(new_column))
     print(paste0("Saved Ranking: ", name))
   })
   
