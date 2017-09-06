@@ -4,6 +4,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 
 import { cloneDeep } from 'lodash-es';
 
+import ErrorModal from './ErrorModal';
 import DiscreteVariableChooser from './DiscreteVariableChooser';
 import SurrogateTable from './SurrogateTable';
 
@@ -84,6 +85,16 @@ class App extends Component {
         this.setState({
           dependentVarData: newDependentVarData
         });
+      }).catch((error) => {
+        const newDependentVarData = cloneDeep(this.state.dependentVarData);
+        newDependentVarData[row].forEach(function(col) {
+          col[0] = DependentVarState.STALE;
+        });
+
+        this.setState({
+          currentErrorMessage: error.message,
+          dependentVarData: newDependentVarData
+        });
       });
   }
 
@@ -134,9 +145,16 @@ class App extends Component {
     });
   }
 
+  handleErrorDialogClose = () => {
+    this.setState({
+      currentErrorMessage: null
+    });
+  };
+
   render() {
     return (
       <div>
+        <ErrorModal show={this.state.currentErrorMessage !== null} errorMessage={this.state.currentErrorMessage} onClose={() => this.handleErrorDialogClose()} />
         <Grid fluid>
           <Row>
             <Col md={12}>
@@ -152,6 +170,8 @@ class App extends Component {
                 dependentVarNames={this.state.dependentVarNames}
                 independentVarData={this.state.independentVarData}
                 dependentVarData={this.state.dependentVarData}
+                discreteIndependentVars={this.state.discreteIndependentVars}
+                service={this.props.service}
 
                 onIndependentVarChange={(col, row, newValue) => this.handleIndependentVarChange(col, row, newValue)}
                 onPredictButtonClick={(row) => this.handlePredictButtonClick(row)}

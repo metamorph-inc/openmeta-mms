@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Glyphicon, Button, Alert, Row, Col, FormGroup, FormControl } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
+import ProbabilityGraphsView from './ProbabilityGraphsView';
 import { DependentVarState } from './Enums';
 
 class RowDetailsModalButton extends Component {
@@ -31,7 +32,7 @@ class RowDetailsModalButton extends Component {
   render() {
     const indepVarCells = this.props.independentVarData.map((value, index) => {
       return (
-        <FormGroup>
+        <FormGroup key={index}>
           <h4>{this.props.independentVarNames[index]}</h4>
           <FormControl type="number" value={value} onChange={(ev) => this.handleIndependentVarChange(index, ev)} />
         </FormGroup>
@@ -40,7 +41,7 @@ class RowDetailsModalButton extends Component {
 
     const depVarCells = this.props.dependentVarData.map((varData, index) => {
       return (
-        <div>
+        <div key={index}>
           <h4>{this.props.dependentVarNames[index]}</h4>
           <h5>Mean</h5>
           <p>{varData[1]}</p>
@@ -102,6 +103,15 @@ class RowDetailsModalButton extends Component {
               </Col>
               <Col md={2}>
                 {depVarCells}
+              </Col>
+              <Col md={8}>
+                <ProbabilityGraphsView
+                  independentVarNames={this.props.independentVarNames}
+                  dependentVarNames={this.props.dependentVarNames}
+                  independentVarData={this.props.independentVarData}
+                  discreteIndependentVars={this.props.discreteIndependentVars}
+                  predictionsUnavailable={this.props.dependentVarNames.length === 0 || this.props.dependentVarData[0][0] === DependentVarState.COMPUTING || this.props.dependentVarData[0][0] === DependentVarState.STALE}
+                  service={this.props.service}/>
               </Col>
             </Row>
           </Modal.Body>

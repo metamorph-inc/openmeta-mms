@@ -31,6 +31,26 @@ class BackendService {
           console.error('Received unexpected reply from Shiny: ', message);
         }
       });
+
+      window.parent.Shiny.addCustomMessageHandler('externalError', (message) => {
+        console.info('Received reply from Shiny', message);
+
+        if(this.requestPromiseCallbacks.has(message.id)) {
+          const callbacks = this.requestPromiseCallbacks.get(message.id);
+          this.requestPromiseCallbacks.delete(message.id);
+
+          callbacks.reject(message.data);
+
+          if(this.pendingRequestQueue.length > 0) {
+            const nextRequest = this.pendingRequestQueue.shift();
+            this.performRequest(nextRequest);
+          } else {
+              this.requestInProgress = false;
+          }
+        } else {
+          console.error('Received unexpected reply from Shiny: ', message);
+        }
+      });
     }
   }
 
@@ -141,6 +161,32 @@ class BackendService {
 
       return new Promise((resolve, reject) => {
         window.setTimeout(() => resolve(resultArray), 1000);
+      });
+    }
+  }
+
+  getSurrogateGraphData(independentVars, discreteVars, selectedIndependentVarIndex) {
+    if(this.hasShiny) {
+      const requestArgs = {
+        independentVars: independentVars,
+        discreteVars: discreteVars,
+        selectedIndependentVarIndex: selectedIndependentVarIndex
+      };
+
+      return this.makeShinyRequest('getGraph', requestArgs).then((result) => {
+        return result;
+      });
+    } else {
+      const result = {
+        xAxisPoints: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        yAxisPoints: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                      [1, 1.5, 3, 3.5, 5, 5.5, 7, 7.5, 9, 9.5]],
+        yAxisErrors:  [[1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+                      [2, 1.8, 1.6, 1.4, 1.2, 1.0, 0.8, 0.6, 0.4, 0.2]]
+      };
+
+      return new Promise((resolve, reject) => {
+        window.setTimeout(() => resolve(result), 1000);
       });
     }
   }

@@ -5,7 +5,8 @@ const StaticData = {
   dependentVarNames: [],
   independentVarData: [],
   dependentVarData: [],
-  discreteIndependentVars: []
+  discreteIndependentVars: [],
+  currentErrorMessage: null
 };
 
 const ExampleData = {

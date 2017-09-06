@@ -70,47 +70,111 @@ server <- function(input, output, session, data) {
   })
 
   observeEvent(input$externalRequest, {
-    if(!is.null(input$externalRequest) && input$externalRequest != "") {
-      print("Received request from browser")
-      print(input$externalRequest)
-
-      if(input$externalRequest$command == "echo") {
-        session$sendCustomMessage(type="externalResponse", list(
-          id=input$externalRequest$id,
-          data=input$externalRequest$data
-        ))
-      } else if(input$externalRequest$command == "listIndependentVars") {
-        session$sendCustomMessage(type="externalResponse", list(
-          id=input$externalRequest$id,
-          data=data$pre$var_range_nums_and_ints_list()[['Design Variable']]
-        ))
-      } else if(input$externalRequest$command == "listDependentVars") {
-        session$sendCustomMessage(type="externalResponse", list(
-          id=input$externalRequest$id,
-          data=data$pre$var_range_nums_and_ints_list()[['Objective']]
-        ))
-      } else if(input$externalRequest$command == "getDiscreteVarInfo") {
-        configs = data$meta$pet$selected_configurations
-        configIdObject = list(varName="CfgID", selected=configs[[1]], available=configs)
-        discreteVarsList = lapply(data$pre$var_range_facs_list()[["Design Variable"]], function(name) {
-          options = names(table(raw[[name]]))
-          newVar = list(varName=name, selected=options[[1]], available=options)
-          return(newVar)
-        })
-        session$sendCustomMessage(type="externalResponse", list(
-          id=input$externalRequest$id,
-          data=c(list(configIdObject), discreteVarsList)
-        ))
-      } else if(input$externalRequest$command == "evaluateSurrogateAtPoints") {
-        result = evaluateSurrogate(input$externalRequest$data$independentVars,
-                          input$externalRequest$data$discreteVars)
-        session$sendCustomMessage(type="externalResponse", list(
-          id=input$externalRequest$id,
-          data=result
-        ))
+    tryCatch({
+      if(!is.null(input$externalRequest) && input$externalRequest != "") {
+        print("Received request from browser")
+        print(input$externalRequest)
+        
+        if(input$externalRequest$command == "echo") {
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=input$externalRequest$data
+          ))
+        } else if(input$externalRequest$command == "listIndependentVars") {
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=data$pre$var_range_nums_and_ints_list()[['Design Variable']]
+          ))
+        } else if(input$externalRequest$command == "listDependentVars") {
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=data$pre$var_range_nums_and_ints_list()[['Objective']]
+          ))
+        } else if(input$externalRequest$command == "getDiscreteVarInfo") {
+          configs = data$meta$pet$selected_configurations
+          configIdObject = list(varName="CfgID", selected=configs[[1]], available=configs)
+          discreteVarsList = lapply(data$pre$var_range_facs_list()[["Design Variable"]], function(name) {
+            options = names(table(raw[[name]]))
+            newVar = list(varName=name, selected=options[[1]], available=options)
+            return(newVar)
+          })
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=c(list(configIdObject), discreteVarsList)
+          ))
+        } else if(input$externalRequest$command == "evaluateSurrogateAtPoints") {
+          result = evaluateSurrogate(input$externalRequest$data$independentVars,
+                                     input$externalRequest$data$discreteVars)
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=result
+          ))
+        } else if(input$externalRequest$command == "getGraph") {
+          result = getGraph(input$externalRequest$data$independentVars,
+                            input$externalRequest$data$discreteVars,
+                            input$externalRequest$data$selectedIndependentVar)
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=result
+          ))
+        }
       }
-    }
+    },
+    error = function(e) {
+      print("Error occurred")
+      replyData = list(
+        message = e$message
+      )
+      session$sendCustomMessage(type="externalError", list(
+        id=input$externalRequest$id,
+        data=replyData
+      ))
+    })
+    
   })
+  
+  getGraph <- function(indepVars, discreteVars, selectedIndependentVar) {
+    GRAPH_RESOLUTION = 200
+    
+    trainingData = data$Filtered()
+    for(discreteVar in discreteVars) {
+      trainingData = trainingData[trainingData[[discreteVar$varName]] == discreteVar$selected, ]
+    }
+    trainingDataIndep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])]
+    trainingDataDep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Objective']])]
+    
+    ivarDf = data.frame(indepVars)
+    
+    names(ivarDf) = unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])
+    
+    expanded = ivarDf[rep(seq_len(nrow(ivarDf)), each=GRAPH_RESOLUTION),]
+    
+    expanded[, selectedIndependentVar] = seq(from=min(trainingData[, selectedIndependentVar]), to=max(trainingData[, selectedIndependentVar]), length.out=200)
+
+    # Need at least two training points (I think?)
+    if(nrow(trainingDataIndep) < (ncol(trainingDataIndep) + ncol(trainingDataDep))) {
+      stop("Insufficient training data; relax filters or run PET with more points.")
+    }
+    
+    yPointsArray = array(rep(0, nrow(expanded) * ncol(trainingDataDep)), c(ncol(trainingDataDep), nrow(expanded)))
+    yErrorsArray = array(rep(0, nrow(expanded) * ncol(trainingDataDep)), c(ncol(trainingDataDep), nrow(expanded)))
+    
+    for(colIndex in 1:ncol(trainingDataDep)) {
+      model = km(design=trainingDataIndep, response=trainingDataDep[, colIndex])
+      predictResults = predict(model, expanded, type='SK')
+
+      yPointsArray[colIndex, ] = predictResults$mean
+      yErrorsArray[colIndex, ] = predictResults$sd
+    }
+    
+    results = list(
+      xAxisPoints = expanded[, selectedIndependentVar],
+      yAxisPoints = yPointsArray,
+      yAxisErrors = yErrorsArray
+    )
+    
+    return(results)
+  }
   
   evaluateSurrogate <- function(indepVars, discreteVars) {
     trainingData = data$Filtered()
@@ -127,9 +191,7 @@ server <- function(input, output, session, data) {
     
     # Need at least two training points (I think?)
     if(nrow(trainingDataIndep) < (ncol(trainingDataIndep) + ncol(trainingDataDep))) {
-      # TODO: Figure out error handling/messaging; for now, we return a "stale"
-      # result set with values of 0
-      return(resultArray)
+      stop("Insufficient training data; relax filters or run PET with more points.")
     }
     
     for(colIndex in 1:ncol(trainingDataDep)) {

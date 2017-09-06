@@ -39,6 +39,8 @@ class SurrogateTable extends Component {
         dependentVarNames={this.props.dependentVarNames}
         independentVarData={indepVarRow}
         dependentVarData={this.props.dependentVarData[index]}
+        discreteIndependentVars={this.props.discreteIndependentVars}
+        service={this.props.service}
         onIndependentVarChange={(col, newValue) => this.handleIndependentVarChange(index, col, newValue)}
         onPredictButtonClick={() => this.handlePredictButtonClick(index)}
         onDeleteButtonClick={() => this.handleDeleteButtonClick(index)} />;
