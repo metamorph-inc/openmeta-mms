@@ -204,6 +204,14 @@ class BackendService {
     }
   }
 
+  pushDiscreteVarState(newDiscreteVars) {
+    if(this.hasShiny) {
+      window.parent.Shiny.onInputChange('SurrogateModeling-discreteVarState', {dvars: newDiscreteVars});
+    } else {
+      console.info("Would have pushed new discrete var state to Shiny, but not connected");
+    }
+  }
+
   getIndependentVarState() {
     if(this.hasShiny) {
       return this.makeShinyRequest('getIndependentVarState', '').then((result) => {

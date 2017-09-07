@@ -50,14 +50,33 @@ server <- function(input, output, session, data) {
             newVar = list(varName=name, selected=options[[1]], available=options)
             return(newVar)
           })
+          
+          discreteVarsList = c(list(configIdObject), discreteVarsList)
+          
+          savedDiscreteVarsList = input$discreteVarState$dvars
+          if(is.null(savedDiscreteVarsList)) {
+            savedDiscreteVarsList = si(ns("discreteVarState"), NULL)$dvars
+          }
+          
+          if(!is.null(savedDiscreteVarsList) && length(savedDiscreteVarsList) == length(discreteVarsList)) {
+            for(i in 1:length(savedDiscreteVarsList)) {
+              if((savedDiscreteVarsList[[i]]$varName == discreteVarsList[[i]]$varName) && is.element(savedDiscreteVarsList[[i]]$selected, discreteVarsList[[i]]$available)) {
+                discreteVarsList[[i]]$selected = savedDiscreteVarsList[[i]]$selected
+              } else {
+                print("Warning: mismatch between saved discrete vars list and dataset")
+                break
+              }
+            }
+          }
+          
           session$sendCustomMessage(type="externalResponse", list(
             id=input$externalRequest$id,
-            data=c(list(configIdObject), discreteVarsList)
+            data=discreteVarsList
           ))
         } else if(input$externalRequest$command == "getIndependentVarState") {
           result = input$independentVarState
           if(is.null(result)) {
-            result = si(ns("independentVarState"))
+            result = si(ns("independentVarState"), NULL)
           }
           session$sendCustomMessage(type="externalResponse", list(
             id=input$externalRequest$id,

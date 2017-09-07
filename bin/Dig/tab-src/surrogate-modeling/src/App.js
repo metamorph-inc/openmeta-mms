@@ -84,6 +84,10 @@ class App extends Component {
     if(!isEqual(previousState.independentVarData, this.state.independentVarData)) {
       this.props.service.pushIndependentVarState(this.state.independentVarData);
     }
+
+    if(!isEqual(previousState.discreteIndependentVars, this.state.discreteIndependentVars)) {
+      this.props.service.pushDiscreteVarState(this.state.discreteIndependentVars);
+    }
   }
 
   // Use an arrow function here because they always bind 'this' correctly by
