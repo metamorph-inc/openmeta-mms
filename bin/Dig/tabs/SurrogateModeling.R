@@ -16,7 +16,9 @@ ui <- function(id) {
     tags$head(tags$script(src="third_party/iframeResizer.min.js")),
     tags$head(tags$style("iframe { width: 100%; }")),
     tags$iframe(src="surrogateModeling/index.html"),
-    tags$script("iFrameResize({log:false, heightCalculationMethod: 'lowestElement'});")
+    tags$script("iFrameResize({log:false, heightCalculationMethod: 'lowestElement'});"),
+    br(),
+    tableOutput(ns("ivarTable"))
   )
 }
 
@@ -27,6 +29,8 @@ server <- function(input, output, session, data) {
     print("Text changed")
     session$sendCustomMessage(type="textFieldChanged", input$someText)
   })
+  
+  output$ivarTable = renderTable(input$independentVarState)
 
   # indepVarNames <- isolate({
   #   data$pre$var_names()[unlist(lapply(data$pre$var_names(), function(var) {
@@ -101,6 +105,16 @@ server <- function(input, output, session, data) {
           session$sendCustomMessage(type="externalResponse", list(
             id=input$externalRequest$id,
             data=c(list(configIdObject), discreteVarsList)
+          ))
+        } else if(input$externalRequest$command == "getIndependentVarState") {
+          result = input$independentVarState
+          if(is.null(result)) {
+            result = si(ns("independentVarState"))
+          }
+          print(result)
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=result
           ))
         } else if(input$externalRequest$command == "evaluateSurrogateAtPoints") {
           result = evaluateSurrogate(input$externalRequest$data$independentVars,
@@ -205,6 +219,14 @@ server <- function(input, output, session, data) {
     
     return(resultArray)
   }
+  
+  observeEvent(input$independentVarState, {
+    print("Rx")
+    if(!is.null(input$independentVarState) && input$independentVarState != "") {
+      print("Received indep var state")
+      print(input$independentVarState)
+    }
+  })
 
   observeEvent(input$messageFromBrowser, {
     print("Rx")

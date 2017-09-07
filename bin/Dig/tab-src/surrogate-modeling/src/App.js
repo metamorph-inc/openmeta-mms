@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash-es';
 
 import ErrorModal from './ErrorModal';
 import DiscreteVariableChooser from './DiscreteVariableChooser';
@@ -21,27 +21,69 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.service.getIndependentVarNames().then((varNames) => {
+    const ivarNamePromise = this.props.service.getIndependentVarNames().then((varNames) => {
       this.setState({
         independentVarNames: varNames,
         independentVarData: [],
         dependentVarData: []
       });
+
+      return varNames;
     });
 
-    this.props.service.getDependentVarNames().then((varNames) => {
+    const dvarNamePromise = this.props.service.getDependentVarNames().then((varNames) => {
       this.setState({
         dependentVarNames: varNames,
         independentVarData: [],
         dependentVarData: []
       });
+
+      return varNames;
     });
 
-    this.props.service.getDiscreteIndependentVars().then((vars) => {
+    const discreteVarPromise = this.props.service.getDiscreteIndependentVars().then((vars) => {
       this.setState({
         discreteIndependentVars: vars
       });
+
+      return vars;
     });
+
+    Promise.all([ivarNamePromise, dvarNamePromise, discreteVarPromise]).then((results) => {
+      console.info("All data loaded: ", results);
+      const [independentVarNames, dependentVarNames, ] = results;
+
+      //Now that we have all the metadata, reload the independent var state
+      this.props.service.getIndependentVarState().then((independentVarData) => {
+        if(independentVarData.length > 0 && independentVarData[0].length === independentVarNames.length) {
+          const dependentVarsLength = dependentVarNames.length;
+
+          const dependentVarData = Array(independentVarData.length);
+
+          for(let i = 0; i < dependentVarData.length; i++) {
+            dependentVarData[i] = Array(dependentVarsLength);
+            for(let j = 0; j < dependentVarData[i].length; j++) {
+              dependentVarData[i][j] = [DependentVarState.STALE, 0.0, 0.0];
+            }
+          }
+
+          this.setState({
+            independentVarData: independentVarData,
+            dependentVarData: dependentVarData
+          });
+        } else if(independentVarData.length > 0) {
+          console.warn(`Number of independent vars (${independentVarNames.length}) changed from saved data (${independentVarData[0].length})`);
+        }
+      });
+    });
+  }
+
+  componentDidUpdate(previousProps, previousState) {
+    // Update Shiny's stored independent var state when it changes
+    // lodash isEqual does a deep comparison
+    if(!isEqual(previousState.independentVarData, this.state.independentVarData)) {
+      this.props.service.pushIndependentVarState(this.state.independentVarData);
+    }
   }
 
   // Use an arrow function here because they always bind 'this' correctly by

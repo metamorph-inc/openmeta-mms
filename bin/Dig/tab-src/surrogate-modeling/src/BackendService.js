@@ -190,6 +190,38 @@ class BackendService {
       });
     }
   }
+
+  pushIndependentVarState(newIndependentVars) {
+    if(this.hasShiny) {
+      // We don't need a response from this, and we'd like to take advantage of
+      // Shiny's ability to rate-limit/batch these updates, so we directly call
+      // onInputChange here rather than using makeShinyRequest
+      // SHINY HACK: Shiny flattens the 2D array we send if we send it directly,
+      // but doesn't if we wrap it in an object first
+      window.parent.Shiny.onInputChange('SurrogateModeling-independentVarState', {ivars: newIndependentVars});
+    } else {
+      console.info("Would have pushed new independent var state to Shiny, but not connected");
+    }
+  }
+
+  getIndependentVarState() {
+    if(this.hasShiny) {
+      return this.makeShinyRequest('getIndependentVarState', '').then((result) => {
+        // Because Shiny serializes empty lists as null
+        if(result === null) {
+          return [];
+        } else {
+          if(result.ivars === null) {
+            return [];
+          } else {
+            return result.ivars;
+          }
+        }
+      });
+    } else {
+      return Promise.resolve(ExampleData.independentVarData);
+    }
+  }
 }
 
 export default BackendService;
