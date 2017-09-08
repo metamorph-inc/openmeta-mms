@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { FormControl, Glyphicon } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
 import RowDetailsModalButton from './RowDetailsModalButton';
+import NumberView from './NumberView';
 import { DependentVarState } from './Enums';
 
 class DependentVarCell extends Component {
@@ -20,10 +21,12 @@ class DependentVarCell extends Component {
     }
     return(
       <td className={cellClass}>
-        {this.props.varData[1]}
+        <NumberView displaySettings={this.props.displaySettings}>
+          {this.props.varData[1]}
+        </NumberView>
         {this.props.varData.length > 2 ? (
           <div>
-            <small>&sigma; {this.props.varData[2]}</small>
+            <small>&sigma; <NumberView displaySettings={this.props.displaySettings}>{this.props.varData[2]}</NumberView></small>
           </div>
         ): null}
       </td>
@@ -55,21 +58,22 @@ class SurrogateTableRow extends Component {
     });
 
     const depVarCells = this.props.dependentVarData.map((varData, index) => {
-      return <DependentVarCell key={index} varData={varData} />;
+      return <DependentVarCell key={index} varData={varData} displaySettings={this.props.displaySettings} />;
     });
 
     return (
       <tr>
         <td>
           <RowDetailsModalButton
-          independentVarNames={this.props.independentVarNames}
-          dependentVarNames={this.props.dependentVarNames}
-          independentVarData={this.props.independentVarData}
-          dependentVarData={this.props.dependentVarData}
-          discreteIndependentVars={this.props.discreteIndependentVars}
-          service={this.props.service}
-          onIndependentVarChange={(i, ev) => this.handleIndependentVarChange(i, ev)}
-          onPredictButtonClick={this.handlePredictButtonClick} />
+            displaySettings={this.props.displaySettings}
+            independentVarNames={this.props.independentVarNames}
+            dependentVarNames={this.props.dependentVarNames}
+            independentVarData={this.props.independentVarData}
+            dependentVarData={this.props.dependentVarData}
+            discreteIndependentVars={this.props.discreteIndependentVars}
+            service={this.props.service}
+            onIndependentVarChange={(i, ev) => this.handleIndependentVarChange(i, ev)}
+            onPredictButtonClick={this.handlePredictButtonClick} />
         </td>
         {indepVarCells}
         <td><TooltipButton bsStyle="primary" bsSize="small" tooltipText="Predict" onClick={() => this.handlePredictButtonClick()}><Glyphicon glyph="question-sign" /><Glyphicon glyph="chevron-right" /></TooltipButton></td>

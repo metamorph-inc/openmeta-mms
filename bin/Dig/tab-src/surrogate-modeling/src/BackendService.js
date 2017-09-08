@@ -1,4 +1,4 @@
-import { ExampleData } from './StaticData';
+import StaticData, { ExampleData } from './StaticData';
 import { DependentVarState } from './Enums';
 
 class BackendService {
@@ -212,6 +212,14 @@ class BackendService {
     }
   }
 
+  pushDisplaySettingsState(newDisplaySettings) {
+    if(this.hasShiny) {
+      window.parent.Shiny.onInputChange('SurrogateModeling-displaySettingsState', {settings: newDisplaySettings});
+    } else {
+      console.info("Would have pushed new display settings state to Shiny, but not connected");
+    }
+  }
+
   getIndependentVarState() {
     if(this.hasShiny) {
       return this.makeShinyRequest('getIndependentVarState', '').then((result) => {
@@ -230,6 +238,26 @@ class BackendService {
       return Promise.resolve(ExampleData.independentVarData);
     }
   }
+
+  getDisplaySettingsState() {
+    if(this.hasShiny) {
+      return this.makeShinyRequest('getDisplaySettingsState', '').then((result) => {
+        // Because Shiny serializes empty lists as null
+        if(result === null) {
+          return StaticData.displaySettings;
+        } else {
+          if(result.settings === null) {
+            return StaticData.displaySettings;
+          } else {
+            return result.settings;
+          }
+        }
+      });
+    } else {
+      return Promise.resolve(StaticData.displaySettings);
+    }
+  }
 }
+
 
 export default BackendService;

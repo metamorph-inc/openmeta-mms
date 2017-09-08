@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Glyphicon, Button, Alert, Row, Col, FormGroup, FormControl } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
 import ProbabilityGraphsView from './ProbabilityGraphsView';
+import NumberView from './NumberView';
 import { DependentVarState } from './Enums';
 
 class RowDetailsModalButton extends Component {
@@ -34,7 +35,7 @@ class RowDetailsModalButton extends Component {
       return (
         <FormGroup key={index}>
           <h4>{this.props.independentVarNames[index]}</h4>
-          <FormControl type="number" value={value} onChange={(ev) => this.handleIndependentVarChange(index, ev)} />
+          <FormControl type="number" value={value} min={1} max={21} onChange={(ev) => this.handleIndependentVarChange(index, ev)} />
         </FormGroup>
       );
     });
@@ -44,13 +45,13 @@ class RowDetailsModalButton extends Component {
         <div key={index}>
           <h4>{this.props.dependentVarNames[index]}</h4>
           <h5>Mean</h5>
-          <p>{varData[1]}</p>
+          <p><NumberView displaySettings={this.props.displaySettings}>{varData[1]}</NumberView></p>
           {varData.length >= 2 ? (
             <div>
               <h5>Standard Deviation</h5>
-              <p>{varData[2]}</p>
+              <p><NumberView displaySettings={this.props.displaySettings}>{varData[2]}</NumberView></p>
               <h5>95% Confidence Interval</h5>
-              <p>{varData[1] - varData[2]*2} &ndash; {varData[1] + varData[2]*2}</p>
+              <p><NumberView displaySettings={this.props.displaySettings}>{varData[1] - varData[2]*2}</NumberView> to <NumberView displaySettings={this.props.displaySettings}>{varData[1] + varData[2]*2}</NumberView></p>
             </div>
           ) : null}
         </div>

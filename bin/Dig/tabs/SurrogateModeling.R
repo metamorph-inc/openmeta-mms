@@ -82,6 +82,15 @@ server <- function(input, output, session, data) {
             id=input$externalRequest$id,
             data=result
           ))
+        } else if(input$externalRequest$command == "getDisplaySettingsState") {
+          result = input$displaySettingsState
+          if(is.null(result)) {
+            result = si(ns("displaySettingsState"), NULL)
+          }
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=result
+          ))
         } else if(input$externalRequest$command == "evaluateSurrogateAtPoints") {
           result = evaluateSurrogate(input$externalRequest$data$independentVars,
                                      input$externalRequest$data$discreteVars)

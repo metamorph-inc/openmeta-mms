@@ -6,7 +6,11 @@ const StaticData = {
   independentVarData: [],
   dependentVarData: [],
   discreteIndependentVars: [],
-  currentErrorMessage: null
+  currentErrorMessage: null,
+  displaySettings: {
+    roundNumbers: false,
+    precision: 5
+  }
 };
 
 const ExampleData = {

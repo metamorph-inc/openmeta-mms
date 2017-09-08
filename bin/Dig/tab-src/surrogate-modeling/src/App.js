@@ -5,6 +5,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { cloneDeep, isEqual } from 'lodash-es';
 
 import ErrorModal from './ErrorModal';
+import DisplaySettingsPopoverButton from './DisplaySettingsPopoverButton';
 import DiscreteVariableChooser from './DiscreteVariableChooser';
 import SurrogateTable from './SurrogateTable';
 
@@ -21,6 +22,12 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.props.service.getDisplaySettingsState().then((newDisplaySettings) => {
+      this.setState({
+        displaySettings: newDisplaySettings
+      });
+    });
+
     const ivarNamePromise = this.props.service.getIndependentVarNames().then((varNames) => {
       this.setState({
         independentVarNames: varNames,
@@ -87,6 +94,10 @@ class App extends Component {
 
     if(!isEqual(previousState.discreteIndependentVars, this.state.discreteIndependentVars)) {
       this.props.service.pushDiscreteVarState(this.state.discreteIndependentVars);
+    }
+
+    if(!isEqual(previousState.displaySettings, this.state.displaySettings)) {
+      this.props.service.pushDisplaySettingsState(this.state.displaySettings);
     }
   }
 
@@ -191,6 +202,12 @@ class App extends Component {
     });
   }
 
+  handleDisplaySettingsChange = (newDisplaySettings) => {
+    this.setState({
+      displaySettings: newDisplaySettings
+    });
+  }
+
   handleErrorDialogClose = () => {
     this.setState({
       currentErrorMessage: null
@@ -204,6 +221,13 @@ class App extends Component {
         <Grid fluid>
           <Row>
             <Col md={12}>
+              <DisplaySettingsPopoverButton
+                displaySettings={this.state.displaySettings}
+                onDisplaySettingsChange={this.handleDisplaySettingsChange} />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
               <DiscreteVariableChooser
                 discreteVars={this.state.discreteIndependentVars}
                 onSelectedVariableChange={(varIndex, newValue) => this.handleSelectedVariableChange(varIndex, newValue)} />
@@ -211,18 +235,21 @@ class App extends Component {
           </Row>
           <Row>
             <Col md={12}>
-              <SurrogateTable
-                independentVarNames={this.state.independentVarNames}
-                dependentVarNames={this.state.dependentVarNames}
-                independentVarData={this.state.independentVarData}
-                dependentVarData={this.state.dependentVarData}
-                discreteIndependentVars={this.state.discreteIndependentVars}
-                service={this.props.service}
+              <div>
+                <SurrogateTable
+                  displaySettings={this.state.displaySettings}
+                  independentVarNames={this.state.independentVarNames}
+                  dependentVarNames={this.state.dependentVarNames}
+                  independentVarData={this.state.independentVarData}
+                  dependentVarData={this.state.dependentVarData}
+                  discreteIndependentVars={this.state.discreteIndependentVars}
+                  service={this.props.service}
 
-                onIndependentVarChange={(col, row, newValue) => this.handleIndependentVarChange(col, row, newValue)}
-                onPredictButtonClick={(row) => this.handlePredictButtonClick(row)}
-                onDeleteButtonClick={(row) => this.handleDeleteButtonClick(row)}
-                onAddRow={() => this.handleAddRow()} />
+                  onIndependentVarChange={(col, row, newValue) => this.handleIndependentVarChange(col, row, newValue)}
+                  onPredictButtonClick={(row) => this.handlePredictButtonClick(row)}
+                  onDeleteButtonClick={(row) => this.handleDeleteButtonClick(row)}
+                  onAddRow={() => this.handleAddRow()} />
+              </div>
             </Col>
           </Row>
         </Grid>
