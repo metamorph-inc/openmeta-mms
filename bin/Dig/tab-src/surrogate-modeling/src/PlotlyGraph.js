@@ -136,12 +136,11 @@ class PlotlyGraph extends Component {
         displaylogo: false
       });
 
-    /*scope.plotlyDiv[0].on('plotly_click', function(data) {
-      console.log(data); // eslint-disable-line
-      scope.$apply(function() {
-        scope.clickHandler(data.points[0].x);
-      });
-    });*/
+    this.plotlyDiv.on('plotly_click', (data) => {
+      console.log(data);
+
+      this.props.onClick(data.points[0].x);
+    });
   }
 
   render() {

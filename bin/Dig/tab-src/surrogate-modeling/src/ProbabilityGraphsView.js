@@ -65,6 +65,10 @@ class ProbabilityGraphsView extends Component {
     this.props.onSelectedIndependentVarChange(ev.target.value);
   }
 
+  handleGraphClick = (graphIndex, xPosition) => {
+    this.props.onGraphClick(graphIndex, xPosition);
+  }
+
   render() {
     const xAxisOptions = this.props.independentVarNames.map((name, index) => {
       return <option key={name} value={name}>{name}</option>;
@@ -88,6 +92,7 @@ class ProbabilityGraphsView extends Component {
             xAxisPoints={this.state.xAxisPoints}
             yAxisPoints={points}
             yAxisErrors={this.state.yAxisErrors[index]}
+            onClick={(xPosition) => this.handleGraphClick(index, xPosition)}
             />
         );
       });

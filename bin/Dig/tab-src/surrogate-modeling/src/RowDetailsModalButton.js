@@ -37,6 +37,13 @@ class RowDetailsModalButton extends Component {
     });
   }
 
+  // Clicking the graph sets the selected independent var to the chosen value,
+  // and predicts at that point
+  handleGraphClick = (graphIndex, xPosition) => {
+    this.handleIndependentVarChange(this.props.independentVarNames.indexOf(this.state.selectedIndependentVar), {target: {value: xPosition}});
+    this.handlePredictButtonClick();
+  }
+
   render() {
     const indepVarCells = this.props.independentVarData.map((value, index) => {
       let className = "";
@@ -136,7 +143,8 @@ class RowDetailsModalButton extends Component {
                   discreteIndependentVars={this.props.discreteIndependentVars}
                   predictionsUnavailable={this.props.dependentVarNames.length === 0 || this.props.dependentVarData[0][0] === DependentVarState.COMPUTING || this.props.dependentVarData[0][0] === DependentVarState.STALE}
                   service={this.props.service}
-                  onSelectedIndependentVarChange={this.handleSelectedIndependentVarChange} />
+                  onSelectedIndependentVarChange={this.handleSelectedIndependentVarChange}
+                  onGraphClick={this.handleGraphClick} />
               </Col>
             </Row>
           </Modal.Body>
