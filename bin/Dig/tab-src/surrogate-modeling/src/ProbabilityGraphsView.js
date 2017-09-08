@@ -9,7 +9,6 @@ class ProbabilityGraphsView extends Component {
     super(props);
 
     this.state = {
-      selectedIndependentVar: (this.props.independentVarNames.length > 0 ? this.props.independentVarNames[0] : ""),
       graphsAvailable: false,
       xAxisPoints: null,
       yAxisPoints: null,
@@ -36,7 +35,7 @@ class ProbabilityGraphsView extends Component {
     if(previousProps.predictionsUnavailable && !this.props.predictionsUnavailable) {
       console.log("New predictions became available; time to reload graphs");
       this.reloadGraphs();
-    } else if(previousState.selectedIndependentVar !== this.state.selectedIndependentVar && !this.props.predictionsUnavailable) {
+    } else if(previousProps.selectedIndependentVar !== this.props.selectedIndependentVar && !this.props.predictionsUnavailable) {
       console.log("Selected independent var changed; time to reload graphs");
       this.reloadGraphs();
     }
@@ -47,7 +46,7 @@ class ProbabilityGraphsView extends Component {
       graphsAvailable: false,
       currentErrorMessage: null
     });
-    this.props.service.getSurrogateGraphData(this.props.independentVarData, this.props.discreteIndependentVars, this.state.selectedIndependentVar).then((result) => {
+    this.props.service.getSurrogateGraphData(this.props.independentVarData, this.props.discreteIndependentVars, this.props.selectedIndependentVar).then((result) => {
       console.info("Got new graph data", result);
       this.setState({
         graphsAvailable: true,
@@ -63,9 +62,7 @@ class ProbabilityGraphsView extends Component {
   }
 
   handleSelectedIndependentVarChange = (ev) => {
-    this.setState({
-      selectedIndependentVar: ev.target.value
-    });
+    this.props.onSelectedIndependentVarChange(ev.target.value);
   }
 
   render() {
@@ -86,7 +83,7 @@ class ProbabilityGraphsView extends Component {
         return (
           <PlotlyGraph
             key={index}
-            xAxisName={this.state.selectedIndependentVar}
+            xAxisName={this.props.selectedIndependentVar}
             yAxisName={this.props.dependentVarNames[index]}
             xAxisPoints={this.state.xAxisPoints}
             yAxisPoints={points}
@@ -110,7 +107,7 @@ class ProbabilityGraphsView extends Component {
               <FormGroup>
                 <ControlLabel>X Axis: </ControlLabel>
                 {' '}
-                <FormControl componentClass="select" value={this.state.selectedIndependentVar} onChange={(ev) => this.handleSelectedIndependentVarChange(ev)}>
+                <FormControl componentClass="select" value={this.props.selectedIndependentVar} onChange={(ev) => this.handleSelectedIndependentVarChange(ev)}>
                   {xAxisOptions}
                 </FormControl>
               </FormGroup>

@@ -34,3 +34,7 @@ table.surrogate-table tbody td small {
   text-overflow: ellipsis;
   overflow-wrap: break-word;
 }
+
+div.form-group.selected-var input {
+  background-color: #e5ffe5;
+}

@@ -10,7 +10,8 @@ class RowDetailsModalButton extends Component {
     super(props);
 
     this.state = {
-      showModal: false
+      showModal: false,
+      selectedIndependentVar: (this.props.independentVarNames.length > 0 ? this.props.independentVarNames[0] : "")
     };
   }
 
@@ -24,16 +25,28 @@ class RowDetailsModalButton extends Component {
 
   handleIndependentVarChange = (i, ev) => {
     this.props.onIndependentVarChange(i, ev);
-  };
+  }
 
   handlePredictButtonClick = () => {
     this.props.onPredictButtonClick();
   }
 
+  handleSelectedIndependentVarChange = (newValue) => {
+    this.setState({
+      selectedIndependentVar: newValue
+    });
+  }
+
   render() {
     const indepVarCells = this.props.independentVarData.map((value, index) => {
+      let className = "";
+
+      if(this.props.independentVarNames[index] === this.state.selectedIndependentVar) {
+        className = "selected-var";
+      }
+
       return (
-        <FormGroup key={index}>
+        <FormGroup key={index} className={className}>
           <h4>{this.props.independentVarNames[index]}</h4>
           <FormControl type="number" value={value} min={1} max={21} onChange={(ev) => this.handleIndependentVarChange(index, ev)} />
         </FormGroup>
@@ -41,19 +54,28 @@ class RowDetailsModalButton extends Component {
     });
 
     const depVarCells = this.props.dependentVarData.map((varData, index) => {
+      let className = "";
+      if(varData[0] === DependentVarState.STALE) {
+        className = "text-warning";
+      } else if(varData[0] === DependentVarState.COMPUTING) {
+        className = "text-info";
+      }
+
       return (
-        <div key={index}>
+        <div key={index} className={className}>
           <h4>{this.props.dependentVarNames[index]}</h4>
-          <h5>Mean</h5>
-          <p><NumberView displaySettings={this.props.displaySettings}>{varData[1]}</NumberView></p>
+          <dl>
+          <dt>Mean</dt>
+          <dd><NumberView displaySettings={this.props.displaySettings}>{varData[1]}</NumberView></dd>
           {varData.length >= 2 ? (
             <div>
-              <h5>Standard Deviation</h5>
-              <p><NumberView displaySettings={this.props.displaySettings}>{varData[2]}</NumberView></p>
-              <h5>95% Confidence Interval</h5>
-              <p><NumberView displaySettings={this.props.displaySettings}>{varData[1] - varData[2]*2}</NumberView> to <NumberView displaySettings={this.props.displaySettings}>{varData[1] + varData[2]*2}</NumberView></p>
+              <dt>Standard Deviation</dt>
+              <dd><NumberView displaySettings={this.props.displaySettings}>{varData[2]}</NumberView></dd>
+              <dt>95% Confidence Interval</dt>
+              <dd><NumberView displaySettings={this.props.displaySettings}>{varData[1] - varData[2]*2}</NumberView> to <NumberView displaySettings={this.props.displaySettings}>{varData[1] + varData[2]*2}</NumberView></dd>
             </div>
           ) : null}
+          </dl>
         </div>
       );
     });
@@ -107,12 +129,14 @@ class RowDetailsModalButton extends Component {
               </Col>
               <Col md={8}>
                 <ProbabilityGraphsView
+                  selectedIndependentVar={this.state.selectedIndependentVar}
                   independentVarNames={this.props.independentVarNames}
                   dependentVarNames={this.props.dependentVarNames}
                   independentVarData={this.props.independentVarData}
                   discreteIndependentVars={this.props.discreteIndependentVars}
                   predictionsUnavailable={this.props.dependentVarNames.length === 0 || this.props.dependentVarData[0][0] === DependentVarState.COMPUTING || this.props.dependentVarData[0][0] === DependentVarState.STALE}
-                  service={this.props.service}/>
+                  service={this.props.service}
+                  onSelectedIndependentVarChange={this.handleSelectedIndependentVarChange} />
               </Col>
             </Row>
           </Modal.Body>

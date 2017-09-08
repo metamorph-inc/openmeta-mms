@@ -1,5 +1,5 @@
 # Copyright (c) 2016-2017, MetaMorph Software
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
 # "Software"), to deal in the Software without restriction, including
@@ -7,10 +7,10 @@
 # distribute, sublicense, and/or sell copies of the Software, and to
 # permit persons to whom the Software is furnished to do so, subject to
 # the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 # MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -65,7 +65,7 @@ if (dig_dataset_config == "") {
     config_filename=file.path('datasets',
                               'WindTurbineForOptimization',
                               'visualizer_config.json',
-                              fsep = "\\\\")
+                              fsep = "/")
     # config_filename=file.path('datasets',
     #                           'boxpacking',
     #                           'visualizer_config.json',
@@ -118,7 +118,7 @@ si <- function(id, default) {
   # Retrieves saved input state from the previous session for a UI element
   # with a given id. This function will most often be called in a 'ui(id)'
   # definition when creating a UI input element.
-  # 
+  #
   # This function deletes the saved value after it is accessed, so each tab
   # should take care to persist the value through any regeneration of UI
   # elements.
@@ -251,7 +251,7 @@ Server <- function(input, output, session) {
   #   input: the Shiny list of all the UI input elements.
   #   output: the Shiny list of all the UI output elements.
   #   session: a handle for the Shiny session.
-  
+
   # Data Pre-Processing --------------------------------------------------------
 
   var_class <- reactive({
@@ -364,7 +364,7 @@ Server <- function(input, output, session) {
       subset(var_names(), !(var_names() %in% var_range()))
     }
   })
-  
+
   pre <- list(var_names=var_names,
               var_class=var_class,
               var_facs=var_facs,
@@ -380,9 +380,9 @@ Server <- function(input, output, session) {
               var_range_facs_list=var_range_facs_list,
               var_range_list=var_range_list,
               var_constants=var_constants)
-  
+
   # Design Configs for Filters -----------------------------------------------
-  
+
   observe({
     if(design_tree_present) {
       if(is.empty(visualizer_config$config_tree)) {
@@ -393,7 +393,7 @@ Server <- function(input, output, session) {
       session$sendCustomMessage(type = "setup_design_configurations", config_tree)
     }
   })
-  
+
   # observe({print(paste("SDC:",paste(SelectedDesignConfigs(),collapse=",")))})
 
   SelectedDesignConfigs <- reactive({
@@ -422,10 +422,10 @@ Server <- function(input, output, session) {
       }
     }
   })
-  
+
   # Filters (Enumerations, Sliders) and Constants ----------------------------
-  
-  # Lets the UI know if a tab has requested the 'Filters' footer.  
+
+  # Lets the UI know if a tab has requested the 'Filters' footer.
   footer_preferences <- lapply(tab_environments,
                                function(tab_env) {tab_env$footer})
   names(footer_preferences) <- lapply(tab_environments,
@@ -434,7 +434,7 @@ Server <- function(input, output, session) {
     display <- (footer_preferences[[input$master_tabset]])
   })
   outputOptions(output, "display_footer", suspendWhenHidden=FALSE)
-  
+
   # Special observe to cover 'footer_collapse'
   observe({
     if(!is.null(si_read("footer_collapse"))) {
@@ -446,12 +446,12 @@ Server <- function(input, output, session) {
       }
     }
   })
-  
+
   # Generates the sliders and select boxes.
   output$filters <- renderUI({
     var_selects <- pre$var_range_facs()
     var_sliders <- pre$var_range_nums_and_ints()
-    
+
     div(
       fluidRow(
         lapply(var_selects, function(var_select) {
@@ -465,7 +465,7 @@ Server <- function(input, output, session) {
       )
     )
   })
-  
+
   # Slider abbreviation function based off slider_width
   abbreviation_length <- ABBREVIATION_LENGTH
   AbbreviateLabel <- function(name) {
@@ -474,26 +474,26 @@ Server <- function(input, output, session) {
     }
     abbreviate(name, abbreviation_length)
   }
-  
+
   # Process slider pixel width when opening filters
   observeEvent(input$footer_collapse, {
     session$onFlushed(function() {
       session$sendCustomMessage("update_widths", message = 1);
     })
   })
-  
+
   GenerateEnumUI <- function(current) {
     items <- names(table(raw[[current]]))
-    
+
     for(i in 1:length(items)){
       items[i] <- paste0(i, '. ', items[i])
     }
-    
+
     selected_value <- input[[paste0('filter_', current)]]
     if(is.null(selected_value))
       # selected_value <- items
       selected_value <- si(paste0('filter_', current), items)
-    
+
     column(FILTER_WIDTH_IN_COLUMNS,
            selectInput(inputId = paste0('filter_', current),
                        label = current,
@@ -503,9 +503,9 @@ Server <- function(input, output, session) {
                        selected = selected_value)
     )
   }
-  
+
   GenerateSliderUI <- function(current) {
-    
+
     if(current %in% pre$var_nums()){
       min <- as.numeric(pre$abs_min()[current])
       max <- as.numeric(pre$abs_max()[current])
@@ -519,7 +519,7 @@ Server <- function(input, output, session) {
       slider_min <- as.numeric(pre$abs_min()[current])
       slider_max <- as.numeric(pre$abs_max()[current])
     }
-    
+
     slider_value <- input[[paste0('filter_', current)]]
     if(is.null(slider_value)){
       # TODO(tthomas): Why are we using 'step' around the already 'stepped' numerics?
@@ -530,8 +530,8 @@ Server <- function(input, output, session) {
                            signif(slider_max+step*10, digits = 4)))
       # slider_value <- c(slider_min, slider_max)
     }
-    
-    
+
+
       column(FILTER_WIDTH_IN_COLUMNS,
              # Hidden well panel for slider tooltip
              wellPanel(id = paste0("slider_tooltip_", current),
@@ -550,7 +550,7 @@ Server <- function(input, output, session) {
                          value = slider_value)
       )
   }
-  
+
   # Custom action button for exact entry. This makes a green button
   # and can also be accessed to produced different themed buttons
   actionButton <- function(inputId, label, btn.style = "" , css.class = "") {
@@ -559,7 +559,7 @@ Server <- function(input, output, session) {
     else btn.css.class = ""
     tags$button(id=inputId, type="button", class=paste("btn action-button",btn.css.class,css.class,collapse=" "), label)
   }
-  
+
   openSliderToolTip <- function(current) {
     # This function calls hide on all slider exact entry windows on a
     # 'double click' and then calls 'show' on the opened one.
@@ -568,14 +568,14 @@ Server <- function(input, output, session) {
     }
     shinyjs::show(paste0("slider_tooltip_", current))
   }
-  
+
   observe({
     lapply(pre$var_range_nums_and_ints(), function(current) {
       # This handles the processing of exact entry back into the slider.
       # It reacts to either the submit button OR the enter key
       input[[paste0("submit_", current)]]
       input$last_key_pressed
-      
+
       isolate({
         slider_value = input[[paste0('filter_', current)]]
         new_min = input[[paste0("tooltip_min_", current)]]
@@ -593,7 +593,7 @@ Server <- function(input, output, session) {
       })
     })
   })
-  
+
   # This function adds a double click handler to each slider
   observe({
     lapply(pre$var_range_nums_and_ints(), function(current) {
@@ -601,7 +601,7 @@ Server <- function(input, output, session) {
       inlineCSS(list(.style = "overflow: hidden"))
     })
   })
-  
+
   output$constants <- renderUI({
     fluidRow(
       lapply(pre$var_constants(), function(var_constant) {
@@ -611,13 +611,13 @@ Server <- function(input, output, session) {
       })
     )
   })
-  
+
   output$constants_present <- reactive({
     length(pre$var_constants()) > 0
   })
-  
+
   outputOptions(output, "constants_present", suspendWhenHidden=FALSE)
-  
+
   observeEvent(input$reset_sliders, {
     session$sendCustomMessage(type = "select_all_design_configurations", "")
     for(column in 1:length(pre$var_names())){
@@ -645,9 +645,9 @@ Server <- function(input, output, session) {
       )
     }
   })
-  
+
   # Data processing ----------------------------------------------------------
-    
+
   FilteredData <- reactive({
     # This reactive holds the full dataset that has been filtered using the
     # values of the sliders.
@@ -690,10 +690,10 @@ Server <- function(input, output, session) {
                                                   }))
             in_range <- (data_filtered[[name]] %in% selection)
         }
-        
+
         # Don't filter based on missing values.
         in_range <- in_range | is.na(data_filtered[[name]])
-        
+
         data_filtered <- subset(data_filtered, in_range)
       }
       # print(nrow(data_filtered))
@@ -701,12 +701,12 @@ Server <- function(input, output, session) {
     # print("Data Filtered.")
     data_filtered
   })
-  
+
   Filters <- reactive({
     # This reactive returns a list of all the filter values so a tab can use
     # the information for filtering the raw dataset itself.
     #
-    # Each of the variables will have a "type" that is simply the 
+    # Each of the variables will have a "type" that is simply the
     # pre$var_class() for that variable and either "selection" or "min" and
     # "max", e.g.:
     # > Filters()$Engine$type
@@ -719,7 +719,7 @@ Server <- function(input, output, session) {
     #   130
     # > Filters()$TopSpeed$max
     #   210
-    
+
     filters <- list()
     for(index in 1:length(pre$var_names())) {
       name <- pre$var_names()[index]
@@ -738,7 +738,7 @@ Server <- function(input, output, session) {
     }
     filters
   })
-  
+
   ColoredData <- reactive({
     data_colored <- FilteredData()
     data_colored$color <- character(nrow(data_colored))
@@ -756,7 +756,7 @@ Server <- function(input, output, session) {
         data$colorings$current$type <- type
       })
       switch(type,
-        "Max/Min" = 
+        "Max/Min" =
         {
           if (input$coloring_source == "Live") {
             var <- input$live_coloring_variable_numeric
@@ -776,7 +776,7 @@ Server <- function(input, output, session) {
           if (goal == "Maximize") {
             data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
                             cols[max(1, ceiling((value - minimum) / divisor))]}))
-          } 
+          }
           else {
             data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
                             cols[max(1, ceiling((maximum - value) / divisor))]}))
@@ -786,7 +786,7 @@ Server <- function(input, output, session) {
             data$colorings$current$goal <- goal
           })
         },
-        "Discrete" = 
+        "Discrete" =
         {
           if (input$coloring_source == "Live") {
             var <- input$live_color_variable_factor
@@ -829,15 +829,15 @@ Server <- function(input, output, session) {
     # names(data_colored) <- lapply(names(data_colored), AddUnits)
     data_colored
   })
-  
+
   # Coloring -----------------------------------------------------------------
-  
+
   if(is.null(visualizer_config$coloring)) {
     colorings <- list()
   } else {
     colorings <- visualizer_config$coloring
   }
-  
+
   output$coloring_table <- renderTable({
     names <- unlist(lapply(data$meta$colorings,
                            function(current) {current$name}))
@@ -850,7 +850,7 @@ Server <- function(input, output, session) {
     }))
     table <- data.frame(Names=names, Descriptions=descriptions)
   })
-  
+
   observeEvent(input$live_coloring_add_classification, {
     isolate({
       name <- input$live_coloring_name
@@ -878,7 +878,7 @@ Server <- function(input, output, session) {
       }
     })
   })
-  
+
   output$coloring_legend <- renderUI({
     req(data$colorings$current$type)
     req(data$colorings$current$var)
@@ -895,7 +895,7 @@ Server <- function(input, output, session) {
       raw_label
     }
   })
-  
+
   observe({
     isolate({
       selected <- input$coloring_source
@@ -910,7 +910,7 @@ Server <- function(input, output, session) {
                       choices = new_choices,
                       selected = selected)
   })
-  
+
   observe({
     selected <- isolate(input$live_color_variable_factor)
     if(is.null(selected) || selected == "") {
@@ -926,7 +926,7 @@ Server <- function(input, output, session) {
                       choices = data$pre$var_range_facs_list(),
                       selected = selected)
   })
-  
+
   observe({
     selected <- isolate(input$live_coloring_variable_numeric)
     if(is.null(selected) || selected == "") {
@@ -942,16 +942,16 @@ Server <- function(input, output, session) {
                       choices = data$pre$var_range_nums_and_ints_list(),
                       selected = selected)
   })
-  
+
   # Sets ---------------------------------------------------------------------
-  
+
   # Blank or saved data
   if(is.null(visualizer_config$sets)) {
     sets <- list()
   } else {
     sets <- visualizer_config$sets
   }
-  
+
   # Classifications table
   output$no_classifications <- renderText(NoClassifications())
   NoClassifications <- reactive({
@@ -960,39 +960,39 @@ Server <- function(input, output, session) {
       "No Classifications Available."
     }
   })
-  
+
   output$classification_table_output <- renderTable(ClassificationsTable())
-  
+
   ClassificationsTable <- reactive({
     new_table <- do.call(rbind, classifications())
     if (!is.null(new_table)) {
       new_table <- cbind(name=names(classifications()), new_table)
     }
   })
-  
+
   classifications <- reactive({
     data$meta$variables[sapply(data$meta$variables,
                         function(x) x$type == "Classification")]
   })
-  
+
   # Final Processing ---------------------------------------------------------
-  
+
   # Build the 'data' list that is shared between all tabs.
   data <- list()
   data$raw <- reactiveValues(df = raw)
   data$Filtered <- FilteredData
   data$Colored <- ColoredData
   data$Filters <- Filters
-  
+
   # Build the 'meta' list.
   data$meta <- reactiveValues(variables=variables,
                               colorings=colorings,
                               pet=pet,
                               sets=sets)
   data$pre <- pre
-  
+
   # Call each tab's server() function ----------------------------------------
-  
+
   mapply(function(tab_env, id) {
       # do.call(tab_env$server,
       #         list(input, output, session, data))
@@ -1002,10 +1002,10 @@ Server <- function(input, output, session) {
     id=tab_ids,
     SIMPLIFY = FALSE
   )
-  
+
   # Session Save/Restore -----------------------------------------------------
 
-  # The save/restore functionality relies upon three main mechanisms: 
+  # The save/restore functionality relies upon three main mechanisms:
   #  1. It saves the values of all the inputs to the visualizer config file
   #     on close by supplying the necessary callback function to
   #     session$onSessionEnded().
@@ -1013,13 +1013,13 @@ Server <- function(input, output, session) {
   #     them to check for a saved value for a input when creating inputs
   #     in their 'ui'.
   #  3. Lastly, there are a number of inputs that can't be restored using the
-  #     standard si() function. These special inputs are restored using 
+  #     standard si() function. These special inputs are restored using
   #     observe(), isolate(), si_read(), and si() functions and can be found
   #     throughout the rest of the body of the 'app.R' file.
-  
+
   # Dispose of this server when the UI is closed
   session$onSessionEnded(function() {
-    
+
     # Save the updated raw data
     if(is.null(visualizer_config$augmented_data)) {
       visualizer_config$augmented_data <- sub(".json", "_data.csv",
@@ -1028,7 +1028,7 @@ Server <- function(input, output, session) {
     write.csv(isolate(data$raw$df),
               file=file.path(launch_dir, visualizer_config$augmented_data),
               row.names = FALSE)
-    
+
     # Prepare metadata for saving to visualizer config file
     meta <- isolate(reactiveValuesToList(data$meta))
     visualizer_config$variables <- meta$variables
@@ -1038,7 +1038,7 @@ Server <- function(input, output, session) {
     visualizer_config$sets <- meta$sets
     # visualizer_config$comments <- meta$comments
     visualizer_config$config_tree <- isolate(input$filter_design_config_tree)
-    
+
     # Prepare inputs for saving to visualizer config file
     current_inputs <- isolate(reactiveValuesToList(input))
     current_inputs[["window_width"]] <- NULL
@@ -1052,7 +1052,7 @@ Server <- function(input, output, session) {
                                                 names(saved_inputs))])
     combined_inputs <- combined_inputs[order(names(combined_inputs))]
     visualizer_config$inputs <- combined_inputs
-    
+
     # Retrive tab data to save
     tab_data <- lapply(tab_environments, function(tab_env) {
       if(!is.null(tab_env$TabData)) {
@@ -1061,21 +1061,21 @@ Server <- function(input, output, session) {
     })
     names(tab_data) <- tab_ids
     visualizer_config$tab_data <- tab_data
-    
+
     # Save visualizer config file
     if(SAVE_DIG_INPUT_CSV || dig_input_csv == "") {
       write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
             file=config_filename)
       print("Session saved.")
     }
-    
+
     # Clear environment variables (necessary only for development)
     Sys.setenv(DIG_INPUT_CSV="")
     Sys.setenv(DIG_DATASET_CONFIG="")
     stopApp()
   })
-  
-  
+
+
 }
 
 # UI -------------------------------------------------------------------------
@@ -1100,27 +1100,27 @@ tabset_arguments <- c(unname(base_tabs),
 ui <- fluidPage(
   useShinyjs(),
   tags$script(src = "main.js"),
-  
+
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "DesignConfig.css")),
   tags$script(src = "d3.v3.min.js"),
   tags$script(src = "design_config_selector.js"),
-  
+
   titlePanel("Visualizer"),
-  
+
   # Generates the master tabset from the user-defined tabs provided.
   do.call(tabsetPanel, tabset_arguments),
-  
+
   # Optional Footer.
   conditionalPanel("output.display_footer",
     hr(),
     bsCollapse(id = "footer_collapse", open = "Filters",  # COMMENT(tthomas): Filters need to open to initialize properly, observe() in server covers saved input.
-      bsCollapsePanel("Filters", 
+      bsCollapsePanel("Filters",
         # tags$div(title = "Activate to show filters for all dataset variables.",
         #          checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
         tags$div(title = "Return visible sliders to default state.",
                  actionButton("reset_sliders", "Reset Visible Filters")),
         hr(),
-        
+
         if(design_tree_present) {
           fluidRow(
             column(3, tags$label("Design Configuration Tree"), tags$div(id="design_configurations")),
