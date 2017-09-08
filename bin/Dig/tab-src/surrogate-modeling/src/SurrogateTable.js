@@ -12,6 +12,10 @@ class SurrogateTable extends Component {
     this.props.onPredictButtonClick(row);
   }
 
+  handleDuplicateButtonClick = (row) => {
+    this.props.onDuplicateButtonClick(row);
+  }
+
   handleDeleteButtonClick = (row) => {
     this.props.onDeleteButtonClick(row);
   }
@@ -44,6 +48,7 @@ class SurrogateTable extends Component {
         service={this.props.service}
         onIndependentVarChange={(col, newValue) => this.handleIndependentVarChange(index, col, newValue)}
         onPredictButtonClick={() => this.handlePredictButtonClick(index)}
+        onDuplicateButtonClick={() => this.handleDuplicateButtonClick(index)}
         onDeleteButtonClick={() => this.handleDeleteButtonClick(index)} />;
     });
 

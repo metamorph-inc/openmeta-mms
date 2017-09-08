@@ -14,6 +14,14 @@ table.surrogate-table tbody td small {
     color: #888;
 }
 
+/* Workaround to prevent duplicate/delete button group from being broken onto
+   two lines, on browsers that support display: flex */
+@supports (display: flex) {
+  table.surrogate-table div.btn-group {
+    display: flex;
+  }
+}
+
 .discrete-var-chooser h4 {
   margin-top: auto;
 }

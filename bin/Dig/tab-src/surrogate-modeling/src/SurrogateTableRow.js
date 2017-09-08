@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FormControl, Glyphicon } from 'react-bootstrap';
+import { FormControl, Glyphicon, ButtonGroup } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
 import RowDetailsModalButton from './RowDetailsModalButton';
 import NumberView from './NumberView';
@@ -48,6 +48,10 @@ class SurrogateTableRow extends Component {
     this.props.onPredictButtonClick();
   }
 
+  handleDuplicateButtonClick = () => {
+    this.props.onDuplicateButtonClick();
+  }
+
   handleDeleteButtonClick = () => {
     this.props.onDeleteButtonClick();
   };
@@ -78,7 +82,12 @@ class SurrogateTableRow extends Component {
         {indepVarCells}
         <td><TooltipButton bsStyle="primary" bsSize="small" tooltipText="Predict" onClick={() => this.handlePredictButtonClick()}><Glyphicon glyph="question-sign" /><Glyphicon glyph="chevron-right" /></TooltipButton></td>
         {depVarCells}
-        <td><TooltipButton bsStyle="danger" bsSize="small" tooltipText="Delete row" onClick={() => this.handleDeleteButtonClick()}><Glyphicon glyph="remove" /></TooltipButton></td>
+        <td>
+          <ButtonGroup bsSize="small">
+            <TooltipButton tooltipText="Duplicate row" onClick={() => this.handleDuplicateButtonClick()}><Glyphicon glyph="duplicate" /></TooltipButton>
+            <TooltipButton bsStyle="danger" tooltipText="Delete row" onClick={() => this.handleDeleteButtonClick()}><Glyphicon glyph="remove" /></TooltipButton>
+          </ButtonGroup>
+        </td>
       </tr>
     );
   }

@@ -155,6 +155,19 @@ class App extends Component {
       });
   }
 
+  handleDuplicateButtonClick = (row) => {
+    const newIndependentVarData = cloneDeep(this.state.independentVarData);
+    newIndependentVarData.splice(row, 0, cloneDeep(this.state.independentVarData[row]));
+
+    const newDependentVarData = cloneDeep(this.state.dependentVarData);
+    newDependentVarData.splice(row, 0, cloneDeep(this.state.dependentVarData[row]));
+
+    this.setState({
+      independentVarData: newIndependentVarData,
+      dependentVarData: newDependentVarData
+    });
+  }
+
   handleDeleteButtonClick = (row) => {
     const newIndependentVarData = cloneDeep(this.state.independentVarData);
     newIndependentVarData.splice(row, 1);
@@ -247,6 +260,7 @@ class App extends Component {
 
                   onIndependentVarChange={(col, row, newValue) => this.handleIndependentVarChange(col, row, newValue)}
                   onPredictButtonClick={(row) => this.handlePredictButtonClick(row)}
+                  onDuplicateButtonClick={(row) => this.handleDuplicateButtonClick(row)}
                   onDeleteButtonClick={(row) => this.handleDeleteButtonClick(row)}
                   onAddRow={() => this.handleAddRow()} />
               </div>
