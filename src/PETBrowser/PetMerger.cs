@@ -276,7 +276,7 @@ namespace PETBrowser
             var config = new VisualizerConfig();
             config.PetConfig = "pet_config.json";
             config.RawData = "mergedPET.csv";
-            config.Tabs = new List<string> { "Explore.R", "DataTable.R", "PETRefinement.R" };
+            config.Tabs = new List<string> { "Explore.R", "DataTable.R", "PETRefinement.R", "SurrogateModeling.R" };
             config.DesignTree = "design_tree.json";
 
             using (var writer = File.CreateText(vizConfigPath))
