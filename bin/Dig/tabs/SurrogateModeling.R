@@ -108,18 +108,17 @@ server <- function(input, output, session, data) {
           ))
         }
       }
-    }#,
-    # error = function(e) {
-    #   print("Error occurred")
-    #   replyData = list(
-    #     message = e$message
-    #   )
-    #   session$sendCustomMessage(type="externalError", list(
-    #     id=input$externalRequest$id,
-    #     data=replyData
-    #   ))
-    # })
-    )
+    },
+    error = function(e) {
+      print("Error occurred")
+      replyData = list(
+        message = e$message
+      )
+      session$sendCustomMessage(type="externalError", list(
+        id=input$externalRequest$id,
+        data=replyData
+      ))
+    })
     
   })
   
