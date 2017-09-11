@@ -93,7 +93,7 @@ class RowDetailsModalButton extends Component {
       varStateHeader = (
         <Row><Col md={12}>
           <Alert bsStyle="danger">
-            No dependent variables found$mdash; cannot compute predictions.
+            No dependent variables found&mdash; cannot compute predictions.
           </Alert>
         </Col></Row>
       );
