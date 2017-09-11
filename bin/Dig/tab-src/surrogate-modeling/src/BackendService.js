@@ -121,6 +121,16 @@ class BackendService {
         } else {
           return result;
         }
+      }).then((discreteVarList) => {
+        // Workaround for visualizer bug where single-element list doesn't get
+        // serialized as a list
+        discreteVarList.forEach((discreteVarObj) => {
+          if(!Array.isArray(discreteVarObj.available)) {
+            discreteVarObj.available = [discreteVarObj.available];
+          }
+        });
+
+        return discreteVarList;
       });
     } else {
       return Promise.resolve(ExampleData.discreteIndependentVars);

@@ -108,17 +108,18 @@ server <- function(input, output, session, data) {
           ))
         }
       }
-    },
-    error = function(e) {
-      print("Error occurred")
-      replyData = list(
-        message = e$message
-      )
-      session$sendCustomMessage(type="externalError", list(
-        id=input$externalRequest$id,
-        data=replyData
-      ))
-    })
+    }#,
+    # error = function(e) {
+    #   print("Error occurred")
+    #   replyData = list(
+    #     message = e$message
+    #   )
+    #   session$sendCustomMessage(type="externalError", list(
+    #     id=input$externalRequest$id,
+    #     data=replyData
+    #   ))
+    # })
+    )
     
   })
   
@@ -129,14 +130,16 @@ server <- function(input, output, session, data) {
     for(discreteVar in discreteVars) {
       trainingData = trainingData[trainingData[[discreteVar$varName]] == discreteVar$selected, ]
     }
-    trainingDataIndep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])]
-    trainingDataDep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Objective']])]
+    trainingDataIndep = subset(trainingData, select=unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']]))
+    trainingDataDep = subset(trainingData, select=unlist(data$pre$var_range_nums_and_ints_list()[['Objective']]))
     
     ivarDf = data.frame(indepVars)
     
     names(ivarDf) = unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])
     
-    expanded = ivarDf[rep(seq_len(nrow(ivarDf)), each=GRAPH_RESOLUTION),]
+    expanded = as.data.frame(lapply(ivarDf, rep, GRAPH_RESOLUTION))
+    # The below is supposed to work, but doesn't when there's only one column
+    # expanded = ivarDf[rep(seq_len(nrow(ivarDf)), each=GRAPH_RESOLUTION),]
     
     expanded[, selectedIndependentVar] = seq(from=min(trainingData[, selectedIndependentVar]), to=max(trainingData[, selectedIndependentVar]), length.out=200)
 
@@ -170,8 +173,8 @@ server <- function(input, output, session, data) {
     for(discreteVar in discreteVars) {
       trainingData = trainingData[trainingData[[discreteVar$varName]] == discreteVar$selected, ]
     }
-    trainingDataIndep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])]
-    trainingDataDep = trainingData[, unlist(data$pre$var_range_nums_and_ints_list()[['Objective']])]
+    trainingDataIndep = subset(trainingData, select=unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']]))
+    trainingDataDep = subset(trainingData, select=unlist(data$pre$var_range_nums_and_ints_list()[['Objective']]))
     
     ivarDf = data.frame(indepVars)
     names(ivarDf) = unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])
