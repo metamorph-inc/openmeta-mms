@@ -55,7 +55,7 @@ class RowDetailsModalButton extends Component {
       return (
         <FormGroup key={index} className={className}>
           <h4>{this.props.independentVarNames[index]}</h4>
-          <FormControl type="number" value={value} min={1} max={21} onChange={(ev) => this.handleIndependentVarChange(index, ev)} />
+          <FormControl type="number" value={value} onChange={(ev) => this.handleIndependentVarChange(index, ev)} />
         </FormGroup>
       );
     });

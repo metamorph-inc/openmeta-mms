@@ -35,7 +35,7 @@ class DisplaySettingsPopoverButton extends Component {
       precisionFormGroup = (<FormGroup>
         <ControlLabel>Precision</ControlLabel>
         {' '}
-        <FormControl type="number" value={this.props.displaySettings.precision} onChange={this.handlePrecisionChange} />
+        <FormControl type="number" min={1} max={21} value={this.props.displaySettings.precision} onChange={this.handlePrecisionChange} />
       </FormGroup>);
     }
 
