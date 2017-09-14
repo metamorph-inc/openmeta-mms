@@ -781,13 +781,17 @@ Server <- function(input, output, session) {
           maximum <- data$pre$abs_max()[[var]]
           cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
           if (goal == "Maximize") {
-            data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
-                            cols[max(1, ceiling((value - minimum) / divisor))]}))
-          } 
-          else {
-            data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
-                            cols[max(1, ceiling((maximum - value) / divisor))]}))
+            Bin <- function(value) {max(1, ceiling((value - minimum) / divisor))}
+          } else {
+            Bin <- function(value) {max(1, ceiling((maximum - value) / divisor))}
           }
+          data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
+            if(is.na(value)) {
+              "grey"
+            } else {
+              cols[Bin(value)]
+            }
+          }))
           isolate({
             data$colorings$current$var <- var
             data$colorings$current$goal <- goal
