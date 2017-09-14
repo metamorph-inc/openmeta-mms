@@ -510,7 +510,9 @@ server <- function(input, output, session, data) {
                                         user=Sys.info()[["user"]])
     new_column <- TOPSISData()[c("Rank", "GUID")]
     names(new_column) <- c(name, "GUID")
-    data$raw$df <- merge(new_column, data$raw$df)[,c(names(data$raw$df),name)]
+    data$raw$df <- merge(new_column,
+                         data$raw$df,
+                         all=TRUE)[,c(names(data$raw$df),name)]
     print(paste0("Saved Ranking: ", name))
   })
   
