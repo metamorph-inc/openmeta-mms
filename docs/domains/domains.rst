@@ -12,6 +12,7 @@ following subchapters describe a few of the more significant ones:
    :maxdepth: 1
 
    cad
+   fea/fea
    eda
    modelica
    spice

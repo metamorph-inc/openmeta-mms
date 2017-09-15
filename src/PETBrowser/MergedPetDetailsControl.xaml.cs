@@ -37,9 +37,21 @@ namespace PETBrowser
             this.DatasetViewModel = datasetViewModel;
             InitializeComponent();
 
+            /*
+             * WPF doesn't have an event that triggers when a Control is removed permanently from the tree, and Load/Unload can be
+             * called multiple times if an object is hidden/reshown (i.e. if the user switches tabs)--  so, to properly make sure
+             * we clean up our VisualizerExitedEvent handler, we need to do it on Unload, and re-register on Load (and check for
+             * any that we might've missed while offscreen).
+             */
+            Loaded += (sender, args) =>
+            {
+                ViewModel.RegisterForVisualizerExitedEvents();
+                ViewModel.UpdateVisualizerSessionStatus();
+            };
+
             Unloaded += (sender, args) =>
             {
-                ViewModel.Dispose();
+                ViewModel.UnregisterForVisualizerExitedEvents();
             };
         }
 

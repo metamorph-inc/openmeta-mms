@@ -16,7 +16,7 @@
     <assembly filename="CyPhy2PCBMfgTest\bin\Release\CyPhy2PCBMfgTest.dll" shadow-copy="true" />
     <!-- TODO needs openEMS assembly filename="CyPhy2RFTest\bin\Release\CyPhy2RFTest.dll" shadow-copy="true" / -->
     <assembly filename="PcbToolsTest\bin\Release\PcbToolsTest.dll" shadow-copy="true" />
-    <assembly filename="CyPhy2CADPCBTest\bin\Release\CyPhy2CADPCBTest.dll" shadow-copy="true" />
+    <assembly filename="CyPhy2CADPCBTest\bin\Release\CyPhy2CADPCBTest.exe" shadow-copy="true" />
    
   </assemblies>
 </xunit>

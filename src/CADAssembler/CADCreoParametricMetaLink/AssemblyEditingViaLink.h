@@ -2,6 +2,7 @@
 #define ASSEMBLY_EDITING_VIA_LINK_H
 #include <InputArgumentsParser.h>
 #include <boost/smart_ptr.hpp>
+#include <isis_include_ptc_headers.h>
 #include "CADFactoryAbstract.h"
 
 namespace isis
@@ -101,7 +102,8 @@ public:
     void AddComponentToAssembly(
         const std::string 				&in_ComponentInstanceID,
         const std::string 				&in_CreoModelName,
-        ProMdlType						in_CreoModelType,
+		// ProMdlType                        in_CreoModelType,
+		e_CADMdlType						in_CreoModelType,
         const std::string				&in_MaterialID,
         const std::string				&in_DisplayName,
         e_CADSpecialInstruction			in_SpecialInstruction,

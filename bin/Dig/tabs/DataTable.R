@@ -105,15 +105,6 @@ server <- function(input, output, session, data) {
     x
   }
   
-  output$table <- DT::renderDataTable({
-    # print("In render data table")
-    local_data <- LocalData()
-    if(input$roundTables)
-      local_data <- RoundDataFrame(LocalData(), input$numDecimals)
-    #data
-    DT::datatable(local_data, options = list(scrollX = T))
-  })
-  
   #Dynamic metrics list
   MetricsList <- reactive({
     idx = NULL
@@ -464,25 +455,28 @@ server <- function(input, output, session, data) {
     if(length(input$weightMetrics) > 0){
       if(input$process_method == 'TOPSIS'){
         if(TRUE)  #input$autoRanking)
-          data <- TOPSISData()
+          table_data <- TOPSISData()
         else
-          data <- SlowTOPSISData()
+          table_data <- SlowTOPSISData()
       }
       else{
         if(TRUE)  #input$autoRanking)
-          data <- RankData()
+          table_data <- RankData()
         else
-          data <- SlowRankData()
+          table_data <- SlowRankData()
       }
     }
     else{
-      data <- LocalData()
+      table_data <- LocalData()
     }
     # if(input$roundTables)
     #   data <- RoundDataFrame(data, input$numDecimals)
     #if(input$transpose)
     #  data <- t(data)
-    data
+    names(table_data) <- sapply(names(table_data), function(name) {
+      data$meta$variables[[name]]$name_with_units
+    })
+    table_data
   })
   
   #Download handler
@@ -511,7 +505,8 @@ server <- function(input, output, session, data) {
                                   sd=sd)
     data$meta$variables[[name]] <- list(type="Classification",
                                         date=toString(Sys.time()),
-                                        user="tthomas")
+                                        name_with_units=name,
+                                        user=Sys.info()[["user"]])
     print(paste0("Saved Ranking: ", name))
   })
   

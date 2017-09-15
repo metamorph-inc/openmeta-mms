@@ -1,10 +1,10 @@
 #include <DiagnosticUtilities.h>
-#include <CommonStructures.h>
+#include <cc_CommonStructures.h>
 #include <CommonFunctions.h>
 #include <CreoStringToEnumConversions.h>
 #include <MaterialProperties.h>
 #include <ISISConstants.h>
-#include <CADCommonConstants.h>
+#include <cc_CommonConstants.h>
 #include <iostream>
 #include <set>
 #include <iterator>
@@ -202,10 +202,10 @@ void stream_SingleCADComponentData( const std::string					&in_ComponentID,
 			"   Name:                      " << in_CADComponentData_map[in_ComponentID].name << std::endl <<
 			"   Type:                      " << isis::ProMdlType_string(in_CADComponentData_map[in_ComponentID].modelType) <<  std::endl <<
 			"   MaterialID (FromCyPhy):    " << in_CADComponentData_map[in_ComponentID].materialID_FromCyPhy <<  std::endl <<
-			"   MaterialID (FromCreoPart): " << in_CADComponentData_map[in_ComponentID].materialID_FromCreoPart <<  std::endl <<
+			"   MaterialID (FromCreoPart): " << in_CADComponentData_map[in_ComponentID].materialID_FromCADPart <<  std::endl <<
 			//"   SpecialInstruction:        " << isis::SpecialInstruction_string(in_CADComponentData_map[in_ComponentID].specialInstruction) <<  std::endl <<
 			"   SpecialInstruction:        " << in_CADComponentData_map[in_ComponentID].specialInstruction <<  std::endl <<
-			"   modelHandle:               " << in_CADComponentData_map[in_ComponentID].modelHandle <<  std::endl <<
+			"   cADModel_hdl:              " << in_CADComponentData_map[in_ComponentID].cADModel_hdl <<  std::endl <<
 			"   assembledFeature.id:       " << in_CADComponentData_map[in_ComponentID].assembledFeature.id <<  std::endl <<
 			"   assembledFeature.type:     " << in_CADComponentData_map[in_ComponentID].assembledFeature.type <<  std::endl <<
 			"   assembledFeature.owner:    " << in_CADComponentData_map[in_ComponentID].assembledFeature.owner <<  std::endl <<
@@ -457,10 +457,10 @@ void stream_AnalysisInputData( const CADAnalyses &in_CADAnalyses, ostream &out_S
 		out_Stream << std::endl << "      Solver: ";
 		for ( std::list<AnalysisSolver>::const_iterator j( i->analysisSolvers.begin()); j !=  i->analysisSolvers.end(); ++j )
 		{
-			out_Stream << std::endl << "         Type:             " << AnalysisSolverType_string(j->type);
-			out_Stream << std::endl << "         MeshType:         " << AnalysisMeshType_string(j->meshType);
-			out_Stream << std::endl << "         ShellElementType: " << AnalysisShellElementType_string(j->shellElementType);
-			out_Stream << std::endl << "         ElementShapeType: " << AnalysisElementShapeType_string(j->elementShapeType);
+			out_Stream << std::endl << "         Type:             " << ProAnalysisSolverType_string(j->type);
+			out_Stream << std::endl << "         MeshType:         " << ProAnalysisMeshType_string(j->meshType);
+			out_Stream << std::endl << "         ShellElementType: " << ProAnalysisShellElementType_string(j->shellElementType);
+			out_Stream << std::endl << "         ElementShapeType: " << ProAnalysisElementShapeType_string(j->elementShapeType);
 		}
 
 		////////////////////////////////////////////

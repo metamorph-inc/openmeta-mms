@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 
 namespace PETBrowser
 {
-    public class MergedPetDetailsViewModel : IDisposable
+    public class MergedPetDetailsViewModel
     {
         private static readonly HashSet<string> IgnoredMetricNames = new HashSet<string>(new []
         {
@@ -100,6 +100,7 @@ namespace PETBrowser
                 get { return _visualizerNotRunning; }
                 set
                 {
+                    Console.WriteLine("Property Changed: VisualizerNotRunning ({0})", DisplayName);
                     PropertyChanged.ChangeAndNotify(ref _visualizerNotRunning, value, () => VisualizerNotRunning);
                 }
             }
@@ -178,12 +179,29 @@ namespace PETBrowser
                 VisualizerSessionsList = GetVisualizerSessions(mergedDirectory);
                 VisualizerSessions = new ListCollectionView(VisualizerSessionsList);
                 VisualizerSessions.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
-
-                VisualizerLauncher.VisualizerExited += OnVisualizerExited;
             }
             else
             {
             }
+        }
+
+        public void RegisterForVisualizerExitedEvents()
+        {
+            VisualizerLauncher.VisualizerExited += OnVisualizerExited;
+        }
+
+        public void UpdateVisualizerSessionStatus()
+        {
+            foreach (var session in VisualizerSessionsList)
+            {
+                var visualizerRunning = VisualizerLauncher.IsVisualizerRunningForConfig(session.ConfigPath);
+                session.VisualizerNotRunning = !visualizerRunning;
+            }
+        }
+
+        public void UnregisterForVisualizerExitedEvents()
+        {
+            VisualizerLauncher.VisualizerExited -= OnVisualizerExited;
         }
 
         private void OnVisualizerExited(object sender, VisualizerLauncher.VisualizerExitedEventArgs visualizerExitedEventArgs)
@@ -373,11 +391,6 @@ namespace PETBrowser
             Metrics.GroupDescriptions.Add(new PropertyGroupDescription("Kind"));
             Metrics.SortDescriptions.Add(new SortDescription("Kind", ListSortDirection.Ascending));
             Metrics.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
-        }
-
-        public void Dispose()
-        {
-            VisualizerLauncher.VisualizerExited -= OnVisualizerExited;
         }
     }
 }

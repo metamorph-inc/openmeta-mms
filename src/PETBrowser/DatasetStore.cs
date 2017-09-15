@@ -249,14 +249,40 @@ namespace PETBrowser
                 var archivePath = Path.Combine(this.DataDirectory, ArchiveDirectory, datasetToDelete.Folders[0]);
 
                 var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
-                File.Move(archivePath, Path.Combine(deletedDirectory.FullName, Path.GetFileName(archivePath)));
+
+                var deletedBaseName = Path.GetFileName(archivePath);
+                var deletedBasePath = deletedDirectory.FullName;
+                var deletedCandidateName = deletedBaseName;
+
+                var i = 0;
+
+                while (File.Exists(Path.Combine(deletedBasePath, deletedCandidateName)))
+                {
+                    i++;
+                    deletedCandidateName = string.Format("{0} ({1})", deletedBaseName, i);
+                }
+
+                File.Move(archivePath, Path.Combine(deletedBasePath, deletedCandidateName));
             }
             else if (datasetToDelete.Kind == Dataset.DatasetKind.MergedPet || datasetToDelete.Kind == Dataset.DatasetKind.Pet)
             {
                 var mergedPath = Path.Combine(this.DataDirectory, MergedDirectory, datasetToDelete.Folders[0]);
 
                 var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
-                Directory.Move(mergedPath, Path.Combine(deletedDirectory.FullName, Path.GetFileName(mergedPath)));
+
+                var deletedBaseName = Path.GetFileName(mergedPath);
+                var deletedBasePath = deletedDirectory.FullName;
+                var deletedCandidateName = deletedBaseName;
+
+                var i = 0;
+
+                while (Directory.Exists(Path.Combine(deletedBasePath, deletedCandidateName)))
+                {
+                    i++;
+                    deletedCandidateName = string.Format("{0} ({1})", deletedBaseName, i);
+                }
+
+                Directory.Move(mergedPath, Path.Combine(deletedBasePath, deletedCandidateName));
             }
             else
             {
@@ -309,7 +335,19 @@ namespace PETBrowser
         {
             var deletedDirectory = Directory.CreateDirectory(Path.Combine(DataDirectory, DeletedDirectory));
 
-            directoryToMove.MoveTo(Path.Combine(deletedDirectory.FullName, directoryToMove.Name));
+            var deletedBaseName = Path.GetFileName(directoryToMove.Name);
+            var deletedBasePath = deletedDirectory.FullName;
+            var deletedCandidateName = deletedBaseName;
+
+            var i = 0;
+
+            while (Directory.Exists(Path.Combine(deletedBasePath, deletedCandidateName)))
+            {
+                i++;
+                deletedCandidateName = string.Format("{0} ({1})", deletedBaseName, i);
+            }
+
+            directoryToMove.MoveTo(Path.Combine(deletedBasePath, deletedCandidateName));
         }
 
         public void ArchiveSelectedDatasets(string archiveName, Dataset highlightedDataset)

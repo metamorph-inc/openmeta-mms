@@ -47,8 +47,8 @@ Numeric Ranges
 PET Details
 ~~~~~~~~~~~
 
--  **New PET Name:** This name will be applied to the PET after is
-   copied from the old one.
+-  **New PET Name:** A copy of the original PET will be generated and
+   given this name.
 
 Execute New PET
 ~~~~~~~~~~~~~~~

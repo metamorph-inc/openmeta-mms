@@ -51,6 +51,13 @@ void CyPhyCAExporter::createComponentAssembly()
 			copyDesignContainerElement(port, ca_model);
 		}
 
+		set<CyPhyML::DomainModel> domainModels = rootDC.DomainModel_kind_children();
+		for(auto dmIt = domainModels.begin(); dmIt != domainModels.end(); ++dmIt)
+		{
+			CyPhyML::DomainModel domainModel = *dmIt;
+			copyDesignContainerElement(domainModel, ca_model);
+		}
+
 		containersMap[rootDC.uniqueId()]=1;
 		if(flatten)
 		{

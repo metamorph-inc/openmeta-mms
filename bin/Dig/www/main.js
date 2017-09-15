@@ -17,14 +17,14 @@ $(window).resize(function() {
 });
 
 $(window).bind("resizeEnd", function() {
-  console.log("resize occured");
+  //console.log("resize occured");
   update_slider_width();
 });
 
 /* This gets called when filter footer is opened...helpful as a startup condition */
 Shiny.addCustomMessageHandler("update_widths", function(message) {
   update_slider_width();
-  update_label_width();
+  //update_label_width();
 })
 
 /* Sends shiny the pixel lengths of each slider */
@@ -39,8 +39,8 @@ function update_slider_width() {
         slider_width = $sliders[i].offsetWidth;
     }
 
-    console.log("slider_width");
-    console.log(slider_width);
+    //console.log("slider_width");
+    //console.log(slider_width);
 
     Shiny.onInputChange("slider_width", slider_width);
   }

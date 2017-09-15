@@ -9,9 +9,24 @@ using GME.MGA;
 using GME.CSharp;
 using META;
 using Microsoft.Win32;
+using System.Reflection;
 
 namespace CyPhy2CADPCBTest
 {
+    public class Program
+    {
+        [STAThread]
+        static int Main(string[] args)
+        {
+            int ret = Xunit.ConsoleClient.Program.Main(new string[] {
+                Assembly.GetExecutingAssembly().CodeBase.Substring("file:///".Length),
+                //"/noshadow",
+            });
+            Console.In.ReadLine();
+            return ret;
+        }
+    }
+
     public class TestFixture : IDisposable
     {
         public static String path_Test = Path.GetFullPath(

@@ -20,38 +20,60 @@ namespace CyPhyPET
     using AVM.DDP;
     using System.Security;
     using System.Runtime.InteropServices;
+    using static AVM.DDP.PETConfig;
 
     public class PET
     {
         //public static GME.CSharp.GMEConsole GMEConsole { get; set; }
         public CyPhyGUIs.GMELogger Logger { get; set; }
         public bool Success = false;
-        public string RunCommand { get; set; }
-        public string Label { get; set; }
 
-        private enum DriverType { PCC, Optimizer, ParameterStudy };
+        private enum DriverType { None, PCC, Optimizer, ParameterStudy };
         private DriverType theDriver;
-        private string driverName;
-        private string validationDriver = "";
-        private CyPhy.TestBenchType testBench;
         private CyPhy.ParametricExploration pet;
-        private string outputDirectory { get; set; }
+        private MgaFCO rootPET;
+        public string outputDirectory { get; set; }
         private string testBenchOutputDir;
+
+        public static readonly ISet<string> testbenchtypes = GetDerivedTypeNames(typeof(CyPhy.TestBenchType));
+        public static readonly ISet<string> petWrapperTypes = GetDerivedTypeNames(typeof(CyPhy.ParametricTestBench));
         public Dictionary<string, string> PCCPropertyInputDistributions { get; set; }
-        public PETConfig config = new PETConfig()
+
+        private PETConfig _config;
+        public PETConfig config
         {
-            components = new Dictionary<string, PETConfig.Component>(),
-            drivers = new Dictionary<string, PETConfig.Driver>(),
-            recorders = new List<PETConfig.Recorder>()
+            get
             {
-                new PETConfig.Recorder()
-                {
-                    type = "DriverCsvRecorder",
-                    filename = "output.csv",
-                    include_id = true
-                }
+                return _config;
             }
-        };
+            set
+            {
+                _config = value;
+                components = _config.components;
+                drivers = _config.drivers;
+                subProblems = _config.subProblems;
+            }
+        }
+        public Dictionary<string, Component> components;
+        public Dictionary<string, Driver> drivers;
+        public Dictionary<string, SubProblem> subProblems;
+        private SubProblem _subProblem;
+        public SubProblem subProblem
+        {
+            get
+            {
+                return _subProblem;
+            }
+            set
+            {
+                _subProblem = value;
+                components = subProblem.components;
+                drivers = subProblem.drivers;
+                subProblems = subProblem.subProblems;
+            }
+        }
+
+
 
         public static IEnumerable<IMgaObject> getAncestors(IMgaFCO fco, IMgaObject stopAt = null)
         {
@@ -87,34 +109,23 @@ namespace CyPhyPET
 
         }
 
-        public PET(CyPhyGUIs.IInterpreterMainParameters parameters, CyPhyGUIs.GMELogger logger)
+        public PET(MgaFCO rootPET, MgaFCO currentFCO, CyPhyGUIs.GMELogger logger)
         {
             this.Logger = logger;
-            this.pet = CyPhyClasses.ParametricExploration.Cast(parameters.CurrentFCO);
-            this.outputDirectory = parameters.OutputDirectory;
-            config.MgaFilename = parameters.CurrentFCO.Project.ProjectConnStr.Substring("MGA=".Length);
-            if (parameters.SelectedConfig != null)
-            {
-                config.SelectedConfigurations = new string[] { parameters.SelectedConfig }.ToList();
-            }
-            else
-            {
-                config.SelectedConfigurations = new string[] { parameters.OriginalCurrentFCOName }.ToList();
-            }
-            config.GeneratedConfigurationModel = parameters.GeneratedConfigurationModel;
-            config.PETName = "/" + string.Join("/", getAncestors(parameters.CurrentFCO, stopAt: parameters.CurrentFCO.Project.RootFolder).Skip(1) // HACK: MI inserts a "Temporary" folder
-                .getTracedObjectOrSelf(parameters.GetTraceability()).Select(obj => obj.Name).Reverse()) + "/" + parameters.OriginalCurrentFCOName;
-            this.PCCPropertyInputDistributions = new Dictionary<string, string>();
+            this.pet = CyPhyClasses.ParametricExploration.Cast(currentFCO);
+            this.rootPET = rootPET;
+        }
+
+        public void Initialize()
+        {
             // Determine type of driver of the Parametric Exploration
             if (this.pet.Children.PCCDriverCollection.Count() == 1)
             {
                 this.theDriver = DriverType.PCC;
-                this.driverName = "PCCDriver";
             }
             else if (this.pet.Children.OptimizerCollection.Count() == 1)
             {
                 this.theDriver = DriverType.Optimizer;
-                this.driverName = "Optimizer";
 
                 var optimizer = this.pet.Children.OptimizerCollection.FirstOrDefault();
                 var config = AddConfigurationForMDAODriver(optimizer);
@@ -194,12 +205,12 @@ namespace CyPhyPET
             else if (this.pet.Children.ParameterStudyCollection.Count() == 1)
             {
                 this.theDriver = DriverType.ParameterStudy;
-                this.driverName = "ParameterStudy";
 
                 var parameterStudy = this.pet.Children.ParameterStudyCollection.FirstOrDefault();
 
                 var config = AddConfigurationForMDAODriver(parameterStudy);
                 config.type = "parameterStudy";
+                // FIXME: do this in another thread
                 Dictionary<string, object> assignment = getPythonAssignment(parameterStudy.Attributes.Code);
                 long num_samples;
                 object num_samplesObj;
@@ -271,73 +282,13 @@ namespace CyPhyPET
                 intermediateVariables = new Dictionary<string, PETConfig.Parameter>(),
                 details = new Dictionary<string, object>()
             };
-            this.config.drivers.Add(driver.Name, config);
+            this.drivers.Add(driver.Name, config);
             foreach (var designVariable in driver.Children.DesignVariableCollection)
             {
                 var configVariable = new PETConfig.DesignVariable();
                 setUnit(designVariable.Referred.unit, configVariable);
+                ParseDesignVariableRange(designVariable, configVariable);
                 config.designVariables.Add(designVariable.Name, configVariable);
-
-                var range = designVariable.Attributes.Range;
-                var oneValue = new System.Text.RegularExpressions.Regex(
-                    // start with previous match. match number or string
-                    "\\G(" +
-                    // number:
-                    // TODO: scientific notation?
-                    // TODO: a la NumberStyles.AllowThousands?
-                    "[+-]?(?:\\d*[.])?\\d+" + "|" +
-                    // string: match \ escape sequence, or anything but \ or "
-                    "\"(?:\\\\(?:\\\\|\"|/|b|f|n|r|t|u\\d{4})|[^\\\\\"])*\"" +
-                    // match ends with ; or end of string
-                    ")(?:;|$)");
-                /*
-                Print(oneValue.Matches("12;"));
-                Print(oneValue.Matches("12.2;"));
-                Print(oneValue.Matches("\"\""));
-                Print(oneValue.Matches("\";asdf;asd\""));
-                Print(oneValue.Matches("\"\\\"\"")); // \"
-                Print(oneValue.Matches("\"\\\\\"")); // \\
-                Print(oneValue.Matches("\"\\n\"")); // \n
-                Print(oneValue.Matches("\"\\n\";\"\";\"asdf\""));
-                Print(oneValue.Matches("\"\\\"")); // \ => false
-                Print(oneValue.Matches("\"\"\"")); // " => false
-                */
-                MatchCollection matches = oneValue.Matches(range);
-                if (matches.Count > 0)
-                {
-                    var items = matches.Cast<Match>().Select(x => x.Groups[1].Value).Select(x =>
-                        x[0] == '"' ? (string)JsonConvert.DeserializeObject(x) :
-                            (object)Double.Parse(x, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture)
-                        ).ToList();
-                    // special-case: a single number produces a double range
-                    if (matches.Count == 1 && matches[0].Groups[1].Value[0] != '"')
-                    {
-                        configVariable.RangeMin = (double)items[0];
-                        configVariable.RangeMax = (double)items[0];
-                    }
-                    else
-                    {
-                        configVariable.items = items;
-                        configVariable.type = "enum";
-                    }
-                }
-                else if (designVariable.Attributes.Range.Contains(","))
-                {
-                    var range_split = designVariable.Attributes.Range.Split(new char[] { ',' });
-                    if (range_split.Length == 2)
-                    {
-                        configVariable.RangeMin = Double.Parse(range_split[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
-                        configVariable.RangeMax = Double.Parse(range_split[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
-                    }
-                }
-                else
-                {
-                    throw new ApplicationException(String.Format("Cannot parse Design Variable Range '{0}'. ", designVariable.Attributes.Range) +
-                        "Double ranges are specified by an un-quoted value or two un-quoted values separated by commas. " +
-                        "Enumerations are specified by one double-quoted value or two or more double-quoted values separated by semicolons. " +
-                        "E.g.: '2.0,2.5' or '\"Low\";\"Medium\";\"High\"'"
-                        );
-                }
             }
             foreach (var objective in driver.Children.ObjectiveCollection)
             {
@@ -360,6 +311,70 @@ namespace CyPhyPET
             }
 
             return config;
+        }
+
+        private static void ParseDesignVariableRange(CyPhy.DesignVariable designVariable, DesignVariable configVariable)
+        {
+            var range = designVariable.Attributes.Range;
+            var oneValue = new System.Text.RegularExpressions.Regex(
+                // start with previous match. match number or string
+                "\\G(" +
+                // number:
+                // TODO: scientific notation?
+                // TODO: a la NumberStyles.AllowThousands?
+                "[+-]?(?:\\d*[.])?\\d+" + "|" +
+                // string: match \ escape sequence, or anything but \ or "
+                "\"(?:\\\\(?:\\\\|\"|/|b|f|n|r|t|u\\d{4})|[^\\\\\"])*\"" +
+                // match ends with ; or end of string
+                ")(?:;|$)");
+            /*
+            Print(oneValue.Matches("12;"));
+            Print(oneValue.Matches("12.2;"));
+            Print(oneValue.Matches("\"\""));
+            Print(oneValue.Matches("\";asdf;asd\""));
+            Print(oneValue.Matches("\"\\\"\"")); // \"
+            Print(oneValue.Matches("\"\\\\\"")); // \\
+            Print(oneValue.Matches("\"\\n\"")); // \n
+            Print(oneValue.Matches("\"\\n\";\"\";\"asdf\""));
+            Print(oneValue.Matches("\"\\\"")); // \ => false
+            Print(oneValue.Matches("\"\"\"")); // " => false
+            */
+            MatchCollection matches = oneValue.Matches(range);
+            if (matches.Count > 0)
+            {
+                var items = matches.Cast<Match>().Select(x => x.Groups[1].Value).Select(x =>
+                    x[0] == '"' ? (string)JsonConvert.DeserializeObject(x) :
+                        (object)Double.Parse(x, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture)
+                    ).ToList();
+                // special-case: a single number produces a double range
+                if (matches.Count == 1 && matches[0].Groups[1].Value[0] != '"')
+                {
+                    configVariable.RangeMin = (double)items[0];
+                    configVariable.RangeMax = (double)items[0];
+                }
+                else
+                {
+                    configVariable.items = items;
+                    configVariable.type = "enum";
+                }
+            }
+            else if (designVariable.Attributes.Range.Contains(","))
+            {
+                var range_split = designVariable.Attributes.Range.Split(new char[] { ',' });
+                if (range_split.Length == 2)
+                {
+                    configVariable.RangeMin = Double.Parse(range_split[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
+                    configVariable.RangeMax = Double.Parse(range_split[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
+                }
+            }
+            else
+            {
+                throw new ApplicationException(String.Format("Cannot parse Design Variable Range '{0}'. ", designVariable.Attributes.Range) +
+                    "Double ranges are specified by an un-quoted value or two un-quoted values separated by commas. " +
+                    "Enumerations are specified by one double-quoted value or two or more double-quoted values separated by semicolons. " +
+                    "E.g.: '2.0,2.5' or '\"Low\";\"Medium\";\"High\"'"
+                    );
+            }
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -408,7 +423,7 @@ namespace CyPhyPET
 
         public void GenerateCode(CyPhy.TestBenchRef testBenchRef, string testBenchOutputDir)
         {
-            this.testBench = testBenchRef.Referred.TestBenchType;
+            var testBench = testBenchRef.Referred.TestBenchType;
             this.testBenchOutputDir = testBenchOutputDir;
             var config = new PETConfig.Component()
             {
@@ -418,7 +433,7 @@ namespace CyPhyPET
             };
             config.details["directory"] = testBenchOutputDir;
 
-            this.config.components.Add(testBenchRef.Name, config);
+            this.components.Add(testBenchRef.Name, config);
             foreach (var parameter in
                 testBench.Children.ParameterCollection.Select(parameter => new { fco = parameter.Impl, unit = parameter.Referred.unit }).
                 Concat(testBench.Children.FileInputCollection.Select(fileInput => new { fco = fileInput.Impl, unit = (CyPhy.unit)null }))
@@ -446,18 +461,18 @@ namespace CyPhyPET
                 var configParameter = new PETConfig.Parameter();
                 config.unknowns.Add(fileOutput.Name, configParameter);
             }
-            if (this.testBench is CyPhy.TestBench)
+            if (testBench is CyPhy.TestBench)
             {
-                var interpreterProgID = Rules.Global.GetInterpreterProgIDFromTestBench(this.testBench as CyPhy.TestBench);
+                var interpreterProgID = Rules.Global.GetInterpreterProgIDFromTestBench(testBench as CyPhy.TestBench);
                 if (interpreterProgID == "MGA.Interpreter.CyPhyFormulaEvaluator")
                 {
                     // FIXME: does this still work
-                    this.SimpleCalculation();
+                    this.SimpleCalculation((CyPhy.TestBench)testBench);
                 }
             }
         }
 
-        private Dictionary<CyPhy.unit, List<Action<string>>> unitsToSet = new Dictionary<CyPhy.unit, List<Action<string>>>();
+        public Dictionary<CyPhy.unit, List<Action<string>>> unitsToSet = new Dictionary<CyPhy.unit, List<Action<string>>>();
 
         private void setUnit(CyPhy.unit unit, Action<string> action)
         {
@@ -484,22 +499,30 @@ namespace CyPhyPET
             setUnit(unit, units => designVariable.units = units);
         }
 
-        private static string[] GetSourcePath(MgaReference refe, MgaFCO port)
+        private string[] GetSourcePath(MgaReference refe, MgaFCO port)
         {
-            MgaConnPoint sources;
+            IEnumerable<MgaConnPoint> sources;
             if (refe != null)
             {
-                sources = port.PartOfConns.Cast<MgaConnPoint>().Where(cp => cp.References != null && cp.References.Count > 0 && cp.References[1].ID == refe.ID && cp.ConnRole == "dst").FirstOrDefault();
+                sources = port.PartOfConns.Cast<MgaConnPoint>().Where(cp => cp.References != null && cp.References.Count > 0 && cp.References[1].ID == refe.ID && cp.ConnRole == "dst");
             }
             else
             {
-                sources = port.PartOfConns.Cast<MgaConnPoint>().Where(cp => (cp.References == null || cp.References.Count == 0) && cp.ConnRole == "dst").FirstOrDefault();
+                sources = port.PartOfConns.Cast<MgaConnPoint>().Where(cp => (cp.References == null || cp.References.Count == 0) && cp.ConnRole == "dst");
             }
-            if (sources == null)
+            sources = sources.Where(s => getAncestors(s.Owner).Select(x => x.ID).Contains(rootPET.ID));
+            if (sources.Count() == 0)
             {
                 return null;
             }
-            var source = (MgaSimpleConnection)sources.Owner;
+            var source = (MgaSimpleConnection)sources.First().Owner;
+            // top-level ParametricExploration: ignore top-level ProblemInput and ProblemOutputs
+            if (config != null &&
+                source.Src.ParentModel.ID == pet.ID &&
+                (source.Src.Meta.Name == typeof(CyPhy.ProblemInput).Name || source.Src.Meta.Name == typeof(CyPhy.ProblemOutput).Name))
+            {
+                return GetSourcePath(null, source.Src);
+            }
             string parentName;
             if (source.SrcReferences != null && source.SrcReferences.Count > 0)
             {
@@ -507,29 +530,49 @@ namespace CyPhyPET
             }
             else
             {
+                if (pet.ID == source.Src.ParentModel.ID)
+                {
+                    return new string[] { source.Src.Name };
+                }
                 parentName = source.Src.ParentModel.Name;
             }
             var sourcePath = new string[] { parentName, source.Src.Name };
             return sourcePath;
+
+            MgaModel parent;
+            if (source.SrcReferences != null && source.SrcReferences.Count > 0)
+            {
+                parent = (MgaModel)source.SrcReferences[1];
+            }
+            else
+            {
+                parent = source.Src.ParentModel;
+            }
+            List<string> path = new List<string>();
+            while (parent.ID != pet.ID)
+            {
+                path.Add(parent.Name);
+                parent = parent.ParentModel;
+            }
+            path.Reverse();
+            path.Add(source.Src.Name);
+            return path.ToArray();
         }
 
         public void GenerateDriverCode()
         {
-            this.RunCommand = "python -E -m run_mdao";
             // Generate Driver
             if (this.theDriver == DriverType.PCC)
             {
-                this.Label = " && PCC" + JobManager.Job.LabelVersion;
+                // this.Label = " && PCC" + JobManager.Job.LabelVersion;
                 // TODO convert this to code in python -m run_mdao
                 this.GeneratePCCScripts();
             }
             else if (this.theDriver == DriverType.Optimizer)
             {
-                this.Label = "";
             }
             else if (this.theDriver == DriverType.ParameterStudy)
             {
-                this.Label = "";
                 if (this.pet.Children.ParameterStudyCollection.First().Attributes.SurrogateType != CyPhyClasses.ParameterStudy.AttributesClass.SurrogateType_enum.None)
                 {
                     throw new ApplicationException("Surrogates are not supported");
@@ -569,16 +612,6 @@ namespace CyPhyPET
                 }
             }
 
-            File.WriteAllText(Path.Combine(this.outputDirectory, "mdao_config.json"), Newtonsoft.Json.JsonConvert.SerializeObject(this.config, Newtonsoft.Json.Formatting.Indented), new System.Text.UTF8Encoding(false));
-
-            File.WriteAllText(Path.Combine(this.outputDirectory, "..", "CyPhyPET_combine.cmd"),
-                "FOR /F \"skip=2 tokens=2,*\" %%A IN ('C:\\Windows\\SysWoW64\\REG.exe query \"HKLM\\software\\META\" /v \"META_PATH\"') DO set META_PATH=%%B" +
-                @"%META_PATH%\bin\Python27\Scripts\Python.exe %META_PATH%\bin\PetViz.py");
-
-            using (StreamWriter writer = new StreamWriter(Path.Combine(outputDirectory, "zip.py")))
-            {
-                writer.WriteLine(CyPhyPET.Properties.Resources.zip);
-            }
         }
 
         # region DriverTypes
@@ -603,6 +636,7 @@ namespace CyPhyPET
                     upMethodNum = 2;
                     break;
                 case CyPhyClasses.PCCDriver.AttributesClass.PCC_UP_Methods_enum.Most_Probable_Point_Method__UP_MPP_:
+                    this.Logger.WriteWarning("The output from Most Probable Point Method is not compatible with the project analyzer Dashboard.");
                     upMethodNum = 3;
                     break;
                 case CyPhyClasses.PCCDriver.AttributesClass.PCC_UP_Methods_enum.Full_Factorial_Numerical_Integration__UP_FFNI_:
@@ -612,6 +646,8 @@ namespace CyPhyPET
                     upMethodNum = 5;
                     break;
                 case CyPhyClasses.PCCDriver.AttributesClass.PCC_UP_Methods_enum.Polynomial_Chaos_Expansion__UP_PCE_:
+                    this.Logger.WriteWarning("The output from Polynomial Chaos Expansion is not compatible with the project analyzer Dashboard.");
+                    this.Logger.WriteWarning("Trying to display such data might require a refresh in order to view other data again.");
                     upMethodNum = 6;
                     break;
                 default:
@@ -640,7 +676,7 @@ namespace CyPhyPET
 
             // Generate input config file for OSU code
 
-            var pccConfig = this.BuildUpPCCConfiguration(driverName, PCCDriver, upMethodNum, saMethodNum);
+            var pccConfig = this.BuildUpPCCConfiguration(PCCDriver.Name, PCCDriver, upMethodNum, saMethodNum);
 
             List<string> objectives = new List<string>();
             List<string> designVariabels = new List<string>();
@@ -683,7 +719,6 @@ namespace CyPhyPET
             foreach (var designVariable in PCCDriver.Children.PCCParameterCollection)
             {
                 var configVariable = new PETConfig.DesignVariable();
-                setUnit(designVariable.Referred.unit, configVariable);
                 driver.designVariables.Add(designVariable.Name, configVariable);
             }
             foreach (var objective in PCCDriver.Children.PCCOutputCollection)
@@ -691,13 +726,10 @@ namespace CyPhyPET
                 var sourcePath = GetSourcePath(null, (MgaFCO)objective.Impl);
                 if (sourcePath != null)
                 {
-                    var configParameter = new PETConfig.Parameter()
+                    driver.objectives.Add(objective.Name, new PETConfig.Parameter()
                     {
                         source = sourcePath
-                    };
-                    driver.objectives.Add(objective.Name, configParameter);
-                    setUnit(objective.Referred.unit, configParameter);
-                    checkUnitMatchesSource(objective);
+                    });
                 }
             }
 
@@ -708,7 +740,7 @@ namespace CyPhyPET
 
         #region TestBenchTypes
 
-        private void SimpleCalculation()
+        private void SimpleCalculation(CyPhy.TestBench testBench)
         {
             this.Logger.WriteWarning("Formula has limited support. You may experience issues during the execution.");
             Directory.CreateDirectory(Path.Combine(outputDirectory, "scripts"));
@@ -716,7 +748,7 @@ namespace CyPhyPET
             {
                 Templates.TestBenchExecutors.Formula simpleCalc = new Templates.TestBenchExecutors.Formula()
                 {
-                    testBench = this.testBench as CyPhy.TestBench
+                    testBench = testBench
                 };
 
                 writer.WriteLine(simpleCalc.TransformText());
@@ -880,11 +912,14 @@ namespace CyPhyPET
         {
             var results = new List<PCCInputDistribution>();
 
-            var jsonFile = Path.Combine(this.outputDirectory, this.testBenchOutputDir, "CyPhy", "PCCProperties.json");
-            if (File.Exists(jsonFile))
+            if (testBenchOutputDir != null)
             {
-                this.Logger.WriteInfo("Found defined PCC-Properties for the DynamicTestBench.");
-                results = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PCCInputDistribution>>(File.ReadAllText(jsonFile));
+                var jsonFile = Path.Combine(this.outputDirectory, this.testBenchOutputDir, "CyPhy", "PCCProperties.json");
+                if (File.Exists(jsonFile))
+                {
+                    this.Logger.WriteInfo("Found defined PCC-Properties for the DynamicTestBench.");
+                    results = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PCCInputDistribution>>(File.ReadAllText(jsonFile));
+                }
             }
 
             return results;
@@ -1001,9 +1036,257 @@ namespace CyPhyPET
                 setUnit(metric.Referred.unit, configParameter);
             }
 
-            this.config.components.Add(constants.Name, config);
+            this.components.Add(constants.Name, config);
 
             return config;
+        }
+
+        internal void GenerateInputsAndOutputs()
+        {
+            if (this.config != null)
+            {
+                return;
+            }
+            foreach (var input in pet.Children.ProblemInputCollection)
+            {
+                var problemInput = new SubProblem.ProblemInput()
+                {
+                    //outerSource =
+                    //innerSource =
+                    value = input.Attributes.Value
+                };
+
+                var sources = ((MgaFCO)input.Impl).PartOfConns.Cast<MgaConnPoint>().Where(cp => (cp.References == null || cp.References.Count == 0) && cp.ConnRole == "dst");
+                foreach (var connPoint in sources)
+                {
+                    var source = (MgaSimpleConnection)connPoint.Owner;
+                    IMgaFCO parent;
+                    if (source.SrcReferences != null && source.SrcReferences.Count > 0)
+                    {
+                        parent = source.SrcReferences[1];
+                    }
+                    else
+                    {
+                        parent = source.Src.ParentModel;
+                    }
+                    var gparent = parent.ParentModel;
+                    // var ggparent = parent == null ? null : parent.ParentModel;
+                    if (gparent != null && gparent.ID == pet.ID)
+                    {
+                        problemInput.innerSource = new string[] { parent.Name, source.Src.Name };
+                    }
+                    else
+                    {
+                        if (parent.ID == this.pet.ParentContainer.ID)
+                        {
+                            problemInput.outerSource = new string[] { source.Src.Name };
+                        }
+                        else
+                        {
+                            problemInput.outerSource = new string[] { parent.Name, source.Src.Name };
+                        }
+                    }
+                }
+
+                List<MgaFCO> realSources = GetTransitiveSources((MgaFCO)input.Impl, new HashSet<string>()
+                {
+                    typeof(CyPhy.Metric).Name,
+                    typeof(CyPhy.FileOutput).Name,
+                    // not a "real" source: typeof(CyPhy.ProblemOutput)
+                    typeof(CyPhy.DesignVariable).Name,
+                    typeof(CyPhy.PCCParameterLNormal).Name,
+                    typeof(CyPhy.PCCParameterNormal).Name,
+                    typeof(CyPhy.PCCParameterUniform).Name,
+                    typeof(CyPhy.PCCParameterBeta).Name
+                });
+                var driverTypes = new HashSet<string>()
+                {
+                    typeof(CyPhy.DesignVariable).Name,
+                    typeof(CyPhy.PCCParameterLNormal).Name,
+                    typeof(CyPhy.PCCParameterNormal).Name,
+                    typeof(CyPhy.PCCParameterUniform).Name,
+                    typeof(CyPhy.PCCParameterBeta).Name
+                };
+                var desVarSources = realSources.Where(s => driverTypes.Contains(s.Meta.Name));
+                if (desVarSources.Count() > 0)
+                {
+                    var desVar = desVarSources.First();
+                    if (desVar.Meta.Name == typeof(CyPhy.DesignVariable).Name)
+                    {
+                        SetProblemInputValueFromDesignVariable(problemInput, desVar);
+                    }
+                    else
+                    {
+                        SetProblemInputValueFromPCCParameter(problemInput, desVar);
+                    }
+                }
+                else
+                {
+                    MgaModel realSourceParent;
+                    MgaFCO realSource = null;
+                    if (realSources.Count > 1)
+                    {
+                        // should be unreachable because checker should detect this error
+                        throw new ApplicationException(String.Format("Error: {0} has more than one source", input.Name));
+                    }
+                    realSource = realSources.First();
+                    realSourceParent = realSource.ParentModel;
+                    if (problemInput.value == "")
+                    {
+                        if (testbenchtypes.Contains(realSourceParent.Meta.Name))
+                        {
+                            // FIXME is this right?
+                            problemInput.value = "0.0";
+                            problemInput.pass_by_obj = true;
+                        }
+                        else if (realSource.Meta.Name == typeof(CyPhy.Metric).Name)
+                        {
+                            problemInput.value = CyPhyClasses.Metric.Cast(realSource).Attributes.Value;
+                            // FIXME: move this to the checker
+                            if (problemInput.value == "")
+                            {
+                                throw new ApplicationException(String.Format("Error: {0} must specify a Value", input.Name));
+                            }
+                        }
+                    }
+                    string kind = realSourceParent.Meta.Name;
+                    if (testbenchtypes.Contains(kind))
+                    {
+                        problemInput.pass_by_obj = true;
+                    }
+                    else if (kind == typeof(CyPhy.ExcelWrapper).Name || kind == typeof(CyPhy.MATLABWrapper).Name)
+                    {
+                        problemInput.pass_by_obj = false;
+                    }
+                    else
+                    {
+                        string pbo = realSource.GetRegistryValueDisp("pass_by_obj") ?? "False";
+                        problemInput.pass_by_obj = true.ToString().Equals(pbo, StringComparison.InvariantCultureIgnoreCase);
+                    }
+                }
+                
+                subProblem.problemInputs.Add(input.Name, problemInput);
+            }
+            foreach (var output in pet.Children.ProblemOutputCollection)
+            {
+                subProblem.problemOutputs.Add(output.Name, GetSourcePath(null, (MgaFCO)output.Impl));
+            }
+        }
+
+        private static void SetProblemInputValueFromDesignVariable(SubProblem.ProblemInput problemInput, MgaFCO desVar)
+        {
+            var configDesignVariable = new DesignVariable();
+            ParseDesignVariableRange(CyPhyClasses.DesignVariable.Cast(desVar), configDesignVariable);
+            if (configDesignVariable.items != null)
+            {
+                if (configDesignVariable.items[0] is string)
+                {
+                    // FIXME: should be Python-style string; this is wrong for codepoints > 0x10000
+                    problemInput.value = String.Format("u{0}", JsonConvert.SerializeObject(configDesignVariable.items[0]));
+                    problemInput.pass_by_obj = true;
+                }
+                else
+                {
+                    problemInput.value = FormatDoubleForPython((double)configDesignVariable.items[0]);
+                    problemInput.pass_by_obj = false;
+                }
+            }
+            else
+            {
+                problemInput.value = FormatDoubleForPython((double)(configDesignVariable.RangeMin +
+                    (configDesignVariable.RangeMax - configDesignVariable.RangeMin) / 2));
+                problemInput.pass_by_obj = false;
+            }
+        }
+
+        private static void SetProblemInputValueFromPCCParameter(SubProblem.ProblemInput problemInput, MgaFCO param)
+        {
+            string kind = param.Meta.Name;
+            if (kind == typeof(CyPhy.PCCParameterBeta).Name)
+            {
+                var beta = CyPhyClasses.PCCParameterBeta.Cast(param);
+                problemInput.value = FormatDoubleForPython(beta.Attributes.HighLimit);
+            }
+            else if (kind == typeof(CyPhy.PCCParameterBeta).Name)
+            {
+                var lnormal = CyPhyClasses.PCCParameterLNormal.Cast(param);
+                problemInput.value = FormatDoubleForPython(lnormal.Attributes.LogScale);
+            }
+            else if (kind == typeof(CyPhy.PCCParameterNormal).Name)
+            {
+                var normal = CyPhyClasses.PCCParameterNormal.Cast(param);
+                problemInput.value = FormatDoubleForPython(normal.Attributes.Mean);
+            }
+            else if (kind == typeof(CyPhy.PCCParameterUniform).Name)
+            {
+                var beta = CyPhyClasses.PCCParameterUniform.Cast(param);
+                problemInput.value = FormatDoubleForPython(beta.Attributes.LowLimit);
+            }
+        }
+
+        private static string FormatDoubleForPython(double v)
+        {
+            if (Double.IsNaN(v))
+            {
+                return "float(\"nan\")";
+            }
+            // (0.0).ToString returns 0, which Python parses as int
+            if (v == Math.Floor(v))
+            {
+                return v.ToString() + ".0";
+            }
+            if (Double.IsPositiveInfinity(v))
+            {
+                return "float(\"inf\")";
+            }
+            if (Double.IsNegativeInfinity(v))
+            {
+                return "float(\"-inf\")";
+            }
+
+            // G17 ensures enough precision to parse the same value
+            return v.ToString("G17", CultureInfo.InvariantCulture);
+        }
+
+        private static ISet<string> GetDerivedTypeNames(Type type)
+        {
+            HashSet<string> ret = new HashSet<string>();
+            foreach (Type t in type.Assembly.GetExportedTypes())
+            {
+                if (type.IsAssignableFrom(t))
+                {
+                    ret.Add(t.Name);
+                }
+            }
+            return ret;
+        }
+
+        public static List<MgaFCO> GetTransitiveSources(MgaFCO fco, ISet<string> stopKinds)
+        {
+            List<MgaFCO> ret = new List<MgaFCO>();
+            Queue<MgaFCO> q = new Queue<MgaFCO>();
+            q.Enqueue(fco);
+            while (q.Count > 0)
+            {
+                fco = q.Dequeue();
+                foreach (MgaConnPoint cp in fco.PartOfConns)
+                {
+                    // FIXME: don't go above top-level PET
+                    if (cp.ConnRole == "dst")
+                    {
+                        fco = ((MgaSimpleConnection)cp.Owner).Src;
+                        if (stopKinds.Contains(fco.Meta.Name))
+                        {
+                            ret.Add(fco);
+                        }
+                        else
+                        {
+                            q.Enqueue(fco);
+                        }
+                    }
+                }
+            }
+            return ret;
         }
 
         public PETConfig.Component GenerateCode(CyPhy.ParametricTestBench excel)
@@ -1044,7 +1327,7 @@ namespace CyPhyPET
                 config.unknowns.Add(fileOutput.Name, new PETConfig.Parameter());
             }
 
-            this.config.components.Add(excel.Name, config);
+            this.components.Add(excel.Name, config);
 
             return config;
         }

@@ -121,6 +121,8 @@ namespace JobManager
         public abstract void AddSoT(SoT sot);
         public List<string> ConfigurationNames { get; set; }
 
+        public Dictionary<string, AVM.DDP.MetaTBManifest.DesignType> Designs;
+
         public abstract void Done();
     }
 }

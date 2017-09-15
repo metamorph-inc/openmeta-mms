@@ -5,7 +5,8 @@ RemoveItemNumber <- function(factor) {sub("[0-9]+. ", "", factor)}
 is.empty <- function(x) {is.null(unlist(x))}
 
 BuildPet <- function(pet_config_filename) {
-  pet_config <- fromJSON(pet_config_filename)
+  # pet_config <- fromJSON(pet_config_filename)
+  pet_config <- fromJSON(pet_config_filename, simplifyDataFrame=FALSE)
   dvs <- pet_config$drivers[[1]]$designVariables
   design_variable_names <- names(dvs)
   design_variables <- Map(function(item, name) {
@@ -68,7 +69,9 @@ AddUnits <- function(name, units) {
 BuildVariables <- function(pet, var_names) {
   if(is.null(pet)) {
     variables <- lapply(var_names, function(var_name) {
-      list(type="Unknown")
+      list(type = "Unknown",
+           units = "",
+           name_with_units = var_name)
     })
   } else {
     pet_config <- pet$pet_config
@@ -142,9 +145,10 @@ FindGUIDFolders <- function(results_dir, config_folders) {
   guid_folders <- list()
   if(length(config_folders) > 0) {
     for (i in 1:length(config_folders)) {
-      artifacts_folder <- normalizePath(file.path(results_dir,
-                                                  dirname(config_folders[[i]]),
-                                                  'artifacts'))
+      artifacts_folder <- suppressWarnings(
+        normalizePath(file.path(results_dir,
+                                dirname(config_folders[[i]]),
+                                'artifacts')))
       guids <- list.files(artifacts_folder)
       if(length(guids) != 0) {
         # print(paste0(artifacts_folder,": ",length(guids)," points."))
@@ -159,4 +163,31 @@ FindGUIDFolders <- function(results_dir, config_folders) {
   guid_folders
 }
 
+# ---- Design Tree supporting functions -------
+compare_node <- function(cur, fil) {
+  return ((is.null(cur$Selected) || cur$Selected == FALSE || fil$Selected == TRUE) &&
+          (is.null(cur$Children) || compare_children(cur$Children, fil$Children)))
+}
 
+compare_children <- function(cur_children, fil_children) {
+  result <- TRUE
+  for(i in 1:length(cur_children)) {
+    for(j in 1:length(fil_children)) {
+      if(cur_children[[i]]$Name == fil_children[[j]]$Name) {
+        result <- result && compare_node(cur_children[[i]], fil_children[[j]])
+      }
+    }
+  }
+  result
+}
+
+SelectAllComponents <- function(node) {
+  if(node[['Type']] == "Component") {
+    node[['Selected']] <- TRUE
+  } else {
+    node[['Children']] <- lapply(node[['Children']], SelectAllComponents)
+  }
+  node
+}
+
+  

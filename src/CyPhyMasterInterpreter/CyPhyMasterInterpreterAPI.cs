@@ -12,6 +12,7 @@
     using Rules;
     using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
     using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
+    using System.Reflection;
 
     /// <summary>
     /// Implements full master interpreter functionality.
@@ -59,6 +60,25 @@
             }
 
             this.Project = project;
+
+            AppDomain.CurrentDomain.AssemblyResolve += LoadFromSameFolder;
+        }
+
+        // MasterInterpreter is loaded via COM with the LoadFrom context. When loading GACed JobManagerLib,
+        // we switch to the standard context (fuslogvw shows "Switch from LoadFrom context to default context"),
+        // which loses the MasterIntepreter dll path.
+        // Tell the AppDomain to look in this folder still
+        static string folderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        static Assembly LoadFromSameFolder(object sender, ResolveEventArgs args)
+        {
+            string assemblyPath = Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+            if (!File.Exists(assemblyPath))
+            {
+                return null;
+            }
+            // assume this dll is the right version
+            Assembly assembly = Assembly.LoadFrom(assemblyPath);
+            return assembly;
         }
 
         public CyPhyMasterInterpreterAPI()
@@ -119,11 +139,16 @@
 
         private JobManagerDispatch Manager { get; set; }
 
+        Dictionary<string, AVM.DDP.MetaTBManifest.DesignType> Designs = new Dictionary<string, AVM.DDP.MetaTBManifest.DesignType>();
+
         /// <summary>
         /// True if this class should dispose the logger.
         /// </summary>
         private bool LoggerDisposeRequired { get; set; }
+        [ComVisible(false)]
         public List<string> ConfigurationNames { get; private set; }
+        [ComVisible(false)]
+        public IEnumerable<GMELightObject> UnselectedConfigurationGroups;
 
         /// <summary>
         /// Disposes the logger if it needs to be disposed.
@@ -135,6 +160,7 @@
             {
                 this.Logger.Dispose();
             }
+            AppDomain.CurrentDomain.AssemblyResolve -= LoadFromSameFolder;
         }
 
         public IMgaFCOs GetConfigurations(IMgaProject project, string gmeId)
@@ -271,6 +297,7 @@
                         }
 
                         this.ConfigurationNames = selectionResult.ConfigurationGroups.SelectMany(group => group.Configurations).Select(fco => fco.Name).ToList();
+                        this.UnselectedConfigurationGroups = selectionResult.UnselectedConfigurations;
                     });
                 }
                 else if (dialogResult == System.Windows.Forms.DialogResult.Yes)
@@ -490,6 +517,29 @@
 
             this.ExecuteInTransaction(context, () =>
             {
+                if (this.Manager != null && this.UnselectedConfigurationGroups != null)
+                {
+                    foreach (var configObj in UnselectedConfigurationGroups)
+                    {
+                        var configuration = this.Project.GetFCOByID(configObj.GMEId);
+                        if (configuration.MetaBase.Name == typeof(CyPhy.CWC).Name)
+                        {
+                            //this.Logger.WriteDebug("{0} was specified as configuration. Start expanding it. {1}", configuration.MetaBase.Name, configuration.AbsPath);
+                            //analysisModelProcessor.Expand(CyPhyClasses.CWC.Cast(configuration));
+                            //this.Logger.WriteDebug("Expand finished for {0}", configuration.AbsPath);
+
+                            var configs = (CyPhy.Configurations)CyPhyClasses.CWC.Cast(configuration).ParentContainer;
+                            var designContainer = (CyPhy.DesignContainer)configs.ParentContainer;
+                            var ddpDesign = GetSelectedDesign(CyPhyClasses.CWC.Cast(configuration), designContainer);
+                            var ddpDesignName = configuration.Name;
+                            Designs.Add(ddpDesignName, ddpDesign);
+                        }
+                        // TODO else if (configuration.MetaBase.Name == typeof(CyPhy.ComponentAssembly).Name)
+
+                    }
+                    this.Manager.JobCollection.Designs = Designs;
+                }
+
                 this.OnMultipleConfigurationProgress(new ProgressCallbackEventArgs()
                 {
                     Percent = 100,
@@ -1039,6 +1089,8 @@
                     createJobManagerResult = createJobManager.BeginInvoke(null, null);
                 }
 
+                AVM.DDP.MetaTBManifest.DesignType ddpDesign = null;
+                string ddpDesignName = null;
                 this.ExecuteInTransaction(context, () =>
                 {
                     contextName = context.Name;
@@ -1065,7 +1117,6 @@
                         Title = "Expanding"
                     });
 
-                    AVM.DDP.MetaTBManifest.DesignType ddpDesign = null;
                     if (configuration.MetaBase.Name == typeof(CyPhy.CWC).Name)
                     {
                         this.Logger.WriteDebug("{0} was specified as configuration. Start expanding it. {1}", configuration.MetaBase.Name, configuration.AbsPath);
@@ -1075,11 +1126,13 @@
                         var configs = (CyPhy.Configurations)CyPhyClasses.CWC.Cast(configuration).ParentContainer;
                         var designContainer = (CyPhy.DesignContainer)configs.ParentContainer;
                         ddpDesign = GetSelectedDesign(CyPhyClasses.CWC.Cast(configuration), designContainer);
+                        ddpDesignName = configuration.Name;
                     }
                     else if (configuration.MetaBase.Name == typeof(CyPhy.ComponentAssembly).Name)
                     {
                         this.Logger.WriteDebug("{0} was specified as configuration. Start expanding it. {1}", configuration.MetaBase.Name, configuration.AbsPath);
                         analysisModelProcessor.Expand(CyPhyClasses.ComponentAssembly.Cast(configuration));
+                        // FIXME: get corresponding CWC and assign ddpDesign = GetSelectedDesign(cwc)
                         this.Logger.WriteDebug("Expand finished for {0}", configuration.AbsPath);
                     }
                     else if (configuration.MetaBase.Name == typeof(CyPhy.ParametricExploration).Name)
@@ -1233,6 +1286,11 @@
                         this.Logger.WriteDebug("Posting to the job manager");
                         var postedToJobManager = analysisModelProcessor.PostToJobManager(this.Manager);
                         result.Success = result.Success && postedToJobManager;
+
+                        if (ddpDesign != null)
+                        {
+                            Designs.Add(ddpDesignName, ddpDesign);
+                        }
 
                         if (postedToJobManager)
                         {

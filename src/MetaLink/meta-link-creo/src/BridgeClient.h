@@ -12,8 +12,7 @@
 #include <boost/lockfree/spsc_queue.hpp>
 #include <iostream>
 
-#include <boost/atomic.hpp>
-#include "LoggerBoost.h"
+#include "cc_LoggerBoost.h"
 
 #include "gen/MetaLinkMsg.pb.h"
 

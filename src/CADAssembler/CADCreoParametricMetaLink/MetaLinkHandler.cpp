@@ -5,6 +5,8 @@
 #include "google/protobuf/text_format.h"
 #include "CreoPlugins\CreoPluginFunctions.h"
 #include "GlobalModelData.h"
+#include <cc_CommonUtilities.h>
+#include <cc_CommonDefinitions.h>
 
 
 namespace meta = edu::vanderbilt::isis::meta;
@@ -178,7 +180,6 @@ namespace isis
 
 	/**
 	The passive topic "ISIS.METALINK.CAD.PASSIVE".
-
 	This topic indicates that the CADAssembler is waiting to be given some work to perform.
 	The protobuf schema to carries arguments, "mode" and an "identifer".
 	It will also use an "action" -> START as well.
@@ -201,15 +202,12 @@ namespace isis
 			return false;
 		}
 		// std::string passiveTopic = edit->topic(0);
-
 		isis::EditPointer editPtr(new meta::Edit());
 		editPtr->add_mode(meta::Edit_EditMode_INTEREST);
 		editPtr->set_editmode(meta::Edit_EditMode_INTEREST);
-
 		boost::uuids::uuid guid = boost::uuids::random_generator()();
 		editPtr->set_guid(boost::uuids::to_string(guid));
 		editPtr->add_origin(m_operator);
-
 		for(int actionIx=0; actionIx < edit->actions_size(); ++actionIx)
 		{
 			std::string majorMode;
@@ -224,7 +222,6 @@ namespace isis
 				isis_LOG(lg, isis_FILE, isis_WARN) << "MetaLinkHandler::process_PassivePost(): wrong action mode specified, action mode: " << action->actionmode();
 				continue;
 			}
-
 			/*if(! action->has_interest())
 			{
 				isis_LOG(lg, isis_FILE, isis_WARN) << "MetaLinkHandler::process_PassivePost(): switch action has no interest";
@@ -241,14 +238,11 @@ namespace isis
 				isis_LOG(lg, isis_FILE, isis_WARN) << "MetaLinkHandler::process_PassivePost(): switch action has no identifier";
 				continue;
 			}
-
 			for(int topix=0; topix < interest.topic_size(); ++topix)
 			{
 				editPtr->add_topic(interest.topic(topix));
 			}
-
 			editPtr->add_topic(interest.uid(0));
-
 			isis_LOG(lg, isis_FILE, isis_DEBUG) << "MetaLinkHandler::process_PassivePost(): posting interest";
 			m_client.send(editPtr);*/
 		}
@@ -365,6 +359,11 @@ namespace isis
 				GlobalModelData::Instance.ComponentEdit.avmId = in_Action->subjectid();
 				isis::GlobalModelData::Instance.mode = isis::COMPONENTEDIT;
 			}
+			meta::Notice notice;
+			notice.set_noticemode(meta::Notice_NoticeMode_DONE);
+			notice.set_msg("No exception.");
+			notice.set_code("C00000");
+			*(in_Action->add_notices()) = notice;
 			return true;
 		}
 
@@ -473,7 +472,6 @@ namespace isis
 
 	//////////////////////////////////////////////
 	/**
-
 	editMode: POST
 	topic: "ISIS.METALINK.CADASSEMBLY"
 	topic: "13a4c47c-39ce-44e0-8732-b946e8821ec7"
@@ -487,7 +485,6 @@ namespace isis
 	}
 	}
 	}
-
 	By the time this method is called the first part of the edit has been processed.
 	This method is responsible for processing a SELECT action.
 	*/
@@ -730,7 +727,8 @@ namespace isis
 
 			const std::string					creoModelName =			in_component.name();
 			const std::string					componentInstanceID =	in_component.componentid();
-			ProMdlType							creoModelType =			isis::ProMdlType_enum(in_component.type());
+			//ProMdlType						creoModelType =			isis::ProMdlType_enum(in_component.type());
+			e_CADMdlType						creoModelType =			isis::CADMdlType_enum(in_component.type());
 			const std::string					materialID =			in_component.materialid();
 			isis::e_CADSpecialInstruction		specialInstruction =	isis::SpecialInstruction_enum(in_component.specialinstruction());
 
@@ -901,13 +899,13 @@ namespace isis
 				isis::ConstraintFeature  creoConstraintFeature_A;
 				creoConstraintFeature_A.componentInstanceID	 =  constraintFeature_A.componentid();
 				creoConstraintFeature_A.featureName			 =  constraintFeature_A.featurename();
-				creoConstraintFeature_A.featureOrientationType =  isis::ProDatumside_enum(constraintFeature_A.featureorientationtype());
+				creoConstraintFeature_A.featureOrientationType =  isis::CADDatumside_enum(constraintFeature_A.featureorientationtype());
 				creoConstraintPair.constraintFeatures.push_back(creoConstraintFeature_A);
 
 				isis::ConstraintFeature  creoConstraintFeature_B;
 				creoConstraintFeature_B.componentInstanceID	 =  constraintFeature_B.componentid();
 				creoConstraintFeature_B.featureName			 =  constraintFeature_B.featurename();
-				creoConstraintFeature_B.featureOrientationType =  isis::ProDatumside_enum(constraintFeature_B.featureorientationtype());
+				creoConstraintFeature_B.featureOrientationType =  isis::CADDatumside_enum(constraintFeature_B.featureorientationtype());
 				creoConstraintPair.constraintFeatures.push_back(creoConstraintFeature_B);
 
 				creoConstraintPairs.push_back(creoConstraintPair);
@@ -1256,9 +1254,9 @@ namespace isis
 				string idupper = boost::to_upper_copy(in_component.datums(i).id());
 				datumnamemap[idupper] = in_component.datums(i).displayname();
 			}
-			ProSolidFeatVisit(ProMdlToSolid(GlobalModelData::Instance.ComponentEdit.mdl), DatumNameVisit, NULL, &datumnamemap);
+			ProSolidFeatVisit(ProMdlToSolid(GlobalModelData::Instance.ComponentEdit.cADModel_ptr), DatumNameVisit, NULL, &datumnamemap);
 
-			ProError status = ProTreetoolRefresh(GlobalModelData::Instance.ComponentEdit.mdl);
+			ProError status = ProTreetoolRefresh(GlobalModelData::Instance.ComponentEdit.cADModel_ptr);
 
 			// Refresh the model tree component
 			switch(status)
@@ -1315,4 +1313,3 @@ namespace isis
 	//////////////////////////////////////////////
 
 } // namespace isis
-

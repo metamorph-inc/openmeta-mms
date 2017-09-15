@@ -25,34 +25,59 @@ For example, the "Histogram.R" example tab below requests this footer.
 Filters
 -------
 
-The Filters panel is the first panel in the Visualizer footer.
+The Filters panel is the first panel in the Visualizer footer. This panel
+allows for filtering on design configuration decisions, enumerated
+variables, and continuous variables. Tabs that use the "Filtered" dataset
+will respond to changes in these filters.
 
 .. image:: images/filters.png
    :alt: Filters Panel of Visualizer Footer
-   :width: 1459px
+   :width: 1223px
 
--  **View All Filters:** This selects between displaying either filters
+.. -  **View All Filters:** This selects between displaying either filters
    for every variable and classification or just filters for those
    variables currently "selected" in the open tab.
 
 -  **Reset Visible Filters:** This button will return the visible
-   filters to their original state, i.e. the full range is selected.
+   filters to their original state, i.e. the full ranges are selected and
+   all discrete choices are included.
 
--  **Filters:** These filters exclude from the "Filtered" dataset data
-   points that fall outside of the ranges specified for any of the
-   variable. Be careful not to exclude all the points in your dataset.
+-  **Design Configuration Tree**: This section displays a tree representing
+   the Design Container hierarchy present in the OpenMETA model.
+   Clicking on a component will toggle it between the included
+   ( |INCLUDED_STATE| ) and excluded ( |EXCLUDED_STATE| ) states. Setting a
+   component to the excluded state will filter out any configurations
+   that included that component from the "Filtered" dataset.
+   
+-  **Enumerated Select Boxes:** These filters exclude from the "Filtered" dataset
+   data points that for the given variable have a value not in the selected
+   options. You can use :kbd:`Shift` to select contiguous options,
+   :kbd:`Control` to select or deselect individual options, and :kbd:`Control-a`
+   after clicking one of the options to select all options.
+   
+-  **Numeric Sliders:** These filters exclude from the "Filtered" dataset data
+   points that for the given variable have a value that falls outside of the
+   ranges specified by the slider.
 
 .. image:: images/filter_exact_entry.png
    :alt: Exact Entry
    :width: 408px
 
--  **Exact Entry Window:** When a slider is 'double-clicked', a new
+-  **Exact Entry Window:** When a numeric slider is 'double-clicked', a new
    window opens up allowing the user to enter an exact range for the
    filter. The window shows the name of the variable along with text
    fields for minimum and maximum range. The 'apply' button applies the
    new values set for the filter; if either or both of the fields are
    left blank or containing non-numeric numbers, they are ignored when
    this button is clicked.
+   
+.. |INCLUDED_STATE| image:: images/design_tree_included_state.png
+   :alt: Included State
+   :width: 26px
+
+.. |EXCLUDED_STATE| image:: images/design_tree_excluded_state.png
+   :alt: Included State
+   :width: 26px
 
 Coloring
 --------
@@ -61,15 +86,17 @@ Coloring
    :alt: Coloring Panel of Visualizer Footer
    :width: 1459px
 
-The *Coloring* panel allows us to apply live and saved colorings to the
-data. This information is passed to the tab as an addition column in the
-data in the ``data$Colored`` data frame. The "Source" can take one of
-three options:
+The Coloring panel allows us to apply live and saved colorings to the
+data. This information is passed to all the tabs as an additional column
+in the data in the ``data$Colored`` data frame. The "Source" can take one
+of three options:
 
-1. **None:** This will assign "black" to the added column in *Colored*.
-2. **Live:** This will use the "Live" options that are present here in
-   the Coloring Panel to assign the added column in *Colored*.
-3. <Saved Colorings>: Different desirable coloring schemes can be saved
+1. **None:** This will assign ``black`` to the **color** column in the
+   ``data$Colored`` data frame. The Explore tab, for example, applies
+   this color directly to the plotted points.
+2. **Live:** This will use the "live" options that are present here in
+   the Coloring panel to assign the **color** column.
+3. **<Saved Colorings>**: Different desirable coloring schemes can be saved
    using the "Add Current 'Live' Coloring" button. These colorings will
    be persisted across the live of the session and can be applied by
    selecting them here in the "Source" select input.

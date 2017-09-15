@@ -68,7 +68,12 @@ namespace DesignSpaceTest
             gateway.PerformInTransaction(() =>
             {
                 currentobj = (MgaFCO)project.RootFolder.ObjectByPath[dsPath];
-            });
+                var configurations = ISIS.GME.Dsml.CyPhyML.Classes.DesignContainer.Cast(currentobj).Children.ConfigurationsCollection;
+                foreach (var configuration in configurations)
+                {
+                    configuration.Delete();
+                }
+            }, abort: false);
             Xunit.Assert.True(currentobj != null, string.Format("'{0}' does not exist in model", dsPath));
 
             desert.Initialize(project);
@@ -172,6 +177,74 @@ namespace DesignSpaceTest
             {
                 Assert.Equal(1, configurations.Count());
                 Assert.Equal(1, configurations.First().Children.CWCCollection.Count());
+            }, null);
+        }
+
+        [Fact]
+        void TestCAExport_DomainModel()
+        {
+            DesertTestBase("/@DesignSpaces/@DesignContainer_DomainModel", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
+            }, configurations =>
+            {
+                Assert.Equal(2, configurations.Children.CWCCollection.Count());
+
+                foreach (var cwc in configurations.Children.CWCCollection)
+                {
+                    //Verify that we generated both ComponentAssemblies
+                    Assert.Equal(1, cwc.DstConnections.Config2CACollection.Count());
+                    var caConn = cwc.DstConnections.Config2CACollection.First();
+                    // ((MgaModel)ca.Impl).GetDescendantFCOs(project.CreateFilter()).Count
+                    var ca = ISIS.GME.Dsml.CyPhyML.Classes.ComponentAssemblyRef.Cast(caConn.DstEnd.Impl).Referred.ComponentAssembly;
+                    Assert.Equal(1, ca.Children.ConnectorCollection.Count());
+
+                    //Now look inside the CA and see if we generated the GenericDomainModel
+                    //We should have exactly one
+                    var genericDomainModels = ca.Children.GenericDomainModelCollection;
+                    Assert.Equal(1, genericDomainModels.Count());
+                    //Now validate its metadata
+                    var genericDomainModel = genericDomainModels.First();
+                    Assert.Equal("OutsideGenericDomainModel", genericDomainModel.Name);
+                    Assert.Equal("ArbitraryDomain", genericDomainModel.Attributes.Domain);
+                    Assert.Equal("ArbitraryType", genericDomainModel.Attributes.Type);
+
+                    //Verify that the generic domain model's ports and connections were copied
+                    var ports = genericDomainModel.Children.GenericDomainModelPortCollection;
+                    Assert.Equal(1, ports.Count());
+                    Assert.Equal(1, ports.First().AllSrcConnections.Count());
+                }
+            });
+        }
+
+        [Fact]
+        void TestDesert_DesignContainer_Opt_Constraint()
+        {
+            DesertTestBase("/@DesignSpaces/@DesignContainer_Opt_Constraint", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(3, configurations.First().Children.CWCCollection.Count());
+            }, null);
+        }
+
+        [Fact]
+        void TestDesert_DesignContainer_Opt_Constraint2()
+        {
+            DesertTestBase("/@DesignSpaces/@DesignContainer_Opt_Constraint2", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
+            }, null);
+        }
+
+        [Fact]
+        void TestDesert_DesignContainer_Opt_Constraint3()
+        {
+            DesertTestBase("/@DesignSpaces/@DesignContainer_Opt_Constraint3", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(3, configurations.First().Children.CWCCollection.Count());
             }, null);
         }
 

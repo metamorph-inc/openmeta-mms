@@ -82,7 +82,7 @@ namespace CyPhyElaborateCS
         }
 
         public Boolean UnrollConnectors = true;
-
+        string[] numericLeafNodes;
 
         /// <summary>
         /// The main entry point of the interpreter. A transaction is already open,
@@ -174,6 +174,7 @@ namespace CyPhyElaborateCS
                 try
                 {
                     formulaEval.InvokeEx(project, currentobj, selectedObjs, 128);
+                    numericLeafNodes = (string[])formulaEval.ComponentParameter["numericLeafNodes"];
                     this.Logger.WriteInfo("CyPhyFormulaEvaluator 1.0 finished");
                 }
                 catch (COMException e)
@@ -454,9 +455,10 @@ namespace CyPhyElaborateCS
                 if (this.Logger == null)
                 {
                     this.Logger = new CyPhyGUIs.GMELogger(project, this.ComponentName);
-                    this.Logger.LoggingLevel = this.Logger.GMEConsoleLoggingLevel = this.Convert(param) == ComponentStartMode.GME_SILENT_MODE ?
+                    this.Logger.GMEConsoleLoggingLevel = this.Convert(param) == ComponentStartMode.GME_SILENT_MODE ?
                         CyPhyGUIs.SmartLogger.MessageType_enum.Warning :
                         CyPhyGUIs.SmartLogger.MessageType_enum.Info;
+                    this.Logger.LoggingLevel = SmartLogger.MessageType_enum.Info;
                     shouldDisposeLogger = true;
                 }
 
@@ -511,7 +513,7 @@ namespace CyPhyElaborateCS
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.WriteDebug(ex.ToString());
+                    this.Logger.WriteInfo(ex.ToString());
                     success = false;
                 }
                 finally
@@ -554,7 +556,7 @@ namespace CyPhyElaborateCS
             return success;
         }
 
-        public static void UpdateMetricsInTestbenchManifest(MgaFCO currentobj, string outputDirectory)
+        public void UpdateMetricsInTestbenchManifest(MgaFCO currentobj, string outputDirectory)
         {
             var tbManifest = AVM.DDP.MetaTBManifest.OpenForUpdate(outputDirectory);
             Dictionary<string, AVM.DDP.MetaTBManifest.Metric> metrics = tbManifest.Metrics.ToDictionary(metric => metric.Name);
@@ -564,7 +566,14 @@ namespace CyPhyElaborateCS
                 AVM.DDP.MetaTBManifest.Metric metric;
                 if (metrics.TryGetValue(metricFco.Name, out metric))
                 {
-                    metric.Value = metricFco.GetStrAttrByNameDisp("Value");
+                    if (numericLeafNodes.Contains(metricFco.Name))
+                    {
+                        metric.Value = Double.Parse(metricFco.GetStrAttrByNameDisp("Value"));
+                    }
+                    else
+                    {
+                        metric.Value = metricFco.GetStrAttrByNameDisp("Value");
+                    }
                 }
             }
 

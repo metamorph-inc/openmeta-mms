@@ -19,7 +19,7 @@
 
 #include "CADEnvironmentSettings.h"
 #include "InputArgumentsParser.h"
-#include "WindowsFunctions.h"
+#include "cc_WindowsFunctions.h"
 
 #include <string>
 #include <sstream>
@@ -33,13 +33,9 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-#include <boost/thread/thread.hpp>
 #include <iostream>
 
-#include <boost/atomic.hpp>
 #include <boost/filesystem.hpp>
-
-#include "gen/MetaLinkMsg.pb.h"
 
 #include "CreoModelToCyphyXML.h"
 

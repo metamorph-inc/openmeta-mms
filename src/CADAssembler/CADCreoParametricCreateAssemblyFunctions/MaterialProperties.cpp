@@ -1,5 +1,5 @@
 #include "MaterialProperties.h"
-#include <CommonUtilities.h>
+#include <cc_CommonUtilities.h>
 #include <string>
 #include <stdlib.h>
 #include <locale>
@@ -18,8 +18,7 @@
 #include <iterator>
 #include <boost/regex.hpp>
 #include <stdlib.h>
-#include "LoggerBoost.h"
-#include "CommonDefinitions.h"
+#include "cc_LoggerBoost.h"
 
 
 namespace isis
@@ -562,7 +561,7 @@ void PopulateAnalysisMaterialStruct( const Material				 &in_Material,
 								errorString <<
 										"Material:          " <<  in_MaterialName << std::endl <<
 										"Material Property: " <<  in_MaterialLibPropertyName << std::endl <<
-										"Material Unit:	    " <<  unit  << endl <<
+										"Material Unit:	    " <<  unit  << std::endl <<
 										"Required Unit:     " << in_MaterialLibRequiredUnit << std::endl <<
 										"The units in the material library are incompatible with the required units.";
 					throw isis::application_exception(errorString.str());
@@ -584,7 +583,7 @@ void PopulateAnalysisMaterialStruct( const Material				 &in_Material,
 				errorString <<
 					"Material:          " <<  in_MaterialName << std::endl <<
 					"Material Property: " <<  in_MaterialLibPropertyName << std::endl <<
-					"Material Unit:	    " <<  unit  << endl <<
+					"Material Unit:	    " <<  unit  << std::endl <<
 					"Value:             " << value_string << std::endl <<
 					"A zero value is not allowed.";
 				throw isis::application_exception(errorString.str());

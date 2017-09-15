@@ -7,8 +7,8 @@ System Requirements
 ~~~~~~~~~~~~~~~~~~~
 
 -  **Platform:** Windows 7, 8, 8.1, or 10.
--  **RAM:** 3GB minimum (8 GB or more recommended)
--  **HDD:** 10GB minimum (50 GB or more recommended)
+-  **RAM:** 3 GB minimum (8 GB or more recommended)
+-  **HDD:** 10 GB minimum (50 GB or more recommended)
 
 Install Steps
 ~~~~~~~~~~~~~

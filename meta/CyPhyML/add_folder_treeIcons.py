@@ -64,6 +64,9 @@ else:
         element.attrib['metaref'] = ''
 
     metarefMax = 0
+    # find holes in the metarefs. meta-core will take larger numbers
+    # claim this range for tonka
+    availableMetarefs = set(xrange(2000, 10000))
     with open(metarefsFilename) as metarefs_in:
         for metarefLine in metarefs_in:
             xpath, metaref = metarefLine.split()
@@ -76,13 +79,18 @@ else:
             element = matches[0]
             element.attrib['metaref'] = metaref
             metarefMax = max(int(metaref), metarefMax)
+            if int(metaref) in availableMetarefs:
+                availableMetarefs.remove(int(metaref))
 
     for element in itertools.chain(itertools.chain(*(tree.xpath('//' + kind) for kind in ('folder', 'model', 'atom', 'reference', 'set', 'connection'))),
             itertools.chain(*(tree.xpath('//' + tag) for tag in ('role', 'aspect', 'attrdef'))),
             tree.xpath('//part')):
         if element.attrib['metaref'] == '':
-            metarefMax = metarefMax + 1
-            element.attrib['metaref'] = str(metarefMax)
+            # metarefMax = metarefMax + 1
+            # element.attrib['metaref'] = str(metarefMax)
+            metaref = min(availableMetarefs)
+            element.attrib['metaref'] = str(metaref)
+            availableMetarefs.remove(metaref)
 
     xmpstat = os.stat(base + '.xmp')
     with open(base + '.xmp', 'w') as out:

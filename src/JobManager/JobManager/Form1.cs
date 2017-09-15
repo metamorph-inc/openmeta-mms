@@ -160,6 +160,7 @@ namespace JobManager
             this.toolStripStatusLabel = new SpringLabel();
             this.toolStripStatusLabel.Text = "Loading";
             this.statusStrip1.Items.Add(this.toolStripStatusLabel);
+            this.lvJobQueue.DoubleClick += showInExplorerToolStripMenuItem_Click;
 
             this.remoteServiceStatusForm = new RemoteServiceStatusForm();
 
@@ -235,6 +236,8 @@ namespace JobManager
                     }
                 }
                 Trace.TraceInformation("JobManager is closing");
+                manager.Dispose();
+                manager = null;
             };
             this.Resize += new EventHandler(JobManager_Resize);
             NotifyIcon = new NotifyIcon();

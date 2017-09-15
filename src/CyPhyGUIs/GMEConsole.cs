@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using GME;
+using System.Security;
 
 namespace GME.CSharp
 {
@@ -146,7 +147,7 @@ namespace GME.CSharp
                     if (fco != null)
                     {
                         // TODO: maybe get it until we reach the original source???
-                        sb.AppendFormat("<a href=\"mga:{0}\">{1}</a>", fco.ID, fco.Name);
+                        sb.AppendFormat("<a href=\"mga:{0}\">{1}</a>", fco.ID, SecurityElement.Escape(fco.Name));
                         return sb.ToString();
                     }
                 }
@@ -158,7 +159,7 @@ namespace GME.CSharp
             }
             else
             {
-                sb.AppendFormat("<a href=\"mga:{0}\">{1} (not mapped)</a>", subject.ID, subject.Path);
+                sb.AppendFormat("<a href=\"mga:{0}\">{1}</a>", subject.ID, subject.Path);
             }
             return sb.ToString();
         }

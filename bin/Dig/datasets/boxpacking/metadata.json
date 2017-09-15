@@ -1,0 +1,22 @@
+{
+  "Kind": 0,
+  "SourceDatasets": [
+    {
+      "Kind": 0,
+      "Time": "2017-01-12 10-09-16",
+      "Name": "PackBoxesDS",
+      "DesignName": "",
+      "Status": "",
+      "Count": 6,
+      "Folders": [
+        "./s4xva0x3/testbench_manifest.json",
+        "./iqd3qpo1/testbench_manifest.json",
+        "./mrg1n50x/testbench_manifest.json",
+        "./sxa54o12/testbench_manifest.json",
+        "./djhhabiy/testbench_manifest.json",
+        "./ylandb3u/testbench_manifest.json"
+      ],
+      "Selected": true
+    }
+  ]
+}

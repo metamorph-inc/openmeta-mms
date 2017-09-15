@@ -1,0 +1,236 @@
+{
+  "28-16": {
+    "Name": "Blade",
+    "Type": "Compound",
+    "Children": [{
+        "Name": "RootThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "28",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "30",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "32",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }, {
+        "Name": "TipThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "16",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "20",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "28-20": {
+    "Name": "Blade",
+    "Type": "Compound",
+    "Children": [{
+        "Name": "RootThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "28",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "30",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "32",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }, {
+        "Name": "TipThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "16",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "20",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      }
+    ]
+  },
+  "30-16": {
+    "Name": "Blade",
+    "Type": "Compound",
+    "Children": [{
+        "Name": "RootThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "28",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "30",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "32",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }, {
+        "Name": "TipThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "16",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "20",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "30-20": {
+    "Name": "Blade",
+    "Type": "Compound",
+    "Children": [{
+        "Name": "RootThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "28",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "30",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "32",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }, {
+        "Name": "TipThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "16",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "20",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      }
+    ]
+  },
+  "32-16": {
+    "Name": "Blade",
+    "Type": "Compound",
+    "Children": [{
+        "Name": "RootThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "28",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "30",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "32",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      }, {
+        "Name": "TipThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "16",
+            "Type": "Component",
+            "Selected": true
+          },
+          {
+            "Name": "20",
+            "Type": "Component",
+            "Selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "32-20": {
+    "Name": "Blade",
+    "Type": "Compound",
+    "Children": [{
+        "Name": "RootThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "28",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "30",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "32",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      }, {
+        "Name": "TipThickness",
+        "Type": "Alternative",
+        "Children": [{
+            "Name": "16",
+            "Type": "Component",
+            "Selected": false
+          },
+          {
+            "Name": "20",
+            "Type": "Component",
+            "Selected": true
+          }
+        ]
+      }
+    ]
+  }
+}

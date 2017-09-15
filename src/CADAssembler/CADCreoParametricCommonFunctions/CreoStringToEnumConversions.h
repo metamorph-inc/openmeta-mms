@@ -20,7 +20,7 @@
 #include <isis_include_ptc_headers.h>
 #include <string>
 #include <iostream>
-#include <CADStringToEnumConversions.h>
+#include <cc_StringToEnumConversions.h>
 
 using namespace std;
 
@@ -43,6 +43,15 @@ namespace isis
 	std::string ProMdlType_string( ProMdlType in_Enum )
 										throw (isis::application_exception);
 
+	ProMdlType ProMdlType_enum( e_CADMdlType in_Enum )
+										throw (isis::application_exception);
+
+	std::string ProMdlType_string( e_CADMdlType in_Enum )
+										throw (isis::application_exception);
+
+	e_CADMdlType CADMdlType_enum( ProMdlType in_Enum )
+										throw (isis::application_exception);
+
 	////////////////////////////////////////////////////////////////////////////////////////
 
 	ProType FeatureGeometryType_enum( const std::string &in_String)
@@ -55,6 +64,9 @@ namespace isis
 										throw (isis::application_exception);
 
 	std::string FeatureGeometryType_string( e_CADFeatureGeometryType in_Enum )
+										throw (isis::application_exception);
+
+	e_CADFeatureGeometryType CADFeatureGeometryType_enum( ProType in_Enum )
 										throw (isis::application_exception);
 
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +83,9 @@ namespace isis
 	std::string ProAsmcompConstrType_string( e_CADAssemblyConstraintType in_Enum )
 										throw (isis::application_exception);
 
+	e_CADAssemblyConstraintType CADAssemblyConstraintType_enum( ProAsmcompConstrType in_Enum )
+										throw (isis::application_exception);
+
 	////////////////////////////////////////////////////////////////////////////////////////
 
 	ProDatumside ProDatumside_enum( const std::string &in_String)
@@ -79,36 +94,81 @@ namespace isis
 	std::string ProDatumside_string( ProDatumside in_Enum )
 										throw (isis::application_exception);
 
-	////////////////////////////////////////////////////////////////////////////////////////
-
-	pro_fem_solver_type AnalysisSolverType_enum( const std::string &in_String)
+	ProDatumside ProDatumside_enum( e_CADDatumside in_Enum )
 										throw (isis::application_exception);
 
-	std::string AnalysisSolverType_string( pro_fem_solver_type in_Enum )
+	std::string ProDatumside_string( e_CADDatumside in_Enum )
 										throw (isis::application_exception);
 
-	////////////////////////////////////////////////////////////////////////////////////////
-
-	pro_fem_mesh_type AnalysisMeshType_enum( const std::string &in_String)
-										throw (isis::application_exception);
-
-	std::string AnalysisMeshType_string( pro_fem_mesh_type in_Enum )
+	e_CADDatumside CADDatumside_enum( ProDatumside in_Enum )
 										throw (isis::application_exception);
 
 	////////////////////////////////////////////////////////////////////////////////////////
 
-	pro_fem_shell_mesh_type AnalysisShellElementType_enum( const std::string &in_String)
+	pro_fem_solver_type ProAnalysisSolverType_enum( const std::string &in_String)
 										throw (isis::application_exception);
 
-	std::string AnalysisShellElementType_string( pro_fem_shell_mesh_type in_Enum )
+	std::string ProAnalysisSolverType_string( pro_fem_solver_type in_Enum )
+										throw (isis::application_exception);
+
+	pro_fem_solver_type ProAnalysisSolverType_enum( e_CADAnalysisSolverType in_Enum )
+										throw (isis::application_exception);
+
+	std::string ProAnalysisSolverType_string( e_CADAnalysisSolverType in_Enum )
+										throw (isis::application_exception);
+
+	e_CADAnalysisSolverType CADAnalysisSolverType_enum( pro_fem_solver_type in_Enum )
 										throw (isis::application_exception);
 
 	////////////////////////////////////////////////////////////////////////////////////////
 
-	pro_fem_elem_shape_type AnalysisElementShapeType_enum( const std::string &in_String)
+	pro_fem_mesh_type ProAnalysisMeshType_enum( const std::string &in_String)
 										throw (isis::application_exception);
 
-	std::string AnalysisElementShapeType_string( pro_fem_elem_shape_type in_Enum )
+	std::string ProAnalysisMeshType_string( pro_fem_mesh_type in_Enum )
+										throw (isis::application_exception);
+
+	pro_fem_mesh_type ProAnalysisMeshType_enum( e_CADAnalysisMeshType in_Enum )
+										throw (isis::application_exception);
+
+	std::string ProAnalysisMeshType_string( e_CADAnalysisMeshType in_Enum )
+										throw (isis::application_exception);
+
+	e_CADAnalysisMeshType CADAnalysisMeshType_enum( pro_fem_mesh_type in_Enum )
+										throw (isis::application_exception);
+
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	pro_fem_shell_mesh_type ProAnalysisShellElementType_enum( const std::string &in_String)
+										throw (isis::application_exception);
+
+	std::string ProAnalysisShellElementType_string( pro_fem_shell_mesh_type in_Enum )
+										throw (isis::application_exception);
+
+	pro_fem_shell_mesh_type ProAnalysisShellElementType_enum( e_CADAnalysisShellElementType in_Enum )
+										throw (isis::application_exception);
+
+	std::string ProAnalysisShellElementType_string( e_CADAnalysisShellElementType in_Enum )
+										throw (isis::application_exception);
+
+	e_CADAnalysisShellElementType CADAnalysisShellElementType_enum( pro_fem_shell_mesh_type in_Enum )
+										throw (isis::application_exception);
+
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	pro_fem_elem_shape_type ProAnalysisElementShapeType_enum( const std::string &in_String)
+										throw (isis::application_exception);
+
+	std::string ProAnalysisElementShapeType_string( pro_fem_elem_shape_type in_Enum )
+										throw (isis::application_exception);
+
+	pro_fem_elem_shape_type ProAnalysisElementShapeType_enum( e_CADAnalysisElementShapeType in_Enum )
+										throw (isis::application_exception);
+
+	std::string ProAnalysisElementShapeType_string( e_CADAnalysisElementShapeType in_Enum )
+										throw (isis::application_exception);
+
+	e_CADAnalysisElementShapeType CADAnalysisElementShapeType_enum( pro_fem_elem_shape_type in_Enum )
 										throw (isis::application_exception);
 
 	////////////////////////////////////////////////////////////////////////////////////////

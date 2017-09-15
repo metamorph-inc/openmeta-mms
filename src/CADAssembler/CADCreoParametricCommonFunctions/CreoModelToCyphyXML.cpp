@@ -5,10 +5,9 @@
 #include "ProFeatType.h"
 #include "ProParameter.h"
 #include "ProAsmcomp.h"
-#include "CommonDefinitions.h"
+#include "cc_CommonDefinitions.h"   
 
 // Boost-related includes
-#include <boost/thread.hpp>
 #include <boost/program_options.hpp>
 #include <boost/asio.hpp>
 #include <boost/uuid/uuid.hpp>            // uuid class

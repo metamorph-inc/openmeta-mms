@@ -42,7 +42,6 @@ __declspec(noreturn) void ThrowComError(HRESULT hr, LPOLESTR err);
 
 bool ConsoleMessagesOn;
 bool Automation;
-bool Expanded;
 bool DoNotGeneratePostProcessing;
 string OutputDir = "";
 string ExceptionMessage = "";
@@ -56,7 +55,6 @@ STDMETHODIMP RawComponent::Initialize(struct IMgaProject *) {
 	ConsoleMessagesOn = false;
 #endif
 	Automation = false;
-	Expanded = false;
 	DoNotGeneratePostProcessing = false;
 	OutputDir = "";
 	ExceptionMessage = "";
@@ -277,7 +275,7 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 
 #else
 			// Calling the main entry point
-			CUdmApp::UdmMain(&dngBackend,currentObject,selectedObjects,param);
+			app.UdmMain(&dngBackend, currentObject, selectedObjects, param);
 			// Closing backend
 			dngBackend.CloseWithUpdate();
 
@@ -383,6 +381,27 @@ STDMETHODIMP RawComponent::get_ComponentParameter(BSTR name, VARIANT *pVal) {
 		CComVariant(ExceptionMessage.c_str()).Detach(pVal);
 		return S_OK;
 	}
+	else if (_name == "numericLeafNodes")
+	{
+		VariantInit(pVal);
+
+		SAFEARRAYBOUND aDim[1];
+		aDim[0].lLbound = 0;
+		aDim[0].cElements = app.numericLeafNodes.size();
+
+		SAFEARRAY* sa = SafeArrayCreate(VT_BSTR, 1, aDim);
+		if (sa)
+		{
+			for (LONG i = 0; i < app.numericLeafNodes.size(); i++)
+			{
+				// note: makes a copy, DOES NOT pass ownership
+				SafeArrayPutElement(sa, &i, CComBSTR(app.numericLeafNodes[i].c_str()));
+			}
+
+			pVal->vt = VT_ARRAY | VT_BSTR;
+			pVal->parray = sa;
+		}
+	}
 	else
 	{
 		// default message
@@ -427,18 +446,6 @@ void RawComponent::UpdateParameters()
 			else
 			{
 				Automation = false;
-			}
-		}
-		else if (_name == "expanded")
-		{
-			std::string value = _bstr_t(_newVal.bstrVal);
-			if (value == "true")
-			{
-				Expanded = true;
-			}
-			else
-			{
-				Expanded = false;
 			}
 		}
 		else if (_name == "do_not_generate_post_processing")

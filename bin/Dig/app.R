@@ -47,12 +47,15 @@ source("utils.R")
 
 ABBREVIATION_LENGTH <- 25
 SAVE_DIG_INPUT_CSV <- TRUE
+FILTER_WIDTH_IN_COLUMNS <- 2
 
 # Resolve Dataset Configuration ----------------------------------------------
 
 pet_config_present <- FALSE
+design_tree_present <- FALSE
 saved_inputs <- NULL
 visualizer_config <- NULL
+design_tree <- NULL
 
 dig_input_csv <- Sys.getenv('DIG_INPUT_CSV')
 dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
@@ -64,29 +67,24 @@ if (dig_dataset_config == "") {
                               'visualizer_config.json',
                               fsep = "\\\\")
     # config_filename=file.path('datasets',
-    #                           'WindTurbine',
-    #                           'visualizer_config.json',
-    #                           fsep = "\\\\")
-    # config_filename=file.path('datasets',
-    #                           'TestPETRefinement',
+    #                           'boxpacking',
     #                           'visualizer_config.json',
     #                           fsep = "\\\\")
   } else {
     # Visualizer legacy launch format
     csv_dir <- dirname(dig_input_csv)
     config_filename <- file.path(csv_dir,
-                                 sub(".csv",
+                                 sub("\\.csv$",
                                      "_viz_config.json",
                                      basename(dig_input_csv)),
                                  fsep = "\\\\")
-    
   }
 } else {
   config_filename <- gsub("\\\\", "/", dig_dataset_config)
 }
 
 if(file.exists(config_filename)) {
-  visualizer_config <- fromJSON(config_filename)
+  visualizer_config <- fromJSON(config_filename, simplifyDataFrame=FALSE)
 } else {
   visualizer_config <- list()
   visualizer_config$raw_data <- basename(dig_input_csv)
@@ -94,9 +92,6 @@ if(file.exists(config_filename)) {
   visualizer_config$tabs <- c("Explore.R",
                               "DataTable.R",
                               "Histogram.R",
-                              "PETRefinement.R",
-                              "Scratch.R",
-                              "ParallelAxisPlot.R",
                               "UncertaintyQuantification.R")
 }
 
@@ -110,6 +105,11 @@ if (!is.null(pet_config_filename) && pet_config_filename != "") {
   if (file.exists(pet_config_filename)) {
     pet_config_present <- TRUE
   }
+}
+
+design_tree_filename <- file.path(launch_dir, "design_tree.json")
+if (file.exists(design_tree_filename)) {
+  design_tree_present <- TRUE
 }
 
 # Saved Input Functions ------------------------------------------------------
@@ -186,6 +186,7 @@ tab_environments <- mapply(function(file_name, id) {
 )
 
 # Read input dataset file
+print("Reading raw data...")
 raw <- read.csv(file.path(launch_dir, visualizer_config$raw_data), fill=T)
 if(!is.null(visualizer_config$augmented_data)) {
   augmented_filename <- file.path(launch_dir,
@@ -209,6 +210,8 @@ if(file.exists(file.path(launch_dir, 'metadata.json'))) {
 }
 
 # Process PET Configuration File ('pet_config.json') -------------------------
+
+print("Processing 'pet_config.json'...")
 pet <- NULL
 if (!is.null(visualizer_config[["pet"]])) {
   pet <- visualizer_config$pet
@@ -218,11 +221,25 @@ if (!is.null(visualizer_config[["pet"]])) {
 
 # Process Variables ----------------------------------------------------------
 
+print("Processing variables...")
 variables <- NULL
 if (!is.null(visualizer_config[["variables"]])) {
   variables <- visualizer_config$variables
 } else {
   variables <- BuildVariables(pet, names(raw))
+}
+
+# Process Design Tree ('design_tree.json') -------------------------
+
+print("Processing 'design_tree.json'...")
+if (design_tree_present) {
+  design_tree <- fromJSON(design_tree_filename, simplifyDataFrame = FALSE)
+  if (is.empty(design_tree)) {
+    design_tree <- NULL
+    design_tree_present <- FALSE
+  } else {
+    FILTER_WIDTH_IN_COLUMNS <- 3
+  }
 }
 
 # Server ---------------------------------------------------------------------
@@ -239,7 +256,10 @@ Server <- function(input, output, session) {
 
   var_class <- reactive({
     df_class <- sapply(data$raw$df, class)
-    df_class[-which(names(df_class) %in% c("GUID", "CfgID"))]
+    if (any(names(df_class) %in% c("GUID", "CfgID"))) {
+      df_class <- df_class[-which(names(df_class) %in% c("GUID", "CfgID"))]
+    }
+    df_class
   })
   var_names <- reactive({names(var_class())})
   var_facs <- reactive({
@@ -361,6 +381,48 @@ Server <- function(input, output, session) {
               var_range_list=var_range_list,
               var_constants=var_constants)
   
+  # Design Configs for Filters -----------------------------------------------
+  
+  observe({
+    if(design_tree_present) {
+      if(is.empty(visualizer_config$config_tree)) {
+        config_tree <- SelectAllComponents(design_tree[[names(design_tree)[1]]])
+      } else {
+        config_tree <- visualizer_config$config_tree
+      }
+      session$sendCustomMessage(type = "setup_design_configurations", config_tree)
+    }
+  })
+  
+  # observe({print(paste("SDC:",paste(SelectedDesignConfigs(),collapse=",")))})
+
+  SelectedDesignConfigs <- reactive({
+    # print(input$filter_design_config_tree)
+    if(!is.null(input$filter_design_config_tree)) {
+      names <- names(design_tree)
+      passing <- sapply(names, function(name) {
+        filter_tree <- input$filter_design_config_tree
+        current_tree <- design_tree[[name]]
+        compare_node(current_tree, filter_tree)
+      })
+      if(any(passing)) {
+        names[passing]
+      } else {
+        NULL
+      }
+    } else {
+      if ("CfgID" %in% names(data$raw$df) && is.null(design_tree)) {
+        if(pet_config_present) {
+          pet$selected_configurations
+        } else {
+          unique(data$raw$df[['CfgID']])
+        }
+      } else {
+        NULL
+      }
+    }
+  })
+  
   # Filters (Enumerations, Sliders) and Constants ----------------------------
   
   # Lets the UI know if a tab has requested the 'Filters' footer.  
@@ -398,12 +460,12 @@ Server <- function(input, output, session) {
       ),
       fluidRow(
         lapply(var_sliders, function(var_slider) {
-          GenerateSliderUI(var_slider, AbbreviateLabel(var_slider))
+          GenerateSliderUI(var_slider)
         })
       )
     )
   })
-
+  
   # Slider abbreviation function based off slider_width
   abbreviation_length <- ABBREVIATION_LENGTH
   AbbreviateLabel <- function(name) {
@@ -432,16 +494,17 @@ Server <- function(input, output, session) {
       # selected_value <- items
       selected_value <- si(paste0('filter_', current), items)
     
-    column(2, selectInput(inputId = paste0('filter_', current),
-                          label = current,
-                          multiple = TRUE,
-                          selectize = FALSE,
-                          choices = items,
-                          selected = selected_value)
+    column(FILTER_WIDTH_IN_COLUMNS,
+           selectInput(inputId = paste0('filter_', current),
+                       label = current,
+                       multiple = TRUE,
+                       selectize = FALSE,
+                       choices = items,
+                       selected = selected_value)
     )
   }
   
-  GenerateSliderUI <- function(current, label) {
+  GenerateSliderUI <- function(current) {
     
     if(current %in% pre$var_nums()){
       min <- as.numeric(pre$abs_min()[current])
@@ -469,18 +532,18 @@ Server <- function(input, output, session) {
     }
     
     
-      column(2,
+      column(FILTER_WIDTH_IN_COLUMNS,
              # Hidden well panel for slider tooltip
              wellPanel(id = paste0("slider_tooltip_", current),
                        style = "position: absolute; z-index: 65; box-shadow: 10px 10px 15px grey; width: 20vw; left: 1vw; top: -275%; display: none;",
-                       h4(label),
+                       h4(data$meta$variables[[current]]$name_with_units),
                        textInput(paste0("tooltip_min_", current), "Min:"),
                        textInput(paste0("tooltip_max_", current), "Max:"),
                        actionButton(paste0("submit_", current), "Apply","success")
              ),
              # The slider itself
              sliderInput(paste0('filter_', current),
-                         label,
+                         AbbreviateLabel(current),
                          step = step,
                          min = slider_min,
                          max = slider_max,
@@ -556,6 +619,7 @@ Server <- function(input, output, session) {
   outputOptions(output, "constants_present", suspendWhenHidden=FALSE)
   
   observeEvent(input$reset_sliders, {
+    session$sendCustomMessage(type = "select_all_design_configurations", "")
     for(column in 1:length(pre$var_names())){
       name <- pre$var_names()[column]
       switch(pre$var_class()[column],
@@ -605,6 +669,9 @@ Server <- function(input, output, session) {
         data_filtered <- subset(data_filtered, a)
       }
     }
+    if("CfgID" %in% names(data_filtered)) {
+      data_filtered <- subset(data_filtered, data_filtered$CfgID %in% SelectedDesignConfigs())
+    }
     for(index in 1:length(pre$var_names())) {
       name <- pre$var_names()[index]
       input_name <- paste("filter_", name, sep="")
@@ -633,6 +700,13 @@ Server <- function(input, output, session) {
     }
     # print("Data Filtered.")
     data_filtered
+  })
+  
+  observe({
+    output$filters_stats <- renderText(
+      paste0("Current Points: ",nrow(FilteredData()), " / ", nrow(data$raw$df),
+             "  ( ", round(100*nrow(FilteredData())/nrow(data$raw$df), digits = 2),
+             "% )"))
   })
   
   Filters <- reactive({
@@ -970,6 +1044,7 @@ Server <- function(input, output, session) {
     # visualizer_config$pet <- meta$pet
     visualizer_config$sets <- meta$sets
     # visualizer_config$comments <- meta$comments
+    visualizer_config$config_tree <- isolate(input$filter_design_config_tree)
     
     # Prepare inputs for saving to visualizer config file
     current_inputs <- isolate(reactiveValuesToList(input))
@@ -1032,6 +1107,11 @@ tabset_arguments <- c(unname(base_tabs),
 ui <- fluidPage(
   useShinyjs(),
   tags$script(src = "main.js"),
+  
+  tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "DesignConfig.css")),
+  tags$script(src = "d3.v3.min.js"),
+  tags$script(src = "design_config_selector.js"),
+  
   titlePanel("Visualizer"),
   
   # Generates the master tabset from the user-defined tabs provided.
@@ -1045,10 +1125,21 @@ ui <- fluidPage(
         # tags$div(title = "Activate to show filters for all dataset variables.",
         #          checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
         tags$div(title = "Return visible sliders to default state.",
+                 style="display: inline-block", 
                  actionButton("reset_sliders", "Reset Visible Filters")),
+        tags$div(style="display: inline-block; padding: 7px 30px 7px 30px", textOutput("filters_stats")),
         hr(),
         
-        uiOutput("filters"),
+        if(design_tree_present) {
+          fluidRow(
+            column(3, tags$label("Design Configuration Tree"), tags$div(id="design_configurations")),
+            column(9, uiOutput("filters"))
+          )
+        } else {
+          fluidRow(
+            column(12, uiOutput("filters"))
+          )
+        },
         conditionalPanel("output.constants_present",
           h3("Constants:"),
           uiOutput("constants")

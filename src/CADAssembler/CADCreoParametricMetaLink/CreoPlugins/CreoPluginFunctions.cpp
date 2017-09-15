@@ -39,9 +39,8 @@ using namespace std;
 // Meta includes
 #include "gen/MetaLinkMsg.pb.h"
 #include "BridgeClient.h"
-#include "BridgeClientST.h"
-#include "CommonDefinitions.h"
-#include "MultiFormatString.h"
+#include "cc_CommonDefinitions.h"
+#include "cc_MultiFormatString.h"
 namespace meta = edu::vanderbilt::isis::meta;
 namespace pb = google::protobuf;
 namespace asio = boost::asio;
@@ -160,7 +159,7 @@ string GetCyphyName(ProFeature* p_feature)
     // Get CYPHY_NAME as datumname, if set
     ProParameter datumNameParam;
     ProParamvalue datumNameValue;
-    error = ProParameterInit(p_feature, const_cast<wchar_t*>(wstring(CYPHY_NAME.begin(),CYPHY_NAME.end()).c_str()), &datumNameParam);
+    error = ProParameterInit(p_feature, const_cast<wchar_t*>(wstring(isis::CYPHY_NAME.begin(),isis::CYPHY_NAME.end()).c_str()), &datumNameParam);
     if(error == PRO_TK_NO_ERROR)
     {
         error = ProParameterValueGet(&datumNameParam, &datumNameValue);
@@ -560,17 +559,6 @@ int Resync(ProMdl mdl)
     }
 
     isis::GlobalModelData::Instance.metalinkAssemblyEditorPtr->Clear();
-
-    /*
-    isis::BridgeClientST client(bridgeIP, bridgePort);
-    boost::system::error_code ec = client.connect();
-
-    if (ec.value() != 0)
-    {
-    	ErrorDialog(connectionfailed);
-    	return 0;
-    }
-    */
 
     isis::GlobalModelData::Instance.metalink_handler_ptr->send(edit);
     return 1;

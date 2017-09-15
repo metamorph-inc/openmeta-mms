@@ -153,7 +153,7 @@ server <- function(input, output, session, data) {
     }))]
   })
   varNums <- isolate({
-    data$pre$var_nums_and_ints()[unlist(lapply(data$pre$var_nums_and_ints(), function(var) {
+    data$pre$var_range_nums_and_ints()[unlist(lapply(data$pre$var_range_nums_and_ints(), function(var) {
       data$meta$variables[[var]]$type == "Design Variable" ||
       data$meta$variables[[var]]$type == "Objective"
     }))]

@@ -607,7 +607,7 @@ namespace CyPhy2Schematic.Layout
 
                             var layoutParser = CodeGenerator.preRouted[preRouteCA];
                             // find the name/gate matching port in schematic domain model
-                            var sch = comp_obj.Impl.Children.SchematicModelCollection.FirstOrDefault();
+                            var sch = comp_obj.Impl.Children.EDAModelCollection.SingleOrDefault();
 
                             var port = (sch != null) ?
                                 sch.Children.SchematicModelPortCollection.
@@ -2070,7 +2070,15 @@ namespace CyPhy2Schematic.Layout
                     if (packageComponent.ContainsKey(pin.package))
                     {
                         var comp = packageComponent[pin.package];
-                        var sch = comp.Impl.Children.SchematicModelCollection.FirstOrDefault();
+                        Tonka.SchematicModel sch;
+                        if (mode == CodeGenerator.Mode.EDA)
+                        {
+                            sch = comp.Impl.Children.EDAModelCollection.SingleOrDefault();
+                        }
+                        else
+                        {
+                            sch = comp.Impl.Children.SPICEModelCollection.SingleOrDefault();
+                        }
 
                         // find the name/gate matching port in schematic domain model
                         var port = (sch != null) ?

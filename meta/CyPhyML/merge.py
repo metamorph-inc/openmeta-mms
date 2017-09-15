@@ -119,8 +119,8 @@ def import_xme(project, filename):
     xme.ParseProject(project, filename)
 
 
-def update_core():
-    subprocess.check_call('git checkout MERGE_HEAD CyPhyML-core.xme', shell=True)
+def update_core(upstream_rev):
+    subprocess.check_call('git checkout {} CyPhyML-core.xme'.format(upstream_rev), shell=True)
     project = Dispatch("Mga.MgaProject")
     project.Create("MGA=" + "CyPhyML-core.mga", "MetaGME")
     import_xme(project, "CyPhyML-core.xme")
@@ -134,6 +134,11 @@ def update_core():
     dumper.DumpProject(project, "CyPhyML-core.xme")
     project.Close(True)
 
+def export_core():
+    project = Dispatch("Mga.MgaProject")
+    project.Create("MGA=" + "CyPhyML-core.mga", "MetaGME")
+    import_xme(project, "CyPhyML-core.xme")
+    project.Save()
 
 def switch_lib(from_, to):
     old_path = from_.AbsPath
@@ -164,8 +169,8 @@ def switch_lib(from_, to):
     switch_children(project.RootFolder)
 
 
-def update_cyphy(version):
-    subprocess.check_call('git checkout MERGE_HEAD ./CyPhyML.xme', shell=True)
+def update_cyphy(version, upstream_rev):
+    subprocess.check_call('git checkout {} ./CyPhyML.xme'.format(upstream_rev), shell=True)
     project = Dispatch("Mga.MgaProject")
     project.Create("MGA=" + "CyPhyML.mga", "MetaGME")
     import_xme(project, "CyPhyML.xme")
@@ -228,7 +233,11 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Updates CyPhyML-core.xme and CyPhyML.xme during a merge.')
     parser.add_argument('--version', required=True, help='version string for CyPhyML')
+    parser.add_argument('--upstream_rev', default='MERGE_HEAD', help='specify meta-core/master to skip CyPhyML-core.xme update checkout upstream_rev\'s CyPhyML.xme')
     args = parser.parse_args()
 
-    update_core()
-    update_cyphy(version=args.version)
+    if args.upstream_rev != "meta-core/master":
+        update_core(args.upstream_rev)
+    else:
+        export_core()
+    update_cyphy(version=args.version, upstream_rev=args.upstream_rev)

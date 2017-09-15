@@ -12,14 +12,14 @@
 #include <isis_ptc_toolkit_functions.h>
 #include <isis_include_ptc_headers.h>
 #include <CreoStringToEnumConversions.h>
-#include <MultiFormatString.h>
-#include <GraphicsFunctions.h>
-#include <CommonStructures.h>
+#include <cc_MultiFormatString.h>
+#include <cc_GraphicsFunctions.h>
+#include <cc_CommonStructures.h>
 #include <string>
 
 namespace isis
 {
-	std::string  Bool_string( bool in_Bool );
+	//std::string  Bool_string( bool in_Bool );
 
 	void setCreoWorkingDirectory ( const MultiFormatString &in_MultiFormatString ) throw (isis::application_exception);
 
@@ -117,6 +117,12 @@ namespace isis
 								std::map<int, CAD_SimplifiedRepData> &out_FeatureID_to_SimplifiedRepData_map ) 
 											throw (isis::application_exception);
 
+
+
+
+	ProAsmcomp getProAsmcomp(const CADAssembledFeature &in_CADAssembledFeature );
+
+	CADAssembledFeature getCADAssembledFeature( const ProAsmcomp &in_ProAsmcomp );
 
 } // END namespace isis
 

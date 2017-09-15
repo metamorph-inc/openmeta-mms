@@ -1,8 +1,9 @@
 #include "CADEnvironmentSettings.h"
 #include "CADSoftwareEnvirUtils.h"
+#include <cc_CommonUtilities.h>
 #include <CommonUtilities.h>
 #include <windows.h>
-#include "WindowsFunctions.h"
+#include "cc_WindowsFunctions.h"
 #include <malloc.h>
 //#include <stdio.h>
 #include <iostream>
@@ -12,9 +13,9 @@
 #include <algorithm>
 #include <sstream>
 #include <ISISConstants.h>
-#include "LoggerBoost.h"
+#include "cc_LoggerBoost.h"
 
-#include "CommonDefinitions.h"
+#include "AssembleUtils.h"
 
 // #define BUFFER 8192
 
@@ -33,26 +34,20 @@ namespace isis
 	void SetCreoEnvirVariable_RetrieveSystemSettings(	bool			in_graphicsModeOn,
 														bool			in_CreoExceptInputFromThisProgramAndCreoUI,
 														std::string		&out_CreoStartCommand,
-														std::string		&out_ProeIsisExtensionsDir,	
+														std::string		&out_CADExtensionsDir,	
 														std::string		&out_TemplateFile_PathAndFileName ) 
 																					throw (isis::application_exception)
 	{
 		///////////////////////////////////////////////////////////////
-		// Log: Use environment  variables or look values in registry
+		// Log: Use environment  variables or lookup values in registry
 		//////////////////////////////////////////////////////////////
 		
-		char *envVariable_CREO_PARAMETRIC_USE_ENVIR_VARS;
+		const char *envVariable_CREO_PARAMETRIC_USE_ENVIR_VARS;
 		envVariable_CREO_PARAMETRIC_USE_ENVIR_VARS = getenv ("CREO_PARAMETRIC_USE_ENVIR_VARS");
 		if ( envVariable_CREO_PARAMETRIC_USE_ENVIR_VARS == NULL )
 			isis_LOG(lg, isis_FILE, isis_WARN) << "Environment Variable CREO_PARAMETRIC_USE_ENVIR_VARS: Not Defined";
 		else 
 			isis_LOG(lg, isis_FILE, isis_INFO) << "Environment Variable CREO_PARAMETRIC_USE_ENVIR_VARS: " << envVariable_CREO_PARAMETRIC_USE_ENVIR_VARS;
-
-
-		/////////////////
-		// Directories
-		/////////////////
-		out_ProeIsisExtensionsDir = getenv ("PROE_ISIS_EXTENSIONS");
 
 
 		/////////////////////////////
@@ -62,7 +57,8 @@ namespace isis
 		isis::SetupCreoEnvironmentVariables(	in_graphicsModeOn,
 												in_CreoExceptInputFromThisProgramAndCreoUI,
 												out_CreoStartCommand);
-		out_TemplateFile_PathAndFileName =  out_ProeIsisExtensionsDir + "\\templates\\" + isis::TEMPLATE_MODEL_NAME_METRIC + isis::TEMPLATE_MODEL_NAME_METRIC_SUFFIX;	
+		out_CADExtensionsDir = META_PATH() + "\\bin\\CAD\\Creo";
+		out_TemplateFile_PathAndFileName = out_CADExtensionsDir + "\\templates\\" + isis::TEMPLATE_MODEL_NAME_METRIC + isis::TEMPLATE_MODEL_NAME_METRIC_SUFFIX;	
 
 
 		/////////////////////////////
@@ -70,9 +66,9 @@ namespace isis
 		/////////////////////////////
 		isis_LOG(lg, isis_FILE, isis_INFO) << "";
 		isis_LOG(lg, isis_FILE, isis_INFO)  << "************** Begin Environment Variables and System Settings *****************";
-		isis_LOG(lg, isis_FILE, isis_INFO) << "ProeIsisExtensionsDir:         "	<< out_ProeIsisExtensionsDir; 
+		isis_LOG(lg, isis_FILE, isis_INFO) << "CADExtensionsDir:                    "	<< out_CADExtensionsDir; 
 		isis_LOG(lg, isis_FILE, isis_INFO) << "CreoStartCommand:              "	<< out_CreoStartCommand; 
-		isis_LOG(lg, isis_FILE, isis_INFO) << "PRO_COMM_MSG_EXE:              "	<<  getenv ("PRO_COMM_MSG_EXE"); 
+		isis_LOG(lg, isis_FILE, isis_INFO) << "PRO_COMM_MSG_EXE:              "	<<  static_cast<const char*>(getenv ("PRO_COMM_MSG_EXE")); 
 		isis_LOG(lg, isis_FILE, isis_INFO) << "TemplateFile_PathAndFileName:  "	<< out_TemplateFile_PathAndFileName; 
 		isis_LOG(lg, isis_FILE, isis_INFO) << "************** End Environment Variables and System Settings *****************";
 

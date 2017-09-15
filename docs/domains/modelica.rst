@@ -3,7 +3,9 @@
 Modelica
 ================
 
-OpenModelica is an open-source Modelica-based modeling and simulation environment intended for industrial and academic usage. META uses OpenModelica for physics simulations, including mechanical, thermal, and power analysis.
+OpenModelica is an open-source Modelica-based modeling and simulation environment
+intended for industrial and academic usage. META uses OpenModelica for
+physics simulations, including mechanical, thermal, and power analysis.
 
 Installation
 ^^^^^^^^^^^^

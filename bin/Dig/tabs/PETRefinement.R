@@ -169,9 +169,9 @@ server <- function(input, output, session, data) {
     
     fluidRow(
       column(2, h5(strong("Configuration Name(s)"))),
-      column(1, actionButton(ns('apply_original_cfg__ids'), 'Apply')),
+      column(1, actionButton(ns('apply_original_cfg_ids'), 'Apply')),
       column(2, h5(original)),
-      column(1, actionButton(ns('apply_refined_cfg__ids'), 'Apply')),
+      column(1, actionButton(ns('apply_refined_cfg_ids'), 'Apply')),
       column(2, h5(refined)),
       column(4,
              textInput(ns('new_cfg_ids'),
@@ -182,12 +182,12 @@ server <- function(input, output, session, data) {
     )
   })
   
-  observeEvent(input$apply_original_cfg__ids, {
-    original <- toString(pet$selected_configurations)
+  observeEvent(input$apply_original_cfg_ids, {
+    original <- toString(paste(pet$selected_configurations, collapse = ", "))
     updateTextInput(session, 'new_cfg_ids', value = original)
   })
   
-  observeEvent(input$apply_refined_cfg__ids, {
+  observeEvent(input$apply_refined_cfg_ids, {
     refined <- toString(unique(FilterData()$CfgID))
     updateTextInput(session, 'new_cfg_ids', value = refined)
   })
@@ -353,7 +353,7 @@ server <- function(input, output, session, data) {
       system2("..\\Python27\\Scripts\\python.exe",
               args = c("..\\UpdatePETParameters.py",
                        "--pet-config",
-                       pet_refined_filename,
+                       paste0("\"",pet_refined_filename,"\""),
                        "--new-name",
                        paste0("\"",input$newPetName,"\"")),
               stdout = file.path(results_directory, "UpdatePETParameters_stdout.log"),

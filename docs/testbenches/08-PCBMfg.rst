@@ -25,10 +25,10 @@ assembly.)
 For general instructions on running test benches, refer to :ref:`testbenchbasics`.
 
 You'll also need an Eagle CAM job file for your design. This file
-specifies, among other things, which Gerber plot files will be produced,
+specifies, among other things, which Gerber plot files will be produced
 and the mapping of Eagle board layers to Gerber plot files. Eagle comes
 with some sample CAM files, and some can be downloaded from PCB
-manufacturers, but making customized ones in Eagle CAD is not hard.
+manufacturers, but making custom ones in Eagle CAD is not hard.
 
 The value of the testbench's **CAM file** parameter must be set to the
 path of the CAM file. This path can be either absolute or relative to
@@ -82,7 +82,7 @@ copies input files from the design subfolder into the testbench's
 results folder, and starts a script to start the three execution tasks.
 
 The **CAM Processing** execution task runs an Eagle CAM job on the
-design's board file, to produce Gerber files and n Excellon drill files.
+design's board file to produce Gerber files and n Excellon drill files.
 The mapping of Eagle board layers to Gerber and Excellon files is
 specified via a standard Eagle CAM file. The path to the CAM file is
 specified in META as the value of a test bench parameter named **CAM

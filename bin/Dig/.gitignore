@@ -2,4 +2,10 @@
 .Rproj.user
 RPlots.pdf
 *_aug.csv
+*_data.csv
 *_test.json
+*_refined.json
+*_viz_config.json
+*_viz_config_data.csv
+UpdatePETParameters_stderr.log
+UpdatePETParameters_stdout.log

@@ -54,7 +54,7 @@
     <Reference Include="CyPhyML">
       <HintPath>..\..\src\CyPhyMLCS\bin\Release\CyPhyML.dll</HintPath>
     </Reference>
-    <Reference Include="ISIS.GME.Common, Version=1.0.6.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+    <Reference Include="ISIS.GME.Common, Version=1.0.7.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
       <HintPath>..\..\src\CyPhyMLCS\ISIS.GME.Common.dll</HintPath>
     </Reference>
     <Reference Include="MfgBom, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b29c8868c453943d, processorArchitecture=MSIL">

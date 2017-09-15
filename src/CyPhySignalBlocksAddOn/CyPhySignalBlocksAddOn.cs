@@ -16,8 +16,7 @@ using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
 using ISIS.GME.Common.Interfaces;
 using System.Windows.Forms;
 using CyPhySignalBlocksAddOn;
-
-
+using System.Security;
 
 namespace CyPhySignalBlocksAddOn
 {
@@ -462,7 +461,10 @@ namespace CyPhySignalBlocksAddOn
                         if (paradigmName != project.MetaName || !guidsEqual)
                         {
                             GMEConsole.Info.WriteLine("Skipping refresh of " + libraryInfo.DisplayName + " because it uses a different metamodel version than the current project.");
-                            throw new Exception();
+                            project.AbortTransaction();
+                            // not true, but don't try again
+                            libraryInfo.attachedLibrary = true;
+                            return;
                         }
 
                         // GMEConsole.Info.WriteLine("Attaching library " + mgaPath);
@@ -482,9 +484,10 @@ namespace CyPhySignalBlocksAddOn
                     }
                     project.CommitTransaction();
                 }
-                catch
+                catch (Exception e)
                 {
-                   project.AbortTransaction();
+                    GMEConsole.Error.WriteLine("Error refreshing library: " + SecurityElement.Escape(e.Message));
+                    project.AbortTransaction();
                 }
                 finally
                 {

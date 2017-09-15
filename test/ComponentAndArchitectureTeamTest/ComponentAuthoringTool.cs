@@ -212,15 +212,15 @@ namespace ComponentAndArchitectureTeamTest
 
                 // verify results
                 // insure the resource path was created correctly
-                var correct_name = testcomp.Children.ResourceCollection.Where(p => p.Name == "damper.prt.36").First();
-                Assert.True(correct_name.Attributes.Path == "CAD\\damper.prt.36",
-                            String.Format("{0} should have had value {1}; instead found {2}", correct_name.Name, "CAD\\damper.prt.36", correct_name.Attributes.Path)
+                var correct_name = testcomp.Children.ResourceCollection.Where(p => p.Name == "damper.prt").First();
+                Assert.True(correct_name.Attributes.Path == "CAD\\damper.prt",
+                            String.Format("{0} should have had value {1}; instead found {2}", correct_name.Name, "CAD\\damper.prt", correct_name.Attributes.Path)
                             );
                 // insure the part file was copied to the back-end folder correctly
                 var getcadmdl = testcomp.Children.CADModelCollection.First();
                 string returnedpath;
                 getcadmdl.TryGetResourcePath(out returnedpath, ComponentLibraryManager.PathConvention.ABSOLUTE);
-                Assert.True(File.Exists(returnedpath),
+                Assert.True(File.Exists(returnedpath + ".36"),
                     String.Format("Could not find the source file for the created resource, got {0}", returnedpath));
             });
             proj.Save();
@@ -807,6 +807,8 @@ namespace ComponentAndArchitectureTeamTest
                 var getcadmdl = testcomp.Children.CADModelCollection.First();
                 string importedpath;
                 getcadmdl.TryGetResourcePath(out importedpath, ComponentLibraryManager.PathConvention.ABSOLUTE);
+                // add in Creo version number
+                importedpath += Path.GetExtension(testpartpath);
 
                 // Rename the CAD file
                 CyPhyComponentAuthoring.Modules.CADFileRename renamecam = new CyPhyComponentAuthoring.Modules.CADFileRename();
@@ -822,6 +824,8 @@ namespace ComponentAndArchitectureTeamTest
                 var renamecadmdl = testcomp.Children.CADModelCollection.First();
                 string renamedpath;
                 renamecadmdl.TryGetResourcePath(out renamedpath, ComponentLibraryManager.PathConvention.ABSOLUTE);
+                // add in Creo version
+                renamedpath += ".1";
                 Assert.True(File.Exists(renamedpath),
                     String.Format("Could not find the renamed CAD file, found {0}", renamedpath));
 
@@ -1237,9 +1241,8 @@ namespace ComponentAndArchitectureTeamTest
                                 String.Format("{0} Resource should have had value {1}; instead found {2}", datasheetResource.Name, "doc\\Datasheet.pdf", datasheetResource.Attributes.Path)
                                 );
 
-                    // 3. Verify the registry entry exists
-                    Assert.True(comp.Children.PropertyCollection.Count() == 7, String.Format("OctoPart query did not create the expected number of CyPhy properties (7). Properties created: {0}",
-                                                                                              comp.Children.PropertyCollection.Count()));
+                    Assert.Equal(new string[] { "ram_bytes", "number_of_bits", "lifecycle_status", "pin_count", "rohs_status", "clock_speed", "reach_svhc_compliance", "octopart_mpn" }.OrderBy(n => n),
+                        comp.Children.PropertyCollection.Select(p => p.Name).OrderBy(n => n));
                 }
                 finally
                 {
