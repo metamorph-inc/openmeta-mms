@@ -298,7 +298,7 @@ namespace DigTest
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
-                var all_variable_names = "IN_ElemCount, IN_E11, IN_E22, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
+                var all_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
                 IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                 
                 // Launch first session
@@ -425,7 +425,7 @@ namespace DigTest
                 IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
                 Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
                 var display = new ShinySelectMultipleInput(driver, "Explore-display");
-                Assert.Equal("IN_HubMaterial, IN_ElemCount, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
+                Assert.Equal("IN_HubMaterial, IN_E11, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
 
                 // Test Data Table
                 ShinyUtilities.SwitchTabs(driver, "Data Table");
@@ -497,7 +497,7 @@ namespace DigTest
             coloring_source.SetCurrentSelection("Live");
             var colored_variable = new ShinySelectInput(driver, "live_coloring_variable_numeric");
             var choices = colored_variable.GetAllChoices();
-            Assert.Equal("IN_ElemCount, IN_E11, IN_E22, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", colored_variable.GetAllChoices().ToArray()));
+            Assert.Equal("IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", colored_variable.GetAllChoices().ToArray()));
             colored_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
             driver.FindElement(By.Id("live_coloring_name")).Clear();
             driver.FindElement(By.Id("live_coloring_name")).SendKeys("Test");
