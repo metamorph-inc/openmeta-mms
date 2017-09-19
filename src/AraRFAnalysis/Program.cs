@@ -292,7 +292,7 @@ namespace AraRFAnalysis
         public void RunScript(string filename)
         {
 
-            var dispatch = new CyPhyMasterInterpreter.JobManagerDispatch();
+            var dispatch = new CyPhyMasterInterpreter.JobManagerDispatch(new Guid().ToString("D"));
             dispatch.StartJobManager(Path.GetDirectoryName(filename));
 
             Job j;
