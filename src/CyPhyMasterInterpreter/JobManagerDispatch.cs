@@ -14,6 +14,11 @@ namespace CyPhyMasterInterpreter
 {
     public class JobManagerDispatch
     {
+        public JobManagerDispatch(string JobCollectionID)
+        {
+            this.JobCollectionID = JobCollectionID;
+        }
+
         public static readonly Uri JobServerConnection = new Uri("ipc://MetaJobManager/JobServer");
 
         public Queue<KeyValuePair<JobServer, Job>> jobsToAdd = new Queue<KeyValuePair<JobServer, Job>>();
@@ -124,6 +129,8 @@ namespace CyPhyMasterInterpreter
 
         JobServer Server;
         public JobCollection JobCollection;
+        private string JobCollectionID;
+
         public bool Started { get; private set; }
 
         public void StartJobManager(string projectDirectory)
@@ -132,7 +139,7 @@ namespace CyPhyMasterInterpreter
             {
                 Server = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
                 // the proxy won't throw until property access/method call
-                JobCollection = Server.CreateAndAddJobCollection();
+                JobCollection = Server.CreateAndAddJobCollection(JobCollectionID);
                 Started = true;
             }
             catch (RemotingException)
@@ -161,7 +168,7 @@ namespace CyPhyMasterInterpreter
                     proc.WaitForInputIdle(20 * 1000);
                     proc.StandardOutput.ReadLine(); // matches Console.Out.WriteLine("JobManager has started"); in JobManager
                     Server = (JobServer)Activator.GetObject(typeof(JobServer), JobServerConnection.OriginalString);
-                    JobCollection = Server.CreateAndAddJobCollection();
+                    JobCollection = Server.CreateAndAddJobCollection(JobCollectionID);
                     Started = true;
                 }
                 else
