@@ -14,6 +14,10 @@ table.surrogate-table tbody td small {
     color: #888;
 }
 
+table.surrogate-table tbody td .form-group {
+  margin-bottom: auto;
+}
+
 /* Workaround to prevent duplicate/delete button group from being broken onto
    two lines, on browsers that support display: flex */
 @supports (display: flex) {

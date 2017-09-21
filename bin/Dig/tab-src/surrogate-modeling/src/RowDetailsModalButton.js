@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Modal, Glyphicon, Button, Alert, Row, Col, FormGroup, FormControl } from 'react-bootstrap';
+import { Modal, Glyphicon, Button, Alert, Row, Col, FormGroup } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
 import ProbabilityGraphsView from './ProbabilityGraphsView';
 import NumberView from './NumberView';
+import ValidatingNumberInput from './ValidatingNumberInput';
 import { DependentVarState } from './Enums';
 
 class RowDetailsModalButton extends Component {
@@ -23,8 +24,8 @@ class RowDetailsModalButton extends Component {
     this.setState({ showModal: true });
   }
 
-  handleIndependentVarChange = (i, ev) => {
-    this.props.onIndependentVarChange(i, ev);
+  handleIndependentVarChange = (i, value) => {
+    this.props.onIndependentVarChange(i, value);
   }
 
   handlePredictButtonClick = () => {
@@ -40,7 +41,7 @@ class RowDetailsModalButton extends Component {
   // Clicking the graph sets the selected independent var to the chosen value,
   // and predicts at that point
   handleGraphClick = (graphIndex, xPosition) => {
-    this.handleIndependentVarChange(this.props.independentVarNames.indexOf(this.state.selectedIndependentVar), {target: {value: xPosition}});
+    this.handleIndependentVarChange(this.props.independentVarNames.indexOf(this.state.selectedIndependentVar), xPosition);
     this.handlePredictButtonClick();
   }
 
@@ -55,7 +56,11 @@ class RowDetailsModalButton extends Component {
       return (
         <FormGroup key={index} className={className}>
           <h4>{this.props.independentVarNames[index]}</h4>
-          <FormControl type="number" value={value} onChange={(ev) => this.handleIndependentVarChange(index, ev)} />
+          <ValidatingNumberInput
+            type="number"
+            value={value}
+            onChange={(value) => this.handleIndependentVarChange(index, value)}
+            validationFunction={ValidatingNumberInput.RealNumberValidator}/>
         </FormGroup>
       );
     });

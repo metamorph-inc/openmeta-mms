@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { FormControl, Glyphicon, ButtonGroup } from 'react-bootstrap';
+import { Glyphicon, ButtonGroup } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
 import RowDetailsModalButton from './RowDetailsModalButton';
 import NumberView from './NumberView';
+import ValidatingNumberInput from './ValidatingNumberInput';
 import { DependentVarState } from './Enums';
 
 class DependentVarCell extends Component {
@@ -44,6 +45,10 @@ class SurrogateTableRow extends Component {
     }
   };
 
+  handleValidatedIndependentVarChange = (i, value) => {
+    this.props.onIndependentVarChange(i, value);
+  };
+
   handlePredictButtonClick = () => {
     this.props.onPredictButtonClick();
   }
@@ -58,7 +63,14 @@ class SurrogateTableRow extends Component {
 
   render() {
     const indepVarCells = this.props.independentVarData.map((value, index) => {
-      return <td key={index}><FormControl type="number" value={value} onChange={(ev) => this.handleIndependentVarChange(index, ev)}/></td>;
+      return (
+        <td key={index}>
+          <ValidatingNumberInput
+            value={value}
+            onChange={(value) => this.handleValidatedIndependentVarChange(index, value)}
+            validationFunction={ValidatingNumberInput.RealNumberValidator}/>
+        </td>
+      );
     });
 
     const depVarCells = this.props.dependentVarData.map((varData, index) => {
@@ -76,7 +88,7 @@ class SurrogateTableRow extends Component {
             dependentVarData={this.props.dependentVarData}
             discreteIndependentVars={this.props.discreteIndependentVars}
             service={this.props.service}
-            onIndependentVarChange={(i, ev) => this.handleIndependentVarChange(i, ev)}
+            onIndependentVarChange={(i, ev) => this.handleValidatedIndependentVarChange(i, ev)}
             onPredictButtonClick={this.handlePredictButtonClick} />
         </td>
         {indepVarCells}

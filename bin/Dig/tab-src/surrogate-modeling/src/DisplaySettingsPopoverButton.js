@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Popover, Glyphicon, Button, OverlayTrigger, Form, FormGroup, FormControl, ControlLabel, Checkbox } from 'react-bootstrap';
+import { Popover, Glyphicon, Button, OverlayTrigger, Form, FormGroup, ControlLabel, Checkbox } from 'react-bootstrap';
+import ValidatingNumberInput from './ValidatingNumberInput';
 
 class DisplaySettingsPopoverButton extends Component {
   handleRoundNumbersChange = (ev) => {
@@ -11,18 +12,10 @@ class DisplaySettingsPopoverButton extends Component {
     this.props.onDisplaySettingsChange(newDisplaySettings);
   }
 
-  handlePrecisionChange = (ev) => {
-    let newValue = Math.round(ev.target.value);
-
-    if(newValue < 1) {
-      newValue = 1;
-    } else if(newValue > 21) {
-      newValue = 21;
-    }
-
+  handlePrecisionChange = (value) => {
     const newDisplaySettings = {
       roundNumbers: this.props.displaySettings.roundNumbers,
-      precision: newValue
+      precision: value
     };
 
     this.props.onDisplaySettingsChange(newDisplaySettings);
@@ -35,7 +28,10 @@ class DisplaySettingsPopoverButton extends Component {
       precisionFormGroup = (<FormGroup>
         <ControlLabel>Precision</ControlLabel>
         {' '}
-        <FormControl type="number" min={1} max={21} value={this.props.displaySettings.precision} onChange={this.handlePrecisionChange} />
+        <ValidatingNumberInput
+          value={this.props.displaySettings.precision}
+          onChange={this.handlePrecisionChange}
+          validationFunction={ValidatingNumberInput.IntegerRangeValidator(1, 21)} />
       </FormGroup>);
     }
 
