@@ -1,12 +1,11 @@
 #include <ToolKitPassThroughFunctions.h>
-#include <CADCommonConstants.h>
+#include <cc_CommonConstants.h>
 #include <CreoStringToEnumConversions.h>
-#include <MultiFormatString.h>
-#include <CommonUtilities.h>
-#include <CommonStructures.h>
+#include <cc_MultiFormatString.h>
+#include <cc_CommonUtilities.h>
+#include <cc_CommonStructures.h>
 #include <sstream>
-#include "LoggerBoost.h"
-#include "CommonDefinitions.h"
+#include "cc_LoggerBoost.h"
 
 namespace isis
 {
@@ -299,7 +298,7 @@ namespace isis
 	{
 		try
 		{
-			isis::isis_ProSolidMassPropertyGet( in_CADComponentData_map[in_ComponentID].modelHandle, NULL, mass_prop );
+			isis::isis_ProSolidMassPropertyGet( static_cast<ProSolid>(in_CADComponentData_map[in_ComponentID].cADModel_hdl), NULL, mass_prop );
 		}
 		catch ( isis::application_exception& ex )
 		{

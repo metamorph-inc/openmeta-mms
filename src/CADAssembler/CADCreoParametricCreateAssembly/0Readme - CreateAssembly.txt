@@ -1065,6 +1065,15 @@ v1.5.18.0  07/16/2017 Modified CommonStructures.h so that it only depends on gen
 			
 v1.5.19.0 	Removed the dependency on PROE_ISIS_EXTENSIONS.  Now the code is only dependent on the registry 
 			entry META_PATH.
+			
+			
+v1.5.20.0 	8/29/2017 Remove all references to Creo from the common structures.  Reorganize the code to move files 
+			as appropriate to the CADCommonFunctions directory.
+
+v1.5.21.0 	9/13/2017 CAD_032_Add_Some_of_the_Generic_CAD_Interfaces, Refactored the code such that most of the common 
+		files are in CADCommonFuncdtions and name with a prefix cc_.  Passed CadFactoryAbstract to 
+		CreateAssemblyViaInputFile.  Other general refactoring.  
+
 
 Known Defects
 -------------

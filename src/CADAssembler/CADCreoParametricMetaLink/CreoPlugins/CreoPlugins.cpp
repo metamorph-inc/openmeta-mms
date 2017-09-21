@@ -16,8 +16,8 @@ Pro/Toolkit includes
 #include <ProPopupmenu.h>
 #include "CreoPluginFunctions.h"
 #include "ProRibbon.h"
-#include "CommonDefinitions.h"
-#include "CommonStructures.h"
+//#include "CommonDefinitions.h"
+#include "cc_CommonStructures.h"
 
 // the windows.h include needs to come after the boost/asio.hpp
 #include <windows.h>

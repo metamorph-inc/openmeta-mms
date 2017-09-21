@@ -3,8 +3,9 @@
 #define CAD_FACTORY_ABSTRACT_H
 
 #include <string>
-#include "Joint.h"
-#include "CommonStructures.h"
+#include "cc_Joint.h"
+#include "cc_CommonStructures.h"
+#include "isis_application_exception.h"
 #include <boost/smart_ptr.hpp>
 
 /**
@@ -14,6 +15,14 @@ concrete CAD systems.
 
 namespace isis {
 namespace cad {
+
+	/*
+struct  DataContainer 
+{
+		std::string string_1;
+		std::string string_2;
+};
+*/
 
 class IAssembler {
 public:
@@ -28,7 +37,7 @@ public:
 	virtual std::vector<Joint::pair_t>  extract_joint_pair_vector
 		(const std::string in_component_id,
 		 std::vector<ConstraintPair> in_component_pair_vector,
-		 std::map<string, isis::CADComponentData> &	in_CADComponentData_map)
+		 std::map<std::string, isis::CADComponentData> &	in_CADComponentData_map)
 		 = 0;
 
 	/**
@@ -40,6 +49,11 @@ public:
 		  const std::string &	in_id, 
 		  std::map<std::string, isis::CADComponentData> &	in_map)
 		= 0;
+
+
+	// This function does any setup that is necessary before invoking the CAD application
+	//virtual void SetupCADEnvirnoment ( const DataContainer &in_DataContainer) throw (isis::application_exception) = 0;
+
 };
 
 

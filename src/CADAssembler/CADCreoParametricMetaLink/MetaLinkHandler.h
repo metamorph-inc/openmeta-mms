@@ -7,6 +7,11 @@ processes EditPointer objects from a deque.
 Each object is extracted and the proper Creo methods are called.
 */
 
+/**
+For an example using this <b>handler</h> object see "meta-link-main.cpp".
+
+*/
+
 /** the header defining the EditPointer objects */
 #include "gen/MetaLinkMsg.pb.h"
 #include "BridgeClient.h"
@@ -19,7 +24,7 @@ Each object is extracted and the proper Creo methods are called.
 #include <AssembleUtils.h>
 
 #include "CADEnvironmentSettings.h"
-#include "WindowsFunctions.h"
+#include "cc_WindowsFunctions.h"
 
 #include <InputArgumentsParser.h>
 #include <AssemblyEditingViaLink.h>
@@ -39,10 +44,11 @@ Each object is extracted and the proper Creo methods are called.
 
 #include <boost/atomic.hpp>
 #include <boost/thread/mutex.hpp>
-#include "LoggerBoost.h"
+#include "cc_LoggerBoost.h"
 
 #include "gen/MetaLinkMsg.pb.h"
 #include "EventLoopMonitor.h"
+#include <queue>
 /* */
 
 namespace isis
@@ -62,7 +68,7 @@ public:
 
     boost::atomic<bool> m_ready;
     boost::atomic<int> m_sequence;
-    queue<isis::EditPointer> m_eventQueue;
+    std::queue<isis::EditPointer> m_eventQueue;
 
     /**
     Express an interest in certain message sources.

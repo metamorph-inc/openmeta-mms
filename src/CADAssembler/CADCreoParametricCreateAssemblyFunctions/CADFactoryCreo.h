@@ -34,7 +34,7 @@ public:
 	std::vector< Joint::pair_t >  extract_joint_pair_vector
 		(const std::string in_component_id,
 		 std::vector<ConstraintPair> in_vector,
-		 std::map<string, isis::CADComponentData> &	in_map);
+		 std::map<std::string, isis::CADComponentData> &	in_map);
 
 	/**
 	The void pointer is CAD system specific.
@@ -44,6 +44,10 @@ public:
 		( const std::string in_working_directory,
 		  const std::string &	in_id, 
 		  std::map<std::string, isis::CADComponentData> &	in_map);
+
+
+
+	//virtual void SetupCADEnvirnoment ( const DataContainer &in_DataContainer) throw (isis::application_exception);
 
 };
 

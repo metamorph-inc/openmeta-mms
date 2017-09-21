@@ -702,6 +702,13 @@ Server <- function(input, output, session) {
     data_filtered
   })
   
+  observe({
+    output$filters_stats <- renderText(
+      paste0("Current Points: ",nrow(FilteredData()), " / ", nrow(data$raw$df),
+             "  ( ", round(100*nrow(FilteredData())/nrow(data$raw$df), digits = 2),
+             "% )"))
+  })
+  
   Filters <- reactive({
     # This reactive returns a list of all the filter values so a tab can use
     # the information for filtering the raw dataset itself.
@@ -774,13 +781,17 @@ Server <- function(input, output, session) {
           maximum <- data$pre$abs_max()[[var]]
           cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
           if (goal == "Maximize") {
-            data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
-                            cols[max(1, ceiling((value - minimum) / divisor))]}))
-          } 
-          else {
-            data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
-                            cols[max(1, ceiling((maximum - value) / divisor))]}))
+            Bin <- function(value) {max(1, ceiling((value - minimum) / divisor))}
+          } else {
+            Bin <- function(value) {max(1, ceiling((maximum - value) / divisor))}
           }
+          data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
+            if(is.na(value)) {
+              "grey"
+            } else {
+              cols[Bin(value)]
+            }
+          }))
           isolate({
             data$colorings$current$var <- var
             data$colorings$current$goal <- goal
@@ -1118,7 +1129,9 @@ ui <- fluidPage(
         # tags$div(title = "Activate to show filters for all dataset variables.",
         #          checkboxInput("viewAllFilters", "View All Filters", value = TRUE)),
         tags$div(title = "Return visible sliders to default state.",
+                 style="display: inline-block", 
                  actionButton("reset_sliders", "Reset Visible Filters")),
+        tags$div(style="display: inline-block; padding: 7px 30px 7px 30px", textOutput("filters_stats")),
         hr(),
         
         if(design_tree_present) {

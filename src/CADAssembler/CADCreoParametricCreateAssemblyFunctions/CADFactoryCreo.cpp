@@ -9,7 +9,7 @@
 #include "ApplyModelConstraints.h"
 #include <ISISConstants.h>
 #include <ToolKitPassThroughFunctions.h>
-#include <CommonUtilities.h>
+#include <cc_CommonUtilities.h>
 
 namespace isis {
 namespace cad {
@@ -180,6 +180,15 @@ std::vector< Joint::pair_t >  AssemblerCreo::extract_joint_pair_vector
 	}
 	return elementary_joints;
 }
+
+/*
+void SetupCADEnvirnoment ( const DataContainer &in_DataContainer) throw (isis::application_exception)
+{
+
+
+
+}
+*/
 
 } // creo
 } // cad

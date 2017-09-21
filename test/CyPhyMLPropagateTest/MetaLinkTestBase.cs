@@ -15,6 +15,7 @@ using Microsoft.Win32.SafeHandles;
 using Microsoft.Win32;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace CyPhyPropagateTest
 {
@@ -31,7 +32,7 @@ namespace CyPhyPropagateTest
         {
             get
             {
-                return Path.Combine(Path.GetTempPath(), "CyPhyMLTest_TestModel");
+                return Path.Combine(Path.GetTempPath(), "CyPhyMLTest_" + this.GetType().Name);
             }
         }
 
@@ -41,6 +42,7 @@ namespace CyPhyPropagateTest
         protected BlockingCollection<Edit> addonMessagesQueue = new System.Collections.Concurrent.BlockingCollection<Edit>(new ConcurrentQueue<Edit>());
         protected MetaLinkBridgeClient testingClient;
         protected Process metalink;
+        protected IntPtr metalinkJob;
         protected StreamWriter metalinkLogStream;
 
 
@@ -111,12 +113,17 @@ namespace CyPhyPropagateTest
         {
             lock (this)
             {
-                if (metalink != null && metalink.HasExited == false)
+                if (metalink != null)
                 {
-                    metalink.Kill();
+                    if (metalink.HasExited == false)
+                    {
+                        metalink.Kill();
+                    }
                     metalink.WaitForExit();
                     metalink.Dispose();
                     metalink = null;
+                    CyPhyMetaLink.JobObjectPinvoke.CloseHandle(metalinkJob);
+                    metalinkJob = IntPtr.Zero;
                 }
             }
         }
@@ -163,21 +170,30 @@ namespace CyPhyPropagateTest
                         MgaProject project = new MgaProject();
                         project.EnableAutoAddOns(true);
                         project.OpenEx("MGA=" + mgaFullPath, "", true);
+                        CyPhyMetaLink.CyPhyMetaLinkAddon propagate = null;
                         try
                         {
                             Assert.Contains("MGA.Addon.CyPhyMLPropagate", project.AddOnComponents.Cast<IMgaComponentEx>().Select(x => x.ComponentProgID));
-                            CyPhyMetaLink.CyPhyMetaLinkAddon propagate = (CyPhyMetaLink.CyPhyMetaLinkAddon)project.AddOnComponents.Cast<IMgaComponent>().Where(comp => comp is CyPhyMetaLink.CyPhyMetaLinkAddon).FirstOrDefault();
+                            propagate = (CyPhyMetaLink.CyPhyMetaLinkAddon)project.AddOnComponents.Cast<IMgaComponent>().Where(comp => comp is CyPhyMetaLink.CyPhyMetaLinkAddon).FirstOrDefault();
                             CyPhyMetaLink.CyPhyMetalinkInterpreter interpreter = new CyPhyMetaLink.CyPhyMetalinkInterpreter();
                             propagate.TestMode = true;
+                            propagate.TestMode_NoAutomaticCreoStart = true;
+                            propagate.TestMode_CreoJobObject = CyPhyMetaLink.JobObjectPinvoke.CreateKillOnCloseJob();
                             interpreter.GMEConsole = GME.CSharp.GMEConsole.CreateFromProject(project);
                             interpreter.MgaGateway = new MgaGateway(project);
 
-                            interpreter.ConnectToMetaLinkBridge(project, 128);
+                            var task = Task.Run(async () => await interpreter.ConnectToMetaLinkBridge(project, 128));
+                            task.Wait();
                             propagate.bridgeClient.SocketQueue.EditMessageReceived += msg => addonMessagesQueue.Add(msg);
                             testAction(project, propagate, interpreter);
                         }
                         finally
                         {
+                            if (propagate != null)
+                            {
+                                CyPhyMetaLink.JobObjectPinvoke.CloseHandle(propagate.TestMode_CreoJobObject);
+                                propagate.TestMode_CreoJobObject = IntPtr.Zero;
+                            }
                             project.Save(project.ProjectConnStr + "_posttest.mga", true);
                             project.Close(true);
                         }
@@ -263,20 +279,35 @@ namespace CyPhyPropagateTest
             FileStream outlog = File.Open(Path.Combine(TestModelDir, "CyPhyPropagateTest_stdout.txt"), FileMode.Create, FileAccess.Write, FileShare.Read);
             metalinkLogStream = new StreamWriter(outlog, Encoding.UTF8);
             metalinkLogStream.AutoFlush = true;
+            int metalinkLogStreamNo = 2;
+            System.Action outputClosed = () =>
+            {
+                metalinkLogStreamNo--;
+                if (metalinkLogStreamNo == 0)
+                {
+                    metalinkLogStream.Close();
+                }
+            };
             try
             {
                 // FIXME: look for "exception caught"
                 metalink.ErrorDataReceived += (o, dataArgs) =>
                 {
                     if (dataArgs.Data == null)
+                    {
+                        outputClosed();
                         return;
+                    }
                     Console.Error.WriteLine(dataArgs.Data);
                 };
                 metalinkReady = new ManualResetEvent(false);
                 metalink.OutputDataReceived += (o, dataArgs) =>
                 {
                     if (dataArgs.Data == null)
+                    {
+                        outputClosed();
                         return;
+                    }
                     Console.Out.WriteLine(dataArgs.Data);
                     lock (metalinkLogStream)
                     {
@@ -292,13 +323,12 @@ namespace CyPhyPropagateTest
                     metalinkOutput.Add(dataArgs.Data);
                 };
                 metalink.Start();
+                metalinkJob = CyPhyMetaLink.JobObjectPinvoke.AssignProcessToKillOnCloseJob(metalink);
                 metalink.BeginOutputReadLine();
                 metalink.BeginErrorReadLine();
             }
             finally
             {
-                lock (metalinkLogStream)
-                    metalinkLogStream.Close();
             }
         }
 
@@ -320,20 +350,23 @@ namespace CyPhyPropagateTest
             receivedMessages = new List<Edit>();
             receivedMessagesQueue = new System.Collections.Concurrent.BlockingCollection<Edit>(new ConcurrentQueue<Edit>());
             sentMessagesQueue = new System.Collections.Concurrent.BlockingCollection<Edit>(new ConcurrentQueue<Edit>());
-            testingClient.EstablishConnection(msg =>
-                {
-                    lock (receivedMessages)
+            Task<bool> startClient = Task.Run(async () =>
+                await testingClient.EstablishConnection(msg =>
                     {
-                        receivedMessages.Add(msg);
+                        lock (receivedMessages)
+                        {
+                            receivedMessages.Add(msg);
+                        }
+                        receivedMessagesQueue.Add(msg);
+                    },
+                    connectionClosed: exc => KillMetaLink(),
+                    EditMessageSent: msg =>
+                    {
+                        sentMessagesQueue.Add(msg);
                     }
-                    receivedMessagesQueue.Add(msg);
-                },
-                connectionClosed: exc => KillMetaLink(),
-                EditMessageSent: msg =>
-                {
-                    sentMessagesQueue.Add(msg);
-                }
+                )
             );
+            startClient.Wait();
         }
 
         protected void WaitForAllMetaLinkMessages()

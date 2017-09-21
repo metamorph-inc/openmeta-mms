@@ -47,6 +47,10 @@ int main( int argc, char **argv ) {
 		exclusiveAttributeNameSet.insert("Path");
 		exclusiveClassNameAttributeNameSetMap.insert(std::make_pair("ComponentAssembly", exclusiveAttributeNameSet));
 
+		exclusiveAttributeNameSet.clear();
+		exclusiveAttributeNameSet.insert("FileType");
+		exclusiveClassNameAttributeNameSetMap.insert(std::make_pair("CADModel", exclusiveAttributeNameSet));
+
 		UdmComparator::ClassNameFilter classNameFilter;
 		classNameFilter.setExclusiveClassNameSet( exclusiveClassNameSet );
 		classNameFilter.setExclusiveClassNameAttributeNameMap( exclusiveClassNameAttributeNameSetMap );

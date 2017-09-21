@@ -199,25 +199,26 @@ if __name__ == '__main__':
             newPET = project.GetObjectByID(newPETID)
             tbs = [tb for tb in newPET.ChildFCOs if tb.MetaBase.Name == 'TestBenchRef' and tb.Referred is not None]
             if not tbs:
-                raise ValueError('Error: PET does not have a TestBenchRef')
-            tb = tbs[0]
-            suts = [sut for sut in tb.Referred.ChildFCOs if sut.MetaRole.Name == 'TopLevelSystemUnderTest']
-            if len(suts) == 0:
-                raise ValueError('Error: TestBench "{}" has no TopLevelSystemUnderTest'.format(tb.Name))
-            if len(suts) > 1:
-                raise ValueError('Error: TestBench "{}" has more than one TopLevelSystemUnderTest'.format(tb.Name))
-            sut = suts[0]
-            if sut.Referred.MetaBase.Name == 'ComponentAssembly':
-                config_ids = [sut.Referred.ID]
+                config_ids = [newPET.ID]
             else:
-                configurations = [config for config in sut.Referred.ChildFCOs if config.MetaBase.Name == 'Configurations' and config.Name == args["GeneratedConfigurationModel"]]
-                if not configurations:
-                    raise ValueError('Error: design has no Configurations model "{}"'.format(args["GeneratedConfigurationModel"]))
-                configurations = configurations[0]
-                cwcs = [cwc for cwc in configurations.ChildFCOs if cwc.MetaBase.Name == 'CWC' and cwc.Name in args["SelectedConfigurations"]]
-                if len(cwcs) != len(args["SelectedConfigurations"]):
-                    raise ValueError('Error: could not find all CWCs "{!r}" in "{}"'.format(args["SelectedConfigurations"], args["GeneratedConfigurationModel"]))
-                config_ids = [cwc.ID for cwc in cwcs]
+                tb = tbs[0]
+                suts = [sut for sut in tb.Referred.ChildFCOs if sut.MetaRole.Name == 'TopLevelSystemUnderTest']
+                if len(suts) == 0:
+                    raise ValueError('Error: TestBench "{}" has no TopLevelSystemUnderTest'.format(tb.Name))
+                if len(suts) > 1:
+                    raise ValueError('Error: TestBench "{}" has more than one TopLevelSystemUnderTest'.format(tb.Name))
+                sut = suts[0]
+                if sut.Referred.MetaBase.Name == 'ComponentAssembly':
+                    config_ids = [sut.Referred.ID]
+                else:
+                    configurations = [config for config in sut.Referred.ChildFCOs if config.MetaBase.Name == 'Configurations' and config.Name == args["GeneratedConfigurationModel"]]
+                    if not configurations:
+                        raise ValueError('Error: design has no Configurations model "{}"'.format(args["GeneratedConfigurationModel"]))
+                    configurations = configurations[0]
+                    cwcs = [cwc for cwc in configurations.ChildFCOs if cwc.MetaBase.Name == 'CWC' and cwc.Name in args["SelectedConfigurations"]]
+                    if len(cwcs) != len(args["SelectedConfigurations"]):
+                        raise ValueError('Error: could not find all CWCs "{!r}" in "{}"'.format(args["SelectedConfigurations"], args["GeneratedConfigurationModel"]))
+                    config_ids = [cwc.ID for cwc in cwcs]
         finally:
             project.CommitTransaction()
 

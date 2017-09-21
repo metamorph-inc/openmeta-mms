@@ -5,6 +5,8 @@
 #include "google/protobuf/text_format.h"
 #include "CreoPlugins\CreoPluginFunctions.h"
 #include "GlobalModelData.h"
+#include <cc_CommonUtilities.h>
+#include <cc_CommonDefinitions.h>
 
 
 namespace meta = edu::vanderbilt::isis::meta;
@@ -29,8 +31,8 @@ namespace isis
 		m_operator(CAD_OPERATOR), m_sequence(1), m_ready(false),
 		m_assembler(assembler_ptr), m_target_id(in_TargetID),
 		m_client(io_service, host, service,
-			boost::bind(&isis::MetaLinkHandler::interest, this, _1, in_InstanceID, in_TargetID),
-			boost::bind(&isis::MetaLinkHandler::process, this, _1)),
+		boost::bind(&isis::MetaLinkHandler::interest, this, _1, in_InstanceID, in_TargetID),
+		boost::bind(&isis::MetaLinkHandler::process, this, _1)),
 		m_network_thread(boost::bind(&boost::asio::io_service::run, &io_service)),
 		m_ioservice(io_service),
 		m_events_mutex(in_events_mutex)
@@ -178,7 +180,6 @@ namespace isis
 
 	/**
 	The passive topic "ISIS.METALINK.CAD.PASSIVE".
-
 	This topic indicates that the CADAssembler is waiting to be given some work to perform.
 	The protobuf schema to carries arguments, "mode" and an "identifer".
 	It will also use an "action" -> START as well.
@@ -201,15 +202,12 @@ namespace isis
 			return false;
 		}
 		// std::string passiveTopic = edit->topic(0);
-
 		isis::EditPointer editPtr(new meta::Edit());
 		editPtr->add_mode(meta::Edit_EditMode_INTEREST);
 		editPtr->set_editmode(meta::Edit_EditMode_INTEREST);
-
 		boost::uuids::uuid guid = boost::uuids::random_generator()();
 		editPtr->set_guid(boost::uuids::to_string(guid));
 		editPtr->add_origin(m_operator);
-
 		for(int actionIx=0; actionIx < edit->actions_size(); ++actionIx)
 		{
 			std::string majorMode;
@@ -224,7 +222,6 @@ namespace isis
 				isis_LOG(lg, isis_FILE, isis_WARN) << "MetaLinkHandler::process_PassivePost(): wrong action mode specified, action mode: " << action->actionmode();
 				continue;
 			}
-
 			/*if(! action->has_interest())
 			{
 				isis_LOG(lg, isis_FILE, isis_WARN) << "MetaLinkHandler::process_PassivePost(): switch action has no interest";
@@ -241,14 +238,11 @@ namespace isis
 				isis_LOG(lg, isis_FILE, isis_WARN) << "MetaLinkHandler::process_PassivePost(): switch action has no identifier";
 				continue;
 			}
-
 			for(int topix=0; topix < interest.topic_size(); ++topix)
 			{
 				editPtr->add_topic(interest.topic(topix));
 			}
-
 			editPtr->add_topic(interest.uid(0));
-
 			isis_LOG(lg, isis_FILE, isis_DEBUG) << "MetaLinkHandler::process_PassivePost(): posting interest";
 			m_client.send(editPtr);*/
 		}
@@ -259,13 +253,14 @@ namespace isis
 		bool MetaLinkHandler::process_AvmComponentPost_select(isis::EditPointer in_Edit, int in_ActionIx, meta::Action *in_Action)
 		{
 			isis_LOG(lg, isis_FILE, isis_DEBUG) << "MetaLinkHandler::process_AvmComponentPost_select()";
+			bool exp = false;
 			/**
 			* Handle selecting the datums.
 			*/
 			if(! in_Action->has_payload())
 			{
 				isis_LOG(lg, isis_FILE, isis_WARN) << "missing payload on select";
-				return true;
+				return false;
 			}
 			meta::Payload payload = in_Action->payload();
 			std::vector<isis::CADCreateAssemblyError> out_ErrorList;
@@ -287,12 +282,11 @@ namespace isis
 					// Don't freak out this is not the end of the world
 				}
 			}
-			return false;
+			return true;
 		}
 
 		bool MetaLinkHandler::process_AvmComponentPost_insert(isis::EditPointer in_Edit, int in_ActionIx, meta::Action *in_Action)
 		{
-			bool had_error = false;
 			isis_LOG(lg, isis_FILE, isis_DEBUG) << "MetaLinkHandler::process_AvmComponentPost_insert()";
 			/**
 			* Handle setting the environment.
@@ -356,10 +350,7 @@ namespace isis
 				{
 					meta::CADComponentType component = payload.components(jx);
 					meta::Notice notice = process_AvmComponentInitialize(in_Action->subjectid(), component);
-					if (notice.msg() != "No exception.") {
-						had_error = true;
-						*(in_Action->add_notices()) = notice;
-					}
+					*(in_Action->add_notices()) = notice;
 				}
 			}
 			else
@@ -368,7 +359,12 @@ namespace isis
 				GlobalModelData::Instance.ComponentEdit.avmId = in_Action->subjectid();
 				isis::GlobalModelData::Instance.mode = isis::COMPONENTEDIT;
 			}
-			return had_error;
+			meta::Notice notice;
+			notice.set_noticemode(meta::Notice_NoticeMode_DONE);
+			notice.set_msg("No exception.");
+			notice.set_code("C00000");
+			*(in_Action->add_notices()) = notice;
+			return true;
 		}
 
 		/**
@@ -476,7 +472,6 @@ namespace isis
 
 	//////////////////////////////////////////////
 	/**
-
 	editMode: POST
 	topic: "ISIS.METALINK.CADASSEMBLY"
 	topic: "13a4c47c-39ce-44e0-8732-b946e8821ec7"
@@ -490,7 +485,6 @@ namespace isis
 	}
 	}
 	}
-
 	By the time this method is called the first part of the edit has been processed.
 	This method is responsible for processing a SELECT action.
 	*/
@@ -503,11 +497,7 @@ namespace isis
 		if(! in_Action->has_payload())
 		{
 			isis_LOG(lg, isis_FILE, isis_INFO) << "missing payload on select";
-			meta::Notice notice;
-			notice.set_msg("missing payload on select");
-			notice.set_code("C0001");
-			(*in_Edit->add_notices()) = notice;
-			return true;
+			return false;
 		}
 		meta::Payload payload = in_Action->payload();
 		std::vector<isis::CADCreateAssemblyError> out_ErrorList;
@@ -528,7 +518,7 @@ namespace isis
 					<< "Couldn't select component: " << componentInstanceId;
 			}
 		}
-		return false;
+		return true;
 	}
 	//////////////////////////////////////////////
 	bool MetaLinkHandler::process_AssemblyDesignPost_insert(isis::EditPointer edit, int actionIx, meta::Action *action)
@@ -657,7 +647,7 @@ namespace isis
 		{
 			isis_LOG(lg, isis_FILE, isis_ERROR) << "ERROR, Function: MetaLinkHandler::process_AssemblyDesignPost_update,  application_exception: " << ex;
 		}
-		return exp;
+		return false;
 	}
 
 	//////////////////////////////////////////////
@@ -667,7 +657,7 @@ namespace isis
 		bool exp = false;
 		try
 		{
-			return !m_assembler->Clear();
+			return m_assembler->Clear();
 		}
 		catch(isis::application_exception& ex)
 		{
@@ -682,7 +672,7 @@ namespace isis
 		bool exp = false;
 		try
 		{
-			return !m_assembler->Clear();
+			return m_assembler->Clear();
 		}
 		catch(isis::application_exception& ex)
 		{
@@ -1264,9 +1254,9 @@ namespace isis
 				string idupper = boost::to_upper_copy(in_component.datums(i).id());
 				datumnamemap[idupper] = in_component.datums(i).displayname();
 			}
-			ProSolidFeatVisit(ProMdlToSolid(GlobalModelData::Instance.ComponentEdit.mdl), DatumNameVisit, NULL, &datumnamemap);
+			ProSolidFeatVisit(ProMdlToSolid(GlobalModelData::Instance.ComponentEdit.cADModel_ptr), DatumNameVisit, NULL, &datumnamemap);
 
-			ProError status = ProTreetoolRefresh(GlobalModelData::Instance.ComponentEdit.mdl);
+			ProError status = ProTreetoolRefresh(GlobalModelData::Instance.ComponentEdit.cADModel_ptr);
 
 			// Refresh the model tree component
 			switch(status)
@@ -1323,4 +1313,3 @@ namespace isis
 	//////////////////////////////////////////////
 
 } // namespace isis
-

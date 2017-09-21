@@ -96,8 +96,8 @@ def WriteDoNotEditMsg(in_FileHandle):
 def WriteCAD_h_Header(in_FileHandle):
     f = in_FileHandle
     WriteDoNotEditMsg(f)
-    f.write('#ifndef CAD_STRING_TO_ENUM_CONVERSIONS_H')
-    f.write('\n#define	CAD_STRING_TO_ENUM_CONVERSIONS_H')
+    f.write('#ifndef CC_STRING_TO_ENUM_CONVERSIONS_H')
+    f.write('\n#define CC_STRING_TO_ENUM_CONVERSIONS_H')
     f.write('\n')
     f.write('\n#include "isis_application_exception.h"')
     f.write('\n#include <string>')
@@ -111,9 +111,9 @@ def WriteCAD_h_Header(in_FileHandle):
 def WriteCAD_cpp_Header(in_FileHandle):
     f = in_FileHandle
     WriteDoNotEditMsg(f)
-    f.write('#include "CADStringToEnumConversions.h"')
+    f.write('#include "cc_StringToEnumConversions.h"')
     f.write('\n#include <boost/algorithm/string/case_conv.hpp>')
-    f.write('\n#include "CADCommonConstants.h"')
+    f.write('\n#include "cc_CommonConstants.h"')
     f.write('\n')
     f.write('\nusing namespace std;')
     f.write('\n')
@@ -141,7 +141,7 @@ def WriteCreo_h_Header (in_FileHandle):
     f.write('\n#include <isis_include_ptc_headers.h>')
     f.write('\n#include <string>')
     f.write('\n#include <iostream>')
-    f.write('\n#include <CADStringToEnumConversions.h>')
+    f.write('\n#include <cc_StringToEnumConversions.h>')
     f.write('\n')
     f.write('\nusing namespace std;')
     f.write('\n')
@@ -153,8 +153,8 @@ def WriteCreo_cpp_Header(in_FileHandle):
     f = in_FileHandle
     WriteDoNotEditMsg(f)
     f.write('#include <CreoStringToEnumConversions.h>')
-    f.write('\n#include <CommonUtilities.h>')
-    f.write('\n#include <CADCommonConstants.h>')
+    f.write('\n#include <cc_CommonUtilities.h>')
+    f.write('\n#include <cc_CommonConstants.h>')
     f.write('\n#include <sstream>')
     f.write('\n#include <boost/algorithm/string.hpp>')	
     f.write('\n')
@@ -307,6 +307,14 @@ def WriteEnums(in_FileHandles_h_dict, in_FileHandles_cpp_dict, in_Enums_list, in
             f_h.write(
                 '\n\tstd::string ' + enumData_itr.functionName + '_string( ' + in_out_EnumsLinked_list[index_linked].enumInputArgumentType + ' in_Enum )')
             f_h.write('\n\t\t\t\t\t\t\t\t\t\tthrow (isis::application_exception);')
+            f_h.write('\n')
+
+
+            # _CADFeatureGeometryType CADFeatureGeometryType_enum( ProType in_Enum )
+            functionName_temp = in_out_EnumsLinked_list[index_linked].enumInputArgumentType.lstrip('e_')
+            f_h.write(
+                '\n\t' + in_out_EnumsLinked_list[index_linked].enumInputArgumentType + ' ' + functionName_temp + '_enum( ' + in_out_EnumsLinked_list[index_linked].enumReturnType + ' in_Enum )')
+            f_h.write('\n\t\t\t\t\t\t\t\t\t\tthrow (isis::application_exception);')
 
 
             # ProAsmcompConstrType ProAsmcompConstrType_enum( e_CADAssemblyConstraintType in_Enum )
@@ -353,6 +361,32 @@ def WriteEnums(in_FileHandles_h_dict, in_FileHandles_cpp_dict, in_Enums_list, in
             f_cpp.write('\n\t\t\tthrow isis::application_exception(errorString);	')
             f_cpp.write('\n\t\t}')
             f_cpp.write('\n\t}')
+
+
+            # _CADFeatureGeometryType CADFeatureGeometryType_enum( ProType in_Enum )
+
+            f_cpp.write('\n')
+            f_cpp.write(
+                '\n\t' + in_out_EnumsLinked_list[index_linked].enumInputArgumentType + ' ' + functionName_temp + '_enum( ' + in_out_EnumsLinked_list[index_linked].enumReturnType + ' in_Enum )')
+            f_cpp.write('\n\t\t\t\t\t\t\t\t\t\tthrow (isis::application_exception)')
+            f_cpp.write('\n\t{')
+            f_cpp.write('\n\t\tswitch ( in_Enum )')
+            f_cpp.write('\n\t\t{')
+            acceptableEnums = ""
+            for enumToSrings_itr in in_out_EnumsLinked_list[index_linked].commoneEnumToSpecificEnum:
+                f_cpp.write('\n\t\t\tcase ' + enumToSrings_itr.value_2 + ':')
+                f_cpp.write('\n\t\t\t\treturn ' + enumToSrings_itr.value_1 + ';')
+                f_cpp.write('\n\t\t\t\tbreak;')
+                acceptableEnums += enumToSrings_itr.value_2 + '   '
+            f_cpp.write('\n\t\t\tdefault:')
+            f_cpp.write('\n\t\t\t\tstd::stringstream errorString;')
+            f_cpp.write('\n\t\t\t\terrorString << "Function - " << __FUNCTION__ << ", was passed: " << in_Enum <<')
+            f_cpp.write('\n\t\t\t\t\t", which is an erroneous value. Allowed values are: " <<')
+            f_cpp.write('\n\t\t\t\t\t"' + acceptableEnums.strip() + '";')
+            f_cpp.write('\n\t\t\t\tthrow isis::application_exception(errorString);')
+            f_cpp.write('\n\t\t}')
+            f_cpp.write('\n\t}')
+
 
             in_out_EnumsLinked_list[index_linked].writtenToFile = True
 
