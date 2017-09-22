@@ -52,10 +52,10 @@ def build(dirname):
     node = os.path.join(dirname, 'node.exe')
     print('`npm install`')
     subprocess.check_call([npm, 'install'])
-    print('`react-scripts.cmd build`')
+    print('`npm run build`')
     env = dict(os.environ)
     env['PATH'] = dirname + ';' + env['PATH']
-    subprocess.check_call([r'node_modules\.bin\react-scripts.cmd', 'build'], env=env)
+    subprocess.check_call([npm, 'run', 'build'], env=env)
     if os.path.isdir(dst):
         shutil.rmtree(dst)
     shutil.copytree('build', dst)
