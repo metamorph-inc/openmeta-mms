@@ -37,6 +37,15 @@ class ValidatingNumberInput extends Component {
     });
   }
 
+  handleKeyPress = (ev) => {
+    if(ev.key === "Enter") {
+      if(this.props.onEnterPressed) {
+        this.props.onEnterPressed();
+      }
+      ev.preventDefault();
+    }
+  }
+
   render() {
     let validationState = null;
     let tooltip = null;
@@ -52,7 +61,7 @@ class ValidatingNumberInput extends Component {
     return (
       <OverlayTrigger placement="bottom" overlay={tooltip} trigger="focus">
         <FormGroup validationState={validationState}>
-          <FormControl value={this.state.preValidationString} onChange={this.handleChange} />
+          <FormControl value={this.state.preValidationString} onChange={this.handleChange} onKeyPress={this.handleKeyPress} />
           <FormControl.Feedback />
         </FormGroup>
       </OverlayTrigger>

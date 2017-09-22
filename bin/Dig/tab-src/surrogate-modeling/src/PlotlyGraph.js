@@ -22,6 +22,7 @@ class PlotlyGraph extends Component {
     const yAxisError = this.props.yAxisErrors;
     const xAxisName = this.props.xAxisName;
     const yAxisName = this.props.yAxisName;
+    const selectedXAxisValue = this.props.selectedXAxisValue;
 
     const upperErrorY = yAxisPoints.map(function(num, index) {
         return num + yAxisError[index];
@@ -93,6 +94,15 @@ class PlotlyGraph extends Component {
         line: {
           color: 'red'
         }
+      },
+      {
+        x: [selectedXAxisValue, selectedXAxisValue],
+        y: [Math.min(...lowerErrorY2), Math.max(...upperErrorY2)],
+        mode: 'lines',
+        line: {
+          color: 'black'
+        },
+        showlegend: false
       }
     ],
       {
@@ -127,7 +137,7 @@ class PlotlyGraph extends Component {
           family: 'Helvetica Neue, Helvetica, Arial, sans-serif',
           size: 9,
           //color: 'white'
-        },
+        }
         //paper_bgcolor: 'rgba(255, 255, 255, 0)',
         //plot_bgcolor: 'rgba(255, 255, 255, 0)'
       },

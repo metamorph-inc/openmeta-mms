@@ -68,6 +68,7 @@ class SurrogateTableRow extends Component {
           <ValidatingNumberInput
             value={value}
             onChange={(value) => this.handleValidatedIndependentVarChange(index, value)}
+            onEnterPressed={this.handlePredictButtonClick}
             validationFunction={ValidatingNumberInput.RealNumberValidator}/>
         </td>
       );

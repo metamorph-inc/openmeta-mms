@@ -60,6 +60,7 @@ class RowDetailsModalButton extends Component {
             type="number"
             value={value}
             onChange={(value) => this.handleIndependentVarChange(index, value)}
+            onEnterPressed={this.handlePredictButtonClick}
             validationFunction={ValidatingNumberInput.RealNumberValidator}/>
         </FormGroup>
       );
@@ -135,6 +136,7 @@ class RowDetailsModalButton extends Component {
             <Row>
               <Col md={2}>
                 {indepVarCells}
+                <Button bsStyle="primary" bsSize="large" block onClick={this.handlePredictButtonClick}><Glyphicon glyph="question-sign" /> Predict</Button>
               </Col>
               <Col md={2}>
                 {depVarCells}
@@ -146,6 +148,7 @@ class RowDetailsModalButton extends Component {
                   dependentVarNames={this.props.dependentVarNames}
                   independentVarData={this.props.independentVarData}
                   discreteIndependentVars={this.props.discreteIndependentVars}
+                  selectedXAxisValue={this.props.independentVarData[this.props.independentVarNames.indexOf(this.state.selectedIndependentVar)]}
                   predictionsUnavailable={this.props.dependentVarNames.length === 0 || this.props.dependentVarData[0][0] === DependentVarState.COMPUTING || this.props.dependentVarData[0][0] === DependentVarState.STALE}
                   service={this.props.service}
                   onSelectedIndependentVarChange={this.handleSelectedIndependentVarChange}

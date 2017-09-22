@@ -92,6 +92,7 @@ class ProbabilityGraphsView extends Component {
             xAxisPoints={this.state.xAxisPoints}
             yAxisPoints={points}
             yAxisErrors={this.state.yAxisErrors[index]}
+            selectedXAxisValue={this.props.selectedXAxisValue}
             onClick={(xPosition) => this.handleGraphClick(index, xPosition)}
             />
         );
