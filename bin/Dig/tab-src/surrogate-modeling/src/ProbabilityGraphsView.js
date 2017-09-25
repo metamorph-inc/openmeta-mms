@@ -46,7 +46,7 @@ class ProbabilityGraphsView extends Component {
       graphsAvailable: false,
       currentErrorMessage: null
     });
-    this.props.service.getSurrogateGraphData(this.props.independentVarData, this.props.discreteIndependentVars, this.props.selectedIndependentVar).then((result) => {
+    this.props.service.getSurrogateGraphData(this.props.independentVarData, this.props.discreteIndependentVars, this.props.selectedIndependentVar, this.props.selectedSurrogateModel).then((result) => {
       console.info("Got new graph data", result);
       this.setState({
         graphsAvailable: true,

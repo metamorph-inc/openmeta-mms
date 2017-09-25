@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col, Form } from 'react-bootstrap';
 
 import { cloneDeep, isEqual } from 'lodash-es';
 
 import ErrorModal from './ErrorModal';
+import SurrogateModelChooser from './SurrogateModelChooser';
 import DisplaySettingsPopoverButton from './DisplaySettingsPopoverButton';
 import DiscreteVariableChooser from './DiscreteVariableChooser';
 import SurrogateTable from './SurrogateTable';
@@ -134,7 +135,7 @@ class App extends Component {
       dependentVarData: newDependentVarData
     });
 
-    this.props.service.evaluateSurrogateAtPoints([selectedIndependentVarRow], this.state.discreteIndependentVars)
+    this.props.service.evaluateSurrogateAtPoints([selectedIndependentVarRow], this.state.discreteIndependentVars, this.state.selectedSurrogateModel)
       .then((resultingDependentVars) => {
         const newDependentVarData = cloneDeep(this.state.dependentVarData);
         newDependentVarData[row] = resultingDependentVars[0];
@@ -221,6 +222,22 @@ class App extends Component {
     });
   }
 
+  handleSelectedSurrogateModelChange = (newSelectedSurrogateModel) => {
+    //TODO: probably a little more efficient to check to see if we've already
+    //      marked these as stale and not update if they already are
+    const newDependentVarData = cloneDeep(this.state.dependentVarData);
+    newDependentVarData.forEach(function(row) {
+      row.forEach(function(col) {
+        col[0] = DependentVarState.STALE;
+      });
+    });
+
+    this.setState({
+      selectedSurrogateModel: newSelectedSurrogateModel,
+      dependentVarData: newDependentVarData
+    });
+  }
+
   handleErrorDialogClose = () => {
     this.setState({
       currentErrorMessage: null
@@ -234,9 +251,15 @@ class App extends Component {
         <Grid fluid>
           <Row>
             <Col md={12}>
-              <DisplaySettingsPopoverButton
-                displaySettings={this.state.displaySettings}
-                onDisplaySettingsChange={this.handleDisplaySettingsChange} />
+              <Form inline className="pull-right">
+                <SurrogateModelChooser
+                  selectedSurrogateModel={this.state.selectedSurrogateModel}
+                  availableSurrogateModels={this.state.availableSurrogateModels}
+                  onChange={this.handleSelectedSurrogateModelChange} />
+                <DisplaySettingsPopoverButton
+                  displaySettings={this.state.displaySettings}
+                  onDisplaySettingsChange={this.handleDisplaySettingsChange} />
+              </Form>
             </Col>
           </Row>
           <Row>
@@ -256,6 +279,7 @@ class App extends Component {
                   independentVarData={this.state.independentVarData}
                   dependentVarData={this.state.dependentVarData}
                   discreteIndependentVars={this.state.discreteIndependentVars}
+                  selectedSurrogateModel={this.state.selectedSurrogateModel}
                   service={this.props.service}
 
                   onIndependentVarChange={(col, row, newValue) => this.handleIndependentVarChange(col, row, newValue)}

@@ -1,4 +1,6 @@
 library(DiceKriging)
+library(randomForest)
+
 
 title <- "Surrogate Modeling"
 footer <- TRUE
@@ -93,7 +95,8 @@ server <- function(input, output, session, data) {
           ))
         } else if(input$externalRequest$command == "evaluateSurrogateAtPoints") {
           result = evaluateSurrogate(input$externalRequest$data$independentVars,
-                                     input$externalRequest$data$discreteVars)
+                                     input$externalRequest$data$discreteVars,
+                                     input$externalRequest$data$surrogateModel)
           session$sendCustomMessage(type="externalResponse", list(
             id=input$externalRequest$id,
             data=result
@@ -101,7 +104,8 @@ server <- function(input, output, session, data) {
         } else if(input$externalRequest$command == "getGraph") {
           result = getGraph(input$externalRequest$data$independentVars,
                             input$externalRequest$data$discreteVars,
-                            input$externalRequest$data$selectedIndependentVar)
+                            input$externalRequest$data$selectedIndependentVar,
+                            input$externalRequest$data$surrogateModel)
           session$sendCustomMessage(type="externalResponse", list(
             id=input$externalRequest$id,
             data=result
@@ -122,7 +126,7 @@ server <- function(input, output, session, data) {
     
   })
   
-  getGraph <- function(indepVars, discreteVars, selectedIndependentVar) {
+  getGraph <- function(indepVars, discreteVars, selectedIndependentVar, surrogateModel) {
     GRAPH_RESOLUTION = 200
     
     trainingData = data$Filtered()
@@ -151,11 +155,20 @@ server <- function(input, output, session, data) {
     yErrorsArray = array(rep(0, nrow(expanded) * ncol(trainingDataDep)), c(ncol(trainingDataDep), nrow(expanded)))
     
     for(colIndex in 1:ncol(trainingDataDep)) {
-      model = km(design=trainingDataIndep, response=trainingDataDep[, colIndex])
-      predictResults = predict(model, expanded, type='SK')
-
-      yPointsArray[colIndex, ] = predictResults$mean
-      yErrorsArray[colIndex, ] = predictResults$sd
+      if(surrogateModel == "Kriging Surrogate") {
+        model = km(design=trainingDataIndep, response=trainingDataDep[, colIndex])
+        predictResults = predict(model, expanded, type='SK')
+  
+        yPointsArray[colIndex, ] = predictResults$mean
+        yErrorsArray[colIndex, ] = predictResults$sd
+      } else if(surrogateModel == "Random Forest") {
+        model = randomForest(x=trainingDataIndep, y=trainingDataDep[, colIndex])
+        predictResults = predict(model, expanded)
+        
+        yPointsArray[colIndex, ] = predictResults
+      } else {
+        stop("Unknown surrogate selected")
+      }
     }
     
     results = list(
@@ -167,7 +180,7 @@ server <- function(input, output, session, data) {
     return(results)
   }
   
-  evaluateSurrogate <- function(indepVars, discreteVars) {
+  evaluateSurrogate <- function(indepVars, discreteVars, surrogateModel) {
     trainingData = data$Filtered()
     for(discreteVar in discreteVars) {
       trainingData = trainingData[trainingData[[discreteVar$varName]] == discreteVar$selected, ]
@@ -178,7 +191,13 @@ server <- function(input, output, session, data) {
     ivarDf = data.frame(indepVars)
     names(ivarDf) = unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])
     
-    resultArray = array(rep(0, nrow(ivarDf) * ncol(trainingDataDep) * 3), c(nrow(ivarDf), ncol(trainingDataDep), 3))
+    resultArray = NULL
+    
+    if(surrogateModel == "Kriging Surrogate") {
+      resultArray = array(rep(0, nrow(ivarDf) * ncol(trainingDataDep) * 3), c(nrow(ivarDf), ncol(trainingDataDep), 3))
+    } else if(surrogateModel == "Random Forest") {
+      resultArray = array(rep(0, nrow(ivarDf) * ncol(trainingDataDep) * 2), c(nrow(ivarDf), ncol(trainingDataDep), 2))
+    }
     
     # Need at least two training points (I think?)
     if(nrow(trainingDataIndep) < (ncol(trainingDataIndep) + ncol(trainingDataDep))) {
@@ -186,12 +205,22 @@ server <- function(input, output, session, data) {
     }
     
     for(colIndex in 1:ncol(trainingDataDep)) {
-      model = km(design=trainingDataIndep, response=trainingDataDep[, colIndex])
-      predictResults = predict(model, ivarDf, type='SK')
-      
-      resultArray[, colIndex, 1] = rep(2, nrow(ivarDf)) # COMPUTED from DependentVarState enum
-      resultArray[, colIndex, 2] = predictResults$mean
-      resultArray[, colIndex, 3] = predictResults$sd
+      if(surrogateModel == "Kriging Surrogate") {
+        model = km(design=trainingDataIndep, response=trainingDataDep[, colIndex])
+        predictResults = predict(model, ivarDf, type='SK')
+        
+        resultArray[, colIndex, 1] = rep(2, nrow(ivarDf)) # COMPUTED from DependentVarState enum
+        resultArray[, colIndex, 2] = predictResults$mean
+        resultArray[, colIndex, 3] = predictResults$sd
+      } else if(surrogateModel == "Random Forest") {
+        model = randomForest(x=trainingDataIndep, y=trainingDataDep[, colIndex])
+        predictResults = predict(model, ivarDf)
+        
+        resultArray[, colIndex, 1] = rep(2, nrow(ivarDf)) # COMPUTED from DependentVarState enum
+        resultArray[, colIndex, 2] = predictResults
+      } else {
+        stop("Unknown surrogate selected")
+      }
     }
     
     return(resultArray)

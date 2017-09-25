@@ -46,7 +46,7 @@ class DisplaySettingsPopoverButton extends Component {
 
     return (
       <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={popover}>
-        <Button bsStyle="link" className="pull-right"><Glyphicon glyph="cog" /> Display Settings</Button>
+        <Button bsStyle="link"><Glyphicon glyph="cog" /> Display Settings</Button>
       </OverlayTrigger>
     );
   }

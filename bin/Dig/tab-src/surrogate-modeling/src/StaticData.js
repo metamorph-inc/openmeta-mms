@@ -10,7 +10,9 @@ const StaticData = {
   displaySettings: {
     roundNumbers: false,
     precision: 5
-  }
+  },
+  selectedSurrogateModel: "Kriging Surrogate",
+  availableSurrogateModels: ["Kriging Surrogate", "Random Forest"]
 };
 
 const ExampleData = {

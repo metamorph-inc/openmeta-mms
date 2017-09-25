@@ -80,7 +80,7 @@ class RowDetailsModalButton extends Component {
           <dl>
           <dt>Mean</dt>
           <dd><NumberView displaySettings={this.props.displaySettings}>{varData[1]}</NumberView></dd>
-          {varData.length >= 2 ? (
+          {varData.length > 2 ? (
             <div>
               <dt>Standard Deviation</dt>
               <dd><NumberView displaySettings={this.props.displaySettings}>{varData[2]}</NumberView></dd>
@@ -150,6 +150,7 @@ class RowDetailsModalButton extends Component {
                   discreteIndependentVars={this.props.discreteIndependentVars}
                   selectedXAxisValue={this.props.independentVarData[this.props.independentVarNames.indexOf(this.state.selectedIndependentVar)]}
                   predictionsUnavailable={this.props.dependentVarNames.length === 0 || this.props.dependentVarData[0][0] === DependentVarState.COMPUTING || this.props.dependentVarData[0][0] === DependentVarState.STALE}
+                  selectedSurrogateModel={this.props.selectedSurrogateModel}
                   service={this.props.service}
                   onSelectedIndependentVarChange={this.handleSelectedIndependentVarChange}
                   onGraphClick={this.handleGraphClick} />

@@ -137,13 +137,14 @@ class BackendService {
     }
   }
 
-  evaluateSurrogateAtPoints(independentVars, discreteVars) {
+  evaluateSurrogateAtPoints(independentVars, discreteVars, surrogateModelName) {
     console.log(discreteVars);
 
     if(this.hasShiny) {
       const requestArgs = {
         independentVars: independentVars,
-        discreteVars: discreteVars
+        discreteVars: discreteVars,
+        surrogateModel: surrogateModelName
       };
 
       return this.makeShinyRequest('evaluateSurrogateAtPoints', requestArgs).then((result) => {
@@ -175,12 +176,13 @@ class BackendService {
     }
   }
 
-  getSurrogateGraphData(independentVars, discreteVars, selectedIndependentVarIndex) {
+  getSurrogateGraphData(independentVars, discreteVars, selectedIndependentVarIndex, surrogateModelName) {
     if(this.hasShiny) {
       const requestArgs = {
         independentVars: independentVars,
         discreteVars: discreteVars,
-        selectedIndependentVarIndex: selectedIndependentVarIndex
+        selectedIndependentVarIndex: selectedIndependentVarIndex,
+        surrogateModel: surrogateModelName
       };
 
       return this.makeShinyRequest('getGraph', requestArgs).then((result) => {
