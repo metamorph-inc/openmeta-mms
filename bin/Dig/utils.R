@@ -26,6 +26,8 @@ BuildPet <- function(pet_config_filename) {
     new_item
   }, dvs, names(dvs))
   objective_names <- names(pet_config$drivers[[1]]$objectives)
+  constraint_names <- names(pet_config$drivers[[1]]$constraints)
+  intermediate_variable_names <- names(pet_config$drivers[[1]]$intermediateVariables)
   num_samples <- unlist(strsplit(as.character(pet_config$drivers[[1]]$details$Code),'='))[2]
   sampling_method <- pet_config$drivers[[1]]$details$DOEType
   generated_configuration_model <- pet_config$GeneratedConfigurationModel
@@ -42,6 +44,8 @@ BuildPet <- function(pet_config_filename) {
               design_variable_names=design_variable_names,
               design_variables=design_variables,
               objective_names=objective_names,
+              constraint_names=constraint_names,
+              intermediate_variable_names=intermediate_variable_names,
               pet_config=pet_config,
               pet_config_filename=pet_config_filename)
 }
@@ -77,6 +81,8 @@ BuildVariables <- function(pet, var_names) {
     pet_config <- pet$pet_config
     design_variable_names <- pet$design_variable_names
     objective_names <- pet$objective_names
+    constraint_names <- pet$constraint_names
+    intermediate_variable_names <- pet$intermediate_variable_names
     
     variables <- lapply(var_names, function(var_name) {
       if (var_name %in% design_variable_names) {
@@ -86,6 +92,14 @@ BuildVariables <- function(pet, var_names) {
       } else if(var_name %in% objective_names) {
         type <- "Objective"
         units <- CleanUnits(pet_config$drivers[[1]]$objectives[[var_name]]$units)
+        name_with_units <- AddUnits(var_name, units)
+      } else if(var_name %in% constraint_names) {
+        type <- "Constraint"
+        units <- NULL
+        name_with_units <- var_name
+      } else if(var_name %in% intermediate_variable_names) {
+        type <- "Intermediate Variable"
+        units <- CleanUnits(pet_config$drivers[[1]]$intermediateVariables[[var_name]]$units)
         name_with_units <- AddUnits(var_name, units)
       } else {
         type <- "Unknown"
