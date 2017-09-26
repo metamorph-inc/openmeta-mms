@@ -232,6 +232,14 @@ class BackendService {
     }
   }
 
+  pushSurrogateModelState(newSurrogateModel) {
+    if(this.hasShiny) {
+      window.parent.Shiny.onInputChange('SurrogateModeling-surrogateModelState', {selectedSurrogateModel: newSurrogateModel});
+    } else {
+      console.info("Would have pushed new surrogate model state to Shiny, but not connected");
+    }
+  }
+
   getIndependentVarState() {
     if(this.hasShiny) {
       return this.makeShinyRequest('getIndependentVarState', '').then((result) => {
@@ -269,7 +277,28 @@ class BackendService {
       return Promise.resolve(StaticData.displaySettings);
     }
   }
+
+  getSurrogateModelState() {
+    if(this.hasShiny) {
+      return this.makeShinyRequest('getSurrogateModelState', '').then((result) => {
+        // Because Shiny serializes empty lists as null
+        if(result === null) {
+          return StaticData.selectedSurrogateModel;
+        } else {
+          if(result.selectedSurrogateModel === null) {
+            return StaticData.selectedSurrogateModel;
+          } else {
+            return result.selectedSurrogateModel;
+          }
+        }
+      });
+    } else {
+      return Promise.resolve(StaticData.selectedSurrogateModel);
+    }
+  }
 }
+
+
 
 
 export default BackendService;

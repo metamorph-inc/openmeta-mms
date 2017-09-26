@@ -29,6 +29,12 @@ class App extends Component {
       });
     });
 
+    this.props.service.getSurrogateModelState().then((newSurrogateModel) => {
+      this.setState({
+        selectedSurrogateModel: newSurrogateModel
+      });
+    });
+
     const ivarNamePromise = this.props.service.getIndependentVarNames().then((varNames) => {
       this.setState({
         independentVarNames: varNames,
@@ -99,6 +105,10 @@ class App extends Component {
 
     if(!isEqual(previousState.displaySettings, this.state.displaySettings)) {
       this.props.service.pushDisplaySettingsState(this.state.displaySettings);
+    }
+
+    if(!isEqual(previousState.selectedSurrogateModel, this.state.selectedSurrogateModel)) {
+      this.props.service.pushSurrogateModelState(this.state.selectedSurrogateModel);
     }
   }
 
