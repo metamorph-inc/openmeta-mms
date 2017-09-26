@@ -252,6 +252,28 @@ Server <- function(input, output, session) {
   #   output: the Shiny list of all the UI output elements.
   #   session: a handle for the Shiny session.
   
+  observeEvent(input$refresh, {
+    RefreshData()
+  })
+        
+  RefreshData <- function() {
+    # Read input dataset file
+    cat("Re-reading raw data... ")
+    raw <- read.csv(file.path(launch_dir, visualizer_config$raw_data), fill=T)
+    if(!is.null(visualizer_config$augmented_data)) {
+      augmented_filename <- file.path(launch_dir,
+                                      visualizer_config$augmented_data)
+      augmented <- read.csv(augmented_filename, fill=T)
+      extra <- raw[!(raw$GUID %in% augmented$GUID),]
+      if(nrow(extra) > 0) {
+        cat(paste("Adding", nrow(extra), "points.\n"))
+      } else {
+        cat("No new points added.\n")
+      }
+      data$raw$df <- rbind(augmented, extra)
+    }
+  }
+  
   # Data Pre-Processing --------------------------------------------------------
 
   var_class <- reactive({
@@ -1117,6 +1139,10 @@ ui <- fluidPage(
   tags$script(src = "design_config_selector.js"),
   
   titlePanel("Visualizer"),
+  
+  tags$div(title = "Refresh the complete dataset.",
+           style="display: inline-block", 
+           actionButton("refresh", "Refresh")),
   
   # Generates the master tabset from the user-defined tabs provided.
   do.call(tabsetPanel, tabset_arguments),
