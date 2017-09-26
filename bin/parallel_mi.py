@@ -4,9 +4,11 @@ from __future__ import print_function
 import sys
 import os
 import os.path
+import json
 import errno
 import uuid
 import subprocess
+import argparse
 
 import imp
 # taken from CyPhyPython:
@@ -82,7 +84,7 @@ def test_jobmanager_running(mga_dir):
 
 
 # This is the entry point
-def invoke(focusObject, rootObject, componentParameters, **kwargs):
+def invoke(focusObject, rootObject, componentParameters, dn=None, **kwargs):
     # output_dir = componentParameters['output_dir']
     import subprocess
     import udm
@@ -105,7 +107,14 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
     design = tlsut.ref
     if design.type.name != 'DesignContainer':
         raise ValueError('TopLevelSystemUnderTest must refer to a DesignContainer')
-    cwcs = [cwc for config in design.children(child_type=CyPhyML.Configurations) for cwc in config.children(child_type=CyPhyML.CWC)]
+
+    if kwargs.get('ids'):
+        cwcs = [dn.get_object_by_id(udm.GmeId2UdmId(id_)) for id_ in kwargs.get('ids').split(',')]
+    elif kwargs.get('configuration_id'):
+        cwcs = [cwc for cwc in dn.get_object_by_id(udm.GmeId2UdmId(kwargs.get('configuration_id'))).children(child_type=CyPhyML.CWC)]
+    else:
+        import pdb; pdb.set_trace()
+        cwcs = [cwc for config in design.children(child_type=CyPhyML.Configurations) for cwc in config.children(child_type=CyPhyML.CWC)]
 
     # CyPhyMasterExe.exe "MGA=C:\Users\kevin\Documents\jolt-sketch\OpenMETA\Jolt.mga" "/@Testing/@Tron Coin Changer Detection" "/@DesignSpaces/@VendingMachine/@Exported-Configurations-at--09-12--16-38-52/@cfg1"
     master_exe_path = os.path.join(meta_path, 'bin', 'CyPhyMasterExe.exe')
@@ -123,7 +132,18 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
     messages_condition = threading.Condition()
 
     conn_str = focusObject.convert_udm2gme().Project.ProjectConnStr
-    test_jobmanager_running(mga_dir=os.path.dirname(conn_str[len('MGA='):]))
+    mga_dir = os.path.dirname(conn_str[len('MGA='):])
+    results_metaresults = os.path.join(mga_dir, 'results', 'results.metaresults.json')
+    if not os.path.isfile(results_metaresults):
+        try:
+            os.makedirs(os.path.dirname(results_metaresults))
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise
+        with open(results_metaresults, 'w') as results:
+            results.write(json.dumps({"Results": []}))
+
+    test_jobmanager_running(mga_dir=mga_dir)
 
     def message(msg):
         with messages_condition:
@@ -175,6 +195,13 @@ def invoke(focusObject, rootObject, componentParameters, **kwargs):
 
 # Allow calling this script with a .mga file as an argument
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Run MasterInterpreter in parallel')
+    parser.add_argument('--ids', help='design configuration ids')
+    parser.add_argument('--configuration-id', help='Configurations model id')
+    parser.add_argument('filename')
+    parser.add_argument('testbench_id')
+    args = parser.parse_args()
+
     # need to open meta DN since it isn't compiled in
     uml_diagram = udm.uml_diagram()
     meta_dn = udm.SmartDataNetwork(uml_diagram)
@@ -185,8 +212,8 @@ if __name__ == '__main__':
     meta_dn.open(CyPhyML_udm, "")
 
     dn = udm.SmartDataNetwork(meta_dn.root)
-    dn.open(os.path.abspath(sys.argv[1]), "")
-    focusObject = dn.get_object_by_id(udm.GmeId2UdmId(sys.argv[2]))
-    invoke(focusObject, dn.root, {})
+    dn.open(os.path.abspath(args.filename), "")
+    focusObject = dn.get_object_by_id(udm.GmeId2UdmId(args.testbench_id))
+    invoke(focusObject, dn.root, {}, **{"ids": args.ids, "configuration_id": args.configuration_id, "dn": dn})
     dn.close_no_update()
     meta_dn.close_no_update()
