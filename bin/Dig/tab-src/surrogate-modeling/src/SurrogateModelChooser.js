@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Well, Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 class SurrogateModelChooser extends Component {
   handleChange = (ev) => {
@@ -13,9 +13,12 @@ class SurrogateModelChooser extends Component {
     });
 
     return (
-        <FormControl componentClass="select" value={this.props.selectedSurrogateModel} onChange={(ev) => this.handleChange(ev)}>
-          {options}
-        </FormControl>
+        <FormGroup>
+          <ControlLabel>Surrogate Technique</ControlLabel>{' '}
+          <FormControl componentClass="select" value={this.props.selectedSurrogateModel} onChange={(ev) => this.handleChange(ev)}>
+            {options}
+          </FormControl>
+        </FormGroup>
     );
   }
 }
