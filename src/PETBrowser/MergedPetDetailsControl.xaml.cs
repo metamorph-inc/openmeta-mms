@@ -102,7 +102,7 @@ namespace PETBrowser
             var selectedConfig = (MergedPetDetailsViewModel.VisualizerSession) VisualizerSessionsGrid.SelectedItem;
             selectedConfig.VisualizerNotRunning = false;
 
-            VisualizerLauncher.LaunchVisualizer(selectedConfig.ConfigPath);
+            VisualizerLauncher.LaunchVisualizer(selectedConfig.ConfigPath, ViewModel.DetailsDataset, DatasetViewModel.Store.DataDirectory);
         }
 
         
