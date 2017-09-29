@@ -334,7 +334,7 @@ namespace PETBrowser
         {
             if (File.Exists(path))
             {
-                using (var reader = File.OpenText(path))
+                using (var reader = new StreamReader(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
                 {
                     JsonSerializer serializer = new JsonSerializer();
                     var designTree = (Dictionary<string, MetaTBManifest.DesignType>) serializer.Deserialize(reader,

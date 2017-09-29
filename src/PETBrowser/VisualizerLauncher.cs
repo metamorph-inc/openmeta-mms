@@ -142,6 +142,7 @@ namespace PETBrowser
                             var directoryToWatch = Directory.GetParent(testbenchManifestFilePath).FullName;
                             Console.WriteLine("Watching {0}", directoryToWatch);
                             var watcher = new FileSystemWatcher(directoryToWatch);
+                            //watcher.NotifyFilter = NotifyFilters.Size | NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.FileName | NotifyFilters.DirectoryName;
                             watcher.Filter = "output.csv";
 
                             watcher.Changed += OnChanged;
