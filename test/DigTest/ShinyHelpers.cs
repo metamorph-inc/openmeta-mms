@@ -220,6 +220,12 @@ namespace DigTest
             driver.FindElement(By.LinkText(name)).Click();
             wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//li[contains(.,'" + name + "')]/../../div/div[@class='tab-pane active' and @data-value='" + name + "']")));
         }
+
+        public static void ScrollToElement(IWebDriver driver, IWebElement elem)
+        {
+            string jsToBeExecuted = string.Format("window.scroll(0, {0});", elem.Location.Y);
+            ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecuted);
+        }
     }
 
 
