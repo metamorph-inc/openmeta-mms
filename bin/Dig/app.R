@@ -523,7 +523,7 @@ Server <- function(input, output, session) {
   })
   
   GenerateEnumUI <- function(current) {
-    items <- names(table(raw[[current]]))
+    items <- names(table(data$raw$df[[current]]))
     
     for(i in 1:length(items)){
       items[i] <- paste0(i, '. ', items[i])
