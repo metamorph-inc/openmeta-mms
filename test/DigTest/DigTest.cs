@@ -284,7 +284,7 @@ namespace DigTest
             File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/OpenmetaCSV/windturbine_merged_viz_config_data.csv"));
         }
 
-        [Fact()]
+        [Fact(Skip="flakey")]
         [Trait("Category","ResultsBrowser")]
         void ResultsBrowserJSONLaunch()
         {
