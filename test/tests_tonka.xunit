@@ -1,6 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xunit>
   <assemblies>
+    <assembly filename="SchematicUnitTests\bin\Release\SchematicUnitTests.exe" shadow-copy="true" />
+    <assembly filename="SystemCTest\bin\Release\SystemCTest.dll" shadow-copy="true" />
+    <assembly filename="ModelsTest\bin\Release\ModelsTest.dll" shadow-copy="true" />
+    <assembly filename="TonkaDDPTest\bin\Release\TonkaDDPTest.exe" shadow-copy="true" />
+    <assembly filename="SpiceParserTest\bin\Release\SpiceLibTest.exe" shadow-copy="true" />
+    <assembly filename="..\src\PinMatcher\bin\Release\PinMatcher.dll" shadow-copy="true" />
+    <assembly filename="ConnectorUnrollTest\bin\Release\ConnectorUnrollTest.exe" shadow-copy="true" />
+    <assembly filename="CyPhy2MfgBomTest\bin\Release\CyPhy2MfgBomTest.dll" shadow-copy="true" />
+    <assembly filename="BinPackTest\bin\Release\BinPackTest.dll" shadow-copy="true" />
+    <assembly filename="SpiceViewerTest\bin\Release\SpiceViewerTest.exe" shadow-copy="true" />
+    <assembly filename="CyPhy2RFTest\bin\Release\CyPhy2RFTest.dll" shadow-copy="true" />
+    <assembly filename="CyPhy2PCBMfgTest\bin\Release\CyPhy2PCBMfgTest.dll" shadow-copy="true" />
+    <assembly filename="AraRFAnalysisTest\bin\Release\AraRFAnalysisTest.dll" shadow-copy="true" />
+    <assembly filename="CyPhy2CADPCBTest\bin\Release\CyPhy2CADPCBTest.exe" shadow-copy="true" />
+    <assembly filename="PcbToolsTest\bin\Release\PcbToolsTest.dll" shadow-copy="true" />
     <assembly filename="DigTest\bin\Release\DigTest.exe" shadow-copy="true" />
+    <assembly filename="SimulinkTest\bin\Release\SimulinkTest.exe" shadow-copy="true" />
   </assemblies>
 </xunit>
