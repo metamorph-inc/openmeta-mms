@@ -139,29 +139,17 @@ namespace DigTest
             {
                 IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
 
-                /*try
-                {*/
-                    // Launch first session
-                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
-                    driver.Navigate().GoToUrl(wrapper.url);
-                    Assert.True(wait10.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
-                    Assert.Equal("Visualizer", driver.Title);
+                // Launch first session
+                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
+                driver.Navigate().GoToUrl(wrapper.url);
+                Assert.True(wait10.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
+                Assert.Equal("Visualizer", driver.Title);
 
-                    TabsSet(driver);
-                    FooterSet(driver);
+                TabsSet(driver);
+                FooterSet(driver);
 
-                    Thread.Sleep(300); //For shiny to catch up, find a better way
-                    driver.Close();
-                /*}
-                catch
-                {
-                    if (Debugger.IsAttached)
-                    {
-                        // this should keep the browser open for inspection
-                        Debugger.Break();
-                    }
-                    throw;
-                }*/
+                Thread.Sleep(300); //For shiny to catch up, find a better way
+                driver.Close();
             }
 
             // Launch second session
@@ -235,12 +223,11 @@ namespace DigTest
             // Test "PETRefinement.R"
             ShinyUtilities.SwitchTabs(driver, "PET Refinement");
             wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
-            driver.FindElement(By.Id("PETRefinement-apply_original_cfg_ids")).Click();
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.scroll(0, 200);");
-            driver.FindElement(By.Id("PETRefinement-apply_all_original_numeric")).Click();
-            driver.FindElement(By.Id("PETRefinement-apply_all_original_enum")).Click();
-            driver.FindElement(By.Id("PETRefinement-apply_refined_range_IN_E11")).Click();
-            driver.FindElement(By.Id("PETRefinement-apply_refined_range_IN_Root_AvgCapMaterialThickness")).Click();
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_original_cfg_ids");
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_all_original_numeric");
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_all_original_enum");
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_refined_range_IN_E11");
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_refined_range_IN_Root_AvgCapMaterialThickness");
             Assert.Equal("600", driver.FindElement(By.Id("PETRefinement-pet_num_samples")).GetAttribute("value"));
             Assert.Equal("28-16, 28-20, 30-16, 30-20, 32-16, 32-20", driver.FindElement(By.Id("PETRefinement-new_cfg_ids")).GetAttribute("value"));
             Assert.Equal("5", driver.FindElement(By.Id("PETRefinement-new_min_IN_ElemCount")).GetAttribute("value"));
@@ -250,7 +237,7 @@ namespace DigTest
             Assert.Equal("30", driver.FindElement(By.Id("PETRefinement-new_max_IN_Tip_AvgCapMaterialThickness")).GetAttribute("value"));
             Assert.Equal("Steel, Aluminum", driver.FindElement(By.Id("PETRefinement-new_selection_IN_HubMaterial")).GetAttribute("value"));
             Assert.Equal("/Testing/Parametric Studies/WindTurbinePET_Refined", driver.FindElement(By.Id("PETRefinement-newPetName")).GetAttribute("value"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.scroll(0, 0);");
+            ShinyUtilities.ScrollToTop(driver);
 
 
             //// Test "UncertaintyQuantification.R"

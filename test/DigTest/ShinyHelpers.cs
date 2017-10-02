@@ -226,6 +226,25 @@ namespace DigTest
             string jsToBeExecuted = string.Format("window.scroll(0, {0});", elem.Location.Y);
             ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecuted);
         }
+
+        public static void ClickIDWithScroll(IWebDriver driver, string id)
+        {
+            IWebElement elem = driver.FindElement(By.Id(id));
+            try
+            {
+                elem.Click();
+            }
+            catch (System.InvalidOperationException)
+            {
+                ScrollToElement(driver, elem);
+                elem.Click();
+            }
+        }
+
+        public static void ScrollToTop(IWebDriver driver)
+        {
+            ((IJavaScriptExecutor)driver).ExecuteScript("window.scroll(0, 0);");
+        }
     }
 
 
