@@ -24,7 +24,7 @@ namespace DigTest
             int ret = Xunit.ConsoleClient.Program.Main(new string[] {
                 System.Reflection.Assembly.GetAssembly(typeof(DigTest)).CodeBase.Substring("file:///".Length),
                 //"/noshadow",
-                //"/trait", "Category=ResultsBrowser"
+                "/trait", "Category=ResultsBrowser"
             });
             Console.In.ReadLine();
         }
