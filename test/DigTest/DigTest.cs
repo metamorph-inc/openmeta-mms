@@ -130,6 +130,7 @@ namespace DigTest
 
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
+            options.AddArgument("--start-maximized");
             File.Copy(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config.json"),
                       Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"),
                       overwrite: true);
