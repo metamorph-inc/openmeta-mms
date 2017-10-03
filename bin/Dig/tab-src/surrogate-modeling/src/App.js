@@ -207,6 +207,10 @@ class App extends Component {
     });
   }
 
+  handleTrain = () => {
+    this.props.service.trainSurrogateAtPoints(this.state.independentVarData, this.state.discreteIndependentVars, this.state.selectedSurrogateModel);
+  }
+
   handleSelectedVariableChange = (varIndex, newValue) => {
     const newDiscreteIndependentVars = cloneDeep(this.state.discreteIndependentVars);
     newDiscreteIndependentVars[varIndex].selected = newValue;
@@ -296,7 +300,8 @@ class App extends Component {
                   onPredictButtonClick={(row) => this.handlePredictButtonClick(row)}
                   onDuplicateButtonClick={(row) => this.handleDuplicateButtonClick(row)}
                   onDeleteButtonClick={(row) => this.handleDeleteButtonClick(row)}
-                  onAddRow={() => this.handleAddRow()} />
+                  onAddRow={() => this.handleAddRow()}
+                  onTrain={() => this.handleTrain()} />
               </div>
             </Col>
           </Row>

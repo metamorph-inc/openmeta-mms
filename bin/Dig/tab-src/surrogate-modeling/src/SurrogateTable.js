@@ -24,6 +24,10 @@ class SurrogateTable extends Component {
     this.props.onAddRow();
   }
 
+  handleTrainButtonClick = () => {
+    this.props.onTrain();
+  }
+
   render() {
     const headerRow = [];
 
@@ -76,6 +80,8 @@ class SurrogateTable extends Component {
       <Row>
         <Col md={12}>
           <Button bsStyle="success" onClick={()=>this.handleAddRowButtonClick()}><Glyphicon glyph="plus" /> Add row</Button>
+          {' '}
+          <Button bsStyle="primary" onClick={()=>this.handleTrainButtonClick()}><Glyphicon glyph="education" /> Train at these points</Button>
         </Col>
       </Row>
       </div>
