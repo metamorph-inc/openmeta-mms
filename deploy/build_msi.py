@@ -121,7 +121,6 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\ModelicaWrapperTemplates",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\chipfit_display",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\layout_json",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\run_mdao",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\SpiceVisualizer")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\spice_viewer")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\cam2gerber")
@@ -131,12 +130,6 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\runDrc")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\Android")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\CADVisualizer")
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\PCC\PCC",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\isis_meta\isis_meta",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\meta_nrmm\meta_nrmm",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\py_modelica\py_modelica",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\py_modelica_exporter\py_modelica_exporter",)
-    gen_dir_wxi.gen_dir_from_vc(r"..\meta\DesignDataPackage\lib\python", "DesignDataPackage_python.wxi", "DesignDataPackage_python")
 
     bin_mods()
 
