@@ -24,7 +24,7 @@ namespace DigTest
             int ret = Xunit.ConsoleClient.Program.Main(new string[] {
                 System.Reflection.Assembly.GetAssembly(typeof(DigTest)).CodeBase.Substring("file:///".Length),
                 //"/noshadow",
-                //"/trait", "Category=ResultsBrowser"
+                "/trait", "Category=ResultsBrowser"
             });
             Console.In.ReadLine();
         }
@@ -86,6 +86,7 @@ namespace DigTest
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
+            options.AddArgument("--start-maximized");
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
@@ -107,6 +108,7 @@ namespace DigTest
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
+            options.AddArgument("--start-maximized");
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
@@ -189,6 +191,7 @@ namespace DigTest
         {
             var all_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
             IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            Actions builder = new Actions(driver);
             
             // Test "Explore.R"
             // Test Pairs Plot
@@ -197,13 +200,30 @@ namespace DigTest
             display.AppendSelection("OUT");
             display.AppendSelection("OUT");
 
+            //TODO(tthomas): Replace SwitchTabs("Single Plot") with double click.
+            //IWebElement pairs_plot = driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img"));
+            //IAction dbl_click_pairs_plot = builder.MoveToElement(pairs_plot, 100, 300).DoubleClick().Build();
+            //dbl_click_pairs_plot.Perform();
+
             //Test Single Plot
-            // Perform plot brush sequence and color data accordingly
-            //Actions builder = new Actions(driver);
+            ShinyUtilities.SwitchTabs(driver, "Single Plot");
+            new ShinySelectInput(driver, "Explore-x_input").SetCurrentSelection("IN_Tip_AvgCapMaterialThickness");
+            Thread.Sleep(300);
 
-            //IAction plotBrush = builder.MoveToElement(single_plot, 80, 66).ClickAndHold().MoveByOffset(400, 400).Release().Build();
-            //plotBrush.Perform();
+            // Perform plot brush sequence
+            var single_plot = driver.FindElement(By.Id("Explore-single_plot"));
+            IAction brush_single_plot = builder.MoveToElement(single_plot, 200, 200).ClickAndHold().MoveByOffset(400, 400).Release().Build();
+            brush_single_plot.Perform();
 
+            driver.FindElement(By.LinkText("Filter")).Click();
+            Thread.Sleep(300);
+            driver.FindElement(By.Id("Explore-update_y")).Click();
+            
+            //Test Single Point Details
+            ShinyUtilities.SwitchTabs(driver, "Point Details");
+
+            // Return to Pairs Plot
+            ShinyUtilities.SwitchTabs(driver, "Pairs Plot");
 
             // Test "DataTable.R"
             ShinyUtilities.SwitchTabs(driver, "Data Table");
@@ -321,9 +341,7 @@ namespace DigTest
             ShinyUtilities.ScrollToElement(driver, elemcountslider);
             Actions dblclick_elemcountslider = new Actions(driver).DoubleClick(elemcountslider);
             RetryStaleElement(() => dblclick_elemcountslider.Build().Perform());
-            //catch (StaleElementReferenceException e)
-            //catch (NoSuchElementException e)
-            //catch (Exception e)
+            
             wait10.Until(driver1 => driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).Displayed);
             driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).Clear();
             driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).SendKeys("20");
@@ -338,9 +356,7 @@ namespace DigTest
                 
             Actions dblclick_costslider = new Actions(driver).DoubleClick(costslider);
             RetryStaleElement(() => dblclick_costslider.Build().Perform());
-            //catch (StaleElementReferenceException e)
-            //catch (NoSuchElementException e)
-            //catch (Exception e)
+
             wait10.Until(driver1 => driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).Displayed);
             driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).Clear();
             driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).SendKeys("150000");
