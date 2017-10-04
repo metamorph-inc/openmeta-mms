@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Grid, Row, Col, Form } from 'react-bootstrap';
 
-import { cloneDeep, isEqual } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash';
 
 import ErrorModal from './ErrorModal';
 import SurrogateModelChooser from './SurrogateModelChooser';
