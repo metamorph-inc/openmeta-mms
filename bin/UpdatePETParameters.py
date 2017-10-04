@@ -18,6 +18,7 @@ import pythoncom
 # if os.environ.has_key("UDM_PATH"):
 #     sys.path.append(os.path.join(os.environ["UDM_PATH"], "bin"))
 import _winreg as winreg
+import pywintypes
 with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"Software\META") as software_meta:
     meta_path, _ = winreg.QueryValueEx(software_meta, "META_PATH")
 sys.path.append(os.path.join(meta_path, 'bin'))
@@ -238,7 +239,13 @@ if __name__ == '__main__':
         results = master.RunInTransactionWithConfigLight(config_light)
 
         project.Save(project.ProjectConnStr + "_PET_debug.mga", True)
-        project.Close(False)
+        try:
+            project.Close(False)
+        except pywintypes.com_error as e:
+            if 'Access is denied' in repr(e):
+                print('Could not save "{}". Is it open in GME?'.format(project.ProjectConnStr[4:]))
+            else:
+                raise
 
         # print(cyPhyPython.ComponentParameter())
 
