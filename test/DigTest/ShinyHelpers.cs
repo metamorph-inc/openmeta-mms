@@ -245,6 +245,12 @@ namespace DigTest
         {
             ((IJavaScriptExecutor)driver).ExecuteScript("window.scroll(0, 0);");
         }
+
+        public static bool WaitUntilDocumentReady(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            return wait10.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+        }
     }
 
 

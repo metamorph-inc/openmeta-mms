@@ -127,22 +127,25 @@ namespace DigTest
         void ResultsBrowserJSONLaunch()
         {
             // TODO(tthomas): Add testing of additional UI elements
-
+            var original = Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config.json");
+            var copy = Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json");
+            File.Copy(original, copy, overwrite: true);
+            var log = Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.log");
+            File.Delete(log);
+            
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
             options.AddArgument("--start-maximized");
-            File.Copy(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config.json"),
-                      Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"),
-                      overwrite: true);
+
+            // Launch first session
+            File.AppendAllText(log, "First Launch Log ------------------------\n");
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
-                IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-
-                // Launch first session
-                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
+                
+                wrapper.Start(copy);
                 driver.Navigate().GoToUrl(wrapper.url);
-                Assert.True(wait10.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
+                Assert.True(ShinyUtilities.WaitUntilDocumentReady(driver));
                 Assert.Equal("Visualizer", driver.Title);
 
                 TabsSet(driver);
@@ -150,11 +153,12 @@ namespace DigTest
 
                 Thread.Sleep(300); //For shiny to catch up, find a better way
                 driver.Close();
+                wrapper.AppendLog(log);
             }
 
             // Launch second session
-            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
-               options))
+            File.AppendAllText(log, "\nSecond Launch Log ------------------------\n");
+            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
                 // Reload to check changes
@@ -174,6 +178,7 @@ namespace DigTest
                 Assert.Equal("", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
 
                 driver.Close();
+                wrapper.AppendLog(log);
             }
 
             File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
@@ -407,7 +412,7 @@ namespace DigTest
                         {
                             lock (stdoutData)
                             {
-                                stdoutData.Append(args.Data);
+                                stdoutData.Append(args.Data + Environment.NewLine);
                             }
                         }
                     };
@@ -417,7 +422,7 @@ namespace DigTest
                         {
                             lock (stderrData)
                             {
-                                stderrData.Append(args.Data);
+                                stderrData.Append(args.Data + Environment.NewLine);
                                 Console.Error.WriteLine(args.Data);
                                 try
                                 {
@@ -458,6 +463,11 @@ namespace DigTest
                     }
                     catch (System.InvalidOperationException) { } // possible race with proc.HasExited
                 }
+            }
+
+            public void AppendLog(string log)
+            {
+                File.AppendAllText(log, stdoutData.ToString());
             }
         }
     }
