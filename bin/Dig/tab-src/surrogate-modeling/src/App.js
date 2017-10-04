@@ -208,7 +208,38 @@ class App extends Component {
   }
 
   handleTrain = () => {
-    this.props.service.trainSurrogateAtPoints(this.state.independentVarData, this.state.discreteIndependentVars, this.state.selectedSurrogateModel);
+    this.setState({
+      allowTraining: false
+    });
+
+    this.props.service.trainSurrogateAtPoints(this.state.independentVarData, this.state.discreteIndependentVars, this.state.selectedSurrogateModel)
+      .then((resultingDependentVars) => {
+        const newDependentVarData = cloneDeep(this.state.dependentVarData);
+        newDependentVarData.forEach(function(row) {
+          row.forEach(function(col) {
+            col[0] = DependentVarState.STALE;
+          });
+        });
+
+        this.setState({
+          allowTraining: true,
+          dependentVarData: newDependentVarData
+        });
+      })
+      .catch((error) => {
+        const newDependentVarData = cloneDeep(this.state.dependentVarData);
+        newDependentVarData.forEach(function(row) {
+          row.forEach(function(col) {
+            col[0] = DependentVarState.STALE;
+          });
+        });
+
+        this.setState({
+          allowTraining: true,
+          currentErrorMessage: error.message,
+          dependentVarData: newDependentVarData
+        });
+      });;
   }
 
   handleSelectedVariableChange = (varIndex, newValue) => {
@@ -295,6 +326,7 @@ class App extends Component {
                   discreteIndependentVars={this.state.discreteIndependentVars}
                   selectedSurrogateModel={this.state.selectedSurrogateModel}
                   service={this.props.service}
+                  allowTraining={this.state.allowTraining}
 
                   onIndependentVarChange={(col, row, newValue) => this.handleIndependentVarChange(col, row, newValue)}
                   onPredictButtonClick={(row) => this.handlePredictButtonClick(row)}

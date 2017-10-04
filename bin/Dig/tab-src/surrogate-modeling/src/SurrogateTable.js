@@ -81,7 +81,7 @@ class SurrogateTable extends Component {
         <Col md={12}>
           <Button bsStyle="success" onClick={()=>this.handleAddRowButtonClick()}><Glyphicon glyph="plus" /> Add row</Button>
           {' '}
-          <Button bsStyle="primary" onClick={()=>this.handleTrainButtonClick()}><Glyphicon glyph="education" /> Train at these points</Button>
+          <Button bsStyle="primary" onClick={()=>this.handleTrainButtonClick()} disabled={!this.props.allowTraining || (this.props.independentVarData.length <= 0)}><Glyphicon glyph="education" /> Train at these points</Button>
         </Col>
       </Row>
       </div>
