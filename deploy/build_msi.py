@@ -130,6 +130,7 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\runDrc")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\Android")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\CADVisualizer")
+    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\get_eagle_path")
 
     bin_mods()
 
