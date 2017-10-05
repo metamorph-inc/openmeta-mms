@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Drawing;
+using System.IO;
 
 namespace DigTest
 {
@@ -251,7 +253,66 @@ namespace DigTest
             IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
             return wait10.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
         }
+
+        // Return the number of matching pixels.
+        private static int CountPixels(Bitmap bm, Color target_color)
+        {
+            // Loop through the pixels.
+            int matches = 0;
+            for (int y = 0; y < bm.Height; y++)
+            {
+                for (int x = 0; x < bm.Width; x++)
+                {
+                    if (bm.GetPixel(x, y) == target_color) matches++;
+                }
+            }
+            return matches;
+        }
+
+        // Search for specific color.
+        private static bool FindColor(Bitmap bm, Color target_color)
+        {
+            // Loop through the pixels.
+            for (int y = 0; y < bm.Height; y++)
+            {
+                for (int x = 0; x < bm.Width; x++)
+                {
+                    if (bm.GetPixel(x, y) == target_color) return true;
+                }
+            }
+            return false;
+        }
+
+        private static byte [] GetData(string src)
+        {
+            string trim = src.Substring("data:image/png;base64,".Length);
+            return Convert.FromBase64String(trim);
+        }
+
+        public static bool ImageIncludesColor(IWebDriver driver, string id, Color color)
+        {
+            string img_xpath = String.Format("//div[@id='{0}']/img", id);
+            IWebElement img_elem = driver.FindElement(By.XPath(img_xpath));
+            string img_str = img_elem.GetAttribute("src");
+            Bitmap image = null;
+            using (MemoryStream stream = new MemoryStream(GetData(img_str)))
+            {
+                image = new Bitmap(stream);
+            }
+            return FindColor(image, color);
+        }
+
+        public static int ImageColorCount(IWebDriver driver, string id, Color color)
+        {
+            string img_xpath = String.Format("//div[@id='{0}']/img", id);
+            IWebElement img_elem = driver.FindElement(By.XPath(img_xpath));
+            string img_str = img_elem.GetAttribute("src");
+            Bitmap image = null;
+            using (MemoryStream stream = new MemoryStream(GetData(img_str)))
+            {
+                image = new Bitmap(stream);
+            }
+            return CountPixels(image, color);
+        }
     }
-
-
 }

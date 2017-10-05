@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Xunit;
-
+using System.Drawing;
 
 namespace DigTest
 {
@@ -78,9 +78,7 @@ namespace DigTest
                 }
             }
         }
-
         
-
         [Fact()]
         void GenericCSVLaunch()
         {
@@ -201,24 +199,36 @@ namespace DigTest
             display.AppendSelection("OUT");
 
             //TODO(tthomas): Replace SwitchTabs("Single Plot") with double click.
-            //IWebElement pairs_plot = driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img"));
-            //IAction dbl_click_pairs_plot = builder.MoveToElement(pairs_plot, 100, 300).DoubleClick().Build();
-            //dbl_click_pairs_plot.Perform();
+            IWebElement pairs_plot = driver.FindElement(By.Id("Explore-pairs_plot"));
+            IAction dbl_click_pairs_plot = builder.MoveToElement(pairs_plot).MoveByOffset(100, 300).DoubleClick().Build();
+            dbl_click_pairs_plot.Perform();
 
             //Test Single Plot
             ShinyUtilities.SwitchTabs(driver, "Single Plot");
             new ShinySelectInput(driver, "Explore-x_input").SetCurrentSelection("IN_Tip_AvgCapMaterialThickness");
-            Thread.Sleep(300);
 
+            driver.FindElement(By.LinkText("Markers")).Click();
+            Thread.Sleep(300);
+            new ShinySelectInput(driver, "Explore-single_plot_marker").SetCurrentSelection("16"); // "Filled Circle"
+            //TODO(tthomas): Added test of size
+
+            driver.FindElement(By.LinkText("Filter")).Click();
+            Thread.Sleep(300);
             // Perform plot brush sequence
             var single_plot = driver.FindElement(By.Id("Explore-single_plot"));
             IAction brush_single_plot = builder.MoveToElement(single_plot, 200, 200).ClickAndHold().MoveByOffset(400, 400).Release().Build();
             brush_single_plot.Perform();
 
-            driver.FindElement(By.LinkText("Filter")).Click();
-            Thread.Sleep(300);
             driver.FindElement(By.Id("Explore-update_y")).Click();
-            
+
+            driver.FindElement(By.LinkText("Overlays")).Click();
+            Thread.Sleep(300);
+            Assert.Equal("false", driver.FindElement(By.Id("Explore-add_regression")).GetAttribute("data-shinyjs-resettable-value"));
+            Assert.False(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
+            driver.FindElement(By.Id("Explore-add_regression")).Click();
+            Thread.Sleep(300);
+            Assert.True(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
+
             //Test Single Point Details
             ShinyUtilities.SwitchTabs(driver, "Point Details");
 
