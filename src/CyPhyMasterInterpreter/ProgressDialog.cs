@@ -77,7 +77,7 @@ namespace CyPhyMasterInterpreter
 
         public CyPhyMasterInterpreterAPI MasterInterpreter { get; set; }
 
-        public void MultipleConfigurationProgressHandler(object o, ProgressCallbackEventArgs progressArgs)
+        public void MultipleConfigurationProgressHandler(ProgressCallbackEventArgs progressArgs)
         {
             if (this.m_FormClosed)
             {
@@ -121,7 +121,7 @@ namespace CyPhyMasterInterpreter
             }
         }
 
-        public void SingleConfigurationProgressHandler(object o, ProgressCallbackEventArgs progressArgs)
+        public void SingleConfigurationProgressHandler(ProgressCallbackEventArgs progressArgs)
         {
             if (this.m_FormClosed)
             {
