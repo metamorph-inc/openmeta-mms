@@ -273,6 +273,129 @@ namespace DigTest
         }
     }
 
+    public class ShinyPlot
+    {
+        private IWebDriver driver;
+        private string id;
+        private string img_str;
+        private string img_path;
+        private string img_str_change;
+        private string img_str_reload;
+
+        public ShinyPlot(IWebDriver driver, string id)
+        {
+            this.driver = driver;
+            this.id = id;
+            this.img_path = String.Format("//div[@id='{0}']/img", id);
+            ReloadImage();
+            img_str_change = img_str;
+        }
+
+        private byte[] GetData()
+        {
+            string trim = img_str.Substring("data:image/png;base64,".Length);
+            return Convert.FromBase64String(trim);
+        }
+
+        private void ReloadImage()
+        {
+            IWebElement img_elem = driver.FindElement(By.XPath(this.img_path));
+            img_str = img_elem.GetAttribute("src");
+        }
+
+        public IWebElement GetElement()
+        {
+            return driver.FindElement(By.Id("Explore-single_plot"));
+        }
+
+        public bool ImageHasChanged()
+        {
+            ReloadImage();
+            var changed = (img_str_change != img_str);
+            img_str_change = img_str;
+            return changed;
+        }
+
+        private bool DoneReloading()
+        {
+            ReloadImage();
+            bool same = img_str_reload == img_str;
+            bool recalculating = driver.FindElement(By.Id(id)).GetAttribute("class").Split().Contains("recalculating");
+            return !same && !recalculating;
+        }
+
+        public void WaitUntilImageRefreshes()
+        {
+            img_str_reload = img_str;
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            wait.Until(a => DoneReloading());
+        }
+
+        public bool ImageIncludesColor(Color color)
+        {
+            ReloadImage();
+            using (MemoryStream stream = new MemoryStream(GetData()))
+            {
+                var image = new Bitmap(stream);
+                // Loop through the pixels.
+                for (int y = 0; y < image.Height; y++)
+                {
+                    for (int x = 0; x < image.Width; x++)
+                    {
+                        if (image.GetPixel(x, y) == color) return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        public int ImageColorCount(Color color)
+        {
+            ReloadImage();
+            using (MemoryStream stream = new MemoryStream(GetData()))
+            {
+                var image = new Bitmap(stream);
+                // Loop through the pixels.
+                int matches = 0;
+                for (int y = 0; y < image.Height; y++)
+                {
+                    for (int x = 0; x < image.Width; x++)
+                    {
+                        if (image.GetPixel(x, y) == color) matches++;
+                    }
+                }
+                return matches;
+            }
+        }
+
+        public Dictionary<Color, int> ImageStats()
+        {
+            ReloadImage();
+            using (MemoryStream stream = new MemoryStream(GetData()))
+            {
+                var image = new Bitmap(stream);
+                // Loop through the pixels.
+                var matches = new Dictionary<Color, int>();
+                for (int y = 0; y < image.Height; y++)
+                {
+                    for (int x = 0; x < image.Width; x++)
+                    {
+                        var color = image.GetPixel(x, y);
+                        if (matches.ContainsKey(color))
+                        {
+                            matches[color] += 1;
+                        }
+                        else
+                        {
+                            matches.Add(color, 1);
+                        }
+                    }
+                }
+                return matches;
+            }
+        }
+    }
+
     public class ShinyUtilities
     {
         public static void OpenTabPanel(IWebDriver driver, string tabset_id, string tab_name)
@@ -343,74 +466,6 @@ namespace DigTest
         {
             IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
             return wait10.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
-        }
-
-        internal static void WaitUntilImageRefreshes(IWebDriver driver, string image_id)
-        {
-            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromMilliseconds(200.0));
-            wait.Until(d => driver.FindElement(By.Id(image_id)).GetAttribute("class").Contains("recalculating"));
-            wait.Until(d => !driver.FindElement(By.Id(image_id)).GetAttribute("class").Contains("recalculating"));
-        }
-
-        // Return the number of matching pixels.
-        private static int CountPixels(Bitmap bm, Color target_color)
-        {
-            // Loop through the pixels.
-            int matches = 0;
-            for (int y = 0; y < bm.Height; y++)
-            {
-                for (int x = 0; x < bm.Width; x++)
-                {
-                    if (bm.GetPixel(x, y) == target_color) matches++;
-                }
-            }
-            return matches;
-        }
-
-        // Search for specific color.
-        private static bool FindColor(Bitmap bm, Color target_color)
-        {
-            // Loop through the pixels.
-            for (int y = 0; y < bm.Height; y++)
-            {
-                for (int x = 0; x < bm.Width; x++)
-                {
-                    if (bm.GetPixel(x, y) == target_color) return true;
-                }
-            }
-            return false;
-        }
-
-        private static byte [] GetData(string src)
-        {
-            string trim = src.Substring("data:image/png;base64,".Length);
-            return Convert.FromBase64String(trim);
-        }
-
-        public static bool ImageIncludesColor(IWebDriver driver, string id, Color color)
-        {
-            string img_xpath = String.Format("//div[@id='{0}']/img", id);
-            IWebElement img_elem = driver.FindElement(By.XPath(img_xpath));
-            string img_str = img_elem.GetAttribute("src");
-            Bitmap image = null;
-            using (MemoryStream stream = new MemoryStream(GetData(img_str)))
-            {
-                image = new Bitmap(stream);
-            }
-            return FindColor(image, color);
-        }
-
-        public static int ImageColorCount(IWebDriver driver, string id, Color color)
-        {
-            string img_xpath = String.Format("//div[@id='{0}']/img", id);
-            IWebElement img_elem = driver.FindElement(By.XPath(img_xpath));
-            string img_str = img_elem.GetAttribute("src");
-            Bitmap image = null;
-            using (MemoryStream stream = new MemoryStream(GetData(img_str)))
-            {
-                image = new Bitmap(stream);
-            }
-            return CountPixels(image, color);
         }
     }
 }

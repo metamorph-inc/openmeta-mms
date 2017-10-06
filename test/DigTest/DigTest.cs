@@ -183,12 +183,19 @@ namespace DigTest
             // Test Pairs Plot
             Assert.True(wait.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
             var display = new ShinySelectMultipleInput(driver, "Explore-display");
+            var pairs_plot = new ShinyPlot(driver, "Explore-pairs_plot");
             display.AppendSelection("OUT");
             display.AppendSelection("OUT");
+            pairs_plot.WaitUntilImageRefreshes();
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Markers");
             var marker_size = new ShinySliderInput(driver, "Explore-pairs_plot_marker_size");
+            var initial_count = pairs_plot.ImageStats();
             Assert.Equal(1.5, marker_size.MoveSliderToValue(1.5));
+            pairs_plot.WaitUntilImageRefreshes();
+            //Assert.True(pairs_plot.ImageHasChanged()); // Faster Method
+            var second_count = pairs_plot.ImageStats();
+            Assert.True(second_count[Color.FromArgb(255, 0, 0, 0)] > initial_count[Color.FromArgb(255, 0, 0, 0)]);
 
             //TODO(tthomas): Replace SwitchTabs("Single Plot") with double click.
             //IWebElement pairs_plot = driver.FindElement(By.Id("Explore-pairs_plot"));
@@ -205,20 +212,21 @@ namespace DigTest
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Filter");
             // Perform plot brush sequence
-            var single_plot = driver.FindElement(By.Id("Explore-single_plot"));
-            IAction brush_single_plot = builder.MoveToElement(single_plot, 200, 200).ClickAndHold().MoveByOffset(400, 400).Release().Build();
-            brush_single_plot.Perform();
+            var single_plot = new ShinyPlot(driver, "Explore-single_plot");
+            var brush_single_plot = builder.MoveToElement(single_plot.GetElement(), 200, 200).ClickAndHold();
+            brush_single_plot.MoveByOffset(400, 400).Release().Build().Perform();
             driver.FindElement(By.Id("Explore-update_y")).Click();
-            builder.MoveToElement(single_plot, 100, 100).Click().Build().Perform();
+            builder.MoveToElement(single_plot.GetElement(), 100, 100).Click().Build().Perform();
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Overlays");
             Assert.Equal("false", driver.FindElement(By.Id("Explore-add_regression")).GetAttribute("data-shinyjs-resettable-value"));
-            Assert.False(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
+            //Assert.False(single_plot.ImageHasChanged()); // Faster Method
+            Assert.False(single_plot.ImageIncludesColor(Color.FromArgb(255, 0, 0, 139)));
 
             driver.FindElement(By.Id("Explore-add_regression")).Click();
-            ShinyUtilities.WaitUntilImageRefreshes(driver, "Explore-single_plot");
-            Thread.Sleep(300);
-            //Assert.True(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
+            single_plot.WaitUntilImageRefreshes();
+            //Assert.True(single_plot.ImageHasChanged()); // Faster Method
+            Assert.True(single_plot.ImageIncludesColor(Color.FromArgb(255, 0, 0, 139)));
 
             //Test Single Point Details
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Point Details");
