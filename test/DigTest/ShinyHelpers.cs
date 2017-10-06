@@ -12,6 +12,22 @@ using System.Diagnostics;
 
 namespace DigTest
 {
+    public class ShinySession
+    {
+        public string all_vars { get; set; }
+        public string original_config { get; set; }
+        public string copied_config { get; set; }
+        public string log_file { get; set; }
+
+        public ShinySession(string config_file)
+        {
+            all_vars = "";
+            original_config = Path.Combine(META.VersionInfo.MetaPath, config_file);
+            copied_config = original_config.Insert(original_config.LastIndexOf(".json"), "_test");
+            log_file = Path.ChangeExtension(copied_config, ".log");
+        }
+    }
+
     public class ShinySelectInput
     {
         private string id;

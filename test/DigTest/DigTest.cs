@@ -127,23 +127,20 @@ namespace DigTest
         void ResultsBrowserJSONLaunch()
         {
             // TODO(tthomas): Add testing of additional UI elements
-            var original = Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config.json");
-            var copy = Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json");
-            File.Copy(original, copy, overwrite: true);
-            var log = Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.log");
-            File.Delete(log);
+            var session = new ShinySession(Path.Combine("bin", "dig", "datasets", "WindTurbineForOptimization", "visualizer_config.json"));
+            File.Copy(session.original_config, session.copied_config, overwrite: true);
+            File.Delete(session.log_file);
             
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
             options.AddArgument("--start-maximized");
 
             // Launch first session
-            File.AppendAllText(log, "First Launch Log ------------------------\n");
+            File.AppendAllText(session.log_file, "First Launch Log ------------------------\n");
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
-                
-                wrapper.Start(copy);
+                wrapper.Start(session.copied_config);
                 driver.Navigate().GoToUrl(wrapper.url);
                 Assert.True(ShinyUtilities.WaitUntilDocumentReady(driver));
                 Assert.Equal("Visualizer", driver.Title);
@@ -154,32 +151,21 @@ namespace DigTest
 
                 Thread.Sleep(300); //For shiny to catch up, find a better way
                 driver.Close();
-                wrapper.AppendLog(log);
+                wrapper.AppendLog(session.log_file);
             }
 
-            // Launch second session
-            File.AppendAllText(log, "\nSecond Launch Log ------------------------\n");
+            // Launch second session to ensure proper session restore
+            File.AppendAllText(session.log_file, "\nSecond Launch Log ------------------------\n");
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
-                // Reload to check changes
-                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
+                wrapper.Start(session.copied_config);
                 driver.Navigate().GoToUrl(wrapper.url);
-                IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
-                var display = new ShinySelectMultipleInput(driver, "Explore-display");
-                Assert.Equal("IN_HubMaterial, IN_E11, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
 
-                // Test Data Table
-                ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
-                var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
-                Assert.Equal("OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
-                wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("DataTable-clearMetrics"))).Click();
-                Thread.Sleep(500); // FIXME: Apply the correct wait statement here instead of a Thread.Sleep() call.
-                Assert.Equal("", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+                TabsCheck(driver);
 
                 driver.Close();
-                wrapper.AppendLog(log);
+                wrapper.AppendLog(session.log_file);
             }
 
             File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
@@ -242,8 +228,6 @@ namespace DigTest
         {
             var all_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
             IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-
-
 
             // Test "DataTable.R"
             ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
@@ -410,6 +394,22 @@ namespace DigTest
             wait10.Until(driver1 => driver.FindElement(By.Id("remove_missing")).Displayed);
             Assert.Equal("false", driver.FindElement(By.Id("remove_missing")).GetAttribute("data-shinyjs-resettable-value"));
             Assert.Equal("false", driver.FindElement(By.Id("remove_outliers")).GetAttribute("data-shinyjs-resettable-value"));
+        }
+
+        private void TabsCheck(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
+            var display = new ShinySelectMultipleInput(driver, "Explore-display");
+            Assert.Equal("IN_HubMaterial, IN_E11, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
+
+            // Test Data Table
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
+            var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
+            Assert.Equal("OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+            wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("DataTable-clearMetrics"))).Click();
+            Thread.Sleep(500); // FIXME: Apply the correct wait statement here instead of a Thread.Sleep() call.
+            Assert.Equal("", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
         }
 
         class DigWrapper : IDisposable
