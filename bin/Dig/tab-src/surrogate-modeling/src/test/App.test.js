@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { shallow, render } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import App from '../App';
 import BackendService from '../BackendService';

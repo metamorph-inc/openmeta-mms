@@ -108,3 +108,4 @@ class SurrogateTableRow extends Component {
 };
 
 export default SurrogateTableRow;
+export { DependentVarCell };
