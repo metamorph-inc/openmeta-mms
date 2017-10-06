@@ -28,6 +28,48 @@ namespace DigTest
         }
     }
 
+    public class ShinySliderInput
+    {
+        public string id;
+        private IWebDriver driver;
+        private IWait<IWebDriver> wait;
+        private string grid_path;
+        private string current_path;
+        private double low;
+        private double high;
+        private double current { get; set; }
+
+        public ShinySliderInput(IWebDriver driver, string id)
+        {
+            this.driver = driver;
+            this.id = id;
+            this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(1.0));
+            string parent_path = String.Format("//input[@id='{0}']/..", id);
+            this.grid_path = parent_path + "/span/span[@class='irs-grid']";
+            string low_path = parent_path + "/span/span[@class='irs']/span[@class='irs-min']";
+            this.current_path = parent_path + "/span/span[@class='irs']/span[@class='irs-single']";
+            string high_path = parent_path + "/span/span[@class='irs']/span[@class='irs-max']";
+            this.low = Double.Parse(driver.FindElement(By.XPath(low_path)).GetAttribute("textContent"));
+            this.current = Double.Parse(driver.FindElement(By.XPath(current_path)).GetAttribute("textContent"));
+            this.high = Double.Parse(driver.FindElement(By.XPath(high_path)).GetAttribute("textContent"));
+        }
+
+        public double MoveSliderToValue(double target)
+        {
+            if(target < low) { target = low; }
+            if(target > high) { target = high; }
+            Actions builder = new Actions(this.driver);
+            var grid = driver.FindElement(By.XPath(this.grid_path));
+            var width = grid.Size.Width;
+            var old_x = width * (current - low) / (high - low);
+            var new_x = width * (target - low) / (high - low);
+            builder.MoveToElement(grid, (int)old_x, 0).ClickAndHold();
+            builder.MoveByOffset((int)(new_x - old_x), 0).Release().Build().Perform();
+            this.current = Double.Parse(driver.FindElement(By.XPath(current_path)).GetAttribute("textContent"));
+            return this.current;
+        }
+    }
+
     public class ShinySelectInput
     {
         private string id;

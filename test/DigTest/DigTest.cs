@@ -149,7 +149,7 @@ namespace DigTest
                 TabsSet(driver);
                 FooterSet(driver);
 
-                Thread.Sleep(300); //For shiny to catch up, find a better way
+                //Thread.Sleep(300); //For shiny to catch up, find a better way
                 driver.Close();
                 wrapper.AppendLog(session.log_file);
             }
@@ -186,16 +186,19 @@ namespace DigTest
             display.AppendSelection("OUT");
             display.AppendSelection("OUT");
 
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Markers");
+            var marker_size = new ShinySliderInput(driver, "Explore-pairs_plot_marker_size");
+            Assert.Equal(1.5, marker_size.MoveSliderToValue(1.5));
+
             //TODO(tthomas): Replace SwitchTabs("Single Plot") with double click.
-            IWebElement pairs_plot = driver.FindElement(By.Id("Explore-pairs_plot"));
-            IAction dbl_click_pairs_plot = builder.MoveToElement(pairs_plot).MoveByOffset(100, 300).DoubleClick().Build();
-            dbl_click_pairs_plot.Perform();
+            //IWebElement pairs_plot = driver.FindElement(By.Id("Explore-pairs_plot"));
+            //IAction dbl_click_pairs_plot = builder.MoveToElement(pairs_plot).MoveByOffset(100, 300).DoubleClick().Build();
+            //dbl_click_pairs_plot.Perform();
 
             //Test Single Plot
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Single Plot");
             new ShinySelectInput(driver, "Explore-x_input").SetCurrentSelection("IN_Tip_AvgCapMaterialThickness");
 
-            //driver.FindElement(By.LinkText("Markers")).Click();
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Markers");
             new ShinySelectInput(driver, "Explore-single_plot_marker").SetCurrentSelection("16"); // "Filled Circle"
             //TODO(tthomas): Added test of marker size
