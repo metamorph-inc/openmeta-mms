@@ -148,6 +148,7 @@ namespace DigTest
                 Assert.True(ShinyUtilities.WaitUntilDocumentReady(driver));
                 Assert.Equal("Visualizer", driver.Title);
 
+                ExploreSet(driver);
                 TabsSet(driver);
                 FooterSet(driver);
 
@@ -185,15 +186,13 @@ namespace DigTest
             File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test_data.csv"));
         }
 
-        private void TabsSet(IWebDriver driver)
+        private void ExploreSet(IWebDriver driver)
         {
-            var all_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
-            IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-            Actions builder = new Actions(driver);
-            
-            // Test "Explore.R"
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            Actions builder = new Actions(driver);// Test "Explore.R"
+
             // Test Pairs Plot
-            Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
+            Assert.True(wait.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
             var display = new ShinySelectMultipleInput(driver, "Explore-display");
             display.AppendSelection("OUT");
             display.AppendSelection("OUT");
@@ -207,33 +206,41 @@ namespace DigTest
             ShinyUtilities.SwitchTabs(driver, "Single Plot");
             new ShinySelectInput(driver, "Explore-x_input").SetCurrentSelection("IN_Tip_AvgCapMaterialThickness");
 
-            driver.FindElement(By.LinkText("Markers")).Click();
-            Thread.Sleep(300);
+            //driver.FindElement(By.LinkText("Markers")).Click();
+            ShinyUtilities.OpenCollapse(driver, "Explore-single_plot_collapse", "Markers");
             new ShinySelectInput(driver, "Explore-single_plot_marker").SetCurrentSelection("16"); // "Filled Circle"
-            //TODO(tthomas): Added test of size
+            //TODO(tthomas): Added test of marker size
 
-            driver.FindElement(By.LinkText("Filter")).Click();
-            Thread.Sleep(300);
+            ShinyUtilities.OpenCollapse(driver, "Explore-single_plot_collapse", "Filter");
             // Perform plot brush sequence
             var single_plot = driver.FindElement(By.Id("Explore-single_plot"));
             IAction brush_single_plot = builder.MoveToElement(single_plot, 200, 200).ClickAndHold().MoveByOffset(400, 400).Release().Build();
             brush_single_plot.Perform();
-
             driver.FindElement(By.Id("Explore-update_y")).Click();
+            builder.MoveToElement(single_plot, 100, 100).Click().Build().Perform();
 
-            driver.FindElement(By.LinkText("Overlays")).Click();
-            Thread.Sleep(300);
+            ShinyUtilities.OpenCollapse(driver, "Explore-single_plot_collapse", "Overlays");
             Assert.Equal("false", driver.FindElement(By.Id("Explore-add_regression")).GetAttribute("data-shinyjs-resettable-value"));
             Assert.False(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
+
             driver.FindElement(By.Id("Explore-add_regression")).Click();
+            ShinyUtilities.WaitUntilImageRefreshes(driver, "Explore-single_plot");
             Thread.Sleep(300);
-            Assert.True(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
+            //Assert.True(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
 
             //Test Single Point Details
             ShinyUtilities.SwitchTabs(driver, "Point Details");
 
             // Return to Pairs Plot
             ShinyUtilities.SwitchTabs(driver, "Pairs Plot");
+        }
+
+        private void TabsSet(IWebDriver driver)
+        {
+            var all_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+
+
 
             // Test "DataTable.R"
             ShinyUtilities.SwitchTabs(driver, "Data Table");
@@ -257,7 +264,7 @@ namespace DigTest
 
             // Test "PETRefinement.R"
             ShinyUtilities.SwitchTabs(driver, "PET Refinement");
-            wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
             ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_original_cfg_ids");
             ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_all_original_numeric");
             ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_all_original_enum");
@@ -374,9 +381,8 @@ namespace DigTest
             Thread.Sleep(1500);
 
             // Coloring
-            driver.FindElement(By.LinkText("Coloring")).Click();
+            ShinyUtilities.OpenCollapse(driver, "footer_collapse", "Coloring");
             var coloring_source = new ShinySelectInput(driver, "coloring_source");
-            wait10.Until(driver1 => coloring_source.GetDiv().Displayed);
             Assert.Equal("None", coloring_source.GetCurrentSelection());
             Assert.Equal(2, coloring_source.GetAllChoices().Count());
             Assert.Equal("None, Live", string.Join(", ", coloring_source.GetAllChoices().ToArray()));
@@ -388,12 +394,12 @@ namespace DigTest
             driver.FindElement(By.Id("live_coloring_name")).Clear();
             driver.FindElement(By.Id("live_coloring_name")).SendKeys("Test");
             driver.FindElement(By.Id("live_coloring_add_classification")).Click();
-            wait10.Until(driver1 => coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1);
-            Assert.True(coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1);
+            Assert.True(wait10.Until(d => coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1));
 
             // Classifications
-            driver.FindElement(By.LinkText("Classifications")).Click();
-            wait10.Until(driver1 => driver.FindElement(By.Id("no_classifications")).Displayed);
+            //driver.FindElement(By.LinkText("Classifications")).Click();
+            //wait10.Until(driver1 => driver.FindElement(By.Id("no_classifications")).Displayed);
+            ShinyUtilities.OpenCollapse(driver, "footer_collapse", "Classifications");
             Assert.Equal("No Classifications Available.", driver.FindElement(By.Id("no_classifications")).Text);
 
             // Configuration

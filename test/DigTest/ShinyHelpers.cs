@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Drawing;
 using System.IO;
+using System.Diagnostics;
 
 namespace DigTest
 {
@@ -223,6 +224,26 @@ namespace DigTest
             wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//li[contains(.,'" + name + "')]/../../div/div[@class='tab-pane active' and @data-value='" + name + "']")));
         }
 
+        public static void OpenCollapse(IWebDriver driver, string collapse_id, string panel_name)
+        {
+            string base_path = String.Format("//div[@id='{0}']/div[@value='{1}']",
+                                             collapse_id, panel_name);
+            string link_path = base_path + "/div[@class='panel-heading']/h4/a";
+            string content_path = base_path + "/div[2]";
+            if(!driver.FindElement(By.XPath(content_path)).GetAttribute("class").Contains(" in"))
+            {
+                if (!driver.FindElement(By.XPath(link_path)).Displayed)
+                {
+                    ScrollToElement(driver, driver.FindElement(By.XPath(link_path)));
+                }
+                driver.FindElement(By.XPath(link_path)).Click();
+                var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
+                IWebElement content = driver.FindElement(By.XPath(content_path));
+                wait.Until(d => content.GetAttribute("class").Contains(" in"));
+                wait.Until(d => content.GetAttribute("style") == "");
+            }
+        }
+
         public static void ScrollToElement(IWebDriver driver, IWebElement elem)
         {
             string jsToBeExecuted = string.Format("window.scroll(0, {0});", elem.Location.Y);
@@ -252,6 +273,13 @@ namespace DigTest
         {
             IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
             return wait10.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+        }
+
+        internal static void WaitUntilImageRefreshes(IWebDriver driver, string image_id)
+        {
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromMilliseconds(200.0));
+            wait.Until(d => driver.FindElement(By.Id(image_id)).GetAttribute("class").Contains("recalculating"));
+            wait.Until(d => !driver.FindElement(By.Id(image_id)).GetAttribute("class").Contains("recalculating"));
         }
 
         // Return the number of matching pixels.
