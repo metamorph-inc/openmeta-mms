@@ -217,29 +217,41 @@ namespace DigTest
 
     public class ShinyUtilities
     {
-        public static void SwitchTabs(IWebDriver driver, string name)
+        public static void OpenTabPanel(IWebDriver driver, string tabset_id, string tab_name)
         {
-            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
-            driver.FindElement(By.LinkText(name)).Click();
-            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//li[contains(.,'" + name + "')]/../../div/div[@class='tab-pane active' and @data-value='" + name + "']")));
-        }
-
-        public static void OpenCollapse(IWebDriver driver, string collapse_id, string panel_name)
-        {
-            string base_path = String.Format("//div[@id='{0}']/div[@value='{1}']",
-                                             collapse_id, panel_name);
-            string link_path = base_path + "/div[@class='panel-heading']/h4/a";
-            string content_path = base_path + "/div[2]";
-            if(!driver.FindElement(By.XPath(content_path)).GetAttribute("class").Contains(" in"))
+            string link_path = String.Format("//ul[@id='{0}']/li/a[@data-value='{1}']",
+                                             tabset_id, tab_name);
+            string content_path = String.Format("//ul[@id='{0}']/../div/div[@data-value='{1}']",
+                                                tabset_id, tab_name);
+            if (!driver.FindElement(By.XPath(content_path)).GetAttribute("class").Split().Contains("active"))
             {
                 if (!driver.FindElement(By.XPath(link_path)).Displayed)
                 {
                     ScrollToElement(driver, driver.FindElement(By.XPath(link_path)));
                 }
                 driver.FindElement(By.XPath(link_path)).Click();
-                var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
+                WebDriverWait wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
                 IWebElement content = driver.FindElement(By.XPath(content_path));
-                wait.Until(d => content.GetAttribute("class").Contains(" in"));
+                wait.Until(d => content.GetAttribute("class").Split().Contains("active"));
+            }
+        }
+
+        public static void OpenCollapsePanel(IWebDriver driver, string collapse_id, string panel_name)
+        {
+            string base_path = String.Format("//div[@id='{0}']/div[@value='{1}']",
+                                             collapse_id, panel_name);
+            string link_path = base_path + "/div[@class='panel-heading']/h4/a";
+            string content_path = base_path + "/div[2]";
+            if(!driver.FindElement(By.XPath(content_path)).GetAttribute("class").Split().Contains("in"))
+            {
+                if (!driver.FindElement(By.XPath(link_path)).Displayed)
+                {
+                    ScrollToElement(driver, driver.FindElement(By.XPath(link_path)));
+                }
+                driver.FindElement(By.XPath(link_path)).Click();
+                WebDriverWait wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
+                IWebElement content = driver.FindElement(By.XPath(content_path));
+                wait.Until(d => content.GetAttribute("class").Split().Contains("in"));
                 wait.Until(d => content.GetAttribute("style") == "");
             }
         }

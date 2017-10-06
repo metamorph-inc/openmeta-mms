@@ -171,7 +171,7 @@ namespace DigTest
                 Assert.Equal("IN_HubMaterial, IN_E11, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
 
                 // Test Data Table
-                ShinyUtilities.SwitchTabs(driver, "Data Table");
+                ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
                 var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
                 Assert.Equal("OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
                 wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("DataTable-clearMetrics"))).Click();
@@ -186,10 +186,13 @@ namespace DigTest
             File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test_data.csv"));
         }
 
+        // Test "Explore.R"
         private void ExploreSet(IWebDriver driver)
         {
             IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-            Actions builder = new Actions(driver);// Test "Explore.R"
+            Actions builder = new Actions(driver);
+
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Explore");
 
             // Test Pairs Plot
             Assert.True(wait.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
@@ -203,15 +206,15 @@ namespace DigTest
             dbl_click_pairs_plot.Perform();
 
             //Test Single Plot
-            ShinyUtilities.SwitchTabs(driver, "Single Plot");
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Single Plot");
             new ShinySelectInput(driver, "Explore-x_input").SetCurrentSelection("IN_Tip_AvgCapMaterialThickness");
 
             //driver.FindElement(By.LinkText("Markers")).Click();
-            ShinyUtilities.OpenCollapse(driver, "Explore-single_plot_collapse", "Markers");
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Markers");
             new ShinySelectInput(driver, "Explore-single_plot_marker").SetCurrentSelection("16"); // "Filled Circle"
             //TODO(tthomas): Added test of marker size
 
-            ShinyUtilities.OpenCollapse(driver, "Explore-single_plot_collapse", "Filter");
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Filter");
             // Perform plot brush sequence
             var single_plot = driver.FindElement(By.Id("Explore-single_plot"));
             IAction brush_single_plot = builder.MoveToElement(single_plot, 200, 200).ClickAndHold().MoveByOffset(400, 400).Release().Build();
@@ -219,7 +222,7 @@ namespace DigTest
             driver.FindElement(By.Id("Explore-update_y")).Click();
             builder.MoveToElement(single_plot, 100, 100).Click().Build().Perform();
 
-            ShinyUtilities.OpenCollapse(driver, "Explore-single_plot_collapse", "Overlays");
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Overlays");
             Assert.Equal("false", driver.FindElement(By.Id("Explore-add_regression")).GetAttribute("data-shinyjs-resettable-value"));
             Assert.False(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
 
@@ -229,10 +232,10 @@ namespace DigTest
             //Assert.True(ShinyUtilities.ImageIncludesColor(driver, "Explore-single_plot", Color.FromArgb(255, 0, 0, 139)));
 
             //Test Single Point Details
-            ShinyUtilities.SwitchTabs(driver, "Point Details");
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Point Details");
 
             // Return to Pairs Plot
-            ShinyUtilities.SwitchTabs(driver, "Pairs Plot");
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Pairs Plot");
         }
 
         private void TabsSet(IWebDriver driver)
@@ -243,7 +246,7 @@ namespace DigTest
 
 
             // Test "DataTable.R"
-            ShinyUtilities.SwitchTabs(driver, "Data Table");
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
             Assert.Equal("true", driver.FindElement(By.Id("DataTable-use_filtered")).GetAttribute("data-shinyjs-resettable-value"));
             var process_method = new ShinySelectInput(driver, "DataTable-process_method");
             Assert.Equal("None", process_method.GetCurrentSelection());
@@ -256,14 +259,14 @@ namespace DigTest
 
 
             // Test "Histogram.R"
-            ShinyUtilities.SwitchTabs(driver, "Histogram");
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Histogram");
             var histogram_variable = new ShinySelectInput(driver, "Histogram-variable");
             Assert.Equal(all_variable_names, string.Join(", ", histogram_variable.GetAllChoices().ToArray()));
             histogram_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
 
 
             // Test "PETRefinement.R"
-            ShinyUtilities.SwitchTabs(driver, "PET Refinement");
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "PET Refinement");
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
             ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_original_cfg_ids");
             ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_all_original_numeric");
@@ -288,7 +291,7 @@ namespace DigTest
             //Assert.True(wait30.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
             //Assert.Equal("Visualizer", driver.Title);
 
-            ShinyUtilities.SwitchTabs(driver, "Uncertainty Quantification");
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Uncertainty Quantification");
             //driver.FindElement(By.Id("UncertaintyQuantification-design_configs_present")).Click();
             //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
             //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/../../../..")).Displayed));
@@ -336,7 +339,7 @@ namespace DigTest
             ////*/
 
             // Return to "Explore.R" tab
-            ShinyUtilities.SwitchTabs(driver, "Explore");
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Explore");
         }
 
         private void FooterSet(IWebDriver driver)
@@ -381,7 +384,7 @@ namespace DigTest
             Thread.Sleep(1500);
 
             // Coloring
-            ShinyUtilities.OpenCollapse(driver, "footer_collapse", "Coloring");
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Coloring");
             var coloring_source = new ShinySelectInput(driver, "coloring_source");
             Assert.Equal("None", coloring_source.GetCurrentSelection());
             Assert.Equal(2, coloring_source.GetAllChoices().Count());
@@ -399,7 +402,7 @@ namespace DigTest
             // Classifications
             //driver.FindElement(By.LinkText("Classifications")).Click();
             //wait10.Until(driver1 => driver.FindElement(By.Id("no_classifications")).Displayed);
-            ShinyUtilities.OpenCollapse(driver, "footer_collapse", "Classifications");
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Classifications");
             Assert.Equal("No Classifications Available.", driver.FindElement(By.Id("no_classifications")).Text);
 
             // Configuration
