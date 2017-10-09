@@ -273,6 +273,34 @@ namespace DigTest
         }
     }
 
+    public class ShinyCheckboxInput
+    {
+        private IWebDriver driver;
+        private WebDriverWait wait;
+        private string id;
+        private bool state;
+
+        public ShinyCheckboxInput(IWebDriver driver, string id)
+        {
+            this.driver = driver;
+            this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromMilliseconds(200.0));
+            this.id = id;
+            this.state = GetDefaultState();
+        }
+
+        public bool ToggleState()
+        {
+            driver.FindElement(By.Id(id)).Click();
+            Thread.Sleep(100);
+            return state = !state;
+        }
+
+        public bool GetDefaultState()
+        {
+            return "true" == driver.FindElement(By.Id(id)).GetAttribute("data-shinyjs-resettable-value");
+        }
+    }
+
     public class ShinyPlot
     {
         private IWebDriver driver;

@@ -188,6 +188,30 @@ namespace DigTest
             display.AppendSelection("OUT");
             pairs_plot.WaitUntilImageRefreshes();
 
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Plot Options");
+            var start = pairs_plot.ImageStats();
+            var autorender = new ShinyCheckboxInput(driver, "Explore-auto_render");
+            Assert.True(autorender.GetDefaultState());
+            //TODO(tthomas): Test Delayed Render
+            //Assert.False(autorender.ToggleState());
+            //ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Variables");
+
+            var upperpanel = new ShinyCheckboxInput(driver, "Explore-pairs_upper_panel");
+            Assert.False(upperpanel.GetDefaultState());
+            Assert.True(upperpanel.ToggleState());
+            pairs_plot.WaitUntilImageRefreshes();
+            Assert.True(pairs_plot.ImageStats()[Color.FromArgb(255,0,0,0)] > start[Color.FromArgb(255,0,0,0)] * 1.5);
+
+            var trendlines = new ShinyCheckboxInput(driver, "Explore-pairs_trendlines");
+            Assert.False(trendlines.GetDefaultState());
+            Assert.False(start.ContainsKey(Color.FromArgb(255, 255, 0, 0)));
+            Assert.True(trendlines.ToggleState());
+            pairs_plot.WaitUntilImageRefreshes();
+            Assert.True(pairs_plot.ImageIncludesColor(Color.FromArgb(255, 255, 0, 0)));
+
+            var displayunits = new ShinyCheckboxInput(driver, "Explore-pairs_units");
+            Assert.True(displayunits.GetDefaultState());
+
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Markers");
             var marker_size = new ShinySliderInput(driver, "Explore-pairs_plot_marker_size");
             var initial_count = pairs_plot.ImageStats();
