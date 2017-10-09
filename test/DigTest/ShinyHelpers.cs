@@ -559,6 +559,32 @@ namespace DigTest
         }
     }
 
+    public class VisualizerFilterStats
+    {
+        private IWebDriver driver;
+
+        public VisualizerFilterStats(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+
+        public int GetCurrentPoints()
+        {
+            return Int32.Parse(driver.FindElement(By.Id("filters_stats")).GetAttribute("textContent").Split()[2]);
+        }
+
+        public int GetTotalPoints()
+        {
+            return Int32.Parse(driver.FindElement(By.Id("filters_stats")).GetAttribute("textContent").Split()[4]);
+        }
+
+        public double GetPercentage()
+        {
+            var test = driver.FindElement(By.Id("filters_stats")).GetAttribute("textContent").Split();
+            return Double.Parse(driver.FindElement(By.Id("filters_stats")).GetAttribute("textContent").Split()[7].Split('%')[0]) / 100;
+        }
+    }
+
     public class ShinyUtilities
     {
         public static void OpenTabPanel(IWebDriver driver, string tabset_id, string tab_name)

@@ -223,7 +223,7 @@ namespace DigTest
             var third_count = pairs_plot.ImageStats();
             Assert.True(third_count[Color.FromArgb(255, 0, 0, 0)] > second_count[Color.FromArgb(255, 0, 0, 0)]);
             
-            //TODO(tthomas): Replace SwitchTabs("Single Plot") with double click.
+            //TODO(tthomas): Replace OpenTabPanel("Single Plot") with double click.
             //IWebElement pairs_plot = driver.FindElement(By.Id("Explore-pairs_plot"));
             //IAction dbl_click_pairs_plot = builder.MoveToElement(pairs_plot).MoveByOffset(100, 300).DoubleClick().Build();
             //dbl_click_pairs_plot.Perform();
@@ -407,16 +407,23 @@ namespace DigTest
             Assert.True(wait.Until(d => coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1));
 
             // Classifications
-            //driver.FindElement(By.LinkText("Classifications")).Click();
-            //wait10.Until(driver1 => driver.FindElement(By.Id("no_classifications")).Displayed);
             ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Classifications");
             Assert.Equal("No Classifications Available.", driver.FindElement(By.Id("no_classifications")).Text);
 
             // Configuration
-            driver.FindElement(By.LinkText("Configuration")).Click();
-            wait.Until(driver1 => driver.FindElement(By.Id("remove_missing")).Displayed);
-            Assert.Equal("false", driver.FindElement(By.Id("remove_missing")).GetAttribute("data-shinyjs-resettable-value"));
-            Assert.Equal("false", driver.FindElement(By.Id("remove_outliers")).GetAttribute("data-shinyjs-resettable-value"));
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Configuration");
+            var remove_missing = new ShinyCheckboxInput(driver, "remove_missing");
+            Assert.False(remove_missing.GetDefaultState());
+            var remove_outliers = new ShinyCheckboxInput(driver, "remove_outliers");
+            Assert.False(remove_outliers.GetDefaultState());
+            var stats = new VisualizerFilterStats(driver);
+            var prev_points = stats.GetCurrentPoints();
+            remove_outliers.ToggleState();
+            new ShinySliderInput(driver, "num_sd").MoveSliderToValue(2);
+
+            // Return to Filters
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
+            Assert.True(stats.GetCurrentPoints() < prev_points);
         }
 
         private void TabsCheck(IWebDriver driver)
