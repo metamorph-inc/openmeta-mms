@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { Well, Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 class DiscreteVariableFormGroup extends Component {
+  static propTypes = {
+    variable: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired
+  }
+
   handleChange = (ev) => {
     this.props.onChange(ev.target.value);
   }
@@ -25,6 +31,11 @@ class DiscreteVariableFormGroup extends Component {
 }
 
 class DiscreteVariableChooser extends Component {
+  static propTypes = {
+    discreteVars: PropTypes.array.isRequired,
+    onSelectedVariableChange: PropTypes.func.isRequired
+  }
+
   handleChange = (varIndex, newValue) => {
     this.props.onSelectedVariableChange(varIndex, newValue);
   }

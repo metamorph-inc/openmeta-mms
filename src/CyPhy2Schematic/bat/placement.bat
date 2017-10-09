@@ -41,17 +41,17 @@ IF %SYNTH_ERRORLEVEL% neq 0 (
 	exit /b %SYNTH_ERRORLEVEL%
 )
 
-%SystemRoot%\SysWoW64\REG.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\App Paths\eagle.exe" /v "Path"
+"%META_PATH%\bin\Python27\Scripts\python.exe" -m get_eagle_path
 SET QUERY_ERRORLEVEL=%ERRORLEVEL%
 
 IF %QUERY_ERRORLEVEL% == 0 (
-    FOR /F "skip=2 tokens=2,*" %%A IN ('%SystemRoot%\SysWoW64\REG.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\App Paths\eagle.exe" /v "Path"') DO SET EAGLE_PATH=%%B)
+	FOR /F "tokens=*" %%i in ('"%META_PATH%\bin\Python27\Scripts\python.exe" -m get_eagle_path') DO SET EAGLE_PATH=%%i
 )
 IF %QUERY_ERRORLEVEL% == 1 (
-    echo on
-    echo "Eagle CAD tools not installed." >> _FAILED.txt
-    echo "Eagle CAD tools not installed."
-    exit /b %QUERY_ERRORLEVEL%
+	echo on
+	echo "Eagle CAD tools are not installed." >> _FAILED.txt
+	echo "Eagle CAD tools are not installed."
+	exit /b %QUERY_ERRORLEVEL%
 )
 
 IF NOT DEFINED USING_PARTIAL_LAYOUT  (
@@ -60,7 +60,7 @@ IF NOT DEFINED USING_PARTIAL_LAYOUT  (
 
 echo "Creating a PNG of the board."
 
-"%EAGLE_PATH%\bin\eagle.exe" schema.brd -C "set confirm yes; export image schema.png 800; quit;"
+"%EAGLE_PATH%" schema.brd -C "set confirm yes; export image schema.png 800; quit;"
 
 SET /A PNG_ERRORLEVEL=%ERRORLEVEL%
 
@@ -77,11 +77,11 @@ goto :eof
 if exist autoroute.ctl (
   echo on
 	echo Using "autoroute.ctl" Auto Routing settings ...
-	"%EAGLE_PATH%\bin\eagle.exe" schema.brd -C "auto load autoroute.ctl; auto; set confirm yes; export image schema.png 800; write; quit;"
+	"%EAGLE_PATH%" schema.brd -C "auto load autoroute.ctl; auto; set confirm yes; export image schema.png 800; write; quit;"
 ) else (
   echo on
 	echo Using default Auto Routing settings ...
-	"%EAGLE_PATH%\bin\eagle.exe" schema.brd -C "auto; set confirm yes; export image schema.png 800; write; quit;"
+	"%EAGLE_PATH%" schema.brd -C "auto; set confirm yes; export image schema.png 800; write; quit;"
 )
 @echo off
 

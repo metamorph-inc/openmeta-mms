@@ -12,7 +12,8 @@ const StaticData = {
     precision: 5
   },
   selectedSurrogateModel: "Kriging Surrogate",
-  availableSurrogateModels: ["Kriging Surrogate", "Random Forest"]
+  availableSurrogateModels: ["Kriging Surrogate", "Random Forest"],
+  allowTraining: true
 };
 
 const ExampleData = {

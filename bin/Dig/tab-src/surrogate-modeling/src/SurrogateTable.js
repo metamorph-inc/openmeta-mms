@@ -1,9 +1,28 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col, Table, Button, Glyphicon } from 'react-bootstrap';
 
 import SurrogateTableRow from './SurrogateTableRow';
 
 class SurrogateTable extends Component {
+  static propTypes = {
+    displaySettings: PropTypes.object.isRequired,
+    independentVarNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    dependentVarNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    independentVarData: PropTypes.array.isRequired,
+    dependentVarData: PropTypes.array.isRequired,
+    discreteIndependentVars: PropTypes.array.isRequired,
+    selectedSurrogateModel: PropTypes.string.isRequired,
+    service: PropTypes.object.isRequired,
+    allowTraining: PropTypes.bool.isRequired,
+    onIndependentVarChange: PropTypes.func.isRequired,
+    onPredictButtonClick: PropTypes.func.isRequired,
+    onDuplicateButtonClick: PropTypes.func.isRequired,
+    onDeleteButtonClick: PropTypes.func.isRequired,
+    onAddRow: PropTypes.func.isRequired,
+    onTrain: PropTypes.func.isRequired,
+  };
+
   handleIndependentVarChange = (row, column, newValue) => {
     this.props.onIndependentVarChange(row, column, newValue);
   }
@@ -22,6 +41,10 @@ class SurrogateTable extends Component {
 
   handleAddRowButtonClick = () => {
     this.props.onAddRow();
+  }
+
+  handleTrainButtonClick = () => {
+    this.props.onTrain();
   }
 
   render() {
@@ -76,6 +99,8 @@ class SurrogateTable extends Component {
       <Row>
         <Col md={12}>
           <Button bsStyle="success" onClick={()=>this.handleAddRowButtonClick()}><Glyphicon glyph="plus" /> Add row</Button>
+          {' '}
+          <Button bsStyle="primary" onClick={()=>this.handleTrainButtonClick()} disabled={!this.props.allowTraining || (this.props.independentVarData.length <= 0)}><Glyphicon glyph="education" /> Train at these points</Button>
         </Col>
       </Row>
       </div>

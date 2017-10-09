@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 class NumberView extends Component {
   static propTypes = {
     children: PropTypes.number.isRequired,
-    displaySettings: PropTypes.object.isRequired
+    displaySettings: PropTypes.shape({
+      roundNumbers: PropTypes.bool,
+      precision: PropTypes.number
+    }).isRequired
   }
 
   render() {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Glyphicon, ButtonGroup } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
 import RowDetailsModalButton from './RowDetailsModalButton';
@@ -7,6 +8,11 @@ import ValidatingNumberInput from './ValidatingNumberInput';
 import { DependentVarState } from './Enums';
 
 class DependentVarCell extends Component {
+  static propTypes = {
+    varData: PropTypes.array.isRequired,
+    displaySettings: PropTypes.object.isRequired
+  }
+
   render() {
     let cellClass = "";
 
@@ -36,6 +42,21 @@ class DependentVarCell extends Component {
 };
 
 class SurrogateTableRow extends Component {
+  static propTypes = {
+    displaySettings: PropTypes.object.isRequired,
+    independentVarNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    dependentVarNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    independentVarData: PropTypes.array.isRequired,
+    dependentVarData: PropTypes.array.isRequired,
+    discreteIndependentVars: PropTypes.array.isRequired,
+    selectedSurrogateModel: PropTypes.string.isRequired,
+    service: PropTypes.object.isRequired,
+    onIndependentVarChange: PropTypes.func.isRequired,
+    onPredictButtonClick: PropTypes.func.isRequired,
+    onDuplicateButtonClick: PropTypes.func.isRequired,
+    onDeleteButtonClick: PropTypes.func.isRequired
+  };
+
   handleIndependentVarChange = (i, ev) => {
     const parsedNumber = Number(ev.target.value);
     if(Number.isNaN(parsedNumber)) {
@@ -108,3 +129,4 @@ class SurrogateTableRow extends Component {
 };
 
 export default SurrogateTableRow;
+export { DependentVarCell };

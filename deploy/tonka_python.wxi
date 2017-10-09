@@ -15,7 +15,8 @@
           <Directory Id="runCentroidUlp" Name="runCentroidUlp" />
           <Directory Id="runEagleUlp" Name="runEagleUlp" />
           <Directory Id="runDrc" Name="runDrc" />
-		  <Directory Id="CADVisualizer" Name="CADVisualizer" />
+		      <Directory Id="CADVisualizer" Name="CADVisualizer" />
+          <Directory Id="get_eagle_path" Name="get_eagle_path" />
         </DirectoryRef>
     </Fragment>
     <Fragment>
@@ -28,7 +29,8 @@
           <ComponentGroupRef Id="runCentroidUlp" />
           <ComponentGroupRef Id="runEagleUlp" />
           <ComponentGroupRef Id="runDrc" />
-		  <ComponentGroupRef Id="CADVisualizer" />
+		      <ComponentGroupRef Id="CADVisualizer" />
+          <ComponentGroupRef Id="get_eagle_path" />
         </ComponentGroup>
     </Fragment>
 </Wix>

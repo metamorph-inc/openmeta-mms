@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { Grid, Row, Col, Form } from 'react-bootstrap';
 
-import { cloneDeep, isEqual } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash';
 
 import ErrorModal from './ErrorModal';
 import SurrogateModelChooser from './SurrogateModelChooser';
@@ -21,6 +22,10 @@ class App extends Component {
 
     this.state = StaticData;
   }
+
+  static propTypes = {
+    service: PropTypes.object.isRequired
+  };
 
   componentDidMount() {
     this.props.service.getDisplaySettingsState().then((newDisplaySettings) => {
@@ -207,6 +212,41 @@ class App extends Component {
     });
   }
 
+  handleTrain = () => {
+    this.setState({
+      allowTraining: false
+    });
+
+    this.props.service.trainSurrogateAtPoints(this.state.independentVarData, this.state.discreteIndependentVars, this.state.selectedSurrogateModel)
+      .then((resultingDependentVars) => {
+        const newDependentVarData = cloneDeep(this.state.dependentVarData);
+        newDependentVarData.forEach(function(row) {
+          row.forEach(function(col) {
+            col[0] = DependentVarState.STALE;
+          });
+        });
+
+        this.setState({
+          allowTraining: true,
+          dependentVarData: newDependentVarData
+        });
+      })
+      .catch((error) => {
+        const newDependentVarData = cloneDeep(this.state.dependentVarData);
+        newDependentVarData.forEach(function(row) {
+          row.forEach(function(col) {
+            col[0] = DependentVarState.STALE;
+          });
+        });
+
+        this.setState({
+          allowTraining: true,
+          currentErrorMessage: error.message,
+          dependentVarData: newDependentVarData
+        });
+      });;
+  }
+
   handleSelectedVariableChange = (varIndex, newValue) => {
     const newDiscreteIndependentVars = cloneDeep(this.state.discreteIndependentVars);
     newDiscreteIndependentVars[varIndex].selected = newValue;
@@ -291,12 +331,14 @@ class App extends Component {
                   discreteIndependentVars={this.state.discreteIndependentVars}
                   selectedSurrogateModel={this.state.selectedSurrogateModel}
                   service={this.props.service}
+                  allowTraining={this.state.allowTraining}
 
                   onIndependentVarChange={(col, row, newValue) => this.handleIndependentVarChange(col, row, newValue)}
                   onPredictButtonClick={(row) => this.handlePredictButtonClick(row)}
                   onDuplicateButtonClick={(row) => this.handleDuplicateButtonClick(row)}
                   onDeleteButtonClick={(row) => this.handleDeleteButtonClick(row)}
-                  onAddRow={() => this.handleAddRow()} />
+                  onAddRow={() => this.handleAddRow()}
+                  onTrain={() => this.handleTrain()} />
               </div>
             </Col>
           </Row>
