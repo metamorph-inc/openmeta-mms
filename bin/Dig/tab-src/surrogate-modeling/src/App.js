@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { Grid, Row, Col, Form } from 'react-bootstrap';
 
@@ -21,6 +22,10 @@ class App extends Component {
 
     this.state = StaticData;
   }
+
+  static propTypes = {
+    service: PropTypes.object.isRequired
+  };
 
   componentDidMount() {
     this.props.service.getDisplaySettingsState().then((newDisplaySettings) => {

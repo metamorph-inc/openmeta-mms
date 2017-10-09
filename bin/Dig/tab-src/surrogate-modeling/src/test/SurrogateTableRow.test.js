@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 import SurrogateTableRow, { DependentVarCell } from '../SurrogateTableRow';
 import { DependentVarState } from '../Enums';
 
-import { ExampleData } from '../StaticData';
+import StaticData, { ExampleData } from '../StaticData';
 
 const displaySettings = {
   round: false,
@@ -83,14 +83,19 @@ it("DependentVarCell renders computing state and doesn't display numbers", () =>
 
 it("renders", () => {
   const wrapper = shallow(<SurrogateTableRow
-    displaySettings={ExampleData.displaySettings}
+    displaySettings={StaticData.displaySettings}
     independentVarNames={ExampleData.independentVarNames}
     dependentVarNames={ExampleData.dependentVarNames}
     independentVarData={ExampleData.independentVarData[1]}
     dependentVarData={ExampleData.dependentVarData[1]}
     discreteIndependentVars={ExampleData.discreteIndependentVars}
-    selectedSurrogateModel={ExampleData.selectedSurrogateModel}
-    service={null}
+    selectedSurrogateModel={StaticData.selectedSurrogateModel}
+    service={{}}
+
+    onIndependentVarChange={(col, newValue) => null}
+    onPredictButtonClick={() => null}
+    onDuplicateButtonClick={() => null}
+    onDeleteButtonClick={() => null}
     />);
 
   expect(wrapper.is("tr")).toBe(true);

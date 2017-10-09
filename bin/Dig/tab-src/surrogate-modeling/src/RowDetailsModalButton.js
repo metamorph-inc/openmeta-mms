@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Glyphicon, Button, Alert, Row, Col, FormGroup } from 'react-bootstrap';
 import TooltipButton from './TooltipButton';
 import ProbabilityGraphsView from './ProbabilityGraphsView';
@@ -14,6 +15,19 @@ class RowDetailsModalButton extends Component {
       showModal: false,
       selectedIndependentVar: (this.props.independentVarNames.length > 0 ? this.props.independentVarNames[0] : "")
     };
+  }
+
+  static propTypes = {
+    displaySettings: PropTypes.object.isRequired,
+    independentVarNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    dependentVarNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    independentVarData: PropTypes.arrayOf(PropTypes.number).isRequired,
+    dependentVarData: PropTypes.arrayOf(PropTypes.array).isRequired,
+    discreteIndependentVars: PropTypes.array.isRequired,
+    selectedSurrogateModel: PropTypes.string.isRequired,
+    service: PropTypes.object.isRequired,
+    onIndependentVarChange: PropTypes.func.isRequired,
+    onPredictButtonClick: PropTypes.func.isRequired
   }
 
   close = () => {

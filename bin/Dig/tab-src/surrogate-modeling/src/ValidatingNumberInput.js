@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FormGroup, FormControl, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap';
 
 class ValidatingNumberInput extends Component {
@@ -10,6 +11,11 @@ class ValidatingNumberInput extends Component {
       valid: true,
       errorText: null
     };
+  }
+
+  static propTypes = {
+    value: PropTypes.number.isRequired,
+    validationFunction: PropTypes.func.isRequired
   }
 
   componentDidUpdate(previousProps, previousState) {

@@ -4,19 +4,26 @@ import { shallow } from 'enzyme';
 
 import SurrogateTable from '../SurrogateTable';
 
-import { ExampleData } from '../StaticData';
+import StaticData, { ExampleData } from '../StaticData';
 
 it("renders", () => {
   const wrapper = shallow(<SurrogateTable
-    displaySettings={ExampleData.displaySettings}
+    displaySettings={StaticData.displaySettings}
     independentVarNames={ExampleData.independentVarNames}
     dependentVarNames={ExampleData.dependentVarNames}
     independentVarData={ExampleData.independentVarData}
     dependentVarData={ExampleData.dependentVarData}
     discreteIndependentVars={ExampleData.discreteIndependentVars}
-    selectedSurrogateModel={ExampleData.selectedSurrogateModel}
-    service={null}
+    selectedSurrogateModel={StaticData.selectedSurrogateModel}
+    service={{}}
     allowTraining={true}
+
+    onIndependentVarChange={(col, row, newValue) => null}
+    onPredictButtonClick={(row) => null}
+    onDuplicateButtonClick={(row) => null}
+    onDeleteButtonClick={(row) => null}
+    onAddRow={() => null}
+    onTrain={() => null}
     />);
 
   expect(wrapper.is("div")).toBe(true);

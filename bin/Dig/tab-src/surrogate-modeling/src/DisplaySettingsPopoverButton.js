@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Popover, Glyphicon, Button, OverlayTrigger, Form, FormGroup, ControlLabel, Checkbox } from 'react-bootstrap';
 import ValidatingNumberInput from './ValidatingNumberInput';
 
 class DisplaySettingsPopoverButton extends Component {
+  static propTypes = {
+    displaySettings: PropTypes.shape({
+      roundNumbers: PropTypes.bool,
+      precision: PropTypes.number
+    }).isRequired
+  }
+
   handleRoundNumbersChange = (ev) => {
     const newDisplaySettings = {
       roundNumbers: ev.target.checked,
