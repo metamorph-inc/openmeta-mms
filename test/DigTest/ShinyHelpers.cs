@@ -68,6 +68,11 @@ namespace DigTest
             this.current = Double.Parse(driver.FindElement(By.XPath(current_path)).GetAttribute("textContent"));
             return this.current;
         }
+
+        public double GetValue()
+        {
+            return current;
+        }
     }
 
     public class ShinySelectInput
@@ -76,6 +81,7 @@ namespace DigTest
         private IWebDriver driver;
         private IWait<IWebDriver> wait;
         private string div;
+        private string input;
         private string choices;
         private string selected;
 
@@ -85,6 +91,7 @@ namespace DigTest
             this.id = id;
             this.div = string.Format("//select[@id='{0}']/..", id);
             var master_div = this.driver.FindElement(By.XPath(this.div));
+            this.input = this.div + "/div[1]/div[1]/input";
             this.choices = this.div + "/select/following::div[1]/div[2]/div[1]/div";
             this.selected = choices + "[@class='option selected']";
             this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(11.0));
@@ -160,9 +167,9 @@ namespace DigTest
             return choices;
         }
 
-        public void SetCurrentSelection(string v)
+        public void SetCurrentSelectionClicked(string v)
         {
-            var master_div = this.driver.FindElement(By.XPath(this.div));
+            var master_div = driver.FindElement(By.XPath(div));
             master_div.Click();
             Thread.Sleep(300);
             var choices = this.GetAllChoiceDivs();
@@ -171,6 +178,15 @@ namespace DigTest
                             select choice;
             this.wait.Until(driver1 => to_select.First().Displayed);
             to_select.First().Click();
+        }
+
+        public void SetCurrentSelectionTyped(string v)
+        {
+            this.driver.FindElement(By.XPath(div)).Click();
+            var input = driver.FindElement(By.XPath(this.input));
+            input.SendKeys(Keys.Backspace);
+            input.SendKeys(v);
+            input.SendKeys(Keys.Enter);
         }
     }
 
@@ -229,12 +245,12 @@ namespace DigTest
 
         public IWebElement GetDiv()
         {
-            return this.driver.FindElement(By.XPath(this.div));
+            return driver.FindElement(By.XPath(div));
         }
 
         private IEnumerable<IWebElement> GetAllChoiceDivs()
         {
-            return this.driver.FindElements(By.XPath(this.choices));
+            return driver.FindElements(By.XPath(choices));
         }
 
         public IEnumerable<string> GetRemainingChoices()
@@ -247,7 +263,7 @@ namespace DigTest
             {
                 try
                 {
-                    choices = from choice_div in this.driver.FindElements(By.XPath(this.choices))
+                    choices = from choice_div in driver.FindElements(By.XPath(this.choices))
                               select choice_div.GetAttribute("data-value");
                     break;
                 }
@@ -299,11 +315,17 @@ namespace DigTest
         {
             return "true" == driver.FindElement(By.Id(id)).GetAttribute("data-shinyjs-resettable-value");
         }
+
+        public bool GetState()
+        {
+            return state;
+        }
     }
 
     public class ShinyPlot
     {
         private IWebDriver driver;
+        private WebDriverWait wait;
         private string id;
         private string img_str;
         private string img_path;
@@ -313,6 +335,7 @@ namespace DigTest
         public ShinyPlot(IWebDriver driver, string id)
         {
             this.driver = driver;
+            this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
             this.id = id;
             this.img_path = String.Format("//div[@id='{0}']/img", id);
             ReloadImage();
@@ -327,13 +350,14 @@ namespace DigTest
 
         private void ReloadImage()
         {
-            IWebElement img_elem = driver.FindElement(By.XPath(this.img_path));
+            IWebElement img_elem = null;
+            wait.Until(d => img_elem = driver.FindElement(By.XPath(this.img_path)));
             img_str = img_elem.GetAttribute("src");
         }
 
         public IWebElement GetElement()
         {
-            return driver.FindElement(By.Id("Explore-single_plot"));
+            return driver.FindElement(By.Id(id));
         }
 
         public bool ImageHasChanged()
@@ -355,7 +379,6 @@ namespace DigTest
         public void WaitUntilImageRefreshes()
         {
             img_str_reload = img_str;
-            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
             wait.Until(a => DoneReloading());
         }
 
@@ -494,6 +517,11 @@ namespace DigTest
         {
             IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
             return wait10.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+        }
+
+        public static string ReadVerbatimText(IWebDriver driver, string id)
+        {
+            return driver.FindElement(By.Id(id)).GetAttribute("textContent");
         }
     }
 }

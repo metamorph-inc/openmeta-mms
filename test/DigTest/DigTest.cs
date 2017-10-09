@@ -213,9 +213,9 @@ namespace DigTest
             Assert.True(displayunits.GetDefaultState());
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Markers");
-            var marker_size = new ShinySliderInput(driver, "Explore-pairs_plot_marker_size");
+            var marker_size_pairs = new ShinySliderInput(driver, "Explore-pairs_plot_marker_size");
             var initial_count = pairs_plot.ImageStats();
-            Assert.Equal(1.5, marker_size.MoveSliderToValue(1.5));
+            Assert.Equal(1.5, marker_size_pairs.MoveSliderToValue(1.5));
             pairs_plot.WaitUntilImageRefreshes();
             //Assert.True(pairs_plot.ImageHasChanged()); // Faster Method
             var second_count = pairs_plot.ImageStats();
@@ -228,15 +228,21 @@ namespace DigTest
 
             //Test Single Plot
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Single Plot");
-            new ShinySelectInput(driver, "Explore-x_input").SetCurrentSelection("IN_Tip_AvgCapMaterialThickness");
+            var single_plot = new ShinyPlot(driver, "Explore-single_plot");
+            new ShinySelectInput(driver, "Explore-x_input").SetCurrentSelectionClicked("IN_Tip_AvgCapMaterialThickness");
+            single_plot.WaitUntilImageRefreshes();
+            Assert.True(single_plot.ImageHasChanged());
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Markers");
-            new ShinySelectInput(driver, "Explore-single_plot_marker").SetCurrentSelection("16"); // "Filled Circle"
-            //TODO(tthomas): Added test of marker size
+            new ShinySelectInput(driver, "Explore-single_plot_marker").SetCurrentSelectionClicked("16"); // "Filled Circle"
+            var marker_size_single = new ShinySliderInput(driver, "Explore-single_plot_marker_size");
+            Assert.Equal(1.0, marker_size_single.GetValue());
+            Assert.Equal(1.5, marker_size_single.MoveSliderToValue(1.5));
+            single_plot.WaitUntilImageRefreshes();
+            Assert.True(single_plot.ImageHasChanged());
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Filter");
             // Perform plot brush sequence
-            var single_plot = new ShinyPlot(driver, "Explore-single_plot");
             var brush_single_plot = builder.MoveToElement(single_plot.GetElement(), 200, 200).ClickAndHold();
             brush_single_plot.MoveByOffset(400, 400).Release().Build().Perform();
             driver.FindElement(By.Id("Explore-update_y")).Click();
@@ -254,6 +260,9 @@ namespace DigTest
 
             //Test Single Point Details
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Point Details");
+            new ShinySelectInput(driver, "Explore-details_guid").SetCurrentSelectionTyped("0f700");
+            var expected_details = "                                               \r\nCfgID                                \"32-20\"   \r\nIN_E11                               \"27684.36\"\r\nIN_E22                               \"72611.63\"\r\nIN_ElemCount                         \"44\"      \r\nIN_HubMaterial                       \"Aluminum\"\r\nIN_Root_AvgCapMaterialThickness (mm) \"81.6862\" \r\nIN_Tip_AvgCapMaterialThickness (mm)  \"22.29602\"\r\nOUT_Blade_Cost_Total (USD)           \"148647.5\"\r\nOUT_Blade_Tip_Deflection (mm)        \"2639.237\"";
+            Assert.Equal(expected_details, ShinyUtilities.ReadVerbatimText(driver, "Explore-point_details"));
 
             // Return to Pairs Plot
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Pairs Plot");
@@ -269,7 +278,7 @@ namespace DigTest
             Assert.Equal("true", driver.FindElement(By.Id("DataTable-use_filtered")).GetAttribute("data-shinyjs-resettable-value"));
             var process_method = new ShinySelectInput(driver, "DataTable-process_method");
             Assert.Equal("None", process_method.GetCurrentSelection());
-            process_method.SetCurrentSelection("TOPSIS");
+            process_method.SetCurrentSelectionClicked("TOPSIS");
 
             var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
             //Assert.Equal(all_variable_names, string.Join(", ", weight_metrics.GetRemainingChoices().ToArray())); <-- Broken right now.
@@ -281,7 +290,7 @@ namespace DigTest
             ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Histogram");
             var histogram_variable = new ShinySelectInput(driver, "Histogram-variable");
             Assert.Equal(all_variable_names, string.Join(", ", histogram_variable.GetAllChoices().ToArray()));
-            histogram_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
+            histogram_variable.SetCurrentSelectionClicked("OUT_Blade_Cost_Total");
 
 
             // Test "PETRefinement.R"
@@ -408,11 +417,11 @@ namespace DigTest
             Assert.Equal("None", coloring_source.GetCurrentSelection());
             Assert.Equal(2, coloring_source.GetAllChoices().Count());
             Assert.Equal("None, Live", string.Join(", ", coloring_source.GetAllChoices().ToArray()));
-            coloring_source.SetCurrentSelection("Live");
+            coloring_source.SetCurrentSelectionClicked("Live");
             var colored_variable = new ShinySelectInput(driver, "live_coloring_variable_numeric");
             var choices = colored_variable.GetAllChoices();
             Assert.Equal("IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", colored_variable.GetAllChoices().ToArray()));
-            colored_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
+            colored_variable.SetCurrentSelectionClicked("OUT_Blade_Cost_Total");
             driver.FindElement(By.Id("live_coloring_name")).Clear();
             driver.FindElement(By.Id("live_coloring_name")).SendKeys("Test");
             driver.FindElement(By.Id("live_coloring_add_classification")).Click();
