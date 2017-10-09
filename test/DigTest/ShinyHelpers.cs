@@ -75,6 +75,118 @@ namespace DigTest
         }
     }
 
+    public class VisualizerFilterInput
+    {
+        private IWebDriver driver;
+        private WebDriverWait wait;
+        private string var;
+        private string parent_path;
+        private string tooltip_path;
+        private string min_path;
+        private string max_path;
+        private string submit_path;
+        private string from_path;
+        private string to_path;
+        private double low;
+        private double high;
+
+        private double from { get; set; }
+        private double to { get; set; }
+
+        public VisualizerFilterInput(IWebDriver driver, string variable)
+        {
+            this.driver = driver;
+            this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(1.0));
+            this.var = variable;
+            this.parent_path = String.Format("//input[@id='filter_{0}']/..", variable);
+            this.tooltip_path = String.Format("//div[@id='slider_tooltip_{0}']", variable);
+            this.min_path = String.Format("//input[@id='tooltip_min_{0}']", variable);
+            this.max_path = String.Format("//input[@id='tooltip_max_{0}']", variable);
+            this.submit_path = String.Format("//button[@id='submit_{0}']", variable);
+            this.from_path = parent_path + "/span/span[@class='irs']/span[@class='irs-from']";
+            this.to_path = parent_path + "/span/span[@class='irs']/span[@class='irs-to']";
+            string low_path = parent_path + "/span/span[@class='irs']/span[@class='irs-min']";
+            string high_path = parent_path + "/span/span[@class='irs']/span[@class='irs-max']";
+            this.low = Double.Parse(driver.FindElement(By.XPath(low_path)).GetAttribute("textContent"));
+            this.from = Double.Parse(driver.FindElement(By.XPath(from_path)).GetAttribute("textContent"));
+            this.to = Double.Parse(driver.FindElement(By.XPath(to_path)).GetAttribute("textContent"));
+            this.high = Double.Parse(driver.FindElement(By.XPath(high_path)).GetAttribute("textContent"));
+        }
+
+        public double EntrySetFrom(double from)
+        {
+            OpenTooltip();
+
+            if (from < low) { from = low; }
+            if (from > to) { from = to; }
+            var min = driver.FindElement(By.XPath(min_path));
+            min.Clear();
+            min.SendKeys(from.ToString());
+
+            driver.FindElement(By.XPath(submit_path)).Click();
+            Thread.Sleep(500);
+
+            this.from = Double.Parse(driver.FindElement(By.XPath(from_path)).GetAttribute("textContent"));
+            return this.from;
+        }
+
+        public double EntrySetTo(double to)
+        {
+            OpenTooltip();
+
+            if (to > high) { to = high; }
+            if (to < from) { to = from; }
+            var max = driver.FindElement(By.XPath(max_path));
+            max.Clear();
+            max.SendKeys(to.ToString());
+
+            driver.FindElement(By.XPath(submit_path)).Click();
+
+            Thread.Sleep(500);
+            this.to = Double.Parse(driver.FindElement(By.XPath(to_path)).GetAttribute("textContent"));
+            return this.to;
+        }
+
+        public string EntrySetFromTo(double from, double to)
+        {
+            OpenTooltip();
+
+            if (from < low) { from = low; }
+            if (from > to) { from = to; }
+            var min = driver.FindElement(By.XPath(min_path));
+            min.Clear();
+            min.SendKeys(from.ToString());
+
+            if (to > high) { to = high; }
+            if (to < from) { to = from; }
+            var max = driver.FindElement(By.XPath(max_path));
+            max.Clear();
+            max.SendKeys(to.ToString());
+
+            driver.FindElement(By.XPath(submit_path)).Click();
+
+            Thread.Sleep(500);
+            this.to = Double.Parse(driver.FindElement(By.XPath(to_path)).GetAttribute("textContent"));
+            this.from = Double.Parse(driver.FindElement(By.XPath(from_path)).GetAttribute("textContent"));
+
+            return this.from.ToString() + "-" + this.to.ToString();
+        }
+
+        private void OpenTooltip()
+        {
+            var parent = driver.FindElement(By.XPath(parent_path));
+            Actions double_click_element = new Actions(driver).DoubleClick(parent);
+            double_click_element.Build().Perform();
+            wait.Until(d => driver.FindElement(By.XPath(tooltip_path)).Displayed);
+        }
+
+        public double GetFrom() { return from; }
+        public double GetTo() { return to; }
+        public string GetFromTo() { return this.from.ToString() + "-" + this.to.ToString(); }
+        public double GetMin() { return low; }
+        public double GetMax() { return high; }
+    }
+
     public class ShinySelectInput
     {
         private string id;
@@ -492,6 +604,11 @@ namespace DigTest
         {
             string jsToBeExecuted = string.Format("window.scroll(0, {0});", elem.Location.Y);
             ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecuted);
+        }
+
+        public static void ScrollToElementID(IWebDriver driver, string id)
+        {
+            ScrollToElement(driver, driver.FindElement(By.Id(id)));
         }
 
         public static void ClickIDWithScroll(IWebDriver driver, string id)

@@ -213,14 +213,16 @@ namespace DigTest
             Assert.True(displayunits.GetDefaultState());
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Markers");
-            var marker_size_pairs = new ShinySliderInput(driver, "Explore-pairs_plot_marker_size");
             var initial_count = pairs_plot.ImageStats();
-            Assert.Equal(1.5, marker_size_pairs.MoveSliderToValue(1.5));
+            new ShinySelectInput(driver, "Explore-pairs_plot_marker").SetCurrentSelectionTyped("Plus");
             pairs_plot.WaitUntilImageRefreshes();
-            //Assert.True(pairs_plot.ImageHasChanged()); // Faster Method
             var second_count = pairs_plot.ImageStats();
             Assert.True(second_count[Color.FromArgb(255, 0, 0, 0)] > initial_count[Color.FromArgb(255, 0, 0, 0)]);
-
+            Assert.Equal(1.5, new ShinySliderInput(driver, "Explore-pairs_plot_marker_size").MoveSliderToValue(1.5));
+            pairs_plot.WaitUntilImageRefreshes();
+            var third_count = pairs_plot.ImageStats();
+            Assert.True(third_count[Color.FromArgb(255, 0, 0, 0)] > second_count[Color.FromArgb(255, 0, 0, 0)]);
+            
             //TODO(tthomas): Replace SwitchTabs("Single Plot") with double click.
             //IWebElement pairs_plot = driver.FindElement(By.Id("Explore-pairs_plot"));
             //IAction dbl_click_pairs_plot = builder.MoveToElement(pairs_plot).MoveByOffset(100, 300).DoubleClick().Build();
@@ -245,8 +247,11 @@ namespace DigTest
             // Perform plot brush sequence
             var brush_single_plot = builder.MoveToElement(single_plot.GetElement(), 200, 200).ClickAndHold();
             brush_single_plot.MoveByOffset(400, 400).Release().Build().Perform();
+            var in_e11_filter = new VisualizerFilterInput(driver, "IN_E11");
+            Assert.Equal("25520-32480", in_e11_filter.GetFromTo());
             driver.FindElement(By.Id("Explore-update_y")).Click();
             builder.MoveToElement(single_plot.GetElement(), 100, 100).Click().Build().Perform();
+            Assert.Equal("25520-32480", in_e11_filter.GetFromTo()); // This should fail when UpdateX/Y/Both are fixed.
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Overlays");
             Assert.Equal("false", driver.FindElement(By.Id("Explore-add_regression")).GetAttribute("data-shinyjs-resettable-value"));
@@ -375,41 +380,15 @@ namespace DigTest
             // TODO(tthomas): Add testing of additional UI elements
             
             // Test Footer
-
-            IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-            Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            Assert.True(wait.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
 
             // Filters
-            IWebElement elemcountslider = driver.FindElement(By.Id("filter_IN_ElemCount")).FindElement(By.XPath(".."));
-            if (!elemcountslider.Displayed)
-            {
-                RetryStaleElement(() => driver.FindElement(By.LinkText("Filters")).Click());
-                wait10.Until(driver1 => elemcountslider.Displayed);
-            }
-            ShinyUtilities.ScrollToElement(driver, elemcountslider);
-            Actions dblclick_elemcountslider = new Actions(driver).DoubleClick(elemcountslider);
-            RetryStaleElement(() => dblclick_elemcountslider.Build().Perform());
-            
-            wait10.Until(driver1 => driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).Displayed);
-            driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).Clear();
-            driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).SendKeys("20");
-            driver.FindElement(By.Id("submit_IN_ElemCount")).Click();
-            Thread.Sleep(1500);
-
-            IWebElement costslider = driver.FindElement(By.Id("filter_OUT_Blade_Cost_Total")).FindElement(By.XPath(".."));
-            wait10.Until(driver1 => costslider.Displayed);
-
-            string jsToBeExecuted = string.Format("window.scroll(0, {0});", costslider.Location.Y);
-            ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecuted);
-                
-            Actions dblclick_costslider = new Actions(driver).DoubleClick(costslider);
-            RetryStaleElement(() => dblclick_costslider.Build().Perform());
-
-            wait10.Until(driver1 => driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).Displayed);
-            driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).Clear();
-            driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).SendKeys("150000");
-            driver.FindElement(By.Id("submit_OUT_Blade_Cost_Total")).Click();
-            Thread.Sleep(1500);
+            ShinyUtilities.ScrollToElementID(driver, "footer_collapse");
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
+            Assert.Equal("20-50", new VisualizerFilterInput(driver, "IN_ElemCount").EntrySetFromTo(20, 50));
+            Assert.Equal(20000, new VisualizerFilterInput(driver, "IN_E22").EntrySetFrom(20000.0));
+            Assert.Equal(160000, new VisualizerFilterInput(driver, "OUT_Blade_Cost_Total").EntrySetTo(160000));
 
             // Coloring
             ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Coloring");
@@ -425,7 +404,7 @@ namespace DigTest
             driver.FindElement(By.Id("live_coloring_name")).Clear();
             driver.FindElement(By.Id("live_coloring_name")).SendKeys("Test");
             driver.FindElement(By.Id("live_coloring_add_classification")).Click();
-            Assert.True(wait10.Until(d => coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1));
+            Assert.True(wait.Until(d => coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1));
 
             // Classifications
             //driver.FindElement(By.LinkText("Classifications")).Click();
@@ -435,7 +414,7 @@ namespace DigTest
 
             // Configuration
             driver.FindElement(By.LinkText("Configuration")).Click();
-            wait10.Until(driver1 => driver.FindElement(By.Id("remove_missing")).Displayed);
+            wait.Until(driver1 => driver.FindElement(By.Id("remove_missing")).Displayed);
             Assert.Equal("false", driver.FindElement(By.Id("remove_missing")).GetAttribute("data-shinyjs-resettable-value"));
             Assert.Equal("false", driver.FindElement(By.Id("remove_outliers")).GetAttribute("data-shinyjs-resettable-value"));
         }
