@@ -240,7 +240,7 @@ namespace DigTest
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Point Details");
             new ShinySelectInput(driver, "Explore-details_guid").SetCurrentSelectionTyped("0f700");
             var expected_details = "                                               \r\nCfgID                                \"32-20\"   \r\nIN_E11                               \"27684.36\"\r\nIN_E22                               \"72611.63\"\r\nIN_ElemCount                         \"44\"      \r\nIN_HubMaterial                       \"Aluminum\"\r\nIN_Root_AvgCapMaterialThickness (mm) \"81.6862\" \r\nIN_Tip_AvgCapMaterialThickness (mm)  \"22.29602\"\r\nOUT_Blade_Cost_Total (USD)           \"148647.5\"\r\nOUT_Blade_Tip_Deflection (mm)        \"2639.237\"";
-            Assert.Equal(expected_details, ShinyUtilities.ReadVerbatimText(driver, "Explore-point_details"));
+            wait.Until(d => expected_details == ShinyUtilities.ReadVerbatimText(driver, "Explore-point_details"));
 
             // Return to Pairs Plot
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Pairs Plot");
