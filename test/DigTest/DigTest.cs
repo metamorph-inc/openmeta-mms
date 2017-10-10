@@ -36,48 +36,6 @@ namespace DigTest
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out string pszPath);
-
-
-        void RetryStaleElement(Action a)
-        {
-            int tries = 3;
-            while (true)
-            {
-                try
-                {
-                    a();
-                    break;
-                }
-                catch (OpenQA.Selenium.StaleElementReferenceException)
-                {
-                    //Thread.Sleep(100);
-                    if (--tries == 0)
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
-
-        void RetryNoSuchElement(Action a)
-        {
-            int tries = 3;
-            while (true)
-            {
-                try
-                {
-                    a();
-                    break;
-                }
-                catch (OpenQA.Selenium.NoSuchElementException)
-                {
-                    if (--tries == 0)
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
         
         [Fact()]
         void GenericCSVLaunch()
@@ -163,6 +121,7 @@ namespace DigTest
                 driver.Navigate().GoToUrl(wrapper.url);
 
                 TabsCheck(driver);
+                FooterCheck(driver);
 
                 driver.Close();
                 wrapper.AppendLog(session.log_file);
@@ -191,26 +150,26 @@ namespace DigTest
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Plot Options");
             var start = pairs_plot.ImageStats();
             var autorender = new ShinyCheckboxInput(driver, "Explore-auto_render");
-            Assert.True(autorender.GetDefaultState());
+            Assert.True(autorender.GetStartState());
             //TODO(tthomas): Test Delayed Render
             //Assert.False(autorender.ToggleState());
             //ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Variables");
 
             var upperpanel = new ShinyCheckboxInput(driver, "Explore-pairs_upper_panel");
-            Assert.False(upperpanel.GetDefaultState());
+            Assert.False(upperpanel.GetStartState());
             Assert.True(upperpanel.ToggleState());
             pairs_plot.WaitUntilImageRefreshes();
             Assert.True(pairs_plot.ImageStats()[Color.FromArgb(255,0,0,0)] > start[Color.FromArgb(255,0,0,0)] * 1.5);
 
             var trendlines = new ShinyCheckboxInput(driver, "Explore-pairs_trendlines");
-            Assert.False(trendlines.GetDefaultState());
+            Assert.False(trendlines.GetStartState());
             Assert.False(start.ContainsKey(Color.FromArgb(255, 255, 0, 0)));
             Assert.True(trendlines.ToggleState());
             pairs_plot.WaitUntilImageRefreshes();
             Assert.True(pairs_plot.ImageIncludesColor(Color.FromArgb(255, 255, 0, 0)));
 
             var displayunits = new ShinyCheckboxInput(driver, "Explore-pairs_units");
-            Assert.True(displayunits.GetDefaultState());
+            Assert.True(displayunits.GetStartState());
 
             ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Markers");
             var initial_count = pairs_plot.ImageStats();
@@ -271,6 +230,11 @@ namespace DigTest
 
             // Return to Pairs Plot
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Pairs Plot");
+        }
+
+        private void ExploreCheck(IWebDriver driver)
+        {
+            ;
         }
 
         private void TabsSet(IWebDriver driver)
@@ -375,13 +339,28 @@ namespace DigTest
             ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Explore");
         }
 
-        private void FooterSet(IWebDriver driver)
+        private void TabsCheck(IWebDriver driver)
         {
-            // TODO(tthomas): Add testing of additional UI elements
-            
-            // Test Footer
             IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
             Assert.True(wait.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
+            var display = new ShinySelectMultipleInput(driver, "Explore-display");
+            Assert.Equal("IN_HubMaterial, IN_E11, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
+
+            // Test Data Table
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
+            var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
+            Assert.Equal("OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("DataTable-clearMetrics"))).Click();
+            Thread.Sleep(500); // FIXME: Apply the correct wait statement here instead of a Thread.Sleep() call.
+            Assert.Equal("", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+        }
+
+        /// <summary>
+        /// Check the Footer after a session restore.
+        /// </summary>
+        private void FooterSet(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
 
             // Filters
             ShinyUtilities.ScrollToElementID(driver, "footer_collapse");
@@ -413,9 +392,9 @@ namespace DigTest
             // Configuration
             ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Configuration");
             var remove_missing = new ShinyCheckboxInput(driver, "remove_missing");
-            Assert.False(remove_missing.GetDefaultState());
+            Assert.False(remove_missing.GetStartState());
             var remove_outliers = new ShinyCheckboxInput(driver, "remove_outliers");
-            Assert.False(remove_outliers.GetDefaultState());
+            Assert.False(remove_outliers.GetStartState());
             var stats = new VisualizerFilterStats(driver);
             var prev_points = stats.GetCurrentPoints();
             remove_outliers.ToggleState();
@@ -426,20 +405,41 @@ namespace DigTest
             Assert.True(stats.GetCurrentPoints() < prev_points);
         }
 
-        private void TabsCheck(IWebDriver driver)
+        private void FooterCheck(IWebDriver driver)
         {
-            IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-            Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
-            var display = new ShinySelectMultipleInput(driver, "Explore-display");
-            Assert.Equal("IN_HubMaterial, IN_E11, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
 
-            // Test Data Table
-            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
-            var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
-            Assert.Equal("OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
-            wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("DataTable-clearMetrics"))).Click();
-            Thread.Sleep(500); // FIXME: Apply the correct wait statement here instead of a Thread.Sleep() call.
-            Assert.Equal("", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+            // Filters
+            ShinyUtilities.ScrollToElementID(driver, "footer_collapse");
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
+            Assert.Equal("20-50", new VisualizerFilterInput(driver, "IN_ElemCount").GetFromTo());
+            Assert.Equal(20000, new VisualizerFilterInput(driver, "IN_E22").GetFrom());
+            Assert.Equal(160000, new VisualizerFilterInput(driver, "OUT_Blade_Cost_Total").GetTo());
+
+            // Coloring
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Coloring");
+            var coloring_source = new ShinySelectInput(driver, "coloring_source");
+            Assert.Equal("Live", coloring_source.GetCurrentSelection());
+            Assert.Equal("None, Live, Test", string.Join(", ", coloring_source.GetAllChoices().ToArray()));
+            var colored_variable = new ShinySelectInput(driver, "live_coloring_variable_numeric");
+            var choices = colored_variable.GetAllChoices();
+            Assert.Equal("IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", colored_variable.GetAllChoices().ToArray()));
+            Assert.Equal("OUT_Blade_Cost_Total", colored_variable.GetCurrentSelection());
+
+            // Classifications
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Classifications");
+            Assert.Equal("No Classifications Available.", driver.FindElement(By.Id("no_classifications")).Text);
+
+            // Configuration
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Configuration");
+            var remove_missing = new ShinyCheckboxInput(driver, "remove_missing");
+            Assert.False(remove_missing.GetStartState());
+            var remove_outliers = new ShinyCheckboxInput(driver, "remove_outliers");
+            Assert.True(remove_outliers.GetStartState());
+            Assert.Equal(2, new ShinySliderInput(driver, "num_sd").GetValue());
+
+            // Return to Filters
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
         }
 
         class DigWrapper : IDisposable

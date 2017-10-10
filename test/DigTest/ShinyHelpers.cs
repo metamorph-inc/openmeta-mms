@@ -107,10 +107,10 @@ namespace DigTest
             this.to_path = parent_path + "/span/span[@class='irs']/span[@class='irs-to']";
             string low_path = parent_path + "/span/span[@class='irs']/span[@class='irs-min']";
             string high_path = parent_path + "/span/span[@class='irs']/span[@class='irs-max']";
-            this.low = Double.Parse(driver.FindElement(By.XPath(low_path)).GetAttribute("textContent"));
-            this.from = Double.Parse(driver.FindElement(By.XPath(from_path)).GetAttribute("textContent"));
-            this.to = Double.Parse(driver.FindElement(By.XPath(to_path)).GetAttribute("textContent"));
-            this.high = Double.Parse(driver.FindElement(By.XPath(high_path)).GetAttribute("textContent"));
+            this.low = GetValue(low_path);
+            this.from = GetValue(from_path);
+            this.to = GetValue(to_path);
+            this.high = GetValue(high_path);
         }
 
         public double EntrySetFrom(double from)
@@ -124,9 +124,10 @@ namespace DigTest
             min.SendKeys(from.ToString());
 
             driver.FindElement(By.XPath(submit_path)).Click();
-            Thread.Sleep(500);
 
-            this.from = Double.Parse(driver.FindElement(By.XPath(from_path)).GetAttribute("textContent"));
+            wait.Until(d => GetValue(from_path) == from);
+            this.from = from;
+            Thread.Sleep(400);
             return this.from;
         }
 
@@ -142,8 +143,9 @@ namespace DigTest
 
             driver.FindElement(By.XPath(submit_path)).Click();
 
-            Thread.Sleep(500);
-            this.to = Double.Parse(driver.FindElement(By.XPath(to_path)).GetAttribute("textContent"));
+            wait.Until(d => GetValue(to_path) == to);
+            this.to = to;
+            Thread.Sleep(400);
             return this.to;
         }
 
@@ -165,11 +167,36 @@ namespace DigTest
 
             driver.FindElement(By.XPath(submit_path)).Click();
 
-            Thread.Sleep(500);
-            this.to = Double.Parse(driver.FindElement(By.XPath(to_path)).GetAttribute("textContent"));
-            this.from = Double.Parse(driver.FindElement(By.XPath(from_path)).GetAttribute("textContent"));
-
+            wait.Until(d => GetValue(to_path) == to);
+            wait.Until(d => GetValue(from_path) == from);
+            this.to = to;
+            this.from = from;
+            Thread.Sleep(400);
             return this.from.ToString() + "-" + this.to.ToString();
+        }
+
+        private double GetValue(string path)
+        {
+            int tries = 3;
+            while (true)
+            {
+                try
+                {
+                    return Double.Parse(driver.FindElement(By.XPath(path)).GetAttribute("textContent"));
+                }
+                catch (OpenQA.Selenium.StaleElementReferenceException)
+                {
+                    //Thread.Sleep(100);
+                    if (--tries == 0)
+                    {
+                        throw;
+                    }
+                }
+                catch (OpenQA.Selenium.NoSuchElementException)
+                {
+                    wait.Until(d => driver.FindElement(By.XPath(path)));
+                }
+            }
         }
 
         private void OpenTooltip()
@@ -178,6 +205,11 @@ namespace DigTest
             Actions double_click_element = new Actions(driver).DoubleClick(parent);
             double_click_element.Build().Perform();
             wait.Until(d => driver.FindElement(By.XPath(tooltip_path)).Displayed);
+        }
+
+        public IWebElement GetDiv()
+        {
+            return driver.FindElement(By.XPath(parent_path));
         }
 
         public double GetFrom() { return from; }
@@ -413,7 +445,7 @@ namespace DigTest
             this.driver = driver;
             this.wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromMilliseconds(200.0));
             this.id = id;
-            this.state = GetDefaultState();
+            this.state = GetStartState();
         }
 
         public bool ToggleState()
@@ -423,7 +455,7 @@ namespace DigTest
             return state = !state;
         }
 
-        public bool GetDefaultState()
+        public bool GetStartState()
         {
             return "true" == driver.FindElement(By.Id(id)).GetAttribute("data-shinyjs-resettable-value");
         }
@@ -665,6 +697,47 @@ namespace DigTest
         public static string ReadVerbatimText(IWebDriver driver, string id)
         {
             return driver.FindElement(By.Id(id)).GetAttribute("textContent");
+        }
+
+        public static void RetryStaleElement(Action a)
+        {
+            int tries = 3;
+            while (true)
+            {
+                try
+                {
+                    a();
+                    break;
+                }
+                catch (OpenQA.Selenium.StaleElementReferenceException)
+                {
+                    //Thread.Sleep(100);
+                    if (--tries == 0)
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        public static void RetryNoSuchElement(Action a)
+        {
+            int tries = 3;
+            while (true)
+            {
+                try
+                {
+                    a();
+                    break;
+                }
+                catch (OpenQA.Selenium.NoSuchElementException)
+                {
+                    if (--tries == 0)
+                    {
+                        throw;
+                    }
+                }
+            }
         }
     }
 }
