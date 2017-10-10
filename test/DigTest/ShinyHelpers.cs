@@ -14,10 +14,11 @@ namespace DigTest
 {
     public class ShinySession
     {
-        public string all_vars { get; set; }
-        public string original_config { get; set; }
-        public string copied_config { get; set; }
-        public string log_file { get; set; }
+        public string all_vars { get; }
+        public string original_config { get; }
+        public string copied_config { get; }
+        public string log_file { get; }
+        public string data_file { get; }
 
         public ShinySession(string config_file)
         {
@@ -25,6 +26,7 @@ namespace DigTest
             original_config = Path.Combine(META.VersionInfo.MetaPath, config_file);
             copied_config = original_config.Insert(original_config.LastIndexOf(".json"), "_test");
             log_file = Path.ChangeExtension(copied_config, ".log");
+            data_file = Path.ChangeExtension(copied_config.Insert(original_config.LastIndexOf(".json"), "_data"), ".csv");
         }
     }
 
@@ -361,9 +363,10 @@ namespace DigTest
             catch (OpenQA.Selenium.NoSuchElementException)
             {
                 // Force the choices to appear.
-                Thread.Sleep(2000);
                 master_div.Click();
-                master_div.Click();
+                Thread.Sleep(300);
+                this.driver.FindElement(By.XPath(this.input)).SendKeys(Keys.Escape);
+                Thread.Sleep(1000);
             }
             if (this.driver.FindElement(By.XPath(this.choices)).GetAttribute("data-value") == null)
             {
