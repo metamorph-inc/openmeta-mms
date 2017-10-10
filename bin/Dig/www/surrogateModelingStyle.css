@@ -1,0 +1,23 @@
+iframe {
+  width: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+table.uq-predictions-table {
+  width: auto !important;
+}
+
+table.uq-predictions-table div.form-group {
+  margin-bottom: auto;
+  width: 150px;
+}
+
+table.uq-predictions-table thead td {
+    text-align: center;
+}
+
+table.uq-predictions-table tbody td {
+    vertical-align:  middle;
+}

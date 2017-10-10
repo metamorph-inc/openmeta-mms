@@ -6,6 +6,7 @@
     "DataTable.R",
     "Histogram.R",
     "PETRefinement.R",
-    "UncertaintyQuantification.R"
+    "UncertaintyQuantification.R",
+    "SurrogateModeling.R"
   ]
 }

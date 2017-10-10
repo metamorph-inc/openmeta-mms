@@ -444,6 +444,8 @@ server <- function(input, output, session, data) {
     score <- sorted_topsis$score
     output_data <- LocalData()[sorted_topsis$alt.row,]
     output_data <- cbind(rank, score, output_data)
+    names(output_data)[1] <- "Rank"
+    names(output_data)[2] <- "Score"
     output_data
   })
   
@@ -474,7 +476,11 @@ server <- function(input, output, session, data) {
     #if(input$transpose)
     #  data <- t(data)
     names(table_data) <- sapply(names(table_data), function(name) {
-      data$meta$variables[[name]]$name_with_units
+      if(!is.null(data$meta$variables[[name]]$name_with_units)) {
+        data$meta$variables[[name]]$name_with_units
+      } else {
+        name
+      }
     })
     table_data
   })
@@ -493,20 +499,20 @@ server <- function(input, output, session, data) {
   
   observeEvent(input$save_ranking, {
     number <- 1
-    name <- paste0("class", number)
+    name <- paste0("Rank_", number)
     while(!is.null(data$meta$variables[[name]])) {
       number <- number + 1
-      name <- paste0("class", number)
+      name <- paste0("Rank_", number)
     }
-    mean <- 25 + runif(1) * 50
-    sd <- 2 + runif(1) * 3
-    data$raw$df[[name]] <<- rnorm(nrow(data$raw$df),
-                                  mean=mean,
-                                  sd=sd)
     data$meta$variables[[name]] <- list(type="Classification",
                                         date=toString(Sys.time()),
                                         name_with_units=name,
                                         user=Sys.info()[["user"]])
+    new_column <- TOPSISData()[c("Rank", "GUID")]
+    names(new_column) <- c(name, "GUID")
+    data$raw$df <- merge(new_column,
+                         data$raw$df,
+                         all=TRUE)[,c(names(data$raw$df),name)]
     print(paste0("Saved Ranking: ", name))
   })
   

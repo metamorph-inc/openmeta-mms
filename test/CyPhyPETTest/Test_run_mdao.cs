@@ -277,8 +277,10 @@ namespace CyPhyPETTest
 
             Assert.Equal("u\"one\"", config.subProblems["ParametricExploration"].problemInputs["ProblemInput"].value);
             Assert.Equal(true, config.subProblems["ParametricExploration"].problemInputs["ProblemInput"].pass_by_obj);
+
+            Assert.Equal(petExperimentPath.Replace("@", ""), config.PETName);
         }
-        
+
 
         [Fact]
         public void Test_CyPhyPET_unit_matcher()
@@ -392,6 +394,26 @@ namespace CyPhyPETTest
 
             Assert.Equal(JsonConvert.SerializeObject(SortPropertiesAlphabetically(json_expected)),
                          JsonConvert.SerializeObject(SortPropertiesAlphabetically((JObject)constants)));
+
+            Assert.Equal("/Testing/ParametricExploration/TestConstants", (string)config["PETName"]);
+        }
+
+        [Fact]
+        public void NoDesignVariables()
+        {
+            string outputDir = GetCurrentMethod();
+            string petExperimentPath = "/@Testing/@ParametricExploration/@" + GetCurrentMethod();
+
+            Assert.True(File.Exists(mgaFile), "Failed to generate the mga.");
+            var result = DynamicsTeamTest.CyPhyPETRunner.RunReturnFull(outputDir, mgaFile, petExperimentPath);
+
+            Assert.True(result.Item2.Success, "CyPhyPET failed.");
+
+            var configContents = File.ReadAllText(Path.Combine(result.Item1.OutputDirectory, "mdao_config.json"));
+            var config = JsonConvert.DeserializeObject<AVM.DDP.PETConfig>(configContents);
+
+            Assert.Equal("num_samples = 1", config.drivers["ParameterStudy"].details["Code"]);
+            Assert.Equal("Uniform", config.drivers["ParameterStudy"].details["DOEType"]);
         }
 
         [Fact]
@@ -491,14 +513,19 @@ namespace CyPhyPETTest
             string objectAbsPath = "/@Testing/@ParametricExploration/@TestTestBench_With_Files";
             string configAbsPath = "/@Designs/@SimpleSystem";
 
-            var success = CyPhyMasterInterpreterRunner.RunMasterInterpreter(
+            var result = CyPhyMasterInterpreterRunner.RunMasterInterpreterAndReturnResults(
                 projectPath: this.mgaFile,
                 absPath: objectAbsPath,
                 configPath: configAbsPath,
                 postToJobManager: false,
                 keepTempModels: false);
 
-            Assert.True(success, "CyPhyMasterInterpreter run should have succeeded, but did not.");
+            Assert.True(result.Success, "CyPhyMasterInterpreter run should have succeeded, but did not.");
+
+            var configContents = File.ReadAllText(Path.Combine(result.OutputDirectory, "mdao_config.json"));
+            var config = JsonConvert.DeserializeObject<AVM.DDP.PETConfig>(configContents);
+
+            Assert.Equal(objectAbsPath.Replace("@", ""), config.PETName);
         }
 
         public void SetFixture(WorkFlow_PETFixture data)

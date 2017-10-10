@@ -1,0 +1,56 @@
+useDynLib(DiceKriging) 
+
+import(methods)
+importFrom("graphics", plot)
+importFrom("stats", predict)
+importFrom("stats", logLik)
+importFrom("stats", coef)
+importFrom("stats", coefficients)
+importFrom("stats", simulate)
+importFrom("stats", update)
+
+## S4
+exportClasses(covTensorProduct, covIso, covScaling, covKernel, km, covAffineScaling, covUser)
+## All methods, for own or "foreign" generics:
+exportMethods(show, plot, predict, simulate, update, covMatrix, covMat1Mat2, 
+covMatrixDerivative, covVector.dx, covParametersBounds, covparam2vect, vect2covparam, coef, summary, inputnames, ninput, kernelname, nuggetvalue, "nuggetvalue<-", nuggetflag)
+
+## S3
+S3method(logLik, km)
+S3method(plot, km)
+S3method(predict, km)
+
+
+
+export(branin, 
+       camelback, 
+       checkNames,
+       computeAuxVariables,
+       covStruct.create,
+       drop.response,
+       goldsteinPrice, 
+       hartman3, 
+       hartman6, 
+       km,
+       kmEstimate,
+       kmData,
+       km1Nugget.init, 
+       kmNoNugget.init, 
+       kmNuggets.init, 
+       leaveOneOut.km,
+       leaveOneOutFun,
+       leaveOneOutGrad, 
+       logLik.km, 
+       logLikFun,
+       logLikGrad, 
+       plot.km, 
+       predict.km, 
+       SCAD.derivative, 
+       SCAD, 
+       scalingFun,
+       scalingGrad,       
+       trend.deltax,
+       affineScalingFun,
+       affineScalingGrad,
+       trendMatrix.update)
+

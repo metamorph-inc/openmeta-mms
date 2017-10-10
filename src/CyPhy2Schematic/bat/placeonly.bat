@@ -2,6 +2,7 @@
 pushd %~dp0
 %SystemRoot%\SysWoW64\REG.exe query "HKLM\software\META" /v "META_PATH"
 
+SETLOCAL EnableDelayedExpansion
 SET QUERY_ERRORLEVEL=%ERRORLEVEL%
 
 IF %QUERY_ERRORLEVEL% == 0 (
@@ -41,22 +42,22 @@ IF %SYNTH_ERRORLEVEL% neq 0 (
 	exit /b %SYNTH_ERRORLEVEL%
 )
 
-%SystemRoot%\SysWoW64\REG.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\App Paths\eagle.exe" /v "Path"
+"%META_PATH%\bin\Python27\Scripts\python.exe" -m get_eagle_path
 SET QUERY_ERRORLEVEL=%ERRORLEVEL%
 
 IF %QUERY_ERRORLEVEL% == 0 (
-    FOR /F "skip=2 tokens=2,*" %%A IN ('%SystemRoot%\SysWoW64\REG.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\App Paths\eagle.exe" /v "Path"') DO SET EAGLE_PATH=%%B)
+	FOR /F "tokens=*" %%i in ('"%META_PATH%\bin\Python27\Scripts\python.exe" -m get_eagle_path') DO SET EAGLE_PATH=%%i
 )
 IF %QUERY_ERRORLEVEL% == 1 (
-    echo on
-    echo "Eagle CAD tools not installed." >> _FAILED.txt
-    echo "Eagle CAD tools not installed."
-    exit /b %QUERY_ERRORLEVEL%
+	echo on
+	echo "Eagle CAD tools are not installed." >> _FAILED.txt
+	echo "Eagle CAD tools are not installed."
+	exit /b %QUERY_ERRORLEVEL%
 )
 
 echo "Creating a PNG of the placeonly board."
 
-"%EAGLE_PATH%\bin\eagle.exe" schema.brd -C "set confirm yes; export image schema.png 800; quit;"
+"%EAGLE_PATH%" schema.brd -C "set confirm yes; export image schema.png 800; quit;"
 
 SET /A PNG_ERRORLEVEL=%ERRORLEVEL%
 

@@ -1,0 +1,52 @@
+table.surrogate-table {
+  width: auto !important;
+}
+
+table.surrogate-table thead th {
+    text-align: center;
+}
+
+table.surrogate-table tbody td {
+    vertical-align:  middle;
+}
+
+table.surrogate-table tbody td small {
+    color: #888;
+}
+
+table.surrogate-table tbody td .form-group {
+  margin-bottom: auto;
+}
+
+/* Workaround to prevent duplicate/delete button group from being broken onto
+   two lines, on browsers that support display: flex */
+@supports (display: flex) {
+  table.surrogate-table div.btn-group {
+    display: flex;
+  }
+}
+
+.discrete-var-chooser h4 {
+  margin-top: auto;
+}
+
+.discrete-var-chooser .form-group {
+  padding-right: 1em;
+}
+
+.discrete-var-chooser .form-control {
+  width: 200px;
+}
+
+.row-details-modal {
+  width: 95%;
+}
+
+.row-details-modal h4 {
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+}
+
+div.form-group.selected-var input {
+  background-color: #e5ffe5;
+}

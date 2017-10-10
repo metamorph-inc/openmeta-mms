@@ -56,6 +56,7 @@ design_tree_present <- FALSE
 saved_inputs <- NULL
 visualizer_config <- NULL
 design_tree <- NULL
+first_raw_poll <- TRUE
 
 dig_input_csv <- Sys.getenv('DIG_INPUT_CSV')
 dig_dataset_config <- Sys.getenv('DIG_DATASET_CONFIG')
@@ -167,7 +168,7 @@ for (i in 1:length(tab_requests)) {
 }
 
 # Source tab files
-print("Sourcing Tabs:")
+cat("Sourcing Tabs:\n")
 tab_environments <- mapply(function(file_name, id) {
     env <- new.env()
     if(!is.null(visualizer_config$tab_data)) {
@@ -177,7 +178,7 @@ tab_environments <- mapply(function(file_name, id) {
     }
     source(file_name, local = env)
     # debugSource(file_name, local = env)
-    print(paste0(env$title, " (", file_name, ")"))
+    cat(paste0("  ", env$title, " (", file_name, ")\n"))
     env
   },
   file_name=tab_files,
@@ -186,32 +187,37 @@ tab_environments <- mapply(function(file_name, id) {
 )
 
 # Read input dataset file
-print("Reading raw data...")
+cat("Reading raw data:\n")
 raw <- read.csv(file.path(launch_dir, visualizer_config$raw_data), fill=T)
 if(!is.null(visualizer_config$augmented_data)) {
   augmented_filename <- file.path(launch_dir,
                                   visualizer_config$augmented_data)
   augmented <- read.csv(augmented_filename, fill=T)
   extra <- raw[!(raw$GUID %in% augmented$GUID),]
+  if(nrow(extra) > 0) {
+    cat(paste0("  Added ", nrow(extra), " points.\n"))
+  }
   raw <- rbind(augmented, extra)
 }
+cat("  Done.\n")
 
 # Locate Artifacts
-print("Locating Artifacts:")
+cat("Locating Artifacts:\n")
 guid_folders <- NULL
 if(file.exists(file.path(launch_dir, 'metadata.json'))) {
   config_folders <- GetConfigFolders(launch_dir)
-  print(paste("Config Folders:", length(config_folders)))
+  cat(paste0("  Config Folders: ", length(config_folders), "\n"))
   results_dir <- file.path(launch_dir,"..","..","results")
   guid_folders <- FindGUIDFolders(results_dir, config_folders)
-  print(paste("GUID Folders:", length(guid_folders)))
+  cat(paste0("  GUID Folders: ", length(guid_folders), "\n"))
 } else {
-  print("No Artifacts Found.")
+  cat("  No Artifacts Found.\n")
 }
 
+cat("Processing Files:\n")
 # Process PET Configuration File ('pet_config.json') -------------------------
 
-print("Processing 'pet_config.json'...")
+cat("  'pet_config.json'\n")
 pet <- NULL
 if (!is.null(visualizer_config[["pet"]])) {
   pet <- visualizer_config$pet
@@ -219,19 +225,9 @@ if (!is.null(visualizer_config[["pet"]])) {
   pet <- BuildPet(pet_config_filename)
 }
 
-# Process Variables ----------------------------------------------------------
-
-print("Processing variables...")
-variables <- NULL
-if (!is.null(visualizer_config[["variables"]])) {
-  variables <- visualizer_config$variables
-} else {
-  variables <- BuildVariables(pet, names(raw))
-}
-
 # Process Design Tree ('design_tree.json') -------------------------
 
-print("Processing 'design_tree.json'...")
+cat("  'design_tree.json'\n")
 if (design_tree_present) {
   design_tree <- fromJSON(design_tree_filename, simplifyDataFrame = FALSE)
   if (is.empty(design_tree)) {
@@ -242,6 +238,18 @@ if (design_tree_present) {
   }
 }
 
+# Process Variables ----------------------------------------------------------
+
+cat("Processing variables...\n")
+variables <- NULL
+if (!is.null(visualizer_config[["variables"]])) {
+  variables <- visualizer_config$variables
+} else {
+  variables <- BuildVariables(pet, names(raw))
+}
+
+cat("Initial Setup Complete.\n\n")
+
 # Server ---------------------------------------------------------------------
 
 Server <- function(input, output, session) {
@@ -251,6 +259,38 @@ Server <- function(input, output, session) {
   #   input: the Shiny list of all the UI input elements.
   #   output: the Shiny list of all the UI output elements.
   #   session: a handle for the Shiny session.
+  
+  observe({
+    # Read input dataset file
+    raw <- raw_poll()
+    if(first_raw_poll) {
+      first_raw_poll <<- FALSE
+    } else {
+      cat("Re-reading raw data... ")
+      current <- isolate(data$raw$df)
+      extra <- raw[!(raw$GUID %in% current$GUID),]
+      if(nrow(extra) > 0) {
+        cat(paste("Adding", nrow(extra), "points.\n"))
+        data$raw$df <- rbind(current, extra)
+      } else {
+        cat("No new points added.\n")
+      }
+    }
+  })
+  
+  raw_poll <- reactivePoll(1000, session,
+    # This function returns the time that raw data file was last modified
+    checkFunc = function() {
+      if (file.exists(file.path(launch_dir, visualizer_config$raw_data)))
+        file.info(file.path(launch_dir, visualizer_config$raw_data))$mtime[1]
+      else
+        ""
+    },
+    # This function returns the content of log_file
+    valueFunc = function () {
+      read.csv(file.path(launch_dir, visualizer_config$raw_data), fill=T)
+    }
+  )
   
   # Data Pre-Processing --------------------------------------------------------
 
@@ -483,7 +523,7 @@ Server <- function(input, output, session) {
   })
   
   GenerateEnumUI <- function(current) {
-    items <- names(table(raw[[current]]))
+    items <- names(table(data$raw$df[[current]]))
     
     for(i in 1:length(items)){
       items[i] <- paste0(i, '. ', items[i])
@@ -698,7 +738,7 @@ Server <- function(input, output, session) {
       }
       # print(nrow(data_filtered))
     }
-    # print("Data Filtered.")
+    # cat("Data Filtered.\n")
     data_filtered
   })
   
@@ -781,13 +821,17 @@ Server <- function(input, output, session) {
           maximum <- data$pre$abs_max()[[var]]
           cols <- rainbow(bins, 1, 0.875, start = 0, end = 0.325)
           if (goal == "Maximize") {
-            data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
-                            cols[max(1, ceiling((value - minimum) / divisor))]}))
-          } 
-          else {
-            data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
-                            cols[max(1, ceiling((maximum - value) / divisor))]}))
+            Bin <- function(value) {max(1, ceiling((value - minimum) / divisor))}
+          } else {
+            Bin <- function(value) {max(1, ceiling((maximum - value) / divisor))}
           }
+          data_colored$color <- unlist(sapply(data_colored[[var]], function(value) {
+            if(is.na(value)) {
+              "grey"
+            } else {
+              cols[Bin(value)]
+            }
+          }))
           isolate({
             data$colorings$current$var <- var
             data$colorings$current$goal <- goal
@@ -831,7 +875,7 @@ Server <- function(input, output, session) {
         }
       )
     }
-    # print("Data Colored")
+    # cat("Data Colored.\n")
     # TODO(tthomas): Move adding units code out into the Explore.R tab.
     # names(data_colored) <- lapply(names(data_colored), AddUnits)
     data_colored
@@ -1074,7 +1118,7 @@ Server <- function(input, output, session) {
     if(SAVE_DIG_INPUT_CSV || dig_input_csv == "") {
       write(toJSON(visualizer_config, pretty = TRUE, auto_unbox = TRUE),
             file=config_filename)
-      print("Session saved.")
+      cat("Session saved.\n")
     }
     
     # Clear environment variables (necessary only for development)

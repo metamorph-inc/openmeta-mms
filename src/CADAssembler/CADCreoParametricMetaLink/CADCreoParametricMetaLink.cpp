@@ -5,21 +5,22 @@
 
 #include <ProNotify.h>
 #include <AssembleUtils.h>
-#include "MiscellaneousFunctions.h"
+#include "cc_MiscellaneousFunctions.h"
 
 #include "CADEnvironmentSettings.h"
-#include "WindowsFunctions.h"
+#include "cc_WindowsFunctions.h"
 #include <AssemblyEditingViaLink.h>
 #include <MetaLinkHandler.h>
 #include <Test_MetaLink.h>
 #include <ISISVersionNumber.h>
 #include "CADFactoryAbstract.h"
 #include "CADFactoryCreo.h"
+#include "CreoErrorCodes.h"
 #include <AssembleUtils.h>
 
 #include <boost/filesystem.hpp>
-#include "LoggerBoost.h"
-#include "CommonDefinitions.h"
+#include "cc_LoggerBoost.h"
+//#include "CommonDefinitions.h"
 #include <cc_CommonUtilities.h>
 //#include "EventLoopMonitor.h"
 #include "GlobalModelData.h"
@@ -166,7 +167,7 @@ int main(int argc, char *argv[])
     int ExitCode = 0;
 
     std::string			creoStartCommand;
-    std::string			CADToolDir;
+    std::string			CADExtensionsDir;
 
     std::string			templateFile_PathAndFileName;
     std::stringstream	exceptionErrorStringStream;
@@ -235,7 +236,7 @@ int main(int argc, char *argv[])
 		isis::SetCreoEnvirVariable_RetrieveSystemSettings(programInputArguments.graphicsModeOn,
                 programInputArguments.synchronizeWithCyPhy,
                 creoStartCommand,
-                CADToolDir,
+                CADExtensionsDir,
                 templateFile_PathAndFileName);
 
         std::map<std::string, isis::CADComponentData> CADComponentData_map;
@@ -305,9 +306,24 @@ int main(int argc, char *argv[])
 
         bool inputFileProcessed = false;
 
-        while(!terminateProcess)
+        while (true)
         {
             ProEventProcess();
+            if (terminateProcess)
+            {
+                break;
+            }
+            ProErr err;
+            if ((err = ProEngineerStatusGet()) != PRO_TK_NO_ERROR)
+            {
+				if (terminateProcess)
+				{
+					break;
+				}
+				exceptionErrorStringStream << "Creo exited abnormally: " << isis::ProToolKitError_string(err).c_str();
+                ExitCode = -4;
+                break;
+            }
             if(programInputArguments.inputXmlFileName.size()!=0 && !inputFileProcessed)
             {
                 metalink_handler.CreateAssembly(programInputArguments.inputXmlFileName);
@@ -388,6 +404,13 @@ int main(int argc, char *argv[])
             std::cerr << std::endl << std::endl << exceptionErrorStringStream.str() << std::endl << std::endl;
         }
 
+    }
+    else
+    {
+        if(Logging_Set_Up)
+        {
+            isis_LOG(lg, isis_FILE, isis_INFO) << "Normal exit" << std::endl;
+        }
     }
 
 

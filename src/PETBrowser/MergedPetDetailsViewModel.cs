@@ -122,7 +122,7 @@ namespace PETBrowser
         public ICollectionView Metrics { get; set; }
         public List<VisualizerSession> VisualizerSessionsList { get; set; }
         public ICollectionView VisualizerSessions { get; set; }
-        private string MergedDirectory { get; set; }
+        public string MergedDirectory { get; set; }
 
         public string CreatedTime
         {

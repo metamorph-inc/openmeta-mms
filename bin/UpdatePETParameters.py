@@ -18,6 +18,7 @@ import pythoncom
 # if os.environ.has_key("UDM_PATH"):
 #     sys.path.append(os.path.join(os.environ["UDM_PATH"], "bin"))
 import _winreg as winreg
+import pywintypes
 with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"Software\META") as software_meta:
     meta_path, _ = winreg.QueryValueEx(software_meta, "META_PATH")
 sys.path.append(os.path.join(meta_path, 'bin'))
@@ -154,10 +155,13 @@ if __name__ == '__main__':
         parser = argparse.ArgumentParser(description='Re-run a PET with updated parameters.')
         parser.add_argument('--new-name')
         parser.add_argument('--pet-config')
+        parser.add_argument('--log-file')
         command_line_args = parser.parse_args()
 
         from win32com.client import DispatchEx
         Dispatch = DispatchEx
+        import win32com.client.dynamic
+        import win32com.server.util
         from pywintypes import com_error
         import json
         # with open(sys.argv[1]) as input_json:
@@ -232,13 +236,43 @@ if __name__ == '__main__':
         # config_light.KeepTemporaryModels = True
         config_light.PostToJobManager = True
 
+        class StatusCallback(object):
+            _public_methods_ = ['SingleConfigurationProgress', 'MultipleConfigurationProgress']
+
+            def __init__(self, log):
+                self.log = log
+
+            def SingleConfigurationProgress(self, args):
+                # args = win32com.client.dynamic.Dispatch(args)
+                # print (args.Context or '') + ' ' + (args.Configuration or '') + ' ' + args.Title
+                pass
+
+            def MultipleConfigurationProgress(self, args):
+                args = win32com.client.dynamic.Dispatch(args)
+                # print (args.Context or '') + ' ' + (args.Configuration or '') + ' ' + args.Title
+                self.log.write(args.Title + '\n')
+                self.log.flush()
+
         master = Dispatch("CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI")
         master.Initialize(project)
+        logfile = None
+        if command_line_args.log_file:
+            logfile = open(command_line_args.log_file, 'wb')
+            cb = win32com.client.dynamic.Dispatch(win32com.server.util.wrap(StatusCallback(logfile)))
+            master.AddProgressCallback(cb)
         # master.Initialize(project._oleobj_.QueryInterface(pythoncom.IID_IUnknown))
         results = master.RunInTransactionWithConfigLight(config_light)
+        if logfile:
+            logfile.close()
 
         project.Save(project.ProjectConnStr + "_PET_debug.mga", True)
-        project.Close(False)
+        try:
+            project.Close(False)
+        except pywintypes.com_error as e:
+            if 'Access is denied' in repr(e):
+                print('Could not save "{}". Is it open in GME?'.format(project.ProjectConnStr[4:]))
+            else:
+                raise
 
         # print(cyPhyPython.ComponentParameter())
 
