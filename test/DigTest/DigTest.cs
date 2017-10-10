@@ -105,10 +105,16 @@ namespace DigTest
 
                 ExploreSet(driver);
                 DataTableSet(driver);
-                TabsSet(driver);
+                HistogramSet(driver);
+                PETRefinementSet(driver);
+                UQSet(driver);
+
+                ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Explore");
+
                 FooterSet(driver);
 
-                Thread.Sleep(500); //For shiny to catch up, find a better way
+                //TODO(tthomas): Find a better way to allow shiny to finish before exiting.
+                Thread.Sleep(500);
                 driver.Close();
                 wrapper.AppendLog(session.log_file);
             }
@@ -124,6 +130,8 @@ namespace DigTest
 
                 ExploreCheck(driver);
                 DataTableCheck(driver);
+                HistogramCheck(driver);
+                PETRefinementCheck(driver);
                 FooterCheck(driver);
 
                 driver.Close();
@@ -134,7 +142,10 @@ namespace DigTest
             File.Delete(session.data_file);
         }
 
-        // Test "Explore.R"
+        /// <summary>
+        /// Test the functionality of the Explore tab.
+        /// </summary>
+        /// <param name="driver"></param>
         private void ExploreSet(IWebDriver driver)
         {
             IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
@@ -235,6 +246,10 @@ namespace DigTest
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Pairs Plot");
         }
 
+        /// <summary>
+        /// Check Explore tab after session restore.
+        /// </summary>
+        /// <param name="driver"></param>
         private void ExploreCheck(IWebDriver driver)
         {
             IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
@@ -278,6 +293,10 @@ namespace DigTest
             ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Pairs Plot");
         }
 
+        /// <summary>
+        /// Test the functionality of the Data Table tab.
+        /// </summary>
+        /// <param name="driver"></param>
         private void DataTableSet(IWebDriver driver)
         {
             IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
@@ -333,17 +352,41 @@ namespace DigTest
             wait.Until(d => string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()) == "");
         }
 
-        private void TabsSet(IWebDriver driver)
+        /// <summary>
+        /// Test the functionality of the Histogram tab.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void HistogramSet(IWebDriver driver)
         {
             var all_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
             IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
 
-            // Test "Histogram.R"
             ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Histogram");
             var histogram_variable = new ShinySelectInput(driver, "Histogram-variable");
             Assert.Equal(all_variable_names, string.Join(", ", histogram_variable.GetAllChoices().ToArray()));
+            var histogram_image = new ShinyPlot(driver, "Histogram-plot");
             histogram_variable.SetCurrentSelectionClicked("OUT_Blade_Cost_Total");
+            histogram_image.WaitUntilImageRefreshes();
+            Assert.True(histogram_image.ImageHasChanged());
+        }
 
+        /// <summary>
+        /// Check Histogram tab after session restore.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void HistogramCheck(IWebDriver driver)
+        {
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Histogram");
+            Assert.Equal("OUT_Blade_Cost_Total", new ShinySelectInput(driver, "Histogram-variable").GetCurrentSelection());
+        }
+
+        /// <summary>
+        /// Test the functionality of the PET Refinement tab.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void PETRefinementSet(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
 
             // Test "PETRefinement.R"
             ShinyUtilities.OpenTabPanel(driver, "master_tabset", "PET Refinement");
@@ -363,8 +406,38 @@ namespace DigTest
             Assert.Equal("Steel, Aluminum", driver.FindElement(By.Id("PETRefinement-new_selection_IN_HubMaterial")).GetAttribute("value"));
             Assert.Equal("/Testing/Parametric Studies/WindTurbinePET_Refined", driver.FindElement(By.Id("PETRefinement-newPetName")).GetAttribute("value"));
             ShinyUtilities.ScrollToTop(driver);
+        }
 
+        /// <summary>
+        /// Check the PET Refinement tab after session restore.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void PETRefinementCheck(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
 
+            // Test "PETRefinement.R"
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "PET Refinement");
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
+            Assert.Equal("600", driver.FindElement(By.Id("PETRefinement-pet_num_samples")).GetAttribute("value"));
+            Assert.Equal("28-16, 28-20, 30-16, 30-20, 32-16, 32-20", driver.FindElement(By.Id("PETRefinement-new_cfg_ids")).GetAttribute("value"));
+            Assert.Equal("5", driver.FindElement(By.Id("PETRefinement-new_min_IN_ElemCount")).GetAttribute("value"));
+            Assert.Equal("31898.59688", driver.FindElement(By.Id("PETRefinement-new_max_IN_E11")).GetAttribute("value"));
+            Assert.Equal("9180", driver.FindElement(By.Id("PETRefinement-new_min_IN_E22")).GetAttribute("value"));
+            Assert.Equal("77.01253438", driver.FindElement(By.Id("PETRefinement-new_min_IN_Root_AvgCapMaterialThickness")).GetAttribute("value"));
+            Assert.Equal("30", driver.FindElement(By.Id("PETRefinement-new_max_IN_Tip_AvgCapMaterialThickness")).GetAttribute("value"));
+            Assert.Equal("Steel, Aluminum", driver.FindElement(By.Id("PETRefinement-new_selection_IN_HubMaterial")).GetAttribute("value"));
+            Assert.Equal("/Testing/Parametric Studies/WindTurbinePET_Refined", driver.FindElement(By.Id("PETRefinement-newPetName")).GetAttribute("value"));
+        }
+
+        /// <summary>
+        /// Test the functionality of the Uncertainty Quantification (UQ) tab.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void UQSet(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            
             //// Test "UncertaintyQuantification.R"
             //IWait<IWebDriver> wait30 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
 
@@ -417,13 +490,10 @@ namespace DigTest
             ////IWait<IWebDriver> UQ_wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
             ////Assert.True(UQ_wait5.Until(driver1 => driver.FindElement(By.CssSelector("#probabilityTable")).Displayed));
             ////*/
-
-            // Return to "Explore.R" tab
-            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Explore");
         }
 
         /// <summary>
-        /// Check the Footer after a session restore.
+        /// Test the functionality of the Visualizer Footer.
         /// </summary>
         private void FooterSet(IWebDriver driver)
         {
@@ -472,6 +542,10 @@ namespace DigTest
             Assert.True(stats.GetCurrentPoints() < prev_points);
         }
 
+        /// <summary>
+        /// Check the Footer after a session restore.
+        /// </summary>
+        /// <param name="driver"></param>
         private void FooterCheck(IWebDriver driver)
         {
             IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));

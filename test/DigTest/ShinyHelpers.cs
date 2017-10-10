@@ -249,7 +249,9 @@ namespace DigTest
             {
                 // Force the choices to appear.
                 master_div.Click();
-                master_div.Click();
+                Thread.Sleep(300);
+                this.driver.FindElement(By.XPath(this.input)).SendKeys(Keys.Escape);
+                Thread.Sleep(1000);
             }
             if (this.driver.FindElement(By.XPath(this.choices)).GetAttribute("data-value") == null)
             {
