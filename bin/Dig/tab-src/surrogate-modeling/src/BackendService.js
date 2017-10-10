@@ -176,6 +176,31 @@ class BackendService {
     }
   }
 
+  trainSurrogateAtPoints(independentVars, discreteVars, surrogateModelName) {
+    console.log(discreteVars);
+
+    if(this.hasShiny) {
+      const requestArgs = {
+        independentVars: independentVars,
+        discreteVars: discreteVars,
+        surrogateModel: surrogateModelName
+      };
+
+      return this.makeShinyRequest('trainSurrogateAtPoints', requestArgs).then((result) => {
+        // Because Shiny serializes empty lists as null
+        if(result === null) {
+          return [];
+        } else {
+          return result;
+        }
+      });
+    } else {
+      console.log("Adding training points at: ", independentVars);
+
+      return Promise.resolve();
+    }
+  }
+
   getSurrogateGraphData(independentVars, discreteVars, selectedIndependentVarIndex, surrogateModelName) {
     if(this.hasShiny) {
       const requestArgs = {

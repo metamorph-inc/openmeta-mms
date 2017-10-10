@@ -110,6 +110,14 @@ server <- function(input, output, session, data) {
             id=input$externalRequest$id,
             data=result
           ))
+        } else if(input$externalRequest$command == "trainSurrogateAtPoints") {
+          result = trainSurrogate(input$externalRequest$data$independentVars,
+                                     input$externalRequest$data$discreteVars,
+                                     input$externalRequest$data$surrogateModel)
+          session$sendCustomMessage(type="externalResponse", list(
+            id=input$externalRequest$id,
+            data=result
+          ))
         } else if(input$externalRequest$command == "getGraph") {
           result = getGraph(input$externalRequest$data$independentVars,
                             input$externalRequest$data$discreteVars,
@@ -134,6 +142,57 @@ server <- function(input, output, session, data) {
     })
     
   })
+  
+  trainSurrogate <- function(indepVars, discreteVars, surrogateModel) {
+    if(!is.null(data$meta$pet$pet_config_filename)) {
+      results_directory <- dirname(pet_config_filename)
+      project_directory <- dirname(results_directory)
+      
+      if("metadata.json" %in% dir(results_directory)) {
+        
+        ivarDf = data.frame(matrix(unlist(indepVars), nrow=length(indepVars), byrow=T))
+        names(ivarDf) = unlist(data$pre$var_range_nums_and_ints_list()[['Design Variable']])
+        
+        config_id = NULL
+        
+        for(discreteVar in discreteVars) {
+          if(discreteVar$varName == "CfgID") {
+            config_id = discreteVar$selected
+          } else {
+            ivarDf[discreteVar$varName] = rep(discreteVar$selected, nrow(ivarDf))
+          }
+        }
+        
+        surrogateCsvPath = paste(results_directory, "surrogate-model-reexec.csv", sep="\\")
+        
+        write.csv(ivarDf, file = surrogateCsvPath, row.names=FALSE, quote=FALSE)
+        
+        result = system2("..\\Python27\\Scripts\\python.exe",
+                args = c("..\\RunMergedPetAtPoints.py",
+                         shQuote(results_directory),
+                         shQuote(config_id),
+                         shQuote(surrogateCsvPath)),
+                stdout = file.path(results_directory, "RunMergedPetAtPoints_stdout.log"),
+                stderr = file.path(results_directory, "RunMergedPetAtPoints_stderr.log"),
+                wait = TRUE)
+        
+        if(result == 0) {
+          result = list(
+            success = TRUE,
+            message = ""
+          )
+          
+          return(result)
+        } else {
+          stop("PET re-execution failed--  see RunMergedPetAtPoints_stdout.log for more details.")
+        }
+      } else {
+        stop("Results Browser metadata.json required to add training points.")
+      }
+    } else {
+      stop("Training must be done on a merged PET.")
+    }
+  }
   
   getGraph <- function(indepVars, discreteVars, selectedIndependentVar, surrogateModel) {
     GRAPH_RESOLUTION = 200

@@ -83,6 +83,7 @@ namespace PythonTest
                     "matlab_wrapper",
                     "tables",
                     "vitables",
+                    "get_eagle_path",
             };
 
             foreach (var test in module_names.Select(moduleName =>

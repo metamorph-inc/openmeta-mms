@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col, Form, FormGroup, FormControl, ControlLabel, Alert } from 'react-bootstrap';
 
 import PlotlyGraph from './PlotlyGraph';
@@ -15,6 +16,15 @@ class ProbabilityGraphsView extends Component {
       yAxisErrors: null,
       currentErrorMessage: null
     };
+  }
+
+  static propTypes = {
+    predictionsUnavailable: PropTypes.bool.isRequired,
+    independentVarNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    dependentVarNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    selectedIndependentVar: PropTypes.string.isRequired,
+    selectedXAxisValue: PropTypes.number.isRequired,
+    service: PropTypes.object.isRequired
   }
 
   componentDidMount() {

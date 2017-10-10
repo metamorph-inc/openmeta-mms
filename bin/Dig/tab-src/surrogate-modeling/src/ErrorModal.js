@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Glyphicon, Button} from 'react-bootstrap';
 
 class ErrorModal extends Component {
+  static propTypes = {
+    errorMessage: PropTypes.string,
+    onClose: PropTypes.func.isRequired
+  }
+
   handleClose = () => {
     this.props.onClose();
   }

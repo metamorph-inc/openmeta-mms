@@ -1122,3 +1122,5 @@ test/master_results.xml
 test/results.xml
 .Rproj.user
 models/PET_simple_proof-of-concept/manifest.project.json
+**/.idea
+*.ncrunchsolution.user

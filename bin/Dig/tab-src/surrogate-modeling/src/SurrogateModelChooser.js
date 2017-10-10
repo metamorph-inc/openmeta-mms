@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 class SurrogateModelChooser extends Component {
+  static propTypes = {
+    availableSurrogateModels: PropTypes.arrayOf(PropTypes.string).isRequired,
+    selectedSurrogateModel: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired
+  }
+
   handleChange = (ev) => {
     this.props.onChange(ev.target.value);
   }

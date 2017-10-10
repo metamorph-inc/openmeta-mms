@@ -685,10 +685,13 @@ namespace CyPhyPET
                     }
                 }
             }
+
             config.GeneratedConfigurationModel = mainParameters.GeneratedConfigurationModel;
             config.PETName = "/" + string.Join("/", PET.getAncestors(mainParameters.CurrentFCO, stopAt: mainParameters.CurrentFCO.Project.RootFolder)
-                .Skip(mainParameters.SelectedConfig != null ? 1 : 0) // HACK: MI inserts a "Temporary" folder for design space SUTs
-                .getTracedObjectOrSelf(mainParameters.GetTraceability()).Select(obj => obj.Name).Reverse()) + "/" + mainParameters.OriginalCurrentFCOName;
+                .getTracedObjectOrSelf(mainParameters.GetTraceability())
+                // MI inserts a "Temporary" folder for design space SUTs. Skip it
+                .Distinct(new FCOComparer())
+                .Select(obj => obj.Name).Reverse()) + "/" + mainParameters.OriginalCurrentFCOName;
 
             // 2) Get the type of test-bench and call any dependent interpreters
             //var graph = CyPhySoT.CyPhySoTInterpreter.UpdateDependency((MgaModel)this.mainParameters.CurrentFCO, this.Logger);
@@ -756,7 +759,7 @@ namespace CyPhyPET
                     else if (testBenchRef != null && testBenchRef.AllReferred != null && testBenchRef.AllReferred is CyPhy.TestBenchType)
                     {
                         interpreterSuccess = this.CallCyPhy2CAD_CSharp(testBenchRef.AllReferred as CyPhy.TestBenchType, outputFolder);
-                        this.UpdateSuccess("Assuming call to CAD successful : ", true);
+                        this.UpdateSuccess("CyPhy2CAD : ", interpreterSuccess);
                     }
                     else
                     {
@@ -1202,8 +1205,10 @@ namespace CyPhyPET
                 {
                     CreateParametersAndMetricsForExcel(fco);
                 }
-
-                CreateParametersAndMetricsForPythonOrMatlab(fco);
+                else
+                {
+                    CreateParametersAndMetricsForPythonOrMatlab(fco);
+                }
             });
         }
 
@@ -1528,6 +1533,15 @@ namespace CyPhyPET
             }
 
             var valueFlow = ((GME.MGA.Meta.IMgaMetaModel)excel.Impl.MetaBase).AspectByName["ValueFlowAspect"];
+            Func<ISIS.GME.Common.Interfaces.FCO, int> getYPosition = (fco_) =>
+            {
+                string icon;
+                int x = 1, y = 1;
+                ((MgaFCO)fco_.Impl).GetPartDisp(valueFlow).GetGmeAttrs(out icon, out x, out y);
+                return y;
+            };
+            int maxMetricYPosition = excel.Children.MetricCollection.Select(getYPosition).DefaultIfEmpty().Max();
+            int maxParamYPosition = excel.Children.ParameterCollection.Select(getYPosition).DefaultIfEmpty().Max();
             ExcelInterop.GetExcelInputsAndOutputs(dialog.FileName, (string name, string refersTo) =>
             {
                 var metric = excel.Children.MetricCollection.Where(m => m.Name == name).FirstOrDefault();
@@ -1536,7 +1550,8 @@ namespace CyPhyPET
                     metric = CyPhyClasses.Metric.Create(excel);
                     metric.Name = name;
                     metric.Attributes.Description = refersTo;
-                    ((IMgaFCO)metric.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 800, 300);
+                    maxMetricYPosition += 60;
+                    ((IMgaFCO)metric.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 800, maxMetricYPosition);
                 }
                 else
                 {
@@ -1550,6 +1565,8 @@ namespace CyPhyPET
                     param = CyPhyClasses.Parameter.Create(excel);
                     param.Name = name;
                     param.Attributes.Description = refersTo;
+                    maxParamYPosition += 60;
+                    ((IMgaFCO)param.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 100, maxParamYPosition);
                 }
                 else
                 {
@@ -1583,4 +1600,16 @@ namespace CyPhyPET
         }
     }
 
+    public class FCOComparer : IEqualityComparer<IMgaObject>
+    {
+        public bool Equals(IMgaObject x, IMgaObject y)
+        {
+            return x.Project == y.Project && x.ID == y.ID;
+        }
+
+        public int GetHashCode(IMgaObject obj)
+        {
+            return obj.ID.GetHashCode();
+        }
+    }
 }

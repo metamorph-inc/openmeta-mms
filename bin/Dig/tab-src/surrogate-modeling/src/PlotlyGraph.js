@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Col } from 'react-bootstrap';
 import { plot } from 'plotly.js/lib/core';
 
 class PlotlyGraph extends Component {
+  static propTypes = {
+    xAxisPoints: PropTypes.arrayOf(PropTypes.number).isRequired,
+    yAxisPoints: PropTypes.arrayOf(PropTypes.number).isRequired,
+    yAxisErrors: PropTypes.arrayOf(PropTypes.number).isRequired,
+    xAxisName: PropTypes.string.isRequired,
+    yAxisName: PropTypes.string.isRequired,
+    selectedXAxisValue: PropTypes.number.isRequired
+  }
+
   componentDidMount() {
     console.log("Mounted plotly graph component");
     this.buildPlotlyGraph();
