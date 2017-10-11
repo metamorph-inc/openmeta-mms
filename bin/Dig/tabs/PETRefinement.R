@@ -104,6 +104,11 @@ server <- function(input, output, session, data) {
   
   design_variables <- pet$design_variables
   
+  results_directory <- dirname(pet_config_filename)
+  project_directory <- dirname(results_directory)
+  pet_refined_filename <- file.path(results_directory, "pet_config_refined.json")
+  log_filename <- file.path(results_directory, "master_interpreter.log")
+  
   output$pet_config_present <- reactive({
     !is.null(pet$pet_name)
   })
@@ -355,35 +360,47 @@ server <- function(input, output, session, data) {
                               job_count,
                               " job(s)."),
                        duration=NULL)
-      results_directory <- dirname(pet_config_filename)
-      project_directory <- dirname(results_directory)
-      pet_refined_filename <- file.path(results_directory, "pet_config_refined.json")
+      if (file.exists(log_filename)) {
+        file.remove(log_filename)
+      }
       ExportRangesFunction(pet_refined_filename)
       rc <- system2("..\\Python27\\Scripts\\python.exe",
               args = c("..\\UpdatePETParameters.py",
                        "--pet-config",
                        paste0("\"",pet_refined_filename,"\""),
                        "--new-name",
-                       paste0("\"",input$newPetName,"\"")),
+                       paste0("\"",input$newPetName,"\""),
+                       "--log-file",
+                       paste0("\"",log_filename,"\"")),
               stdout = file.path(results_directory, "UpdatePETParameters_stdout.log"),
               stderr = file.path(results_directory, "UpdatePETParameters_stderr.log"),
               wait = TRUE)
       # removeNotification(id="test")
       end.time <- Sys.time()
+      message <- paste0(end.time, ": Master Interpreter ")
       if(rc == 0) {
-        showNotification(paste0(end.time,
-                                ": Successfully created ",
-                                job_count,
-                                " job(s) after ",
-                                round(end.time-start.time, digits = 2),
-                                " s!"),
-                         duration = NULL)
+        message <- paste0(message, "completed successfully ")
       } else {
-        showNotification("Execution Failed!", duration = NULL)
-        # shell.exec(results_directory)
+        message <- paste0(message, "failed ")
       }
+      message <- paste0(message, "after ",
+                        round(end.time-start.time, digits = 2), " s!\n")
+      action <- NULL
+      if (file.exists(log_filename)) {
+        ConvertToWindowsLineEndings(log_filename)
+        action <- tags$div(style="padding: 7px 0px 0px 0px", actionButton(ns("log"), "Open Log"))
+      }
+      showNotification(ui = message, action = action, duration = NULL)
     }
   })
+  
+  ConvertToWindowsLineEndings <- function(filename) {
+    txt <- readLines(filename)
+    txt <- gsub("\n", "\r\n", txt)
+    writeLines(txt, con = filename)
+  }
+  
+  observeEvent(input$log, { shell.exec(log_filename) })
   
   output$downloadRanges <- downloadHandler(
     filename = function() {paste('pet_config_refined_', Sys.Date(), '.json', sep='')},
