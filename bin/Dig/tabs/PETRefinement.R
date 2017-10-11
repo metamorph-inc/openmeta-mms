@@ -352,17 +352,19 @@ server <- function(input, output, session, data) {
   
   observeEvent(input$run_ranges, {
     if (!is.null(pet$pet_config_filename)) {
-      start.time <- Sys.time()
-      job_count <- length(unlist(strsplit(input$new_cfg_ids, ",")))
-      showNotification(id="test",
-                       paste0(start.time,
-                              ": Master Interpreter started creating ",
-                              job_count,
-                              " job(s)."),
-                       duration=NULL)
       if (file.exists(log_filename)) {
         file.remove(log_filename)
       }
+      removeNotification(id="start_notifcation")
+      removeNotification(id="end_notification")
+      job_count <- length(unlist(strsplit(input$new_cfg_ids, ",")))
+      start.time <- Sys.time()
+      showNotification(id="start_notification",
+                       ui=paste0(start.time,
+                                ": Master Interpreter started creating ",
+                                job_count,
+                                " job(s)."),
+                       duration=NULL)
       ExportRangesFunction(pet_refined_filename)
       rc <- system2("..\\Python27\\Scripts\\python.exe",
               args = c("..\\UpdatePETParameters.py",
@@ -375,7 +377,6 @@ server <- function(input, output, session, data) {
               stdout = file.path(results_directory, "UpdatePETParameters_stdout.log"),
               stderr = file.path(results_directory, "UpdatePETParameters_stderr.log"),
               wait = TRUE)
-      # removeNotification(id="test")
       end.time <- Sys.time()
       message <- paste0(end.time, ": Master Interpreter ")
       if(rc == 0) {
@@ -390,7 +391,8 @@ server <- function(input, output, session, data) {
         ConvertToWindowsLineEndings(log_filename)
         action <- tags$div(style="padding: 7px 0px 0px 0px", actionButton(ns("log"), "Open Log"))
       }
-      showNotification(ui = message, action = action, duration = NULL)
+      showNotification(id = "end_notification", ui = message,
+                       action = action, duration = NULL)
     }
   })
   
