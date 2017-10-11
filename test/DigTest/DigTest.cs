@@ -502,6 +502,7 @@ namespace DigTest
             // Filters
             ShinyUtilities.ScrollToElementID(driver, "footer_collapse");
             ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
+            Thread.Sleep(500);
             Assert.Equal("20-50", new VisualizerFilterInput(driver, "IN_ElemCount").EntrySetFromTo(20, 50));
             Assert.Equal(20000, new VisualizerFilterInput(driver, "IN_E22").EntrySetFrom(20000.0));
             Assert.Equal(160000, new VisualizerFilterInput(driver, "OUT_Blade_Cost_Total").EntrySetTo(160000));
