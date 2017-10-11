@@ -129,7 +129,7 @@ namespace DigTest
 
             wait.Until(d => GetValue(from_path) == from);
             this.from = from;
-            Thread.Sleep(400);
+            Thread.Sleep(800);
             return this.from;
         }
 
@@ -147,7 +147,7 @@ namespace DigTest
 
             wait.Until(d => GetValue(to_path) == to);
             this.to = to;
-            Thread.Sleep(400);
+            Thread.Sleep(800);
             return this.to;
         }
 
@@ -173,7 +173,7 @@ namespace DigTest
             wait.Until(d => GetValue(from_path) == from);
             this.to = to;
             this.from = from;
-            Thread.Sleep(400);
+            Thread.Sleep(800);
             return this.from.ToString() + "-" + this.to.ToString();
         }
 
