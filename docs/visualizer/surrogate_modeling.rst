@@ -14,7 +14,7 @@ Walkthrough
 
 |TAB_EMPTY|
 
-The surrogate modeling tab opens to a page containing selectors for each
+The Surrogate Modeling tab opens to a page containing selectors for each
 discrete design variable in your model, as well as a table containing a column
 for each numeric design variable and objective in the model.
 
@@ -61,11 +61,14 @@ the surrogate model.  Once the new values have been computed, the "Train at
 these points" button will become enabled, and the objective cells in the table
 will become yellow to indicate that their values are out of date-- click
 |PREDICT_BUTTON| "Predict" in each row to re-compute the surrogate and get new
-predictions at the selected points.  Also note that, depending on the results
-of the PET, the new points may not be within your visualizer's current filter
-range--  if the new surrogate predictions don't differ from the values prior to
-training, reset filters by selecting the "Filters" pane and clicking "Reset
-Visible Filters".
+predictions at the selected points.
+
+.. note::
+   Depending on the results of the PET, the new points may not be within
+   your Visualizer's current filter range. If the new surrogate predictions
+   don't differ from the values prior to training, reset the filters by
+   selecting the "Filters" pane in the footer and clicking "Reset Visible
+   Filters".
 
 Reference
 ~~~~~~~~~
