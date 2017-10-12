@@ -504,6 +504,18 @@ server <- function(input, output, session, data) {
     t(near_points)
   })
   
+  UpdateX <- observeEvent(input$update_x, {
+    cat("Warning: UpdateX() is currently unimplemented.\n")
+  })
+  
+  UpdateY <- observeEvent(input$update_y, {
+    cat("Warning: UpdateY() is currently unimplemented.\n")
+  })
+  
+  UpdateBoth <- observeEvent(input$update_both, {
+    cat("Warning: UpdateBoth() is currently unimplemented.\n")
+  })
+  
   # Point Details -----------------------------------------------------
 
   observe({

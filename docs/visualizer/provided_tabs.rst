@@ -15,3 +15,4 @@ Visualizer.
    data_table
    pet_refinement
    uncertainty_quantification
+   surrogate_modeling

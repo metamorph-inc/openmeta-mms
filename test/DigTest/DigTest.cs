@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Xunit;
-
+using System.Drawing;
 
 namespace DigTest
 {
@@ -24,7 +24,7 @@ namespace DigTest
             int ret = Xunit.ConsoleClient.Program.Main(new string[] {
                 System.Reflection.Assembly.GetAssembly(typeof(DigTest)).CodeBase.Substring("file:///".Length),
                 //"/noshadow",
-                //"/trait", "Category=ResultsBrowser"
+                "/trait", "Category=ResultsBrowser"
             });
             Console.In.ReadLine();
         }
@@ -36,218 +36,13 @@ namespace DigTest
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out string pszPath);
-
-
-        void RetryStaleElement(Action a)
-        {
-            int tries = 3;
-            while (true)
-            {
-                try
-                {
-                    a();
-                    break;
-                }
-                catch (OpenQA.Selenium.StaleElementReferenceException)
-                {
-                    //Thread.Sleep(100);
-                    if (--tries == 0)
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
-
-        void RetryNoSuchElement(Action a)
-        {
-            int tries = 3;
-            while (true)
-            {
-                try
-                {
-                    a();
-                    break;
-                }
-                catch (OpenQA.Selenium.NoSuchElementException)
-                {
-                    if (--tries == 0)
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
-
-        void OldVisualizer()
-        {
-            var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
-
-            options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
-            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
-                options))
-            using (DigWrapper wrapper = new DigWrapper())
-            {
-                /*try
-                {*/
-                    wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbine/mergedPET.csv"));
-
-                    driver.Navigate().GoToUrl(wrapper.url);
-                    
-                    IWait<IWebDriver> wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
-                    Assert.True(wait0.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
-
-                    Assert.Equal("Visualizer", driver.Title);
-                    
-                    /*                              PAIRS TAB                              */
-
-                    // Check coloring schemes
-                    IWait<IWebDriver> wait1 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(wait1.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Total Points: 5000")));
-
-                    /*  Min/Max Coloring   */
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"None\"]")).Click());
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click());
-                    IWait<IWebDriver> wait2 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(wait2.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Best Points: 1700")));
-
-                    /*  Highlighted Coloring   */
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click());
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click());
-                    IWait<IWebDriver> wait3 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(wait3.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Highlighted Points: 0")));
-
-                    /*  Ranked Coloring   */
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click());
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click());
-                    IWait<IWebDriver> wait4 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(wait4.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Ranked Points: 0")));
-
-
-                    /*                          SINGLE PLOT TAB                             */
-
-                    driver.FindElement(By.CssSelector("a[data-value=\"Single Plot\"]")).Click();
-                    IWait<IWebDriver> single_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
-                    
-                    // Perform plot brush sequence and color data accordingly
-                    Actions builder = new Actions(driver);
-                    
-                    IWebElement single_plot = driver.FindElement(By.CssSelector("div#singlePlot.shiny-plot-output.shiny-bound-output"));
-                    //Assert.True(single_wait0.Until(driver1 => single_plot.Displayed));
-                    Assert.True(single_wait0.Until(driver1 => single_plot.FindElement(By.CssSelector("img")).Displayed));
-
-                    IAction plotBrush = builder.MoveToElement(single_plot, 80, 66).ClickAndHold().MoveByOffset(400, 400).Release().Build();
-
-                    plotBrush.Perform();
-
-                    driver.FindElement(By.Id("highlightData")).Click();
-
-                    Thread.Sleep(1000);
-                    Trace.WriteLine(driver.FindElement(By.Id("stats")).Text);
-
-                    /*IWait<IWebDriver> single_wait2 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
-                    Assert.True(single_wait2.Until(driver1 => driver.FindElement(By.Id("stats")).Displayed));
-                    Assert.True(single_wait2.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Highlighted Points: 1911")));*/
-
-                    /*                           DATA TABLE TAB                             */
-
-                    /*  Rank data table by modelica.jturbine, select first data point, and color */
-                    driver.FindElement(By.CssSelector("a[data-value=\"Data Table\"]")).Click();
-                    IWebElement activateSimpleRanking = driver.FindElement(By.CssSelector("input[value=\"Simple Metric w/ TxFx\"]"));
-                    Thread.Sleep(50);
-                    activateSimpleRanking.Click();
-
-                    driver.FindElement(By.CssSelector("div[class=\"selectize-input items not-full has-options\"]")).Click();
-                    IWait<IWebDriver> wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(wait5.Until(driver1 => driver.FindElement(By.CssSelector("div[class=\"selectize-input items not-full has-options focus input-active dropdown-active\"]")).Displayed));
-                    IWait<IWebDriver> wait6 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(wait6.Until(driver1 => driver.FindElement(By.CssSelector("div.option.active")).Displayed));
-                    driver.FindElement(By.CssSelector("div.option.active")).Click();
-                    IWait<IWebDriver> wait7 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(wait7.Until(driver1 => driver.FindElement(By.CssSelector("tbody > tr:nth-child(1) > td:nth-child(1)")).Text.Contains("4460")));
-                    driver.FindElement(By.CssSelector("tbody > tr:nth-child(1) > td:nth-child(1)")).Click();
-                    driver.FindElement(By.CssSelector("button#colorRanked.btn.btn-default.action-button.shiny-bound-input")).Click();
-                    IWait<IWebDriver> wait8 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(wait8.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Ranked Points: 1")));
-
-
-                    /*                             PET CONFIG TAB                              */
-
-                    // Check refined and original ranges
-                    driver.FindElement(By.CssSelector("a[data-value=\"PET Refinement\"]")).Click();
-
-                    IWait<IWebDriver> pet_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                    Assert.True(pet_wait0.Until(driver1 => driver.FindElement(By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Displayed));
-
-                    driver.FindElement(By.CssSelector("button#applyAllOriginalNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
-                    IWait<IWebDriver> wait9 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
-                    Assert.Equal("80", wait9.Until(driver1 => driver.FindElement(By.Id("newMin2")).GetAttribute("value")));
-                    
-                    driver.FindElement(By.CssSelector("button#applyAllRefinedNumeric.btn.btn-default.action-button.shiny-bound-input")).Click();
-                    IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
-                    Assert.True(wait10.Until(driver1 => driver.FindElement(By.Id("newMax3")).GetAttribute("value") == "1.499990966"));
-
-                    /*                             OPTIONS TAB                              */
-
-                    // Get path of downloads folder
-                    string downloads;
-                    SHGetKnownFolderPath(KnownFolder.Downloads, 0, IntPtr.Zero, out downloads);
-
-                    // Export and import a session
-                    driver.FindElement(By.CssSelector("a[data-value=\"Options\"]")).Click();
-
-                    String path = Path.Combine(downloads, "DigTestSettings.csv");
-
-                    // Delete current instance of session file
-                    if(File.Exists(path))
-                        File.Delete(path);
-                    
-                    // Save Current Session
-                    driver.FindElement(By.Id("sessionName")).Click();
-                    driver.FindElement(By.Id("sessionName")).SendKeys("DigTestSettings");
-                    Thread.Sleep(50); // Wait for text field to populate
-                    driver.FindElement(By.Id("exportSession")).Click();
-
-                    // Change data coloring to Max/Min in pairs tab
-                    driver.FindElement(By.CssSelector("a[data-value=\"Pairs Plot\"]")).Click();
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click());
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Max/Min\"]")).Click());
-
-                    // Load earlier session
-                    driver.FindElement(By.CssSelector("a[data-value=\"Options\"]")).Click();
-                    IWait<IWebDriver> option_wait0 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
-                    Assert.True(option_wait0.Until(driver1 => driver.FindElement(By.Id("loadSessionName")).Displayed));
-                    driver.FindElement(By.Id("loadSessionName")).Click();
-                    driver.FindElement(By.Id("loadSessionName")).SendKeys(path);
-                    driver.FindElement(By.Id("importSession")).Click();
-
-                    // Check to see that coloring mode has returned to Ranked
-                    Assert.True(wait8.Until(driver1 => driver.FindElement(By.Id("stats")).Text.Contains("Ranked Points: 1")));
-
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Ranked\"]")).Click());
-                    RetryStaleElement(() => driver.FindElement(By.CssSelector("div[data-value=\"Highlighted\"]")).Click());
-
-
-                /*}
-                catch
-                {
-                    if (Debugger.IsAttached)
-                    {
-                        // this should keep the browser open for inspection
-                        Debugger.Break();
-                    }
-                    throw;
-                }*/
-
-            }
-
-        }
-
+        
         [Fact()]
         void GenericCSVLaunch()
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
+            options.AddArgument("--start-maximized");
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
@@ -269,6 +64,7 @@ namespace DigTest
         {
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
+            options.AddArgument("--start-maximized");
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
@@ -284,237 +80,508 @@ namespace DigTest
             File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/OpenmetaCSV/windturbine_merged_viz_config_data.csv"));
         }
 
-        [Fact(Skip="flakey")]
+        [Fact()]
         [Trait("Category","ResultsBrowser")]
         void ResultsBrowserJSONLaunch()
         {
             // TODO(tthomas): Add testing of additional UI elements
-
+            var session = new ShinySession(Path.Combine("bin", "dig", "datasets", "WindTurbineForOptimization", "visualizer_config.json"));
+            File.Copy(session.original_config, session.copied_config, overwrite: true);
+            File.Delete(session.log_file);
+            
             var options = new OpenQA.Selenium.Chrome.ChromeOptions { };
             options.AddUserProfilePreference("auto-open-devtools-for-tabs", "true");
-            File.Copy(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config.json"),
-                      Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"),
-                      overwrite: true);
+            options.AddArgument("--start-maximized");
+
+            // Launch first session
+            File.AppendAllText(session.log_file, "First Launch Log ------------------------\n");
             using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
-                var all_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
-                IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                
-                // Launch first session
-                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
+                wrapper.Start(session.copied_config);
                 driver.Navigate().GoToUrl(wrapper.url);
+                Assert.True(ShinyUtilities.WaitUntilDocumentReady(driver));
+                Assert.Equal("Visualizer", driver.Title);
 
-                // Test "Explore.R"
-                Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
-                var display = new ShinySelectMultipleInput(driver, "Explore-display");
-                display.AppendSelection("OUT");
-                display.AppendSelection("OUT");
+                ExploreSet(driver);
+                DataTableSet(driver);
+                HistogramSet(driver);
+                PETRefinementSet(driver);
+                UQSet(driver);
 
-
-                // Test "DataTable.R"
-                ShinyUtilities.SwitchTabs(driver, "Data Table");
-                Assert.Equal("true", driver.FindElement(By.Id("DataTable-use_filtered")).GetAttribute("data-shinyjs-resettable-value"));
-                var process_method = new ShinySelectInput(driver, "DataTable-process_method");
-                Assert.Equal("None", process_method.GetCurrentSelection());
-                process_method.SetCurrentSelection("TOPSIS");
-
-                var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
-                //Assert.Equal(all_variable_names, string.Join(", ", weight_metrics.GetRemainingChoices().ToArray())); <-- Broken right now.
-                weight_metrics.AppendSelection("OUT_Blade");
-                weight_metrics.AppendSelection("OUT_Blade");
-
-
-                // Test "Histogram.R"
-                ShinyUtilities.SwitchTabs(driver, "Histogram");
-                var histogram_variable = new ShinySelectInput(driver, "Histogram-variable");
-                Assert.Equal(all_variable_names, string.Join(", ", histogram_variable.GetAllChoices().ToArray()));
-                histogram_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
-
-
-                // Test "PETRefinement.R"
-                ShinyUtilities.SwitchTabs(driver, "PET Refinement");
-                wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
-                driver.FindElement(By.Id("PETRefinement-apply_original_cfg_ids")).Click();
-                driver.FindElement(By.Id("PETRefinement-apply_all_original_numeric")).Click();
-                driver.FindElement(By.Id("PETRefinement-apply_all_original_enum")).Click();
-                driver.FindElement(By.Id("PETRefinement-apply_refined_range_IN_E11")).Click();
-                driver.FindElement(By.Id("PETRefinement-apply_refined_range_IN_Root_AvgCapMaterialThickness")).Click();
-                Assert.Equal("600", driver.FindElement(By.Id("PETRefinement-pet_num_samples")).GetAttribute("value"));
-                Assert.Equal("28-16, 28-20, 30-16, 30-20, 32-16, 32-20", driver.FindElement(By.Id("PETRefinement-new_cfg_ids")).GetAttribute("value"));
-                Assert.Equal("5", driver.FindElement(By.Id("PETRefinement-new_min_IN_ElemCount")).GetAttribute("value"));
-                Assert.Equal("31898.59688", driver.FindElement(By.Id("PETRefinement-new_max_IN_E11")).GetAttribute("value"));
-                Assert.Equal("9180", driver.FindElement(By.Id("PETRefinement-new_min_IN_E22")).GetAttribute("value"));
-                Assert.Equal("77.01253438", driver.FindElement(By.Id("PETRefinement-new_min_IN_Root_AvgCapMaterialThickness")).GetAttribute("value"));
-                Assert.Equal("30", driver.FindElement(By.Id("PETRefinement-new_max_IN_Tip_AvgCapMaterialThickness")).GetAttribute("value"));
-                Assert.Equal("Steel, Aluminum", driver.FindElement(By.Id("PETRefinement-new_selection_IN_HubMaterial")).GetAttribute("value"));
-                Assert.Equal("/Testing/Parametric Studies/WindTurbinePET_Refined", driver.FindElement(By.Id("PETRefinement-newPetName")).GetAttribute("value"));
-
-
-                //// Test "UncertaintyQuantification.R"
-                //IWait<IWebDriver> wait30 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
-
-                //Assert.True(wait30.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
-                //Assert.Equal("Visualizer", driver.Title);
-
-                ShinyUtilities.SwitchTabs(driver, "Uncertainty Quantification");
-                //driver.FindElement(By.Id("UncertaintyQuantification-design_configs_present")).Click();
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/../../../..")).Displayed));
-                //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div")).Click();
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div/div[2]")).Displayed));
-                //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div/div[2]//div[@data-value='32-16']")).Click();
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
-
-                //// Forward UQ
-                //driver.FindElement(By.Id("UncertaintyQuantification-fuq_constraint_enable2")).Click();
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-fuq_constraint_enable2")).Selected));
-                //driver.FindElement(By.Id("UncertaintyQuantification-run_forward_uq")).Click();
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
-
-                ////// Add Probability Query
-                //driver.FindElement(By.Id("UncertaintyQuantification-add_probability")).Click();
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-queryThreshold0")).Displayed));
-
-                //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div")).Click();
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div/div[2]")).Displayed));
-                //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div/div[2]//div[@data-value='OUT_Blade_Tip_Deflection']")).Click();
-
-
-
-                ////driver.FindElement(By.XPath("//select[@data-value='OUT_Blade_Tip_Deflection']")).Click();
-
-                //driver.FindElement(By.Id("UncertaintyQuantification-queryThreshold0")).SendKeys("2400");
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.CssSelector("#UncertaintyQuantification-queryThreshold0")).GetAttribute("value") == "2400"));
-
-                ////// Evaluate current probability Query
-                //driver.FindElement(By.Id("UncertaintyQuantification-run_probabilities_queries")).Click();
-                //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-queryValue0")).Displayed));
-                //Assert.True(wait30.Until(driver1 => float.Parse(driver.FindElement(By.Id("UncertaintyQuantification-queryValue0")).Text) < 0.35));
-
-                /////*      DESIGN RANKING TAB      */
-                ////driver.FindElement(By.CssSelector("#uqTabset > li:nth-child(2) > a")).Click();
-
-                ////IWait<IWebDriver> UQ_wait4 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                ////Assert.True(UQ_wait4.Until(driver1 => driver.FindElement(By.CssSelector("#runProbability")).Displayed));
-                ////driver.FindElement(By.CssSelector("#runProbability")).Click();
-
-                /////*
-                ////IWait<IWebDriver> UQ_wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                ////Assert.True(UQ_wait5.Until(driver1 => driver.FindElement(By.CssSelector("#probabilityTable")).Displayed));
-                ////*/
-
-                // Return to "Explore.R" tab
-                ShinyUtilities.SwitchTabs(driver, "Explore");
+                ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Explore");
 
                 FooterSet(driver);
 
-                Thread.Sleep(300); //For shiny to catch up, find a better way
-
+                //TODO(tthomas): Find a better way to allow shiny to finish before exiting.
+                Thread.Sleep(500);
                 driver.Close();
+                wrapper.AppendLog(session.log_file);
             }
 
-            // Launch second session
-            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(
-               options))
+            // Launch second session to ensure proper session restore
+            File.AppendAllText(session.log_file, "\nSecond Launch Log ------------------------\n");
+            using (IWebDriver driver = new OpenQA.Selenium.Chrome.ChromeDriver(options))
             using (DigWrapper wrapper = new DigWrapper())
             {
-                // Reload to check changes
-                wrapper.Start(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
+                wrapper.Start(session.copied_config);
                 driver.Navigate().GoToUrl(wrapper.url);
-                IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-                Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
-                var display = new ShinySelectMultipleInput(driver, "Explore-display");
-                Assert.Equal("IN_HubMaterial, IN_E11, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
+                Assert.True(ShinyUtilities.WaitUntilDocumentReady(driver));
 
-                // Test Data Table
-                ShinyUtilities.SwitchTabs(driver, "Data Table");
-                var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
-                Assert.Equal("OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
-                wait10.Until(ExpectedConditions.ElementIsVisible(By.Id("DataTable-clearMetrics"))).Click();
-                Thread.Sleep(300); // FIXME: Apply the correct wait statement here instead of a Thread.Sleep() call.
-                Assert.Equal("", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+                ExploreCheck(driver);
+                DataTableCheck(driver);
+                HistogramCheck(driver);
+                PETRefinementCheck(driver);
+                FooterCheck(driver);
 
                 driver.Close();
+                wrapper.AppendLog(session.log_file);
             }
 
-            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test.json"));
-            File.Delete(Path.Combine(META.VersionInfo.MetaPath, "bin/Dig/datasets/WindTurbineForOptimization/visualizer_config_test_data.csv"));
+            File.Delete(session.copied_config);
+            File.Delete(session.data_file);
         }
 
+        /// <summary>
+        /// Test the functionality of the Explore tab.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void ExploreSet(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            Actions builder = new Actions(driver);
+
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Explore");
+
+            // Test Pairs Plot
+            Assert.True(wait.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
+            var display = new ShinySelectMultipleInput(driver, "Explore-display");
+            var pairs_plot = new ShinyPlot(driver, "Explore-pairs_plot");
+            display.AppendSelection("OUT");
+            display.AppendSelection("OUT");
+            pairs_plot.WaitUntilImageRefreshes();
+
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Plot Options");
+            var start = pairs_plot.ImageStats();
+            var autorender = new ShinyCheckboxInput(driver, "Explore-auto_render");
+            Assert.True(autorender.GetStartState());
+            //TODO(tthomas): Test Delayed Render
+            //Assert.False(autorender.ToggleState());
+            //ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Variables");
+
+            var upperpanel = new ShinyCheckboxInput(driver, "Explore-pairs_upper_panel");
+            Assert.False(upperpanel.GetStartState());
+            Assert.True(upperpanel.ToggleState());
+            pairs_plot.WaitUntilImageRefreshes();
+            Assert.True(pairs_plot.ImageStats()[Color.FromArgb(255,0,0,0)] > start[Color.FromArgb(255,0,0,0)] * 1.5);
+
+            var trendlines = new ShinyCheckboxInput(driver, "Explore-pairs_trendlines");
+            Assert.False(trendlines.GetStartState());
+            Assert.False(start.ContainsKey(Color.FromArgb(255, 255, 0, 0)));
+            Assert.True(trendlines.ToggleState());
+            pairs_plot.WaitUntilImageRefreshes();
+            Assert.True(pairs_plot.ImageIncludesColor(Color.FromArgb(255, 255, 0, 0)));
+
+            var displayunits = new ShinyCheckboxInput(driver, "Explore-pairs_units");
+            Assert.True(displayunits.GetStartState());
+
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Markers");
+            var initial_count = pairs_plot.ImageStats();
+            new ShinySelectInput(driver, "Explore-pairs_plot_marker").SetCurrentSelectionTyped("Plus");
+            pairs_plot.WaitUntilImageRefreshes();
+            var second_count = pairs_plot.ImageStats();
+            Assert.True(second_count[Color.FromArgb(255, 0, 0, 0)] > initial_count[Color.FromArgb(255, 0, 0, 0)]);
+            Assert.Equal(1.5, new ShinySliderInput(driver, "Explore-pairs_plot_marker_size").MoveSliderToValue(1.5));
+            pairs_plot.WaitUntilImageRefreshes();
+            var third_count = pairs_plot.ImageStats();
+            Assert.True(third_count[Color.FromArgb(255, 0, 0, 0)] > second_count[Color.FromArgb(255, 0, 0, 0)]);
+            
+            //TODO(tthomas): Replace OpenTabPanel("Single Plot") with double click.
+            //IWebElement pairs_plot = driver.FindElement(By.Id("Explore-pairs_plot"));
+            //IAction dbl_click_pairs_plot = builder.MoveToElement(pairs_plot).MoveByOffset(100, 300).DoubleClick().Build();
+            //dbl_click_pairs_plot.Perform();
+
+            //Test Single Plot
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Single Plot");
+            var single_plot = new ShinyPlot(driver, "Explore-single_plot");
+            new ShinySelectInput(driver, "Explore-x_input").SetCurrentSelectionClicked("IN_Tip_AvgCapMaterialThickness");
+            single_plot.WaitUntilImageRefreshes();
+            Assert.True(single_plot.ImageHasChanged());
+
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Markers");
+            new ShinySelectInput(driver, "Explore-single_plot_marker").SetCurrentSelectionClicked("16"); // "Filled Circle"
+            var marker_size_single = new ShinySliderInput(driver, "Explore-single_plot_marker_size");
+            Assert.Equal(1.0, marker_size_single.GetValue());
+            Assert.Equal(1.5, marker_size_single.MoveSliderToValue(1.5));
+            single_plot.WaitUntilImageRefreshes();
+            Assert.True(single_plot.ImageHasChanged());
+
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Filter");
+            // Perform plot brush sequence
+            var brush_single_plot = builder.MoveToElement(single_plot.GetElement(), 200, 200).ClickAndHold();
+            brush_single_plot.MoveByOffset(400, 400).Release().Build().Perform();
+            var in_e11_filter = new VisualizerFilterInput(driver, "IN_E11");
+            Assert.Equal("25520-32480", in_e11_filter.GetFromTo());
+            driver.FindElement(By.Id("Explore-update_y")).Click();
+            builder.MoveToElement(single_plot.GetElement(), 100, 100).Click().Build().Perform();
+            Assert.Equal("25520-32480", in_e11_filter.GetFromTo()); // This should fail when UpdateX/Y/Both are fixed.
+
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Overlays");
+            Assert.Equal("false", driver.FindElement(By.Id("Explore-add_regression")).GetAttribute("data-shinyjs-resettable-value"));
+            //Assert.False(single_plot.ImageHasChanged()); // Faster Method
+            Assert.False(single_plot.ImageIncludesColor(Color.FromArgb(255, 0, 0, 139)));
+
+            driver.FindElement(By.Id("Explore-add_regression")).Click();
+            single_plot.WaitUntilImageRefreshes();
+            //Assert.True(single_plot.ImageHasChanged()); // Faster Method
+            Assert.True(single_plot.ImageIncludesColor(Color.FromArgb(255, 0, 0, 139)));
+
+            //Test Single Point Details
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Point Details");
+            new ShinySelectInput(driver, "Explore-details_guid").SetCurrentSelectionTyped("0f700");
+            var expected_details = "                                               \r\nCfgID                                \"32-20\"   \r\nIN_E11                               \"27684.36\"\r\nIN_E22                               \"72611.63\"\r\nIN_ElemCount                         \"44\"      \r\nIN_HubMaterial                       \"Aluminum\"\r\nIN_Root_AvgCapMaterialThickness (mm) \"81.6862\" \r\nIN_Tip_AvgCapMaterialThickness (mm)  \"22.29602\"\r\nOUT_Blade_Cost_Total (USD)           \"148647.5\"\r\nOUT_Blade_Tip_Deflection (mm)        \"2639.237\"";
+            wait.Until(d => expected_details == ShinyUtilities.ReadVerbatimText(driver, "Explore-point_details"));
+
+            // Return to Pairs Plot
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Pairs Plot");
+        }
+
+        /// <summary>
+        /// Check Explore tab after session restore.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void ExploreCheck(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            
+            // Test Pairs Plot
+            Assert.True(wait.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
+            var display = new ShinySelectMultipleInput(driver, "Explore-display");
+            Assert.Equal("IN_HubMaterial, IN_E11, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", display.GetCurrentSelection().ToArray()));
+
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Plot Options");
+            Assert.True(new ShinyCheckboxInput(driver, "Explore-auto_render").GetStartState());
+            Assert.True(new ShinyCheckboxInput(driver, "Explore-pairs_upper_panel").GetStartState());
+            Assert.True(new ShinyCheckboxInput(driver, "Explore-pairs_trendlines").GetStartState());
+            Assert.True(new ShinyCheckboxInput(driver, "Explore-pairs_units").GetStartState());
+
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-pairs_plot_collapse", "Markers");
+            Assert.Equal("3", new ShinySelectInput(driver, "Explore-pairs_plot_marker").GetCurrentSelection());
+            Assert.Equal(1.5, new ShinySliderInput(driver, "Explore-pairs_plot_marker_size").GetValue());
+            
+            //Test Single Plot
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Single Plot");
+            Assert.Equal("IN_Tip_AvgCapMaterialThickness", new ShinySelectInput(driver, "Explore-x_input").GetCurrentSelection());
+            Assert.Equal("IN_E11", new ShinySelectInput(driver, "Explore-y_input").GetCurrentSelection());
+            
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Markers");
+            Assert.Equal("16", new ShinySelectInput(driver, "Explore-single_plot_marker").GetCurrentSelection()); // "Filled Circle"
+            Assert.Equal(1.5, new ShinySliderInput(driver, "Explore-single_plot_marker_size").GetValue());
+
+            ShinyUtilities.OpenCollapsePanel(driver, "Explore-single_plot_collapse", "Overlays");
+            Assert.True(new ShinyCheckboxInput(driver, "Explore-add_regression").GetStartState());
+            Assert.False(new ShinyCheckboxInput(driver, "Explore-add_contour").GetStartState());
+            Assert.False(new ShinyCheckboxInput(driver, "Explore-add_pareto").GetStartState());
+
+            //Test Single Point Details
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Point Details");
+            Assert.True(new ShinySelectInput(driver, "Explore-details_guid").GetCurrentSelection().StartsWith("0f700"));
+            var expected_details = "                                               \r\nCfgID                                \"32-20\"   \r\nIN_E11                               \"27684.36\"\r\nIN_E22                               \"72611.63\"\r\nIN_ElemCount                         \"44\"      \r\nIN_HubMaterial                       \"Aluminum\"\r\nIN_Root_AvgCapMaterialThickness (mm) \"81.6862\" \r\nIN_Tip_AvgCapMaterialThickness (mm)  \"22.29602\"\r\nOUT_Blade_Cost_Total (USD)           \"148647.5\"\r\nOUT_Blade_Tip_Deflection (mm)        \"2639.237\"";
+            Assert.Equal(expected_details, ShinyUtilities.ReadVerbatimText(driver, "Explore-point_details"));
+
+            // Return to Pairs Plot
+            ShinyUtilities.OpenTabPanel(driver, "Explore-tabset", "Pairs Plot");
+        }
+
+        /// <summary>
+        /// Test the functionality of the Data Table tab.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void DataTableSet(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+
+            // Test "DataTable.R"
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
+            Assert.True(new ShinyCheckboxInput(driver, "DataTable-use_filtered").GetStartState());
+            var process_method = new ShinySelectInput(driver, "DataTable-process_method");
+            Assert.Equal("None", process_method.GetCurrentSelection());
+            process_method.SetCurrentSelectionClicked("TOPSIS");
+
+            var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
+            //TODO(tthomas): Fix the ShinySelectMultipleInput.GetRemainingChoices() call.
+            //var all_numeric_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
+            //var sample = string.Join(", ", weight_metrics.GetRemainingChoices().ToArray());
+            //wait.Until(d => string.Join(", ", weight_metrics.GetRemainingChoices().ToArray()) == all_numeric_variable_names);
+            weight_metrics.AppendSelection("OUT_Blade");
+            weight_metrics.AppendSelection("OUT_Blade");
+            Thread.Sleep(200);
+
+            Assert.Equal(0.5, new ShinySliderInput(driver, "DataTable-rnk7").MoveSliderToValue(0.5));
+            wait.Until(d => driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[1]")).GetAttribute("textContent") == "140");
+            Assert.Equal("1", driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[2]")).GetAttribute("textContent"));
+            Assert.Equal("0.828514676583442", driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[3]")).GetAttribute("textContent"));
+            Assert.Equal("32-16", driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[4]")).GetAttribute("textContent"));
+            Assert.Equal("8a3c95db-2fa6-4fbc-badd-34a119d1c37e", driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[5]")).GetAttribute("textContent"));
+        }
+
+        /// <summary>
+        /// Check Data Table tab after session restore.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void DataTableCheck(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(5.0));
+
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Data Table");
+            Assert.True(new ShinyCheckboxInput(driver, "DataTable-use_filtered").GetStartState());
+            Assert.Equal("TOPSIS", new ShinySelectInput(driver, "DataTable-process_method").GetCurrentSelection());
+
+            //TODO(tthomas): Fix failure to restore weight slider value.
+            //Assert.Equal(0.5, new ShinySliderInput(driver, "DataTable-rnk7").GetValue());
+            //wait.Until(d => driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[1]")).GetAttribute("textContent") == "140");
+            //Assert.Equal("1", driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[2]")).GetAttribute("textContent"));
+            //Assert.Equal("0.828514676583442", driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[3]")).GetAttribute("textContent"));
+            //Assert.Equal("32-16", driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[4]")).GetAttribute("textContent"));
+            //Assert.Equal("8a3c95db-2fa6-4fbc-badd-34a119d1c37e", driver.FindElement(By.XPath("//div[@id='DataTable-dataTable']/div[1]/table/tbody/tr[1]/td[5]")).GetAttribute("textContent"));
+
+            var weight_metrics = new ShinySelectMultipleInput(driver, "DataTable-weightMetrics");
+            Assert.Equal("OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("DataTable-clearMetrics"))).Click();
+            Thread.Sleep(500); // FIXME: Apply the correct wait statement here instead of a Thread.Sleep() call.
+            wait.Until(d => string.Join(", ", weight_metrics.GetCurrentSelection().ToArray()) == "");
+        }
+
+        /// <summary>
+        /// Test the functionality of the Histogram tab.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void HistogramSet(IWebDriver driver)
+        {
+            var all_variable_names = "IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection";
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Histogram");
+            var histogram_variable = new ShinySelectInput(driver, "Histogram-variable");
+            Assert.Equal(all_variable_names, string.Join(", ", histogram_variable.GetAllChoices().ToArray()));
+            var histogram_image = new ShinyPlot(driver, "Histogram-plot");
+            histogram_variable.SetCurrentSelectionClicked("OUT_Blade_Cost_Total");
+            histogram_image.WaitUntilImageRefreshes();
+            Assert.True(histogram_image.ImageHasChanged());
+        }
+
+        /// <summary>
+        /// Check Histogram tab after session restore.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void HistogramCheck(IWebDriver driver)
+        {
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Histogram");
+            Assert.Equal("OUT_Blade_Cost_Total", new ShinySelectInput(driver, "Histogram-variable").GetCurrentSelection());
+        }
+
+        /// <summary>
+        /// Test the functionality of the PET Refinement tab.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void PETRefinementSet(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+
+            // Test "PETRefinement.R"
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "PET Refinement");
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_original_cfg_ids");
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_all_original_numeric");
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_all_original_enum");
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_refined_range_IN_E11");
+            ShinyUtilities.ClickIDWithScroll(driver, "PETRefinement-apply_refined_range_IN_Root_AvgCapMaterialThickness");
+            Assert.Equal("600", driver.FindElement(By.Id("PETRefinement-pet_num_samples")).GetAttribute("value"));
+            Assert.Equal("28-16, 28-20, 30-16, 30-20, 32-16, 32-20", driver.FindElement(By.Id("PETRefinement-new_cfg_ids")).GetAttribute("value"));
+            Assert.Equal("5", driver.FindElement(By.Id("PETRefinement-new_min_IN_ElemCount")).GetAttribute("value"));
+            Assert.Equal("31898.59688", driver.FindElement(By.Id("PETRefinement-new_max_IN_E11")).GetAttribute("value"));
+            Assert.Equal("9180", driver.FindElement(By.Id("PETRefinement-new_min_IN_E22")).GetAttribute("value"));
+            Assert.Equal("77.01253438", driver.FindElement(By.Id("PETRefinement-new_min_IN_Root_AvgCapMaterialThickness")).GetAttribute("value"));
+            Assert.Equal("30", driver.FindElement(By.Id("PETRefinement-new_max_IN_Tip_AvgCapMaterialThickness")).GetAttribute("value"));
+            Assert.Equal("Steel, Aluminum", driver.FindElement(By.Id("PETRefinement-new_selection_IN_HubMaterial")).GetAttribute("value"));
+            Assert.Equal("/Testing/Parametric Studies/WindTurbinePET_Refined", driver.FindElement(By.Id("PETRefinement-newPetName")).GetAttribute("value"));
+            ShinyUtilities.ScrollToTop(driver);
+        }
+
+        /// <summary>
+        /// Check the PET Refinement tab after session restore.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void PETRefinementCheck(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+
+            // Test "PETRefinement.R"
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "PET Refinement");
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("PETRefinement-apply_original_cfg_ids")));
+            Assert.Equal("600", driver.FindElement(By.Id("PETRefinement-pet_num_samples")).GetAttribute("value"));
+            Assert.Equal("28-16, 28-20, 30-16, 30-20, 32-16, 32-20", driver.FindElement(By.Id("PETRefinement-new_cfg_ids")).GetAttribute("value"));
+            Assert.Equal("5", driver.FindElement(By.Id("PETRefinement-new_min_IN_ElemCount")).GetAttribute("value"));
+            Assert.Equal("31898.59688", driver.FindElement(By.Id("PETRefinement-new_max_IN_E11")).GetAttribute("value"));
+            Assert.Equal("9180", driver.FindElement(By.Id("PETRefinement-new_min_IN_E22")).GetAttribute("value"));
+            Assert.Equal("77.01253438", driver.FindElement(By.Id("PETRefinement-new_min_IN_Root_AvgCapMaterialThickness")).GetAttribute("value"));
+            Assert.Equal("30", driver.FindElement(By.Id("PETRefinement-new_max_IN_Tip_AvgCapMaterialThickness")).GetAttribute("value"));
+            Assert.Equal("Steel, Aluminum", driver.FindElement(By.Id("PETRefinement-new_selection_IN_HubMaterial")).GetAttribute("value"));
+            Assert.Equal("/Testing/Parametric Studies/WindTurbinePET_Refined", driver.FindElement(By.Id("PETRefinement-newPetName")).GetAttribute("value"));
+        }
+
+        /// <summary>
+        /// Test the functionality of the Uncertainty Quantification (UQ) tab.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void UQSet(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            
+            //// Test "UncertaintyQuantification.R"
+            //IWait<IWebDriver> wait30 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.0));
+
+            //Assert.True(wait30.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete")));
+            //Assert.Equal("Visualizer", driver.Title);
+
+            ShinyUtilities.OpenTabPanel(driver, "master_tabset", "Uncertainty Quantification");
+            //driver.FindElement(By.Id("UncertaintyQuantification-design_configs_present")).Click();
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/../../../..")).Displayed));
+            //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div")).Click();
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div/div[2]")).Displayed));
+            //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-design_config_choice']/following-sibling::div/div[2]//div[@data-value='32-16']")).Click();
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
+
+            //// Forward UQ
+            //driver.FindElement(By.Id("UncertaintyQuantification-fuq_constraint_enable2")).Click();
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-fuq_constraint_enable2")).Selected));
+            //driver.FindElement(By.Id("UncertaintyQuantification-run_forward_uq")).Click();
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//div[@id='UncertaintyQuantification-vars_plots']/div[1]/div/div/img")).Displayed));
+
+            ////// Add Probability Query
+            //driver.FindElement(By.Id("UncertaintyQuantification-add_probability")).Click();
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-queryThreshold0")).Displayed));
+
+            //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div")).Click();
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div/div[2]")).Displayed));
+            //driver.FindElement(By.XPath("//*[@id='UncertaintyQuantification-queryVariable0']/following-sibling::div/div[2]//div[@data-value='OUT_Blade_Tip_Deflection']")).Click();
+
+
+
+            ////driver.FindElement(By.XPath("//select[@data-value='OUT_Blade_Tip_Deflection']")).Click();
+
+            //driver.FindElement(By.Id("UncertaintyQuantification-queryThreshold0")).SendKeys("2400");
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.CssSelector("#UncertaintyQuantification-queryThreshold0")).GetAttribute("value") == "2400"));
+
+            ////// Evaluate current probability Query
+            //driver.FindElement(By.Id("UncertaintyQuantification-run_probabilities_queries")).Click();
+            //Assert.True(wait30.Until(driver1 => driver.FindElement(By.Id("UncertaintyQuantification-queryValue0")).Displayed));
+            //Assert.True(wait30.Until(driver1 => float.Parse(driver.FindElement(By.Id("UncertaintyQuantification-queryValue0")).Text) < 0.35));
+
+            /////*      DESIGN RANKING TAB      */
+            ////driver.FindElement(By.CssSelector("#uqTabset > li:nth-child(2) > a")).Click();
+
+            ////IWait<IWebDriver> UQ_wait4 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            ////Assert.True(UQ_wait4.Until(driver1 => driver.FindElement(By.CssSelector("#runProbability")).Displayed));
+            ////driver.FindElement(By.CssSelector("#runProbability")).Click();
+
+            /////*
+            ////IWait<IWebDriver> UQ_wait5 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+            ////Assert.True(UQ_wait5.Until(driver1 => driver.FindElement(By.CssSelector("#probabilityTable")).Displayed));
+            ////*/
+        }
+
+        /// <summary>
+        /// Test the functionality of the Visualizer Footer.
+        /// </summary>
         private void FooterSet(IWebDriver driver)
         {
-            // TODO(tthomas): Add testing of additional UI elements
-            
-            // Test Footer
-
-            IWait<IWebDriver> wait10 = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
-            Assert.True(wait10.Until(driver1 => driver.FindElement(By.XPath("//*[@id='Explore-pairs_plot']/img")).Displayed));
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
 
             // Filters
-            IWebElement elemcountslider = driver.FindElement(By.Id("filter_IN_ElemCount")).FindElement(By.XPath(".."));
-            if (!elemcountslider.Displayed)
-            {
-                RetryStaleElement(() => driver.FindElement(By.LinkText("Filters")).Click());
-                wait10.Until(driver1 => elemcountslider.Displayed);
-            }
-
-            Actions dblclick_elemcountslider = new Actions(driver).DoubleClick(elemcountslider);
-            RetryStaleElement(() => dblclick_elemcountslider.Build().Perform());
-            //catch (StaleElementReferenceException e)
-            //catch (NoSuchElementException e)
-            //catch (Exception e)
-            wait10.Until(driver1 => driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).Displayed);
-            driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).Clear();
-            driver.FindElement(By.Id("tooltip_min_IN_ElemCount")).SendKeys("20");
-            driver.FindElement(By.Id("submit_IN_ElemCount")).Click();
-            Thread.Sleep(1500);
-
-            IWebElement costslider = driver.FindElement(By.Id("filter_OUT_Blade_Cost_Total")).FindElement(By.XPath(".."));
-            wait10.Until(driver1 => costslider.Displayed);
-
-            string jsToBeExecuted = string.Format("window.scroll(0, {0});", costslider.Location.Y);
-            ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecuted);
-                
-            Actions dblclick_costslider = new Actions(driver).DoubleClick(costslider);
-            RetryStaleElement(() => dblclick_costslider.Build().Perform());
-            //catch (StaleElementReferenceException e)
-            //catch (NoSuchElementException e)
-            //catch (Exception e)
-            wait10.Until(driver1 => driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).Displayed);
-            driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).Clear();
-            driver.FindElement(By.Id("tooltip_min_OUT_Blade_Cost_Total")).SendKeys("150000");
-            driver.FindElement(By.Id("submit_OUT_Blade_Cost_Total")).Click();
-            Thread.Sleep(1500);
+            ShinyUtilities.ScrollToElementID(driver, "footer_collapse");
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
+            Thread.Sleep(500);
+            Assert.Equal("20-50", new VisualizerFilterInput(driver, "IN_ElemCount").EntrySetFromTo(20, 50));
+            Assert.Equal(20000, new VisualizerFilterInput(driver, "IN_E22").EntrySetFrom(20000.0));
+            Assert.Equal(160000, new VisualizerFilterInput(driver, "OUT_Blade_Cost_Total").EntrySetTo(160000));
 
             // Coloring
-            driver.FindElement(By.LinkText("Coloring")).Click();
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Coloring");
             var coloring_source = new ShinySelectInput(driver, "coloring_source");
-            wait10.Until(driver1 => coloring_source.GetDiv().Displayed);
             Assert.Equal("None", coloring_source.GetCurrentSelection());
             Assert.Equal(2, coloring_source.GetAllChoices().Count());
             Assert.Equal("None, Live", string.Join(", ", coloring_source.GetAllChoices().ToArray()));
-            coloring_source.SetCurrentSelection("Live");
+            coloring_source.SetCurrentSelectionClicked("Live");
             var colored_variable = new ShinySelectInput(driver, "live_coloring_variable_numeric");
             var choices = colored_variable.GetAllChoices();
             Assert.Equal("IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", colored_variable.GetAllChoices().ToArray()));
-            colored_variable.SetCurrentSelection("OUT_Blade_Cost_Total");
+            colored_variable.SetCurrentSelectionClicked("OUT_Blade_Cost_Total");
             driver.FindElement(By.Id("live_coloring_name")).Clear();
             driver.FindElement(By.Id("live_coloring_name")).SendKeys("Test");
             driver.FindElement(By.Id("live_coloring_add_classification")).Click();
-            wait10.Until(driver1 => coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1);
-            Assert.True(coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1);
+            Assert.True(wait.Until(d => coloring_source.GetAllChoices().Where(c => c == "Test").Count() == 1));
 
             // Classifications
-            driver.FindElement(By.LinkText("Classifications")).Click();
-            wait10.Until(driver1 => driver.FindElement(By.Id("no_classifications")).Displayed);
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Classifications");
             Assert.Equal("No Classifications Available.", driver.FindElement(By.Id("no_classifications")).Text);
 
             // Configuration
-            driver.FindElement(By.LinkText("Configuration")).Click();
-            wait10.Until(driver1 => driver.FindElement(By.Id("remove_missing")).Displayed);
-            Assert.Equal("false", driver.FindElement(By.Id("remove_missing")).GetAttribute("data-shinyjs-resettable-value"));
-            Assert.Equal("false", driver.FindElement(By.Id("remove_outliers")).GetAttribute("data-shinyjs-resettable-value"));
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Configuration");
+            var remove_missing = new ShinyCheckboxInput(driver, "remove_missing");
+            Assert.False(remove_missing.GetStartState());
+            var remove_outliers = new ShinyCheckboxInput(driver, "remove_outliers");
+            Assert.False(remove_outliers.GetStartState());
+            var stats = new VisualizerFilterStats(driver);
+            var prev_points = stats.GetCurrentPoints();
+            remove_outliers.ToggleState();
+            new ShinySliderInput(driver, "num_sd").MoveSliderToValue(2);
+
+            // Return to Filters
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
+            Assert.True(stats.GetCurrentPoints() < prev_points);
+        }
+
+        /// <summary>
+        /// Check the Footer after a session restore.
+        /// </summary>
+        /// <param name="driver"></param>
+        private void FooterCheck(IWebDriver driver)
+        {
+            IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(10.0));
+
+            // Filters
+            ShinyUtilities.ScrollToElementID(driver, "footer_collapse");
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
+            Assert.Equal("20-50", new VisualizerFilterInput(driver, "IN_ElemCount").GetFromTo());
+            Assert.Equal(20000, new VisualizerFilterInput(driver, "IN_E22").GetFrom());
+            Assert.Equal(160000, new VisualizerFilterInput(driver, "OUT_Blade_Cost_Total").GetTo());
+
+            // Coloring
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Coloring");
+            var coloring_source = new ShinySelectInput(driver, "coloring_source");
+            Assert.Equal("Live", coloring_source.GetCurrentSelection());
+            Assert.Equal("None, Live, Test", string.Join(", ", coloring_source.GetAllChoices().ToArray()));
+            var colored_variable = new ShinySelectInput(driver, "live_coloring_variable_numeric");
+            var choices = colored_variable.GetAllChoices();
+            Assert.Equal("IN_E11, IN_E22, IN_ElemCount, IN_Root_AvgCapMaterialThickness, IN_Tip_AvgCapMaterialThickness, OUT_Blade_Cost_Total, OUT_Blade_Tip_Deflection", string.Join(", ", colored_variable.GetAllChoices().ToArray()));
+            Assert.Equal("OUT_Blade_Cost_Total", colored_variable.GetCurrentSelection());
+
+            // Classifications
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Classifications");
+            Assert.Equal("No Classifications Available.", driver.FindElement(By.Id("no_classifications")).Text);
+
+            // Configuration
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Configuration");
+            var remove_missing = new ShinyCheckboxInput(driver, "remove_missing");
+            Assert.False(remove_missing.GetStartState());
+            var remove_outliers = new ShinyCheckboxInput(driver, "remove_outliers");
+            Assert.True(remove_outliers.GetStartState());
+            Assert.Equal(2, new ShinySliderInput(driver, "num_sd").GetValue());
+
+            // Return to Filters
+            ShinyUtilities.OpenCollapsePanel(driver, "footer_collapse", "Filters");
         }
 
         class DigWrapper : IDisposable
@@ -552,7 +619,7 @@ namespace DigTest
                         {
                             lock (stdoutData)
                             {
-                                stdoutData.Append(args.Data);
+                                stdoutData.Append(args.Data + Environment.NewLine);
                             }
                         }
                     };
@@ -562,7 +629,7 @@ namespace DigTest
                         {
                             lock (stderrData)
                             {
-                                stderrData.Append(args.Data);
+                                stderrData.Append(args.Data + Environment.NewLine);
                                 Console.Error.WriteLine(args.Data);
                                 try
                                 {
@@ -603,6 +670,11 @@ namespace DigTest
                     }
                     catch (System.InvalidOperationException) { } // possible race with proc.HasExited
                 }
+            }
+
+            public void AppendLog(string log)
+            {
+                File.AppendAllText(log, stdoutData.ToString());
             }
         }
     }
