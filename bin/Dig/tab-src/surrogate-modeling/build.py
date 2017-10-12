@@ -34,13 +34,17 @@ def download(url, filename):
 
 
 def decompress(filename, dirname):
-    if os.path.isdir(dirname):
-        return
+    # n.b. `dirname` may exist with partial contents due to failed `git clean` ('Filename too long' errors)
+    # if os.path.isdir(dirname):
+    #    return
+    if os.path.isfile(os.path.join(dirname, 'npm')):
+       return
     print('Extracting ' + filename)
-    if os.path.isdir('tmp'):
-        # n.b. \\?\ is for MAXPATH workaround
-        # n.b. unicode strings are required for os.listdir
-        shutil.rmtree(u'\\\\?\\' + os.path.abspath(u'tmp'))
+    for path in (unicode(dirname), u'tmp'):
+        if os.path.isdir(path):
+            # n.b. \\?\ is for MAXPATH workaround
+            # n.b. unicode strings are required for os.listdir
+            shutil.rmtree(u'\\\\?\\' + os.path.abspath(path))
     os.mkdir('tmp')
     with zipfile.ZipFile(filename, 'r', allowZip64=True) as zf:
         zf.extractall('\\\\?\\' + os.path.abspath('tmp'))
