@@ -110,12 +110,14 @@ function update(root, source) {
       .append("image")
       .attr("xlink:href", "lock.svg")
       .attr("height", barHeight)
+      .attr("width", "20")
       .attr("transform", "translate(" + (barWidth-barHeight) + "," + (-barHeight/2) + ")");
   
   nodeEnter.append("image")
       .attr("class", "type-icon")
       .attr("xlink:href", icon)
       .attr("height", barHeight)
+      .attr("width", "20")
       .attr("transform", "translate(2.5," + (-barHeight/2) + ")");
 
   // Transition nodes to their new position.
