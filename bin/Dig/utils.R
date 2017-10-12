@@ -204,4 +204,11 @@ SelectAllComponents <- function(node) {
   node
 }
 
-  
+RemoveDuplicatesBesidesGUID <- function(data) {
+  if("GUID" %in% names(data)) {
+    duplicated_rows <- duplicated(data[,-which(names(data) == "GUID")])
+  } else {
+    duplicated_rows <- duplicated(data)
+  }
+  data[-which(duplicated_rows),]
+}
