@@ -11,8 +11,8 @@ const StaticData = {
     roundNumbers: false,
     precision: 5
   },
-  selectedSurrogateModel: "Kriging Surrogate",
-  availableSurrogateModels: ["Kriging Surrogate", "Random Forest"],
+  selectedSurrogateModel: "Kriging Surrogate (Estimate Nugget)",
+  availableSurrogateModels: ["Kriging Surrogate (Estimate Nugget)", "Kriging Surrogate", "Random Forest"],
   allowTraining: true
 };
 
