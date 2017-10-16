@@ -39,6 +39,7 @@
     "react-bootstrap": "^0.31.3",
     "react-dev-utils": "^4.0.0",
     "react-dom": "^16.0.0",
+    "react-overlays": "^0.7.3",
     "style-loader": "0.18.2",
     "sw-precache-webpack-plugin": "0.11.4",
     "url-loader": "0.5.9",
