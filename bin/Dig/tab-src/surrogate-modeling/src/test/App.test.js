@@ -7,6 +7,7 @@ import App from '../App';
 import BackendService from '../BackendService';
 
 it('renders without crashing', () => {
+  console.log(requestAnimationFrame);
   const div = document.createElement('div');
 
   const service = new BackendService();

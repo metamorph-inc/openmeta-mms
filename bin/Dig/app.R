@@ -66,7 +66,7 @@ if (dig_dataset_config == "") {
     config_filename=file.path('datasets',
                               'WindTurbineForOptimization',
                               'visualizer_config.json',
-                              fsep = "\\\\")
+                              fsep = "/")
     # config_filename=file.path('datasets',
     #                           'boxpacking',
     #                           'visualizer_config.json',

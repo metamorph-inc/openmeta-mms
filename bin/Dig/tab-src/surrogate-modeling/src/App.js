@@ -213,10 +213,6 @@ class App extends Component {
   }
 
   handleTrain = () => {
-    this.setState({
-      allowTraining: false
-    });
-
     this.props.service.trainSurrogateAtPoints(this.state.independentVarData, this.state.discreteIndependentVars, this.state.selectedSurrogateModel)
       .then((resultingDependentVars) => {
         const newDependentVarData = cloneDeep(this.state.dependentVarData);
