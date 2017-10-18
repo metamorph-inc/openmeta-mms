@@ -16,6 +16,7 @@ table.surrogate-table tbody td small {
 
 table.surrogate-table tbody td .form-group {
   margin-bottom: auto;
+  min-width: 7em;
 }
 
 /* Workaround to prevent duplicate/delete button group from being broken onto
