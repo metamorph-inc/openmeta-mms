@@ -221,6 +221,28 @@ namespace DigTest
         public double GetMax() { return high; }
     }
 
+    public class VisualizerDesignTreeSelector
+    {
+        private IWebDriver driver;
+
+        public VisualizerDesignTreeSelector(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+
+        public void ClickByName(string n)
+        {
+            driver.FindElement(By.XPath("//*[name()='svg' and @id='design_configurations_svg']/*[name()='g']/*[name()='g']/*[name()='text' and text()='" + n + "']/..")).Click();
+            Thread.Sleep(200);
+        }
+
+        public bool SelectedByName(string n)
+        {
+            var style = driver.FindElement(By.XPath("//*[name()='svg' and @id='design_configurations_svg']/*[name()='g']/*[name()='g']/*[name()='text' and text()='" + n + "']/../*[name()='rect']")).GetAttribute("style");
+            return style == "fill: rgb(212, 224, 155);";
+        }
+    }
+
     public class ShinySelectInput
     {
         private string id;
