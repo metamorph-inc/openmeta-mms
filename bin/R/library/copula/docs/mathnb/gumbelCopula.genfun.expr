@@ -1,1 +1,0 @@
-List((alpha*(-Log(u))**alpha)/(u*Log(u)),(alpha*(-1 + alpha - Log(u))*(-Log(u))**(-2 + alpha))/u**2)
