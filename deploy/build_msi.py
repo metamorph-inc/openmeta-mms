@@ -60,18 +60,6 @@ def get_nuget_packages():
     if destination_files:
         raise Exception('Could not find files %s in NuGet packages' % repr(destination_files))
 
-def bin_mods():
-    output_filename = 'bin.wxi'
-    ElementTree.register_namespace("", "http://schemas.microsoft.com/wix/2006/wi")
-    tree = ElementTree.parse(output_filename, parser=CommentedTreeBuilder()).getroot()
-    dig_dir = tree.findall(".//{http://schemas.microsoft.com/wix/2006/wi}Directory[@Id='dir_bin_Dig']")[0]
-    dig_dir.insert(0, ElementTree.fromstring("""<Component Id="dir_bin_Dig_perms" Guid="7adf3bbd-3720-421a-9f6c-85d6637176ed">
-  <CreateFolder>
-    <PermissionEx xmlns="http://schemas.microsoft.com/wix/UtilExtension" User="[WIX_ACCOUNT_USERS]" GenericWrite="yes" GenericRead="yes" Read="yes" GenericExecute="yes" ChangePermission="yes"/>
-  </CreateFolder>
-</Component>"""))
-
-    ElementTree.ElementTree(tree).write(output_filename, xml_declaration=True, encoding='utf-8')
 
 def generate_license_rtf():
     with open('../license.rtf', 'wb') as rtf:
@@ -117,7 +105,6 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\meta\CyPhyML\icons",)
     gen_dir_wxi.gen_dir_from_vc(r"..\models\Validation",)
     gen_dir_wxi.gen_dir_from_vc(r"..\bin", diskId='3')
-    gen_dir_wxi.main(r"..\bin\Dig\www\SurrogateModeling", diskId='3')
     gen_dir_wxi.gen_dir_from_vc(r"..\ModelicaWrapperTemplates",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\chipfit_display",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\layout_json",)
@@ -131,8 +118,6 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\Android")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\CADVisualizer")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\get_eagle_path")
-
-    bin_mods()
 
     def get_vcsversion():
         p = subprocess.Popen("git rev-list HEAD --count".split(), stdout=subprocess.PIPE)

@@ -129,9 +129,6 @@
         <Directory Id="ApplicationProgramsFolder" Name="META"/>
       </Directory>
     </Directory>
-    <DirectoryRef Id="dir_bin_Dig_www">
-        <Directory Id="SurrogateModeling" Name="SurrogateModeling" />
-    </DirectoryRef>
 
     <!-- =========================================================== -->
     <!-- MERGE MODULES -->
@@ -373,7 +370,6 @@
       <ComponentGroupRef Id="CyPhyTestBenchImporter" />
       <ComponentGroupRef Id='dot_bin'/>
       <ComponentGroupRef Id='bin'/>
-      <ComponentGroupRef Id='SurrogateModeling'/>
       <ComponentGroupRef Id='analysis_tools'/>
       <ComponentRef Id='META_PATH'/>
       <ComponentRef Id='META_VERSION'/>
@@ -444,9 +440,6 @@
       <ComponentGroupRef Id='MaterialLibrary'/>
       <ComponentGroupRef Id='Validation'/>
 
-      <ComponentGroupRef Id='Dig_run'/>
-      <ComponentRef Id='dir_bin_Dig_perms'/>
-      
       <ComponentGroupRef Id='Ionic.Zip'/>
       <!--<ComponentGroupRef Id='ComponentAuthoringAssistant'/>-->
       <ComponentGroupRef Id='CyPhy2CAD_CSharp'/>

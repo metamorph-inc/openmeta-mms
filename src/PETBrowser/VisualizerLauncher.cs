@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using Microsoft.Win32;
 
 namespace PETBrowser
 {
@@ -28,6 +29,27 @@ namespace PETBrowser
         private static Dictionary<string, MergedDirectoryWatcher> MergedDirectoryWatchers =
             new Dictionary<string, MergedDirectoryWatcher>();
 
+        public static string VisualizerPath
+        {
+            get
+            {
+                string keyName = @"Software\Metamorph\OpenMETA-Visualizer";
+                string value = @"PATH";
+                using (var view32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine,
+                                            RegistryView.Registry32))
+                {
+                    using (var subkey = view32.OpenSubKey(keyName))
+                    {
+                        if (subkey == null)
+                        {
+                            return "";
+                        }
+                        return (string)subkey.GetValue(value, "");
+                    }
+                }
+            }
+        }
+
         public static void LaunchVisualizer(string vizConfigPath, Dataset mergedDataset, string dataDirectoryPath)
         {
             Console.WriteLine(vizConfigPath);
@@ -39,8 +61,8 @@ namespace PETBrowser
                 FileName = "cmd.exe",
                 Arguments =
                     String.Format("/S /C \"\"{0}\" \"{1}\" \"{2}\" > \"{3}\" 2>&1\"",
-                        System.IO.Path.Combine(META.VersionInfo.MetaPath, "bin\\Dig\\run.cmd"), vizConfigPath,
-                        META.VersionInfo.MetaPath, logPath),
+                        System.IO.Path.Combine(VisualizerPath, "Dig\\run.cmd"), vizConfigPath,
+                        VisualizerPath, logPath),
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
                 // WorkingDirectory = ,

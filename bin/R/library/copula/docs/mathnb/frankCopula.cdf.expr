@@ -1,6 +1,0 @@
--(Log(E**(-(alpha*u1)))/alpha)
--(Log(1 + ((-1 + E**(-(alpha*u1)))*(-1 + E**(-(alpha*u2))))/(-1 + E**(-alpha)))/alpha)
--(Log(1 + ((-1 + E**(-(alpha*u1)))*(-1 + E**(-(alpha*u2)))*(-1 + E**(-(alpha*u3))))/(-1 + E**(-alpha))**2)/alpha)
--(Log(1 + ((-1 + E**(-(alpha*u1)))*(-1 + E**(-(alpha*u2)))*(-1 + E**(-(alpha*u3)))*(-1 + E**(-(alpha*u4))))/(-1 + E**(-alpha))**3)/alpha)
--(Log(1 + ((-1 + E**(-(alpha*u1)))*(-1 + E**(-(alpha*u2)))*(-1 + E**(-(alpha*u3)))*(-1 + E**(-(alpha*u4)))*(-1 + E**(-(alpha*u5))))/(-1 + E**(-alpha))**4)/alpha)
--(Log(1 + ((-1 + E**(-(alpha*u1)))*(-1 + E**(-(alpha*u2)))*(-1 + E**(-(alpha*u3)))*(-1 + E**(-(alpha*u4)))*(-1 + E**(-(alpha*u5)))*(-1 + E**(-(alpha*u6))))/(-1 + E**(-alpha))**5)/alpha)

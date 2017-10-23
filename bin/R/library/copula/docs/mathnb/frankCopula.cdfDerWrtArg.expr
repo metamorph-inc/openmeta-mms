@@ -1,4 +1,0 @@
-1
-(E**alpha*(-1 + E**(alpha*u2)))/(-E**alpha + E**(alpha + alpha*u1) - E**(alpha*(u1 + u2)) + E**(alpha + alpha*u2))
-((-1 + E**(-(alpha*u2)))*(-1 + E**(-(alpha*u3))))/(E**(alpha*u1)*(-1 + E**(-alpha))**2*(1 + ((-1 + E**(-(alpha*u1)))*(-1 + E**(-(alpha*u2)))*(-1 + E**(-(alpha*u3))))/(-1 + E**(-alpha))**2))
-((-1 + E**(-(alpha*u2)))*(-1 + E**(-(alpha*u3)))*(-1 + E**(-(alpha*u4))))/(E**(alpha*u1)*(-1 + E**(-alpha))**3*(1 + ((-1 + E**(-(alpha*u1)))*(-1 + E**(-(alpha*u2)))*(-1 + E**(-(alpha*u3)))*(-1 + E**(-(alpha*u4))))/(-1 + E**(-alpha))**3))
