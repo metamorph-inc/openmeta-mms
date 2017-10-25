@@ -94,7 +94,7 @@ Bundled Python packages
 * `docutils` - [docutils - Python Documentation Utilities](http://docutils.sourceforge.net/) - Mostly public domain, with some components licensed under BSD License or GPLv3
 * `elementtree-1.2.7_20070827_preview-py2.7-win32.egg` - [ElementTree](http://effbot.org/zone/element-index.htm) - Python License (MIT-style)
 * `euclid.py` - [Euclid](https://code.google.com/archive/p/pyeuclid/) - LGPLv2.1+
-* `excel_wrapper` - [OpenMDAO Excel Wrapper](https://github.com/OpenMDAO-Plugins/excel_wrapper) - GPLv2
+* `excel_wrapper` - [OpenMDAO Excel Wrapper](https://github.com/metamorph-inc/excel_wrapper) - GPLv2
 * `imagesize` - [imagesize](https://github.com/shibukawa/imagesize_py) - MIT License
 * `jinja2` - [Jinja](http://jinja.pocoo.org/) - BSD License
 * `lazy_object_proxy` - [lazy_object_proxy](https://github.com/ionelmc/python-lazy-object-proxy) - BSD license
