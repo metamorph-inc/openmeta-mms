@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-    <DirectoryRef Id="example_models">
-        <Directory Id="Android" Name="SystemC_Android"/>
-    </DirectoryRef>
     <ComponentGroup Id="tonka">
       <ComponentGroupRef Id="AddConnector"/>
       <ComponentGroupRef Id="CyPhy2MfgBom"/>
       <ComponentGroupRef Id="CyPhy2Schematic"/>
       <ComponentGroupRef Id="LayoutSolver"/>
-      <ComponentGroupRef Id="CyPhy2SystemC"/>
       <ComponentGroupRef Id="CyPhy2Simulink"/>
       <ComponentGroupRef Id="CyPhy2CADPCB"/>
       <ComponentGroupRef Id="SpiceVisualizer"/>
@@ -55,8 +51,6 @@
      <Component Id="CommandLine" Directory="INSTALLDIR_BIN">
       <File Source="..\src\AraRFAnalysis\bin\Release\CommandLine.dll"/>
      </Component>
-     <ComponentGroupRef Id="Android"/>
-     <ComponentGroupRef Id="Android_artifacts"/>
     </ComponentGroup>
   </Fragment>
 </Wix>
