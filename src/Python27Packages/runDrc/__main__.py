@@ -23,6 +23,8 @@ from optparse import OptionParser
 from subprocess import call
 from _winreg import *
 
+from get_eagle_path import find_eagle
+
 
 #----------------------------------------------
 g_warningCount = 0
@@ -55,14 +57,11 @@ def getEagleDrcCommand(myBoard, myEaglePath):
 
 def get_default_eaglecon_path():
     result = r"C:\Program Files (x86)\EAGLE-6.5.0\bin\eaglecon.exe"
-    my_reg = ConnectRegistry(None, HKEY_LOCAL_MACHINE)
-    try:
-        eagle_key = OpenKey(my_reg, r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\eagle.exe")
-        eagle_default_path = QueryValue(eagle_key, "")
-        eaglecon_path = eagle_default_path.replace("eagle.exe", "eaglecon.exe")
-        if eaglecon_path:
-            result = eaglecon_path
-    except:
+    eagle_path = find_eagle()
+    eaglecon_path = eagle_path.replace("eagle.exe", "eaglecon.exe")
+    if eaglecon_path:
+        result = eaglecon_path
+    else:
         warning("The Eagle app's path was not found in the Windows registry.")
     return result
 

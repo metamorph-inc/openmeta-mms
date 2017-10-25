@@ -47,6 +47,8 @@ from optparse import OptionParser
 from _winreg import *
 import shutil
 
+from get_eagle_path import find_eagle
+
 #----------------------------------------------
 g_warningCount = 0
 g_errorCount = 0
@@ -72,7 +74,7 @@ def get_windows_command_to_run_ulp(my_ulp_path, my_board, my_eagle_path):
     eaglecon C:\o1ul2wxq\schema.brd -C "set confirm yes; RUN centroid-screamingcircuits-smd.ulp; set confirm yes; quit;"
     """
     command_string = '"' + my_eagle_path + '" "' + my_board + \
-                     '" -C "set confirm yes; RUN ""' + my_ulp_path + '""; set confirm yes; quit;"'
+                     '" -C "set confirm yes; RUN "' + my_ulp_path + '"; set confirm yes; quit;"'
     return command_string
 
 
@@ -80,14 +82,11 @@ def get_windows_command_to_run_ulp(my_ulp_path, my_board, my_eagle_path):
 
 def get_default_eaglecon_path():
     result = r"C:\Program Files (x86)\EAGLE-6.5.0\bin\eaglecon.exe"
-    my_reg = ConnectRegistry(None, HKEY_LOCAL_MACHINE)
-    try:
-        eagle_key = OpenKey(my_reg, r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\eagle.exe")
-        eagle_default_path = QueryValue(eagle_key, "")
-        eaglecon_path = eagle_default_path.replace("eagle.exe", "eaglecon.exe")
-        if eaglecon_path:
-            result = eaglecon_path
-    except:
+    eagle_path = find_eagle()
+    eaglecon_path = eagle_path.replace("eagle.exe", "eaglecon.exe")
+    if eaglecon_path:
+        result = eaglecon_path
+    else:
         warning("The Eagle app's path was not found in the Windows registry.")
     return result
 
@@ -137,7 +136,8 @@ def main_run_ulp():
             my_ulp_path = module_ulp_path
     if (not g_errorCount):
         # Copy the ULP to the board directory
-        shutil.copy(my_ulp_path, os.path.dirname(my_board))
+        if os.path.normpath(os.path.dirname(my_board)) != os.path.normpath(os.path.dirname(my_ulp_path)):
+            shutil.copy(my_ulp_path, os.path.dirname(my_board))
         board_dir = os.path.dirname(my_board)
 
     if (not g_errorCount):
