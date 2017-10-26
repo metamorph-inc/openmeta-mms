@@ -119,18 +119,20 @@ from subprocess import check_output, CalledProcessError
 import re
 
 try:
-    for line in (l for l in check_output('git grep HintPath.*\\\\src\\\\ -- **/*.csproj').split('\n') if l):
-        if r'src\nuget' in line:
-            continue
-        proj, dep = re.match(r'([^:]*):.*?HintPath.*\\(.*)(?:.dll|.exe)..HintPath.*', line).groups()
-        proj = os.path.basename(proj)
-        if dep not in 'MgaMeta CyPhyElaborateCS CyPhyML CyPhyGUIs ISIS.GME.Common'.split():
-            add_dep(proj, dep + '.csproj')
-
+    git_grep_results = check_output('git grep HintPath.*\\\\src\\\\ -- **/*.csproj').split('\n')
 except CalledProcessError as err:
     print ('The git grep command returned no results or a non-zero status code.')
     print ('It should have successfully found matches for the pattern.')
     raise err
+
+for line in (l for l in git_grep_results if l):
+    if r'src\nuget' in line:
+        continue
+    proj, dep = re.match(r'([^:]*):.*?HintPath.*\\(.*)(?:.dll|.exe)..HintPath.*', line).groups()
+    proj = os.path.basename(proj)
+    if dep not in 'MgaMeta CyPhyElaborateCS CyPhyML CyPhyGUIs ISIS.GME.Common'.split():
+        add_dep(proj, dep + '.csproj')
+
 
 # TODO: copy solution dependencies from dependent slns
 
