@@ -133,7 +133,6 @@ for line in (l for l in git_grep_results if l):
     if dep not in 'MgaMeta CyPhyElaborateCS CyPhyML CyPhyGUIs ISIS.GME.Common'.split():
         add_dep(proj, dep + '.csproj')
 
-
 # TODO: copy solution dependencies from dependent slns
 
 sln.SaveAs(os.path.join(meta_path, r"src\CyPhyMLCombined.sln"))
