@@ -115,9 +115,17 @@ for vcxproj in map(os.path.basename, tonka_projects):
     add_dep(vcxproj, 'CyPhyGUIs.csproj')
 
 # repr(open('tmp.sh').read())
-import subprocess
+from subprocess import check_output, CalledProcessError
 import re
-for line in (l for l in subprocess.check_output('git grep HintPath.*\\\\src\\\\ **/*.csproj').split('\n') if l):
+
+try:
+    git_grep_results = check_output('git grep HintPath.*\\\\src\\\\ -- **/*.csproj').split('\n')
+except CalledProcessError as err:
+    print ('The git grep command returned no results or a non-zero status code.')
+    print ('It should have successfully found matches for the pattern.')
+    raise err
+
+for line in (l for l in git_grep_results if l):
     if r'src\nuget' in line:
         continue
     proj, dep = re.match(r'([^:]*):.*?HintPath.*\\(.*)(?:.dll|.exe)..HintPath.*', line).groups()
