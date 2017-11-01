@@ -29,27 +29,6 @@ namespace PETBrowser
         private static Dictionary<string, MergedDirectoryWatcher> MergedDirectoryWatchers =
             new Dictionary<string, MergedDirectoryWatcher>();
 
-        public static string VisualizerPath
-        {
-            get
-            {
-                string keyName = @"Software\Metamorph\OpenMETA-Visualizer";
-                string value = @"PATH";
-                using (var view32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine,
-                                            RegistryView.Registry32))
-                {
-                    using (var subkey = view32.OpenSubKey(keyName))
-                    {
-                        if (subkey == null)
-                        {
-                            return "";
-                        }
-                        return (string)subkey.GetValue(value, "");
-                    }
-                }
-            }
-        }
-
         public static void LaunchAnalysisTool(AnalysisTool analysisTool, string vizConfigPath, Dataset mergedDataset, string dataDirectoryPath)
         {
             Console.WriteLine(vizConfigPath);

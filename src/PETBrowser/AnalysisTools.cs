@@ -45,7 +45,6 @@ namespace PETBrowser
 
                                     if (tool.InternalName == "OpenMetaVisualizer")
                                     {
-                                        Console.WriteLine("XXX");
                                         HasDefaultAnalysisTool = true;
                                         DefaultAnalysisTool = tool;
                                     }
@@ -81,7 +80,6 @@ namespace PETBrowser
 
                                     if (tool.InternalName == "OpenMetaVisualizer")
                                     {
-                                        Console.WriteLine("XXX");
                                         HasDefaultAnalysisTool = true;
                                         DefaultAnalysisTool = tool;
                                     }
