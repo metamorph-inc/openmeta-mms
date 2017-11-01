@@ -102,7 +102,7 @@ namespace PETBrowser
             var selectedConfig = (MergedPetDetailsViewModel.VisualizerSession) VisualizerSessionsGrid.SelectedItem;
             selectedConfig.VisualizerNotRunning = false;
 
-            VisualizerLauncher.LaunchVisualizer(selectedConfig.ConfigPath, ViewModel.DetailsDataset, DatasetViewModel.Store.DataDirectory);
+            VisualizerLauncher.LaunchAnalysisTool(ViewModel.AnalysisTools.DefaultAnalysisTool, selectedConfig.ConfigPath, ViewModel.DetailsDataset, DatasetViewModel.Store.DataDirectory);
         }
 
         
@@ -164,6 +164,11 @@ namespace PETBrowser
 
             var analysisTool = (AnalysisTool) source.DataContext;
             Console.WriteLine("Running analysis tool {0}", analysisTool.DisplayName);
+
+            var selectedConfig = (MergedPetDetailsViewModel.VisualizerSession)VisualizerSessionsGrid.SelectedItem;
+            selectedConfig.VisualizerNotRunning = false;
+
+            VisualizerLauncher.LaunchAnalysisTool(analysisTool, selectedConfig.ConfigPath, ViewModel.DetailsDataset, DatasetViewModel.Store.DataDirectory);
         }
     }
 }

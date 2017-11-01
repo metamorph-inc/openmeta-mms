@@ -50,27 +50,35 @@ namespace PETBrowser
             }
         }
 
-        public static void LaunchVisualizer(string vizConfigPath, Dataset mergedDataset, string dataDirectoryPath)
+        public static void LaunchAnalysisTool(AnalysisTool analysisTool, string vizConfigPath, Dataset mergedDataset, string dataDirectoryPath)
         {
             Console.WriteLine(vizConfigPath);
-            string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(),
-                "OpenMETA_Visualizer_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".log");
+
+            string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), string.Format("{0}_{1:yyyyMMdd_HHmmss}.log", analysisTool.InternalName, DateTime.Now));
+            var exePath = ExpandAnalysisToolString(analysisTool.ExecutableFilePath, vizConfigPath, dataDirectoryPath);
+            var arguments = ExpandAnalysisToolString(analysisTool.ProcessArguments, vizConfigPath, dataDirectoryPath);
+            var workingDirectory = ExpandAnalysisToolString(analysisTool.WorkingDirectory, vizConfigPath, dataDirectoryPath);
 
             ProcessStartInfo psi = new ProcessStartInfo()
             {
                 FileName = "cmd.exe",
-                Arguments =
-                    String.Format("/S /C \"\"{0}\" \"{1}\" \"{2}\" > \"{3}\" 2>&1\"",
-                        System.IO.Path.Combine(VisualizerPath, "Dig\\run.cmd"), vizConfigPath,
-                        VisualizerPath, logPath),
+                Arguments = string.Format("/S /C \"\"{0}\" {1} > \"{2}\" 2>&1\"", exePath, arguments, logPath),
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
-                // WorkingDirectory = ,
+                WorkingDirectory = workingDirectory,
                 // RedirectStandardError = true,
                 // RedirectStandardOutput = true,
-                UseShellExecute = true
-                //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
+                UseShellExecute = true //UseShellExecute must be true to prevent subprocess from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
             };
+
+            if (analysisTool.ShowConsoleWindow)
+            {
+                psi.Arguments = string.Format("/S /C \"\"{0}\" {1}\"", exePath, arguments, logPath);
+                psi.CreateNoWindow = false;
+                psi.WindowStyle = ProcessWindowStyle.Normal;
+            }
+
+            Console.WriteLine(psi.Arguments);
             var p = new Process();
             p.StartInfo = psi;
             p.EnableRaisingEvents = true;
@@ -78,8 +86,16 @@ namespace PETBrowser
             p.Start();
 
             p.Exited += (sender, args) => { RemoveRunningSession(vizConfigPath, mergedDataset, dataDirectoryPath); };
+        }
 
-            //p.Dispose();
+        private static string ExpandAnalysisToolString(string input, string exportPath, string workingDirectory)
+        {
+            string result = input.Replace("%1", exportPath);
+            result = result.Replace("%2", workingDirectory);
+            //TODO: %3 should be list of all selected directories; can we get that?
+            result = result.Replace("%4", META.VersionInfo.MetaPath);
+
+            return result;
         }
 
         private static void RemoveRunningSession(string vizConfigPath, Dataset mergedDataset, string dataDirectoryPath)

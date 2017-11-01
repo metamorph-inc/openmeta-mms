@@ -102,11 +102,12 @@
         <DockPanel Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4">
             <StackPanel Margin="0"  DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="NewSessionButton" Margin="4,4,4,0" Padding="5,3" Click="NewSessionButton_Click">New Session…</Button>
-                <Button x:Name="LaunchVisualizerButton" Margin="4,4,0,0" Padding="5,3" Content="Launch in Visualizer" Click="LaunchVisualizerButton_Click">
+                <Button x:Name="LaunchVisualizerButton" Margin="4,4,0,0" Padding="5,3" Content="{Binding AnalysisTools.DefaultAnalysisTool.ActionName}" Click="LaunchVisualizerButton_Click">
                     <Button.IsEnabled>
                         <MultiBinding Converter="{StaticResource CountAndBoolMultiValueConverter}">
                             <Binding Path="SelectedItems.Count" ElementName="VisualizerSessionsGrid" />
                             <Binding Path="SelectedItem.VisualizerNotRunning" ElementName="VisualizerSessionsGrid" />
+                            <Binding Path="AnalysisTools.HasDefaultAnalysisTool"/>
                         </MultiBinding>
                     </Button.IsEnabled>
                 </Button>
@@ -115,6 +116,7 @@
                         <MultiBinding Converter="{StaticResource CountAndBoolMultiValueConverter}">
                             <Binding Path="SelectedItems.Count" ElementName="VisualizerSessionsGrid" />
                             <Binding Path="SelectedItem.VisualizerNotRunning" ElementName="VisualizerSessionsGrid" />
+                            <Binding Path="AnalysisTools.HasDefaultAnalysisTool"/>
                         </MultiBinding>
                     </Button.IsEnabled>
                     <Button.Content>
