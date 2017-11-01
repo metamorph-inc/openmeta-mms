@@ -126,5 +126,44 @@ namespace PETBrowser
                 ShowErrorDialog("Session creation error", "An error occurred while creating a new Visualizer session.", ex.Message, ex.ToString());
             }
         }
+
+        private bool isContextMenuOpen = false;
+        private void AnalysisToolsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var source = sender as Button;
+
+            if (source != null && source.ContextMenu != null)
+            {
+                // Only open the ContextMenu when it is not already open. If it is already open,
+                // when the button is pressed the ContextMenu will lose focus and automatically close.
+                if (!isContextMenuOpen)
+                {
+                    source.ContextMenu.AddHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed), true);
+                    // If there is a drop-down assigned to this button, then position and display it 
+                    source.ContextMenu.PlacementTarget = source;
+                    //source.ContextMenu.Placement = PlacementMode.Bottom;
+                    source.ContextMenu.IsOpen = true;
+                    isContextMenuOpen = true;
+                }
+            }
+        }
+
+        void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            isContextMenuOpen = false;
+            var contextMenu = sender as ContextMenu;
+            if (contextMenu != null)
+            {
+                contextMenu.RemoveHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed));
+            }
+        }
+
+        private void PetAnalysisToolRun(object sender, RoutedEventArgs e)
+        {
+            var source = (MenuItem) sender;
+
+            var analysisTool = (AnalysisTool) source.DataContext;
+            Console.WriteLine("Running analysis tool {0}", analysisTool.DisplayName);
+        }
     }
 }

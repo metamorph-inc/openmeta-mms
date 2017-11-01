@@ -109,7 +109,42 @@
                             <Binding Path="SelectedItem.VisualizerNotRunning" ElementName="VisualizerSessionsGrid" />
                         </MultiBinding>
                     </Button.IsEnabled>
-                    
+                </Button>
+                <Button x:Name="AnalysisToolsButton" Margin="0,4,0,0" Padding="5,3" Click="AnalysisToolsButton_Click" ContextMenuService.IsEnabled="False" BorderThickness="0,1,1,1">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource CountAndBoolMultiValueConverter}">
+                            <Binding Path="SelectedItems.Count" ElementName="VisualizerSessionsGrid" />
+                            <Binding Path="SelectedItem.VisualizerNotRunning" ElementName="VisualizerSessionsGrid" />
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Path Margin="0" VerticalAlignment="Center" Width="6" Stretch="Uniform" HorizontalAlignment="Right" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z ">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsEnabled}" Value="True" >
+                                                <Setter Property="Fill" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsEnabled}" Value="False" >
+                                                <Setter Property="Fill" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.ContextMenu>
+                        <ContextMenu Placement="Bottom" ItemsSource="{Binding AnalysisTools.PetAnalysisToolList}">
+                            <ContextMenu.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Path=ActionName}" />
+                                    <EventSetter Event="Click" Handler="PetAnalysisToolRun"></EventSetter>
+                                </Style>
+                            </ContextMenu.ItemContainerStyle>
+                        </ContextMenu>
+                    </Button.ContextMenu>
                 </Button>
             </StackPanel>
             <DataGrid x:Name="VisualizerSessionsGrid" ItemsSource="{Binding VisualizerSessions}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{StaticResource GridStyle}">
