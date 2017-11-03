@@ -52,7 +52,7 @@ namespace PETBrowser
 
             if (analysisTool.ShowConsoleWindow)
             {
-                psi.Arguments = string.Format("/S /C \"\"{0}\" {1}\"", exePath, arguments, logPath);
+                psi.Arguments = string.Format("/S /C \"\"{0}\" {1}", exePath, arguments, logPath);
                 psi.CreateNoWindow = false;
                 psi.WindowStyle = ProcessWindowStyle.Normal;
             }
