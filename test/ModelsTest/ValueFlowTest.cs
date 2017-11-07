@@ -301,7 +301,7 @@ namespace ModelsTest
 
         [Fact]
         public void Generic_FromSimpleFormula()
-    {
+        {
             String nameDomainModel = "GenericDomainModel";
             String nameParameter = "FromSimpleFormula";
             String valueExpected = "5";
