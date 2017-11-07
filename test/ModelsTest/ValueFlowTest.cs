@@ -301,28 +301,22 @@ namespace ModelsTest
 
         [Fact]
         public void Generic_FromSimpleFormula()
-        {
-            ModelOperation(delegate
-            {
-                String nameDomainModel = "GenericDomainModel";
-                String nameParameter = "FromSimpleFormula";
-                String valueExpected = "5";
+    {
+            String nameDomainModel = "GenericDomainModel";
+            String nameParameter = "FromSimpleFormula";
+            String valueExpected = "5";
 
-                CheckParamValue(nameDomainModel, nameParameter, valueExpected);
-            });
+            CheckParamValue(nameDomainModel, nameParameter, valueExpected);
         }
 
         [Fact]
         public void Generic_StringVal()
         {
-            ModelOperation(delegate
-            {
-                String nameDomainModel = "GenericDomainModel";
-                String nameParameter = "StringVal";
-                String valueExpected = "SOMEVALUE";
+            String nameDomainModel = "GenericDomainModel";
+            String nameParameter = "StringVal";
+            String valueExpected = "SOMEVALUE";
 
-                CheckParamValue(nameDomainModel, nameParameter, valueExpected);
-            });
+            CheckParamValue(nameDomainModel, nameParameter, valueExpected);
         }
 
         [Fact]
