@@ -238,6 +238,7 @@ namespace CyPhy2Schematic.Schematic
                 else
                 {
                     node.parameters.Add(par.Name, par.Attributes.Value);
+                    node.template_values.Add(par.Name, "${" + par.Name + "}");
                 }
             }
 

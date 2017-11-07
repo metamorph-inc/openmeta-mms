@@ -19,14 +19,14 @@ namespace CyPhy2Schematic.Spice
             subcircuits = new Dictionary<string, string>();
         }
 
-        public void Serialize(string spiceFile)
+        public void Serialize(string spiceFile, bool template = false)
         {
             StreamWriter writer = new StreamWriter(spiceFile);
             writer.WriteLine("CyPhy2Schematic Circuit {0}", name);
             writer.WriteLine("* Network Topology");
             foreach (var node in nodes)
             {
-                node.Serialize(writer);
+                node.Serialize(writer, template);
             }
             writer.WriteLine();
             writer.WriteLine("* Sub Circuits");
@@ -56,21 +56,24 @@ namespace CyPhy2Schematic.Spice
         public string classType { get; set; }           // subcircuit class type
         public SortedDictionary<int, string> nets { get; set; } // nets sorted by an order parameter
         public SortedDictionary<string, string> parameters { get; set; }    // device parameters
+        public SortedDictionary<string, string> template_values { get; set; } // corresponding top-level parameter, if applicable 
 
         public Node()
         {
             nets = new SortedDictionary<int, string>();
             parameters = new SortedDictionary<string, string>();
+            template_values = new SortedDictionary<string, string>();
         }
 
-        public void Serialize(StreamWriter writer)
+        public void Serialize(StreamWriter writer, bool template = false)
         {
             writer.Write("{0}{1} ", type, name);
             foreach (var net in nets)                   // ports are index-ordered
                 writer.Write("{0} ", net.Value);
             if (classType != null) 
                 writer.Write("{0} ", classType);            // sub-circuit name or model name
-            foreach (var param in parameters)           // params are name-ordered
+            var current_parameters = template ? template_values : parameters;
+            foreach (var param in current_parameters)           // params are name-ordered
             {
                 // value parameters are special - don't require a name= prefix
                 if (param.Key.Contains("value"))

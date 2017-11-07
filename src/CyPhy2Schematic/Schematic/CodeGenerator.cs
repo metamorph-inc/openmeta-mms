@@ -158,6 +158,8 @@ namespace CyPhy2Schematic.Schematic
             TestBench_obj.accept(new SpiceVisitor(Traceability, mgaIdToDomainIDs, this) { circuit_obj = circuit, siginfo_obj = siginfo, mode = this.mode });
             String spiceFile = Path.Combine(this.mainParameters.OutputDirectory, "schema.cir");
             circuit.Serialize(spiceFile);
+            String spiceTemplateFile = Path.Combine(this.mainParameters.OutputDirectory, "schema_template.cir");
+            circuit.Serialize(spiceTemplateFile, true);
             String siginfoFile = Path.Combine(this.mainParameters.OutputDirectory, "siginfo.json");
             siginfo.Serialize(siginfoFile);
 
