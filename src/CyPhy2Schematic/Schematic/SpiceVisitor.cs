@@ -7,6 +7,7 @@ using META;
 
 using Tonka = ISIS.GME.Dsml.CyPhyML.Interfaces;
 using TonkaClasses = ISIS.GME.Dsml.CyPhyML.Classes;
+using ISIS.GME.Common.Interfaces;
 
 namespace CyPhy2Schematic.Schematic
 {
@@ -238,12 +239,27 @@ namespace CyPhy2Schematic.Schematic
                 else
                 {
                     node.parameters.Add(par.Name, par.Attributes.Value);
-                    node.template_values.Add(par.Name, "${" + par.Name + "}");
+                    node.template_values.Add(par.Name, FindTestBenchParameter(par) ?? par.Attributes.Value);
                 }
             }
 
             nodes.Add(node);
             ComponentNodeMap[de] = node;
+        }
+
+        private string FindTestBenchParameter(Tonka.SPICEModelParameter parameter)
+        {
+            if (parameter.AllSrcConnections.Count() == 0)
+                return null;
+
+            return FindTestBenchParameter(((Tonka.SPICEModelParameterMap)parameter.AllSrcConnections.First()).SrcEnd);
+        }
+
+        private string FindTestBenchParameter(FCO element)
+        {
+            if (element.AllSrcConnections.Count() == 0)
+                return element.ParentContainer is Tonka.TestBench ? "${" + element.Name + "}" : null;
+            return FindTestBenchParameter(((Tonka.ValueFlow)element.AllSrcConnections.First()).SrcEnd);
         }
 
         public override void visit(Port obj)
@@ -437,6 +453,5 @@ namespace CyPhy2Schematic.Schematic
                     this.visit(port, net_obj);
             }
         }
-
     }
 }
