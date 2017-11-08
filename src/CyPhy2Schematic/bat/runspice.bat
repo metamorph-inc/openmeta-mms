@@ -16,7 +16,7 @@ IF %QUERY_ERRORLEVEL% == 1 (
     exit !QUERY_ERRORLEVEL!
 )
 
-if exist "schema_template.cir" (
+if exist "schema.cir.template" (
 	"%META_PATH%\bin\python27\scripts\python.exe" PopulateSchemaTemplate.py
 
 	IF !ERRORLEVEL! neq 0 (

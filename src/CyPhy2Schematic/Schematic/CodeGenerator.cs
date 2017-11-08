@@ -156,10 +156,8 @@ namespace CyPhy2Schematic.Schematic
             var siginfo = new Spice.SignalContainer() { name = TestBench_obj.Name, objectToNetId = new Dictionary<CyPhy2SchematicInterpreter.IDs,string>() };
             // now traverse the object network with Spice Visitor to build the spice and siginfo object network
             TestBench_obj.accept(new SpiceVisitor(Traceability, mgaIdToDomainIDs, this) { circuit_obj = circuit, siginfo_obj = siginfo, mode = this.mode });
-            String spiceFile = Path.Combine(this.mainParameters.OutputDirectory, "schema.cir");
-            circuit.Serialize(spiceFile);
-            String spiceTemplateFile = Path.Combine(this.mainParameters.OutputDirectory, "schema_template.cir");
-            circuit.Serialize(spiceTemplateFile, true);
+            String spiceTemplateFile = Path.Combine(this.mainParameters.OutputDirectory, "schema.cir.template");
+            circuit.Serialize(spiceTemplateFile);
             String siginfoFile = Path.Combine(this.mainParameters.OutputDirectory, "siginfo.json");
             siginfo.Serialize(siginfoFile);
 

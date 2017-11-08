@@ -238,8 +238,7 @@ namespace CyPhy2Schematic.Schematic
                 }
                 else
                 {
-                    node.parameters.Add(par.Name, par.Attributes.Value);
-                    node.template_values.Add(par.Name, FindTestBenchParameter(par) ?? par.Attributes.Value);
+                    node.parameters.Add(par.Name, FindTestBenchParameter(par) ?? par.Attributes.Value);
                 }
             }
 
@@ -252,14 +251,22 @@ namespace CyPhy2Schematic.Schematic
             if (parameter.AllSrcConnections.Count() == 0)
                 return null;
 
-            return FindTestBenchParameter(((Tonka.SPICEModelParameterMap)parameter.AllSrcConnections.First()).SrcEnd);
+            return FindTestBenchParameter(parameter, ((Tonka.SPICEModelParameterMap)parameter.AllSrcConnections.First()).SrcEnd);
         }
 
-        private string FindTestBenchParameter(FCO element)
+        private string FindTestBenchParameter(Tonka.SPICEModelParameter parameter, FCO element)
         {
+            if (!(element is Tonka.Parameter || element is Tonka.Property))
+            {
+                //CodeGenerator.Logger.WriteWarning(String.Format("{0} depends on {1} in ValueFlow network.", parameter.Path, element.Path));
+                CodeGenerator.Logger.WriteWarning("Root Source Obscured: <a href=\"mga:{1}\">{0}</a> in Valueflow path for {4} parameter <a href=\"mga:{3}\">{2}</a>",
+                                                  element.Name, traceability.GetID(element.Impl),
+                                                  parameter.Name, traceability.GetID(parameter.Impl), parameter.ParentContainer.ParentContainer.Name);
+                return null;
+            }
             if (element.AllSrcConnections.Count() == 0)
                 return element.ParentContainer is Tonka.TestBench ? "${" + element.Name + "}" : null;
-            return FindTestBenchParameter(((Tonka.ValueFlow)element.AllSrcConnections.First()).SrcEnd);
+            return FindTestBenchParameter(parameter, ((Tonka.ValueFlow)element.AllSrcConnections.First()).SrcEnd);
         }
 
         public override void visit(Port obj)

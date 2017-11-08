@@ -2,6 +2,7 @@
 
 import json
 from string import Template
+import sys
 
 def main():
     # Get Testbench Manifest Parameters
@@ -12,7 +13,7 @@ def main():
     for param in testbench_manifest["Parameters"]:
         parameters[param["Name"]] = str(param["Value"])
 
-    with open("schema_template.cir", 'r') as f_in:
+    with open("schema.cir.template", 'r') as f_in:
         schema_template = f_in.read()
     
     # Try to generate schema file from template
