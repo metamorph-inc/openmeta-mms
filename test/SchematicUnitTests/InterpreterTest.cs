@@ -818,7 +818,7 @@ namespace SchematicUnitTests
         }
 
         [Fact]
-        [Trait("Type", "SPICE-New")]
+        [Trait("Type", "SPICE")]
         public void SpiceTemplateGeneration()
         {
             string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
@@ -2565,7 +2565,6 @@ namespace SchematicUnitTests
                 Assembly.GetExecutingAssembly().CodeBase.Substring("file:///".Length),
                 // [Trait("THIS", "ONE")]
                 // "/trait", "THIS=ONE",
-                "/trait", "Type=SPICE-New",
                 //"/noshadow",
             });
             Console.In.ReadLine();
