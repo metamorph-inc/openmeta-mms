@@ -35,6 +35,14 @@
       <RegistryValue Name='WorkingDirectory' Type='string' Value='%2'/>
       <RegistryValue Name='ShowConsoleWindow' Type='integer' Value='0'/>
     </RegistryKey>
+    <RegistryKey Root='HKLM' Key='Software\META\PETBrowser\PETTools\OpenInJMP'>
+      <RegistryValue Type='string' Value='Open With JMP'/>
+      <RegistryValue Name='ActionName' Type='string' Value='Open With JMP'/>
+      <RegistryValue Name='ExecutableFilePath' Type='string' Value='[INSTALLDIR]\bin\Python27\Scripts\Python.exe'/>
+      <RegistryValue Name='ProcessArguments' Type='string' Value='"[INSTALLDIR]\bin\PetBrowserOpenInJMP.py" "%1" "%4"'/>
+      <RegistryValue Name='WorkingDirectory' Type='string' Value='%2'/>
+      <RegistryValue Name='ShowConsoleWindow' Type='integer' Value='0'/>
+    </RegistryKey>
   </Component>
 </ComponentGroup>
 </Fragment>
