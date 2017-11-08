@@ -140,7 +140,9 @@ namespace PETBrowser
                 {
                     source.ContextMenu.AddHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed), true);
                     // If there is a drop-down assigned to this button, then position and display it 
-                    source.ContextMenu.PlacementTarget = source;
+                    // Note: normally we'd position the context menu below the source button, but since
+                    // we're simulating a split button, we're placing it underneath the "main" launch button
+                    source.ContextMenu.PlacementTarget = LaunchVisualizerButton;
                     //source.ContextMenu.Placement = PlacementMode.Bottom;
                     source.ContextMenu.IsOpen = true;
                     isContextMenuOpen = true;
