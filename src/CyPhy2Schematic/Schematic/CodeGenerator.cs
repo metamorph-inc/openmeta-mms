@@ -193,6 +193,13 @@ namespace CyPhy2Schematic.Schematic
             placeBat.Close();
         }
 
+        private void GeneratePopulateTemplateScriptFile()
+        {
+            var writer = new StreamWriter(Path.Combine(this.mainParameters.OutputDirectory, "PopulateSchemaTemplate.py"));
+            writer.Write(CyPhy2Schematic.Properties.Resources.PopulateSchemaTemplate);
+            writer.Close();
+        }
+
         private void GenerateLayoutReimportFiles(LayoutJson.Layout layoutJson)
         {
             File.WriteAllText(Path.Combine(this.mainParameters.OutputDirectory, "layoutReimport.bat"), CyPhy2Schematic.Properties.Resources.layoutReimport);
@@ -497,6 +504,7 @@ namespace CyPhy2Schematic.Schematic
                     GenerateSpiceCommandFile(TestBench_obj);
                     break;
                 case Mode.SPICE:
+                    GeneratePopulateTemplateScriptFile();
                     GenerateSpiceCode(TestBench_obj);
                     GenerateSpiceCommandFile(TestBench_obj);
                     GenerateSpiceViewerLauncher();
