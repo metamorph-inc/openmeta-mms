@@ -131,6 +131,7 @@ protected:
 	set<CyPhyML::EDAModelParameter> m_edaModelParameters;
 	set<CyPhyML::SPICEModelParameter> m_spiceModelParameters;
 	set<CyPhyML::SystemCParameter> m_systemcParameters;
+	set<CyPhyML::GenericDomainModelParameter> m_genericDomainModelParameters;
 	set<CyPhyML::Units> m_units_folders;
 	map<string, CyPhyML::unit> m_unit_name_table;
 	void EvaluateCADParameters();
@@ -138,6 +139,7 @@ protected:
 	void EvaluateEDAParameters();
 	void EvaluateSPICEParameters();
 	void EvaluateSystemCParameters();
+	void EvaluateGenericDomainModelParameters();
 	void EvaluateCarParameters();
 
 	std::string NonRealValueFixture( CyPhyML::ValueFlowTarget &vft, std::string &value );

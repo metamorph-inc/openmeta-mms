@@ -269,6 +269,102 @@ namespace ModelsTest
             CheckParamValue(nameDomainModel, nameParameter, valueExpected);
         }
 
+        [Fact]
+        public void Generic_FromCustomFormula()
+        {
+            String nameDomainModel = "GenericDomainModel";
+            String nameParameter = "FromCustomFormula";
+            String valueExpected = "5";
+
+            CheckParamValue(nameDomainModel, nameParameter, valueExpected);
+        }
+
+        [Fact]
+        public void Generic_FromParameter()
+        {
+            String nameDomainModel = "GenericDomainModel";
+            String nameParameter = "FromParam";
+            String valueExpected = "2";
+
+            CheckParamValue(nameDomainModel, nameParameter, valueExpected);
+        }
+
+        [Fact]
+        public void Generic_FromProperty()
+        {
+            String nameDomainModel = "GenericDomainModel";
+            String nameParameter = "FromProp";
+            String valueExpected = "3";
+
+            CheckParamValue(nameDomainModel, nameParameter, valueExpected);
+        }
+
+        [Fact]
+        public void Generic_FromSimpleFormula()
+        {
+            String nameDomainModel = "GenericDomainModel";
+            String nameParameter = "FromSimpleFormula";
+            String valueExpected = "5";
+
+            CheckParamValue(nameDomainModel, nameParameter, valueExpected);
+        }
+
+        [Fact]
+        public void Generic_StringVal()
+        {
+            String nameDomainModel = "GenericDomainModel";
+            String nameParameter = "StringVal";
+            String valueExpected = "SOMEVALUE";
+
+            CheckParamValue(nameDomainModel, nameParameter, valueExpected);
+        }
+
+        [Fact]
+        public void Generic_DomainModelExists()
+        {
+            ModelOperation(delegate
+            {
+                String nameDomainModel = "GenericDomainModel";
+
+                var domainModel = compValueFlow.AllChildren
+                    .First(c => c.Name == nameDomainModel)
+                    .Impl as MgaModel;
+                Assert.NotNull(domainModel);
+            });
+        }
+
+        [Fact]
+        public void Generic_ParamsHaveValueField()
+        {
+            ModelOperation(delegate
+            {
+                String nameDomainModel = "GenericDomainModel";
+
+                var domainModel = compValueFlow.AllChildren
+                    .First(c => c.Name == nameDomainModel)
+                    .Impl as MgaModel;
+                Assert.NotNull(domainModel);
+
+                foreach (MgaFCO obj in domainModel.ChildFCOs)
+                {
+                    if (obj.Meta.Name != "GenericDomainModelParameter")
+                    {
+                        continue;
+                    }
+
+                    var hasValue = false;
+                    foreach (MgaAttribute attr in obj.Attributes)
+                    {
+                        if (attr.Meta.Name == "Value")
+                        {
+                            hasValue = true;
+                        }
+                    }
+                    Assert.True(hasValue, "GenericDomainModelParameter should have a Value attribute, but doesn't.");
+                }
+            });
+        }
+
         private void CheckParamValue(String nameDomainModel, String nameParameter, String valueExpected)
         {
             ModelOperation(delegate
