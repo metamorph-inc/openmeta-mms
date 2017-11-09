@@ -4,7 +4,7 @@ Results Browser
 ===============
 
 The OpenMETA tools enable the generation of large amounts of data
-through the execution of the various domain models. These amount of
+through the execution of the various domain models. The amount of
 analyses results can be further exacerbated with design space modeling
 and the Parametric Exploration Tool.
 
