@@ -75,10 +75,10 @@ Column Headers
    the bottom of the PET Dataset Pane. They reside in .csv format in the
    ./archive folder in the root of the project.  Archives must be converted to
    the new Merged PET format (using the "Merge Selected" button while the
-   archive is selected) before they can be launched in the visualizer.
+   archive is selected) before they can be launched in the Visualizer.
 -  |PET_RESULT_ICON| **Legacy PET**: These are PET entries created using earlier
-   versions of the results browser, which must be merged (using the "Merge
-   Selected" button) before they can be launched in the visualizer.  These are
+   versions of the Results Browser, which must be merged (using the "Merge
+   Selected" button) before they can be launched in the Visualizer.  These are
    only shown when "Show Legacy PETs" is checked in the Settings
    (|SETTINGS_ICON|) menu.
 
@@ -154,12 +154,12 @@ Below the header is a summary of the dataset's metrics. Each of the
 DesignVariables and Objectives are listed along with the minimum,
 average, and maximum values represented in the dataset.
 
-For PETs and Merged PETs, a list of saved visualizer sessions is also displayed
+For PETs and Merged PETs, a list of saved Visualizer sessions is also displayed
 in this pane.  To launch a session, select a session from the list and click
 "Launch in OpenMETA Visualizer"; sessions with a |VISUALIZER_SESSION_RUNNING_ICON| icon
 are already running and cannot be launched again (close the browser tab to
 relaunch).  To create a new session, click "New Session..." and specify a
-session name; this will create a new visualizer session with the default
+session name; this will create a new Visualizer session with the default
 configuration.
 
 .. |VISUALIZER_SESSION_RUNNING_ICON| image:: images/icons/VisualizerSessionRunning.svg
