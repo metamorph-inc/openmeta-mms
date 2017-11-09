@@ -851,6 +851,8 @@ namespace SchematicUnitTests
             //Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
         }
 
+        //TODO: Add test for running in the context of a PET.
+
         [Fact]
         [Trait("Type", "SPICE")]
         public void SpiceTemplateGenerationFormula()
@@ -2589,7 +2591,7 @@ namespace SchematicUnitTests
                 Assembly.GetExecutingAssembly().CodeBase.Substring("file:///".Length),
                 // [Trait("THIS", "ONE")]
                 // "/trait", "THIS=ONE",
-                "/trait", "Type=SPICE", // Do SPICE Tests Only
+                //"/trait", "Type=SPICE", // Do SPICE Tests Only
                 //"/noshadow",
             });
             Console.In.ReadLine();
