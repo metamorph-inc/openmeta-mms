@@ -264,7 +264,7 @@ namespace CyPhy2Schematic.Schematic
                                                   parameter.Name, traceability.GetID(parameter.Impl), parameter.ParentContainer.ParentContainer.Name);
                 return null;
             }
-            if (element.AllSrcConnections.Count() == 0)
+            if (element.AllSrcConnections.Count() == 0 || element.AllSrcConnections.First().Kind != "ValueFlow")
                 return element.ParentContainer is Tonka.TestBench ? "${" + element.Name + "}" : null;
             return FindTestBenchParameter(parameter, ((Tonka.ValueFlow)element.AllSrcConnections.First()).SrcEnd);
         }
