@@ -192,6 +192,11 @@ Visualizer" button and choose "Open in Excel".  A new Excel document will be
 opened, containing a row for each iteration of your PET and a column for each
 design variable, objective, constraint, or intermediate variable.
 
+.. note::
+   When multiple version of Excel are installed, the Results Browser will
+   launch the first version it encounters in the ``%PATH`` environment
+   variable.
+
 Opening results in JMP
 ************************
 
