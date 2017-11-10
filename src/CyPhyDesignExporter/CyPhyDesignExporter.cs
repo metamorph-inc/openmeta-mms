@@ -602,9 +602,15 @@ namespace CyPhyDesignExporter
             {
                 MgaGateway = new MgaGateway(project);
 
-                MgaGateway.BeginTransaction();
-                Main(project, currentobj, selectedobjs, Convert(param));
-                MgaGateway.AbortTransaction();
+                MgaGateway.BeginTransaction(transactiontype_enum.TRANSACTION_NON_NESTED);
+                try
+                {
+                    Main(project, currentobj, selectedobjs, Convert(param));
+                }
+                finally
+                {
+                    MgaGateway.AbortTransaction();
+                }
             }
             finally
             {
