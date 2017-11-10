@@ -129,6 +129,7 @@ void NewTraverser::Traverse(const Udm::Object &udmObject)
 		EvaluateEDAParameters();
 		EvaluateSPICEParameters();
 		EvaluateSystemCParameters();
+		EvaluateGenericDomainModelParameters();
 		EvaluateCarParameters();
 	}
 
@@ -199,6 +200,13 @@ void NewTraverser::FindRootNodes(const CyPhyML::Component &component, set<CyPhyM
 		set<CyPhyML::SystemCParameter> param = ci->SystemCParameter_kind_children();
 		for (set<CyPhyML::SystemCParameter>::const_iterator di = param.begin(); di != param.end(); di++)
 			m_systemcParameters.insert(*di);
+	}
+
+	set<CyPhyML::GenericDomainModel> genericDomainModel_set = component.GenericDomainModel_kind_children();
+	for (set<CyPhyML::GenericDomainModel>::const_iterator ci = genericDomainModel_set.begin(); ci != genericDomainModel_set.end(); ci++) {
+		set<CyPhyML::GenericDomainModelParameter> param = ci->GenericDomainModelParameter_kind_children();
+		for (set<CyPhyML::GenericDomainModelParameter>::const_iterator di = param.begin(); di != param.end(); di++)
+			m_genericDomainModelParameters.insert(*di);
 	}
 
 	// ZL 11/20/2013 support modelica parameters as value flow targets
@@ -1857,12 +1865,52 @@ void NewTraverser::EvaluateSystemCParameters()
 			// Check for too many incoming connections (cnotradictory)
 			if (portMap_Set.size() > 1)
 			{
-				string message = "FormulaEvaluator - SPICEParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
+				string message = "FormulaEvaluator - SystemCParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
 				GMEConsole::Console::writeLine(message, MSG_ERROR);
 				throw udm_exception(message);
 			}
 
 			CyPhyML::ValueFlowTarget vft = portMap_Set.begin()->srcSystemCParameterPortMap_end();
+
+			std::string sourceName = vft.name();
+
+			if (IsDerivedFrom(vft.type(), CyPhyML::ValueFormula::meta))
+			{
+				EvaluateFormula(CyPhyML::ValueFormula::Cast(vft), incomingVURep);
+				double tmpval = incomingVURep.siValue;
+			}
+			else if (IsDerivedFrom(vft.type(), CyPhyML::HasDescriptionAndGUID::meta)
+				|| IsDerivedFrom(vft.type(), CyPhyML::Constant::meta))
+			{
+				EvaluatePPC(vft, incomingVURep);
+			}
+
+			string tmp;
+			to_string(tmp, incomingVURep.actualValue);
+
+			ci->Value() = NonRealValueFixture(vft, tmp);
+		}
+	}
+}
+
+void NewTraverser::EvaluateGenericDomainModelParameters()
+{
+	for (set<CyPhyML::GenericDomainModelParameter>::const_iterator ci = m_genericDomainModelParameters.begin(); ci != m_genericDomainModelParameters.end(); ci++)
+	{
+		set<CyPhyML::GenericParameterPortMap> portMap_Set = ci->srcGenericParameterPortMap();
+		if (!portMap_Set.empty())
+		{
+			UnitUtil::ValueUnitRep myVURep, incomingVURep;
+
+			// Check for too many incoming connections (cnotradictory)
+			if (portMap_Set.size() > 1)
+			{
+				string message = "FormulaEvaluator - GenericDomainModelParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
+				GMEConsole::Console::writeLine(message, MSG_ERROR);
+				throw udm_exception(message);
+			}
+
+			CyPhyML::ValueFlowTarget vft = portMap_Set.begin()->srcGenericParameterPortMap_end();
 
 			std::string sourceName = vft.name();
 

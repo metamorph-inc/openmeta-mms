@@ -16,6 +16,6 @@ Your tool's registry key should contain the following entries:
 
 When running tools, the following placeholders will be expanded in `ExecutableFilePath`, `ProcessArguments`, and `WorkingDirectory`:
 
-  * `%1` - The path to the exported CSV for the selected PET(s).
+  * `%1` - The path to the visualizer_config.json for the selected merged PET.
   * `%2` - The path to the current project directory.
   * `%4` - The path to the META install directory.

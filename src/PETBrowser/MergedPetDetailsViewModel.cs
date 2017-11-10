@@ -123,6 +123,7 @@ namespace PETBrowser
         public List<VisualizerSession> VisualizerSessionsList { get; set; }
         public ICollectionView VisualizerSessions { get; set; }
         public string MergedDirectory { get; set; }
+        public AnalysisTools AnalysisTools { get; set; }
 
         public string CreatedTime
         {
@@ -135,6 +136,7 @@ namespace PETBrowser
 
         public MergedPetDetailsViewModel(Dataset dataset, string mergedDirectory)
         {
+            AnalysisTools = new AnalysisTools();
             DetailsDataset = dataset;
             MergedDirectory = mergedDirectory;
             RecordCount = 0;

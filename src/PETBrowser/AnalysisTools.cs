@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Media.Animation;
 using Microsoft.Win32;
 
 namespace PETBrowser
@@ -14,8 +15,13 @@ namespace PETBrowser
 
         public IList<AnalysisTool> PetAnalysisToolList { get; set; }
 
+        public bool HasDefaultAnalysisTool { get; set; }
+        public AnalysisTool DefaultAnalysisTool { get; set; }
+
         public AnalysisTools()
         {
+            HasDefaultAnalysisTool = false;
+            DefaultAnalysisTool = null;
             PetAnalysisToolList = new List<AnalysisTool>();
             LoadAnalysisToolsFromRegistry();
         }
@@ -36,6 +42,12 @@ namespace PETBrowser
                                 {
                                     var tool = new AnalysisTool(toolKey);
                                     PetAnalysisToolList.Add(tool);
+
+                                    if (tool.InternalName == "OpenMetaVisualizer")
+                                    {
+                                        HasDefaultAnalysisTool = true;
+                                        DefaultAnalysisTool = tool;
+                                    }
                                 }
                                 catch (InvalidAnalysisToolException e)
                                 {
@@ -65,6 +77,12 @@ namespace PETBrowser
                                 {
                                     var tool = new AnalysisTool(toolKey);
                                     PetAnalysisToolList.Add(tool);
+
+                                    if (tool.InternalName == "OpenMetaVisualizer")
+                                    {
+                                        HasDefaultAnalysisTool = true;
+                                        DefaultAnalysisTool = tool;
+                                    }
                                 }
                                 catch (InvalidAnalysisToolException e)
                                 {
@@ -79,6 +97,18 @@ namespace PETBrowser
                     //TODO: Create this key (with defaults) if it doesn't already exist?
                 }
             }
+
+            if (DefaultAnalysisTool == null && PetAnalysisToolList.Count > 0)
+            {
+                DefaultAnalysisTool = PetAnalysisToolList[0];
+                HasDefaultAnalysisTool = true;
+            }
+            else if(DefaultAnalysisTool == null && PetAnalysisToolList.Count == 0)
+            {
+                HasDefaultAnalysisTool = false;
+                //Dummy analysis tool entry for button label
+                DefaultAnalysisTool = new AnalysisTool();
+            }
         }
     }
 
@@ -91,6 +121,17 @@ namespace PETBrowser
         public string ProcessArguments { get; private set; }
         public string WorkingDirectory { get; private set; }
         public bool ShowConsoleWindow { get; private set; }
+
+        public AnalysisTool()
+        {
+            InternalName = "None";
+            DisplayName = "None";
+            ActionName = "No registered visualizers";
+            ExecutableFilePath = "";
+            ProcessArguments = "";
+            WorkingDirectory = "";
+            ShowConsoleWindow = true;
+        }
 
         public AnalysisTool(RegistryKey toolKey)
         {

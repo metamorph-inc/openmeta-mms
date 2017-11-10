@@ -162,25 +162,6 @@ namespace PETBrowser
             });
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var promptDialog = new PromptDialog {Owner = this};
-
-                if (promptDialog.ShowDialog() == true)
-                {
-                    var highlightedDataset = (Dataset)PetGrid.SelectedItem;
-                    this.ViewModel.Store.ArchiveSelectedDatasets(promptDialog.Text, highlightedDataset);
-                    this.ViewModel.ReloadArchives();
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("Archive error", "An error occurred while archiving results.", ex.Message, ex.ToString());
-            }
-        }
-
         private void SelectResultsFolderButton_Click(object sender, RoutedEventArgs e)
         {
             var folderDialog = new VistaFolderBrowserDialog();
@@ -734,7 +715,7 @@ namespace PETBrowser
         }
 
         private bool isContextMenuOpen = false;
-        private void AnalysisToolsButton_Click(object sender, RoutedEventArgs e)
+        private void DropdownButton_Click(object sender, RoutedEventArgs e)
         {
             var source = sender as Button;
 
@@ -762,64 +743,6 @@ namespace PETBrowser
             {
                 contextMenu.RemoveHandler(ContextMenu.ClosedEvent, new RoutedEventHandler(ContextMenu_Closed));
             }
-        }
-
-        private void PetAnalysisToolRun(object sender, RoutedEventArgs e)
-        {
-            var source = (MenuItem) sender;
-
-            var analysisTool = (AnalysisTool) source.DataContext;
-            Console.WriteLine("Running analysis tool {0}", analysisTool.DisplayName);
-
-            try
-            {
-                var highlightedDataset = (Dataset)PetGrid.SelectedItem;
-                var exportPath = System.IO.Path.GetFullPath(this.ViewModel.Store.ExportSelectedDatasetsToViz(highlightedDataset));
-                string logPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), string.Format("{0}_{1:yyyyMMdd_HHmmss}.log", analysisTool.InternalName, DateTime.Now));
-                var exePath = ExpandAnalysisToolString(analysisTool.ExecutableFilePath, exportPath, ViewModel.Store.DataDirectory);
-                var arguments = ExpandAnalysisToolString(analysisTool.ProcessArguments, exportPath, ViewModel.Store.DataDirectory);
-                var workingDirectory = ExpandAnalysisToolString(analysisTool.WorkingDirectory, exportPath, ViewModel.Store.DataDirectory);
-
-                ProcessStartInfo psi = new ProcessStartInfo()
-                {
-                    FileName = "cmd.exe",
-                    Arguments = string.Format("/S /C \"\"{0}\" {1} > \"{2}\" 2>&1\"", exePath, arguments, logPath),
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    WorkingDirectory = workingDirectory,
-                    // RedirectStandardError = true,
-                    // RedirectStandardOutput = true,
-                    UseShellExecute = true //UseShellExecute must be true to prevent R server from inheriting listening sockets from PETBrowser.exe--  which causes problems at next launch if PETBrowser terminates
-                };
-
-                if (analysisTool.ShowConsoleWindow)
-                {
-                    psi.Arguments = string.Format("/S /C \"\"{0}\" {1}\"", exePath, arguments, logPath);
-                    psi.CreateNoWindow = false;
-                    psi.WindowStyle = ProcessWindowStyle.Normal;
-                }
-
-                Console.WriteLine(psi.Arguments);
-                var p = new Process();
-                p.StartInfo = psi;
-                p.Start();
-
-                p.Dispose();
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("Error", "An error occurred while starting tool.", ex.Message, ex.ToString());
-            }
-        }
-
-        private static string ExpandAnalysisToolString(string input, string exportPath, string workingDirectory)
-        {
-            string result = input.Replace("%1", exportPath);
-            result = result.Replace("%2", workingDirectory);
-            //TODO: %3 should be list of all selected directories; can we get that?
-            result = result.Replace("%4", META.VersionInfo.MetaPath);
-
-            return result;
         }
 
         private void NewCoreCountSelected(object sender, RoutedEventArgs e)

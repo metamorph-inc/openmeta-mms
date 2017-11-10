@@ -4,7 +4,7 @@ Results Browser
 ===============
 
 The OpenMETA tools enable the generation of large amounts of data
-through the execution of the various domain models. These amount of
+through the execution of the various domain models. The amount of
 analyses results can be further exacerbated with design space modeling
 and the Parametric Exploration Tool.
 
@@ -53,7 +53,7 @@ PET Tab
 
 .. image:: images/PetTab.png
    :alt: PET Tab
-   :width: 954px
+   :width: 1188px
 
 PET Dataset List Pane
 ~~~~~~~~~~~~~~~~~~~~~
@@ -75,10 +75,10 @@ Column Headers
    the bottom of the PET Dataset Pane. They reside in .csv format in the
    ./archive folder in the root of the project.  Archives must be converted to
    the new Merged PET format (using the "Merge Selected" button while the
-   archive is selected) before they can be launched in the visualizer.
+   archive is selected) before they can be launched in the Visualizer.
 -  |PET_RESULT_ICON| **Legacy PET**: These are PET entries created using earlier
-   versions of the results browser, which must be merged (using the "Merge
-   Selected" button) before they can be launched in the visualizer.  These are
+   versions of the Results Browser, which must be merged (using the "Merge
+   Selected" button) before they can be launched in the Visualizer.  These are
    only shown when "Show Legacy PETs" is checked in the Settings
    (|SETTINGS_ICON|) menu.
 
@@ -121,13 +121,6 @@ Action Buttons
 folder in the ./merged folder in the project directory that includes a
 .csv of the aggregated data as well as metadata about the dataset.
 
-**Analyze Selected with Tool:** This button is under development; more documentation is forthcoming.
-
-**Open Selected in Visualizer:** This button will launch the visualizer with selected (checked)
-dataset(s) after prompting the user to created a MergedPet. If more than
-one is selected, it will attempt to merge them. If none are selected, it
-will launch the highlighted dataset.
-
 Context Menu
 ^^^^^^^^^^^^
 
@@ -161,17 +154,56 @@ Below the header is a summary of the dataset's metrics. Each of the
 DesignVariables and Objectives are listed along with the minimum,
 average, and maximum values represented in the dataset.
 
-For PETs and Merged PETs, a list of saved visualizer sessions is also displayed
+For PETs and Merged PETs, a list of saved Visualizer sessions is also displayed
 in this pane.  To launch a session, select a session from the list and click
-"Launch in Visualizer"; sessions with a |VISUALIZER_SESSION_RUNNING_ICON| icon
+"Launch in OpenMETA Visualizer"; sessions with a |VISUALIZER_SESSION_RUNNING_ICON| icon
 are already running and cannot be launched again (close the browser tab to
 relaunch).  To create a new session, click "New Session..." and specify a
-session name; this will create a new visualizer session with the default
+session name; this will create a new Visualizer session with the default
 configuration.
 
 .. |VISUALIZER_SESSION_RUNNING_ICON| image:: images/icons/VisualizerSessionRunning.svg
       :alt: Visualizer Session Running Icon
       :width: 16px
+
+Launching other tools from the Results Browser
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: images/OpenWithMenu.png
+   :alt: Open With Visualizer Menu
+   :width: 259.5px
+
+Other external visualization and analysis tools can be launched from the Results
+Browser by clicking the arrow button beside the "Launch in OpenMETA Visualizer"
+button and choosing a tool from the dropdown menu.
+
+Exporting results as CSV
+************************
+
+To export results as CSV, click the arrow button beside the "Launch in OpenMETA
+Visualizer" button, choose "Export as CSV", then select a location to save the
+exported CSV.
+
+Opening results in Excel
+************************
+
+To open results in Excel, click the arrow button beside the "Launch in OpenMETA
+Visualizer" button and choose "Open in Excel".  A new Excel document will be
+opened, containing a row for each iteration of your PET and a column for each
+design variable, objective, constraint, or intermediate variable.
+
+.. note::
+   When multiple version of Excel are installed, the Results Browser will
+   launch the first version it encounters in the ``%PATH`` environment
+   variable.
+
+Opening results in JMP
+************************
+
+To open results in JMP, click the arrow button beside the "Launch in OpenMETA
+Visualizer" button and choose "Open in JMP".  A new JMP Data Table will be
+opened, containing a row for each iteration of your PET and a column for each
+design variable, objective, constraint, or intermediate variable.
 
 Test Benches Tab
 ----------------
