@@ -820,17 +820,13 @@ namespace SchematicUnitTests
         [Trait("Type", "SPICE")]
         public void SpiceTemplateGeneration()
         {
-            string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
-
-            string OutputDir = Path.Combine(TestPath,
-                                            "output",
-                                            TestName);
-
             string TestbenchPath = "/@TestBenches|kind=Testing|relpos=0/SpiceTemplateTest|kind=TestBench|relpos=0";
 
-            RunInterpreterMain(OutputDir,
-                               TestbenchPath,
-                               new CyPhy2Schematic.CyPhy2Schematic_Settings() { doSpice = "true" });
+            var runResult = MasterInterpreterTest.CyPhyMasterInterpreterRunner.RunMasterInterpreterAndReturnResults(fixture.path_MGA,
+                                                                        TestbenchPath,
+                                                                        "/@A_SpiceTests|kind=ComponentAssemblies|relpos=0/@SpiceParametricModel|kind=ComponentAssembly|relpos=0");
+
+            string OutputDir = runResult.OutputDirectory;
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
             Assert.False(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Generated EAGLE schematic (" + generatedSchemaFile + "), but shouldn't have.");
@@ -843,12 +839,12 @@ namespace SchematicUnitTests
             Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
             Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
 
-            //RunPopulateSchemaTemplate(OutputDir);
-            //sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
-            //Assert.Contains("\nXResistor ", sch);
-            //Assert.Contains("\nLInductor ", sch);
-            //Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
-            //Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
+            RunPopulateSchemaTemplate(OutputDir);
+            sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+            Assert.Contains("\nXResistor ", sch);
+            Assert.Contains("\nLInductor ", sch);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE 3.253e-12 1.001 1000 1.293e-13").Success);
         }
 
         //TODO: Add test for running in the context of a PET.
