@@ -7,6 +7,7 @@ using META;
 
 using Tonka = ISIS.GME.Dsml.CyPhyML.Interfaces;
 using TonkaClasses = ISIS.GME.Dsml.CyPhyML.Classes;
+using ISIS.GME.Common.Interfaces;
 
 namespace CyPhy2Schematic.Schematic
 {
@@ -237,12 +238,53 @@ namespace CyPhy2Schematic.Schematic
                 }
                 else
                 {
-                    node.parameters.Add(par.Name, par.Attributes.Value);
+                    node.parameters.Add(par.Name, FindTestBenchParameter(par) ?? par.Attributes.Value);
                 }
             }
 
             nodes.Add(node);
             ComponentNodeMap[de] = node;
+        }
+
+        private string FindTestBenchParameter(Tonka.SPICEModelParameter parameter)
+        {
+            if (parameter.SrcConnections.SPICEModelParameterMapCollection.Count() == 0)
+                return null;
+
+            return FindTestBenchParameter(parameter, parameter.SrcConnections.SPICEModelParameterMapCollection.First().SrcEnd);
+        }
+
+        private string FindTestBenchParameter(Tonka.SPICEModelParameter parameter, FCO element)
+        {
+            Tonka.ValueFlow srcConnection = null;
+            if (element is Tonka.Parameter) {
+                srcConnection = ((Tonka.Parameter)element).SrcConnections.ValueFlowCollection.FirstOrDefault();
+            }
+            else if(element is Tonka.Property)
+            {
+                srcConnection = ((Tonka.Property)element).SrcConnections.ValueFlowCollection.FirstOrDefault();
+            }
+            else
+            {
+                CodeGenerator.Logger.WriteWarning("Encountered unsupported element <a href=\"mga:{1}\">{0}</a> while attempting to trace ValueFlow network from {4} Parameter <a href=\"mga:{3}\">{2}</a> back to a Test Bench Parameter. If you intend for {4} Parameter <a href=\"mga:{3}\">{2}</a> to update dynamically from one or more Test Bench Parameters, include only Parameters and/or Properties in the ValueFlow Network.",
+                                                  element.Name, traceability.GetID(element.Impl),
+                                                  parameter.Name, traceability.GetID(parameter.Impl), parameter.ParentContainer.ParentContainer.Name);
+                return null;
+            }
+            if (srcConnection == null)
+            {
+                if (element.ParentContainer is Tonka.TestBench)
+                {
+                    CodeGenerator.Logger.WriteDebug("Mapped Test Bench Parameter <a href=\"mga:{1}\">{0}</a> to {4} Parameter <a href=\"mga:{3}\">{2}</a> from ValueFlow network.",
+                                                    element.Name, traceability.GetID(element.Impl),
+                                                    parameter.Name, traceability.GetID(parameter.Impl), parameter.ParentContainer.ParentContainer.Name);
+                    return "${" + element.Name + "}";
+                }
+                else
+                    return null;
+            }
+
+            return FindTestBenchParameter(parameter, srcConnection.SrcEnd);
         }
 
         public override void visit(Port obj)
@@ -436,6 +478,5 @@ namespace CyPhy2Schematic.Schematic
                     this.visit(port, net_obj);
             }
         }
-
     }
 }

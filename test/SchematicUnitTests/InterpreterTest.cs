@@ -59,6 +59,7 @@ namespace SchematicUnitTests
     public class InterpreterTest : InterpreterTestBaseClass, IUseFixture<InterpreterTestFixture>
     {
         public const string generatedSchemaFile = "schema.sch";
+        public const string generatedSpiceTemplateFile = "schema.cir.template";
         public const string generatedSpiceFile = "schema.cir";
         public const string generatedLayoutFile = "layout-input.json";
         public const string generatedSpiceViewerLauncher = "LaunchSpiceViewer.bat";
@@ -141,8 +142,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             JObject layout = null;
 
@@ -188,8 +189,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             JObject layout = null;
 
@@ -259,8 +260,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             JObject layout = null;
 
@@ -355,8 +356,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             // At this point, we've created a "layout-input.json" file, and we need to run the "placeonly.bat" file to
             // synthesize a "schema.brd" file.
@@ -522,8 +523,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             // At this point, we've created a "layout-input.json" file, and we need to run the "placeonly.bat" file to
             // synthesize a "schema.brd" file.
@@ -563,8 +564,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             JObject layout = null;
 
@@ -614,8 +615,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             JObject layout = null;
 
@@ -709,8 +710,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             JObject layout = null;
 
@@ -797,12 +798,13 @@ namespace SchematicUnitTests
                                TestbenchPath,
                                new CyPhy2Schematic.CyPhy2Schematic_Settings() { doSpice = "true" });
 
-            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Failed to generate " + generatedSpiceFile);
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
             Assert.False(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Generated EAGLE schematic (" + generatedSchemaFile + "), but shouldn't have.");
             Assert.False(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Generated layout file (" + generatedLayoutFile + "), but shouldn't have.");
-            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceFile);
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceViewerLauncher);
 
-            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+
+            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
             Assert.Contains("\nRRfb ", sch);
             Assert.Contains("\nRRin ", sch);
             Assert.Contains("\nXSpicySingleOpAmp", sch);
@@ -812,6 +814,94 @@ namespace SchematicUnitTests
             Assert.True(Regex.Match(sch, "RRin \\d+ \\d+  10000").Success);
             Assert.True(Regex.Match(sch, "XSpicySingleOpAmp \\d+ \\d+ \\d+ OPAMP1").Success);
 
+        }
+
+        [Fact]
+        [Trait("Type", "SPICE")]
+        public void SpiceTemplateGeneration()
+        {
+            string TestbenchPath = "/@TestBenches|kind=Testing|relpos=0/SpiceTemplateTest|kind=TestBench|relpos=0";
+
+            var runResult = MasterInterpreterTest.CyPhyMasterInterpreterRunner.RunMasterInterpreterAndReturnResults(fixture.path_MGA,
+                                                                        TestbenchPath,
+                                                                        "/@A_SpiceTests|kind=ComponentAssemblies|relpos=0/@SpiceParametricModel|kind=ComponentAssembly|relpos=0");
+
+            string OutputDir = runResult.OutputDirectory;
+
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Generated EAGLE schematic (" + generatedSchemaFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Generated layout file (" + generatedLayoutFile + "), but shouldn't have.");
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceViewerLauncher);
+
+            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
+            Assert.Contains("\nXResistor ", sch);
+            Assert.Contains("\nLInductor ", sch);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
+
+            RunPopulateSchemaTemplate(OutputDir);
+            sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+            Assert.Contains("\nXResistor ", sch);
+            Assert.Contains("\nLInductor ", sch);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE 3.253e-12 1.001 1000 1.293e-13").Success);
+        }
+
+        [Fact]
+        [Trait("Type", "SPICE")]
+        public void SpiceTemplateGenerationPET()
+        {
+            //string TestbenchPath = "/@Testing|kind=Testing|relpos=0/ParametricExploration|kind=ParametricExploration|relpos=0/SpiceTemplateTestPET|kind=ParametricExploration|relpos=0/";
+            string TestbenchPath = "/@Testing/@ParametricExploration/@SpiceTemplateTestPET";
+
+            var runResult = MasterInterpreterTest.CyPhyMasterInterpreterRunner.RunMasterInterpreterAndReturnResults(fixture.path_MGA,
+                                                                        TestbenchPath,
+                                                                        "/@A_SpiceTests|kind=ComponentAssemblies|relpos=0/@SpiceParametricModel|kind=ComponentAssembly|relpos=0");
+
+            string OutputDir = runResult.OutputDirectory;
+            string TestBenchDir = Directory.GetDirectories(OutputDir)[0];
+
+            Assert.True(File.Exists(Path.Combine(TestBenchDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
+            Assert.False(File.Exists(Path.Combine(TestBenchDir, generatedSchemaFile)), "Generated EAGLE schematic (" + generatedSchemaFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(TestBenchDir, generatedLayoutFile)), "Generated layout file (" + generatedLayoutFile + "), but shouldn't have.");
+            Assert.True(File.Exists(Path.Combine(TestBenchDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceViewerLauncher);
+
+            string sch = File.ReadAllText(Path.Combine(TestBenchDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
+            Assert.Contains("\nXResistor ", sch);
+            Assert.Contains("\nLInductor ", sch);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
+
+            RunPopulateSchemaTemplate(TestBenchDir);
+            sch = File.ReadAllText(Path.Combine(TestBenchDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+            Assert.Contains("\nXResistor ", sch);
+            Assert.Contains("\nLInductor ", sch);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE 3.253e-12 1.001 1000 1.293e-13").Success);
+        }
+
+        [Fact]
+        [Trait("Type", "SPICE")]
+        public void SpiceTemplateGenerationFormula()
+        {
+            string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string OutputDir = Path.Combine(TestPath,
+                                            "output",
+                                            TestName);
+
+            string TestbenchPath = "/@TestBenches|kind=Testing|relpos=0/SpiceTemplateTestFormula|kind=TestBench|relpos=0";
+
+            RunInterpreterMain(OutputDir,
+                               TestbenchPath,
+                               new CyPhy2Schematic.CyPhy2Schematic_Settings() { doSpice = "true" });
+
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
+
+            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} 1e\\+06 \\$\\{Delay\\}").Success);
+
+            //Check for warning in log.
         }
 
         [Fact]
@@ -830,12 +920,12 @@ namespace SchematicUnitTests
                                TestbenchPath,
                                new CyPhy2Schematic.CyPhy2Schematic_Settings() { doSpice = "true" });
 
-            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), String.Format("Failed to generate {0}/{1}", OutputDir, generatedSpiceFile));
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
             Assert.False(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Generated EAGLE schematic (" + generatedSchemaFile + "), but shouldn't have.");
             Assert.False(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Generated layout file (" + generatedLayoutFile + "), but shouldn't have.");
-            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceFile);
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceTemplateFile);
 
-            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
             Assert.DoesNotContain("RRfb", sch);
             Assert.DoesNotContain("RRin", sch);
             Assert.DoesNotContain("XSpicySingleOpAmp", sch);
@@ -860,7 +950,7 @@ namespace SchematicUnitTests
 
                 string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
 
-                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
                 Assert.DoesNotContain("RRfb", sch);
                 Assert.DoesNotContain("RRin", sch);
                 Assert.DoesNotContain("XSpicySingleOpAmp", sch);
@@ -897,7 +987,7 @@ namespace SchematicUnitTests
 
                 string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
 
-                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
                 Assert.DoesNotContain("RRfb", sch);
                 Assert.DoesNotContain("RRin", sch);
                 Assert.DoesNotContain("XSpicySingleOpAmp", sch);
@@ -946,7 +1036,7 @@ namespace SchematicUnitTests
 
                 string OutputDir = RunSpiceAsmModelGeneration_Complex(TestName);
 
-                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+                string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
                 Assert.Contains("RRfb", sch);
                 Assert.Contains("RRin", sch);
                 Assert.Contains("XSpicySingleOpAmp", sch);
@@ -965,10 +1055,10 @@ namespace SchematicUnitTests
                                TestbenchPath,
                                new CyPhy2Schematic.CyPhy2Schematic_Settings() { doSpice = "true" });
 
-            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), String.Format("Failed to generate {0}/{1}", OutputDir, generatedSpiceFile));
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), String.Format("Failed to generate {0}/{1}", OutputDir, generatedSpiceTemplateFile));
             Assert.False(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Generated EAGLE schematic (" + generatedSchemaFile + "), but shouldn't have.");
             Assert.False(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Generated layout file (" + generatedLayoutFile + "), but shouldn't have.");
-            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceFile);
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceTemplateFile);
             return OutputDir;
         }
 
@@ -987,8 +1077,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
         }
 
         [Fact]
@@ -1008,8 +1098,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
         }
 
         [Fact]
@@ -1029,8 +1119,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
         }
 
         [Fact]
@@ -1049,8 +1139,8 @@ namespace SchematicUnitTests
             // Verify normal outputs
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), String.Format("Failed to generate {0}/{1}", OutputDir, generatedSchemaFile));
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), String.Format("Failed to generate {0}/{1}", OutputDir, generatedLayoutFile));
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             // Check for spacing parameters in manifest's first execution command.
             var manifest = AVM.DDP.MetaTBManifest.OpenForUpdate(OutputDir);
@@ -1076,8 +1166,8 @@ namespace SchematicUnitTests
             // Verify normal outputs
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             // Check for spacing parameters in manifest's first execution command.
             var manifest = AVM.DDP.MetaTBManifest.OpenForUpdate(OutputDir);
@@ -1102,8 +1192,8 @@ namespace SchematicUnitTests
                                new CyPhy2Schematic.CyPhy2Schematic_Settings() { doPlaceRoute = "true" });
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             String pathLayoutFile = Path.Combine(OutputDir, generatedLayoutFile);
             Assert.True(File.Exists(pathLayoutFile),
@@ -1133,8 +1223,8 @@ namespace SchematicUnitTests
                                new CyPhy2Schematic.CyPhy2Schematic_Settings() { doPlaceRoute = "true" });
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
         }
 
         [Fact]
@@ -2498,8 +2588,8 @@ namespace SchematicUnitTests
 
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceFile)), "Generated SPICE model (" + generatedSpiceFile + "), but shouldn't have.");
-            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceFile + ", but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
 
             // At this point, we've created a "layout-input.json" file, and we need to run the "placeonly.bat" file to
             // synthesize a "schema.brd" file.
@@ -2528,6 +2618,7 @@ namespace SchematicUnitTests
                 Assembly.GetExecutingAssembly().CodeBase.Substring("file:///".Length),
                 // [Trait("THIS", "ONE")]
                 // "/trait", "THIS=ONE",
+                //"/trait", "Type=SPICE", // Do SPICE Tests Only
                 //"/noshadow",
             });
             Console.In.ReadLine();

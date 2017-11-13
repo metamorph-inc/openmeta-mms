@@ -16,6 +16,18 @@ IF %QUERY_ERRORLEVEL% == 1 (
     exit !QUERY_ERRORLEVEL!
 )
 
+if exist "schema.cir.template" (
+	"%META_PATH%\bin\python27\scripts\python.exe" PopulateSchemaTemplate.py
+
+	IF !ERRORLEVEL! neq 0 (
+		echo on
+		echo "Template Population Failed" >> _FAILED.txt
+		echo "Template Population Failed."
+		popd
+		exit !ERRORLEVEL!
+	)
+)
+
 REM ------------------------
 REM Check if SPICE installed
 REM ------------------------

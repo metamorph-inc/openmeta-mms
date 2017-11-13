@@ -156,8 +156,8 @@ namespace CyPhy2Schematic.Schematic
             var siginfo = new Spice.SignalContainer() { name = TestBench_obj.Name, objectToNetId = new Dictionary<CyPhy2SchematicInterpreter.IDs,string>() };
             // now traverse the object network with Spice Visitor to build the spice and siginfo object network
             TestBench_obj.accept(new SpiceVisitor(Traceability, mgaIdToDomainIDs, this) { circuit_obj = circuit, siginfo_obj = siginfo, mode = this.mode });
-            String spiceFile = Path.Combine(this.mainParameters.OutputDirectory, "schema.cir");
-            circuit.Serialize(spiceFile);
+            String spiceTemplateFile = Path.Combine(this.mainParameters.OutputDirectory, "schema.cir.template");
+            circuit.Serialize(spiceTemplateFile);
             String siginfoFile = Path.Combine(this.mainParameters.OutputDirectory, "siginfo.json");
             siginfo.Serialize(siginfoFile);
 
@@ -189,6 +189,13 @@ namespace CyPhy2Schematic.Schematic
             var placeBat = new StreamWriter(Path.Combine(this.mainParameters.OutputDirectory, "placeonly.bat"));
             placeBat.Write(CyPhy2Schematic.Properties.Resources.placeonly);
             placeBat.Close();
+        }
+
+        private void GeneratePopulateTemplateScriptFile()
+        {
+            var writer = new StreamWriter(Path.Combine(this.mainParameters.OutputDirectory, "PopulateSchemaTemplate.py"));
+            writer.Write(CyPhy2Schematic.Properties.Resources.PopulateSchemaTemplate);
+            writer.Close();
         }
 
         private void GenerateLayoutReimportFiles(LayoutJson.Layout layoutJson)
@@ -495,6 +502,7 @@ namespace CyPhy2Schematic.Schematic
                     GenerateSpiceCommandFile(TestBench_obj);
                     break;
                 case Mode.SPICE:
+                    GeneratePopulateTemplateScriptFile();
                     GenerateSpiceCode(TestBench_obj);
                     GenerateSpiceCommandFile(TestBench_obj);
                     GenerateSpiceViewerLauncher();

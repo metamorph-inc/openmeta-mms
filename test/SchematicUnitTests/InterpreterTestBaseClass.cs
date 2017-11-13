@@ -102,5 +102,44 @@ namespace SchematicUnitTests
             Assert.True(File.Exists(pathBoardFile), "Failed to generate " + generatedBoardFileName);
             return pathBoardFile;
         }
+
+        public static string RunPopulateSchemaTemplate(string OutputDir)
+        {
+            string pythonFileName = "PopulateSchemaTemplate.py";
+            var pathPythonFile = Path.Combine(OutputDir,
+                                             pythonFileName);
+            Assert.True(File.Exists(pathPythonFile));
+
+            string generatedSchemaFile = "schema.cir";
+            var pathGeneratedSchemaFile = Path.Combine(OutputDir,
+                                             generatedSchemaFile);
+
+            // Run the "PopulateSchemaTemplate.py" file
+            var processInfo = new ProcessStartInfo()
+            {
+                FileName = META.VersionInfo.PythonVEnvExe,
+                Arguments = "PopulateSchemaTemplate.py",
+                WorkingDirectory = OutputDir,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true
+            };
+
+            using (var process = Process.Start(processInfo))
+            {
+                process.WaitForExit(10000);
+
+                // Read the streams
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+
+                Assert.True(0 == process.ExitCode, output + Environment.NewLine + error);
+            }
+
+            // Check that the "schema.brd" file exists.
+            Assert.True(File.Exists(pathGeneratedSchemaFile), "Failed to generate " + generatedSchemaFile);
+            return pathGeneratedSchemaFile;
+        }
     }
 }
