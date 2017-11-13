@@ -12,47 +12,6 @@ namespace CyPhy2MfgBomTest
         private static String API_KEY = "22becbab";
 
         [Fact]
-        public void ExceedRateLimit()
-        {
-            var querier = new MfgBom.OctoPart.Querier(API_KEY);
-
-            List<int> number = new List<int>();
-            for (int i = 0; i < 100; i++)
-            {
-                number.Add(i);
-            }
-
-            Assert.Throws<MfgBom.OctoPart.OctopartQueryRateException>(delegate
-            {
-                try
-                {
-                    Parallel.ForEach(number, i =>
-                    {
-                        List<String> includes = new List<string>() { "specs", "descriptions" };
-                        querier.QueryMpn("SN74S74N", false, includes, true);
-                    });
-                }
-                catch (Exception ex)
-                {
-                    throw ex.InnerException;
-                }
-            });
-        }
-
-        [Fact]
-        public void ExceedLimitAndRecover()
-        {
-            ExceedRateLimit();
-
-            var querier = new MfgBom.OctoPart.Querier(API_KEY);
-            var part = new MfgBom.Bom.Part()
-            {
-                octopart_mpn = "SN74S74N"
-            };
-            Assert.True(part.QueryOctopartData(API_KEY));
-        }
-
-        [Fact]
         public void QueryAndParse_ManyMPNs()
         {
             var listMpn = new List<String>()
