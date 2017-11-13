@@ -10,6 +10,7 @@
 #ifndef ISIS_VERSION_NUMBER_H
 #define ISIS_VERSION_NUMBER_H
 #include <ISISVersionNumber.h>
+#include <cc_CommonFunctions.h>
 #endif
 
 namespace isis
@@ -340,7 +341,8 @@ void Populate_Single_MetricComponent(
 			metricComponentRoot.ComponentDefinitionSource() =  ComponentDefinitionSource_string(COMPONENT_DEFINITION_SOURCE_CAD_MODEL);
 
 		// Model Type
-		if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_PART )
+		//if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_PART )
+		if ( in_CADComponentData_map[in_ComponentID].modelType == CAD_MDL_PART )
 			metricComponentRoot.Type() = "PART";
 		else
 			metricComponentRoot.Type() = "ASSEMBLY";
@@ -520,7 +522,8 @@ void Populate_Single_MetricComponent(
 
 				// Density
 				// Note - Only parts have a density.  Assemblies do not have densities.
-				if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_PART )
+				//if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_PART )
+				if ( in_CADComponentData_map[in_ComponentID].modelType == CAD_MDL_PART )
 				{
 					PopulateScalar( "Density", in_CADComponentData_map[in_ComponentID].massProperties.density, massUnit_ShortName + "/" + distanceUnit_ShortName + "3", scalarsRoot );
 				}
@@ -534,7 +537,8 @@ void Populate_Single_MetricComponent(
 		// Material
 		//////////////////////////////////
 		
-		if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_PART )
+		//if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_PART )
+		if ( in_CADComponentData_map[in_ComponentID].modelType == CAD_MDL_PART )
 		{
 			std::string material_temp = "Undefined";
 			try
@@ -628,7 +632,7 @@ void Populate_MetricComponents(
 										out_metricComponentsRoot );
 	
 
-	if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_ASSEMBLY )
+	if ( in_CADComponentData_map[in_ComponentID].modelType == CAD_MDL_ASSEMBLY )
 	{
 		for ( std::list<string>::const_iterator i(in_CADComponentData_map[in_ComponentID].children.begin());
 			i != in_CADComponentData_map[in_ComponentID].children.end();
@@ -679,7 +683,8 @@ void PopulateJoints_for_SingleComponent(
 		// Derived from Constraint Pairs
 		for each ( std::string j in i.constrainedTo_ComponentInstanceIDs_DerivedFromConstraintPairs )
 		{
-			if ( in_CADComponentData_map[j].modelType == PRO_MDL_PART ||
+			//if ( in_CADComponentData_map[j].modelType == PRO_MDL_PART ||
+			if ( in_CADComponentData_map[j].modelType == CAD_MDL_PART ||
 				 (in_CADComponentData_map[j].specialInstruction != CAD_SPECIAL_INSTRUCTION_HAS_KINEMATIC_JOINT)) 
 									constrainedToComponentInstanceIDs.insert(j);
 		}
@@ -687,7 +692,8 @@ void PopulateJoints_for_SingleComponent(
 		// Inferred from Leaf Assemblies
 		for each ( std::string j in i.constrainedTo_ComponentInstanceIDs_InferredFromLeafAssemblySubordinates )
 		{
-			if ( in_CADComponentData_map[j].modelType == PRO_MDL_PART ||
+			//if ( in_CADComponentData_map[j].modelType == PRO_MDL_PART ||
+			if ( in_CADComponentData_map[j].modelType == CAD_MDL_PART ||
 			   (in_CADComponentData_map[j].specialInstruction != CAD_SPECIAL_INSTRUCTION_HAS_KINEMATIC_JOINT)) 
 									constrainedToComponentInstanceIDs.insert(j);
 		}
@@ -713,7 +719,8 @@ void PopulateJoints_for_SingleComponent(
 
 		jointRoot.ID() = i.inputJoint.JointID;
 
-		if (in_CADComponentData_map[jointRoot.AssembledComponentInstanceID()].modelType == PRO_MDL_ASSEMBLY && 
+		//if (in_CADComponentData_map[jointRoot.AssembledComponentInstanceID()].modelType == PRO_MDL_ASSEMBLY && 
+		if (in_CADComponentData_map[jointRoot.AssembledComponentInstanceID()].modelType == CAD_MDL_ASSEMBLY && 
 			in_CADComponentData_map[jointRoot.AssembledComponentInstanceID()].specialInstruction == CAD_SPECIAL_INSTRUCTION_HAS_KINEMATIC_JOINT )
 		{
 			isis_LOG(lg, isis_FILE, isis_WARN) << "Only parts and assemblies without CAD_SPECIAL_INSTRUCTION_HAS_KINEMATIC_JOINT appear in joints: " << (string)jointRoot.AssembledComponentInstanceID();
@@ -801,7 +808,8 @@ void Populate_Joints(
 {
 
 	// Only add joint information for parts or assemblies that should be treated as one body.
-	if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_PART ||
+	//if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_PART ||
+	if ( in_CADComponentData_map[in_ComponentID].modelType == CAD_MDL_PART ||
 	   ( in_CADComponentData_map[in_ComponentID].specialInstruction != CAD_SPECIAL_INSTRUCTION_HAS_KINEMATIC_JOINT ) )	
 			PopulateJoints_for_SingleComponent(	in_ComponentID, 
 												in_CADComponentData_map,  
@@ -809,7 +817,8 @@ void Populate_Joints(
 												out_MetricID_to_Anomalies_map,
 												out_jointsRoot );
 	
-	if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_ASSEMBLY )
+//	if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_ASSEMBLY )
+	if ( in_CADComponentData_map[in_ComponentID].modelType == CAD_MDL_ASSEMBLY )
 	{
 		for ( std::list<string>::const_iterator i(in_CADComponentData_map[in_ComponentID].children.begin());
 			i != in_CADComponentData_map[in_ComponentID].children.end();
@@ -835,7 +844,8 @@ void Populate_Joints_MetaData(
 	bool foundProcessingInstruction = false;
 	for each ( const std::string &i in in_ListOfComponentIDsInTheAssembly)
 	{
-		if (	in_CADComponentData_map[i].modelType ==  PRO_MDL_ASSEMBLY  &&
+		//if (	in_CADComponentData_map[i].modelType ==  PRO_MDL_ASSEMBLY  &&
+		if (	in_CADComponentData_map[i].modelType ==  CAD_MDL_ASSEMBLY  &&
 				CyPhyLeafAssembly ( i, in_CADComponentData_map ) &&
 				in_CADComponentData_map[i].specialInstruction != CAD_SPECIAL_INSTRUCTION_HAS_KINEMATIC_JOINT  )
 		{
@@ -850,7 +860,8 @@ void Populate_Joints_MetaData(
 
 		for each ( const std::string &i in in_ListOfComponentIDsInTheAssembly)
 		{
-			if (	in_CADComponentData_map[i].modelType ==  PRO_MDL_ASSEMBLY  &&
+			//if (	in_CADComponentData_map[i].modelType ==  PRO_MDL_ASSEMBLY  &&
+			if (	in_CADComponentData_map[i].modelType ==  CAD_MDL_ASSEMBLY  &&
 					CyPhyLeafAssembly ( i, in_CADComponentData_map ) &&
 					in_CADComponentData_map[i].specialInstruction != CAD_SPECIAL_INSTRUCTION_HAS_KINEMATIC_JOINT  )
 			{
@@ -870,7 +881,8 @@ void Populate_Assemblies(
 
 
 {
-	if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_ASSEMBLY )
+	//if ( in_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_ASSEMBLY )
+	if ( in_CADComponentData_map[in_ComponentID].modelType == CAD_MDL_ASSEMBLY )
 	{
 		if ( in_CADComponentData_map[in_ComponentID].children.size() > 0 )
 		{
@@ -943,7 +955,8 @@ void Populate_Assemblies(
 				cADComponentRoot.ComponentInstanceID() = i;
 				cADComponentRoot.MetricID() = in_CADComponentData_map[i].metricID;
 
-				if ( in_CADComponentData_map[i].modelType == PRO_MDL_ASSEMBLY )
+				//if ( in_CADComponentData_map[i].modelType == PRO_MDL_ASSEMBLY )
+				if ( in_CADComponentData_map[i].modelType == CAD_MDL_ASSEMBLY )
 				{
 					Populate_Assemblies(	i,
 											in_CADComponentData_map,  
@@ -986,7 +999,8 @@ void Assign_MetricIDs_To_Components(
 		in_out_CADComponentData_map[in_ComponentID].metricID = in_out_ModelName_MetricID_map[ ModelNameWithSuffix ];
 	}
 	
-	if ( in_out_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_ASSEMBLY )
+	//if ( in_out_CADComponentData_map[in_ComponentID].modelType == PRO_MDL_ASSEMBLY )
+	if ( in_out_CADComponentData_map[in_ComponentID].modelType == CAD_MDL_ASSEMBLY )
 	{
 		for ( std::list<string>::const_iterator i(in_out_CADComponentData_map[in_ComponentID].children.begin());
 			i != in_out_CADComponentData_map[in_ComponentID].children.end();

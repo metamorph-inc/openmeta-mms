@@ -52,9 +52,6 @@
     <ClCompile Include="SurvivabilityAnalysis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InputArgumentsParser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AssemblyCreationViaInputFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -99,9 +96,6 @@
     <ClInclude Include="SurvivabilityAnalysis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputArgumentsParser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AssemblyCreationViaInputFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -127,12 +121,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\generated\CAD\generated\CADAnalysisMetaData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\generated\CAD\generated\CADAnalysisMetaData_xsd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,6 +7,7 @@ This class provides factories for the
 concrete Creo CAD system.
 */
 #include "CadFactoryAbstract.h"
+#include  <string>
 #include <vector>
 #include <ProSolid.h>
 
@@ -45,9 +46,62 @@ public:
 		  const std::string &	in_id, 
 		  std::map<std::string, isis::CADComponentData> &	in_map);
 
+};
 
 
-	//virtual void SetupCADEnvirnoment ( const DataContainer &in_DataContainer) throw (isis::application_exception);
+class  EnvironmentCreo : public IEnvironment {
+	public:
+		// provide the name of the concrete assembler
+		std::string name() { return "EnvironmentCreo";}
+
+		//std::string getCADExtensionsDir() throw (isis::application_exception);
+
+
+		// This function does any setup that is necessary before invoking the CAD application
+		//virtual void setupCADEnvirnoment ( const DataContainer &in_DataContainer) throw (isis::application_exception) = 0;
+
+
+	void setupCADEnvironment(	
+			const CreateAssemblyInputArguments &in_CreateAssemblyInputArguments,
+			std::string		&out_CADStartCommand,	
+			std::string		&out_CADExtensionsDir,
+			std::string		&out_TemplateFile_PathAndFileName ) const throw (isis::application_exception);
+
+	void setupCADEnvironment(	
+			const MetaLinkInputArguments &in_MetaLinkInputArguments,
+			std::string		&out_CADStartCommand,	
+			std::string		&out_CADExtensionsDir,
+			std::string		&out_TemplateFile_PathAndFileName ) const throw (isis::application_exception);
+
+
+	void setupCADEnvironment(	
+			const ExtractACMInputArguments &in_ExtractACMInputArguments,
+			std::string		&out_CADStartCommand,	
+			std::string		&out_CADExtensionsDir,
+			std::string		&out_TemplateFile_PathAndFileName ) const throw (isis::application_exception);
+
+};
+
+
+class  ModelNamesCreo : public IModelNames {
+	public:
+		// provide the name of the concrete assembler
+		std::string name() { return "ModelNames";}
+
+
+	// e.g. in_OrigName				Chassis_8_Wheel<Chassis>
+	//		out_ModelName			Chassis
+	//		out_FamilyTableEntry	Chassis_8_Wheel
+	//		out_FamilyTableModel	true
+	//
+	// e.g. in_OrigName				bracket
+	//		out_ModelName			bracket
+	//		out_FamilyTableEntry	""
+	//		out_FamilyTableModel	false
+	virtual void extractModelNameAndFamilyTableEntry(	const std::string	&in_OrigName, 
+														std::string			&out_ModelName,
+														std::string			&out_FamilyTableEntry,
+														bool				&out_FamilyTableModel ) const throw (isis::application_exception);
 
 };
 
@@ -55,6 +109,8 @@ class CadFactoryCreo : public CadFactoryAbstract
 {
 private:
 	AssemblerCreo assembler;
+	EnvironmentCreo environment;
+	ModelNamesCreo modelNames;
 
 public:
 	// provide the name of the concrete factory
@@ -65,6 +121,13 @@ public:
 		return assembler;
 	};
 
+	IEnvironment& getEnvironment() {
+		return environment;
+	};
+
+	IModelNames& getModelNames() {
+		return modelNames;
+	};
 };
 
 CadFactoryAbstract::ptr create();

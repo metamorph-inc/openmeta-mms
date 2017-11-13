@@ -2,39 +2,17 @@
     \brief The main(...) function for CADCreoParametricCreateAssembly.exe
 
 	CADCreoParametricCreateAssembly.exe reads an XML file that describes an assembly, and then builds the
-	assembly with "Creo Parametric 1.0 or 2.0" (i.e. PTC's ( http://www.ptc.com/ )  parametric solids modeler).
+	assembly with "Creo Parametric 3.0" (i.e. PTC's ( http://www.ptc.com/ )  parametric solids modeler).
 
 	Pre-Conditions:
 
-		1.	"Creo Parametric 1.0 or 2.0" must be installed and functioning properly on your machine.  The license for
+		1.	"Creo Parametric 3.0" must be installed and functioning properly on your machine.  The license for
 			"Creo Parametric" does not need the the Toolkit license.  The toolkit license is only
 			needed during development.
 
-		2.	The environment variables must be set per
-			...META_Trunk_Working\deploy\CAD_Installs\Proe ISIS Extensions\0Readme - CreateAssembly.txt
+		2.	For information on configuring the system, see registry entry META_PATH + bin\CAD\Creo\0Readme - CreateAssembly.txt
 
-		3.	The requirements for the arguments passed to the exe follow:
-
-				-w  Working directory.  The directory where the generated files would be persisted.
-				-i  Input XML file name.  This file defines the CAD assembly definition.
-				-a  Auxiliary CAD directory.  Would contain CAD parts.
-				-l  Log file name.
-				-v  Log priority level (verbosity).
-				-c  Log configuration file name.
-				-p  Prompt before exiting.  Not prompting is the default.
-				-g  Graphics mode.  No graphics is the default.
-				-h  Help, Display keys along with the usage.
-				-s  host:port combination for meta-link-bridge
-				-d  Name of model that is synchronized between Creo and CyPhy
-				-m  Mode which is being used {m | m in {"design", "component", "passive"}
-
-				Required Keys: -w
-				Key Order: No particular order required
-				Key Grouping:  -p and -g may be grouped (e.g. -pg)
-				Keys are case insensitive.
-
-			Note - an example bat file is located at
-			...META_Trunk_Working\deploy\CAD_Installs\Proe ISIS Extensions\docs\examples\CADCreoParametricCreateAssembly.bat
+		3.	The requirements for the arguments passed to  are defined in cc_CreateAssemblyInputArgumentsParser.h
 
 		4.	The input xml must be compliant with
 			...META_SVN\trunk\deploy\CAD_Installs\Proe ISIS Extensions\schemas\AssemblyInterface.xsd
@@ -42,29 +20,22 @@
 
 	Post-Conditions:
 
-	For the non -s mode:
-		1.	If an exception occurs, the program will log the error message, display the error message to the console,
-			and exit.
+	1.	If an exception occurs, the program will log the error message, display the error message to the console,
+		and exit.
 
-			Some reasons that exceptions could occur follow:
-            - Could not locate a part/assembly.
-            - Could not find a datum in a part/assembly.
-            - The input XML file constrained a Non-Size-to-Fit part/assembly to a Size-to-Fit part/assembly.
+		Some reasons that exceptions could occur follow:
+        - Could not locate a part/assembly.
+        - Could not find a datum in a part/assembly.
+        - The input XML file constrained a Non-Size-to-Fit part/assembly to a Size-to-Fit part/assembly.
 
-		2.	If a warning occurs, the program will log the warning message, display the warning message to the console,
-			and continue processing.  An example of a warning would be if the assembly would not regenerate.  The assembly
-			would have been built and saved, but when opened via Creo, the anomalous models would appear in red in the
-			history tree.
+	2.	If a warning occurs, the program will log the warning message, display the warning message to the console,
+		and continue processing.  An example of a warning would be if the assembly would not regenerate.  The assembly
+		would have been built and saved, but when opened via Creo, the anomalous models would appear in red in the
+		history tree.
 
-		3.	If no exceptions occur, the assemblies and analysis files (e.g. FEA decks) defined in the XML are built
-			and saved in the working directory.
+	3.	If no exceptions occur, the assemblies and analysis files (e.g. FEA decks) defined in the XML are built
+		and saved in the working directory.
 
-
-	For the -s argument, the errors and warnings are returned to the client (i.e. CyPhy)
-    The -s argument requires the -g argument (graphics mode)
-	The -s argument requires the -m argument to set the major-mode which is to
-	"design": (default (implied by -s)) edit an assembly design
-	"component": edit a component
 
 
 	Special Notes:
@@ -76,46 +47,28 @@
 	2.	This program uses UDM 64 bit version to parse the XML file.  Therefore, UDM (http://repo.isis.vanderbilt.edu/UDM)
 		64 bit must be installed.
 
-
 */
 #include "stdafx.h"
-//#include <BuildAssembly.h>
 #include <ISISConstants.h>
 #include "GlobalModelData.h"
-
-#include "CADEnvironmentSettings.h"
-//#include "WindowsHDependentCommonFunctions.h"
 #include "cc_WindowsFunctions.h"
 #include <AssemblyCreationViaInputFile.h>
-#include "InputArgumentsParser.h"
+#include "cc_CreateAssemblyInputArgumentsParser.h"
 #include <cc_CommonUtilities.h>
 #include <cc_MiscellaneousFunctions.h>
 #include <sstream>
+#include <fstream>
 #include "cc_LoggerBoost.h"
 #include "CADFactoryCreo.h"
 #include <boost/asio.hpp>
-//#include <boost/bind.hpp>
 #include <boost/smart_ptr.hpp>
 
 #include <boost/thread/thread.hpp>
 #include <iostream>
 
 #include <boost/filesystem.hpp>
+#include <boost/exception/all.hpp>
 
-void SetupLogging(const std::string &in_Logfilename, isis_LogSeverityLevel in_LogSeverityLevel)
-{
-	std::string logfilenamepath = "log\\"+ in_Logfilename;
-
-	if (!isis_CADCommon::DirectoryExists("log"))
-	{
-		isis_CADCommon::isis_CreateDirectory("log");
-	}
-
-	isis::isis_DeleteFile(logfilenamepath);
-
-	init_logging_boost(	false, false, in_LogSeverityLevel, isis_INFO, logfilenamepath);
-
-}
 
 int main( int argc, char *argv[] )
 {
@@ -128,6 +81,9 @@ int main( int argc, char *argv[] )
 
 	std::string			templateFile_PathAndFileName;
 	std::stringstream	exceptionErrorStringStream;
+
+	std::string			exeName = "CADCreoParametricCreateAssembly.exe";
+
 	bool				promptBeforeExiting;
 
 	bool Pro_E_Running = false;
@@ -137,18 +93,29 @@ int main( int argc, char *argv[] )
 
 	bool logFileOpen = false;
 
-	isis::ProgramInputArguments  programInputArguments;
+	isis::CreateAssemblyInputArguments  programInputArguments;
+
 	::boost::filesystem::path    workingDir;
+
+	std::stringstream inputLine;
 
 	try
 	{
+
+		// Build string of input line
+        for(int i = 0; i < argc; ++i)
+        {
+            inputLine << argv[i] << std::string(" ");
+        }
+
 		bool regenerationSucceeded_ForAllAssemblies = true;
 
 		// Parse Input Arguments
-		isis::ParseInputArguments(argc, argv, programInputArguments);
-		isis::ThrowExecption_If_InvalidInputArguments(argc, argv, programInputArguments);
 
-		SetupLogging(programInputArguments.logFileName, programInputArguments.logVerbosity);
+		programInputArguments.ParseInputArguments(argc, argv);
+		programInputArguments.ThrowExecption_If_InvalidInputArguments(argc, argv);
+
+		SetupLogging("log", programInputArguments.logFileName, false, false, programInputArguments.logVerbosity, isis_INFO );
 
 		// In case of exception we need to know if  logging is available
 		Logging_Set_Up = true;	
@@ -186,8 +153,6 @@ int main( int argc, char *argv[] )
 		time_start=time(NULL); /* get current cal time */
 
 		// Log input line and parameters
-		std::ostringstream inputLine;
-		for ( int i = 0; i < argc; ++i) inputLine << argv[i] << std::string(" ");
 		isis_LOG(lg, isis_FILE, isis_INFO) << "";
 		isis_LOG(lg, isis_FILE, isis_INFO) 
 			<< "************** Begin Input Line *****************" << isis_EOL 
@@ -210,88 +175,65 @@ int main( int argc, char *argv[] )
 		  <<  isis_EOL << "logFileName:                   "	<< programInputArguments.logFileName
 		  <<  isis_EOL << "*************** End Directory Settings *****************";
 		 
-		bool graphicsModeOn = false;
-		bool creoExceptInputFromThisProgramAndCreoUI = false;
 
-		if (programInputArguments.graphicsModeOn) graphicsModeOn = true;
-		if (programInputArguments.synchronizeWithCyPhy) creoExceptInputFromThisProgramAndCreoUI = true;
+		isis::cad::CadFactoryAbstract::ptr cAD_Factory = isis::cad::creo::create();
+		isis::cad::IEnvironment&           environment = cAD_Factory->getEnvironment();
 
-		isis::SetCreoEnvirVariable_RetrieveSystemSettings(	graphicsModeOn,
-															creoExceptInputFromThisProgramAndCreoUI,
-															creoStartCommand,
-															CADExtensionsDir,
-															templateFile_PathAndFileName );
-
-		std::map<std::string, isis::CADComponentData> CADComponentData_map;
-		isis::CADAssemblies CADComponentAssemblies;
+		environment.setupCADEnvironment(programInputArguments,							// in 
+										creoStartCommand,								// out
+										CADExtensionsDir,								// out
+										templateFile_PathAndFileName );					// out
+  
 
 
-		   unsigned int UniqueNameIndex = 1;
-
-		   isis::cad::CadFactoryAbstract::ptr cad_factory = isis::cad::creo::create();
-
-		   isis::CreateAssemblyViaInputFile(	*cad_factory,
-												programInputArguments,
-												CADExtensionsDir,
-												programInputArguments.inputXmlFileName,
-												workingDir.generic_string(),
-												programInputArguments.auxiliaryCADDirectory,
-												programInputArguments.logFileName,
-												templateFile_PathAndFileName,
-												creoStartCommand,
-												programName_Version_TimeStamp,
-												UniqueNameIndex,
-												Pro_E_Running,
-												CADComponentAssemblies,
-												CADComponentData_map);
-
-		 
-
+		isis::CreateAssemblyViaInputFile(	*cAD_Factory,
+											programInputArguments,
+											CADExtensionsDir,
+											templateFile_PathAndFileName,
+											creoStartCommand,
+											programName_Version_TimeStamp,
+											Pro_E_Running );
+	 
 
 	} // END Try
-    catch ( isis::application_exception& ex )
+	catch( boost::program_options::required_option& ex)
 	{
-		exceptionErrorStringStream  << std::endl << "application error: " << ex.what();
-		ExitCode = -1;
+        exceptionErrorStringStream  << "application error: Missing required option when invoking " << exeName << ", " << boost::diagnostic_information(ex);
+		exceptionErrorStringStream << std::endl << "Input Line: " <<  inputLine;
+        ExitCode = -1;
 	}
-	catch ( std::exception& ex )
+	catch( boost::program_options::error& ex)
 	{
-		exceptionErrorStringStream << std::endl  << "general exception: " << ex.what();
-		ExitCode = -2;
+        exceptionErrorStringStream  << "application error: Error with the options passed to " << exeName << ", " << boost::diagnostic_information(ex);
+		exceptionErrorStringStream << std::endl << "Input Line: " <<  inputLine;
+        ExitCode = -2;
 	}
-	catch ( ... )
+	catch (boost::exception &ex)
 	{
-		exceptionErrorStringStream << "unspecified throwable (...):  Please report the error to the help desk.";
-		ExitCode = -3;
+		exceptionErrorStringStream  << "application error: " << boost::diagnostic_information(ex);
+        ExitCode = -3;
 	}
 
-	if ( ExitCode != 0 )
-	{
-		// Write to _FAILED.txt
-		std::string failedTxtFileName = "_FAILED.txt";
-		bool addLineFeed = false;
-		if ( isis::FileExists( failedTxtFileName.c_str() )) addLineFeed = true;
+    catch(isis::application_exception& ex)
+    {
+        exceptionErrorStringStream  << "application error: " << ex.what();
+        ExitCode = -4;
+    }
+    catch(std::exception& ex)
+    {
+        exceptionErrorStringStream << "general exception: " << ex.what();
+        ExitCode = -5;
+    }
+    catch(...)
+    {
+        exceptionErrorStringStream << "unspecified error, caught with (...):  Please report this error to the help desk.";
+        ExitCode = -6;
+    }
 
-		std::ofstream failedTxtFileStream;
-		failedTxtFileStream.open (failedTxtFileName, std::ios::app );
-		if ( failedTxtFileStream.is_open() )
-		{
-			if ( addLineFeed ) failedTxtFileStream << std::endl;
-			failedTxtFileStream <<  isis_CADCommon::GetDayMonthTimeYear() << ", CADCreoParametricCreateAssembly.exe error code: " << ExitCode << ". Error was: " << exceptionErrorStringStream.str();
-			failedTxtFileStream << std::endl;
-			failedTxtFileStream.close();
-		}
-
-		if (Logging_Set_Up)
-		{
-			
-			isis_LOG(lg, isis_CONSOLE_FILE, isis_ERROR) << exceptionErrorStringStream.str();
-		}
-		else
-		{
-			std::cerr <<  std::endl << std::endl << exceptionErrorStringStream.str() << std::endl << std::endl;
-		}	
-	}
+    if(ExitCode != 0)
+    {
+		LogMainNonZeroExitCode( exeName, ExitCode, inputLine, Logging_Set_Up, programInputArguments.logFileName,  exceptionErrorStringStream );
+    }
 
 	// Delete the copied template assembly file if it exists.
 	// Note - Added "if ( Template_Copied )" because the function call was returning a message to the

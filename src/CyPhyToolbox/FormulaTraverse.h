@@ -6,6 +6,7 @@
 #include "CyPhyML.h"
 
 #include "UnitUtil.h"
+#include <unordered_map>
 
 /** \file
     \brief Definition of FormulaTraverse class used to traverse a model and calls functions in EvaluateFormula.h to evaluate formulas.
@@ -25,7 +26,11 @@ void Cleanup(multimap<std::string, double*> &parameters);
 class NewTraverser 
 {
 public:
-	NewTraverser() {}
+	NewTraverser() {
+		// it is not possible to have both strValue and actualValue set from model elements
+		circularConnectionSentinel.strValue = "circular reference detected";
+		circularConnectionSentinel.actualValue = 99e5;
+	}
 	NewTraverser(std::string fileName)
 		:m_fileName(fileName){}
 	~NewTraverser() {}
@@ -35,7 +40,7 @@ public: // member variables
 	vector<string> numericLeafNodes;
 
 public: // member fcn
-	virtual void Traverse(const Udm::Object &udmObject);
+	void Traverse(const Udm::Object &udmObject);
 
 	void FindRootNodes(const CyPhyML::Component &, set<CyPhyML::ValueFlowTarget> &);
 	void FindRootNodes(const CyPhyML::TestComponent &, set<CyPhyML::ValueFlowTarget> &);
@@ -48,9 +53,6 @@ public: // member fcn
 	bool IsRootNode(const CyPhyML::ValueFlowTarget &);
 	bool CheckValueFormula(const CyPhyML::ValueFormula &);
 	bool IsNamedElementStandAlone(const CyPhyML::ValueFlowTarget &);
-
-	//virtual bool EvaluatePPC(CyPhyML::ValueFlowTarget &, double &);
-	//virtual bool EvaluateFormula(CyPhyML::ValueFormula &, double &);
 
 	void NamedElements2Process(CyPhyML::ValueFlowTarget&);
 
@@ -75,6 +77,8 @@ protected:
 	set<CyPhyML::ValueFlowTarget> m_rootNodes;			///< List of VF rootNodes
 	Udm::Object m_BoundingBox;
 	UnitUtil unitUtil;
+
+	UnitUtil::ValueUnitRep circularConnectionSentinel;
 
 	set<CyPhyML::ValueFlowTarget> leafNodes;
 
@@ -113,12 +117,11 @@ protected:
 
 // new stuff - check for unit compatibility
 protected:
-	map<CyPhyML::ValueFlowTarget,UnitUtil::ValueUnitRep> m_ValueUnitMap;
-	map<long, UnitUtil::ValueUnitRep> m_convertedValueFlowTargets_SIMap;
+	unordered_map<long, UnitUtil::ValueUnitRep> m_convertedValueFlowTargets_SIMap;
 
 
-	virtual bool EvaluatePPC(CyPhyML::ValueFlowTarget &, UnitUtil::ValueUnitRep &);
-	virtual bool EvaluateFormula(CyPhyML::ValueFormula &, UnitUtil::ValueUnitRep &);
+	bool EvaluatePPC(CyPhyML::ValueFlowTarget &, UnitUtil::ValueUnitRep &);
+	bool EvaluateFormula(CyPhyML::ValueFormula &, UnitUtil::ValueUnitRep &);
 
 	void PrintNodes(set<CyPhyML::ValueFlowTarget>& leafNodes, string type);
 
@@ -131,13 +134,15 @@ protected:
 	set<CyPhyML::EDAModelParameter> m_edaModelParameters;
 	set<CyPhyML::SPICEModelParameter> m_spiceModelParameters;
 	set<CyPhyML::SystemCParameter> m_systemcParameters;
+	set<CyPhyML::GenericDomainModelParameter> m_genericDomainModelParameters;
 	set<CyPhyML::Units> m_units_folders;
-	map<string, CyPhyML::unit> m_unit_name_table;
+	unordered_map<string, CyPhyML::unit> m_unit_name_table;
 	void EvaluateCADParameters();
 	void EvaluateManufactureParameters();
 	void EvaluateEDAParameters();
 	void EvaluateSPICEParameters();
 	void EvaluateSystemCParameters();
+	void EvaluateGenericDomainModelParameters();
 	void EvaluateCarParameters();
 
 	std::string NonRealValueFixture( CyPhyML::ValueFlowTarget &vft, std::string &value );

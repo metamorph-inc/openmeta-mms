@@ -6,7 +6,6 @@ Third-party software used by OpenMETA
 
 Primarily tools used at build/development time
 
-  * `ant` - [Apache Ant](http://ant.apache.org/) - Apache License, Version 2.0
   * `antlr` - [ANTLR](http://www.antlr.org/) - BSD License
   * `apache-maven-3.0.5` - [Apache Maven](https://maven.apache.org/) - Apache License, Version 2.0
   * `cloc` - [Count Lines of Code](http://cloc.sourceforge.net/) - GPLv2
@@ -28,6 +27,10 @@ Primarily tools used at build/development time
   * `xsd2code` - [Xsd2Code community edition](https://xsd2code.codeplex.com/) - MIT License
   * `xunit-1.9.1` - [xUnit.net](https://xunit.github.io/) - Apache License 2.0
   * `Microsoft.Office.Interop.Excel.dll`, `Office.dll` - Office Primary Interop Assemblies
+
+`meta\DesignDataPackage\tools` directory
+---------------
+  * `jaxb-ri-2.2.6` - CDDL 1.1
 
 `bin` directory
 ---------------

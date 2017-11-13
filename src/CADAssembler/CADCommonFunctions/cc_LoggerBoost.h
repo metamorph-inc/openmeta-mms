@@ -6,6 +6,7 @@
 #include <boost/log/expressions.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
+#include <sstream>
 //#include <boost/log/utility/setup/console.hpp>
 //#include <boost/log/utility/setup/common_attributes.hpp>
 
@@ -45,6 +46,23 @@ void init_logging_boost(	bool				in_include_severity_level_in_msg_file,
 							isis_LogSeverityLevel		in_severity_level_file,
 							isis_LogSeverityLevel		in_severity_level_console,
 							const std::string	&in_log_file_name );
+
+
+void SetupLogging(	const std::string		&in_SubDir,  
+					std::string				&in_Logfilename, 
+					bool					in_include_severity_level_in_msg_file,
+					bool					in_include_severity_level_in_msg_consol,
+					isis_LogSeverityLevel	in_severity_level_file,
+					isis_LogSeverityLevel	in_severity_level_console);
+
+
+void	LogMainNonZeroExitCode( const std::string			&in_ExeName,
+								int							in_ExitCode, 
+								const std::stringstream	&in_InputLine,
+								bool						in_Logging_Set_Up, 
+								const std::string			in_LogFileName,  
+								const std::stringstream		&in_ExceptionErrorStringStream );
+
 
 namespace isis {
 	template< typename CharT, typename TraitsT, typename AllocatorT, typename T >
