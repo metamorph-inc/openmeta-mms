@@ -847,7 +847,38 @@ namespace SchematicUnitTests
             Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE 3.253e-12 1.001 1000 1.293e-13").Success);
         }
 
-        //TODO: Add test for running in the context of a PET.
+        [Fact]
+        [Trait("Type", "SPICE")]
+        public void SpiceTemplateGenerationPET()
+        {
+            //string TestbenchPath = "/@Testing|kind=Testing|relpos=0/ParametricExploration|kind=ParametricExploration|relpos=0/SpiceTemplateTestPET|kind=ParametricExploration|relpos=0/";
+            string TestbenchPath = "/@Testing/@ParametricExploration/@SpiceTemplateTestPET";
+
+            var runResult = MasterInterpreterTest.CyPhyMasterInterpreterRunner.RunMasterInterpreterAndReturnResults(fixture.path_MGA,
+                                                                        TestbenchPath,
+                                                                        "/@A_SpiceTests|kind=ComponentAssemblies|relpos=0/@SpiceParametricModel|kind=ComponentAssembly|relpos=0");
+
+            string OutputDir = runResult.OutputDirectory;
+            string TestBenchDir = Directory.GetDirectories(OutputDir)[0];
+
+            Assert.True(File.Exists(Path.Combine(TestBenchDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
+            Assert.False(File.Exists(Path.Combine(TestBenchDir, generatedSchemaFile)), "Generated EAGLE schematic (" + generatedSchemaFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(TestBenchDir, generatedLayoutFile)), "Generated layout file (" + generatedLayoutFile + "), but shouldn't have.");
+            Assert.True(File.Exists(Path.Combine(TestBenchDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceViewerLauncher);
+
+            string sch = File.ReadAllText(Path.Combine(TestBenchDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
+            Assert.Contains("\nXResistor ", sch);
+            Assert.Contains("\nLInductor ", sch);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
+
+            RunPopulateSchemaTemplate(TestBenchDir);
+            sch = File.ReadAllText(Path.Combine(TestBenchDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+            Assert.Contains("\nXResistor ", sch);
+            Assert.Contains("\nLInductor ", sch);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE 3.253e-12 1.001 1000 1.293e-13").Success);
+        }
 
         [Fact]
         [Trait("Type", "SPICE")]
