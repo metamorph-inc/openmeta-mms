@@ -248,25 +248,43 @@ namespace CyPhy2Schematic.Schematic
 
         private string FindTestBenchParameter(Tonka.SPICEModelParameter parameter)
         {
-            if (parameter.AllSrcConnections.Count() == 0)
+            if (parameter.SrcConnections.SPICEModelParameterMapCollection.Count() == 0)
                 return null;
 
-            return FindTestBenchParameter(parameter, ((Tonka.SPICEModelParameterMap)parameter.AllSrcConnections.First()).SrcEnd);
+            return FindTestBenchParameter(parameter, parameter.SrcConnections.SPICEModelParameterMapCollection.First().SrcEnd);
         }
 
         private string FindTestBenchParameter(Tonka.SPICEModelParameter parameter, FCO element)
         {
-            if (!(element is Tonka.Parameter || element is Tonka.Property))
+            Tonka.ValueFlow srcConnection = null;
+            if (element is Tonka.Parameter) {
+                srcConnection = ((Tonka.Parameter)element).SrcConnections.ValueFlowCollection.FirstOrDefault();
+            }
+            else if(element is Tonka.Property)
             {
-                //CodeGenerator.Logger.WriteWarning(String.Format("{0} depends on {1} in ValueFlow network.", parameter.Path, element.Path));
-                CodeGenerator.Logger.WriteWarning("Root Source Obscured: <a href=\"mga:{1}\">{0}</a> in Valueflow path for {4} parameter <a href=\"mga:{3}\">{2}</a>",
+                srcConnection = ((Tonka.Property)element).SrcConnections.ValueFlowCollection.FirstOrDefault();
+            }
+            else
+            {
+                CodeGenerator.Logger.WriteWarning("Encountered unsupported element <a href=\"mga:{1}\">{0}</a> while attempting to trace ValueFlow network from {4} Parameter <a href=\"mga:{3}\">{2}</a> back to a Test Bench Parameter. If you intend for {4} Parameter <a href=\"mga:{3}\">{2}</a> to update dynamically from one or more Test Bench Parameters, include only Parameters and/or Properties in the ValueFlow Network.",
                                                   element.Name, traceability.GetID(element.Impl),
                                                   parameter.Name, traceability.GetID(parameter.Impl), parameter.ParentContainer.ParentContainer.Name);
                 return null;
             }
-            if (element.AllSrcConnections.Count() == 0 || element.AllSrcConnections.First().Kind != "ValueFlow")
-                return element.ParentContainer is Tonka.TestBench ? "${" + element.Name + "}" : null;
-            return FindTestBenchParameter(parameter, ((Tonka.ValueFlow)element.AllSrcConnections.First()).SrcEnd);
+            if (srcConnection == null)
+            {
+                if (element.ParentContainer is Tonka.TestBench)
+                {
+                    CodeGenerator.Logger.WriteDebug("Mapped Test Bench Parameter <a href=\"mga:{1}\">{0}</a> to {4} Parameter <a href=\"mga:{3}\">{2}</a> from ValueFlow network.",
+                                                    element.Name, traceability.GetID(element.Impl),
+                                                    parameter.Name, traceability.GetID(parameter.Impl), parameter.ParentContainer.ParentContainer.Name);
+                    return "${" + element.Name + "}";
+                }
+                else
+                    return null;
+            }
+
+            return FindTestBenchParameter(parameter, srcConnection.SrcEnd);
         }
 
         public override void visit(Port obj)
