@@ -62,14 +62,15 @@ PET Canvas.
 .. figure:: images/ExcelWrapperAdditionComplete.png
    :alt: text
 
-Matlab Wrappers
+MATLAB Wrappers
 ---------------
 
-.. note:: This section is under construction. Please check back later for updates!
+These allow the user to add custom MATLAB scripts into a PET. There are a 
+few restrictions in the current implementation:
 
-These allow the user to add Matlab scripts to a PET.
-
-.. ADD: current limitation on how many outputs a Matlab script can have
+-  Only one function can be defined in the file.
+-  Only scalar (double) type values are allowed as inputs and outputs.
+-  The function name and the script filename must match.
 
 Adding Matlab Wrappers to a PET
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,17 +78,38 @@ Adding Matlab Wrappers to a PET
 To add a Matlab Wrapper to a PET, simply drag the Matlab Wrapper icon from the
 Part Browser and onto the PET canvas.
 
-.. ADD: picture of Matlab Wrapper being dragged into PET
+.. figure:: images/MatlabWrapper.png
+   :alt: A MatlabWrapper Added to the PET Canvas
 
-Loading Matlab Wrappers
+Loading MATLAB Wrappers
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-To load a Matlab Wrapper, double-click on the Matlab Wrapper and use the
-file explorer to select the Matlab script to be added to the PET.
+A MATLAB Wrapper can be loaded with specially-formatted MATLAB scripts.
 
-.. ADD: picture of Matlab Wrapper being loaded with Matlab script
+Below is a template MATLAB Wrapper script saved as 'Example.m':
 
-.. TODO: "Never used" - Joseph
+.. highlight:: matlab
+.. :linenothreshold: 5
+
+::
+
+    function [sum, product] = Example(x, y, z)
+    sum = x + y + z
+    product = x * y * z
+    end
+
+To configure a MATLAB Wrapper, double-click on the MATLAB Wrapper and use the
+Open dialogue to select the MATLAB script to be added to the PET.
+
+.. figure:: images/MATLABWrapperSelect.png
+   :alt: text
+
+   Loading a MATLAB Wrapper with a MATLAB script
+
+.. figure:: images/MATLABWrapperComponent.png
+   :alt: text
+
+   A MATLAB Wrapper loaded with a MATLAB script
 
 .. _pet_analysis_blocks_python_wrappers:
 
@@ -108,7 +130,7 @@ Part Browser and onto the PET canvas.
 
    A PythonWrapper in a PET
 
-A PythonWrapper can be loaded with specially-formatted python scripts.
+A PythonWrapper can be loaded with specially-formatted Python scripts.
 
 Below is a template PythonWrapper OpenMDAO Component script:
 
