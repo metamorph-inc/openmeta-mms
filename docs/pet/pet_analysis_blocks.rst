@@ -110,6 +110,22 @@ Open dialogue to select the MATLAB script to be added to the PET.
    :alt: text
 
    A MATLAB Wrapper loaded with a MATLAB script
+   
+If you subsequently want to make changes to the script, you can do so
+directly from GME by using the Edit ( |EDIT| ) button. Alternatively, 
+if you make edits to your script outside of GME, you can reload the
+script using the Reload ( |RELOAD| ) button.
+
+.. tip::
+   
+   You can change the default editor in GME by opening
+   :menuselection:`Tools --> Options` and checking **Enable External
+   Text Editor**
+   
+   .. figure:: images/ExternalEditor.png
+      :alt: GME Options Dialogue
+      
+      Configuring Notepad++ as the External Editor
 
 .. _pet_analysis_blocks_python_wrappers:
 
