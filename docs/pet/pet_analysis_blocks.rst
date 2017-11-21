@@ -70,7 +70,7 @@ few restrictions in the current implementation:
 
 -  Only scalar (double) type values are allowed as inputs and outputs.
 -  There can be more than one function declared in the script, but the
-   wrapper will only use the function with the same name and the script
+   wrapper will only use the function with the same name as the script
    filename. These names must match exactly.
 
 Adding Matlab Wrappers to a PET
