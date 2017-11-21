@@ -68,9 +68,10 @@ MATLAB Wrappers
 These allow the user to add custom MATLAB scripts into a PET. There are a 
 few restrictions in the current implementation:
 
--  Only one function can be defined in the file.
 -  Only scalar (double) type values are allowed as inputs and outputs.
--  The function name and the script filename must match.
+-  There can be more than one function declared in the script, but the
+   wrapper will only use the function with the same name and the script
+   filename. These names must match exactly.
 
 Adding Matlab Wrappers to a PET
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
