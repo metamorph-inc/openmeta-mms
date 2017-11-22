@@ -14,13 +14,16 @@ to perform a full-system analysis using subanalyses from multiple domains.
 .. ADD: picture of PET containing all different types of analysis blocks connected
 .. together
 
+For examples of PETs with different analysis blocks see the
+`Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
+project in the 
+`Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
+repository.
+
 Test Benches
 ------------
 
 .. note:: This section is under construction. Please check back later for updates!
-
-.. TODO: "I'm not well acquainted with how Test Benches work in a PET. Might need
-.. to redo the LED Tutorial" - Joseph
 
 Excel Wrappers
 --------------
@@ -62,42 +65,224 @@ PET Canvas.
 .. figure:: images/ExcelWrapperAdditionComplete.png
    :alt: text
 
+.. _pet_analysis_blocks_python_wrappers:
+
+Python Wrappers
+---------------
+
+These serve as the most generic integration point. Practically any Python model or
+tool can be added to a PET using Python Wrappers.
+
+Adding Python Wrappers to a PET
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To add a Python Wrapper to a PET, simply drag the Python Wrapper icon from the
+Part Browser and onto the PET canvas.
+
+.. figure:: images/PythonWrapper.png
+   :alt: text
+
+   A Python Wrapper in a PET
+
+A Python Wrapper can be loaded with specially-formatted Python scripts.
+
+Below is a template Python Wrapper OpenMDAO Component script:
+
+.. highlight:: python
+.. :linenothreshold: 5
+
+::
+
+	from __future__ import print_function
+	from openmdao.api import Component
+	from pprint import pprint
+
+	''' First, let's create the component defining our system. We'll call it 'Paraboloid'. '''
+	class Paraboloid(Component):
+		''' Evaluates the equation f(x,y) = (x-3)^2 +xy +(y+4)^2 - 3 '''
+
+		def __init__(self):
+			super(Paraboloid, self).__init__()
+
+			''' Inputs to the Python Wrapper Component are added here as params '''
+			self.add_param('x', val=0.0)
+			self.add_param('y', val=0.0)
+
+			''' Outputs from the Python Wrapper Component are added here as unknowns '''
+			self.add_output('f_xy', shape=1)
+
+		def solve_nonlinear(self, params, unknowns, resids):
+			''' This is where we describe the system that we want to add to OpenMETA '''
+			''' f(x,y) = (x-3)^2 + xy + (y+4)^2 - 3 '''
+
+			x = params['x']
+			y = params['y']
+
+			f_xy = (x-3.0)**2 + x*y + (y+4.0)**2 - 3.0
+
+			unknowns['f_xy'] = f_xy
+
+			''' This is an equivalent expression to the one above
+			unknowns['f_xy'] = (params['x']-3.0)**2 + params['x']*y + (params['y']+4.0)**2 - 3.0
+			'''
+
+.. note:: For more information on OpenMDAO Component scripts and how to write them, reference
+   the OpenMDAO documentation: http://openmdao.readthedocs.io/en/1.7.3/usr-guide/basics.html#component
+			
+Loading Python Wrappers
+~~~~~~~~~~~~~~~~~~~~~~~
+
+To load a Python Wrapper, double-click on the Python Wrapper and use the
+file explorer to select the Python script to be added to the PET.
+
+.. figure:: images/LoadingPythonWrapper.png
+   :alt: text
+
+   Loading a Python Wrapper with a Python script
+
+.. figure:: images/PythonWrapperComponent.png
+   :alt: text
+
+   A Python Wrapper loaded with a Python script
+
+Reloading Python Wrappers
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note:: You have to manually reload Python Wrappers whenever you
+   change the exposed Params and Unknowns within the Python script.
+   
+   Reloading also allows you to quickly switch between different
+   versions of a Python script in your PET.
+
+To load a Python Wrapper with a different Python script (or reload the same script), 
+left-click on the |RELOAD| button and select the desired Python file.
+
+.. |RELOAD| image:: images/icons/reload.png
+      :alt: Load icon
+      :width: 25px
+
+.. figure:: images/LoadingPythonWrapper.png
+   :alt: text
+
+   Reloading a Python Wrapper with a Python script
+
+.. figure:: images/PythonWrapperComponent.png
+   :alt: text
+
+   A Python Wrapper loaded with a Python script
+
+Editing Python Wrappers
+~~~~~~~~~~~~~~~~~~~~~~~
+
+To edit a Python Wrapper script from within OpenMETA, left-click on the |EDIT| icon
+
+.. |EDIT| image:: images/icons/edit.png
+      :alt: Edit icon
+      :width: 25px
+
+.. figure:: images/EditingPythonWrapper.png
+   :alt: text
+
+   Editing a Python Wrapper script
+   
 MATLAB Wrappers
 ---------------
 
-These allow the user to add custom MATLAB scripts into a PET. There are a 
-few restrictions in the current implementation:
+MATLAB Wrappers allow the user to execute custom MATLAB scripts
+and functions in the context of a PET.
+There are two types of MATLAB scripts that can be integrated:
+*Function Files* and *Bare Files*. The MATLAB Wrapper
+determines the type by examining the script file.
+
+Currently, only MATLAB version 2016a and later are supported.
+
+Function Files
+~~~~~~~~~~~~~~
+
+In a *Function File* you define a function with the same name as
+the script filename and this becomes the entry point for the script.
+There are a few restrictions in the current implementation:
 
 -  Only scalar (double) type values are allowed as inputs and outputs.
 -  There can be more than one function declared in the script, but the
    wrapper will only use the function with the same name as the script
-   filename. These names must match exactly.
+   filename. These names are case-sensitive and must match exactly.
 
-Adding Matlab Wrappers to a PET
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Below is a *Function File* example of a MATLAB Wrapper script:
+
+.. code-block:: matlab
+   :caption: Example.m
+   :name: Example.m
+
+   function [sum, product] = Example(x, y, z)
+   sum = x + y + z
+   product = x * y * z
+   end
+
+
+Bare Files
+~~~~~~~~~~
+
+In a Bare File you define the inputs and outputs of the script by a
+set of specially-formatted comments at the beginning of the file.
+These comments allow you to define the data type of all the inputs
+and outputs.
+
+Below is a *Bare File* example of a script that doubles a number
+of different types of inputs:
+
+.. code-block:: matlab
+   :caption: Double.m
+   :name: Double.m
+
+   % variable: output1 double output
+   % variable: output2 double[] output
+   % variable: output3 string output
+   % variable: output4 string[] output
+   % variable: input1 double input
+   % variable: input2 double[] input
+   % variable: input3 string input
+   % variable: input4 string[] input
+
+   output1 = input1 * 2
+   output2 = input2 * 2
+   output3 = strcat(input3, input3)
+   output4 = [input4, input4]
+
+
+MATLAB Data Type Conversion
+...........................
+
+OpenMETA uses the Python `OpenMDAO <http://www.openmdao.org/>`_
+framework to execute PETs. Since the data passed between analysis
+blocks is managed by Python, the table below describes the conversions
+that occur when data is passed into or out of a MATLAB Wrapper block.
+
+===============  =================  ===============
+Python           to MATLAB          to PYTHON 
+===============  =================  ===============
+Double           Double             Double 
+1x1 Numpy Array  Double             Double 
+1x2 Numpy Array  1x2 Array          1x2 Numpy Array
+String           String             String
+List of Strings     Cell Array      List of Strings
+===============  =================  ===============
+
+For examples of the conversion see the
+``RootFolder/ParametricExploration/ComplexExamples/MatlabConversions`` PET in the
+`Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
+project in the 
+`Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
+repository.
+
+Configuring MATLAB Wrappers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To add a Matlab Wrapper to a PET, simply drag the Matlab Wrapper icon from the
 Part Browser and onto the PET canvas.
 
 .. figure:: images/MatlabWrapper.png
    :alt: A MatlabWrapper Added to the PET Canvas
-
-Loading MATLAB Wrappers
-~~~~~~~~~~~~~~~~~~~~~~~
-
-A MATLAB Wrapper can be loaded with specially-formatted MATLAB scripts.
-
-Below is a template MATLAB Wrapper script saved as 'Example.m':
-
-.. highlight:: matlab
-.. :linenothreshold: 5
-
-::
-
-    function [sum, product] = Example(x, y, z)
-    sum = x + y + z
-    product = x * y * z
-    end
 
 To configure a MATLAB Wrapper, double-click on the MATLAB Wrapper and use the
 Open dialogue to select the MATLAB script to be added to the PET.
@@ -128,125 +313,6 @@ script using the Reload ( |RELOAD| ) button.
       
       Configuring Notepad++ as the External Editor
 
-.. _pet_analysis_blocks_python_wrappers:
-
-PythonWrappers
---------------
-
-These serve as the most generic integration point. Practically any Python model or
-tool can be added to a PET using Python Wrappers.
-
-Adding PythonWrappers to a PET
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To add a PythonWrapper to a PET, simply drag the PythonWrapper icon from the
-Part Browser and onto the PET canvas.
-
-.. figure:: images/PythonWrapper.png
-   :alt: text
-
-   A PythonWrapper in a PET
-
-A PythonWrapper can be loaded with specially-formatted Python scripts.
-
-Below is a template PythonWrapper OpenMDAO Component script:
-
-.. highlight:: python
-.. :linenothreshold: 5
-
-::
-
-	from __future__ import print_function
-	from openmdao.api import Component
-	from pprint import pprint
-
-	''' First, let's create the component defining our system. We'll call it 'Paraboloid'. '''
-	class Paraboloid(Component):
-		''' Evaluates the equation f(x,y) = (x-3)^2 +xy +(y+4)^2 - 3 '''
-
-		def __init__(self):
-			super(Paraboloid, self).__init__()
-
-			''' Inputs to the PythonWrapper Component are added here as params '''
-			self.add_param('x', val=0.0)
-			self.add_param('y', val=0.0)
-
-			''' Outputs from the PythonWrapper Component are added here as unknowns '''
-			self.add_output('f_xy', shape=1)
-
-		def solve_nonlinear(self, params, unknowns, resids):
-			''' This is where we describe the system that we want to add to OpenMETA '''
-			''' f(x,y) = (x-3)^2 + xy + (y+4)^2 - 3 '''
-
-			x = params['x']
-			y = params['y']
-
-			f_xy = (x-3.0)**2 + x*y + (y+4.0)**2 - 3.0
-
-			unknowns['f_xy'] = f_xy
-
-			''' This is an equivalent expression to the one above
-			unknowns['f_xy'] = (params['x']-3.0)**2 + params['x']*y + (params['y']+4.0)**2 - 3.0
-			'''
-
-.. note:: For more information on OpenMDAO Component scripts and how to write them, reference
-   the OpenMDAO documentation: http://openmdao.readthedocs.io/en/1.7.3/usr-guide/basics.html#component
-			
-Loading PythonWrappers
-~~~~~~~~~~~~~~~~~~~~~~~
-
-To load a PythonWrapper, double-click on the PythonWrapper and use the
-file explorer to select the Python script to be added to the PET.
-
-.. figure:: images/LoadingPythonWrapper.png
-   :alt: text
-
-   Loading a PythonWrapper with a Python script
-
-.. figure:: images/PythonWrapperComponent.png
-   :alt: text
-
-   A PythonWrapper loaded with a Python script
-
-Reloading PythonWrappers
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. note:: You have to manually reload PythonWrappers whenever you
-   change the exposed Params and Unknowns within the Python script.
-   
-   Reloading also allows you to quickly switch between different
-   versions of a Python script in your PET.
-
-To load a PythonWrapper with a different Python script (or reload the same script), 
-left-click on the |RELOAD| button and select the desired Python file.
-
-.. |RELOAD| image:: images/icons/reload.png
-      :alt: Load icon
-      :width: 25px
-
-.. figure:: images/LoadingPythonWrapper.png
-   :alt: text
-
-   Reloading a PythonWrapper with a Python script
-
-.. figure:: images/PythonWrapperComponent.png
-   :alt: text
-
-   A PythonWrapper loaded with a Python script
-
-Editing PythonWrappers
-~~~~~~~~~~~~~~~~~~~~~~
-
-To edit a PythonWrapper script from within OpenMETA, left-click on the |EDIT| icon
-
-.. |EDIT| image:: images/icons/edit.png
-      :alt: Edit icon
-      :width: 25px
-
-.. figure:: images/EditingPythonWrapper.png
-   :alt: text
-
-   Editing a PythonWrapper script
 
 Constants Blocks
 ----------------
