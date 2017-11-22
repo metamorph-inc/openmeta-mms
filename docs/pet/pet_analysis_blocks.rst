@@ -15,7 +15,7 @@ to perform a full-system analysis using subanalyses from multiple domains.
 .. together
 
 For examples of PETs with different analysis blocks see the
-`Wrappers <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/wrappers>`_
+`Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
 project in the 
 `Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
 repository.
@@ -240,14 +240,14 @@ of different types of inputs:
    % variable: output3 string output
    % variable: output4 string[] output
    % variable: input1 double input
-   % variable: input2 double[] input format="double"
-   % variable: input3 string input format="double"
-   % variable: input4 string[] input format="double"
+   % variable: input2 double[] input
+   % variable: input3 string input
+   % variable: input4 string[] input
 
    output1 = input1 * 2
    output2 = input2 * 2
-   output3 = input3 + input3
-   output4 = input4 + input4
+   output3 = strcat(input3, input3)
+   output4 = [input4, input4]
 
 
 MATLAB Data Type Conversion
@@ -257,6 +257,23 @@ OpenMETA uses the Python `OpenMDAO <http://www.openmdao.org/>`_
 framework to execute PETs. Since the data passed between analysis
 blocks is managed by Python, the table below describes the conversions
 that occur when data is passed into or out of a MATLAB Wrapper block.
+
+===============  =================  ===============
+Python           to MATLAB          to PYTHON 
+===============  =================  ===============
+Double           Double             Double 
+1x1 Numpy Array  Double             Double 
+1x2 Numpy Array  1x2 Array          1x2 Numpy Array
+String           String             String
+List of Strings     Cell Array      List of Strings
+===============  =================  ===============
+
+For examples of the conversion see the
+``RootFolder/ParametricExploration/ComplexExamples/MatlabConversions`` PET in the
+`Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
+project in the 
+`Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
+repository.
 
 Configuring MATLAB Wrappers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
