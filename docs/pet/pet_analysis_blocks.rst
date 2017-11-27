@@ -118,7 +118,6 @@ Below is a template Python Wrapper OpenMDAO Component script:
 .. code-block:: python
    :name: Paraboloid.py
    :caption: Paraboloid.py
-   :linenos:
 
    from __future__ import print_function
    from openmdao.api import Component
@@ -295,8 +294,7 @@ String           String             String
 List of Strings     Cell Array      List of Strings
 ===============  =================  ===============
 
-For examples of the conversion see the
-``RootFolder/ParametricExploration/ComplexExamples/MatlabConversions`` PET in the
+For examples of the conversion see the "MatlabConversions" PET in the
 `Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
 project in the 
 `Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
