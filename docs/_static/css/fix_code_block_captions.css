@@ -1,0 +1,48 @@
+/* Force captoins to be bolded. */
+div.code-block-caption span.caption-text {
+    font-weight: bold
+}
+
+/* Replicated code from AwesomeFont to apply to 'code-block-caption's */
+.rst-content .code-block-caption .headerlink {
+    display: none;
+    visibility: hidden;
+    font-size: 14px;
+}
+
+.rst-content .code-block-caption .headerlink {
+    font-family: inherit;
+}
+
+.rst-content .code-block-caption .headerlink {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.rst-content .code-block-caption .headerlink:before{
+    font-family: "FontAwesome";
+    display: inline-block;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    text-decoration: inherit;
+}
+
+.rst-content .code-block-caption .headerlink:before{
+    -webkit-font-smoothing: antialiased;
+}
+
+.rst-content .code-block-caption .headerlink:after{
+    visibility: hidden;
+    content: "";
+    font-family: FontAwesome;
+    display: inline-block;
+}
+
+div.code-block-caption:hover > a.headerlink:after {
+    visibility: visible;
+}
