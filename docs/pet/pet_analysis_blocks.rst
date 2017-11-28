@@ -8,11 +8,15 @@ placed within a PET to model the system to be analyzed. Therefore, PET Analysis
 Blocks serve as modular building blocks that can be combined within a single PET
 to perform a full-system analysis using subanalyses from multiple domains.
 
-.. TODO: Comment on how users can easily connect different Analysis Blocks in order
-.. to use the output of one External Tool as the input to a second External Tool.
+.. figure:: images/AllWrappersAndTestbench.png
+   
+   An example PET with all three types of available wrappers and a Test Bench.
 
-.. ADD: picture of PET containing all different types of analysis blocks connected
-.. together
+In addition to the complex analyses that can be performed using
+Test Benches as you saw in the previous :ref:`testbenches` chapter,
+virtually any external execution tool can be integrated using one of
+the provided wrappers. We have used the Python Wrapper to drive
+analysis tools
 
 For examples of PETs with different analysis blocks see the
 `Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
@@ -23,7 +27,30 @@ repository.
 Test Benches
 ------------
 
-.. note:: This section is under construction. Please check back later for updates!
+For more information on composing Test Benches, please see the
+:ref:`testbenches` chapter.
+
+Adding a Test Bench to a PET
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When you want to use a Test Bench in a PET, you need to add a
+*reference* to the Test Bench. This is done in the same manner that
+you add components to Component Assembly. Just as described in the
+:ref:`populate_the_component_assembly` section of the LED Tutorial,
+this is accomplished in one of two ways:
+
+-  You can **Drag-and-drop** the desired Test Bench onto a PET
+   canvas with a **Right-click** and select **Create Reference** from
+   the drop-down menu.
+   
+   .. figure:: images/AddTestBenchToPET.png
+   
+
+-  Or you can **Right-click** on the desired Test Bench and select **copy**
+   from the drop-down menu and then **Right-click** in the PET canvas
+   and select **Paste Special -> As Reference** from the context menu.
+   
+   .. figure:: images/AddTestBenchToPETAlternatively.png
 
 Excel Wrappers
 --------------
@@ -88,43 +115,42 @@ A Python Wrapper can be loaded with specially-formatted Python scripts.
 
 Below is a template Python Wrapper OpenMDAO Component script:
 
-.. highlight:: python
-.. :linenothreshold: 5
+.. code-block:: python
+   :name: Paraboloid.py
+   :caption: Paraboloid.py
 
-::
+   from __future__ import print_function
+   from openmdao.api import Component
+   from pprint import pprint
 
-	from __future__ import print_function
-	from openmdao.api import Component
-	from pprint import pprint
+   ''' First, let's create the component defining our system. We'll call it 'Paraboloid'. '''
+   class Paraboloid(Component):
+       ''' Evaluates the equation f(x,y) = (x-3)^2 +xy +(y+4)^2 - 3 '''
 
-	''' First, let's create the component defining our system. We'll call it 'Paraboloid'. '''
-	class Paraboloid(Component):
-		''' Evaluates the equation f(x,y) = (x-3)^2 +xy +(y+4)^2 - 3 '''
+       def __init__(self):
+           super(Paraboloid, self).__init__()
 
-		def __init__(self):
-			super(Paraboloid, self).__init__()
+           ''' Inputs to the Python Wrapper Component are added here as params '''
+           self.add_param('x', val=0.0)
+           self.add_param('y', val=0.0)
 
-			''' Inputs to the Python Wrapper Component are added here as params '''
-			self.add_param('x', val=0.0)
-			self.add_param('y', val=0.0)
+           ''' Outputs from the Python Wrapper Component are added here as unknowns '''
+           self.add_output('f_xy', shape=1)
 
-			''' Outputs from the Python Wrapper Component are added here as unknowns '''
-			self.add_output('f_xy', shape=1)
+       def solve_nonlinear(self, params, unknowns, resids):
+           ''' This is where we describe the system that we want to add to OpenMETA '''
+           ''' f(x,y) = (x-3)^2 + xy + (y+4)^2 - 3 '''
 
-		def solve_nonlinear(self, params, unknowns, resids):
-			''' This is where we describe the system that we want to add to OpenMETA '''
-			''' f(x,y) = (x-3)^2 + xy + (y+4)^2 - 3 '''
+           x = params['x']
+           y = params['y']
 
-			x = params['x']
-			y = params['y']
+           f_xy = (x-3.0)**2 + x*y + (y+4.0)**2 - 3.0
 
-			f_xy = (x-3.0)**2 + x*y + (y+4.0)**2 - 3.0
+           unknowns['f_xy'] = f_xy
 
-			unknowns['f_xy'] = f_xy
-
-			''' This is an equivalent expression to the one above
-			unknowns['f_xy'] = (params['x']-3.0)**2 + params['x']*y + (params['y']+4.0)**2 - 3.0
-			'''
+           ''' This is an equivalent expression to the one above
+           unknowns['f_xy'] = (params['x']-3.0)**2 + params['x']*y + (params['y']+4.0)**2 - 3.0
+           '''
 
 .. note:: For more information on OpenMDAO Component scripts and how to write them, reference
    the OpenMDAO documentation: http://openmdao.readthedocs.io/en/1.7.3/usr-guide/basics.html#component
@@ -268,8 +294,7 @@ String           String             String
 List of Strings     Cell Array      List of Strings
 ===============  =================  ===============
 
-For examples of the conversion see the
-``RootFolder/ParametricExploration/ComplexExamples/MatlabConversions`` PET in the
+For examples of the conversion see the "MatlabConversions" PET in the
 `Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
 project in the 
 `Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
