@@ -51,6 +51,7 @@ namespace GME.CSharp
         // name
         string name = null;
         SizeF LabelSize;
+        string MetricConstraint_TargetType;
 
         // color of place and its label
         Color color = Color.Black;
@@ -86,7 +87,7 @@ namespace GME.CSharp
 
             // Drawing style
             // n.b. GME decorators are based on pixels and shouldn't be scaled by DPI changes
-            Font font = new Font(SystemFonts.DefaultFont.FontFamily, 12f, GraphicsUnit.Pixel);
+            Font font = new Font("Arial", 12f, GraphicsUnit.Pixel);
             Pen pen = new Pen(color);
             Brush brush = new SolidBrush(color);
 #if DEBUG
@@ -160,12 +161,8 @@ namespace GME.CSharp
                     Content,
                     font,
                     new SolidBrush(contentColor),
-                    new RectangleF(
-                        x,
-                        y + h + 15,
-                        g.MeasureString(Content, SystemFonts.DefaultFont).Width,
-                        g.MeasureString(Content, SystemFonts.DefaultFont).Height),
-                    sf);
+                        x + w / 2.0f,
+                        y + h + LabelSize.Height * 1.2f, sf);
             }
             else if (LastMetaKind == "WorkflowRef")
             {
@@ -272,10 +269,35 @@ namespace GME.CSharp
                     }
                 }
             }
+            else if (LastMetaKind == "MetricConstraint")
+            {
+                string symbol = " ";
+                if (MetricConstraint_TargetType == "Must Exceed")
+                {
+                    symbol = ">";
+                }
+                else if (MetricConstraint_TargetType == "Must Not Exceed")
+                {
+                    symbol = "\u2264";
+                }
+                else if (MetricConstraint_TargetType == "Must Equal")
+                {
+                    symbol = "=";
+                }
+                using (Font symbolFont = new Font(SystemFonts.DefaultFont.FontFamily, 40f, GraphicsUnit.Pixel))
+                using (StringFormat symbolFormat = new StringFormat(StringFormatFlags.NoClip))
+                {
+                    g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                    symbolFormat.Alignment = StringAlignment.Center;
+                    symbolFormat.LineAlignment = StringAlignment.Center;
+
+                    g.DrawString(symbol, symbolFont, new SolidBrush(labelColor), new PointF(x + w / 2.0f, y + h / 2.0f), symbolFormat);
+                }
+            }
 
             // Draw the label
             g.DrawString(name, font, new SolidBrush(labelColor),
-                new RectangleF(x + w / 2 - LabelSize.Width / 2, y + h + 5, LabelSize.Width, 10), sf);
+                new RectangleF(x + w / 2.0f - LabelSize.Width / 2.0f, y + h, LabelSize.Width, LabelSize.Height), sf);
 
             font.Dispose();
             sf.Dispose();
@@ -325,10 +347,10 @@ namespace GME.CSharp
 
         public void GetLabelLocation(out int sx, out int sy, out int ex, out int ey)
         {
-            sx = x + w / 2 - (int)LabelSize.Width / 2;
-            sy = y + h + 5;
+            sx = x + w / 2 - (int)(LabelSize.Width / 2);
+            sy = y + h;
             ex = sx + (int)LabelSize.Width;
-            ey = y + w + 15;
+            ey = y + w + (int)LabelSize.Height;
         }
 
         public void GetLocation(
@@ -453,6 +475,12 @@ namespace GME.CSharp
                         w = IconWidth;
                     }
                 }
+                else if (myobj.Meta.Name == "MetricConstraint")
+                {
+                    h = 40;
+                    w = 40;
+                    MetricConstraint_TargetType = myobj.GetStrAttrByNameDisp("TargetType");
+                }
             }
             else
             {
@@ -559,7 +587,8 @@ namespace GME.CSharp
                     unchecked { parentHwnd = (IntPtr)(int)parentWnd; }
                     using (Graphics g = Graphics.FromHwnd(parentHwnd))
                     {
-                        LabelSize = g.MeasureString(name, SystemFonts.DefaultFont);
+                        Font font = new Font("Arial", 12f, GraphicsUnit.Pixel);
+                        LabelSize = g.MeasureString(name, font);
                     }
                 }
             }

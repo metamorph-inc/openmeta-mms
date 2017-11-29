@@ -11,7 +11,7 @@ Making changes to the metamodel in Tonka
 
  4. Run `merge.py` using the tonka-provided Python (in `tonka\bin\Python27\Scripts`) to merge changes into `CyPhyML.xme`:
         cd meta\CyPhyML
-        python merge.py --version [version number] --upstream_rev meta-core/master
+        bash merge.py --version [version number] --upstream_rev meta-core/master
 
  5. Build using `build_both.cmd` from an administrator VS2015 Developer Command Prompt.
 
