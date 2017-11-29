@@ -13,6 +13,7 @@ import nose.core
 import subprocess
 import json
 import itertools
+import collections
 
 from nose.loader import TestLoader
 from nose.plugins.manager import BuiltinPluginManager
@@ -53,34 +54,71 @@ class TestBenchTest(unittest.TestCase):
             manifest = json.load(manifest_file)
 
         self.assertEqual(manifest['Status'], 'OK')
+        self._checkMetrics(testBench, manifest, result.OutputDirectory)
         # metrics = {metric['GMEID']: metric['Value'] for metric in manifest['Metrics']}
+
+    def _checkMetrics(self, testBench, manifest, outputDir):
         project = testBench.Project
         project.BeginTransactionInNewTerr()
-        testBench_metrics = {m.Name: m for m in (me for me in testBench.ChildFCOs if me.MetaBase.Name == 'Metric')}
         try:
-            for metric in manifest['Metrics']:
-                # can't use project.GetFCOByID(metric['GMEID']) because it may be from a copy
-                metric_fco = testBench_metrics[metric['Name']]
-                for connPoint in metric_fco.PartOfConns:
-                    if connPoint.Owner.MetaBase.Name != 'MetricConstraintBinding':
-                        continue
-                    other = connPoint.Owner.Src if connPoint.ConnRole == 'dst' else connPoint.Owner.Dst
-                    target_type = other.GetStrAttrByNameDisp('TargetType')
-                    target_value = other.GetFloatAttrByNameDisp('TargetValue')
-                    if target_type == 'Must Exceed':
-                        test = self.assertGreater
-                    elif target_type == 'Must Not Exceed':
-                        test = self.assertLessEqual
-                    else:
-                        test = self.assertAlmostEqual
-                    try:
-                        value_float = float(metric['Value'])
-                    except ValueError:
-                        self.fail('Metric {} has value "{}" that is not a number'.format(metric['Name'], metric['Value']))
-                    test(value_float, target_value, 'Metric {} failed'.format(metric['Name']))
+            if testBench.Meta.Name == 'ParametricExploration':
+                import csv
+                with open(os.path.join(outputDir, 'output.csv'), 'rU') as output:
+                    reader = csv.reader(output)
+                    header = next(reader)
+                    values = next(reader)
+                    metrics = dict(zip(header, values))
+                    # TODO: test all sets of values in reader
+                # driver = [fco for fco in testBench.ChildFCOs if fco.Meta.Name in ('ParameterStudy', 'Optimizer', 'PCCDriver')][0]
+
+                def getMetricValue(metric_fco):
+                    for connPoint in metric_fco.PartOfConns:
+                        if connPoint.Owner.Src != metric_fco:
+                            continue
+                        # FIXME: needs to be fixed when MetricConstraint deep in hierarchy is supported
+                        if connPoint.Owner.Dst.Meta.Name == 'Objective':
+                            return metrics[connPoint.Owner.Dst.Name]
+            else:
+                manifestMetrics = {m['Name']: m['Value'] for m in manifest['Metrics']}
+
+                def getMetricValue(metric_fco):
+                    return manifestMetrics[metric_fco.Name]
+
+            for constraintBinding in (me for me in testBench.ChildFCOs if me.MetaBase.Name == 'MetricConstraintBinding'):
+                if constraintBinding.Src.Meta.Name == 'Metric':
+                    metric_fco, constraint = constraintBinding.Src, constraintBinding.Dst
+                else:
+                    constraint, metric_fco = constraintBinding.Src, constraintBinding.Dst
+                target_type = constraint.GetStrAttrByNameDisp('TargetType')
+                target_value = constraint.GetFloatAttrByNameDisp('TargetValue')
+                if target_type == 'Must Exceed':
+                    test = self.assertGreater
+                elif target_type == 'Must Not Exceed':
+                    test = self.assertLessEqual
+                else:
+                    test = self.assertAlmostEqual
+                value = getMetricValue(metric_fco)
+                try:
+                    value_float = float(value)
+                except ValueError:
+                    self.fail('Metric {} has value "{}" that is not a number'.format(metric_fco.Name, value))
+                test(value_float, target_value, msg='Metric {} failed'.format(metric_fco.Name))
 
         finally:
             project.AbortTransaction()
+
+
+def crawlForKinds(root, folderKinds, modelKinds):
+    queue = collections.deque()
+    queue.append(root)
+    while queue:
+        folder = queue.pop()
+        for child_folder in (f for f in folder.ChildFolders if f.MetaBase.Name in folderKinds):
+            queue.append(child_folder)
+        for child in folder.ChildFCOs:
+            if child.Meta.Name in modelKinds:
+                yield child
+
 
 if __name__ == '__main__':
     def run():
@@ -123,53 +161,61 @@ if __name__ == '__main__':
             master = Dispatch("CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI")
             master.Initialize(project)
 
-            filters = []
-            for kind in ("TestBench", "CADTestBench", "KinematicTestBench", "BlastTestBench", "BallisticTestBench", "CarTestBench", "CFDTestBench"):
-                filter = project.CreateFilter()
-                filter.Kind = kind
-                filters.append(filter)
-            testBenches = [tb for tb in itertools.chain(*(project.AllFCOs(filter) for filter in filters)) if not tb.IsLibObject]
-            print repr([t.Name for t in testBenches])
-            for testBench in testBenches:
-                suts = [sut for sut in testBench.ChildFCOs if sut.MetaRole.Name == 'TopLevelSystemUnderTest']
-                if len(suts) == 0:
-                    raise ValueError('Error: TestBench "{}" has no TopLevelSystemUnderTest'.format(testBench.Name))
-                if len(suts) > 1:
-                    raise ValueError('Error: TestBench "{}" has more than one TopLevelSystemUnderTest'.format(testBench.Name))
-                sut = suts[0]
-                if sut.Referred.MetaBase.Name == 'ComponentAssembly':
-                    configs = [sut.Referred]
+            modelKinds = set(("TestBench", "CADTestBench", "KinematicTestBench", "BlastTestBench", "BallisticTestBench", "CarTestBench", "CFDTestBench", "ParametricExploration"))
+            # masterContexts = [tb for tb in itertools.chain(*(project.AllFCOs(filter) for filter in filters)) if not tb.IsLibObject]
+            masterContexts = list(crawlForKinds(project.RootFolder, ("ParametricExplorationFolder", "Testing"), modelKinds))
+            print repr([t.Name for t in masterContexts])
+            for masterContext in masterContexts:
+                configs = None
+                if masterContext.Meta.Name == "ParametricExploration":
+                    tbs = [tb for tb in masterContext.ChildFCOs if tb.MetaBase.Name == 'TestBenchRef' and tb.Referred is not None]
+                    if not tbs:
+                        configs = [masterContext]
+                    else:
+                        testBench = tbs[0].Referred
                 else:
-                    configurations = [config for config in sut.Referred.ChildFCOs if config.MetaBase.Name == 'Configurations']
-                    if not configurations:
-                        raise ValueError('Error: design has no Configurations models. Try using the --run_desert option')
-                    configurations = configurations[0]
-                    cwcs = [cwc for cwc in configurations.ChildFCOs if cwc.MetaBase.Name == 'CWC' and cwc.Name]
-                    if not cwcs:
-                        raise ValueError('Error: could not find CWCs for "{}"'.format(testBench.Name))
-                    configs = list(cwcs)
-                    # FIXME cfg2 > cfg10
-                    configs.sort(key=operator.attrgetter('Name'))
-                    configs = configs[slice(0, command_line_args.max_configs)]
+                    testBench = masterContext
+
+                if not configs:
+                    suts = [sut for sut in testBench.ChildFCOs if sut.MetaRole.Name == 'TopLevelSystemUnderTest']
+                    if len(suts) == 0:
+                        raise ValueError('Error: TestBench "{}" has no TopLevelSystemUnderTest'.format(testBench.Name))
+                    if len(suts) > 1:
+                        raise ValueError('Error: TestBench "{}" has more than one TopLevelSystemUnderTest'.format(testBench.Name))
+                    sut = suts[0]
+                    if sut.Referred.MetaBase.Name == 'ComponentAssembly':
+                        configs = [sut.Referred]
+                    else:
+                        configurations = [config for config in sut.Referred.ChildFCOs if config.MetaBase.Name == 'Configurations']
+                        if not configurations:
+                            raise ValueError('Error: design has no Configurations models. Try using the --run_desert option')
+                        configurations = configurations[0]
+                        cwcs = [cwc for cwc in configurations.ChildFCOs if cwc.MetaBase.Name == 'CWC' and cwc.Name]
+                        if not cwcs:
+                            raise ValueError('Error: could not find CWCs for "{}"'.format(testBench.Name))
+                        configs = list(cwcs)
+                        # FIXME cfg2 > cfg10
+                        configs.sort(key=operator.attrgetter('Name'))
+                        configs = configs[slice(0, command_line_args.max_configs)]
 
                 for config in configs:
                     mi_config = Dispatch("CyPhyMasterInterpreter.ConfigurationSelectionLight")
 
                     # GME id, or guid, or abs path or path to Test bench or SoT or PET
-                    mi_config.ContextId = testBench.ID
+                    mi_config.ContextId = masterContext.ID
 
                     mi_config.SetSelectedConfigurationIds([config.ID])
 
                     # mi_config.KeepTemporaryModels = True
                     mi_config.PostToJobManager = False
 
-                    def add_test(testBench, mi_config, config):
+                    def add_test(masterContext, mi_config, config):
                         def testTestBench(self):
-                            self._testTestBench(testBench, master, mi_config)
-                        # testTestBench.__name__ = str('test_' + testBench.Name + "_" + testBench.ID + "__" + config.Name)
-                        testTestBench.__name__ = str('test_' + testBench.Name + "__" + config.Name)
+                            self._testTestBench(masterContext, master, mi_config)
+                        # testTestBench.__name__ = str('test_' + masterContext.Name + "_" + masterContext.ID + "__" + config.Name)
+                        testTestBench.__name__ = str('test_' + masterContext.Name + "__" + config.Name)
                         setattr(TestBenchTest, testTestBench.__name__, testTestBench)
-                    add_test(testBench, mi_config, config)
+                    add_test(masterContext, mi_config, config)
         finally:
             project.CommitTransaction()
 
