@@ -35,28 +35,48 @@ class TestBenchTest(unittest.TestCase):
         self.longMessage = True
 
     # this class will get methods added to it
-    def _testTestBench(self, testBench, master, config):
+    def _testTestBench(self, context, master, config):
         result = master.RunInTransactionWithConfigLight(config)[0]
         if not result.Success:
             self.fail(result.Exception)
         print 'Output directory is {}'.format(result.OutputDirectory)
 
-        project = testBench.Project
+        project = context.Project
         project.BeginTransactionInNewTerr()
         try:
-            kind = testBench.Meta.Name
+            kind = context.Meta.Name
         finally:
             project.AbortTransaction()
 
         if kind == 'ParametricExploration':
             import run_mdao
+            import openmdao.api
             originalDir = os.getcwd()
+            test = self
+
+            class ConstraintCheckingRecorder(openmdao.api.BaseRecorder):
+                def record_metadata(self, group):
+                    pass
+
+                def record_derivatives(self, derivs, metadata):
+                    pass
+
+                def record_iteration(self, *args, **kwargs):
+                    test._checkParametricExplorationMetrics(context, self.root)
+
+                def close(self):
+                    pass
+
+                def startup(self, root):
+                    super(ConstraintCheckingRecorder, self).startup(root)
+                    self.root = root
+
             os.chdir(result.OutputDirectory)
             try:
-                mdao_top = run_mdao.run('mdao_config.json')
+                mdao_top = run_mdao.run('mdao_config.json', additional_recorders=[ConstraintCheckingRecorder()])
             finally:
                 os.chdir(originalDir)
-            self._checkParametricExplorationMetrics(testBench, mdao_top)
+                self._checkParametricExplorationMetrics(context, mdao_top.top)
         else:
             try:
                 subprocess.check_call((os.path.join(meta_path, r'bin\Python27\Scripts\python.exe'), '-m', 'testbenchexecutor', '--detailed-errors', 'testbench_manifest.json'),
@@ -71,30 +91,47 @@ class TestBenchTest(unittest.TestCase):
                 manifest = json.load(manifest_file)
 
             self.assertEqual(manifest['Status'], 'OK')
-            self._checkTestBenchMetrics(testBench, manifest, result.OutputDirectory)
+            self._checkTestBenchMetrics(context, manifest, result.OutputDirectory)
         # metrics = {metric['GMEID']: metric['Value'] for metric in manifest['Metrics']}
 
-    def _checkParametricExplorationMetrics(self, testBench, mdao_top):
-        project = testBench.Project
+    def _checkParametricExplorationMetrics(self, pet, mdao_group):
+        project = pet.Project
         project.BeginTransactionInNewTerr()
+        root = pet
+
+        def getPathNames(pet):
+            ret = []
+            while pet.ID != root.ID:
+                ret.append(pet.Name)
+                pet = pet.ParentModel
+            ret.reverse()
+            return ret
         try:
-            def getMetricValue(metric_fco, ref):
-                # FIXME for hierarchy
+            def getMetricValue(metric_fco, constraintBinding, ref):
                 componentName = metric_fco.ParentModel.Name
                 if ref is not None:
                     componentName = ref.Name
-                return getattr(mdao_top.root, componentName).unknowns[metric_fco.Name]
+                group = mdao_group
+                for name in getPathNames(constraintBinding.ParentModel):
+                    group = getattr(group, name)._problem.root
+                return getattr(group, componentName).unknowns[metric_fco.Name]
 
-            for constraintBinding in (me for me in testBench.ChildFCOs if me.MetaBase.Name == 'MetricConstraintBinding'):
-                if constraintBinding.Src.Meta.Name == 'Metric':
-                    metric_fco, constraint = constraintBinding.Src, constraintBinding.Dst
-                    metric_refs = constraintBinding.SrcReferences
-                else:
-                    constraint, metric_fco = constraintBinding.Src, constraintBinding.Dst
-                    metric_refs = constraintBinding.DstReferences
-                testBenchRef = metric_refs.Item(1) if len(metric_refs) else None
-                value = getMetricValue(metric_fco, testBenchRef)
-                self._testMetricConstraint(value, constraintBinding)
+            queue = collections.deque()
+            queue.append(pet)
+            while queue:
+                pet = queue.pop()
+                for childPET in (p for p in pet.ChildFCOs if p.Meta.Name == 'ParametricExploration'):
+                    queue.append(childPET)
+                for constraintBinding in (me for me in pet.ChildFCOs if me.MetaBase.Name == 'MetricConstraintBinding'):
+                    if constraintBinding.Src.Meta.Name == 'Metric':
+                        metric_fco, constraint = constraintBinding.Src, constraintBinding.Dst
+                        metric_refs = constraintBinding.SrcReferences
+                    else:
+                        constraint, metric_fco = constraintBinding.Src, constraintBinding.Dst
+                        metric_refs = constraintBinding.DstReferences
+                    testBenchRef = metric_refs.Item(1) if len(metric_refs) else None
+                    value = getMetricValue(metric_fco, constraintBinding, testBenchRef)
+                    self._testMetricConstraint(value, constraintBinding)
         finally:
             project.AbortTransaction()
 
