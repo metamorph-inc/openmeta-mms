@@ -76,7 +76,7 @@ class TestBenchTest(unittest.TestCase):
                 mdao_top = run_mdao.run('mdao_config.json', additional_recorders=[ConstraintCheckingRecorder()])
             finally:
                 os.chdir(originalDir)
-            self._checkParametricExplorationMetrics(context, mdao_top.top)
+            self._checkParametricExplorationMetrics(context, mdao_top.root)
         else:
             try:
                 subprocess.check_call((os.path.join(meta_path, r'bin\Python27\Scripts\python.exe'), '-m', 'testbenchexecutor', '--detailed-errors', 'testbench_manifest.json'),
