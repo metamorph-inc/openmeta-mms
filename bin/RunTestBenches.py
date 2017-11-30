@@ -76,7 +76,7 @@ class TestBenchTest(unittest.TestCase):
                 mdao_top = run_mdao.run('mdao_config.json', additional_recorders=[ConstraintCheckingRecorder()])
             finally:
                 os.chdir(originalDir)
-                self._checkParametricExplorationMetrics(context, mdao_top.top)
+            self._checkParametricExplorationMetrics(context, mdao_top.top)
         else:
             try:
                 subprocess.check_call((os.path.join(meta_path, r'bin\Python27\Scripts\python.exe'), '-m', 'testbenchexecutor', '--detailed-errors', 'testbench_manifest.json'),
@@ -107,12 +107,12 @@ class TestBenchTest(unittest.TestCase):
             ret.reverse()
             return ret
         try:
-            def getMetricValue(metric_fco, constraintBinding, ref):
+            def getMetricValue(metric_fco, pet, ref):
                 componentName = metric_fco.ParentModel.Name
                 if ref is not None:
                     componentName = ref.Name
                 group = mdao_group
-                for name in getPathNames(constraintBinding.ParentModel):
+                for name in getPathNames(pet):
                     group = getattr(group, name)._problem.root
                 return getattr(group, componentName).unknowns[metric_fco.Name]
 
@@ -130,8 +130,18 @@ class TestBenchTest(unittest.TestCase):
                         constraint, metric_fco = constraintBinding.Src, constraintBinding.Dst
                         metric_refs = constraintBinding.DstReferences
                     testBenchRef = metric_refs.Item(1) if len(metric_refs) else None
-                    value = getMetricValue(metric_fco, constraintBinding, testBenchRef)
-                    self._testMetricConstraint(value, constraintBinding)
+                    value = getMetricValue(metric_fco, pet, testBenchRef)
+                    parentName = testBenchRef.Name if testBenchRef else metric_fco.ParentModel.Name
+                    self._testMetricConstraint(value, constraintBinding, metric_name='.'.join(itertools.chain(getPathNames(pet), [parentName, metric_fco.Name])))
+                for testBenchRef in (tb for tb in pet.ChildFCOs if tb.Meta.Name == 'TestBenchRef'):
+                    for constraintBinding in (me for me in testBenchRef.Referred.ChildFCOs if me.MetaBase.Name == 'MetricConstraintBinding'):
+                        if constraintBinding.Src.Meta.Name == 'Metric':
+                            metric_fco, constraint = constraintBinding.Src, constraintBinding.Dst
+                        else:
+                            constraint, metric_fco = constraintBinding.Src, constraintBinding.Dst
+                        value = getMetricValue(metric_fco, pet, testBenchRef)
+                        self._testMetricConstraint(value, constraintBinding, metric_name='.'.join(itertools.chain(getPathNames(pet), [testBenchRef.Name, metric_fco.Name])))
+
         finally:
             project.AbortTransaction()
 
@@ -154,7 +164,7 @@ class TestBenchTest(unittest.TestCase):
         finally:
             project.AbortTransaction()
 
-    def _testMetricConstraint(self, value, constraintBinding):
+    def _testMetricConstraint(self, value, constraintBinding, metric_name=None):
         if constraintBinding.Src.Meta.Name == 'Metric':
             metric_fco, constraint = constraintBinding.Src, constraintBinding.Dst
         else:
@@ -171,7 +181,7 @@ class TestBenchTest(unittest.TestCase):
             test = self.assertLessEqual
         else:
             test = self.assertAlmostEqual
-        test(value_float, target_value, msg='Metric {} failed'.format(metric_fco.Name))
+        test(value_float, target_value, msg='Metric {} failed'.format(metric_name or metric_fco.Name))
 
 
 def crawlForKinds(root, folderKinds, modelKinds):
