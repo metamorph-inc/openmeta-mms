@@ -18,20 +18,6 @@ from matlab_wrapper.engine import SMOPEngine, import_mfile
 class MatlabWrapper(Component):
     def __init__(self, mFile, start_engine=True, var_file=None):
         super(MatlabWrapper, self).__init__()
-        # self.var_dict = None
-        # self.jsonFile = var_file
-        # self.create_json_dict()
-
-        if False:
-            for key, value in self.var_dict.items():
-                if key == "params":
-                    for z in value:
-                        # print(repr(z))
-                        self.add_param(**z)
-                elif key == "unknowns":
-                    for z in value:
-                        # print z["name"]
-                        self.add_output(**z)
 
         if not os.path.exists(mFile):
             open(mFile)
@@ -61,16 +47,14 @@ class MatlabWrapper(Component):
                 if match:
                     name, type_, inout = match.groups()[0:3]
                     args = dict(zip(match.groups()[3::2], match.groups()[4::2]))
-                    # if 'matlabName' in args:
-                    #    raise NotImplementedError(name)
 
                     def map_type(type_, name):
                         ret = {'object': dict,
-                                'double': float,
-                                'double[]': lambda: numpy.zeros(shape=(1, 1)),
-                                'string': six.text_type,
-                                'string[]': list,
-                                }.get(type_)
+                               'double': float,
+                               'double[]': lambda: numpy.zeros(shape=(1, 1)),
+                               'string': six.text_type,
+                               'string[]': list,
+                               'bool': bool}.get(type_)
                         if ret is None:
                             raise ValueError('Unknown type \'{}\' for variable \'{}\''.format(type_, name))
                         return ret
@@ -84,8 +68,6 @@ class MatlabWrapper(Component):
                         self._input_names.append(name)
                         self.add_param(name, val=map_type(type_, name)(), pass_by_obj=pass_by_obj)
 
-                        # raise ValueError("Could not find function named '{0}' in file '{1}'".format(self.basename, os.path.basename(self.mFile)))
-
         if start_engine:
             from matlab_proxy import get_matlab_engine
             self.eng = get_matlab_engine()
@@ -98,21 +80,6 @@ class MatlabWrapper(Component):
         # if self.eng
         # self.eng.quit()
         pass
-
-    def _coerce_val(self, variable):
-        if variable['type'] == 'Bool':
-            variable['val'] = variable['val'] == 'True'
-        elif variable['type'] == 'Str':
-            variable['val'] = six.text_type(variable['val'])
-        else:
-            variable['val'] = getattr(six.moves.builtins, variable['type'].lower())(variable['val'])
-
-    def create_json_dict(self):
-        with open(self.jsonFile) as jsonReader:
-            self.var_dict = json.load(jsonReader)
-            for vartype in ('params', 'unknowns'):
-                for var in self.var_dict.get(vartype, []):
-                    self._coerce_val(var)
 
     def solve_nonlinear(self, params, unknowns, resids):
         args = [params[name] for name in self._input_names]
