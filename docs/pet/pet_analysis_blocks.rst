@@ -284,15 +284,27 @@ framework to execute PETs. Since the data passed between analysis
 blocks is managed by Python, the table below describes the conversions
 that occur when data is passed into or out of a MATLAB Wrapper block.
 
-===============  =================  ===============
-Python           to MATLAB          to PYTHON 
-===============  =================  ===============
-Double           Double             Double 
-1x1 Numpy Array  Double             Double 
-1x2 Numpy Array  1x2 Array          1x2 Numpy Array
-String           String             String
-List of Strings     Cell Array      List of Strings
-===============  =================  ===============
+=========================  ======================  =========================
+Python                     to MATLAB               to Python 
+=========================  ======================  =========================
+Boolean                    N/A                    
+Int                        N/A
+List of Ints               N/A
+Numpy Int Array            Double Array            Numpy Float Array [1]_
+Float                      Double                  Float 
+List of Floats             N/A                    
+Numpy Float Array          Double Array            Numpy Float Array [1]_
+String                     N/A                    
+List of Strings            Cell Array of Strings   List of Strings
+Numpy Array of Strings     N/A                    
+Unicode                    Char                    Unicode String?
+List of Unicodes           Cell Array of Unicodes  List of Unicodes
+Dictionary (String Keys)   Struct                  Dictionary (String Keys)
+Dictionary (Unicode Keys)  Struct                  Dictionary (Unicode Keys)
+=========================  ======================  =========================
+
+.. [1] Beware: All doubles in MATLAB are essentially a one-by-one array
+   (1x1), so we unwrap all one-by-one arrays to a single float value in OpenMDAO.
 
 For examples of the conversion see the "MatlabConversions" PET in the
 `Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
