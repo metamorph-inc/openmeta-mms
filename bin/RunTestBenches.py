@@ -39,73 +39,102 @@ class TestBenchTest(unittest.TestCase):
         result = master.RunInTransactionWithConfigLight(config)[0]
         if not result.Success:
             self.fail(result.Exception)
-
-        try:
-            subprocess.check_call((os.path.join(meta_path, r'bin\Python27\Scripts\python.exe'), '-m', 'testbenchexecutor', '--detailed-errors', 'testbench_manifest.json'),
-                cwd=result.OutputDirectory)
-        except:
-            failed_txt = os.path.join(result.OutputDirectory, '_FAILED.txt')
-            if os.path.isfile(failed_txt):
-                print(open(failed_txt, 'r').read())
-            raise
         print 'Output directory is {}'.format(result.OutputDirectory)
 
-        with open(os.path.join(result.OutputDirectory, 'testbench_manifest.json')) as manifest_file:
-            manifest = json.load(manifest_file)
-
-        self.assertEqual(manifest['Status'], 'OK')
-        self._checkMetrics(testBench, manifest, result.OutputDirectory)
-        # metrics = {metric['GMEID']: metric['Value'] for metric in manifest['Metrics']}
-
-    def _checkMetrics(self, testBench, manifest, outputDir):
         project = testBench.Project
         project.BeginTransactionInNewTerr()
         try:
-            if testBench.Meta.Name == 'ParametricExploration':
-                import csv
-                with open(os.path.join(outputDir, 'output.csv'), 'rU') as output:
-                    reader = csv.reader(output)
-                    header = next(reader)
-                    values = next(reader)
-                    metrics = dict(zip(header, values))
-                    # TODO: test all sets of values in reader
-                # driver = [fco for fco in testBench.ChildFCOs if fco.Meta.Name in ('ParameterStudy', 'Optimizer', 'PCCDriver')][0]
+            kind = testBench.Meta.Name
+        finally:
+            project.AbortTransaction()
 
-                def getMetricValue(metric_fco):
-                    for connPoint in metric_fco.PartOfConns:
-                        if connPoint.Owner.Src != metric_fco:
-                            continue
-                        # FIXME: needs to be fixed when MetricConstraint deep in hierarchy is supported
-                        if connPoint.Owner.Dst.Meta.Name == 'Objective':
-                            return metrics[connPoint.Owner.Dst.Name]
-            else:
-                manifestMetrics = {m['Name']: m['Value'] for m in manifest['Metrics']}
+        if kind == 'ParametricExploration':
+            import run_mdao
+            originalDir = os.getcwd()
+            os.chdir(result.OutputDirectory)
+            try:
+                mdao_top = run_mdao.run('mdao_config.json')
+            finally:
+                os.chdir(originalDir)
+            self._checkParametricExplorationMetrics(testBench, mdao_top)
+        else:
+            try:
+                subprocess.check_call((os.path.join(meta_path, r'bin\Python27\Scripts\python.exe'), '-m', 'testbenchexecutor', '--detailed-errors', 'testbench_manifest.json'),
+                    cwd=result.OutputDirectory)
+            except:
+                failed_txt = os.path.join(result.OutputDirectory, '_FAILED.txt')
+                if os.path.isfile(failed_txt):
+                    print(open(failed_txt, 'r').read())
+                raise
 
-                def getMetricValue(metric_fco):
-                    return manifestMetrics[metric_fco.Name]
+            with open(os.path.join(result.OutputDirectory, 'testbench_manifest.json')) as manifest_file:
+                manifest = json.load(manifest_file)
+
+            self.assertEqual(manifest['Status'], 'OK')
+            self._checkTestBenchMetrics(testBench, manifest, result.OutputDirectory)
+        # metrics = {metric['GMEID']: metric['Value'] for metric in manifest['Metrics']}
+
+    def _checkParametricExplorationMetrics(self, testBench, mdao_top):
+        project = testBench.Project
+        project.BeginTransactionInNewTerr()
+        try:
+            def getMetricValue(metric_fco, ref):
+                # FIXME for hierarchy
+                componentName = metric_fco.ParentModel.Name
+                if ref is not None:
+                    componentName = ref.Name
+                return getattr(mdao_top.root, componentName).unknowns[metric_fco.Name]
+
+            for constraintBinding in (me for me in testBench.ChildFCOs if me.MetaBase.Name == 'MetricConstraintBinding'):
+                if constraintBinding.Src.Meta.Name == 'Metric':
+                    metric_fco, constraint = constraintBinding.Src, constraintBinding.Dst
+                    metric_refs = constraintBinding.SrcReferences
+                else:
+                    constraint, metric_fco = constraintBinding.Src, constraintBinding.Dst
+                    metric_refs = constraintBinding.DstReferences
+                testBenchRef = metric_refs.Item(1) if len(metric_refs) else None
+                value = getMetricValue(metric_fco, testBenchRef)
+                self._testMetricConstraint(value, constraintBinding)
+        finally:
+            project.AbortTransaction()
+
+    def _checkTestBenchMetrics(self, testBench, manifest, outputDir):
+        project = testBench.Project
+        project.BeginTransactionInNewTerr()
+        try:
+            manifestMetrics = {m['Name']: m['Value'] for m in manifest['Metrics']}
+
+            def getMetricValue(metric_fco):
+                return manifestMetrics[metric_fco.Name]
 
             for constraintBinding in (me for me in testBench.ChildFCOs if me.MetaBase.Name == 'MetricConstraintBinding'):
                 if constraintBinding.Src.Meta.Name == 'Metric':
                     metric_fco, constraint = constraintBinding.Src, constraintBinding.Dst
                 else:
                     constraint, metric_fco = constraintBinding.Src, constraintBinding.Dst
-                target_type = constraint.GetStrAttrByNameDisp('TargetType')
-                target_value = constraint.GetFloatAttrByNameDisp('TargetValue')
-                if target_type == 'Must Exceed':
-                    test = self.assertGreater
-                elif target_type == 'Must Not Exceed':
-                    test = self.assertLessEqual
-                else:
-                    test = self.assertAlmostEqual
                 value = getMetricValue(metric_fco)
-                try:
-                    value_float = float(value)
-                except ValueError:
-                    self.fail('Metric {} has value "{}" that is not a number'.format(metric_fco.Name, value))
-                test(value_float, target_value, msg='Metric {} failed'.format(metric_fco.Name))
-
+                self._testMetricConstraint(value, constraintBinding)
         finally:
             project.AbortTransaction()
+
+    def _testMetricConstraint(self, value, constraintBinding):
+        if constraintBinding.Src.Meta.Name == 'Metric':
+            metric_fco, constraint = constraintBinding.Src, constraintBinding.Dst
+        else:
+            constraint, metric_fco = constraintBinding.Src, constraintBinding.Dst
+        target_type = constraint.GetStrAttrByNameDisp('TargetType')
+        target_value = constraint.GetFloatAttrByNameDisp('TargetValue')
+        try:
+            value_float = float(value)
+        except ValueError:
+            self.fail('Metric {} has value "{}" that is not a number'.format(metric_fco.Name, value))
+        if target_type == 'Must Exceed':
+            test = self.assertGreater
+        elif target_type == 'Must Not Exceed':
+            test = self.assertLessEqual
+        else:
+            test = self.assertAlmostEqual
+        test(value_float, target_value, msg='Metric {} failed'.format(metric_fco.Name))
 
 
 def crawlForKinds(root, folderKinds, modelKinds):
