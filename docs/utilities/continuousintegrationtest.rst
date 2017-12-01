@@ -2,7 +2,7 @@
 
 Continuous Integration and Testing
 ==================================
-OpenMETA models can be integrated with Continuous Integration (CI) methods to provide automatic testing for regressions. OpenMETA includes a utility script that automatically runs Test Benches and checks the resulting Metric values against target values provided by the model author.
+OpenMETA models can be integrated with Continuous Integration (CI) methods to provide automatic testing for regressions. OpenMETA includes a utility script that automatically runs Test Benches and PETs and checks the resulting Metric values against target values provided by the model author in the form of Metric Constraints.
 
 Configuring the Jenkins job
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,7 +18,7 @@ In the Source Code Management section, we'll configure the job to poll the maste
    :alt: Source Code Management section
    :width: 600px
 
-Next, we need to configure Jenkins to run the utility script that will automatically run the Test Benches in the OpenMETA project.
+Next, we need to configure Jenkins to run the utility script that will automatically run the Test Benches and PETs in the OpenMETA project.
 
 Add an **Execute Windows batch command** build step to the Jenkins job.
 
@@ -32,27 +32,55 @@ Let's break down this command:
 
 #. ``"C:\Program Files (x86)\META\bin\Python27\Scripts\python"``: Use OpenMETA's Python environment
 #. ``"C:\Program Files (x86)\META\bin\RunTestBenches.py"``: This is the automation script
-#. ``--max_configs 2``: *(optional)* If a Test Bench has a Design Space as its System Under Test, choose at most 2 configurations to test
+#. ``--max_configs 2``: *(optional)* If a Test Bench or PET has a Design Space as its System Under Test, choose at most 2 configurations to test
 #. ``CyPhy_Model\ExampleSat_3_1.xme``: This is the path to the OpenMETA model to test
 #. ``--``: Parameters after this mark are passed to the Python *nose* testing framework
 #. ``-s``: Don’t capture stdout (any stdout output will be printed immediately)
 #. ``--with-xunit``: Produce a JUnit-compatible XML file as output
 #. ``exit /b 0``: This causes a build with out-of-spec values to be marked as "Unstable". Otherwise, it will be marked as "Failed", which makes it hard to distinguish from cases where the tests could not run.
 
-Additional arguments that you may use after the ``--`` mark:
+The Python *nose* testing framework operates by generating a test function for
+each design configuration in each Test Bench or PET. The name of each function
+is produced using the pattern ``test_<analysis_name>__<config_name>``, where
+``<analysis_name>`` is the name of the Test Bench or PET and ``<config_name>``
+is the name of the design configuration that is being tested. (The
+``<config_name`` will simply be the name of the Component Assembly if the
+System Under Test is a Component Assembly.)
 
-- ``-m test_Inertial_and_Geometry``: Only run Test Benches with names that begin with *Inertial_and_Geometry*. Substitute the name of the specific Test Bench(es) that you wish to include.
+These additional arguments can be used after the ``--`` mark to afford more
+control over the testing:
 
-  - You may supply any number of ``-m`` arguments.
-  - Once you've supplied one ``-m`` argument, only the Test Benches that you explicitly specify will be run.
+- ``-m <pattern>``: Include only the tests with names that match the pattern
+  ``<pattern>``.
+  
+  - You may supply any number of ``-m`` arguments. 
+  - Once you've supplied at least one ``-m`` argument, only the tests that
+    match all of the provided patterns will be executed.
+  - E.g. ``-m CI`` would include any test that has the string
+    "CI" in either the name of the Test Bench or PET or the specific
+    configuration name to which that test corresponds.
+  - Similarly ``-m test_Inertial_and_Geometry`` would include any Test Bench
+    or PET that begins with the string *Inertial_and_Geometry*.
 
-- ``-e test_Inertial_and_Geometry``: Exclude Test Benches with names that begin with *Inertial_and_Geometry*. Substitute the name of the specific Test Bench that you wish to exclude.
+- ``-e <pattern>``: Exclude all the tests with names that match the pattern
+  ``pattern``.
 
   - You may supply any number of ``-e`` arguments.
+  - E.g. ``-e test_Inertial_and_Geometry`` would exclude any Test Benches or
+    PETs that begins with the string *Inertial_and_Geometry*.
 
-- ``-v --collect-only``: List all available tests.
+- ``-v --collect-only``: List all the tests that conform to the given available tests.
 
-  - This must be the *only* argument provided after the ``--`` mark.
+  - This can be useful to use when you are trying to find the right
+    combination of ``-m`` and ``-e`` arguments to select the desired
+    tests.
+
+Examples of the these different patterns can be found in the
+`Continuous Integration <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/continuous-integration>`_
+project in the 
+`Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
+repository.
+
 
 We must also add a **Publish JUnit test result report** Post-build Action to the Jenkins job, telling it to grab the `nosetests.xml` test report.
 
