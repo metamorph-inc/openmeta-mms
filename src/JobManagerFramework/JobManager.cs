@@ -125,7 +125,17 @@ namespace JobManagerFramework
 
         public int LocalConcurrentThreads
         {
-            get { return pool.NumAllThread; }
+            get
+            {
+                if (pool is LocalPool)
+                {
+                    return ((LocalPool) pool).NumAllThread;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
 
             set
             {
@@ -147,7 +157,7 @@ namespace JobManagerFramework
         /// <summary>
         /// Local thread pool for jobs.
         /// </summary>
-        private LocalPool pool;
+        private IJobPool pool;
 
         private int highPriorityJobsRemaining = 0;
 
