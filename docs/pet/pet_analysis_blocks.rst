@@ -231,8 +231,9 @@ There are a few restrictions in the current implementation:
 
 -  Only scalar (double) type values are allowed as inputs and outputs.
 -  There can be more than one function declared in the script, but the
-   wrapper will only use the function with the same name as the script
-   filename. These names are case-sensitive and must match exactly.
+   wrapper will only use as an entry point the function with the same
+   name as the script filename. This name is case-sensitive and must
+   match exactly.
 
 Below is a *Function File* example of a MATLAB Wrapper script:
 
@@ -274,6 +275,9 @@ of different types of inputs:
    output2 = input2 * 2
    output3 = strcat(input3, input3)
    output4 = [input4, input4]
+   
+You cannot define functions in a *Bare File* style MATLAB integration file;
+however, you can call other function files that you have defined. 
 
 
 MATLAB Data Type Conversion
@@ -287,7 +291,7 @@ that occur when data is passed into or out of a MATLAB Wrapper block.
 =========================  ======================  =========================
 Python                     to MATLAB               to Python 
 =========================  ======================  =========================
-Boolean                    N/A                    
+Boolean                    N/A                     
 Int                        N/A
 List of Ints               N/A
 Numpy Int Array            Double Array            Numpy Float Array [1]_
