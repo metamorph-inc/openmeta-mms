@@ -231,8 +231,9 @@ There are a few restrictions in the current implementation:
 
 -  Only scalar (double) type values are allowed as inputs and outputs.
 -  There can be more than one function declared in the script, but the
-   wrapper will only use the function with the same name as the script
-   filename. These names are case-sensitive and must match exactly.
+   wrapper will only use as an entry point the function with the same
+   name as the script filename. This name is case-sensitive and must
+   match exactly.
 
 Below is a *Function File* example of a MATLAB Wrapper script:
 
@@ -274,6 +275,9 @@ of different types of inputs:
    output2 = input2 * 2
    output3 = strcat(input3, input3)
    output4 = [input4, input4]
+   
+You cannot define functions in a *Bare File* style MATLAB integration file;
+however, you can call other function files that you have defined. 
 
 
 MATLAB Data Type Conversion
@@ -287,24 +291,43 @@ that occur when data is passed into or out of a MATLAB Wrapper block.
 =========================  ======================  =========================
 Python                     to MATLAB               to Python 
 =========================  ======================  =========================
-Boolean                    N/A                    
-Int                        N/A
-List of Ints               N/A
-Numpy Int Array            Double Array            Numpy Float Array [1]_
-Float                      Double                  Float 
-List of Floats             N/A                    
-Numpy Float Array          Double Array            Numpy Float Array [1]_
-String                     N/A                    
+Boolean                    Logical                 Boolean
+Int                        N/A [1]_
+List of Ints               N/A [1]_
+Numpy Int Array            Double Array            Numpy Float Array [2]_
+Float                      Double                  Float [3]_
+List of Floats             N/A [1]_
+Numpy Float Array          Double Array            Numpy Float Array
+String                     N/A [1]_
 List of Strings            Cell Array of Strings   List of Strings
-Numpy Array of Strings     N/A                    
-Unicode                    Char                    Unicode String?
+Numpy Array of Strings     N/A [1]_
+Unicode                    Char                    Unicode
 List of Unicodes           Cell Array of Unicodes  List of Unicodes
-Dictionary (String Keys)   Struct                  Dictionary (String Keys)
-Dictionary (Unicode Keys)  Struct                  Dictionary (Unicode Keys)
+Dictionary                 Struct                  Dictionary [4]_
 =========================  ======================  =========================
 
-.. [1] Beware: All doubles in MATLAB are essentially a one-by-one array
-   (1x1), so we unwrap all one-by-one arrays to a single float value in OpenMDAO.
+.. [1] These types are not allowed to be passed into MATLAB Wrapper analysis
+   blocks.
+
+.. [2] Integers in an array will be converted to floats upon passing through
+   a MATLAB Wrapper analysis block.
+
+.. [3] All doubles in MATLAB are essentially a one-by-one array
+   (1x1), so the framework automatically unwraps all one-by-one arrays to
+   a single float value as they are passed to the next analysis block.
+   E.g. A 1x1 Numpy Array will become a double in MATLAB and will result in a
+   double in OpenMDAO when it is passed to the next analysis block.
+   
+.. [4] Structs in MATLAB can only accept fieldnames that meet the following
+   three criteria:
+   
+   #. Start with a letter
+   #. Contain only letters, numbers, and/or the underscore character
+   #. Must be no longer than ``namelengthmax`` (currently 63) characters
+   
+   Although Python can handle arbitrary strings as the keys in dictionaries,
+   you must meet these criteria if you are going to pass the dictionaries
+   to a MATLAB Wrapper block.
 
 For examples of the conversion see the "MatlabConversions" PET in the
 `Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_

@@ -11,7 +11,7 @@ following subchapters describe a few of the more significant ones:
 .. toctree::
    :maxdepth: 1
 
-   cad
+   cad/cad
    fea/fea
    eda
    modelica

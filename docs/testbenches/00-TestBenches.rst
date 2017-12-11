@@ -16,6 +16,7 @@ for Project Ara.
    :caption: General
 
    testbenchbasics
+   cadtestbenches
 
 .. toctree::
    :maxdepth: 1

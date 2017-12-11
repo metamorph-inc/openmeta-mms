@@ -1,4 +1,4 @@
-/* Force captoins to be bolded. */
+/* Force captions to be bolded. */
 div.code-block-caption span.caption-text {
     font-weight: bold
 }
