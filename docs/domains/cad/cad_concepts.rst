@@ -135,6 +135,26 @@ The :ref:`metalink` tool is described below.
 Metalink
 ~~~~~~~~
 
+Metalink allows a user to edit an OpenMETA component assembly and immediately
+see those changes reflected in the CAD representation.
+To open a connection between OpenMETA and the CAD tool, simply open the
+desired Component Assembly in the editor and click the Metalink Button
+|METALINK_BUTTON|.
+When you click different components in the OpenMETA model, you will
+see the same components highlighted in the CAD representation.
+
+.. |METALINK_BUTTON| image:: images/metalink_button.png
+   :width: 24px
+
+.. figure:: images/metalink_example.png
+   :alt: Running Metalink with a Simple Assembly
+
+   Running Metalink with a Simple Assembly
+
+Metalink is also capable of regenerating the CAD representation as parameters
+in the OpenMETA model are changed or even entrirely new components are added
+to the assembly.
+
 Examples
 ~~~~~~~~
 
