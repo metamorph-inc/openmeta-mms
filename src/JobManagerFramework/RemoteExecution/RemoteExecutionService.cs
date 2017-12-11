@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using GME.MGA.Core;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
@@ -29,7 +31,35 @@ namespace JobManagerFramework.RemoteExecution
 
         public RemoteJob GetJobInfo(string jobId)
         {
-            return Get<RemoteJob>("/api/client/job/" + jobId);
+            try
+            {
+                return Get<RemoteJob>("/api/client/job/" + jobId);
+            }
+            catch (RequestFailedException e)
+            {
+                if (e.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new ObjectNotFoundException("Job not found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        public string UploadArtifact(Stream fileStream)
+        {
+            var result = PutFile("/api/client/uploadArtifact", "artifact", fileStream);
+
+            return result["hash"].Value<string>();
+        }
+
+        public string CreateJob(string runCommand, string runZipId)
+        {
+            var result = PutObjectAsJson("/api/client/createJob", new RemoteJobRequest {runCommand = runCommand, runZipId = runZipId});
+
+            return result["id"].Value<string>();
         }
 
         private JObject GetJson(string path)
@@ -41,36 +71,7 @@ namespace JobManagerFramework.RemoteExecution
             request.Method = Method.GET;
 
             var response = client.Execute(request);
-            if (response.ErrorException != null)
-            {
-                throw response.ErrorException;
-            }
-            else if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var data = response.Content;
-                var jsonData = JObject.Parse(data);
-                return jsonData;
-            }
-            else if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                throw new ObjectNotFoundException("Job not found");
-            }
-            else
-            {
-                var responseBody = response.Content;
-                var responseMessage = "Unknown error occurred";
-                try
-                {
-                    var jsonData = JObject.Parse(responseBody);
-                    responseMessage = jsonData["message"].Value<string>();
-
-                }
-                catch (Exception)
-                {
-                    // Failed to parse JSON or didn't contain "message" property
-                }
-                throw new RequestFailedException(response.StatusCode, responseMessage);
-            }
+            return GetJsonFromResponse(response);
         }
 
         private T Get<T>(string path) where T: new()
@@ -82,17 +83,22 @@ namespace JobManagerFramework.RemoteExecution
             request.Method = Method.GET;
 
             var response = client.Execute<T>(request);
+            return GetDataFromResponse(response);
+        }
+
+        private static T GetDataFromResponse<T>(IRestResponse<T> response) where T : new()
+        {
             if (response.ErrorException != null)
             {
                 throw response.ErrorException;
             }
+            else if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new RequestFailedException(response.StatusCode, response.ErrorMessage);
+            }
             else if (response.StatusCode == HttpStatusCode.OK)
             {
                 return response.Data;
-            }
-            else if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                throw new ObjectNotFoundException("Job not found");
             }
             else
             {
@@ -102,7 +108,65 @@ namespace JobManagerFramework.RemoteExecution
                 {
                     var jsonData = JObject.Parse(responseBody);
                     responseMessage = jsonData["message"].Value<string>();
-                    
+                }
+                catch (Exception)
+                {
+                    // Failed to parse JSON or didn't contain "message" property
+                }
+                throw new RequestFailedException(response.StatusCode, responseMessage);
+            }
+        }
+
+        private JObject PutFile(string path, string parameterName, Stream fileStream)
+        {
+            var client = new RestClient(BaseUri);
+            client.Authenticator = new HttpBasicAuthenticator(Username, Password);
+
+            var request = new RestRequest(path);
+            request.Method = Method.PUT;
+
+            request.AddFile(parameterName, fileStream.CopyTo, "upload");
+            request.AlwaysMultipartFormData = true;
+
+            var response = client.Execute(request);
+            return GetJsonFromResponse(response);
+        }
+
+        private JObject PutObjectAsJson(string path, object obj)
+        {
+            var client = new RestClient(BaseUri);
+            client.Authenticator = new HttpBasicAuthenticator(Username, Password);
+
+            var request = new RestRequest(path);
+            request.Method = Method.PUT;
+
+            request.RequestFormat = DataFormat.Json;
+            request.AddBody(obj);
+
+            var response = client.Execute(request);
+            return GetJsonFromResponse(response);
+        }
+
+        private static JObject GetJsonFromResponse(IRestResponse response)
+        {
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            else if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var data = response.Content;
+                var jsonData = JObject.Parse(data);
+                return jsonData;
+            }
+            else
+            {
+                var responseBody = response.Content;
+                var responseMessage = "Unknown error occurred";
+                try
+                {
+                    var jsonData = JObject.Parse(responseBody);
+                    responseMessage = jsonData["message"].Value<string>();
                 }
                 catch (Exception)
                 {
@@ -147,6 +211,13 @@ namespace JobManagerFramework.RemoteExecution
             public RemoteJobState Status { get; set; }
             public string Uid { get; set; }
             public string ResultZipId { get; set; }
+        }
+
+        private class RemoteJobRequest
+        {
+            public string runCommand { get; set; }
+            
+            public string runZipId { get; set; }
         }
     }
 }
