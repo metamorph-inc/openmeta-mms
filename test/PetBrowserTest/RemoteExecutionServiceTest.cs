@@ -42,9 +42,36 @@ namespace PetBrowserTest
         {
             var service = new RemoteExecutionService("http://localhost:8080", "test", "test");
 
-            var hash = service.UploadArtifact(new MemoryStream(Resources.test_run_dir));
+            var hash = "";
+
+            using (var uploadedFileStream = new MemoryStream(Resources.test_run_dir))
+            {
+                hash = service.UploadArtifact(uploadedFileStream);
+            }
 
             Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
+        }
+
+        [Fact]
+        public void TestArtifactDownload()
+        {
+            var service = new RemoteExecutionService("http://localhost:8080", "test", "test");
+
+            var hash = "";
+
+            using (var uploadedFileStream = new MemoryStream(Resources.test_run_dir))
+            {
+                hash = service.UploadArtifact(uploadedFileStream);
+            }
+
+            Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
+
+            using (var downloadedFileStream = new MemoryStream())
+            {
+                service.DownloadArtifact("4a0c2b277e4451d5ac59ccd57edf786c79455c99", downloadedFileStream);
+
+                Assert.Equal(downloadedFileStream.GetBuffer(), Resources.test_run_dir);
+            }
         }
 
         [Fact]
@@ -52,7 +79,12 @@ namespace PetBrowserTest
         {
             var service = new RemoteExecutionService("http://localhost:8080", "test", "test");
 
-            var hash = service.UploadArtifact(new MemoryStream(Resources.test_run_dir));
+            var hash = "";
+
+            using (var uploadedFileStream = new MemoryStream(Resources.test_run_dir))
+            {
+                hash = service.UploadArtifact(uploadedFileStream);
+            }
 
             Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
 
@@ -69,7 +101,12 @@ namespace PetBrowserTest
         {
             var service = new RemoteExecutionService("http://localhost:8080", "test", "test");
 
-            var hash = service.UploadArtifact(new MemoryStream(Resources.test_run_dir));
+            var hash = "";
+
+            using (var uploadedFileStream = new MemoryStream(Resources.test_run_dir))
+            {
+                hash = service.UploadArtifact(uploadedFileStream);
+            }
 
             Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
 
@@ -100,6 +137,15 @@ namespace PetBrowserTest
 
             Assert.Equal(RemoteExecutionService.RemoteJobState.Succeeded, finalStatus.Status);
             Assert.NotNull(finalStatus.ResultZipId);
+
+            Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
+
+            using (var downloadedFileStream = new MemoryStream())
+            {
+                service.DownloadArtifact(finalStatus.ResultZipId, downloadedFileStream);
+
+                Assert.NotEqual(0, downloadedFileStream.Length);
+            }
         }
     }
 }

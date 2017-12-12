@@ -55,6 +55,11 @@ namespace JobManagerFramework.RemoteExecution
             return result["hash"].Value<string>();
         }
 
+        public void DownloadArtifact(string hash, Stream fileWriter)
+        {
+            GetFile("/api/client/downloadArtifact/" + hash, fileWriter);
+        }
+
         public string CreateJob(string runCommand, string runZipId)
         {
             var result = PutObjectAsJson("/api/client/createJob", new RemoteJobRequest {runCommand = runCommand, runZipId = runZipId});
@@ -62,7 +67,7 @@ namespace JobManagerFramework.RemoteExecution
             return result["id"].Value<string>();
         }
 
-        private JObject GetJson(string path)
+        private void GetFile(string path, Stream fileWriter)
         {
             var client = new RestClient(BaseUri);
             client.Authenticator = new HttpBasicAuthenticator(Username, Password);
@@ -70,8 +75,33 @@ namespace JobManagerFramework.RemoteExecution
             var request = new RestRequest(path);
             request.Method = Method.GET;
 
+            request.ResponseWriter = responseStream => responseStream.CopyTo(fileWriter);
+
             var response = client.Execute(request);
-            return GetJsonFromResponse(response);
+
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            else if (response.StatusCode == HttpStatusCode.OK)
+            {
+                // Success response handled by ResponseWriter
+            }
+            else
+            {
+                var responseBody = response.Content;
+                var responseMessage = "Unknown error occurred";
+                try
+                {
+                    var jsonData = JObject.Parse(responseBody);
+                    responseMessage = jsonData["message"].Value<string>();
+                }
+                catch (Exception)
+                {
+                    // Failed to parse JSON or didn't contain "message" property
+                }
+                throw new RequestFailedException(response.StatusCode, responseMessage);
+            }
         }
 
         private T Get<T>(string path) where T: new()
