@@ -159,8 +159,8 @@ namespace CyPhy2CADPCBTest
 
             using (var process = Process.Start(processInfo))
             {
-                bool success = process.WaitForExit(10000);
-                Assert.True(success);
+                bool success = process.WaitForExit(30000);
+                Assert.True(success, "Timed out waiting for " + batchFileName + " to exit");
 
                 // Read the streams
                 string output = process.StandardOutput.ReadToEnd();
