@@ -107,7 +107,7 @@ For the tests to pass, OpenEMS must be installed to `C:\OpenEMS`
 Clone this repository to your disk.
 
 # Build
-1. Open Visual Studio Command Prompt (2015 or 2017) with ”Run as administrator”. (Do not use a Visual Studio x64 command prompt)
+1. Open Visual Studio Command Prompt (2015 or 2017) with "Run as administrator". (Do not use a Visual Studio x64 command prompt)
 2. From the root repository directory, run `build_both.cmd`. This may take 30 minutes to build. _(Warnings may be ignored, but there should be no errors.)_
 
 If you encounter errors, try to build once more. There may be some remaining race conditions in the build scripts.
