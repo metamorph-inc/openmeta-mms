@@ -11,10 +11,6 @@
 * Modelica
 * CyPhy Model
 
-#####Secondary
-* Android Software front end
-* SystemC
-
 ###Unit I: Simple Circuit 
 Draft done if struck through
 
@@ -43,7 +39,6 @@ Draft done if struck through
 ###Unit II: Advancing the Design (Possible Directions)
 * On/Off Switch
 * IC
-* Android Emulator
 * Software Control
 * Different LED sizes
 
