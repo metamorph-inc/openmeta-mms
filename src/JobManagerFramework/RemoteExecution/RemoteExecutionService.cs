@@ -60,9 +60,9 @@ namespace JobManagerFramework.RemoteExecution
             GetFile("/api/client/downloadArtifact/" + hash, fileWriter);
         }
 
-        public string CreateJob(string runCommand, string runZipId)
+        public string CreateJob(string runCommand, string workingDirectory, string runZipId)
         {
-            var result = PutObjectAsJson("/api/client/createJob", new RemoteJobRequest {runCommand = runCommand, runZipId = runZipId});
+            var result = PutObjectAsJson("/api/client/createJob", new RemoteJobRequest {runCommand = runCommand, workingDirectory = workingDirectory, runZipId = runZipId});
 
             return result["id"].Value<string>();
         }
@@ -235,6 +235,7 @@ namespace JobManagerFramework.RemoteExecution
         public class RemoteJob
         {
             public string RunCommand { get; set; }
+            public string WorkingDirectory { get; set; }
             public string RunZipId { get; set; }
             public string Owner { get; set; }
             public DateTime CreationTime { get; set; }
@@ -246,7 +247,7 @@ namespace JobManagerFramework.RemoteExecution
         private class RemoteJobRequest
         {
             public string runCommand { get; set; }
-            
+            public string workingDirectory { get; set; }
             public string runZipId { get; set; }
         }
     }

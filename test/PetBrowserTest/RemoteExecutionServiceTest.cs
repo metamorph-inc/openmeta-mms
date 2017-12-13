@@ -88,7 +88,7 @@ namespace PetBrowserTest
 
             Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
 
-            var jobId = service.CreateJob("dir", hash);
+            var jobId = service.CreateJob("dir", ".", hash);
             Assert.NotNull(jobId);
         }
 
@@ -110,7 +110,7 @@ namespace PetBrowserTest
 
             Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
 
-            var jobId = service.CreateJob("dir", hash);
+            var jobId = service.CreateJob("dir", ".", hash);
             Assert.NotNull(jobId);
 
             var jobComplete = false;

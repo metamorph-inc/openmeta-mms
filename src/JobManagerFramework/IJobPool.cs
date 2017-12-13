@@ -1,16 +1,11 @@
-﻿using System.Deployment.Internal;
+﻿using System;
+using System.Deployment.Internal;
 using JobManager;
 
 namespace JobManagerFramework
 {
-    public interface IJobPool
+    public interface IJobPool : IDisposable
     {
-        /// <summary>
-        /// Kills all currently running/pending tasks.
-        /// Releases all resources.
-        /// </summary>
-        void Dispose();
-
         void EnqueueJob(Job j);
         bool AbortJob(Job j);
 

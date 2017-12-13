@@ -818,6 +818,17 @@ namespace PETBrowser
                 ShowErrorDialog("Rename error", "An error occurred while renaming this PET.", ex.Message, ex.ToString());
             }
         }
+
+        private void RemoteExecutionMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Show dialog to configure remote execution
+            this.ViewModel.JobStore.SwitchToRemoteExecution("http://localhost:8080/", "test", "test");
+        }
+
+        private void LocalExecutionMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.JobStore.SwitchToLocalExecution();
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged

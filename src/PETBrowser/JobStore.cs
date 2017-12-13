@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 using JobManager;
 using JobManagerFramework;
 
@@ -91,9 +92,29 @@ namespace PETBrowser
             get { return TrackedJobs.All(model => model.AllowAbort != true); }
         }
 
+        private string _currentExecutionPoolText;
+
+        public string CurrentExecutionPoolText
+        {
+            get { return _currentExecutionPoolText; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _currentExecutionPoolText, value, () => CurrentExecutionPoolText); }
+        }
+
+        private bool _isLocalExecution;
+
+        public bool IsLocalExecution
+        {
+            get { return _isLocalExecution; }
+
+            set { PropertyChanged.ChangeAndNotify(ref _isLocalExecution, value, () => IsLocalExecution); }
+        }
+
         //Constructor MUST be called on UI thread (we capture the UI synchronization context for use later)
         public JobStore()
         {
+            IsLocalExecution = true;
+            CurrentExecutionPoolText = "Local Execution";
             PhysicalCoreCount = LocalPool.GetNumberOfPhysicalCores();
             SelectedThreadCount = Properties.Settings.Default.SelectedThreadCount; //TODO: load setting from a previous session?
             if (SelectedThreadCount == 0)
@@ -137,6 +158,23 @@ namespace PETBrowser
         public void AbortJob(Job j)
         {
             Manager.AbortJobs(new [] {j});
+        }
+
+        public void SwitchToRemoteExecution(string remoteServerUri, string username, string password)
+        {
+            Manager.SwitchToRemotePool(remoteServerUri, username, password);
+            IsLocalExecution = false;
+            CurrentExecutionPoolText = "Remote Execution on " + remoteServerUri;
+        }
+
+        public void SwitchToLocalExecution()
+        {
+            if (!IsLocalExecution)
+            {
+                Manager.SwitchToLocalPool(SelectedThreadCount);
+                IsLocalExecution = true;
+                CurrentExecutionPoolText = "Local Execution";
+            }
         }
 
         private void Manager_JobAdded(object sender, JobManagerFramework.JobManager.JobAddedEventArgs e)

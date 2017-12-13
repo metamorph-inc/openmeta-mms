@@ -91,6 +91,7 @@
     </Compile>
     <Compile Include="RemoteExecution\RemoteExecutionService.cs" />
     <Compile Include="RemoteExecution\WebHelpers.cs" />
+    <Compile Include="RemotePool.cs" />
     <Compile Include="SavedJobs1.Designer.cs">
       <DependentUpon>SavedJobs.edmx</DependentUpon>
       <AutoGen>True</AutoGen>
