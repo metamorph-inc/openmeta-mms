@@ -7,11 +7,6 @@ Follow these configuration instructions, in order, to set up your machine to bui
 ## Windows x64 (7 SP3, 8.1, 10 or Server equivalent)
 Install Windows updates until your version is current
 
-## Microsoft Visual Studio 2010 (any edition including Express)
-
-## Visual Studio Service Pack 1 (SP1)
-[download](http://www.microsoft.com/en-us/download/details.aspx?id=23691)
-
 ## Microsoft Visual Studio 
 The solution will build with Microsoft Visual Studio 2015 or 2017.
 
@@ -54,16 +49,6 @@ GME_x64 is the best-tested (but 32-bit should work too)
 
 ## UDM x64 3.2.14+
 [Download it here](http://repo.isis.vanderbilt.edu/UDM/3.2.14/)
-
-## Android SDK
-If you intend to develop Android apps on the compile machine, install the [Android SDK Bundle](http://developer.android.com/sdk/index.html). If you don't, then you will only need the [Stand-alone SDK Tools](http://developer.android.com/sdk/installing/index.html?pkg=tools).
-
-Install the **Android 4.3 (API 18)** package (at minimum).
-
-## Apache ANT
-Download ANT version **1.9.4** [here](http://archive.apache.org/dist/ant/binaries/apache-ant-1.9.4-bin.zip)
-
-Unzip ANT to `%APPDATA%\Local` such that its full path is `%APPDATA%\Local\apache-ant-1.9.4`
 
 ## Windows Updates
 Again, install Windows updates until everything is current. Restart your computer.
