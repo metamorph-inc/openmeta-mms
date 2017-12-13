@@ -107,13 +107,15 @@ For the tests to pass, OpenEMS must be installed to `C:\OpenEMS`
 Clone this repository to your disk.
 
 # Build
-1. Open Visual Studio Command Prompt (2015 or 2017) with ‚ÄùRun as administrator‚Äù. (Do not use a Visual Studio x64 command prompt)
+1. Open Visual Studio Command Prompt (2015 or 2017) with îRun as administratorî. (Do not use a Visual Studio x64 command prompt)
 2. From the root repository directory, run `build_both.cmd`. This may take 30 minutes to build. _(Warnings may be ignored, but there should be no errors.)_
 
 If you encounter errors, try to build once more. There may be some remaining race conditions in the build scripts.
 
 # Run
-For first-time users, [Walkthrough Documentation](http://www.metamorphsoftware.com/alpha/meta-walkthroughs.html) is a good introduction to using the tools. More advanced capabilities are explored in the [META Case Studies](http://www.metamorphsoftware.com/alpha/meta-case-studies.html).
+First-time users should read the [Documentation](http://docs.metamorphsoftware.com/doc/introduction/introduction.html) to learn about the tools.  
+Simple step-by-step tutorials can be found in [Tutorials section](http://docs.metamorphsoftware.com/doc/tutorials/tutorials.html).  
+More advanced capabilities are explored in the [Walkthroughs section](http://docs.metamorphsoftware.com/doc/walkthroughs/walkthroughs.html).  
 
 # Installer
 Run `bin\Python27\Scripts\python.exe deploy\build_msi.py` to build the installer.
