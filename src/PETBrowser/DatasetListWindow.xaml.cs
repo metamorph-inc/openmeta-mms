@@ -827,7 +827,7 @@ namespace PETBrowser
 
             if (result == true)
             {
-                this.ViewModel.JobStore.SwitchToRemoteExecution(remoteExecutionDialog.ViewModel.ServerName, remoteExecutionDialog.ViewModel.Username, remoteExecutionDialog.ViewModel.Password);
+                this.ViewModel.JobStore.SwitchToRemoteExecution(remoteExecutionDialog.ViewModel.ServerName, remoteExecutionDialog.ViewModel.Username, remoteExecutionDialog.Password);
             }
         }
 

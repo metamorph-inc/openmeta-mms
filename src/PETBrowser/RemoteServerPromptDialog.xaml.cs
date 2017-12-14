@@ -29,6 +29,11 @@ namespace PETBrowser
             set { DataContext = value; }
         }
 
+        public string Password
+        {
+            get { return PasswordField.Password; }
+        }
+
         public RemoteServerPromptDialog()
         {
             this.ViewModel = new RemoteServerPromptDialogViewModel();
@@ -59,7 +64,7 @@ namespace PETBrowser
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.VerifyServer();
+            ViewModel.VerifyServer(PasswordField.Password);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -109,7 +114,6 @@ namespace PETBrowser
         {
             _serverName = "";
             _username = "";
-            _password = "";
             _verifying = false;
         }
 
@@ -139,22 +143,9 @@ namespace PETBrowser
             }
         }
 
-        private string _password;
-
-        public string Password
-        {
-            get { return _password; }
-
-            set
-            {
-                PropertyChanged.ChangeAndNotify(ref _password, value, () => Password);
-                PropertyChanged.Notify(() => OkButtonEnabled);
-            }
-        }
-
         public bool OkButtonEnabled
         {
-            get { return !Verifying && ServerName.Length > 0 && Username.Length > 0 && Password.Length > 0; }
+            get { return !Verifying && ServerName.Length > 0 && Username.Length > 0; }
         }
 
         public bool _verifying;
@@ -170,12 +161,12 @@ namespace PETBrowser
             }
         }
 
-        public void VerifyServer()
+        public void VerifyServer(string password)
         {
             Verifying = true;
             var verifyServerTask = new Task<Exception>(() =>
             {
-                var remoteService = new RemoteExecutionService(ServerName, Username, Password);
+                var remoteService = new RemoteExecutionService(ServerName, Username, password);
 
                 try
                 {

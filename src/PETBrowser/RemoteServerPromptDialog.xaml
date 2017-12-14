@@ -24,7 +24,7 @@
         <Label Content="Username:" Margin="25,10,30,0"/>
         <TextBox Height="23" TextWrapping="Wrap" Margin="30,0,30,0" Width="300" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
         <Label Content="Password:" Margin="25,10,30,0"/>
-        <TextBox Height="23" TextWrapping="Wrap" Margin="30,0,30,20" Width="300" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+        <PasswordBox x:Name="PasswordField" Height="23" Margin="30,0,30,20" Width="300" />
         <StackPanel Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">
                 <Label Content="Verifying..." VerticalAlignment="Center" Visibility="{Binding Verifying, Converter={StaticResource BoolVisibilityConverter}}"></Label>
