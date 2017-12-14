@@ -822,7 +822,13 @@ namespace PETBrowser
         private void RemoteExecutionMenuItem_Click(object sender, RoutedEventArgs e)
         {
             //TODO: Show dialog to configure remote execution
-            this.ViewModel.JobStore.SwitchToRemoteExecution("http://localhost:8080/", "test", "test");
+            var remoteExecutionDialog = new RemoteServerPromptDialog { Owner = this };
+            bool? result = remoteExecutionDialog.ShowDialog();
+
+            if (result == true)
+            {
+                this.ViewModel.JobStore.SwitchToRemoteExecution(remoteExecutionDialog.ViewModel.ServerName, remoteExecutionDialog.ViewModel.Username, remoteExecutionDialog.ViewModel.Password);
+            }
         }
 
         private void LocalExecutionMenuItem_Click(object sender, RoutedEventArgs e)

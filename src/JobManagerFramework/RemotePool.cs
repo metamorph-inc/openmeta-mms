@@ -59,7 +59,8 @@ namespace JobManagerFramework
                 if (File.Exists(Path.Combine(j.WorkingDirectory, "testbench_manifest.json")))
                 {
                     // TODO: How do we want to specify which Python to use?
-                    runCommand = "\"" + META.VersionInfo.PythonVEnvExe + "\"" +
+                    //runCommand = "\"" + META.VersionInfo.PythonVEnvExe + "\"" +
+                    runCommand = "python" +
                                  " -m testbenchexecutor --detailed-errors testbench_manifest.json";
                 }
                 else

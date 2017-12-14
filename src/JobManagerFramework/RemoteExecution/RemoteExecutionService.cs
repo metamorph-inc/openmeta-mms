@@ -29,6 +29,21 @@ namespace JobManagerFramework.RemoteExecution
             Password = password;
         }
 
+        public bool PingServer()
+        {
+            var result = GetJson("/api/client/ping");
+
+            JToken token = null;
+            if (result.TryGetValue("result", out token) && token.Value<string>() == "ok")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public RemoteJob GetJobInfo(string jobId)
         {
             try
@@ -102,6 +117,18 @@ namespace JobManagerFramework.RemoteExecution
                 }
                 throw new RequestFailedException(response.StatusCode, responseMessage);
             }
+        }
+
+        private JObject GetJson(string path)
+        {
+            var client = new RestClient(BaseUri);
+            client.Authenticator = new HttpBasicAuthenticator(Username, Password);
+
+            var request = new RestRequest(path);
+            request.Method = Method.GET;
+
+            var response = client.Execute(request);
+            return GetJsonFromResponse(response);
         }
 
         private T Get<T>(string path) where T: new()
