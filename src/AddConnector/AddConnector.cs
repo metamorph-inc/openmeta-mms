@@ -218,14 +218,10 @@ namespace AddConnector
         /// <summary>
         /// Creates a connector for each selected port or pin.
         /// </summary>
-        /// <param name="project"></param>
-        /// <param name="currentobj"></param>
-        /// <param name="selectedobjs"></param>
-        /// <param name="startMode"></param>
-        /// <returns></returns>
-        private bool handleNoConnectorsSelected(MgaFCO currentobj, List<MgaFCO> portList)
+        /// <param name="currentobj">Component that holds the ports/pins to be wrapped.</param>
+        /// <param name="portList">List of all the selected ports/pins to be wrapped with connectors.</param>
+        private void handleNoConnectorsSelected(MgaFCO currentobj, List<MgaFCO> portList)
         {
-            bool rVal = false;
             int popCount = 0;
 
             // Get the component
@@ -248,7 +244,7 @@ namespace AddConnector
                 // of the SPICE model the SPICE model pin is on.
 
                 int pinX = 100;
-                int pinY = startY + 100 +  (125 * popCount++);
+                int pinY = startY + (125 * ++popCount);
 
                 // Position the newly-created connector
                 // GUI coordinates in all aspects.
@@ -269,22 +265,17 @@ namespace AddConnector
                 // Delete the original port or pin
                 portOrPin.DestroyObject();
             }
-
-            return rVal;
         }
 
         /// <summary>
         /// Adds selected ports or pins to the selected connector.
         /// </summary>
-        /// <param name="project"></param>
-        /// <param name="currentobj"></param>
-        /// <param name="selectedobjs"></param>
-        /// <param name="startMode"></param>
-        /// <returns></returns>
-        private bool handleOneConnectorSelected(MgaFCO currentobj, List<MgaFCO> portList, CyPhy.Connector conn)
+        /// <param name="currentobj">Component that holds the ports/pins to be wrapped.</param>
+        /// <param name="portList">List of all the selected ports to be moved into the selected connector.</param>
+        /// <param name="conn">Connector where the selected pins are to be moved.</param>
+        private void handleOneConnectorSelected(MgaFCO currentobj, List<MgaFCO> portList, CyPhy.Connector conn)
         {
-            bool rVal = false;
-            int popCount = 1;
+            int popCount = 0;
             int startY = getGreatestCurrentConnectorY(conn);
 
             // Get the component
@@ -296,7 +287,7 @@ namespace AddConnector
                 string popName = portOrPin.Name;
 
                 int pinX = 100;
-                int pinY = startY + (125 * popCount++);
+                int pinY = startY + (125 * ++popCount);
 
                 // Copy fields into a cloned port or pin
                 MgaFCO clonedPortOrPin = ClonePort(conn.Impl as MgaModel, portOrPin);
@@ -314,7 +305,6 @@ namespace AddConnector
                 portOrPin.DestroyObject();
             }
 
-            return rVal;
         }
 
         /// <summary>
@@ -410,7 +400,7 @@ namespace AddConnector
 
             // The current object is a component.
             // Check for selected objects.
-            if ((selectedobjs == null) || (selectedobjs.Count < 1))
+            if (selectedobjs.Count < 1)
             {
                 Logger.WriteError("At least one pin or port must be selected.");
                 return;
