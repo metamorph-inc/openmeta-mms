@@ -495,7 +495,7 @@ namespace AddConnector
                 Logger.WriteInfo("About to create connectors for the selected ports.");
                 handleNoConnectorsSelected(currentobj, portList);
             }
-            else if connectorList.Count == 1)
+            else if (connectorList.Count == 1)
             {
                 Logger.WriteInfo("About to move selected ports into the selected connector.");
                 handleOneConnectorSelected(currentobj, portList, connectorList[0]);
