@@ -304,7 +304,47 @@ namespace AddConnector
                 // Delete the original port or pin
                 portOrPin.DestroyObject();
             }
+        }
 
+        /// <summary>
+        /// Intelligently adds selected ports or pins to the selected connectors.
+        /// </summary>
+        /// <param name="currentobj">Component that holds the ports/pins to be wrapped.</param>
+        /// <param name="portList">List of all the selected ports to be moved into the selected connector.</param>
+        /// <param name="conn">Connector where the selected pins are to be moved.</param>
+        private void handleMultipleConnectorsSelected(MgaFCO currentobj, List<MgaFCO> portList, List<CyPhy.Connector> connList)
+        {
+            // TODO(tthomas): Add "intelligence"
+            int popCount = 0;
+            CyPhy.Connector conn = connList[0];
+            int startY = getGreatestCurrentConnectorY(conn);
+
+            // Get the component
+            var component = ISIS.GME.Dsml.CyPhyML.Classes.Component.Cast(currentobj);
+
+            foreach (MgaFCO portOrPin in portList)
+            {
+                // Get the name of the selected port or pin
+                string popName = portOrPin.Name;
+
+                int pinX = 100;
+                int pinY = startY + (125 * ++popCount);
+
+                // Copy fields into a cloned port or pin
+                MgaFCO clonedPortOrPin = ClonePort(conn.Impl as MgaModel, portOrPin);
+
+                // Name it
+                clonedPortOrPin.Name = popName;
+
+                // Set coordinates
+                setFCOPosition(clonedPortOrPin, pinX, pinY);
+
+                // Copy connections
+                copyPinConnections(component, portOrPin, clonedPortOrPin);
+
+                // Delete the original port or pin
+                portOrPin.DestroyObject();
+            }
         }
 
         /// <summary>
@@ -429,23 +469,22 @@ namespace AddConnector
                 }
             }
 
-            if (connectorList.Count > 1)
+            if (portList.Count == 0)
             {
-                Logger.WriteError("More than one connector was selected; at most one is allowed.");
+                Logger.WriteError("At least one pin/port object must be selected.");
                 return;
             }
 
             if (otherList.Count > 0)
             {
-                Logger.WriteError("AddConnector only expects pins/ports or connectors to be selected; but a {0} was also selected.",
-                    otherList[0].MetaRole.Name);
-                return;
-            }
-
-            if (portList.Count == 0)
-            {
-                Logger.WriteError("At least one pin/port object must be selected.");
-                return;
+                if (otherList.Count == 1)
+                {
+                    Logger.WriteWarning("AddConnector only operates on pins/ports and/or connectors; {0} was also selected but is being ignored.", otherList[0].MetaRole.Name);
+                }
+                else
+                {
+                    Logger.WriteWarning("AddConnector only operates on pins/ports and/or connectors; {0} objects of other types were also selected but are being ignored.", otherList.Count);
+                }
             }
 
             Logger.WriteInfo("Found {0} ports, and {1} connectors OK.", portList.Count, connectorList.Count);
@@ -456,10 +495,15 @@ namespace AddConnector
                 Logger.WriteInfo("About to create connectors for the selected ports.");
                 handleNoConnectorsSelected(currentobj, portList);
             }
-            else
+            else if connectorList.Count == 1)
             {
                 Logger.WriteInfo("About to move selected ports into the selected connector.");
                 handleOneConnectorSelected(currentobj, portList, connectorList[0]);
+            }
+            else
+            {
+                Logger.WriteInfo("About to run in \"intelligent\" mode.");
+                handleMultipleConnectorsSelected(currentobj, portList, connectorList);
             }
 
         }
