@@ -62,7 +62,7 @@ namespace AddConnector
         /// <param name="component">The CyPhy.Component that will be analyzed.</param>
         /// <returns>The largest current Y value used by the component.</returns>
         /// <see>Based on code in SchematicModelImport.cs</see>
-        public int getGreatestCurrentY(CyPhy.Component component)
+        public int GetGreatestCurrentY(CyPhy.Component component)
         {
             int rVal = 0;
             // The children of the component may be things like schematic models, ports, etc.
@@ -87,7 +87,7 @@ namespace AddConnector
             return rVal;
         }
 
-        public int getGreatestCurrentConnectorY(CyPhy.Connector conn)
+        public int GetGreatestCurrentConnectorY(CyPhy.Connector conn)
         {
             int rVal = 0;
             // The children of the component may be things like schematic models, ports, etc.
@@ -120,7 +120,7 @@ namespace AddConnector
         /// <param name="x">The X coordinate to be set. (0 on the left, increasing to the right)</param>
         /// <param name="y">The Y coordinate. (0 at the top, increasing down)</param>
 
-        public void setFCOPosition(MgaFCO myFCO, int x, int y)
+        public void SetFCOPosition(MgaFCO myFCO, int x, int y)
         {
             // Set the FCO's coordinates in all aspects.
             foreach (MgaPart item in (myFCO).Parts)
@@ -149,7 +149,7 @@ namespace AddConnector
         /// <param name="original">The original, possibly connected, port/pin.</param>
         /// <param name="duplicate">The port/pin that will receive the copied connections.</param>
         /// <remarks>The original port/pin should typically be deleted after this method.</remarks>
-        private void copyPinConnections(CyPhy.Component component, MgaFCO original, MgaFCO duplicate)
+        private void CopyPinConnections(CyPhy.Component component, MgaFCO original, MgaFCO duplicate)
         {
             // Get the ID of the original pin
             string originalPinId = original.ID;
@@ -220,13 +220,13 @@ namespace AddConnector
         /// </summary>
         /// <param name="currentobj">Component that holds the ports/pins to be wrapped.</param>
         /// <param name="portList">List of all the selected ports/pins to be wrapped with connectors.</param>
-        private void handleNoConnectorsSelected(MgaFCO currentobj, List<MgaFCO> portList)
+        private void HandleNoConnectorsSelected(MgaFCO currentobj, List<MgaFCO> portList)
         {
             int popCount = 0;
 
             // Get the component
             var component = ISIS.GME.Dsml.CyPhyML.Classes.Component.Cast(currentobj);
-            int startY = getGreatestCurrentY(component);
+            int startY = GetGreatestCurrentY(component);
 
             foreach (MgaFCO portOrPin in portList)
             {
@@ -248,7 +248,7 @@ namespace AddConnector
 
                 // Position the newly-created connector
                 // GUI coordinates in all aspects.
-                setFCOPosition(newConnector.Impl as MgaFCO, pinX, pinY);
+                SetFCOPosition(newConnector.Impl as MgaFCO, pinX, pinY);
 
                 // Copy fields into a cloned port or pin
                 MgaFCO clonedPortOrPin = ClonePort(newConnector.Impl as MgaModel, portOrPin);
@@ -257,10 +257,10 @@ namespace AddConnector
                 clonedPortOrPin.Name = popName;
 
                 // Set coordinates
-                setFCOPosition(clonedPortOrPin, 100, 100);
+                SetFCOPosition(clonedPortOrPin, 100, 100);
 
                 // Copy connections
-                copyPinConnections(component, portOrPin, clonedPortOrPin);
+                CopyPinConnections(component, portOrPin, clonedPortOrPin);
 
                 // Delete the original port or pin
                 portOrPin.DestroyObject();
@@ -273,10 +273,10 @@ namespace AddConnector
         /// <param name="currentobj">Component that holds the ports/pins to be wrapped.</param>
         /// <param name="portList">List of all the selected ports to be moved into the selected connector.</param>
         /// <param name="conn">Connector where the selected pins are to be moved.</param>
-        private void handleOneConnectorSelected(MgaFCO currentobj, List<MgaFCO> portList, CyPhy.Connector conn)
+        private void HandleOneConnectorSelected(MgaFCO currentobj, List<MgaFCO> portList, CyPhy.Connector conn)
         {
             int popCount = 0;
-            int startY = getGreatestCurrentConnectorY(conn);
+            int startY = GetGreatestCurrentConnectorY(conn);
 
             // Get the component
             var component = ISIS.GME.Dsml.CyPhyML.Classes.Component.Cast(currentobj);
@@ -296,10 +296,10 @@ namespace AddConnector
                 clonedPortOrPin.Name = popName;
 
                 // Set coordinates
-                setFCOPosition(clonedPortOrPin, pinX, pinY);
+                SetFCOPosition(clonedPortOrPin, pinX, pinY);
 
                 // Copy connections
-                copyPinConnections(component, portOrPin, clonedPortOrPin);
+                CopyPinConnections(component, portOrPin, clonedPortOrPin);
 
                 // Delete the original port or pin
                 portOrPin.DestroyObject();
@@ -312,12 +312,12 @@ namespace AddConnector
         /// <param name="currentobj">Component that holds the ports/pins to be wrapped.</param>
         /// <param name="portList">List of all the selected ports to be moved into the selected connector.</param>
         /// <param name="conn">Connector where the selected pins are to be moved.</param>
-        private void handleMultipleConnectorsSelected(MgaFCO currentobj, List<MgaFCO> portList, List<CyPhy.Connector> connList)
+        private void HandleMultipleConnectorsSelected(MgaFCO currentobj, List<MgaFCO> portList, List<CyPhy.Connector> connList)
         {
             // TODO(tthomas): Add "intelligence"
             int popCount = 0;
             CyPhy.Connector conn = connList[0];
-            int startY = getGreatestCurrentConnectorY(conn);
+            int startY = GetGreatestCurrentConnectorY(conn);
 
             // Get the component
             var component = ISIS.GME.Dsml.CyPhyML.Classes.Component.Cast(currentobj);
@@ -337,10 +337,10 @@ namespace AddConnector
                 clonedPortOrPin.Name = popName;
 
                 // Set coordinates
-                setFCOPosition(clonedPortOrPin, pinX, pinY);
+                SetFCOPosition(clonedPortOrPin, pinX, pinY);
 
                 // Copy connections
-                copyPinConnections(component, portOrPin, clonedPortOrPin);
+                CopyPinConnections(component, portOrPin, clonedPortOrPin);
 
                 // Delete the original port or pin
                 portOrPin.DestroyObject();
@@ -352,7 +352,7 @@ namespace AddConnector
         /// </summary>
         /// <param name="selectedObj"></param>
         /// <returns></returns>
-        private bool isPort(MgaFCO selectedObj)
+        private bool IsPort(MgaFCO selectedObj)
         {
             bool rVal = false;
             if( selectedObj != null )
@@ -458,7 +458,7 @@ namespace AddConnector
                 {
                     connectorList.Add(CyPhyClasses.Connector.Cast(selectedObj));
                 }
-                else if (isPort(selectedObj))
+                else if (IsPort(selectedObj))
                 {
                     Logger.WriteDebug("Found port {0}.", selectedObj.Name);
                     portList.Add(selectedObj);
@@ -493,17 +493,17 @@ namespace AddConnector
             if (connectorList.Count == 0)
             {
                 Logger.WriteInfo("About to create connectors for the selected ports.");
-                handleNoConnectorsSelected(currentobj, portList);
+                HandleNoConnectorsSelected(currentobj, portList);
             }
             else if (connectorList.Count == 1)
             {
                 Logger.WriteInfo("About to move selected ports into the selected connector.");
-                handleOneConnectorSelected(currentobj, portList, connectorList[0]);
+                HandleOneConnectorSelected(currentobj, portList, connectorList[0]);
             }
             else
             {
                 Logger.WriteInfo("About to run in \"intelligent\" mode.");
-                handleMultipleConnectorsSelected(currentobj, portList, connectorList);
+                HandleMultipleConnectorsSelected(currentobj, portList, connectorList);
             }
 
         }
