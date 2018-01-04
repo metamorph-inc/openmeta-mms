@@ -40,7 +40,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GME, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="GME.MGA, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -57,13 +57,13 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="GME.MGA.Meta, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="GME.MGA.Parser, Version=1.1.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="GME.Util, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -83,10 +83,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\CommonFiles\MgaUtils.cs">
-      <Link>MgaUtils.cs</Link>
-    </Compile>
-    <Compile Include="InterpreterFixtureBaseClass.cs" />
     <Compile Include="UtilitiesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -104,6 +100,16 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AddConnector\AddConnector.csproj">
+      <Project>{32050562-6571-4378-b314-47b96f65d34c}</Project>
+      <Name>AddConnector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SchematicUnitTests\SchematicUnitTests.csproj">
+      <Project>{f446635b-63b9-4c30-b286-8095b43ef06a}</Project>
+      <Name>SchematicUnitTests</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -12,7 +12,7 @@ using System.IO;
 
 namespace UtilitiesTest
 {
-    public class UtilitiesTestFixture : InterpreterFixtureBaseClass
+    public class UtilitiesTestFixture : SchematicUnitTests.InterpreterFixtureBaseClass
     {
         public override String path_XME
         {
@@ -35,30 +35,34 @@ namespace UtilitiesTest
         {
             fixture = data;
         }
-
-        /*public override MgaProject project
-        {
-            get
-            {
-                return fixture.proj;
-            }
-        }
-
-        public override String TestPath
-        {
-            get
-            {
-                return fixture.path_Test;
-            }
-        }*/
         #endregion
 
         #region AddConnector Tests
 
         [Fact]
-        private void TestSinglePin()
+        private void TestSinglePinNoConnector()
         {
-            
+            fixture.proj.BeginTransactionInNewTerr();
+
+            try
+            {
+                var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component"];
+                Assert.Null((MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component/@Pin|kind=Connector"]);
+                var pin = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component/@Pin|kind=SchematicModelPort"];
+                var interpreter = new AddConnector.AddConnectorInterpreter();
+                var SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
+                SelectedFCOs.Append(pin);
+
+                interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
+
+                var connector = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component/@Pin|kind=Connector"];
+                Assert.Equal(connector.Name, "Pin");
+                Assert.Null((MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component/@Pin|kind=SchematicModelPort"]);
+            }
+            finally
+            {
+                fixture.proj.AbortTransaction();
+            }
         }
         #endregion
     }

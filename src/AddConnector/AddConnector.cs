@@ -389,6 +389,7 @@ namespace AddConnector
         [ComVisible(false)]
         public void Main(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, ComponentStartMode startMode)
         {
+            GMEConsole = GMEConsole.CreateFromProject(project);
             GMEConsole.Out.WriteLine("Running the AddConnector interpreter...");
 
             Boolean ownLogger = false;
@@ -523,7 +524,6 @@ namespace AddConnector
 
             try
             {
-                GMEConsole = GMEConsole.CreateFromProject(project);
                 MgaGateway = new MgaGateway(project);
 
                 MgaGateway.PerformInTransaction(delegate
