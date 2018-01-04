@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{718A593D-B7D6-44B4-A2C9-FDBEFC97D7F0}" cdate="Wed Jan 03 16:00:25 2018" mdate="Wed Jan 03 16:00:25 2018" version="" metaguid="{B9E99D40-79CD-08E1-3CCC-6B7E79506914}" metaversion="14.13-t30" metaname="CyPhyML">
+<project guid="{BFD172BE-5788-4D7C-901C-BA6D553E89FB}" cdate="Wed Jan 03 16:00:25 2018" mdate="Wed Jan 03 16:00:25 2018" version="" metaguid="{B9E99D40-79CD-08E1-3CCC-6B7E79506914}" metaversion="14.13-t30" metaname="CyPhyML">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
@@ -23537,10 +23537,10 @@
 				<value>131594834740000000</value>
 			</regnode>
 		</folder>
-		<folder id="id-006a-00000018" relid="0x6" childrelidcntr="0x1" kind="Components" guid="{f88c5ba9-2889-49a4-be3f-ee87539a917f}">
+		<folder id="id-006a-00000018" relid="0x6" childrelidcntr="0x6" kind="Components" guid="{f88c5ba9-2889-49a4-be3f-ee87539a917f}">
 			<name>Components</name>
 			<model id="id-0065-00000260" kind="Component" guid="{cee7d8e9-9bff-4819-8a1a-f5cc765464bd}" relid="0x1" childrelidcntr="0x1">
-				<name>Component</name>
+				<name>SinglePin</name>
 				<attribute kind="AVMID">
 					<value>56cd2c31-ba11-49b4-8c6e-204fac631cdf</value>
 				</attribute>
@@ -23622,6 +23622,2501 @@
 						<value>0</value>
 					</attribute>
 				</atom>
+			</model>
+			<model id="id-0065-00000261" kind="Component" guid="{8ba8fd66-4d98-4148-af2f-56b449e54209}" relid="0x2" childrelidcntr="0x5">
+				<name>FivePins</name>
+				<attribute kind="AVMID">
+					<value>8d60d036-1544-4b61-9f7c-b68b0ee3cabd</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>1</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>8ba8fd66-4d98-4148-af2f-56b449e54209</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>components/ye3ja0ff/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<atom id="id-0066-000000e6" kind="SchematicModelPort" role="SchematicModelPort" guid="{99d48dde-8884-4f66-beda-b4cae2460325}" relid="0x1">
+					<name>Pin_1</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-99d48dde-8884-4f66-beda-b4cae2460325</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-000000e7" kind="SchematicModelPort" role="SchematicModelPort" guid="{d81d174f-e16b-43a5-a3f5-c0c339f8e838}" relid="0x2">
+					<name>Pin_2</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,182</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-d81d174f-e16b-43a5-a3f5-c0c339f8e838</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-000000e8" kind="SchematicModelPort" role="SchematicModelPort" guid="{e0f0ee32-a73d-462b-af02-ff5b657d2929}" relid="0x3">
+					<name>Pin_3</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,252</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-e0f0ee32-a73d-462b-af02-ff5b657d2929</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-000000e9" kind="SchematicModelPort" role="SchematicModelPort" guid="{371ea2ae-ba67-474c-ae8f-08ad232b390a}" relid="0x4">
+					<name>Pin_4</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,322</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-371ea2ae-ba67-474c-ae8f-08ad232b390a</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-000000ea" kind="SchematicModelPort" role="SchematicModelPort" guid="{cc65a0a2-5433-47b2-a267-3ffa173357c6}" relid="0x5">
+					<name>Pin_5</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,392</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-cc65a0a2-5433-47b2-a267-3ffa173357c6</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+			</model>
+			<model id="id-0065-0000026d" kind="Component" guid="{88ab5c07-93e3-4426-a011-695da84f99c7}" relid="0x3" childrelidcntr="0x2">
+				<name>TwoConnectors</name>
+				<attribute kind="AVMID">
+					<value>957c8499-5f47-47e2-b21d-e5995a4e210e</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>2</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>88ab5c07-93e3-4426-a011-695da84f99c7</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>components/1ajjtuar/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<model id="id-0065-0000026e" kind="Connector" role="Connector" guid="{4f6f68dc-d8dd-4438-b95a-f6e34de807ce}" relid="0x1" childrelidcntr="0x1">
+					<name>SDA</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="AbstractPortAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>105,98</value>
+							</regnode>
+						</regnode>
+						<regnode name="BondGraphAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="ConnectorAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="ModelicaAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="RFAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-4f6f68dc-d8dd-4438-b95a-f6e34de807ce</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-000000f6" kind="SchematicModelPort" role="SchematicModelPort" guid="{01d56a13-9743-4010-9844-872485bb02d4}" relid="0x1">
+						<name>SDA</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>266,140</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>266,140</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-01d56a13-9743-4010-9844-872485bb02d4</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<model id="id-0065-0000026f" kind="Connector" role="Connector" guid="{f1e15a9d-c151-4392-804b-78217b553ecc}" relid="0x2" childrelidcntr="0x1">
+					<name>SCK</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="AbstractPortAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>105,203</value>
+							</regnode>
+						</regnode>
+						<regnode name="BondGraphAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="ConnectorAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="ModelicaAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="RFAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-f1e15a9d-c151-4392-804b-78217b553ecc</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-000000f7" kind="SchematicModelPort" role="SchematicModelPort" guid="{3525f785-749e-4b75-bb86-ad22a78a6c53}" relid="0x1">
+						<name>SCK</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>266,140</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>266,140</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-3525f785-749e-4b75-bb86-ad22a78a6c53</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+			</model>
+			<model id="id-0065-00000270" kind="Component" guid="{92b8814a-f068-4504-9726-a074e3583719}" relid="0x4" childrelidcntr="0x4">
+				<name>ConnectorWithPins</name>
+				<attribute kind="AVMID">
+					<value>13c446e5-ab79-4c65-bfbc-ba16f75011a3</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>3</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>92b8814a-f068-4504-9726-a074e3583719</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>components/p0qejkil/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<model id="id-0065-00000271" kind="Connector" role="Connector" guid="{9e0e4047-a115-4475-bc1e-5e77d504dbba}" relid="0x1" childrelidcntr="0x1">
+					<name>FourPinBus</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="AbstractPortAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>217,63</value>
+							</regnode>
+						</regnode>
+						<regnode name="BondGraphAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="ConnectorAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="ModelicaAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="RFAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>280,126</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-9e0e4047-a115-4475-bc1e-5e77d504dbba</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-000000f8" kind="SchematicModelPort" role="SchematicModelPort" guid="{1d3b61cc-2bed-47d1-92e4-b9220650c5a8}" relid="0x1">
+						<name>Pin_1</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>266,140</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>266,140</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-1d3b61cc-2bed-47d1-92e4-b9220650c5a8</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<atom id="id-0066-000000f9" kind="SchematicModelPort" role="SchematicModelPort" guid="{7dcabb32-0392-45fc-901b-bdf870a7cbab}" relid="0x2">
+					<name>Pin_2</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,182</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-7dcabb32-0392-45fc-901b-bdf870a7cbab</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-000000fa" kind="SchematicModelPort" role="SchematicModelPort" guid="{6feaffe3-49eb-4ad8-9062-ce106f4a85ed}" relid="0x3">
+					<name>Pin_3</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,252</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-6feaffe3-49eb-4ad8-9062-ce106f4a85ed</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-000000fb" kind="SchematicModelPort" role="SchematicModelPort" guid="{a4e3414f-1625-427a-97b1-f23ac2c1d7de}" relid="0x4">
+					<name>Pin_4</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,322</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-a4e3414f-1625-427a-97b1-f23ac2c1d7de</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+			</model>
+			<model id="id-0065-00000272" kind="Component" guid="{e50ff000-d70e-4344-8de9-aee89cac63db}" relid="0x5" childrelidcntr="0xc">
+				<name>EagleImport</name>
+				<attribute kind="AVMID">
+					<value>764cb141-a610-44dd-9f13-10d7c0ac8d58</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>4</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>e50ff000-d70e-4344-8de9-aee89cac63db</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>components/jsp1haqt/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<model id="id-0065-00000273" kind="EDAModel" role="EDAModel" guid="{ba426af8-e8ee-4acf-afc8-be002b5119e6}" relid="0x1" childrelidcntr="0x4">
+					<name>EDAModel</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>189,147</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>315,147</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Author" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Device" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DeviceSet" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="FilePathWithinResource" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="HasMultiLayerFootprint" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Library" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Notes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Package" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-000000fc" kind="SchematicModelPort" role="SchematicModelPort" guid="{d41c286f-306c-4101-90ac-f6fe80e86ba6}" relid="0x1">
+						<name>VDD</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>84,112</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>203,112</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-d41c286f-306c-4101-90ac-f6fe80e86ba6</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+					<atom id="id-0066-000000fd" kind="SchematicModelPort" role="SchematicModelPort" guid="{4b4c9565-2147-475e-b4b0-5b6fb40aa590}" relid="0x2">
+						<name>GND</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>84,189</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>203,196</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-4b4c9565-2147-475e-b4b0-5b6fb40aa590</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+					<atom id="id-0066-000000fe" kind="SchematicModelPort" role="SchematicModelPort" guid="{fc1d762d-71cc-4089-9271-06daffa1d17c}" relid="0x3">
+						<name>SDA</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>392,112</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>203,112</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-fc1d762d-71cc-4089-9271-06daffa1d17c</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+					<atom id="id-0066-000000ff" kind="SchematicModelPort" role="SchematicModelPort" guid="{4d198781-f525-4d15-9651-00250d51ef4b}" relid="0x4">
+						<name>SCL</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>392,189</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>203,196</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-4d198781-f525-4d15-9651-00250d51ef4b</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<atom id="id-0066-00000100" kind="SchematicModelPort" role="SchematicModelPort" guid="{999e0dd3-ca02-4e44-8810-a424ad124968}" relid="0x2">
+					<name>GND</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>84,189</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>203,196</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-999e0dd3-ca02-4e44-8810-a424ad124968</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000101" kind="SchematicModelPort" role="SchematicModelPort" guid="{366062b1-f899-4dc6-9126-40db0dbf7728}" relid="0x3">
+					<name>SCL</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>392,189</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>203,196</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-366062b1-f899-4dc6-9126-40db0dbf7728</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000102" kind="SchematicModelPort" role="SchematicModelPort" guid="{319b097f-1b0e-4659-96f1-558d26823c6c}" relid="0x4">
+					<name>SDA</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>392,112</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>203,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-319b097f-1b0e-4659-96f1-558d26823c6c</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000103" kind="SchematicModelPort" role="SchematicModelPort" guid="{60063ad4-3816-4404-9732-26272cec928c}" relid="0x5">
+					<name>VDD</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>84,112</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>203,112</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-60063ad4-3816-4404-9732-26272cec928c</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000104" kind="Resource" role="Resource" guid="{782ca1c1-74df-44d0-a762-db777d8ae5b2}" relid="0xa">
+					<name>Resource</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>217,49</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Hash" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-782ca1c1-74df-44d0-a762-db777d8ae5b2</value>
+					</attribute>
+					<attribute kind="Notes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Path" status="meta">
+						<value></value>
+					</attribute>
+				</atom>
+				<connection id="id-0068-0000002d" kind="PortComposition" role="PortComposition" guid="{32e550d2-3118-404b-9114-699165c60f54}" relid="0x6">
+					<name>PortComposition</name>
+					<connpoint role="src" target="id-0066-000000fc"/>
+					<connpoint role="dst" target="id-0066-00000103"/>
+				</connection>
+				<connection id="id-0068-0000002e" kind="PortComposition" role="PortComposition" guid="{151f579b-d411-4134-9945-58652578c28f}" relid="0x7">
+					<name>PortComposition</name>
+					<connpoint role="src" target="id-0066-000000fd"/>
+					<connpoint role="dst" target="id-0066-00000100"/>
+				</connection>
+				<connection id="id-0068-0000002f" kind="PortComposition" role="PortComposition" guid="{51105377-7d1e-47ec-8a16-521fe4086310}" relid="0x8">
+					<name>PortComposition</name>
+					<connpoint role="src" target="id-0066-000000fe"/>
+					<connpoint role="dst" target="id-0066-00000102"/>
+				</connection>
+				<connection id="id-0068-00000030" kind="PortComposition" role="PortComposition" guid="{4b3a2af9-fa59-4379-9b49-aaeed6cec649}" relid="0x9">
+					<name>PortComposition</name>
+					<connpoint role="src" target="id-0066-000000ff"/>
+					<connpoint role="dst" target="id-0066-00000101"/>
+				</connection>
+				<connection id="id-0068-00000032" kind="UsesResource" role="UsesResource" guid="{2dbf7c40-d3d2-43d9-8ed7-e97fa4640ad2}" relid="0xc">
+					<name>UsesResource</name>
+					<connpoint role="src" target="id-0065-00000273"/>
+					<connpoint role="dst" target="id-0066-00000104"/>
+				</connection>
+			</model>
+			<model id="id-0065-0000027b" kind="Component" guid="{81b406ad-2ef0-4033-8b8f-1d92d3b895c5}" relid="0x6" childrelidcntr="0x1d">
+				<name>Merge</name>
+				<attribute kind="AVMID">
+					<value>5336ba16-89f8-42aa-b8e9-a16376a098db</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>1</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>81b406ad-2ef0-4033-8b8f-1d92d3b895c5</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>./components/t3kvenvq/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<model id="id-0065-0000027c" kind="EDAModel" role="EDAModel" guid="{15258f67-c50f-477f-b217-1124fc809507}" relid="0x1" childrelidcntr="0x4">
+					<name>EDAModel</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>231,154</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>315,147</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Author" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Device" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DeviceSet" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="FilePathWithinResource" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="HasMultiLayerFootprint" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Library" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Notes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Package" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-00000112" kind="SchematicModelPort" role="SchematicModelPort" guid="{6165b04a-3667-4f39-a11a-d3a81521cae3}" relid="0x4">
+						<name>SCL</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>392,189</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>203,196</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-6165b04a-3667-4f39-a11a-d3a81521cae3</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+					<atom id="id-0066-00000113" kind="SchematicModelPort" role="SchematicModelPort" guid="{548d4122-cd46-4908-b6b6-d9060ef613b6}" relid="0x3">
+						<name>SDA</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>392,112</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>203,112</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-548d4122-cd46-4908-b6b6-d9060ef613b6</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+					<atom id="id-0066-00000114" kind="SchematicModelPort" role="SchematicModelPort" guid="{a3204485-c40a-4043-9bd1-313dde2a0ab9}" relid="0x2">
+						<name>GND</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>84,189</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>203,196</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-a3204485-c40a-4043-9bd1-313dde2a0ab9</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+					<atom id="id-0066-00000115" kind="SchematicModelPort" role="SchematicModelPort" guid="{6ea59c98-a95c-4f8d-b84c-9f6fa9a1b603}" relid="0x1">
+						<name>VDD</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>84,112</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>203,112</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-6ea59c98-a95c-4f8d-b84c-9f6fa9a1b603</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<model id="id-0065-0000027d" kind="Connector" role="Connector" guid="{2a94e118-6977-4d0d-95e8-f6b02d6bf43e}" relid="0xd" childrelidcntr="0x1">
+					<name>GND</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="AbstractPortAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>63,91</value>
+							</regnode>
+						</regnode>
+						<regnode name="BondGraphAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="ConnectorAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="ModelicaAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="RFAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,321</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-2a94e118-6977-4d0d-95e8-f6b02d6bf43e</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-0000011b" kind="SchematicModelPort" role="SchematicModelPort" guid="{e1d2f1d9-271e-4eea-a456-53d34890a025}" relid="0x1">
+						<name>GND</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>100,100</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>100,100</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-e1d2f1d9-271e-4eea-a456-53d34890a025</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<model id="id-0065-0000027e" kind="Connector" role="Connector" guid="{3f12ec0e-0543-4a0c-936a-f08a8db533ef}" relid="0xf" childrelidcntr="0x1">
+					<name>VDD</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="AbstractPortAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>63,217</value>
+							</regnode>
+						</regnode>
+						<regnode name="BondGraphAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="ConnectorAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="ModelicaAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="RFAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,446</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-3f12ec0e-0543-4a0c-936a-f08a8db533ef</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-0000011c" kind="SchematicModelPort" role="SchematicModelPort" guid="{6fed9937-adf0-4013-93c1-f52371e571dc}" relid="0x1">
+						<name>VDD</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>100,100</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>100,100</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-6fed9937-adf0-4013-93c1-f52371e571dc</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<model id="id-0065-0000027f" kind="Connector" role="Connector" guid="{8bee8dae-4256-41c9-96b2-cad681ed666a}" relid="0x11" childrelidcntr="0x1">
+					<name>SCL</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="AbstractPortAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>434,91</value>
+							</regnode>
+						</regnode>
+						<regnode name="BondGraphAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="ConnectorAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="ModelicaAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="RFAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,571</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-8bee8dae-4256-41c9-96b2-cad681ed666a</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-0000011d" kind="SchematicModelPort" role="SchematicModelPort" guid="{e9105d74-f7bc-48a0-a89a-32d96c8bc658}" relid="0x1">
+						<name>SCL</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>100,100</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>100,100</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-e9105d74-f7bc-48a0-a89a-32d96c8bc658</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<model id="id-0065-00000280" kind="Connector" role="Connector" guid="{de155855-9b8e-4e59-90af-fc09f59689a9}" relid="0x13" childrelidcntr="0x1">
+					<name>SDA</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="AbstractPortAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>434,217</value>
+							</regnode>
+						</regnode>
+						<regnode name="BondGraphAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="ConnectorAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="ModelicaAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="RFAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>100,696</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-de155855-9b8e-4e59-90af-fc09f59689a9</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-0000011e" kind="SchematicModelPort" role="SchematicModelPort" guid="{cf7a96a8-cf69-45ed-8308-c009c49b7032}" relid="0x1">
+						<name>SDA</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>100,100</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>100,100</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-cf7a96a8-cf69-45ed-8308-c009c49b7032</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<model id="id-0065-00000281" kind="SPICEModel" role="SPICEModel" guid="{c97b72ee-0232-4b37-b5f6-364cfc067a26}" relid="0x15" childrelidcntr="0x3">
+					<name>SPICEModel</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>217,336</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>245,357</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Author" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Class" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="FilePathWithinResource" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Notes" status="meta">
+						<value></value>
+					</attribute>
+					<atom id="id-0066-0000011f" kind="SchematicModelPort" role="SchematicModelPort" guid="{8be40c08-fc03-4144-97d0-c251652e9faa}" relid="0x1">
+						<name>VDD</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>63,385</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>182,154</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-8be40c08-fc03-4144-97d0-c251652e9faa</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+					<atom id="id-0066-00000120" kind="SchematicModelPort" role="SchematicModelPort" guid="{f696ed0f-a2ec-4947-b193-4d4249eb5503}" relid="0x2">
+						<name>GND</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>63,483</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>336,154</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-f696ed0f-a2ec-4947-b193-4d4249eb5503</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+					<atom id="id-0066-00000121" kind="SchematicModelPort" role="SchematicModelPort" guid="{e2568687-e22c-4a95-88c6-afad53cc3753}" relid="0x3">
+						<name>SIG</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>427,385</value>
+								</regnode>
+							</regnode>
+							<regnode name="SchematicAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>238,273</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Definition" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="DefinitionNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDAGate" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationX" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolLocationY" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="EDASymbolRotation" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>id-e2568687-e22c-4a95-88c6-afad53cc3753</value>
+						</attribute>
+						<attribute kind="InstanceNotes" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="SPICEPortNumber" status="meta">
+							<value>0</value>
+						</attribute>
+					</atom>
+				</model>
+				<atom id="id-0066-00000116" kind="Resource" role="Resource" guid="{2dbdc609-155c-4119-81e7-d022ee832b6e}" relid="0xa">
+					<name>Resource</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,49</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Hash" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-2dbdc609-155c-4119-81e7-d022ee832b6e</value>
+					</attribute>
+					<attribute kind="Notes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Path" status="meta">
+						<value></value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000124" kind="SchematicModelPort" role="SchematicModelPort" guid="{b4009bab-219f-45ca-a6d1-93a5a7b2d55b}" relid="0x18">
+					<name>VDD</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>63,385</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>182,154</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-b4009bab-219f-45ca-a6d1-93a5a7b2d55b</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000125" kind="SchematicModelPort" role="SchematicModelPort" guid="{b7daf6b5-fac6-4c25-aac7-9d3273fbd4b9}" relid="0x19">
+					<name>SIG</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>427,385</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>238,273</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-b7daf6b5-fac6-4c25-aac7-9d3273fbd4b9</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<atom id="id-0066-00000126" kind="SchematicModelPort" role="SchematicModelPort" guid="{50485431-bbfd-4b79-92fd-c8fb6e111285}" relid="0x1a">
+					<name>GND</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>63,483</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>336,154</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDAGate" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationX" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolLocationY" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="EDASymbolRotation" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-50485431-bbfd-4b79-92fd-c8fb6e111285</value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="SPICEPortNumber" status="meta">
+						<value>0</value>
+					</attribute>
+				</atom>
+				<connection id="id-0068-00000037" kind="UsesResource" role="UsesResource" guid="{52979c56-7940-4fee-9d22-5f4d85df153a}" relid="0xc">
+					<name>UsesResource</name>
+					<connpoint role="src" target="id-0065-0000027c"/>
+					<connpoint role="dst" target="id-0066-00000116"/>
+				</connection>
+				<connection id="id-0068-0000003c" kind="PortComposition" role="PortComposition" guid="{9c48c029-1dfb-40b6-abd2-c7debd7aad4e}" relid="0xe">
+					<name></name>
+					<connpoint role="src" target="id-0066-00000114"/>
+					<connpoint role="dst" target="id-0066-0000011b"/>
+				</connection>
+				<connection id="id-0068-0000003d" kind="PortComposition" role="PortComposition" guid="{ef80b393-2e5e-4784-8f06-6662ebacc3b1}" relid="0x10">
+					<name></name>
+					<connpoint role="src" target="id-0066-00000115"/>
+					<connpoint role="dst" target="id-0066-0000011c"/>
+				</connection>
+				<connection id="id-0068-0000003e" kind="PortComposition" role="PortComposition" guid="{7c3caea2-1560-4223-ba83-d3b010375784}" relid="0x12">
+					<name></name>
+					<connpoint role="src" target="id-0066-00000112"/>
+					<connpoint role="dst" target="id-0066-0000011d"/>
+				</connection>
+				<connection id="id-0068-0000003f" kind="PortComposition" role="PortComposition" guid="{8fe26936-0c35-4bf4-882c-60b2f59b941b}" relid="0x14">
+					<name></name>
+					<connpoint role="src" target="id-0066-00000113"/>
+					<connpoint role="dst" target="id-0066-0000011e"/>
+				</connection>
+				<connection id="id-0068-00000040" kind="PortComposition" role="PortComposition" guid="{b8ea3bd8-018d-49a0-8f87-ef36dcd21f97}" relid="0x1b">
+					<name>PortComposition</name>
+					<connpoint role="dst" target="id-0066-0000011f"/>
+					<connpoint role="src" target="id-0066-00000124"/>
+				</connection>
+				<connection id="id-0068-00000041" kind="PortComposition" role="PortComposition" guid="{710873a8-1197-4d50-9217-6355262d70ac}" relid="0x1c">
+					<name>PortComposition</name>
+					<connpoint role="dst" target="id-0066-00000120"/>
+					<connpoint role="src" target="id-0066-00000126"/>
+				</connection>
+				<connection id="id-0068-00000042" kind="PortComposition" role="PortComposition" guid="{02e3e1ab-b088-4cd9-824e-d388dc2e4142}" relid="0x1d">
+					<name>PortComposition</name>
+					<connpoint role="dst" target="id-0066-00000121"/>
+					<connpoint role="src" target="id-0066-00000125"/>
+				</connection>
 			</model>
 		</folder>
 	</folder>

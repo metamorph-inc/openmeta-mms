@@ -46,18 +46,185 @@ namespace UtilitiesTest
 
             try
             {
-                var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component"];
-                Assert.Null((MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component/@Pin|kind=Connector"]);
-                var pin = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component/@Pin|kind=SchematicModelPort"];
+                var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@SinglePin"];
+                Assert.Null((MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@SinglePin/@Pin|kind=Connector"]);
+                var pin = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@SinglePin/@Pin|kind=SchematicModelPort"];
                 var interpreter = new AddConnector.AddConnectorInterpreter();
                 var SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
                 SelectedFCOs.Append(pin);
 
                 interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
 
-                var connector = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component/@Pin|kind=Connector"];
-                Assert.Equal(connector.Name, "Pin");
-                Assert.Null((MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Component/@Pin|kind=SchematicModelPort"]);
+                var connector = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@SinglePin/@Pin|kind=Connector"];
+                Assert.Equal("Pin", connector.Name);
+                Assert.Null((MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@SinglePin/@Pin|kind=SchematicModelPort"]);
+                Assert.Equal(1, component.ChildObjects.Count);
+            }
+            finally
+            {
+                fixture.proj.AbortTransaction();
+            }
+        }
+
+        [Fact]
+        private void TestFivePinsNoConnector()
+        {
+            fixture.proj.BeginTransactionInNewTerr();
+
+            try
+            {
+                var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@FivePins"];
+                var SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    Assert.Equal("SchematicModelPort", child.Meta.Name);
+                    SelectedFCOs.Append(child);
+                }
+
+                var interpreter = new AddConnector.AddConnectorInterpreter();
+                interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
+
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    Assert.Equal("Connector", child.Meta.Name);
+                }
+            }
+            finally
+            {
+                fixture.proj.AbortTransaction();
+            }
+        }
+
+        [Fact]
+        private void TestConnectorWithPins()
+        {
+            fixture.proj.BeginTransactionInNewTerr();
+
+            try
+            {
+                var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@ConnectorWithPins"];
+                var SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    SelectedFCOs.Append(child);
+                }
+                Assert.Equal(4, component.ChildObjects.Count);
+
+                var interpreter = new AddConnector.AddConnectorInterpreter();
+                interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
+
+                Assert.Equal(1, component.ChildObjects.Count);
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    Assert.Equal("Connector", child.Meta.Name);
+                }
+            }
+            finally
+            {
+                fixture.proj.AbortTransaction();
+            }
+        }
+
+        [Fact(Skip = "Unimplemented")]
+        private void TestNoPinsTwoConnectors()
+        {
+            fixture.proj.BeginTransactionInNewTerr();
+
+            try
+            {
+                var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@TwoConnectors"];
+                var SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    Assert.Equal(child.Meta.Name, "Connector");
+                    SelectedFCOs.Append(child);
+                }
+
+                var interpreter = new AddConnector.AddConnectorInterpreter();
+                interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
+
+                Assert.Equal(1, component.ChildObjects.Count);
+                Assert.Equal("Connector", ((MgaFCO)component.ChildObjectByRelID[0]).Meta.Name);
+            }
+            finally
+            {
+                fixture.proj.AbortTransaction();
+            }
+        }
+
+        [Fact(Skip = "Unimplemented")]
+        private void TestMerge()
+        {
+            fixture.proj.BeginTransactionInNewTerr();
+
+            try
+            {
+                var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Merge"];
+                var SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
+                int pin_count = 0, connector_count = 0;
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    if (child.Meta.Name == "SchematicModelPort")
+                        pin_count++;
+                    if (child.Meta.Name == "Connector")
+                        connector_count++;
+                    SelectedFCOs.Append(child);
+                }
+                Assert.Equal(3, pin_count);
+                Assert.Equal(4, connector_count);
+
+                var interpreter = new AddConnector.AddConnectorInterpreter();
+                interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
+
+                pin_count = 0;
+                connector_count = 0;
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    if (child.Meta.Name == "SchematicModelPort")
+                        pin_count++;
+                    if (child.Meta.Name == "Connector")
+                        connector_count++;
+                    Assert.False(child.Meta.Name == "SchematicModelPort");
+                }
+                Assert.Equal(0, pin_count);
+                Assert.Equal(5, connector_count);
+            }
+            finally
+            {
+                fixture.proj.AbortTransaction();
+            }
+        }
+
+        [Fact]
+        private void TestEagleImport()
+        {
+            fixture.proj.BeginTransactionInNewTerr();
+
+            try
+            {
+                var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@EagleImport"];
+                var SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
+                var pin_count = 0;
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    if (child.Meta.Name == "SchematicModelPort")
+                        pin_count++;
+                    Assert.False(child.Meta.Name == "Connector");
+                    SelectedFCOs.Append(child);
+                }
+                Assert.Equal(4, pin_count);
+
+                var interpreter = new AddConnector.AddConnectorInterpreter();
+                interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
+
+                var connector_count = 0;
+                foreach (MgaFCO child in component.ChildObjects)
+                {
+                    if (child.Meta.Name == "Connector")
+                        connector_count++;
+                    Assert.False(child.Meta.Name == "SchematicModelPort");
+                }
+                Assert.Equal(4, connector_count);
             }
             finally
             {
