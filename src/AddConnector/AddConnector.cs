@@ -529,7 +529,7 @@ namespace AddConnector
                 MgaGateway.PerformInTransaction(delegate
                 {
                     Main(project, currentobj, selectedobjs, Convert(param));
-                });
+                }, abort: false);
             }
             finally
             {
