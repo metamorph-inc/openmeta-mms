@@ -9,6 +9,8 @@ using GME.MGA.Meta;
 using Xunit;
 using System.Reflection;
 using System.IO;
+using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
+using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
 
 namespace UtilitiesTest
 {
@@ -161,33 +163,37 @@ namespace UtilitiesTest
             {
                 var component = (MgaFCO)fixture.proj.RootFolder.ObjectByPath["/@Components/@Merge"];
                 var SelectedFCOs = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
-                int pin_count = 0, connector_count = 0;
                 foreach (MgaFCO child in component.ChildObjects)
                 {
-                    if (child.Meta.Name == "SchematicModelPort")
-                        pin_count++;
-                    if (child.Meta.Name == "Connector")
-                        connector_count++;
                     SelectedFCOs.Append(child);
                 }
-                Assert.Equal(3, pin_count);
-                Assert.Equal(4, connector_count);
+                CyPhy.Component comp = CyPhyClasses.Component.Cast(component);
+                Assert.Equal(3, comp.Children.SchematicModelPortCollection.Count());
+                Assert.Equal(4, comp.Children.ConnectorCollection.Count());
 
                 var interpreter = new AddConnector.AddConnectorInterpreter();
                 interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
+                
+                Assert.Equal(0, comp.Children.SchematicModelPortCollection.Count());
+                Assert.Equal(5, comp.Children.ConnectorCollection.Count());
 
-                pin_count = 0;
-                connector_count = 0;
-                foreach (MgaFCO child in component.ChildObjects)
+                // Check GND Connector to confirm ports were merged correctly.
+                var gnd_connector = comp.Children.ConnectorCollection.Where(a => a.Name == "GND").First();
+                Assert.Equal(1, gnd_connector.AllChildren.Count());
+                Assert.Equal(1, gnd_connector.Children.SchematicModelPortCollection.Count());
+
+                // Make sure GND port in GND connector connects to both the EDA and SPICE models.
+                var gnd_port = gnd_connector.AllChildren.First();
+                var gnd_connections = comp.Children.PortCompositionCollection.Where(a => a.SrcEnd.Name == "GND" || a.DstEnd.Name == "GND");
+                Assert.Equal(2, gnd_connections.Count());
+
+                var ends_pairs = gnd_connections.Select(a => new string [] { a.SrcEnd.ParentContainer.Kind, a.DstEnd.ParentContainer.Kind });
+                foreach (var ends_pair in ends_pairs)
                 {
-                    if (child.Meta.Name == "SchematicModelPort")
-                        pin_count++;
-                    if (child.Meta.Name == "Connector")
-                        connector_count++;
-                    Assert.False(child.Meta.Name == "SchematicModelPort");
+                    Assert.True(ends_pair.Contains("Connector"));
+                    Assert.True(ends_pair.Contains("SPICEModel") || ends_pair.Contains("EDAModel"));
                 }
-                Assert.Equal(0, pin_count);
-                Assert.Equal(5, connector_count);
+
             }
             finally
             {
