@@ -107,30 +107,11 @@ namespace JobManagerFramework
                     try
                     {
                         var jobStatus = Service.GetJobInfo(jobPair.Key);
-
-                        switch (jobStatus.Status)
-                        {
-                            case RemoteExecutionService.RemoteJobState.Created:
-                                jobPair.Value.Status = Job.StatusEnum.QueuedOnServer;
-                                break;
-                            case RemoteExecutionService.RemoteJobState.Running:
-                                jobPair.Value.Status = Job.StatusEnum.RunningOnServer;
-                                break;
-                            case RemoteExecutionService.RemoteJobState.Succeeded:
-                                jobPair.Value.Status = Job.StatusEnum.Succeeded;
-                                break;
-                            case RemoteExecutionService.RemoteJobState.Failed:
-                                jobPair.Value.Status = Job.StatusEnum.Failed;
-                                break;
-                            case RemoteExecutionService.RemoteJobState.Cancelled:
-                                jobPair.Value.Status = Job.StatusEnum.FailedAbortOnServer;
-                                break;
-                        }
+                        var job = jobPair.Value;
 
                         //TODO: on completion, fetch and extract the completed ZIP
                         if (IsJobStateCompleted(jobStatus.Status))
                         {
-                            var job = jobPair.Value;
                             PendingJobs.Remove(jobPair.Key);
 
                             if (!string.IsNullOrEmpty(jobStatus.ResultZipId))
@@ -152,6 +133,33 @@ namespace JobManagerFramework
                                 {
                                     job.Status = Job.StatusEnum.FailedToDownload;
                                 }
+                            }
+                        }
+
+                        string failedLog = Path.Combine(job.WorkingDirectory, LocalPool.Failed);
+                        if (IsJobStateCompleted(jobStatus.Status) && File.Exists(failedLog))
+                        {
+                            job.Status = Job.StatusEnum.Failed;
+                        }
+                        else
+                        {
+                            switch (jobStatus.Status)
+                            {
+                                case RemoteExecutionService.RemoteJobState.Created:
+                                    job.Status = Job.StatusEnum.QueuedOnServer;
+                                    break;
+                                case RemoteExecutionService.RemoteJobState.Running:
+                                    job.Status = Job.StatusEnum.RunningOnServer;
+                                    break;
+                                case RemoteExecutionService.RemoteJobState.Succeeded:
+                                    job.Status = Job.StatusEnum.Succeeded;
+                                    break;
+                                case RemoteExecutionService.RemoteJobState.Failed:
+                                    job.Status = Job.StatusEnum.Failed;
+                                    break;
+                                case RemoteExecutionService.RemoteJobState.Cancelled:
+                                    job.Status = Job.StatusEnum.FailedAbortOnServer;
+                                    break;
                             }
                         }
                     }
