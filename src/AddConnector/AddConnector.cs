@@ -384,7 +384,6 @@ namespace AddConnector
                 {
                     if (connector.Name == popName)
                     {
-                        //if (connector.Children.SchematicModelPortCollection)
                         matched_connector = connector;
                     }
                 }
@@ -415,7 +414,7 @@ namespace AddConnector
                     var matched_pin = matched_connector.Children.SchematicModelPortCollection.Where(a => a.Name == popName).FirstOrDefault();
                     if (matched_pin != null)
                     {
-                        //clonedPortOrPin = (MgaFCO)matched_pin;
+                        clonedPortOrPin = (matched_pin.Impl as MgaFCO);
                     }
                 }
 
