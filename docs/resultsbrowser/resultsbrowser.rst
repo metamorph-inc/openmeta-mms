@@ -26,7 +26,7 @@ Toolbar
 
 **Select Results Folder:** This button allows you to specify a new working directory for the
 Results Browser. This directory must include at a minimum a
-'results'Â folder with some results already generated.
+'results' folder with some results already generated.
 
 **Refresh:** This button will force a refresh of the PET Tab and Test Benches Tab
 results lists. A refresh happens automatically at the conclusion of each
@@ -319,7 +319,7 @@ job.
 Action Buttons
 ^^^^^^^^^^^^^^
 
-**Abort Selected Job:** This button will kill the selected job (or PET?).
+**Abort Selected Job:** This button will kill the selected job.
 
 **Open Selected Job in Explorer:** This button will open Windows Explorer at the location of the execution
 directory for the highlighted job.

@@ -105,7 +105,6 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\meta\CyPhyML\icons",)
     gen_dir_wxi.gen_dir_from_vc(r"..\models\Validation",)
     gen_dir_wxi.gen_dir_from_vc(r"..\bin", diskId='3')
-    gen_dir_wxi.gen_dir_from_vc(r"..\ModelicaWrapperTemplates",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\chipfit_display",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\layout_json",)
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\SpiceVisualizer")
@@ -115,7 +114,6 @@ def build_msi():
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\runCentroidUlp")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\runEagleUlp")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\runDrc")
-    gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\Android")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\CADVisualizer")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\get_eagle_path")
 

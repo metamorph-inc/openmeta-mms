@@ -80,6 +80,7 @@ cyphy_mods = {
             "Icon": "cad_model.png"},
     "/@CAD|kind=SheetFolder/@3_SolidModeling|kind=ParadigmSheet/@FileFormat|kind=EnumAttribute":
         {"MenuItems": """Creo
+CATIA
 AP 203
 AP 214
 Solidworks

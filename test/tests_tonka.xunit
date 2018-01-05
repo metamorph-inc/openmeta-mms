@@ -2,7 +2,6 @@
 <xunit>
   <assemblies>
     <assembly filename="SchematicUnitTests\bin\Release\SchematicUnitTests.exe" shadow-copy="true" />
-    <assembly filename="SystemCTest\bin\Release\SystemCTest.dll" shadow-copy="true" />
     <assembly filename="ModelsTest\bin\Release\ModelsTest.dll" shadow-copy="true" />
     <assembly filename="TonkaDDPTest\bin\Release\TonkaDDPTest.exe" shadow-copy="true" />
     <assembly filename="SpiceParserTest\bin\Release\SpiceLibTest.exe" shadow-copy="true" />

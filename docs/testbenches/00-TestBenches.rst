@@ -26,7 +26,6 @@ for Project Ara.
    02-ChipFit
    03-PlaceAndRoute
    04-SpiceTest
-   05-SystemC
    06-RFAnalysis
    07-Thermal
    08-PCBMfg

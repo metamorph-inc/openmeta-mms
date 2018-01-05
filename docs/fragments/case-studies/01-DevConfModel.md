@@ -14,7 +14,6 @@ ___
     * Have ProtoModule separated from LEDModule example
     * A USB (as opposed to Ara Interface) version so people could actually prototype their design
     	* _"How to turn Arduino thinking into Ara thinking. Here are the things you switch out."_
-    * What's up with SystemC?
 * Components
 * Component Assemblies
     * ProtoModule

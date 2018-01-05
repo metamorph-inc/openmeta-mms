@@ -35,8 +35,14 @@ namespace ComponentAndArchitectureTeamTest
 
         public void Dispose()
         {
-            Connector.Dispose();
-            Logger.Dispose();
+            if (Connector != null)
+            {
+                Connector.Dispose();
+            }
+            if (Logger != null)
+            {
+                Logger.Dispose();
+            }
         }
     }
 
