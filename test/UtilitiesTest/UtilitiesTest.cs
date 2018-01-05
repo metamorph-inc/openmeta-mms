@@ -125,7 +125,7 @@ namespace UtilitiesTest
             }
         }
 
-        [Fact(Skip = "Unimplemented")]
+        [Fact]
         private void TestNoPinsTwoConnectors()
         {
             fixture.proj.BeginTransactionInNewTerr();
@@ -152,7 +152,7 @@ namespace UtilitiesTest
             }
         }
 
-        [Fact(Skip = "Unimplemented")]
+        [Fact]
         private void TestMerge()
         {
             fixture.proj.BeginTransactionInNewTerr();
