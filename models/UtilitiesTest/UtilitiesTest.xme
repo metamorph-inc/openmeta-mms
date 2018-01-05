@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{BFD172BE-5788-4D7C-901C-BA6D553E89FB}" cdate="Wed Jan 03 16:00:25 2018" mdate="Wed Jan 03 16:00:25 2018" version="" metaguid="{B9E99D40-79CD-08E1-3CCC-6B7E79506914}" metaversion="14.13-t30" metaname="CyPhyML">
+<project guid="{86E9EDC0-E7E4-46B3-B99D-0608C864230F}" cdate="Wed Jan 03 16:00:25 2018" mdate="Wed Jan 03 16:00:25 2018" version="" metaguid="{B9E99D40-79CD-08E1-3CCC-6B7E79506914}" metaversion="14.13-t30" metaname="CyPhyML">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
@@ -24055,7 +24055,7 @@
 					</atom>
 				</model>
 				<model id="id-0065-0000026f" kind="Connector" role="Connector" guid="{f1e15a9d-c151-4392-804b-78217b553ecc}" relid="0x2" childrelidcntr="0x1">
-					<name>SCK</name>
+					<name>SCL</name>
 					<regnode name="PartRegs" status="undefined">
 						<value></value>
 						<regnode name="AbstractPortAspect" status="undefined">
@@ -24138,7 +24138,7 @@
 						<value></value>
 					</attribute>
 					<atom id="id-0066-000000f7" kind="SchematicModelPort" role="SchematicModelPort" guid="{3525f785-749e-4b75-bb86-ad22a78a6c53}" relid="0x1">
-						<name>SCK</name>
+						<name>SCL</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
 							<regnode name="All" status="undefined">
@@ -25760,7 +25760,7 @@
 						<regnode name="All" status="undefined">
 							<value></value>
 							<regnode name="Position" isopaque="yes">
-								<value>217,336</value>
+								<value>231,336</value>
 							</regnode>
 						</regnode>
 						<regnode name="SchematicAspect" status="undefined">
@@ -25994,7 +25994,7 @@
 						<regnode name="All" status="undefined">
 							<value></value>
 							<regnode name="Position" isopaque="yes">
-								<value>427,385</value>
+								<value>455,385</value>
 							</regnode>
 						</regnode>
 						<regnode name="SchematicAspect" status="undefined">

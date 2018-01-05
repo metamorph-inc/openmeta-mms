@@ -144,7 +144,7 @@ namespace UtilitiesTest
                 interpreter.Main(fixture.proj, component, SelectedFCOs, AddConnector.AddConnectorInterpreter.ComponentStartMode.GME_SILENT_MODE);
 
                 Assert.Equal(1, component.ChildObjects.Count);
-                Assert.Equal("Connector", ((MgaFCO)component.ChildObjectByRelID[0]).Meta.Name);
+                Assert.Equal("SCL_SDA", ((MgaFCO)component.ChildObjects[1]).Name); // FIX(tthomas): Why object [1]?
             }
             finally
             {

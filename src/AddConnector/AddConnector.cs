@@ -327,7 +327,7 @@ namespace AddConnector
             new_connector.Name = String.Join("_", connList.Select(a => a.Name));
 
             // Make sure it doesn't overlap with existing objects.
-            y_offset_component = y_offset_component + 75;
+            y_offset_component = y_offset_component + 125;
 
             // Position the newly-created connector
             // GUI coordinates in all aspects.
@@ -335,7 +335,7 @@ namespace AddConnector
 
             foreach (CyPhy.Connector connector in connList)
             {
-                foreach (MgaFCO port in ((MgaFCO)connector).ChildObjects)
+                foreach (MgaFCO port in (connector.Impl as MgaFCO).ChildObjects)
                 {
                     // Copy fields into a cloned port or pin
                     MgaFCO cloned_port = ClonePort(new_connector.Impl as MgaModel, port);
@@ -353,6 +353,8 @@ namespace AddConnector
                     // Delete the original port or pin
                     port.DestroyObject();
                 }
+
+                (connector.Impl as MgaFCO).DestroyObject();
             }
         }
 
