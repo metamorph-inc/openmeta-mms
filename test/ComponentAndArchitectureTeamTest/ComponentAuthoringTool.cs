@@ -116,6 +116,16 @@ namespace ComponentAndArchitectureTeamTest
             "duplicatedSymbols.lbr"
             );
 
+        // This is the path to a simple generator component for testing the SPICE Import with PinMatcher. OPENMETA-357:
+        public static readonly string generatorLbrPath = Path.Combine(
+            META.VersionInfo.MetaPath,
+            "models",
+            "ComponentsAndArchitectureTeam",
+            "ComponentAuthoringTool",
+            "eagle-lbr",
+            "generator.lbr"
+            );
+
         public static string testpartpath = Path.Combine(
             testPath,
             "damper.prt.36");
@@ -612,20 +622,30 @@ namespace ComponentAndArchitectureTeamTest
                 // Set the combined path to the SPICE file
                 string fullSpiceFileName = Path.Combine(spiceFilesDirectoryPath, shortSpiceFileName);
 
-                //var rf = CyPhyClasses.RootFolder.GetRootFolder(fixture.proj);
-                //var cf = CyPhyClasses.Components.Create(rf);
-                //cf.Name = nameTest;
-                //CyPhy.Component component = CyPhyClasses.Component.Create(cf);
-                //component.Name = nameTest;
+                var rf = CyPhyClasses.RootFolder.GetRootFolder(fixture.proj);
+                var cf = CyPhyClasses.Components.Create(rf);
+                cf.Name = nameTest;
+                CyPhy.Component component = CyPhyClasses.Component.Create(cf);
+                component.Name = nameTest;
 
-                var path = String.Format("/@{0}|kind=Components/@{0}|kind=Component", nameTest);
-                var component = CyPhyClasses.Component.Cast(fixture.proj.RootFolder.ObjectByPath[path]);
+                //var path = String.Format("/@{0}|kind=Components/@{0}|kind=Component", nameTest);
+                //var component = CyPhyClasses.Component.Cast(fixture.proj.RootFolder.ObjectByPath[path]);
+                
+                // new instance of the class to test
+                CyPhyComponentAuthoring.Modules.EDAModelImport SchematicCATModule = new CyPhyComponentAuthoring.Modules.EDAModelImport();
 
-                var catModule = new CyPhyComponentAuthoring.Modules.SpiceModelImport();
-                catModule.SetCurrentComp(component);
-                catModule.CurrentObj = (MgaFCO)component.Impl;
+                //// these class variables need to be set to avoid NULL references
+                SchematicCATModule.SetCurrentComp(component);
+                SchematicCATModule.CurrentObj = component.Impl as MgaFCO;
 
-                catModule.ImportSpiceModel(component, fullSpiceFileName);
+                // call the primary function directly
+                SchematicCATModule.ImportSelectedEagleDevice("\\GENERATOR\\", generatorLbrPath);
+
+                var SpiceCATModule = new CyPhyComponentAuthoring.Modules.SpiceModelImport();
+                SpiceCATModule.SetCurrentComp(component);
+                SpiceCATModule.CurrentObj = (MgaFCO)component.Impl;
+
+                SpiceCATModule.ImportSpiceModel(component, fullSpiceFileName);
 
                 // Check that one and only one CyPhy SPICE model exists in the component.
                 Assert.Equal(1, component.Children.SPICEModelCollection.Count());
