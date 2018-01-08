@@ -1,0 +1,15 @@
+*----------------------------------------------------------------------
+* test4.cir
+*
+* Description: Example Signal Generator
+* Author:      Tim Thomas
+* Date:        2018-01-05
+*
+* Copyright(C) 2018 MetaMorph Inc.
+* http://metamorphsoftware.com/
+*
+*
+.SUBCKT GENERATOR VDD GND SIGNAL FREQ=1.0k
+R1 VDD GND 500
+V1 SIGNAL GND SINE(0 50 FREQ)
+.ENDS GENERATOR

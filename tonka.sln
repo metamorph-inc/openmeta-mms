@@ -84,6 +84,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyPhy2Simulink", "src\CyPhy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulinkTest", "test\SimulinkTest\SimulinkTest.csproj", "{45998568-2ED7-4CD2-98D8-7FE681576180}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilitiesTest", "test\UtilitiesTest\UtilitiesTest.csproj", "{7F983E5D-A078-4735-804F-B608A7D80645}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -464,6 +466,22 @@ Global
 		{45998568-2ED7-4CD2-98D8-7FE681576180}.Release|Win32.Build.0 = Release|Any CPU
 		{45998568-2ED7-4CD2-98D8-7FE681576180}.Release|x86.ActiveCfg = Release|Any CPU
 		{45998568-2ED7-4CD2-98D8-7FE681576180}.Release|x86.Build.0 = Release|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Debug|Win32.Build.0 = Debug|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Release|Win32.ActiveCfg = Release|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Release|Win32.Build.0 = Release|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F983E5D-A078-4735-804F-B608A7D80645}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -494,5 +512,9 @@ Global
 		{9D5CFD7A-EDBB-4708-983C-B204BEB24C6E} = {6C5BAEE6-05C7-4970-9A53-C7584A0A7BD3}
 		{67864C23-19D6-47D5-848B-A740EECE4387} = {187E46AA-5A45-4352-A506-52BDBBA496F8}
 		{45998568-2ED7-4CD2-98D8-7FE681576180} = {6C5BAEE6-05C7-4970-9A53-C7584A0A7BD3}
+		{7F983E5D-A078-4735-804F-B608A7D80645} = {6C5BAEE6-05C7-4970-9A53-C7584A0A7BD3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DF86C47-61E2-4D46-899D-16291A551D38}
 	EndGlobalSection
 EndGlobal
