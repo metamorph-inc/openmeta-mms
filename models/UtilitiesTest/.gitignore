@@ -1,0 +1,28 @@
+# OpenMETA project stuff
+*.mga
+CyPhy2CAD.log
+archive/
+config/
+dashboard/
+design-space/
+designs/
+export_for_dashboard_scoring.py
+index.html
+log/
+merged/
+requirements/
+results/
+stats/
+test-benches/
+tmp/
+CADCreoParametricCreateAssembly_err.log
+components/**/trail.txt.*
+components/**/*.acm
+components/**/_FAILED.txt
+components/**/std.out
+components/**/std.err
+components/**/config.pro
+MetaLink_*/
+
+# Python
+*.pyc

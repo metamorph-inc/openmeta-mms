@@ -116,6 +116,16 @@ namespace ComponentAndArchitectureTeamTest
             "duplicatedSymbols.lbr"
             );
 
+        // This is the path to a simple generator component for testing the SPICE Import with PinMatcher. OPENMETA-357:
+        public static readonly string generatorLbrPath = Path.Combine(
+            META.VersionInfo.MetaPath,
+            "models",
+            "ComponentsAndArchitectureTeam",
+            "ComponentAuthoringTool",
+            "eagle-lbr",
+            "generator.lbr"
+            );
+
         public static string testpartpath = Path.Combine(
             testPath,
             "damper.prt.36");
@@ -593,6 +603,78 @@ namespace ComponentAndArchitectureTeamTest
                 string destinationFilePath = Path.Combine( PathForComp, newResource.Attributes.Path );
                 string sourceFilePath = fullSpiceFileName;
                 Assert.True(FileCompare( sourceFilePath, destinationFilePath ));
+            });
+        }
+
+        [Fact]
+        public void SpiceImportWithPinMatch()
+        {
+            String nameTest = "SpiceImportWithPinMatch";
+
+            fixture.proj.PerformInTransaction(delegate
+            {
+                // Set the SPICE file name
+                string shortSpiceFileName = "test4.cir";
+
+                // Set the SPICE file path
+                string spiceFilesDirectoryPath = getSourceSpiceFileDirectory();
+
+                // Set the combined path to the SPICE file
+                string fullSpiceFileName = Path.Combine(spiceFilesDirectoryPath, shortSpiceFileName);
+
+                var rf = CyPhyClasses.RootFolder.GetRootFolder(fixture.proj);
+                var cf = CyPhyClasses.Components.Create(rf);
+                cf.Name = nameTest;
+                CyPhy.Component component = CyPhyClasses.Component.Create(cf);
+                component.Name = nameTest;
+
+                //var path = String.Format("/@{0}|kind=Components/@{0}|kind=Component", nameTest);
+                //var component = CyPhyClasses.Component.Cast(fixture.proj.RootFolder.ObjectByPath[path]);
+                
+                // new instance of the class to test
+                CyPhyComponentAuthoring.Modules.EDAModelImport SchematicCATModule = new CyPhyComponentAuthoring.Modules.EDAModelImport();
+
+                //// these class variables need to be set to avoid NULL references
+                SchematicCATModule.SetCurrentComp(component);
+                SchematicCATModule.CurrentObj = component.Impl as MgaFCO;
+
+                // call the primary function directly
+                SchematicCATModule.ImportSelectedEagleDevice("\\GENERATOR\\", generatorLbrPath);
+
+                var SpiceCATModule = new CyPhyComponentAuthoring.Modules.SpiceModelImport();
+                SpiceCATModule.SetCurrentComp(component);
+                SpiceCATModule.CurrentObj = (MgaFCO)component.Impl;
+
+                SpiceCATModule.ImportSpiceModel(component, fullSpiceFileName);
+
+                // Check that one and only one CyPhy SPICE model exists in the component.
+                Assert.Equal(1, component.Children.SPICEModelCollection.Count());
+
+                // Check that the CyPhy SPICE model has the correct class.
+                var newSpiceModel = component.Children.SPICEModelCollection.First();
+                Assert.True(newSpiceModel.Attributes.Class == "X:GENERATOR");
+
+                // Check that the CyPhy SPICE model has two pins.
+                Assert.Equal(3, newSpiceModel.Children.SchematicModelPortCollection.Count());
+
+                // Check that the GND pin has a connection to both the SPICE Model and EDA Model.
+                var gnd_connections = component.Children.PortCompositionCollection.Where(a => a.SrcEnd.ParentContainer.Name == "GND" || a.DstEnd.ParentContainer.Name == "GND");
+                var end_points = gnd_connections.Select(a => a.SrcEnd.ParentContainer.Name == "GND" ? a.DstEnd.ParentContainer.Name : a.SrcEnd.ParentContainer.Name);
+                foreach (var end_point in end_points)
+                {
+                    Assert.True(end_point == "GENERATOR_SPICEModel" || end_point == "EDAModel");
+                }
+
+                Assert.Equal(7, component.Children.PortCompositionCollection.Count());
+                var differing_connections = component.Children.PortCompositionCollection
+                                           .Where(a => a.SrcEnd.Name != a.DstEnd.Name)
+                                           .Select(a => new List<string> { a.SrcEnd.Name, a.DstEnd.Name });
+                Assert.Equal(1, differing_connections.Count());
+                var diff = differing_connections.First();
+                diff.Sort();
+                Assert.Equal("SDA", diff[0]);
+                Assert.Equal("SIGNAL", diff[1]);
+                //}
             });
         }
 

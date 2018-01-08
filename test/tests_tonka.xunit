@@ -16,5 +16,6 @@
     <assembly filename="CyPhy2CADPCBTest\bin\Release\CyPhy2CADPCBTest.exe" shadow-copy="true" />
     <assembly filename="PcbToolsTest\bin\Release\PcbToolsTest.dll" shadow-copy="true" />
     <assembly filename="SimulinkTest\bin\Release\SimulinkTest.exe" shadow-copy="true" />
+	<assembly filename="UtilitiesTest\bin\Release\UtilitiesTest.exe" shadow-copy="true" />
   </assemblies>
 </xunit>
