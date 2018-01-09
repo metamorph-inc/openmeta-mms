@@ -435,20 +435,8 @@ namespace JobManagerFramework
 
             foreach (var selectedJob in toAbort)
             {
-                if (new Job.StatusEnum[]
-                {
-                    Job.StatusEnum.RunningOnServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer
-                }.Contains(selectedJob.Status))
-                {
-                    // Cancel remote execution
-                    // selectedJob.SubItems[Headers.Status.ToString()].Text = "Redownload Queued";
-                    selectedJob.Status = Job.StatusEnum.AbortOnServerRequested;
-                }
-                else
-                {
-                    // Cancel local execution
-                    pool.AbortJob(selectedJob);
-                }
+                // Cancel local execution
+                pool.AbortJob(selectedJob);
             }
             RestartMonitorTimer();
         }

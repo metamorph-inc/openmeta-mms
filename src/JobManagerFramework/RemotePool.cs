@@ -90,6 +90,15 @@ namespace JobManagerFramework
 
         public bool AbortJob(Job j)
         {
+            //Try and find a job in the pending jobs dict that matches j
+            foreach (var pendingJobPair in PendingJobs)
+            {
+                if (pendingJobPair.Value == j)
+                {
+                    return Service.CancelJob(pendingJobPair.Key);
+                }
+            }
+
             return false;
         }
 

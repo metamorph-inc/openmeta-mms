@@ -63,6 +63,21 @@ namespace JobManagerFramework.RemoteExecution
             }
         }
 
+        public bool CancelJob(string jobId)
+        {
+            var result = GetJson("/api/client/job/" + jobId + "/cancel", Method.POST);
+
+            JToken token = null;
+            if (result.TryGetValue("cancelled", out token) && token.Value<bool>() == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public string UploadArtifact(Stream fileStream)
         {
             var result = PutFile("/api/client/uploadArtifact", "artifact", fileStream);
@@ -119,13 +134,13 @@ namespace JobManagerFramework.RemoteExecution
             }
         }
 
-        private JObject GetJson(string path)
+        private JObject GetJson(string path, Method method = Method.GET)
         {
             var client = new RestClient(BaseUri);
             client.Authenticator = new HttpBasicAuthenticator(Username, Password);
 
             var request = new RestRequest(path);
-            request.Method = Method.GET;
+            request.Method = method;
 
             var response = client.Execute(request);
             return GetJsonFromResponse(response);
