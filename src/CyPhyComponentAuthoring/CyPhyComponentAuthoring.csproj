@@ -89,9 +89,7 @@
       <DependentUpon>SimulinkLibraryBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Modules\SimulinkModelImport.cs" />
-    <Compile Include="SchematicModelImport.cs">
-      <Link>Modules\SchematicModelImport.cs</Link>
-    </Compile>
+    <Compile Include="Modules\SchematicModelImport.cs" />
     <Compile Include="GUIs\EagleDevicePicker.cs">
       <SubType>Form</SubType>
     </Compile>
