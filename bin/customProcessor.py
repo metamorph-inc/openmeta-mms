@@ -1,6 +1,10 @@
-﻿
+
 import sys
 import os
+import parser
+#sys.path.append(r"C:\Program Files\ISIS\Udm\bin")
+#if os.environ.has_key("UDM_PATH"):
+#    sys.path.append(os.path.join(os.environ["UDM_PATH"], "bin"))
 import _winreg as winreg
 with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"Software\META") as software_meta:
     meta_path, _ = winreg.QueryValueEx(software_meta, "META_PATH")
@@ -29,15 +33,15 @@ try:
 except ImportError:
     pass
 
-	
+
 def is_number(s):
     try:
         float(s)
         return True
     except ValueError:
-        return False	
-	
-	
+        return False
+
+
 def start_pdb():
     ''' Starts pdb, the Python debugger, in a console window
     '''
@@ -67,10 +71,10 @@ class ComputeData(object):
         que.extend(sut.ref.children())
         #csv_filename = os.path.join(output_dir, 'parts_cost.csv')
         #csv_file = open(csv_filename,'w')
-        aggregated_mass = float(0)
-        aggregated_cost = float(0)
-        #log("ComputeData in customProcessor.PY")	
-        #print "this is a print"       
+        # aggregated_mass = float(0)
+        # aggregated_cost = float(0)
+        #log("ComputeData in customProcessor.PY")
+        #print "this is a print"
         propDict = {}
         #log("ComputeData: Initialized dict  yyyyy")
         #log("objects m,prop,para,sut="+str(len(tb_props)))
@@ -78,14 +82,18 @@ class ComputeData(object):
         #log("scanning props")
         for pp in tb_props :
             instr = pp.Description
-            #log(instr)            
+            #log(instr)
             propname = pp.name
             #log("ComputeData: prop:"+instr)
+            if instr.count(',') != 2:
+                raise ValueError('Property {} has invalid description format. It should contain 3 values, comma-separated'.format(propname))
             pname,classname,op = instr.split(',')
+            if op not in ('*', '+', ''):
+                raise ValueError('Property {} has invalid operator \'{}\'. If should be * or +'.format(propname, op))
             #log("param "+pname+ " in "+ classname + " Op " + op)
             val = "0.0"
             propDict[propname] = (pname,classname,op,val)
-            
+
         #############################################################
         while que:
             obj = que.pop()
@@ -97,7 +105,7 @@ class ComputeData(object):
                     classifications.setdefault(class_, [])
                     classifications[class_].append(component)
             if obj.type.name == "Component":
-                #log("Visit:"+obj.name)						
+                #log("Visit:"+obj.name)
                 add_classification(obj)
                 for xx in propDict :
                     #log(xx)
@@ -124,17 +132,19 @@ class ComputeData(object):
                                     except:
                                         #log("error with value/string")
                                         propDict[xx] = (propDict[xx][0],propDict[xx][1],propDict[xx][2],child.Value)
-                                    
+
         #log("Done with parsing")
-        ###############################################################################################	
+        ###############################################################################################
         fcomp.write("import json\n")
-        fcomp.write("import os\n")        
+        fcomp.write("import os\n")
         fcomp.write("json_filename = os.path.join(\"\", 'testbench_manifest.json')\n")
         fcomp.write("json_data = {}\n")
         fcomp.write("if os.path.isfile(json_filename):\n")
         fcomp.write("    with open(json_filename, \"r\") as json_file:\n")
-        fcomp.write("        json_data = json.load(json_file) \n") 
-        fcomp.write("    for item in json_data['Parameters']:\n") 
+        fcomp.write("        json_data = json.load(json_file) \n")
+        fcomp.write("    for item in json_data['Parameters']:\n")
+        if len(tb_params) == 0:
+            fcomp.write("        pass\n")
         for ppp in tb_params:
             fcomp.write("        if \""+ppp.name+ "\"== item[\"Name\"]:\n")
             fcomp.write("            try:\n")
@@ -157,73 +167,86 @@ class ComputeData(object):
             with open(json_filename, "r") as json_file:
                 json_data = json.load(json_file)
         json_data.setdefault('Metrics', [])
-        #log("metrics code gen")              
-        for item in json_data['Metrics']:    
+        #log("metrics code gen")
+        for item in json_data['Metrics']:
             if len(item["Description"]) > 0 :
                 #log(item["Description"])
+                parser.suite(item["Description"])  # fail fast if it doesn't parse
                 fcomp.write(item["Description"]+"\n")
         #log("done metrics code gen")
         fcomp.write("\n##############################\n")
         #log("creating json handling code")
         fcomp.write("for metric in json_data['Metrics']: \n")
-        for item in json_data['Metrics']: 
+        for item in json_data['Metrics']:
             #log(item["Name"])
             fcomp.write("    if metric[\"Name\"] == \""+item["Name"]+"\":\n")
             fcomp.write("        metric[\"Value\"] = "+item["Name"]+"\n")
         fcomp.write("with open(json_filename, \"w\") as json_file:\n")
         fcomp.write("    json.dump(json_data, json_file, indent=4)\n")
-        
-        fcomp.write("# json handler done\n")
-        fcomp.close()       
 
-# This is the entry point    
+        fcomp.write("# json handler done\n")
+        fcomp.close()
+
+        #log(str(json_data))
+        #log('- Saving to: %s' % json_filename)
+
+
+# This is the entry point
 def invoke(focusObject, rootObject, componentParameters, **kwargs):
+    #log(rootObject.name)
+    #print repr(rootObject.name)
     output_dir = componentParameters['output_dir']
     if output_dir == '':
         output_dir = os.getcwd()
-        
+
     ComputeData().compute(focusObject, output_dir)
+    #log_formatted("Output files are <a href=\"file:///{0}\" target=\"_blank\">{0}</a>.".format(output_dir))
+    #log("Output files are <a href=\"file:///{0}\" target=\"_blank\">{0}</a>.".format(output_dir))
+    #log('done')
 
-    ###############################################################################################				
+    ###############################################################################################
     ##  create run_classifications.cmd
-    ###############################################################################################				
+    ###############################################################################################
 
+    #with open(os.path.join(output_dir, 'run_classifications.cmd'), 'w'): pass
     componentParameters['runCommand'] = 'run_classifications.cmd'
+    ##componentParameters['labels'] = 'Windows'
+
     outputfilename_bat_path = os.path.join(output_dir, 'run_classifications.cmd')
-    
+
+    #start_pdb()
+    #print "outputfilename_bat_path: " + outputfilename_bat_path
+
     try:
         fbat = open(outputfilename_bat_path, 'w')
     except Exception, e:
         log("Could not open  {0}: {1}".format(outputfilename_bat_path, str(e)))
     foundCommands = False
+    fbat.write('Setlocal EnableDelayedExpansion\n')
     for child in focusObject.children():
-         if child.type.name=="Property" and child.name =="preExec": 
+         if child.type.name=="Property" and child.name =="preExec":
             fbat.write(child.Description+'\n\n')
             foundCommands=True
     for child in focusObject.children():
          if child.type.name=="Property" and child.name =="Exec":
             fbat.write(child.Description+'\n\n')
-            foundCommands=True 
+            foundCommands=True
     for child in focusObject.children():
          if child.type.name=="Property" and child.name =="postExec":
-            fbat.write(child.Description+'\n\n')  
-            foundCommands=True            
-        
+            fbat.write(child.Description+'\n\n')
+            foundCommands=True
+
     if foundCommands == False:
-        fbat_contents = '''
-set ERROR_CODE=0
-
-FOR /F "skip=2 tokens=2,*" %%A IN ('C:\Windows\SysWoW64\REG.exe query "HKLM\software\META" /v "META_PATH"') DO set META_PATH=%%B
-"%META_PATH%\\bin\\Python27\\Scripts\\python.exe" compute.py
-
-echo "DONE"
-exit /b
-        '''
-        fbat.write(fbat_contents)
+        fbat.write('set ERROR_CODE=0\n')
+        fbat.write('''FOR /F "skip=2 tokens=2,*" %%A IN ('C:\Windows\SysWoW64\REG.exe query "HKLM\software\META" /v "META_PATH"') DO set META_PATH=%%B\n''')
+        fbat.write('"%META_PATH%\\bin\\Python27\\Scripts\\python.exe" compute.py || exit /b !ERRORLEVEL!\n')
+        fbat.write('echo "DONE"	\n')
+        fbat.write('\n')
+        fbat.write('''pause  2 exit 0\n''')
 
     fbat.close()
 
-# Allow calling this script with a .mga file as an argument    
+# Allow calling this script with a .mga file as an argument
 if __name__=='__main__':
     import _winreg as winreg
     with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"Software\META") as software_meta:
