@@ -8,9 +8,11 @@
         d:DataContext="{d:DesignInstance Type=local:RemoteServerPromptDialogViewModel, IsDesignTimeCreatable=False}"
         Title="Remote server details"
         ResizeMode="NoResize"
-        SizeToContent="WidthAndHeight"
+        SizeToContent="Height"
         ShowInTaskbar="False"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Width="500"
+        MaxWidth="500">
     <Window.Resources>
         <ResourceDictionary>
             <local:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
@@ -19,12 +21,47 @@
         </ResourceDictionary>
     </Window.Resources>
     <StackPanel >
+        <Label Content="Recent Servers:" Margin="25,10,30,0"/>
+        <ListBox x:Name="RecentRemoteServersListBox" ItemsSource="{Binding RecentRemoteServers}" Height="125" Margin="30,0,30,0" SelectionChanged="ListBox_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding ServerName}" FontWeight="Bold" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding UserName, StringFormat=User: {0}}" Margin="10,0,0,0" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.Resources>
+                <!--Defines a context menu-->
+                <ContextMenu x:Key="ListItemMenu">
+                    <MenuItem Header="Delete" Click="DeleteServerEntry"/>
+                </ContextMenu>
+
+                <!--Sets a context menu for each ListBoxItem in the current ListBox-->
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ListItemMenu}"/>
+                </Style>
+            </ListBox.Resources>
+        </ListBox>
         <Label Content="Server Address:" Margin="25,10,30,0"/>
-        <TextBox Height="23" TextWrapping="Wrap" Margin="30,0,30,0" Width="300" Text="{Binding ServerName, UpdateSourceTrigger=PropertyChanged}"/>
-        <Label Content="Username:" Margin="25,10,30,0"/>
-        <TextBox Height="23" TextWrapping="Wrap" Margin="30,0,30,0" Width="300" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
-        <Label Content="Password:" Margin="25,10,30,0"/>
-        <PasswordBox x:Name="PasswordField" Height="23" Margin="30,0,30,20" Width="300" />
+        <TextBox Height="23" Margin="30,0,30,0" Text="{Binding ServerName, UpdateSourceTrigger=PropertyChanged}" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                <Label Content="Username:" Margin="25,10,30,0"/>
+                <TextBox Height="23" Margin="30,0,15,0" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
+                <Border Name="UsernameSizingShim" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Vertical">
+                <Label Content="Password:" Margin="10,10,30,0"/>
+                <PasswordBox x:Name="PasswordField" Height="23" Margin="15,0,30,20" />
+            </StackPanel>
+        </Grid>
+        
+        
         <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
             <StackPanel Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
                 <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Right">

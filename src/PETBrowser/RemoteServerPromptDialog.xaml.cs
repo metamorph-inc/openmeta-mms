@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using JobManagerFramework.RemoteExecution;
 using Ookii.Dialogs.Wpf;
+using Newtonsoft.Json;
+using PETBrowser.Properties;
 
 namespace PETBrowser
 {
@@ -37,7 +39,11 @@ namespace PETBrowser
         public RemoteServerPromptDialog()
         {
             this.ViewModel = new RemoteServerPromptDialogViewModel();
-            ViewModel.ServerVerified += (sender, args) => this.DialogResult = true;
+            ViewModel.ServerVerified += (sender, args) =>
+            {
+                this.DialogResult = true;
+                ViewModel.PersistRecentRemoteServers(true);
+            };
 
             ViewModel.ServerVerificationFailed += (sender, args) =>
             {
@@ -90,6 +96,27 @@ namespace PETBrowser
             //MessageBox.Show(this, "The selected folder doesn't appear to be a valid data folder.",
             //    "Error loading datasets", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ListBox &&
+                ((ListBox) sender).SelectedItem is RemoteServerPromptDialogViewModel.RemoteServerConnectionInfo)
+            {
+                var selectedConnection = (RemoteServerPromptDialogViewModel.RemoteServerConnectionInfo) ((ListBox) sender).SelectedItem;
+
+                ViewModel.ServerName = selectedConnection.ServerName;
+                ViewModel.Username = selectedConnection.UserName;
+            }
+        }
+
+        private void DeleteServerEntry(object sender, RoutedEventArgs e)
+        {
+            var selected = RecentRemoteServersListBox.SelectedItem;
+            if (selected != null && selected is RemoteServerPromptDialogViewModel.RemoteServerConnectionInfo)
+            {
+                ViewModel.RemoveRemoteServer((RemoteServerPromptDialogViewModel.RemoteServerConnectionInfo) selected);
+            }
+        }
     }
 
     public class RemoteServerPromptDialogViewModel : INotifyPropertyChanged
@@ -115,6 +142,18 @@ namespace PETBrowser
             _serverName = "";
             _username = "";
             _verifying = false;
+
+            try
+            {
+                RecentRemoteServersList = JsonConvert.DeserializeObject<
+                    List<RemoteServerConnectionInfo>>(Settings.Default.RecentRemoteServers);
+            }
+            catch (JsonException)
+            {
+                RecentRemoteServersList = new List<RemoteServerConnectionInfo>();
+            }
+
+            RecentRemoteServers = new ListCollectionView(RecentRemoteServersList);
         }
 
         private string _serverName;
@@ -159,6 +198,65 @@ namespace PETBrowser
                 PropertyChanged.ChangeAndNotify(ref _verifying, value, () => Verifying);
                 PropertyChanged.Notify(() => OkButtonEnabled);
             }
+        }
+
+        public class RemoteServerConnectionInfo : IEquatable<RemoteServerConnectionInfo>
+        {
+            public bool Equals(RemoteServerConnectionInfo other)
+            {
+                return string.Equals(ServerName, other.ServerName) && string.Equals(UserName, other.UserName);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((RemoteServerConnectionInfo) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((ServerName != null ? ServerName.GetHashCode() : 0) * 397) ^ (UserName != null ? UserName.GetHashCode() : 0);
+                }
+            }
+
+            public string ServerName { get; set; }
+            public string UserName { get; set; }
+        }
+
+        public List<RemoteServerConnectionInfo> RecentRemoteServersList { get; private set; }
+        public ICollectionView RecentRemoteServers { get; private set; }
+
+        public void RemoveRemoteServer(RemoteServerConnectionInfo toRemove)
+        {
+            RecentRemoteServersList.Remove(toRemove);
+            RecentRemoteServers.Refresh();
+            PersistRecentRemoteServers(false);
+        }
+
+        /**
+         * Persists the RecentRemoteServersList in Settings, adding the current ServerName and Username if not present, and bringing them
+         * to the top of the list if they are
+         */
+        public void PersistRecentRemoteServers(bool addCurrentServer)
+        {
+            if (addCurrentServer)
+            {
+                var newRemoteServerInfo = new RemoteServerConnectionInfo
+                {
+                    ServerName = ServerName,
+                    UserName = Username
+                };
+
+                RecentRemoteServersList.Remove(newRemoteServerInfo);
+                RecentRemoteServersList.Insert(0, newRemoteServerInfo);
+            }
+
+            Settings.Default.RecentRemoteServers = JsonConvert.SerializeObject(RecentRemoteServersList);
+            Settings.Default.Save();
         }
 
         public void VerifyServer(string password)
