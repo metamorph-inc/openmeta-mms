@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{2FFD2894-B627-45BE-A739-F900D2DD9959}" cdate="Wed Nov 29 14:04:55 2017" mdate="Wed Nov 29 14:04:55 2017" version="" metaguid="{C84D2738-4519-44F2-B4C1-114F73567576}" metaversion="" metaname="MetaGME">
+<project guid="{F372B6D2-E439-4571-BD7B-174569A4A255}" cdate="Thu Jan 11 13:04:57 2018" mdate="Thu Jan 11 13:04:57 2018" version="" metaguid="{C84D2738-4519-44F2-B4C1-114F73567576}" metaversion="" metaname="MetaGME">
 	<name>CyPhyML-core</name>
 	<comment></comment>
 	<author></author>
@@ -40173,7 +40173,8 @@ Neural Net</value>
 						<value>Full Factorial
 Central Composite
 Opt Latin Hypercube
-Uniform</value>
+Uniform
+CSV File</value>
 					</attribute>
 					<attribute kind="Prompt">
 						<value>DOE Type:</value>
