@@ -183,6 +183,25 @@ the ranges of all Design Variables.
 If **num_samples=1**, then, in the resulting single input case, each
 Design Variable will be set to its minimum value.
 
+CSV File
+********
+
+The CSV File type allows for an arbitrary set of test cases to be specified
+in a CSV file and then executed with the given analysis workflow. This is
+useful when you have a number of edge cases you need to test.
+
+The input file is selected by placing the path, relative to the project
+directory (i.e. the location of the current ``.mga`` file), in a
+``filename='<path>'`` assignment in the **Code** attribute of the
+Parameter Study Driver. This file will be copied to the execution
+directory when the PET is executed.
+
+All design variables that are unrepresented in the input CSV file will be
+assigned a value that is the average of the interval specified in that design
+variable's *Range* attribute in the Parameter Study Driver. Extra columns that
+don't match any of the design variables are allowed in the input CSV, but
+they are ignored.
+
 .. _pet_drivers_optimizer:
 
 Optimizer
