@@ -70,7 +70,9 @@ namespace JobManagerFramework
 
                 var relativeWorkingDirectory = new DirectoryInfo(j.WorkingDirectory).Name;
 
-                var newJobId = Service.CreateJob(runCommand, relativeWorkingDirectory, zipArtifactId);
+                var labels = j.Labels != null ? j.Labels : "";
+
+                var newJobId = Service.CreateJob(runCommand, relativeWorkingDirectory, zipArtifactId, labels);
                 PendingJobs.Add(newJobId, j);
                 j.Status = Job.StatusEnum.PostedToServer;
             }
