@@ -11,3 +11,7 @@ continuous integration, refactoring, and more.
 
    continuousintegrationtest
    runonhpc
+
+
+For infomation on Test Bench utilities see the :ref:`testbench_utilities`
+section of the Test Benches chapter.
