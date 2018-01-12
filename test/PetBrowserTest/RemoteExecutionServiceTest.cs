@@ -23,10 +23,22 @@ namespace PetBrowserTest
         {
             var service = new RemoteExecutionService("http://localhost:8080", "test", "test");
 
-            var job = service.GetJobInfo("9be66783-8805-5242-9f34-a603a051ae24");
+            var hash = "";
+
+            using (var uploadedFileStream = new MemoryStream(Resources.test_run_dir))
+            {
+                hash = service.UploadArtifact(uploadedFileStream);
+            }
+
+            Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
+
+            var jobId = service.CreateJob("dir", ".", hash, "");
+            Assert.NotNull(jobId);
+
+            var job = service.GetJobInfo(jobId);
 
             Assert.NotNull(job);
-            Assert.Equal(job.Uid, "9be66783-8805-5242-9f34-a603a051ae24");
+            Assert.Equal(job.Uid, jobId);
         }
 
         [Fact]
@@ -88,7 +100,7 @@ namespace PetBrowserTest
 
             Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
 
-            var jobId = service.CreateJob("dir", ".", hash);
+            var jobId = service.CreateJob("dir", ".", hash, "");
             Assert.NotNull(jobId);
         }
 
@@ -110,7 +122,7 @@ namespace PetBrowserTest
 
             Assert.Equal(hash, "4a0c2b277e4451d5ac59ccd57edf786c79455c99");
 
-            var jobId = service.CreateJob("dir", ".", hash);
+            var jobId = service.CreateJob("dir", ".", hash, "");
             Assert.NotNull(jobId);
 
             var jobComplete = false;
