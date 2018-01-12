@@ -29,7 +29,7 @@ to Test Bench Metrics.
 Depending how few different components and properties you have in your
 OpenMETA model, it may be possible to use Value Flow to wire all the needed
 values out of your model, but as the complexity of the model increases, it
-quickly becomes infeasible to wire out every property you want to extracted
+quickly becomes infeasible to wire out every property you want to extract
 from a system model. The **customProcessor.py** script was designed to make
 the task of gathering values easier.
 
@@ -93,7 +93,7 @@ has the following meaning:
 2. **classification**: The classification node used to filter the query.
 
    -  Each component has a *Classifications* field that is normally
-      used to hold the ontological nodes to which that component belongs.
+      used to hold the ontological classes to which that component belongs.
       The **classification** field of the query must match one of the 
       nodes defined in the *Classifications* field of the parent component
       of the property. Again, the match must be exact and is case-sensitive.
@@ -126,7 +126,7 @@ Assigning Queries to Metrics
 After you have all your queries properly added, you only need to assign
 the resulting values to Metrics so they can be recorded and, if executing
 in the context of a PET, passed to other analysis blocks.
-Similar to the queries themselves, and assignment is accomplished by adding
+Similar to the queries themselves, an assignment is accomplished by adding
 an assignment statement to the *Description* attribute of a Test Bench
 *Metric*.
 
@@ -138,9 +138,9 @@ an assignment statement to the *Description* attribute of a Test Bench
 In the image above, you can see that the **Total Mass** that was calculated
 with a query is being assigned to the **VehicleMass** metric.
 
-.. note:: These assignments are evaluated in Python have
-   access to all the built-in functions for manipulating numbers as well as
-   the ``math`` module. See `Section 2: Built-in Functions
+.. note:: These assignments are evaluated in Python and have
+   access to all of Python's built-in functions for manipulating numbers as well as the ``math`` module. 
+   See `Section 2: Built-in Functions
    <https://docs.python.org/2/library/functions.html#>`_ and `Section 9.2:
    Mathematical functions <https://docs.python.org/2/library/math.html>`_
    of the Python 2.7 Documentation for more information.
