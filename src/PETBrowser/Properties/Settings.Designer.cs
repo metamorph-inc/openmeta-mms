@@ -34,5 +34,17 @@ namespace PETBrowser.Properties {
                 this["SelectedThreadCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[]")]
+        public string RecentRemoteServers {
+            get {
+                return ((string)(this["RecentRemoteServers"]));
+            }
+            set {
+                this["RecentRemoteServers"] = value;
+            }
+        }
     }
 }

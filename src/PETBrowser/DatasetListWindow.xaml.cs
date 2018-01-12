@@ -818,6 +818,23 @@ namespace PETBrowser
                 ShowErrorDialog("Rename error", "An error occurred while renaming this PET.", ex.Message, ex.ToString());
             }
         }
+
+        private void RemoteExecutionMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Show dialog to configure remote execution
+            var remoteExecutionDialog = new RemoteServerPromptDialog { Owner = this };
+            bool? result = remoteExecutionDialog.ShowDialog();
+
+            if (result == true)
+            {
+                this.ViewModel.JobStore.SwitchToRemoteExecution(remoteExecutionDialog.ViewModel.ServerName, remoteExecutionDialog.ViewModel.Username, remoteExecutionDialog.Password);
+            }
+        }
+
+        private void LocalExecutionMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.JobStore.SwitchToLocalExecution();
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged

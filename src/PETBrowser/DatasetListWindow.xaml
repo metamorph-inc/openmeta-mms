@@ -57,6 +57,45 @@
                     <Button BorderThickness="0" Background="{x:Null}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" IsTabStop="False" Click="DropdownButton_Click" ContextMenuService.IsEnabled="False" Padding="3,1" IsEnabled="{Binding JobStore.HasNoRunningJobs}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding JobStore.CurrentExecutionPoolText}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsEnabled}" Value="False" >
+                                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <Path Margin="6,0,0,0" VerticalAlignment="Center" Width="6" Stretch="Uniform" HorizontalAlignment="Right" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z ">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsEnabled}" Value="True" >
+                                                    <Setter Property="Fill" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsEnabled}" Value="False" >
+                                                    <Setter Property="Fill" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                            </StackPanel>
+                        </Button.Content>
+                        <Button.ContextMenu>
+                            <ContextMenu Placement="Bottom">
+                                <MenuItem x:Name="RemoteExecutionMenuItem" Header="Remote Execution..." Click="RemoteExecutionMenuItem_Click" IsEnabled="{Binding JobStore.HasNoRunningJobs}">
+                                </MenuItem>
+                                <MenuItem x:Name="LocalExecutionMenuItem" Header="Local Execution" Click="LocalExecutionMenuItem_Click" IsEnabled="{Binding JobStore.HasNoRunningJobs}">
+                                </MenuItem>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                    <Button BorderThickness="0" Background="{x:Null}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" IsTabStop="False" Click="DropdownButton_Click" ContextMenuService.IsEnabled="False" Padding="3,1" IsEnabled="{Binding JobStore.HasNoRunningJobs}" Visibility="{Binding JobStore.IsLocalExecution, Converter={StaticResource BoolVisibilityConverter}}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding JobStore.SelectedThreadCount, StringFormat='Simultaneous processes: {0}'}">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">

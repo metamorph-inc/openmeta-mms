@@ -117,6 +117,9 @@
       <DependentUpon>MergedPetDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="PetMerger.cs" />
+    <Compile Include="RemoteServerPromptDialog.xaml.cs">
+      <DependentUpon>RemoteServerPromptDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VisualizerDialog.xaml.cs">
       <DependentUpon>VisualizerDialog.xaml</DependentUpon>
     </Compile>
@@ -184,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PromptDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RemoteServerPromptDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

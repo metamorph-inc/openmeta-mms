@@ -13,7 +13,7 @@ using JobManager;
 
 namespace JobManagerFramework
 {
-    public class LocalPool
+    public class LocalPool : IJobPool
     {
         /// <summary>
         /// Each job must generate this file if the execution was failed.
@@ -307,6 +307,7 @@ namespace JobManagerFramework
                         {
                             commandToShowToUser = job.WorkingDirectory + ": " + job.RunCommand;
                         }
+                        proc0.StandardInput.Close();
 
                         int iWaitHandle =
                             WaitHandle.WaitAny(new WaitHandle[] {processExited, this.ShutdownPool, jobAborted});
@@ -409,7 +410,7 @@ namespace JobManagerFramework
             return job;
         }
 
-        internal int GetNumberOfUnfinishedJobs()
+        public int GetNumberOfUnfinishedJobs()
         {
             lock (QueuedJobs)
             lock (RunningJobs)

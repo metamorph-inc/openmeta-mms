@@ -122,10 +122,20 @@ namespace JobManagerFramework
             public string ResultsGetURL;
         }
         ConcurrentDictionary<Job, RemoteJobInfo> JobMap;
-
+        
         public int LocalConcurrentThreads
         {
-            get { return pool.NumAllThread; }
+            get
+            {
+                if (pool is LocalPool)
+                {
+                    return ((LocalPool) pool).NumAllThread;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
 
             set
             {
@@ -133,6 +143,11 @@ namespace JobManagerFramework
                 {
                     throw new InvalidPoolStateException(
                         "Cannot change number of concurrent threads while jobs are running.");
+                }
+                else if (!(pool is LocalPool))
+                {
+                    throw new InvalidPoolStateException(
+                        "Cannot change number of concurrent threads on a non-local pool");
                 }
                 else
                 {
@@ -147,7 +162,7 @@ namespace JobManagerFramework
         /// <summary>
         /// Local thread pool for jobs.
         /// </summary>
-        private LocalPool pool;
+        private IJobPool pool;
 
         private int highPriorityJobsRemaining = 0;
 
@@ -156,6 +171,7 @@ namespace JobManagerFramework
         public JobManager(int localConcurrentThreads = 0)
         {
             pool = new LocalPool(localConcurrentThreads);
+            //pool = new RemotePool("http://localhost:8080/", "test", "test");
             InitializeChannels();
             InitializePersistence();
 
@@ -175,6 +191,34 @@ namespace JobManagerFramework
         ~JobManager()
         {
             this.Dispose();
+        }
+
+        public void SwitchToRemotePool(string remoteServerUri, string username, string password)
+        {
+            if (pool.GetNumberOfUnfinishedJobs() != 0)
+            {
+                throw new InvalidPoolStateException(
+                    "Cannot switch pools while jobs are running.");
+            }
+
+            //Create a new remote pool with the new thread count
+            var oldPool = pool;
+            pool = new RemotePool(remoteServerUri, username, password);
+            oldPool.Dispose();
+        }
+
+        public void SwitchToLocalPool(int numConcurrentThreads)
+        {
+            if (pool.GetNumberOfUnfinishedJobs() != 0)
+            {
+                throw new InvalidPoolStateException(
+                    "Cannot switch pools while jobs are running.");
+            }
+
+            //Create a new local pool with the new thread count
+            var oldPool = pool;
+            pool = new LocalPool(numConcurrentThreads);
+            oldPool.Dispose();
         }
 
         public static readonly string ServerName = "JobServer";
@@ -391,20 +435,8 @@ namespace JobManagerFramework
 
             foreach (var selectedJob in toAbort)
             {
-                if (new Job.StatusEnum[]
-                {
-                    Job.StatusEnum.RunningOnServer, Job.StatusEnum.StartedOnServer, Job.StatusEnum.QueuedOnServer
-                }.Contains(selectedJob.Status))
-                {
-                    // Cancel remote execution
-                    // selectedJob.SubItems[Headers.Status.ToString()].Text = "Redownload Queued";
-                    selectedJob.Status = Job.StatusEnum.AbortOnServerRequested;
-                }
-                else
-                {
-                    // Cancel local execution
-                    pool.AbortJob(selectedJob);
-                }
+                // Cancel local execution
+                pool.AbortJob(selectedJob);
             }
             RestartMonitorTimer();
         }

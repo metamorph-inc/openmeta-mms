@@ -40,6 +40,13 @@ the Cleanup button.
 Status Bar
 ----------
 
+.. image:: images/RemoteExecutionMenu.png
+   :alt: Status Bar: Simultaneous Processes
+   :width: 278.5px
+
+Remote execution can be enabled from the status bar when no jobs are running.
+See `Remote Execution`_ for more details.
+
 .. image:: images/SimultaneousProcesses.png
    :alt: Status Bar: Simultaneous Processes
    :width: 186.5px
@@ -316,3 +323,28 @@ Action Buttons
 
 **Open Selected Job in Explorer:** This button will open Windows Explorer at the location of the execution
 directory for the highlighted job.
+
+Remote Execution
+----------------
+
+Remote execution of OpenMETA jobs is available if the OpenMETA Remote Execution
+Server is available on a remote machine.
+
+.. image:: images/RemoteExecutionMenu.png
+   :alt: Status Bar: Simultaneous Processes
+   :width: 278.5px
+
+To switch to remote execution, click the "Local Execution" dropdown on the
+status bar, and select "Remote Execution..." from the menu.
+
+.. image:: images/RemoteExecutionDialog.png
+   :alt: Status Bar: Simultaneous Processes
+   :width: 361px
+
+In the dialog that appears, enter the URL for the remote execution server as
+well as your username and password for the remote execution server (given to
+you by the server administrator) and click "OK".  All jobs will then be executed
+remotely rather than locally.
+
+To return to local execution, click the "Remote Execution" dropdown on the
+status bar, then select "Local execution" from the menu.

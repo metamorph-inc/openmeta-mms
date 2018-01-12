@@ -263,8 +263,7 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 	LOGFONT logFont;
 	getFacilities().GetFont(FONT_PORT)->gdipFont->GetLogFontW(getFacilities().getGraphics(), &logFont);
 	{
-		CDC dc;
-		dc.Attach(GetDC(NULL));
+		HDC dc = GetDC(NULL);
 		Gdiplus::Graphics g(dc);
 		Gdiplus::Font f(dc, &logFont);
 		Gdiplus::PointF zero(0.0, 0.0);
@@ -294,6 +293,7 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 			const_cast<ModelComplexPart*>(this)->m_prominentAttrsNamesCX = max(m_prominentAttrsNamesCX, prominentNameSize.Width);
 			const_cast<ModelComplexPart*>(this)->m_prominentAttrsValuesCX = max(m_prominentAttrsValuesCX, prominentValueSize.Width);
 		}
+		::ReleaseDC(NULL, dc);
 	}
 
 	long lWidth = 0;
