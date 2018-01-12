@@ -196,6 +196,11 @@ directory (i.e. the location of the current ``.mga`` file), in a
 Parameter Study Driver. This file will be copied to the execution
 directory when the PET is executed.
 
+.. figure:: images/driver_config_csv_file.png
+   :alt: Example CSV File DOE Type Configuration for a Parameter Study Driver
+   
+   Example CSV File DOE Type Configuration for a Parameter Study Driver
+
 All design variables that are unrepresented in the input CSV file will be
 assigned a value that is the average of the interval specified in that design
 variable's *Range* attribute in the Parameter Study Driver. Extra columns that
