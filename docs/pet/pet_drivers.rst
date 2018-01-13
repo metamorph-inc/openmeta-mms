@@ -10,102 +10,93 @@ A PET Driver allows the user to:
 
 .. _pet_drivers_parameter_study:
 
-Parameter Study
----------------
+Driver Basics
+-------------
 
-The Parameter Study varies system inputs and records designated system outputs
-for each set of inputs.
+Adding a Driver to a PET
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Adding a Parameter Study to a PET
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To add a Parameter Study to a PET, simply drag the **Parameter Study** icon from the
-Part Browser and onto the PET canvas.
+To add a *PET Driver* to a PET, simply left-click and drag the driver icon from the
+**Part Browser** and onto the PET canvas.
 
 .. figure:: images/ParameterStudy.png
-   :alt: text
+   :alt: Adding a Parameter Study Driver to a PET
 
-   A Parameter Study in a PET
+   Adding a Parameter Study Driver to a PET
 
-Design Variable
-~~~~~~~~~~~~~~~
+Design Variables
+~~~~~~~~~~~~~~~~
 
-A Design Variable placed inside a Parameter Study will appear as a port
-on the Parameter Study's PET model and can be connected to PET Analysis
+A Design Variable placed inside a PET Driver will appear as a port
+on the Driver's PET model and can be connected to PET Analysis
 Blocks.
 
-Over the course of a PET run, a Parameter Study Driver
-typically changes each Design Variable's value many times in order to
-provide the system being analyzed with different inputs. The Driver's Design
-Variables may be connected to the inputs of PET Analysis Blocks.
+Adding a Design Variable to a PET Driver
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   
+To add a Design Variable to a PET Driver, simply open the PET Model
+by double-clicking on the PET Driver in the PET Canvas and drag
+the **Design Variable** icon from the Part Browser and onto the canvas.
 
 .. figure:: images/DesignVariable.png
-   :alt: text
-
-   A Design Variable in a Parameter Study PET Driver
-
-.. figure:: images/DesignVariableConnected.png
-   :alt: text
-
-   A Parameter Study PET Driver's Design Variable connected to a PET Analysis Block
-
-Adding a Design Variable to a Parameter Study Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To add a Design Variable to a Parameter Study Driver, simply drag
-the **Design Variable** icon from the Part Browser and onto the PET canvas.
+   :alt: Adding Design Variables to a Parameter Study Driver
+   
+   Adding Design Variables to a Parameter Study Driver
 
 Design Variable Range
 ^^^^^^^^^^^^^^^^^^^^^
 
 Each Design Variable has **Range** attribute
 that can be set by the user.
+This range can be expressed in a few different ways:
 
-To set a Design Variable's range:
-
-#. Left-click on the Design Variable
-   and edit the **Range** attribute in the **Object Inspector**.
-
-#. Enter the Design Variable's minimum value followed by
-   a comma followed by the Design Variable's maximum value.
-   (e.g. Entering **-50,34** in a Design Variable's **Range** attribute
-   will limit that Design Variable to values between **-50** and **+34 inclusive**).
+#. A single string or numeric value. E.g. ``25.0`` or ``Diesel``.
+#. A real-number interval. This can include closed or open intervals.
+   If the interval is expressed without either parentheses or brackets it
+   is assumed to be a closed interval. E.g. ``1,10`` signifies a closed
+   interval between one and ten and ``(0,10000]`` signifies a half-closed
+   interval from zero exclusive to ten thousand inclusive.
+#. A semicolon-separated enumeration of either quoted strings or numbers.
+   E.g. ``2;3;5;7;11;13;17;19`` or ``"red";"blue";"green"``.
 
 .. figure:: images/DesignVariableRange.png
    :alt: text
 
    Setting a Design Variable's range
 
-Objective
-~~~~~~~~~
+Objectives
+~~~~~~~~~~
 
-An Objective placed inside a Parameter Study will appear as a port
-on the Parameter Study's PET model and PET Analysis Blocks can be
+Objectives are used to specify which values we want to record or optimize
+towards during the execution of the PET.
+An *Objective* placed inside a PET Driver will appear as a port
+on the PET Driver's PET model and the outputs of PET Analysis Blocks can be
 connected to it.
 
-At every iteration of the Parameter Study, the Objective will record
-the value of the Metric connected to it.
-
-Adding an Objective to a Parameter Study Driver
+Adding an Objective to a PET Driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To add an Objective to a Parameter Study Driver, simply drag
-the **Objective** icon from the Part Browser and onto the Parameter Study canvas.
+To add an *Objective* to a PET Driver, simply drag
+the **Objective** icon from the Part Browser and onto
+the PET Model canvas as you did with Design Variables.
 
-.. figure:: images/Objective.png
-   :alt: text
+.. figure:: images/ParameterStudyDriverPopulated.png
+   :alt: A Parameter Study PET Driver with Design Variables **a** and **b** and Objective **c**
 
-   An Objective in a Optimizer PET Driver
+   A Parameter Study PET Driver with Design Variables **a** and **b**
+   and Objective **c**
 
-.. figure:: images/ObjectiveConnected.png
-   :alt: text
 
-   A PET Analysis Block connected to an Optimizer PET Driver's Objective
+Parameter Study
+---------------
 
-Parameter Study Attributes
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+The Parameter Study Driver generates a set of inputs based on the type
+of Design of Experiments (DOE) that is being conducted. Then
+the driver evaluates the analysis workflow at each of the generated
+inputs sets and records the values of the objectives.
 
-Several critical Parameter Study attribute can be accessed by left-clicking
+The Parameter Study is configured by setting a adjusting a number
+of its attributes. These attributes can be accessed by left-clicking
 a Parameter Study and then looking under the **Attributes** tab of the
 **Object Inspector** window.
 
@@ -115,30 +106,31 @@ a Parameter Study and then looking under the **Attributes** tab of the
    A Parameter Study's Attributes
 
 Code
-^^^^
+~~~~
 
-Entering **num_samples=** followed by an integer number
-(e.g. **num_samples=10**) sets the number of Parameter Study samples.
+The **Code** attribute is used to pass configuration variables
+to underlying MDAO engine. For example, in the image above you can
+see entering we assigned the variable ``num_samples`` the value of ``10``.
 
-.. note:: The number of Parameter Study iterations (or data points)
-   depends on both **num_samples** and the **DOE Type**.
+See the `DOE Types`_ section below for more
+information on what code variables need to be set for each type.
 
-.. Surrogate Type:
-.. ^^^^^^^^^^^^^^^
+Surrogate Type
+~~~~~~~~~~~~~~
 
-.. ADD: This section.
+The **Surrogate Type** attribute is not currently documented.
 
-DOE Type:
-^^^^^^^^^
+DOE Types
+~~~~~~~~~
 
-The DOE Type determines the sampling method by which
+The **DOE Type** attribute determines the sampling method by which
 the Parameter Study explores the Design Variable space.
-
 Different DOE Types can be selected by left-clicking
-the **DOE Type** menu and selecting the desired method.
+the **DOE Type** attribute field and selecting the desired method.
+The different types and there accompanying configuration are described below.
 
 Full Factorial
-**************
+^^^^^^^^^^^^^^
 
 The Full Factorial type generates **DV^num_samples** input cases where
 **DV** is the number of Design Variables and **num_samples** is set
@@ -161,12 +153,12 @@ the PET will test the following *(x,y)* inputs: *(-10,-10), (-10,0),
 (-10,+10), (0,-10), (0,0), (0,+10), (+10,-10), (+10,0), (+10,+10)*.
 
 Central Composite
-*****************
+^^^^^^^^^^^^^^^^^
 
 This DOE type is currently unsupported.
 
 Opt Latin Hypercube
-*******************
+^^^^^^^^^^^^^^^^^^^
 
 The Opt Latin Hypercube type is a predetermined-samples driver that seeks to
 produce good coverage across all the dimensions. This is preferred to a Uniform
@@ -174,7 +166,7 @@ type of sampling in most cases as you have a higher probability of an
 evenly-sampled independent variables set.
 
 Uniform
-*******
+^^^^^^^
 
 The Uniform type generates **num_samples** input cases where **num_samples**
 is set in the **Code** attribute. The input cases are evenly distributed across
@@ -182,6 +174,30 @@ the ranges of all Design Variables.
 
 If **num_samples=1**, then, in the resulting single input case, each
 Design Variable will be set to its minimum value.
+
+CSV File
+^^^^^^^^
+
+The CSV File type allows for an arbitrary set of test cases to be specified
+in a CSV file and then executed with the given analysis workflow. This is
+useful when you have a number of edge cases you need to test.
+
+The input file is selected by placing the path, relative to the project
+directory (i.e. the location of the current ``.mga`` file), in a
+``filename='<path>'`` assignment in the **Code** attribute of the
+Parameter Study Driver. This file will be copied to the execution
+directory when the PET is executed.
+
+.. figure:: images/driver_config_csv_file.png
+   :alt: Example CSV File DOE Type Configuration for a Parameter Study Driver
+   
+   Example CSV File DOE Type Configuration for a Parameter Study Driver
+
+All design variables that are unrepresented in the input CSV file will be
+assigned a value that is the average of the interval specified in that design
+variable's *Range* attribute in the Parameter Study Driver. Extra columns that
+don't match any of the design variables are allowed in the input CSV, but
+they are ignored.
 
 .. _pet_drivers_optimizer:
 
