@@ -52,7 +52,10 @@ def start_pdb():
     sys.stdin = open('CONIN$', 'rt')
     import pdb; pdb.set_trace()
     
-supportedOperators = ["*", "+", ""]
+supported_operators = ["", "*", "SAMPLE", "+", "SUM", "COUNT", "AVERAGE", "MIN", "MAX", "AND", "OR"]
+
+def str2bool(s):
+    return s.lower() in ["t", "true", "1", "1.0", "1."]
 
 class ComputeData(object):
     def compute(self, currentobj, output_dir):
@@ -86,13 +89,26 @@ class ComputeData(object):
             if instruction.count(',') != 2:
                 raise ValueError('Property {} has invalid description format. It should contain 3 values, comma-separated'.format(name))
             pname,classname,op = instruction.split(',')
-            if op not in ('*', '+', ''):
+            if op not in supported_operators:
                 raise ValueError('Property {} has invalid operator \'{}\'. If should be * or +'.format(name, op))
             propDict[name] = {}
             propDict[name]["pname"] = pname
             propDict[name]["classname"] = classname
-            propDict[name]["op"] = op
-            propDict[name]["val"] = "0.0"
+            if op in ["", "*", "SAMPLE"]:
+                propDict[name]["op"] = "SAMPLE"
+            elif op in ["+", "SUM"]:
+                propDict[name]["op"] = "SUM"
+            else:
+                propDict[name]["op"] = op
+                
+            
+            if propDict[name]["op"] in ["SUM", "COUNT"]:
+                propDict[name]["val"] = 0.0
+            elif propDict[name]["op"] == "AVERAGE":
+                propDict[name]["val"] = 0.0
+                propDict[name]["count"] = 0.0
+            else:
+                propDict[name]["val"] = None
 
         ###############################################
         # Perform the desired operations on the model #
@@ -110,7 +126,7 @@ class ComputeData(object):
             if obj.type.name == "Component":
                 #log("Visit:"+obj.name)
                 add_classification(obj)
-                for tb_prop in propDict :
+                for tb_prop in propDict:
                     #log(tb_prop)
                     #log("Look for:"+propDict[tb_prop]["classname"])
                     #log("Class is:"+obj.Classifications)
@@ -119,18 +135,44 @@ class ComputeData(object):
                         for child in obj.children():
                             #log(child.name+" "+child.type.name+" equal to "+propDict[tb_prop]["pname"])
                             if (child.type.name=="Property" or child.type.name=="Parameter") and child.name == propDict[tb_prop]["pname"] :
-                                if propDict[tb_prop]["op"] == "*" or propDict[tb_prop]["op"] == "" :
+                                if propDict[tb_prop]["op"] in ["*", "", "SAMPLE"]:
                                     #log("val is: "+tb_prop+ " set to "+child.Value)
                                     propDict[tb_prop]["val"] = child.Value
                                     #log("add to "+tb_prop+" child.Value")
-                                if propDict[tb_prop]["op"] == "+"  :
+                                elif propDict[tb_prop]["op"] in ["SUM", "AVERAGE", "COUNT", "MAX", "MIN"]:
                                     #log("val is: "+child.Value + " added to "+tb_prop)
                                     try:
-                                        #log("Adding "+child.Value+" to running sum of "+propDict[tb_prop]["val"]+".")
-                                        propDict[tb_prop]["val"] = str(float(propDict[tb_prop]["val"]) + float(child.Value))
+                                        value = float(child.Value)
+                                        if propDict[tb_prop]["op"] in ["SUM", "AVERAGE"]:
+                                            propDict[tb_prop]["val"] += value
+                                            if propDict[tb_prop]["op"] == "AVERAGE":
+                                                propDict[tb_prop]["count"] += 1
+                                        elif propDict[tb_prop]["op"] == "COUNT":
+                                            propDict[tb_prop]["val"] += 1
+                                        elif propDict[tb_prop]["op"] == "MAX":
+                                            if propDict[tb_prop]["val"] == None:
+                                                propDict[tb_prop]["val"] = value
+                                            propDict[tb_prop]["val"] = max(propDict[tb_prop]["val"], child.Value)
+                                        elif propDict[tb_prop]["op"] == "MIN":
+                                            if propDict[tb_prop]["val"] == None:
+                                                propDict[tb_prop]["val"] = value
+                                            propDict[tb_prop]["val"] = min(propDict[tb_prop]["val"], child.Value)
                                     except:
-                                        #log("Error with value/string")
-                                        propDict[tb_prop]["val"] = child.Value
+                                        # Skip values that aren't numeric
+                                        pass
+                                elif propDict[tb_prop]["op"] == "AND":
+                                    if propDict[tb_prop]["val"] == None:
+                                        propDict[tb_prop]["val"] = True
+                                    propDict[tb_prop]["val"] &= str2bool(child.Value)
+                                elif propDict[tb_prop]["op"] == "OR":
+                                    if propDict[tb_prop]["val"] == None:
+                                        propDict[tb_prop]["val"] = False
+                                    propDict[tb_prop]["val"] |= str2bool(child.Value)
+        
+        for tb_prop in propDict:
+            if propDict[tb_prop]["op"] == "AVERAGE" and propDict[tb_prop]["count"] > 0:
+                propDict[tb_prop]["val"] /= propDict[tb_prop]["count"]
+            propDict[tb_prop]["val"] = str(propDict[tb_prop]["val"])
         #log("Done with parsing")
         
         #####################################

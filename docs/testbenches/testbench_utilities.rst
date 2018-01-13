@@ -108,17 +108,39 @@ has the following meaning:
    +-----------------------+--------------------------------+
    | **Operator**          | **Description**                |
    +-----------------------+--------------------------------+
+   | **\*** or **SAMPLE**  | Returns the last value that    |
+   |                       | is encountered.                |
+   +-----------------------+--------------------------------+
    | **+** or **SUM**      | Sums all the values            |
    |                       | that are found.                |
    +-----------------------+--------------------------------+
-   | **\*** or **SAMPLE**  | Returns the first value that   |
-   |                       | is encountered.                |
+   | **AVERAGE**           | Returns the average of all the |
+   |                       | values that are found.         |
+   +-----------------------+--------------------------------+
+   | **COUNT**             | Returns a count of the number  |
+   |                       | of properties that are found.  |
+   +-----------------------+--------------------------------+
+   | **MAX**               | Returns the maximum value that |
+   |                       | is found.                      |
+   +-----------------------+--------------------------------+
+   | **MINIMUM**           | Returns the minimum value that |
+   |                       | is found.                      |
+   +-----------------------+--------------------------------+
+   | **AND**               | Returns the boolean ``&&`` of  |
+   |                       | the values that are            |
+   |                       | found.                         |
+   +-----------------------+--------------------------------+
+   | **OR**                | Returns the boolean ``||`` of  |
+   |                       | the values that are            |
+   |                       | found.                         |
    +-----------------------+--------------------------------+
    
    
-For example, the query in the images above, ``Mass,*,+``, will return
-the summation of all the values in properties named "Mass" from the
-*TopLevelSystemUnderTest*.
+   
+For example, the query in the images above, ``Mass,*,+``, would return
+the summation of all the values in properties or parameters named "Mass" in
+components in the *TopLevelSystemUnderTest*, and ``Mass,,COUNT`` would return
+a count of the said properties or parameters.
 
 Assigning Queries to Metrics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
