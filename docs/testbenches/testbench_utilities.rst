@@ -3,7 +3,7 @@
 Common Utilities
 ================
 
-Custom Processor
+Value Aggregator
 ----------------
 
 Introduction
@@ -30,7 +30,7 @@ Depending how few different components and properties you have in your
 OpenMETA model, it may be possible to use Value Flow to wire all the needed
 values out of your model, but as the complexity of the model increases, it
 quickly becomes infeasible to wire out every property you want to extract
-from a system model. The **customProcessor.py** script was designed to make
+from a system model. The **ValueAggregator.py** script was designed to make
 the task of gathering values easier.
 
 Configuring the Test Bench
@@ -45,7 +45,7 @@ If a Workflow Definitions folder doesn't exist in your Testing Folder, you
 can add one by Right-clicking the Testing Folder and selecting:
 :menuselection:`Insert Folder --> Workflow Definitions`.
 
-To configure a Workflow to execute the **customProcessor.py** script, follow
+To configure a Workflow to execute the **ValueAggregator.py** script, follow
 the steps below:
 
 #. Add a Task to the *Workflow* by left-click-dragging a **Task** from the 
@@ -62,7 +62,7 @@ the steps below:
    .. image:: images/workflow_cyphypython.png
       :alt: Selecting the CyPhyPython Interpreter
       
-#.  Double-click the resulting Task object and enter "customProcessor.py"
+#.  Double-click the resulting Task object and enter "ValueAggregator.py"
     into the **script** field, then close the window.
     
     .. image:: images/workflow_script_parameter.png
@@ -77,10 +77,10 @@ different queries that you want to perform on the model. An OpenMETA
 to perform. The *Description* attribute of the Property is where you will
 place the definition of the query.
 
-.. figure:: images/customprocessor_tb_property.png
-   :alt: A Test Bench Property with a Custom Processor Query in the Description
+.. figure:: images/value_aggregator_tb_property.png
+   :alt: A Test Bench Property with a Value Aggregator Query in the Description
    
-   A Test Bench Property with a Custom Processor Query in the
+   A Test Bench Property with a Value Aggregator Query in the
    Description
 
 The query takes the form of a comma-separated triplet where the each field
@@ -130,10 +130,10 @@ Similar to the queries themselves, an assignment is accomplished by adding
 an assignment statement to the *Description* attribute of a Test Bench
 *Metric*.
 
-.. figure:: images/customprocessor_tb_metric.png
-   :alt: A Test Bench Metric with a Custom Processor Assignment in the Description
+.. figure:: images/value_aggregator_tb_metric.png
+   :alt: A Test Bench Metric with a Value Aggregator Assignment in the Description
    
-   A Test Bench Metric with a Custom Processor Assignment in the Description
+   A Test Bench Metric with a Value Aggregator Assignment in the Description
 
 In the image above, you can see that the **Total Mass** that was calculated
 with a query is being assigned to the **VehicleMass** metric.
