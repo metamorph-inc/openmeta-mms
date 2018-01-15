@@ -17,6 +17,7 @@ for Project Ara.
 
    testbenchbasics
    cadtestbenches
+   testbench_utilities
 
 .. toctree::
    :maxdepth: 1

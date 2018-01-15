@@ -3,6 +3,25 @@
 Advanced Topics
 ===============
 
+Common Workflows
+----------------
+
+Using a Test Bench to Extract Properties 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Often various Property and Parameter values from Components or Component
+Assemblies in the OpenMETA model are needed in the context of a PET to
+drive the parameters of the various Analysis Blocks; the best way to get these
+values is to use a Test Bench.
+
+.. figure:: images/HillClimbPET.png
+   :alt: PET with a Test Bench to extract Properties from the OpenMETA Model
+
+   PET with a Test Bench to extract Properties from the OpenMETA Model
+
+See the :ref:`testbench_utilities` section of
+the Test Bench chapter for information on how to do this.
+
 Optimization
 ------------
 
