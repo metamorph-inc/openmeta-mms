@@ -50,7 +50,7 @@ Each Design Variable has **Range** attribute
 that can be set by the user.
 This range can be expressed in a few different ways:
 
-#. A single string or numeric value. E.g. ``25.0`` or ``Diesel``.
+#. A single string or numeric value. E.g. ``25.0`` or ``"Diesel"``.
 #. A real-number interval. This can include closed or open intervals.
    If the interval is expressed without either parentheses or brackets it
    is assumed to be a closed interval. E.g. ``1,10`` signifies a closed
