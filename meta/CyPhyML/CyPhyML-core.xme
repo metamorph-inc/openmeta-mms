@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{F372B6D2-E439-4571-BD7B-174569A4A255}" cdate="Thu Jan 11 13:04:57 2018" mdate="Thu Jan 11 13:04:57 2018" version="" metaguid="{C84D2738-4519-44F2-B4C1-114F73567576}" metaversion="" metaname="MetaGME">
+<project guid="{440DF7C0-B806-4559-BF57-17BB14D2325B}" cdate="Mon Jan 15 15:06:15 2018" mdate="Mon Jan 15 15:06:15 2018" version="" metaguid="{C84D2738-4519-44F2-B4C1-114F73567576}" metaversion="" metaname="MetaGME">
 	<name>CyPhyML-core</name>
 	<comment></comment>
 	<author></author>
@@ -39611,7 +39611,7 @@ sRefParent=srcResultFlow_refport_parent
 						</regnode>
 					</regnode>
 					<regnode name="description" isopaque="yes">
-						<value>A single number (e.g. 1.5), a comma-separated range (e.g. 1.5,3), or a list of enum values (e.g. &quot;item one&quot;;&quot;item two&quot; or 1.5;3)</value>
+						<value>A single number (e.g. 1.5), a real-number interval (e.g. (0,5]), or a list of enum values (e.g. &quot;item one&quot;;&quot;item two&quot; or 1.5;3)</value>
 					</regnode>
 					<attribute kind="ContentType" status="meta">
 						<value></value>
