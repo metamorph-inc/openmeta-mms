@@ -1,5 +1,5 @@
 rem Build Old Docs
-python build.py
+..\bin\Python27\Scripts\python build.py
 rem Build New Docs
 rd /s/q _build
 cmd /c make html
