@@ -48,13 +48,36 @@ namespace CyPhy2Simulink.Simulink
 
         private static void GenerateRunCmd(TextWriter writer, IList<string> postProcessScripts )
         {
-            writer.WriteLine("\"{0}\" PopulateTestBenchParams.py", META.VersionInfo.PythonVEnvExe);
+            /*
+%SystemRoot%\SysWoW64\REG.exe query "HKLM\software\META" /v "META_PATH"
+
+SET QUERY_ERRORLEVEL=%ERRORLEVEL%
+
+IF %QUERY_ERRORLEVEL% neq 0 (
+    echo on
+    echo "META tools not installed." >> _FAILED.txt
+    echo "See Error Log: _FAILED.txt"
+    exit %QUERY_ERRORLEVEL%
+)
+
+FOR /F "skip=2 tokens=2,*" %%A IN ('%SystemRoot%\SysWoW64\REG.exe query "HKLM\software\META" /v "META_PATH"') DO SET META_PATH=%%B
+SET META_PYTHON_EXE="%META_PATH%\bin\Python27\Scripts\Python.exe"
+REM Interpreter-specific stuff goes here
+IF %ERRORLEVEL% neq 0 (
+    echo on
+    echo "Simulink simulation failed." >> _FAILED.txt
+    exit %ERRORLEVEL%
+)
+            */
+            writer.WriteLine("%SystemRoot%\\SysWoW64\\REG.exe query \"HKLM\\software\\META\" /v \"META_PATH\"\r\n\r\nSET QUERY_ERRORLEVEL=%ERRORLEVEL%\r\n\r\nIF %QUERY_ERRORLEVEL% neq 0 (\r\n    echo on\r\n    echo \"META tools not installed.\" >> _FAILED.txt\r\n    echo \"See Error Log: _FAILED.txt\"\r\n    exit %QUERY_ERRORLEVEL%\r\n)\r\n\r\nFOR /F \"skip=2 tokens=2,*\" %%A IN (\'%SystemRoot%\\SysWoW64\\REG.exe query \"HKLM\\software\\META\" /v \"META_PATH\"\') DO SET META_PATH=%%B\r\nSET META_PYTHON_EXE=\"%META_PATH%\\bin\\Python27\\Scripts\\Python.exe\"");
+            writer.WriteLine("%META_PYTHON_EXE% PopulateTestBenchParams.py");
             writer.WriteLine("matlab.exe -nodisplay -nosplash -nodesktop -wait -r \"diary('matlab.out.txt'), try, run('build_simulink'), run('run_simulink'), catch me, disp('An error occurred while building or executing the model:'), fprintf('%%s / %%s\\n',me.identifier,me.message), exit(1), end, exit(0)\"");
 
             foreach (var script in postProcessScripts)
             {
-                writer.WriteLine("\"{0}\" \"{1}\"", META.VersionInfo.PythonVEnvExe, script);
+                writer.WriteLine("%META_PYTHON_EXE% \"{0}\"", script);
             }
+            writer.WriteLine("IF %ERRORLEVEL% neq 0 (\r\n    echo on\r\n    echo \"Simulink simulation failed.\" >> _FAILED.txt\r\n    exit %ERRORLEVEL%\r\n)");
         }
 
         private static void CopySupportFile(string outputDirectory, string fileName, string contents)
