@@ -3,7 +3,6 @@
 import json
 from string import Template
 import sys
-import re
 
 def main():
     # Get Testbench Manifest Parameters
@@ -18,11 +17,10 @@ def main():
         schema_template = f_in.read()
     
     # Try to generate schema file from template
-    schema = Template(schema_template).safe_substitute(parameters)
-
-    unsubstituted_param = re.search("\$\{(.*)\}", schema)
-    if unsubstituted_param is not None:
-        error_message = "Error: Run Aborted: Parameter '{}' does not exist in testbench_manifest.json.".format(unsubstituted_param.group(1))
+    try:
+        schema = Template(schema_template).substitute(parameters)
+    except KeyError, Argument:
+        error_message = "Error: Run Aborted: {} does not exist in testbench_manifest.json.".format(Argument)
         #Pass error message to Manifest
         testbench_manifest["ErrorMessage"] = error_message
 
