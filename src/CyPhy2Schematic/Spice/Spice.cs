@@ -65,7 +65,7 @@ namespace CyPhy2Schematic.Spice
 
         public void Serialize(StreamWriter writer)
         {
-            writer.Write("{0}{1} ", type, name);
+            writer.Write("{0}{1} ", type, name.Replace("$", "$$"));
             foreach (var net in nets)                   // ports are index-ordered
                 writer.Write("{0} ", net.Value);
             if (classType != null) 
