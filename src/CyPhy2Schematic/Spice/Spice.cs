@@ -22,7 +22,7 @@ namespace CyPhy2Schematic.Spice
         public void Serialize(string spiceFile)
         {
             StreamWriter writer = new StreamWriter(spiceFile);
-            writer.WriteLine("CyPhy2Schematic Circuit {0}", name);
+            writer.WriteLine("CyPhy2Schematic Circuit {0}", name.Replace("$", "$$"));
             writer.WriteLine("* Network Topology");
             foreach (var node in nodes)
             {
@@ -32,13 +32,13 @@ namespace CyPhy2Schematic.Spice
             writer.WriteLine("* Sub Circuits");
             foreach (var sub in subcircuits)
             {
-                writer.Write(sub.Value);
+                writer.Write(sub.Value.Replace("$", "$$"));
                 writer.WriteLine();
             }
             writer.WriteLine();
             if (analysis != null)
             {
-                writer.WriteLine(analysis);
+                writer.WriteLine(analysis.Replace("$", "$$"));
             }
             writer.WriteLine();
             writer.WriteLine(".end");
@@ -65,18 +65,18 @@ namespace CyPhy2Schematic.Spice
 
         public void Serialize(StreamWriter writer)
         {
-            writer.Write("{0}{1} ", type, name.Replace("$", "$$"));
+            writer.Write("{0}{1} ", new String(type, 1).Replace("$", "$$"), name.Replace("$", "$$"));
             foreach (var net in nets)                   // ports are index-ordered
-                writer.Write("{0} ", net.Value);
+                writer.Write("{0} ", net.Value.Replace("$", "$$"));
             if (classType != null) 
-                writer.Write("{0} ", classType);            // sub-circuit name or model name
+                writer.Write("{0} ", classType.Replace("$", "$$"));            // sub-circuit name or model name
             foreach (var param in parameters)           // params are name-ordered
             {
                 // value parameters are special - don't require a name= prefix
                 if (param.Key.Contains("value"))
                     writer.Write("{0} ", param.Value);
                 else
-                    writer.Write("{0}={1} ", param.Key, param.Value);
+                    writer.Write("{0}={1} ", param.Key.Replace("$", "$$"), param.Value);
             }
             writer.WriteLine();
         }

@@ -238,7 +238,7 @@ namespace CyPhy2Schematic.Schematic
                 }
                 else
                 {
-                    node.parameters.Add(par.Name, FindTestBenchParameter(par) ?? par.Attributes.Value);
+                    node.parameters.Add(par.Name, FindTestBenchParameter(par) ?? par.Attributes.Value.Replace("$", "$$"));
                 }
             }
 
