@@ -163,7 +163,7 @@ namespace TestRemoteExecution
 
             var info = new ProcessStartInfo("openmeta-executor-worker.exe", String.Format(
                 // FIXME get version number better, or pass --ignore-job-labels to server
-                "-l Windows14.13,OpenModelica,py_modelica14.13,OpenModelica__latest_,Creo,CADCreoParametricCreateAssembly.exev1.4 " +
+                "-l Windows14.13,OpenModelica,py_modelica14.13,OpenModelica__latest_,Creo,CADCreoParametricCreateAssembly.exev1.4,Schematic,Simulink,RF,Visualizer, " +
                 "{0} \"{1}\"", remoteServerUri, workerKey));
             worker = new Process();
             worker.StartInfo = info;
