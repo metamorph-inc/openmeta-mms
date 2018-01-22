@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <DirectoryRef Id="INSTALLDIR_BIN" />
+</Fragment>
+<Fragment>
+<ComponentGroup Id="TestRemoteExecution">
+  <Component Id="TestRemoteExecution.dll" Directory="INSTALLDIR_BIN">
+    <File Id="TestRemoteExecution.dll" Name="TestRemoteExecution.dll" KeyPath="yes" Source="../test/TestRemoteExecution\bin\Release\TestRemoteExecution.dll" />
+    <Class Id="{7C908995-E367-4D93-B112-24EC52ED6F69}" Context="InprocServer32" Description="TestRemoteExecution" ThreadingModel="both" ForeignServer="mscoree.dll">
+      <ProgId Id="CyPhy.TestRemoteExecution" Description="TestRemoteExecution" />
+    </Class>
+    <RegistryValue Root="HKCR" Key="CLSID\{7C908995-E367-4D93-B112-24EC52ED6F69}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{7C908995-E367-4D93-B112-24EC52ED6F69}\InprocServer32" Name="Class" Value="TestRemoteExecution.TestRemoteExecution" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{7C908995-E367-4D93-B112-24EC52ED6F69}\InprocServer32" Name="Assembly" Value="TestRemoteExecution, Version=1.0.0.0, Culture=neutral" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{7C908995-E367-4D93-B112-24EC52ED6F69}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="CLSID\{7C908995-E367-4D93-B112-24EC52ED6F69}\InprocServer32" Name="CodeBase" Value="file:///[#TestRemoteExecution.dll]" Type="string" Action="write" />
+    <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
+
+    <!-- File Source='..\test\TestRemoteExecution\app.config' Name='TestRemoteExecution.exe.config'/ -->
+  </Component>
+</ComponentGroup>
+</Fragment>
+</Wix>
