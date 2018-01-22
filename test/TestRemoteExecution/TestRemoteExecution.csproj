@@ -59,15 +59,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit">
-      <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.console.clr4.x86">
-      <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.console.clr4.x86.exe</HintPath>
-    </Reference>
-    <Reference Include="xunit.extensions">
-      <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.extensions.dll</HintPath>
-    </Reference>
     <Reference Include="GME.Util, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />
     <Reference Include="GME.MGA, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />
     <Reference Include="GME.MGA.Core, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL" />

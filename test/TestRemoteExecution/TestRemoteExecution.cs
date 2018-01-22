@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using JobManager;
 using JobManagerFramework;
 using System.Diagnostics;
-using Xunit;
 using System.IO;
 using GME.MGA;
 using System.Collections.Concurrent;
@@ -108,7 +107,10 @@ namespace TestRemoteExecution
             addUser.StandardInput.WriteLine(password);
             addUser.StandardInput.Close();
             addUser.WaitForExit();
-            Assert.Equal(0, addUser.ExitCode);
+            if (addUser.ExitCode != 0)
+            {
+                throw new ApplicationException("Error adding user to openmeta-executor-server");
+            }
         }
 
         public void StartServer()
@@ -221,10 +223,16 @@ namespace TestRemoteExecution
             try
             {
                 var tb = project.RootFolder.ObjectByPath[tbpath];
-                Assert.True(tb != null, "Could not find " + tbpath);
+                if (tb == null)
+                {
+                    throw new ApplicationException("Could not find " + tbpath);
+                }
                 tbId = tb.ID;
                 var config = project.RootFolder.ObjectByPath[configPath];
-                Assert.True(config != null, "Could not find " + configPath);
+                if (config == null)
+                {
+                    throw new ApplicationException("Could not find " + configPath);
+                }
                 configId = config.ID;
             }
             finally
@@ -246,7 +254,10 @@ namespace TestRemoteExecution
             masterApi = new CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI();
             masterApi.Initialize(project);
             var results = masterApi.RunInTransactionWithConfigLight(configurationSelection);
-            Assert.True(results.First().Success);
+            if (results.First().Success == false)
+            {
+                throw new ApplicationException("MasterInterpreter run failed");
+            }
 
             while (true)
             {
@@ -256,7 +267,7 @@ namespace TestRemoteExecution
                     if (Job.IsFailedStatus(job.Status))
                     {
                         // TODO dump logs, stdout.txt, stderr.txt
-                        Assert.Equal(Job.StatusEnum.Succeeded, job.Status);
+                        throw new ApplicationException("Remote run failed: " + job.Status);
                     }
                     else if (job.Status == Job.StatusEnum.Succeeded)
                     {
