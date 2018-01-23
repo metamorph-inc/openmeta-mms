@@ -26,7 +26,7 @@ Toolbar
 
 **Select Results Folder:** This button allows you to specify a new working directory for the
 Results Browser. This directory must include at a minimum a
-'results' folder with some results already generated.
+'results' folder with some results already generated.
 
 **Refresh:** This button will force a refresh of the PET Tab and Test Benches Tab
 results lists. A refresh happens automatically at the conclusion of each

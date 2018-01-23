@@ -16,7 +16,7 @@ Welcome to OpenMETA's documentation!
    tutorials/tutorials
    walkthroughs/walkthroughs
    domains/domains
-   testbenches/00-TestBenches
+   testbenches/testbenches
    pet/pet
    resultsbrowser/resultsbrowser
    visualizer/visualizer

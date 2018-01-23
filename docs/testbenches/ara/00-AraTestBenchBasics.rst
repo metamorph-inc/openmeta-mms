@@ -1,7 +1,7 @@
-.. _testbenchbasics:
+.. _ara_testbench_basics:
 
-Test Bench Basics
-=================
+Project Ara Test Benches Basics
+===============================
 
 Configuring
 ~~~~~~~~~~~

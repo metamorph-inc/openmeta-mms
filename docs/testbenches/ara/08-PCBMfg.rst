@@ -22,7 +22,8 @@ the design subfolder. (The design subfolder is located in the
 determined by checking the "Path" attribute of the top-level component
 assembly.)
 
-For general instructions on running test benches, refer to :ref:`testbenchbasics`.
+For general instructions on running test benches, refer to
+:ref:`ara_testbench_basics`.
 
 You'll also need an Eagle CAM job file for your design. This file
 specifies, among other things, which Gerber plot files will be produced
