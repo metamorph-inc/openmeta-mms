@@ -2651,7 +2651,7 @@ namespace SchematicUnitTests
                 Assembly.GetExecutingAssembly().CodeBase.Substring("file:///".Length),
                 // [Trait("THIS", "ONE")]
                 // "/trait", "THIS=ONE",
-                "/trait", "Type=SPICE", // Do SPICE Tests Only
+                //"/trait", "Type=SPICE", // Do SPICE Tests Only
                 //"/noshadow",
             });
             Console.In.ReadLine();
