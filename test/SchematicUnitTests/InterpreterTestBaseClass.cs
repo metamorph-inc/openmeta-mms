@@ -137,7 +137,7 @@ namespace SchematicUnitTests
                 Assert.True(0 == process.ExitCode, output + Environment.NewLine + error);
             }
 
-            // Check that the "schema.brd" file exists.
+            // Check that the "schema.cir" file exists.
             Assert.True(File.Exists(pathGeneratedSchemaFile), "Failed to generate " + generatedSchemaFile);
             return pathGeneratedSchemaFile;
         }

@@ -818,6 +818,38 @@ namespace SchematicUnitTests
 
         [Fact]
         [Trait("Type", "SPICE")]
+        public void AraSPICETestTestBench()
+        {
+            string TestbenchPath = "/@Testing|kind=Testing|relpos=0/@AraTestBenches|kind=Testing|relpos=0/SPICETest|kind=TestBench|relpos=0";
+
+            var runResult = MasterInterpreterTest.CyPhyMasterInterpreterRunner.RunMasterInterpreterAndReturnResults(fixture.path_MGA,
+                                                                        TestbenchPath,
+                                                                        "/@ComponentAssemblies|kind=ComponentAssemblies|relpos=0/@mic_preamp|kind=ComponentAssembly|relpos=0");
+
+            string OutputDir = runResult.OutputDirectory;
+
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Generated EAGLE schematic (" + generatedSchemaFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Generated layout file (" + generatedLayoutFile + "), but shouldn't have.");
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Failed to generate " + generatedSpiceViewerLauncher);
+
+            string sch_template = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
+
+            // Check for lone '$' characters; these should have been escaped to '$$' or part of a '${.*}'
+            Assert.Equal(0, Regex.Matches(sch_template, @"[^$]\$[^${]").Count);
+            Assert.Equal(1, Regex.Matches(sch_template, @"[^$]\$\$[^$]").Count);
+            Assert.Equal(0, Regex.Matches(sch_template, @"[^$]\$\{([A-Za-z]+)\}").Count);
+
+            RunPopulateSchemaTemplate(OutputDir);
+
+            string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
+            Assert.Equal(1, Regex.Matches(sch, @"[^$]\$[^${]").Count);
+            Assert.Equal(0, Regex.Matches(sch, @"[^$]\$\$[^$]").Count);
+            Assert.Equal(0, Regex.Matches(sch, @"[^$]\$\{([A-Za-z]+)\}").Count);
+        }
+
+        [Fact]
+        [Trait("Type", "SPICE")]
         public void SpiceTemplateGeneration()
         {
             string TestbenchPath = "/@TestBenches|kind=Testing|relpos=0/SpiceTemplateTest|kind=TestBench|relpos=0";
@@ -836,6 +868,7 @@ namespace SchematicUnitTests
             string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
             Assert.Contains("\nXResistor ", sch);
             Assert.Contains("\nLInductor ", sch);
+            Assert.Equal(4, Regex.Matches(sch, "[^$][$][{]([A-Za-z]+)[}]").Count);
             Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
             Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
 
