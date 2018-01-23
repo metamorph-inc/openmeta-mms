@@ -271,7 +271,8 @@ namespace JobManagerFramework.RemoteExecution
             Running = 1,
             Succeeded = 2,
             Failed = 3,
-            Cancelled = 4
+            Cancelled = 4,
+            RequestingCancellation = 5
         }
 
         public class RemoteJob
