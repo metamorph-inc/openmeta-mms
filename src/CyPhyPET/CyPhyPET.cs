@@ -893,6 +893,8 @@ namespace CyPhyPET
                     interpreter.ProgId);
             }
 
+            var diTestBenchOutputDir = Directory.CreateDirectory(Path.Combine(OutputDirectory, outputDirName));
+
             CyPhy.Task task = null;
             string result = string.Empty;
             if (testBench.Children.WorkflowRefCollection.Count() == 1)
@@ -906,6 +908,8 @@ namespace CyPhyPET
                     {
                         task = workflow.Children.TaskCollection.FirstOrDefault();
                     }
+
+                    CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI.CopyFiles(workflow.Children.CopyFilesCollection, mainParameters.ProjectDirectory, diTestBenchOutputDir.FullName);
                 }
             }
 
@@ -929,8 +933,6 @@ namespace CyPhyPET
             interpreter.SetWorkflowParameterValues();
 
             interpreter.Initialize(this.mainParameters.Project);
-
-            var diTestBenchOutputDir = Directory.CreateDirectory(Path.Combine(OutputDirectory, outputDirName));
 
             interpreter.MainParameters.OutputDirectory = diTestBenchOutputDir.FullName;
             interpreter.MainParameters.CurrentFCO = (MgaFCO)testBench.Impl;

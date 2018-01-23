@@ -1100,6 +1100,12 @@ namespace CyPhyPET
             config.type = "matlab_wrapper.MatlabWrapper";
         }
 
+        private void CopyFiles(CyPhy.ParametricTestBench wrapper)
+        {
+            var projectDir = Path.GetDirectoryName(Path.GetFullPath(wrapper.Impl.Project.ProjectConnStr.Substring("MGA=".Length)));
+            CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI.CopyFiles(wrapper.Children.CopyFilesCollection, projectDir, this.outputDirectory);
+        }
+
         public PETConfig.Component GenerateCode(CyPhy.Constants constants)
         {
             // Get a new config
@@ -1435,6 +1441,7 @@ namespace CyPhyPET
 
             this.components.Add(excel.Name, config);
 
+            CopyFiles(excel);
             return config;
         }
 
