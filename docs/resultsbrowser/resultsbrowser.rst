@@ -327,24 +327,42 @@ directory for the highlighted job.
 Remote Execution
 ----------------
 
-Remote execution of OpenMETA jobs is available if the OpenMETA Remote Execution
+Remote execution of OpenMETA jobs is available if a OpenMETA Remote Execution
 Server is available on a remote machine.
 
 .. image:: images/RemoteExecutionMenu.png
    :alt: Status Bar: Simultaneous Processes
    :width: 278.5px
 
+Establishing a Connection
+~~~~~~~~~~~~~~~~~~~~~~~~~
+   
 To switch to remote execution, click the "Local Execution" dropdown on the
 status bar, and select "Remote Execution..." from the menu.
-
-.. image:: images/RemoteExecutionDialog.png
-   :alt: Status Bar: Simultaneous Processes
-   :width: 361px
 
 In the dialog that appears, enter the URL for the remote execution server as
 well as your username and password for the remote execution server (given to
 you by the server administrator) and click "OK".  All jobs will then be executed
 remotely rather than locally.
 
+.. image:: images/RemoteExecutionDialog.png
+   :alt: Remote Execution Connection Dialog
+   :width: 499px
+
+Although the passwords are not stored for security reasons, a list of
+Recent Servers is saved for ease of reconnection.
+
+.. image:: images/RemoteExecutionConnectionEstablished.png
+   :alt: An established remote execution connection
+   :width: 417px
+
 To return to local execution, click the "Remote Execution" dropdown on the
 status bar, then select "Local execution" from the menu.
+
+Setting up a Server
+~~~~~~~~~~~~~~~~~~~
+
+The OpenMETA Remote Executor Server is not currently shipped with public
+releases of OpenMETA.
+If you are interested in this feature of OpenMETA, please contact us for
+more information.
