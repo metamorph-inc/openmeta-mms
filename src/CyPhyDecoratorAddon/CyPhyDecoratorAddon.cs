@@ -21,7 +21,8 @@ namespace CyPhyDecoratorAddon
 	public class CyPhyDecoratorAddon :
 		IMgaComponentEx,
 		IGMEVersionInfo,
-		IMgaEventSink
+		IMgaEventSink,
+		IDisposable
 	{
 
 		private MgaAddOn addon;
@@ -36,6 +37,7 @@ namespace CyPhyDecoratorAddon
 		{
 			if (@event == globalevent_enum.GLOBALEVENT_CLOSE_PROJECT)
 			{
+				addon.Destroy();
 				Marshal.FinalReleaseComObject(addon);
 				addon = null;
 			}
@@ -147,11 +149,18 @@ namespace CyPhyDecoratorAddon
                             form.addon = this;
                             form.Init();
 
+                            HashSet<string> taskKinds = new HashSet<string>()
+                            {
+                                "ExecutionTask",
+                                "Task"
+                            };
+
                             IEnumerable<MgaAtom> taskChildren = subject.ExGetParent().
                                                                         ChildObjects.
                                                                         OfType<MgaAtom>().
                                                                         Where(x => x.ExDstFcos().Count() == 0).
-                                                                        Where(x => x.ID != subject.ID);
+                                                                        Where(x => x.ID != subject.ID).
+                                                                        Where(x => taskKinds.Contains(x.Meta.Name));
 
                             form.lbTasks.Items.Clear();
                             foreach (var currTask in taskChildren)
@@ -380,6 +389,15 @@ namespace CyPhyDecoratorAddon
 		}
 
 		#endregion
+
+		public void Dispose()
+		{
+			if (addon != null)
+			{
+				addon.Destroy();
+				addon = null;
+			}
+		}
 	}
 
     internal class MgaAtomWrapper
