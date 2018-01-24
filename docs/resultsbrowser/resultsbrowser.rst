@@ -72,18 +72,18 @@ Column Headers
 
 **Dataset Types:**
 
--  |PET_ICON| **PET**: These are results from a single execution of the Master
+-  |PET_ICON| **PET:** These are results from a single execution of the Master
    Interpreter within a PET context.
--  |MERGED_PET_ICON| **Merged PET**: These are results that that were combined
+-  |MERGED_PET_ICON| **Merged PET:** These are results that that were combined
    from one or more other result sets, with the Merge Selected button.  They may
    be refreshed by right-clicking and selecting "Refresh" from the context menu.
--  |ARCHIVE_ICON| **Archive**: These are archives of PET Results that were
+-  |ARCHIVE_ICON| **Archive:** These are archives of PET Results that were
    created with the 'Archive Selected' button [deprecated with OpenMETA 0.11] at
    the bottom of the PET Dataset Pane. They reside in .csv format in the
    ./archive folder in the root of the project.  Archives must be converted to
    the new Merged PET format (using the "Merge Selected" button while the
    archive is selected) before they can be launched in the Visualizer.
--  |PET_RESULT_ICON| **Legacy PET**: These are PET entries created using earlier
+-  |PET_RESULT_ICON| **Legacy PET:** These are PET entries created using earlier
    versions of the Results Browser, which must be merged (using the "Merge
    Selected" button) before they can be launched in the Visualizer.  These are
    only shown when "Show Legacy PETs" is checked in the Settings
@@ -137,12 +137,12 @@ Right-clicking a PET or Merged PET will display a context menu:
    :alt: PET Tab Context Menu
    :width: 537.5px
 
-**Refresh**:  Updates the selected dataset to include the latest data from its
+**Refresh:**  Updates the selected dataset to include the latest data from its
 source datasets.
 
-**Rename...**:  Renames the selected dataset.
+**Rename...:**  Renames the selected dataset.
 
-**Delete...**: Deletes the selected dataset.
+**Delete...:** Deletes the selected dataset.
 
 PET Details Pane
 ~~~~~~~~~~~~~~~~
@@ -266,15 +266,15 @@ Below the header is a summary of the Test Bench. Each of the five
 sections provides information that is encoded in the
 ``testbench_manifest.json`` file.
 
--  Steps: An ordered list of the commands to be invoked for the
+-  **Steps:** An ordered list of the commands to be invoked for the
    execution of this Test Bench.
--  Parameters: The input parameters of the Test Bench, including their
+-  **Parameters:** The input parameters of the Test Bench, including their
    value, range, and units.
--  Metrics: The output metrics that resulted from the execution of the
+-  **Metrics:** The output metrics that resulted from the execution of the
    Test Bench, including their value and units.
--  Artifacts: A list of recorded artifacts from the Test Bench
+-  **Artifacts:** A list of recorded artifacts from the Test Bench
    execution.
--  Visualization Artifacts: A list of the recorded visual artifacts from
+-  **Visualization Artifacts:** A list of the recorded visual artifacts from
    the Test Bench execution.
 
 Active Jobs Tab
@@ -306,11 +306,11 @@ Explorer.'
 **Status:** This is the current status of the job, according to the Job Manager. The
 possible values are as follows:
 
--  Succeeded: The job was executed and finished without errors.
--  Failed: The job was executed, but the job was aborted or an error was
+-  **Succeeded:** The job was executed and finished without errors.
+-  **Failed:** The job was executed, but the job was aborted or an error was
    encountered.
--  Running: The job is currently being executed.
--  In Queue: The job is waiting to be executed because the maximum
+-  **Running:** The job is currently being executed.
+-  **In Queue:** The job is waiting to be executed because the maximum
    number of simultaneous jobs has already been met.
 
 **Run Command:** This is the command that is called by the job executor to invoke the
@@ -324,18 +324,28 @@ Action Buttons
 **Open Selected Job in Explorer:** This button will open Windows Explorer at the location of the execution
 directory for the highlighted job.
 
+.. _remote_execution:
+
 Remote Execution
 ----------------
 
-Remote execution of OpenMETA jobs is available if a OpenMETA Remote Execution
-Server is available on a remote machine.
+Remote execution of OpenMETA jobs is available if the OpenMETA Remote Execution
+Server is installed on a remote machine.
 
 .. image:: images/RemoteExecutionMenu.png
    :alt: Status Bar: Simultaneous Processes
    :width: 278.5px
 
-Establishing a Connection
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Setting up a Server
+~~~~~~~~~~~~~~~~~~~
+
+The OpenMETA Remote Executor Server is not currently shipped with public
+releases of OpenMETA.
+If you are interested in this feature of OpenMETA, please contact us for
+more information.
+
+Establishing a Server Connection
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    
 To switch to remote execution, click the "Local Execution" dropdown on the
 status bar, and select "Remote Execution..." from the menu.
@@ -359,10 +369,23 @@ Recent Servers is saved for ease of reconnection.
 To return to local execution, click the "Remote Execution" dropdown on the
 status bar, then select "Local execution" from the menu.
 
-Setting up a Server
+Job Distribution
+~~~~~~~~~~~~~~~~
+
+When the Results Browser is configured to run jobs under remote execution,
+the jobs' *labels* are then used by the server to distribute each job to a
+suitable worker machine. See the :ref:`job_labels` subsection of the Test
+Benches chapter for more information.
+
+
+Remote Job Statuses
 ~~~~~~~~~~~~~~~~~~~
 
-The OpenMETA Remote Executor Server is not currently shipped with public
-releases of OpenMETA.
-If you are interested in this feature of OpenMETA, please contact us for
-more information.
+Jobs executing remotely have the following additional statuses:
+
+-  **Succeeded:** The job was executed and finished without errors.
+-  **Failed:** The job was executed, but the job was aborted or an error was
+   encountered.
+-  **Running:** The job is currently being executed.
+-  **In Queue:** The job is waiting to be executed because the maximum
+   number of simultaneous jobs has already been met.
