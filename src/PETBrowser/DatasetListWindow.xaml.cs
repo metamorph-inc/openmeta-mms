@@ -196,17 +196,21 @@ namespace PETBrowser
         {
             try
             {
-                var selectedDataset = (Dataset) TestBenchGrid.SelectedItem;
+                if (TestBenchGrid.SelectedItem != null)
+                {
+                    var selectedDataset = (Dataset) TestBenchGrid.SelectedItem;
 
-                var datasetPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory, DatasetStore.ResultsDirectory,
-                    selectedDataset.Folders[0]);
+                    var datasetPath = System.IO.Path.Combine(ViewModel.Store.DataDirectory,
+                        DatasetStore.ResultsDirectory,
+                        selectedDataset.Folders[0]);
 
-                //Explorer doesn't accept forward slashes in paths
-                datasetPath = datasetPath.Replace("/", "\\");
+                    //Explorer doesn't accept forward slashes in paths
+                    datasetPath = datasetPath.Replace("/", "\\");
 
-                Console.WriteLine("/select,\"" + datasetPath + "\"");
+                    Console.WriteLine("/select,\"" + datasetPath + "\"");
 
-                Process.Start("explorer.exe", "/select,\"" + datasetPath + "\"");
+                    Process.Start("explorer.exe", "/select,\"" + datasetPath + "\"");
+                }
             }
             catch (Exception ex)
             {
@@ -259,8 +263,11 @@ namespace PETBrowser
 
         private void DeleteTestBenchItem(object sender, RoutedEventArgs e)
         {
-            var selectedDataset = (Dataset)TestBenchGrid.SelectedItem;
-            DeleteItem(selectedDataset);
+            if (TestBenchGrid.SelectedItem != null)
+            {
+                var selectedDataset = (Dataset) TestBenchGrid.SelectedItem;
+                DeleteItem(selectedDataset);
+            }
         }
 
         private void DeleteItem(Dataset datasetToDelete)
@@ -623,29 +630,52 @@ namespace PETBrowser
 
         private void reRunJob_Click(object sender, RoutedEventArgs e)
         {
-            var selectedJob = (JobViewModel) JobGrid.SelectedItem;
+            try
+            {
+                if (JobGrid.SelectedItem != null)
+                {
+                    var selectedJob = (JobViewModel) JobGrid.SelectedItem;
 
-            ViewModel.JobStore.ReRunJob(selectedJob.Job);
+                    ViewModel.JobStore.ReRunJob(selectedJob.Job);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while rerunning the job.", "", ex.ToString());
+            }
         }
 
         private void abortJob_Click(object sender, RoutedEventArgs e)
         {
-            var selectedJob = (JobViewModel)JobGrid.SelectedItem;
+            try
+            {
+                if (JobGrid.SelectedItem != null)
+                {
+                    var selectedJob = (JobViewModel) JobGrid.SelectedItem;
 
-            ViewModel.JobStore.AbortJob(selectedJob.Job);
+                    ViewModel.JobStore.AbortJob(selectedJob.Job);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while aborting the job.", "", ex.ToString());
+            }
         }
 
         private void showJobInExplorer(object sender, RoutedEventArgs e)
         {
             try
             {
-                var selectedJob = (JobViewModel)JobGrid.SelectedItem;
-                var jobDirectoryPath = selectedJob.Job.WorkingDirectory;
+                if (JobGrid.SelectedItem != null)
+                {
+                    var selectedJob = (JobViewModel) JobGrid.SelectedItem;
+                    var jobDirectoryPath = selectedJob.Job.WorkingDirectory;
 
-                //Explorer doesn't accept forward slashes in paths
-                jobDirectoryPath = jobDirectoryPath.Replace("/", "\\");
+                    //Explorer doesn't accept forward slashes in paths
+                    jobDirectoryPath = jobDirectoryPath.Replace("/", "\\");
 
-                Process.Start("explorer.exe", jobDirectoryPath);
+                    Process.Start("explorer.exe", jobDirectoryPath);
+                }
             }
             catch (Exception ex)
             {
