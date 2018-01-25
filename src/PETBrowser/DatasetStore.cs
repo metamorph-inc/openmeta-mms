@@ -130,18 +130,19 @@ namespace PETBrowser
                         using (var testbenchManifestFile = File.OpenText(testbenchManifestFilePath))
                         using (var jsonReader = new JsonTextReader(testbenchManifestFile))
                         {
-                            var manifestJson = (JObject)JToken.ReadFrom(jsonReader);
+                            var manifestJson = (JObject) JToken.ReadFrom(jsonReader);
 
-                            var testBenchName = (string)manifestJson["TestBench"];
+                            var testBenchName = (string) manifestJson["TestBench"];
 
                             var newDataset = new Dataset(Dataset.DatasetKind.TestBenchResult, time, testBenchName);
-                            newDataset.Status = (string)manifestJson["Status"];
-                            newDataset.DesignName = (string)manifestJson["DesignName"];
+                            newDataset.Status = (string) manifestJson["Status"];
+                            newDataset.DesignName = (string) manifestJson["DesignName"];
 
                             newDataset.Count++;
                             newDataset.Folders.Add(folder);
 
-                            var actualDirectory = Directory.GetParent(Path.Combine(DataDirectory, ResultsDirectory, folder));
+                            var actualDirectory =
+                                Directory.GetParent(Path.Combine(DataDirectory, ResultsDirectory, folder));
                             TrackedResultsFolders.Add(actualDirectory.FullName);
 
                             TestbenchDatasets.Add(newDataset);
@@ -154,6 +155,10 @@ namespace PETBrowser
                     catch (DirectoryNotFoundException)
                     {
                         //Don't add testbench if we don't find its directory
+                    }
+                    catch (JsonException)
+                    {
+                        //Don't add testbench if the TestbenchManifest.json is unparseable (like if a job were cancelled and its corresponding manifest were corrupted)
                     }
                 }
 
