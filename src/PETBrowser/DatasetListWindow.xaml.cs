@@ -832,15 +832,18 @@ namespace PETBrowser
         {
             try
             {
-                var selectedDataset = (Dataset) PetGrid.SelectedItem;
-                var renameDialog = new PromptDialog { Owner = this, Text = selectedDataset.Name};
-
-                bool? result = renameDialog.ShowDialog();
-
-                if (result == true && renameDialog.Text != selectedDataset.Name)
+                if (PetGrid.SelectedItem != null)
                 {
-                    PetMerger.RenameMergedPet(selectedDataset, renameDialog.Text, ViewModel.Store.DataDirectory);
-                    ViewModel.ReloadMerged();
+                    var selectedDataset = (Dataset) PetGrid.SelectedItem;
+                    var renameDialog = new PromptDialog {Owner = this, Text = selectedDataset.Name};
+
+                    bool? result = renameDialog.ShowDialog();
+
+                    if (result == true && renameDialog.Text != selectedDataset.Name)
+                    {
+                        PetMerger.RenameMergedPet(selectedDataset, renameDialog.Text, ViewModel.Store.DataDirectory);
+                        ViewModel.ReloadMerged();
+                    }
                 }
             }
             catch (Exception ex)
