@@ -82,8 +82,6 @@ simulating its behavior.
 
 .. note:: Insert an image of the drive train component.
 
-.. _connectors:
-
 Connectors
 ~~~~~~~~~~
 
