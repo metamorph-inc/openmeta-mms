@@ -342,7 +342,9 @@ Setting up a Server
 The OpenMETA Remote Executor Server is not currently shipped with public
 releases of OpenMETA.
 If you are interested in this feature of OpenMETA, please contact us for
-more information.
+more information by visiting the
+`Contact <https://www.metamorphsoftware.com/contact/>`_ page of the MetaMorph
+website.
 
 Establishing a Server Connection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
