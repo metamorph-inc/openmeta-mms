@@ -3,8 +3,8 @@
 Test Benches
 ============
 
-The **Test Bench** is the primary tool for defining how a desired analysis
-execution should be performed.
+The **Test Bench** is the primary tool for defining how a system model
+should be translated into a executable, domain-specific model.
 
 The :ref:`testbench_basics` section gives a general overview of what
 Test Benches are and how you can create, configure, and execute them.
