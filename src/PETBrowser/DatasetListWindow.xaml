@@ -483,7 +483,7 @@
                                         <Setter Property="Background" Value="{StaticResource FailedBrush}" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Status}" Value="AbortOnServerRequested">
-                                    <Setter Property="Background" Value="{StaticResource FailedBrush}" />
+                                    <Setter Property="Background" Value="{StaticResource RunningBrush}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

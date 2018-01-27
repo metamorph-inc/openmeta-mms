@@ -162,6 +162,9 @@ namespace JobManagerFramework
                                 case RemoteExecutionService.RemoteJobState.Running:
                                     job.Status = Job.StatusEnum.RunningOnServer;
                                     break;
+                                case RemoteExecutionService.RemoteJobState.RequestingCancellation:
+                                    job.Status = Job.StatusEnum.AbortOnServerRequested;
+                                    break;
                                 case RemoteExecutionService.RemoteJobState.Succeeded:
                                     job.Status = Job.StatusEnum.Succeeded;
                                     break;
@@ -192,6 +195,7 @@ namespace JobManagerFramework
             {
                 case RemoteExecutionService.RemoteJobState.Created:
                 case RemoteExecutionService.RemoteJobState.Running:
+                case RemoteExecutionService.RemoteJobState.RequestingCancellation:
                     return false;
                 case RemoteExecutionService.RemoteJobState.Succeeded:
                 case RemoteExecutionService.RemoteJobState.Failed:
