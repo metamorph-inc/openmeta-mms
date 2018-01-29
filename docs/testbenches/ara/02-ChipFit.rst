@@ -25,7 +25,7 @@ Configure
 ~~~~~~~~~
 
 First, you'll need to create a copy of one of the ***chipfit*** test
-benches. For instructions, refer to the section :ref:`testbenchbasics`.
+benches. For instructions, refer to the section :ref:`ara_testbench_basics`.
 
 No additional configuration is needed to test a design against one of
 the standard Ara sizes provided. However, if you would like to test for

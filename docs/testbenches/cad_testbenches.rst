@@ -1,4 +1,4 @@
-.. _cad_test_benches:
+.. _cad_testbenches:
 
 ================
 CAD Test Benches

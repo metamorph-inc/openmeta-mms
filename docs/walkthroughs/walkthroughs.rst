@@ -19,8 +19,9 @@ Metamorph to demonstrate the concepts of OpenMETA with a system model of a
 ficticious satellite.  The system model includes both CAD models and
 OpenModelica models for a joint phyical and electrical analysis of the craft.
 
-This project is hosted
-`here <https://github.com/metamorph-inc/openmeta-spacecraft-study>`_ on GitHub.
+The OpenMETA Vahana project is here on GitHub:
+`openmeta-spacecraft-study
+<https://github.com/metamorph-inc/openmeta-spacecraft-study>`_
 
 
 .. _vahana_study:
@@ -34,5 +35,5 @@ the open-source MATLAB scripts used for the trade study and incorporated them
 into the OpenMETA environment where we used the Parametric Exploration Tool (PET)
 to perform similar analyses of the Vahana model.
 
-The OpenMETA Vahana project is
-hosted `here <https://github.com/metamorph-inc/openmeta-vahana>`_ on GitHub.
+The OpenMETA Vahana project is here on GitHub:
+`openmeta-vahana <https://github.com/metamorph-inc/openmeta-vahana>`_
