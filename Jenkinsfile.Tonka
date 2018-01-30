@@ -1,0 +1,54 @@
+pipeline {
+    agent none
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '1000'))
+        timeout(time: 2, unit: 'HOURS')
+    }
+    stages {
+        stage('Build') {
+            agent {
+                node {
+                    label 'tonka-build'
+                    customWorkspace 'c:\\jenkins_tonka_pipeline'
+                }
+            }
+            steps {
+                checkout scm
+
+                bat('''cmd /c register_interpreters.cmd || git clean -xdf
+
+"c:\Program Files\Git\usr\bin\find.exe" -iname \*UnmanagedRegistration.cache -print -delete
+git checkout HEAD -- .''')
+
+                bat('''Setlocal EnableDelayedExpansion
+rem Push_All_NuGet
+c:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make_CAD.msbuild /t:All /fl /flp:diag;PerformanceSummary /m /nodeReuse:false || exit /b !ERRORLEVEL!
+
+pushd src\CADAssembler
+cmd /c ..\..\bin\Python27\Scripts\Python.exe CADCreoParametricCreateAssembly\build_nuget_package.py pack_nuget || exit /b !ERRORLEVEL!
+cmd /c ..\..\bin\Python27\Scripts\Python.exe ExtractACM-XMLfromCreoModels\build_nuget_package.py pack_nuget || exit /b !ERRORLEVEL!
+cmd /c ..\..\bin\Python27\Scripts\Python.exe CADCreoParametricMetaLink\build_nuget_package.py pack_nuget || exit /b !ERRORLEVEL!
+popd
+
+run_cadunittests.cmd''')
+
+                bat('''jenkins_build.cmd''')
+
+                bat('''echo TONKA_BUILD_NUMBER=%BUILD_NUMBER% > build.properties''')
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'deploy/META*.msi,deploy/META_x64.wixpdb,deploy/*.msp,deploy/META_bundle_x64.exe'
+                }
+                unstable {
+                    archiveArtifacts artifacts: 'deploy/META*.msi,deploy/META_x64.wixpdb,deploy/*.msp,deploy/META_bundle_x64.exe'
+                }
+                always {
+                    junit keepLongStdio: true, testResults: 'test/junit_results.xml'
+                }
+            }
+        }
+    }
+}
+
+// set GIT_ALTERNATE_OBJECT_DIRECTORIES=c:\meta-core\.git\objects
