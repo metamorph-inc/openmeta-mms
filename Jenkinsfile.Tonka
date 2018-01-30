@@ -17,7 +17,7 @@ pipeline {
 
                 bat($/cmd /c register_interpreters.cmd || git clean -xdf
 
-"c:\Program Files\Git\usr\bin\find.exe" -iname \*UnmanagedRegistration.cache -print -delete
+"c:\Program Files\Git\Usr\bin\find.exe" -iname \*UnmanagedRegistration.cache -print -delete
 git checkout HEAD -- ./$)
 
                 bat($/Setlocal EnableDelayedExpansion
