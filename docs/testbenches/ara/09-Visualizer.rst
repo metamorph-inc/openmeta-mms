@@ -12,7 +12,7 @@ Configure
 ~~~~~~~~~
 
 First, you'll need to create a copy of one of the **Visualizer** test
-benches. For instructions, refer to :ref:`testbenchbasics`.
+benches. For instructions, refer to :ref:`ara_testbench_basics`.
 
 There are three available options:
 
