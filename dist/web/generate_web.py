@@ -99,8 +99,10 @@ def download(url, filename):
     #handle errors
     except HTTPError, e:
         print("HTTP Error:", e.code, url)
+        raise
     except URLError, e:
         print("URL Error:", e.reason, url)
+        raise
 
 if __name__ == "__main__":
     main()
