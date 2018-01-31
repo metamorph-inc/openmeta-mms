@@ -61,7 +61,7 @@ run_cadunittests.cmd/$)
             steps {
                 //Need to grab the build artifact that we want to upload, because
                 //Jenkins might switch nodes on us
-                unarchive(mapping: ['META_bundle_x64.exe': 'deploy/META_bundle_x64.exe'])
+                unarchive(mapping: ['deploy/META_bundle_x64.exe': 'deploy/META_bundle_x64.exe'])
 
                 //Build our release webpage
                 bat('bin\\Python27\\Scripts\\Python.exe  dist\\web\\generate_web.py')
