@@ -65,7 +65,7 @@
             </thead>
             <tbody>
               {% for release in releases | reverse %}
-              <tr {% if release == version %}class="success"{% endif %}>
+              <tr {% if release["Version"] == version %}class="success"{% endif %}>
                 <td>{{ release["Version"] }}</td>
                 <td>{{ release["Release Date"] }}
                 <td>
