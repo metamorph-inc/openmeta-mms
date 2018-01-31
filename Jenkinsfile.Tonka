@@ -73,11 +73,11 @@ run_cadunittests.cmd/$)
                 echo("This is our release ID: '${releaseId}'")
 
                 withAWS(credentials:'AWS-jenkins-tonka-release-uploader', region:'us-east-2') {
-                  s3Upload(file: 'deploy/META_bundle_x64.exe', bucket: 'releases-test.metamorphsoftware.com', path: "releases/${releaseId}/META_bundle_x64.exe")
-                  s3Upload(file: 'index.html', bucket: 'releases-test.metamorphsoftware.com', path: "releases/${releaseId}/index.html")
-                  s3Upload(file: 'index.html', bucket: 'releases-test.metamorphsoftware.com', path: "index.html")
-                  s3Upload(file: 'releases.csv', bucket: 'releases-test.metamorphsoftware.com', path: "releases.csv")
-                  s3Upload(file: 'previous_releases.html', bucket: 'releases-test.metamorphsoftware.com', path: "previous_releases.html")
+                  s3Upload(file: 'deploy/META_bundle_x64.exe', bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/META_bundle_x64.exe")
+                  s3Upload(file: 'index.html', bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/index.html")
+                  s3Upload(file: 'index.html', bucket: 'releases.metamorphsoftware.com', path: "index.html")
+                  s3Upload(file: 'releases.csv', bucket: 'releases.metamorphsoftware.com', path: "releases.csv")
+                  s3Upload(file: 'previous_releases.html', bucket: 'releases.metamorphsoftware.com', path: "previous_releases.html")
                 }
             }
         }
