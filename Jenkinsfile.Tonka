@@ -103,7 +103,7 @@ run_cadunittests.cmd/$)
                 withAWS(credentials:'AWS-jenkins-tonka-release-uploader', region:'us-east-1') {
                   //aws s3 sync publish_html/ s3://docs.metamorphsoftware.com/doc/ --delete
                   s3Delete(bucket: 'docs.metamorphsoftware.com', path: '/doc/')
-                  s3Upload(folder: 'docs/publish_html/', bucket: 'docs.metamorphsoftware.com', path: '/doc/', cacheControl:'public,max-age=3600')
+                  s3Upload(file: 'docs/publish_html', bucket: 'docs.metamorphsoftware.com', path: '/doc/', cacheControl:'public,max-age=3600')
                 }
             }
         }
