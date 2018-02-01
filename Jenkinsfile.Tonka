@@ -15,21 +15,6 @@ pipeline {
             steps {
                 checkout scm
 
-                script {
-                    properties([[$class: "SlackJobProperty",
-                        startNotification: false,
-                        notifyAborted: false,
-                        notifyFailure: true,
-                        notifyNotBuilt: false,
-                        notifySuccess: false,
-                        notifyUnstable: true,
-                        notifyBackToNormal: true,
-                        notifyRepeatedFailure: false,
-                        includeTestSummary: false,
-                        showCommitList: false,
-                        includeCustomMessage: false]])
-                }
-
                 bat($/cmd /c register_interpreters.cmd || git clean -xdf
 
 "c:\Program Files\Git\Usr\bin\find.exe" -iname \*UnmanagedRegistration.cache -print -delete
@@ -93,6 +78,17 @@ run_cadunittests.cmd/$)
                   s3Upload(file: 'index.html', bucket: 'releases.metamorphsoftware.com', path: "index.html", cacheControl:'public,max-age=120')
                   s3Upload(file: 'releases.csv', bucket: 'releases.metamorphsoftware.com', path: "releases.csv", cacheControl:'public,max-age=0')
                   s3Upload(file: 'previous_releases.html', bucket: 'releases.metamorphsoftware.com', path: "previous_releases.html", cacheControl:'public,max-age=120')
+                }
+
+                //Build our updated docs
+                dir('docs') {
+                  bat('preparepublish.bat')
+                }
+
+                withAWS(credentials:'AWS-jenkins-tonka-release-uploader', region:'us-east-1') {
+                  //aws s3 sync publish_html/ s3://docs.metamorphsoftware.com/doc/ --delete
+                  s3Delete(bucket: 'docs.metamorphsoftware.com', path: '/doc/')
+                  s3Upload(file: 'docs/publish_html', bucket: 'docs.metamorphsoftware.com', path: '/doc/', cacheControl:'public,max-age=3600')
                 }
             }
         }
