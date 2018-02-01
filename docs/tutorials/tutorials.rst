@@ -5,7 +5,7 @@ Tutorials
 
 .. toctree::
    :maxdepth: 2
-   :caption: Caption
+   :caption: Sections
 
    led_tutorial/led_tutorial
    pet_tutorial/pet_tutorial
