@@ -94,6 +94,17 @@ run_cadunittests.cmd/$)
                   s3Upload(file: 'releases.csv', bucket: 'releases.metamorphsoftware.com', path: "releases.csv", cacheControl:'public,max-age=0')
                   s3Upload(file: 'previous_releases.html', bucket: 'releases.metamorphsoftware.com', path: "previous_releases.html", cacheControl:'public,max-age=120')
                 }
+
+                //Build our updated docs
+                dir('docs') {
+                  bat('preparepublish.bat')
+                }
+
+                withAWS(credentials:'AWS-jenkins-tonka-release-uploader', region:'us-east-1') {
+                  //aws s3 sync publish_html/ s3://docs.metamorphsoftware.com/doc/ --delete
+                  s3Delete(bucket: 'docs.metamorphsoftware.com', path: './')
+                  s3Upload(folder: 'docs/publish_html/', bucket: 'docs.metamorphsoftware.com', path: './')
+                }
             }
         }
     }
