@@ -15,6 +15,21 @@ pipeline {
             steps {
                 checkout scm
 
+                script {
+                    properties([[$class: "SlackJobProperty",
+                        startNotification: false,
+                        notifyAborted: false,
+                        notifyFailure: true,
+                        notifyNotBuilt: false,
+                        notifySuccess: false,
+                        notifyUnstable: true,
+                        notifyBackToNormal: true,
+                        notifyRepeatedFailure: false,
+                        includeTestSummary: false,
+                        showCommitList: false,
+                        includeCustomMessage: false]])
+                }
+
                 bat($/cmd /c register_interpreters.cmd || git clean -xdf
 
 "c:\Program Files\Git\Usr\bin\find.exe" -iname \*UnmanagedRegistration.cache -print -delete
