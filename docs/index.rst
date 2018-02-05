@@ -8,17 +8,40 @@ Welcome to OpenMETA's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Getting Started
 
-   introduction/introduction
-   installation/installation
-   concepts/concepts
+   getting_started/introduction/introduction
+   getting_started/installation/installation
+   getting_started/hello_world/hello_world
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+   
    tutorials/tutorials
-   walkthroughs/walkthroughs
-   domains/domains
-   testbenches/testbenches
-   pet/pet
-   resultsbrowser/resultsbrowser
-   visualizer/visualizer
-   utilities/utilities
+   tutorials/led_tutorial/led_tutorial
+   tutorials/pet_tutorial/pet_tutorial
+   tutorials/walkthroughs/walkthroughs
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference - Modeling
+   
+   reference_modeling/concepts
+   reference_modeling/testbenches/testbenches
+   reference_modeling/pet/pet
+   reference_modeling/domains/domains
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference - Execution
+   
+   reference_execution/resultsbrowser/resultsbrowser
+   reference_execution/visualizer/visualizer
+   reference_execution/utilities/utilities
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Appendices
+   
    appendices/appendices
