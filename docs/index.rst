@@ -27,8 +27,12 @@ Welcome to OpenMETA's documentation!
    :maxdepth: 2
    :caption: Reference - Modeling
    
-   reference_modeling/concepts
-   reference_modeling/testbenches/testbenches
+   reference_modeling/openmeta_projects/openmeta_projects
+   reference_modeling/components/components
+   reference_modeling/component_assemblies/component_assemblies
+   reference_modeling/design_spaces/design_spaces
+   reference_modeling/interpreters/interpreters
+   reference_modeling/test_benches/test_benches
    reference_modeling/pet/pet
    reference_modeling/domains/domains
    
@@ -36,7 +40,8 @@ Welcome to OpenMETA's documentation!
    :maxdepth: 2
    :caption: Reference - Execution
    
-   reference_execution/resultsbrowser/resultsbrowser
+   reference_execution/master_interpreter/master_interpreter
+   reference_execution/results_browser/results_browser
    reference_execution/visualizer/visualizer
    reference_execution/utilities/utilities
    

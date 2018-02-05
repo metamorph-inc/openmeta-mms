@@ -110,7 +110,8 @@ by a single "Cargo_To_Antenna" connector.
 
    Antenna component with a CAD Joint Connector
 
-See the :ref:`connectors` section of the :ref:`concepts` chapter for more information on Connectors.
+See the :ref:`connectors` section of the :ref:`components` chapter for
+more information on Connectors.
 
 Composing Assemblies
 ~~~~~~~~~~~~~~~~~~~~

@@ -44,9 +44,8 @@ experienced users.
 The :ref:`installation` chapter explains how to set up the OpenMETA
 tools on your computer.
 
-The :ref:`concepts` and :ref:`tutorials` chapters explain the key concepts
-and modeling elements used when building and editing OpenMETA models and then
-guide the user through the building and analysis of a simple LED example model.
+The :ref:`led_tutorial` guides the user through the building and
+analysis of a simple LED example model.
 
 The :ref:`walkthroughs` chapter showcases a couple of example models that
 demonstrate the power of the OpenMETA tools.
@@ -57,6 +56,10 @@ domain-specific external tools to work with OpenMETA, and explains the
 domain-specific model elements, attributes, and principles for each domain.
 Then the :ref:`testbenches` chapter describes how to run testbenches that
 generate and execute models in tools from the various domains.
+
+The :ref:`openmeta_projects`, :ref:`components`, and :ref:`tutorials` chapters
+explain the key concepts and modeling elements used when building and editing
+OpenMETA models.
 
 The :ref:`pet` chapter covers OpenMETA's multi-disciplinary analysis framework.
 PETs allows for OpenMETA testbenches and external tools from multiple
