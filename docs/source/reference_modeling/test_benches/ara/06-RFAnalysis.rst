@@ -3,7 +3,7 @@ RF Analysis
 
 **Location:** ``TestBenches / AraTestBenches / RF / *``
 
-There are two separate RF testbenches, named **Directivity** and
+There are two separate RF test benches, named **Directivity** and
 **SAR**. Both provide excitation for the RF model to be tested, set up
 the simulation space, then execute OpenEMS and the related
 post-processing tasks. The **Directivity** testbench is focused on the

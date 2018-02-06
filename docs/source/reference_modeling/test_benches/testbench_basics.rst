@@ -10,7 +10,7 @@ The *Test Bench* is the OpenMETA model object used to define how an
 OpenMETA system model should be translated into an executable
 domain-specific model, analysis, or simulation.
 When a Test Bench is executed with the :ref:`master_interpreter`, a job is
-created, ready to be processed by the :ref:`resultsbrowser`.
+created, ready to be processed by the :ref:`results_browser`.
 
 For example, a Modelica Test Bench defines how a system model composed of
 OpenMETA components, each containing a Modelica model, should be translated

@@ -26,7 +26,7 @@ Generating Results
 .. image:: images/03-04-SPICE-Test-bench.png
    :alt: SPICE Test
 
-The :ref:`resultsbrowser` will launch if it is not already open and begin
+The :ref:`results_browser` will launch if it is not already open and begin
 running your simulation. After a few more moments, the new job
 should change from blue to green. If there is an
 error and the test bench fails, it will turn red.

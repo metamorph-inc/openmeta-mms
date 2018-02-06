@@ -1,4 +1,4 @@
-.. _ara_testbenches:
+.. _ara_test_benches:
 
 Project Ara Test Benches
 ========================

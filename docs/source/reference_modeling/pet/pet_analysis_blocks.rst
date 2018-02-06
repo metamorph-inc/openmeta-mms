@@ -13,7 +13,7 @@ to perform a full-system analysis using subanalyses from multiple domains.
    An example PET with all three types of available wrappers and a Test Bench.
 
 In addition to the complex analyses that can be performed using
-Test Benches as you saw in the previous :ref:`testbenches` chapter,
+Test Benches as you saw in the previous :ref:`test_benches` chapter,
 virtually any external execution tool can be integrated using one of
 the provided wrappers. We have used the Python Wrapper to drive
 analysis tools
@@ -28,7 +28,7 @@ Test Benches
 ------------
 
 For more information on composing Test Benches, please see the
-:ref:`testbenches` chapter.
+:ref:`test_benches` chapter.
 
 Adding a Test Bench to a PET
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

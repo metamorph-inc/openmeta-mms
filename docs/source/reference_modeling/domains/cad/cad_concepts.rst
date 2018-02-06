@@ -127,7 +127,7 @@ desired connectors.
 
 After an assembly is created, you can view the composed CAD geometry
 by executing CAD Test Bench or running Metalink.
-Visit the :ref:`cad_testbenches` section to see how to properly set up and
+Visit the :ref:`cad_test_benches` section to see how to properly set up and
 execute a CAD Test Bench.
 The :ref:`metalink` tool is described below.
 

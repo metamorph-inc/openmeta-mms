@@ -30,7 +30,7 @@ The :ref:`components`, :ref:`component_assemblies`, and :ref:`design_spaces`
 chapters cover the key concepts and modeling elements used to create a model
 of a system and express the variability of that system.
 
-The :ref:`interpreters`, :ref:`testbenches` chapters describe the tools
+The :ref:`interpreters`, :ref:`test_benches` chapters describe the tools
 used for code generation or the creation of executable analysis in a single
 domain.
 
@@ -48,7 +48,7 @@ the domain-specific model elements, attributes, and principles for each domain.
 Reference - Execution
 ---------------------
 
-The :ref:`resultsbrowser` and :ref:`visualizer` chapters describe the tools
+The :ref:`results_browser` and :ref:`visualizer` chapters describe the tools
 provided with OpenMETA to manage and visualize the generated Test Bench and
 Parametric Exploration Tool results.
 

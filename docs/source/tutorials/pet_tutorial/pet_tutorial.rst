@@ -11,7 +11,7 @@ using :ref:`pet_analysis_blocks` and configure the analysis with a
 :ref:`pet_drivers_parameter_study` PET Driver.
 
 Then, you will learn how to execute your PET with the *Master Interpreter*
-and analyze the results, using both the :ref:`resultsbrowser` and
+and analyze the results, using both the :ref:`results_browser` and
 the :ref:`visualizer`. From the results you will refine the analysis inputs
 and re-execute your analysis.
 

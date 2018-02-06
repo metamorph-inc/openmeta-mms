@@ -38,7 +38,7 @@ its icon on the **GME Toolbar**:
 2. Make sure **Post job to META manager** is checked.
 3. Click **OK**.
 4. Once your job successfully completes and turns green in the **Active Jobs**
-   tab of the :ref:`resultsbrowser`, right-click it and select Show in explorer.
+   tab of the :ref:`results_browser`, right-click it and select Show in explorer.
 
 In the folder, you will find a number of different files. One of them is
 the generated Eagle schematic: **schema.sch**. Double-click it and open

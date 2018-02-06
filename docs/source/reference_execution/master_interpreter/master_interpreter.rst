@@ -15,7 +15,7 @@ Generally the **Master Interpreter** is used to execute a Test Bench.
 Running the Master Interpreter results in the creation of a new output
 folder in the ``results\`` folder of the project directory, the execution
 of all tasks in the referenced workflow, and (optionally) the generation of
-a *job* that is passed to the :ref:`resultsbrowser` and executed.
+a *job* that is passed to the :ref:`results_browser` and executed.
 
 Jobs
 ----

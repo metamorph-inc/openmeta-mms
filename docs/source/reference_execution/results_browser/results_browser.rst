@@ -1,4 +1,4 @@
-.. _resultsbrowser:
+.. _results_browser:
 
 Results Browser
 ===============
@@ -9,7 +9,7 @@ analyses results can be further exacerbated with design space modeling
 and the Parametric Exploration Tool.
 
 To manage and visualize the results of OpenMETA generated analyses, we
-created the :ref:`resultsbrowser` and :ref:`visualizer`, respectively.
+created the :ref:`results_browser` and :ref:`visualizer`, respectively.
 
 The Results Browser provides a layer of management and organization
 on top of the raw results in the file system. This chapter explains the
