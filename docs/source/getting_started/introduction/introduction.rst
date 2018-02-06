@@ -9,7 +9,7 @@ The OpenMETA Tools
 ------------------
 
 The OpenMETA tools are an integrated, open source, model-based platform
-used to design and analyze complex systems. They comprise of a modeling
+used to design and analyze complex systems. They comprise a modeling
 environment, a test execution framework, and a results management and
 visualization system.
 
@@ -46,8 +46,8 @@ Using the Documentation
 This documentation should be used as both an installation guide and primer for
 those who are beginning to learn OpenMETA as well as a reference guide for
 experienced users.
-The first half covers everything you need to get started using OpenMETA including
-installation instructions, step-by-step tutorials, and a plethora of
+The first half covers everything you need to get started using OpenMETA
+including installation instructions, step-by-step tutorials, and a plethora of
 example models. The second half of the documentation clearly details the various
 components of the OpenMETA tools and explains all the various concepts,
 options, and attributes that are afforded by them.
@@ -56,7 +56,5 @@ If you are getting started, the next chapter will guide you through installing
 the OpenMETA tools, and the :ref:`hello_world` chapter will walk you through
 creating your first OpenMETA project.
 When you have complete both these chapters, the :ref:`next_steps` chapter
-will help you find the most useful next steps to gaining proficiency with OpenMETA.
-
-
-
+will help you find the most useful next steps to gaining proficiency with
+OpenMETA.

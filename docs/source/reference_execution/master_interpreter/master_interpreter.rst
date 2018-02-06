@@ -3,28 +3,35 @@
 Master Interpreter
 ==================
 
-.. note::
-
-   This chapter should describe:
-
-   #. That Master Interpreter is the means by which jobs are created.
-   #. What the options in the prompt mean. 
-
-
-Generally the **Master Interpreter** is used to execute a Test Bench.
+Generally the **Master Interpreter** is used to execute a Test Bench or PET.
 Running the Master Interpreter results in the creation of a new output
 folder in the ``results\`` folder of the project directory, the execution
 of all tasks in the referenced workflow, and (optionally) the generation of
 a *job* that is passed to the :ref:`results_browser` and executed.
 
+For more information on the project directory folder structure see the
+:ref:`openmeta_projects` chapter.
+
+Running the Master Interpreter
+------------------------------
+
+<Click this button, etc.>
+
+Options
+^^^^^^^
+
+<Describe the meaning of the options in the dialog box.>
+
 Jobs
 ----
 
-An OpenMETA *job* is a single directory and associated metadata that is 
+An OpenMETA *job* is a single directory and associated metadata that is
 passed to the Results Browser from the Master Interpreter.
 Jobs can be executed locally by the Results Browser or sent to another machine
 for execution using the :ref:`remote_execution` capability of the Results
 Browser.
+
+<Describe more here about the folder and how it was created.>
 
 .. _job_labels:
 
