@@ -3,16 +3,22 @@
 Introduction
 ============
 
+Welcome to the documentation for the OpenMETA tools.
+
 The OpenMETA Tools
 ------------------
 
-The OpenMETA tool kit is an integrated, open source, model-based platform
-used to design and analyze complex systems. While the OpenMETA tools have
-been used to create satellite and vehicular systems, they excel at
-electronic hardware design. OpenMETA users can create a design with
-integrated schematic, PCB, thermal, power usage and cost information.
-The process will allow users to create functional hardware products
-without requiring expert level electronics experience.
+The OpenMETA tools are an integrated, open source, model-based platform
+used to design and analyze complex systems. They comprise of a modeling
+environment, a test execution framework, and a results management and
+visualization system.
+
+The OpenMETA tools have been
+used to create satellites, vehicular systems, and consumer electronics.
+OpenMETA allows users to model a system with
+multiple domains in a single model to better manage the synchronization
+and interactions between these domains.
+
 
 Benefits of OpenMETA
 --------------------
@@ -34,46 +40,23 @@ Benefits of OpenMETA
    components from outside of our library.
 -  Gauge the cost of ideas before designs are finalized.
 
-How to Use This Documentation
------------------------------
+Using the Documentation
+-----------------------
 
 This documentation should be used as both an installation guide and primer for
 those who are beginning to learn OpenMETA as well as a reference guide for
 experienced users.
+The first half covers everything you need to get started using OpenMETA including
+installation instructions, step-by-step tutorials, and a plethora of
+example models. The second half of the documentation clearly details the various
+components of the OpenMETA tools and explains all the various concepts,
+options, and attributes that are afforded by them.
 
-The :ref:`installation` chapter explains how to set up the OpenMETA
-tools on your computer.
+If you are getting started, the next chapter will guide you through installing
+the OpenMETA tools, and the :ref:`hello_world` chapter will walk you through
+creating your first OpenMETA project.
+When you have complete both these chapters, the :ref:`next_steps` chapter
+will help you find the most useful next steps to gaining proficiency with OpenMETA.
 
-The :ref:`led_tutorial` guides the user through the building and
-analysis of a simple LED example model.
 
-The :ref:`walkthroughs` chapter showcases a couple of example models that
-demonstrate the power of the OpenMETA tools.
 
-The :ref:`domains` chapter enumerates all the major
-domains that have been integrated with OpenMETA, covers how to configure these
-domain-specific external tools to work with OpenMETA, and explains the
-domain-specific model elements, attributes, and principles for each domain.
-Then the :ref:`testbenches` chapter describes how to run testbenches that
-generate and execute models in tools from the various domains.
-
-The :ref:`openmeta_projects`, :ref:`components`, and :ref:`tutorials` chapters
-explain the key concepts and modeling elements used when building and editing
-OpenMETA models.
-
-The :ref:`pet` chapter covers OpenMETA's multi-disciplinary analysis framework.
-PETs allows for OpenMETA testbenches and external tools from multiple
-domains to be composed as analysis blocks in a single analysis workflow.
-These workflows can then be executed using design of experiments or
-optimization drivers.
-
-The :ref:`resultsbrowser` and :ref:`visualizer` chapters describe the tools
-provided with OpenMETA to manage and visualize the generated Test Bench and
-Parametric Exploration Tool results.
-
-The :ref:`reference` and :ref:`connectors` appendices are used for
-reference and understanding of some of the more complex concepts within
-OpenMETA.
-
-Finally, the :ref:`olddocs` chapter links to the old version of the
-documentation.

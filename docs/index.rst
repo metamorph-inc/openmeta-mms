@@ -13,12 +13,12 @@ Welcome to OpenMETA's documentation!
    getting_started/introduction/introduction
    getting_started/installation/installation
    getting_started/hello_world/hello_world
+   getting_started/next_steps/next_steps
    
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials
    
-   tutorials/tutorials
    tutorials/led_tutorial/led_tutorial
    tutorials/pet_tutorial/pet_tutorial
    tutorials/walkthroughs/walkthroughs
