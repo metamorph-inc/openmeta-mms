@@ -18,7 +18,7 @@ Running the Master Interpreter
 <Click this button, etc.>
 
 Options
-^^^^^^^
+~~~~~~~
 
 <Describe the meaning of the options in the dialog box.>
 
