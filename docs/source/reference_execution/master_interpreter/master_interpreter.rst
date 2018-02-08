@@ -53,13 +53,18 @@ computationally-intensive interpreters.
 Jobs
 ----
 
-An OpenMETA *job* is a single directory and associated metadata that is
+An OpenMETA *job* is a single folder and associated metadata that is
 passed to the Results Browser from the Master Interpreter.
 Jobs can be executed locally by the Results Browser or sent to another machine
 for execution using the :ref:`remote_execution` capability of the Results
 Browser.
 
-<Describe more here about the folder and how it was created.>
+The results folder includes any artifacts required for execution of the
+referenced workflow or PET, as well as any artifacts produced by the workflow
+(for example, CAD models or PET results).  If the job is submitted to and
+executed by the Job Manager, it will also contain job execution logs (in the
+``logs`` subfolder), as well as a _REPORT.html containing step-by-step status
+information and links to the logs for each step.
 
 .. _job_labels:
 
