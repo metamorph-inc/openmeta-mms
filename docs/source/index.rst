@@ -12,21 +12,22 @@ Welcome to OpenMETA's documentation!
 
    getting_started/introduction/introduction
    getting_started/installation/installation
-   getting_started/hello_world/hello_world
+   getting_started/see_it_in_action/see_it_in_action
    getting_started/next_steps/next_steps
-   
+
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials
-   
+
+   tutorials/hello_world/hello_world
    tutorials/led_tutorial/led_tutorial
    tutorials/pet_tutorial/pet_tutorial
    tutorials/walkthroughs/walkthroughs
-   
+
 .. toctree::
    :maxdepth: 2
    :caption: Reference - Modeling
-   
+
    reference_modeling/openmeta_projects/openmeta_projects
    reference_modeling/components/components
    reference_modeling/component_assemblies/component_assemblies
@@ -35,18 +36,18 @@ Welcome to OpenMETA's documentation!
    reference_modeling/test_benches/test_benches
    reference_modeling/pet/pet
    reference_modeling/domains/domains
-   
+
 .. toctree::
    :maxdepth: 2
    :caption: Reference - Execution
-   
+
    reference_execution/master_interpreter/master_interpreter
    reference_execution/results_browser/results_browser
    reference_execution/visualizer/visualizer
    reference_execution/utilities/utilities
-   
+
 .. toctree::
    :maxdepth: 2
    :caption: Appendices
-   
+
    appendices/appendices
