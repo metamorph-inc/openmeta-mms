@@ -96,6 +96,18 @@ namespace CyPhy2MfgBom
         /// <returns>Result of the run, which contains a success flag.</returns>
         public IInterpreterResult Main(IInterpreterMainParameters parameters)
         {
+            try
+            {
+                return _Main(parameters);
+            }
+            finally
+            {
+                DisposeLogger();
+            }
+        }
+
+        private IInterpreterResult _Main(IInterpreterMainParameters parameters)
+        {
             this.mainParameters = parameters;
 
             //this.runtime = new Queue<Tuple<string, TimeSpan>>();
@@ -312,7 +324,7 @@ namespace CyPhy2MfgBom
                     StartModeParam = param
                 };
 
-                Main(this.mainParameters);
+                _Main(this.mainParameters);
 
                 //this.PrintRuntimeStatistics();
             }
