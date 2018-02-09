@@ -103,3 +103,39 @@ component, with its individual domain-specific interfaces grouped into
 connectors. For more information on how *Connectors* are used to compose
 OpenMETA *Components*, visit the :ref:`component_composition` section of the
 next chapter.
+
+Managing Complexity
+-------------------
+
+As the size and complexity of a project grow, the number of components and
+difficulty of maintaining them also increases. To ease the task of component
+management, OpenMETA supports *component references*, *component
+instantiation*, and *component class inheritance*.
+
+Component References
+~~~~~~~~~~~~~~~~~~~~
+
+Components can be added to CAs and DCs as references.
+This allows us to use the exact same component in multiple places.
+Without references, it would be necessary to update the component everywhere
+it is used when a change was made to its definition.
+We recommend keeping all the components in the project confined to
+Components Folders and using components references everywhere that component is
+used.
+This reduces the size of model?
+
+Instantiation
+~~~~~~~~~~~~~
+
+You can create instances of components in CA's, DCs, <what else?>.
+Offers the same benefits of references, but keeps the object in an
+expanded form.
+
+Class Inheritance
+~~~~~~~~~~~~~~~~~
+
+Components can be subclasses of other Components.
+This is useful for managing different classes of components that share
+many of the same attributes.
+When model objects are added to the base class components, they are
+automatically added to all derived component classes.

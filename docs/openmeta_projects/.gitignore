@@ -2,7 +2,7 @@ log/
 merged/
 results/
 requirements/
-design-spaces/
+design-space/
 designs/
 manifest.project.json
 test-benches/

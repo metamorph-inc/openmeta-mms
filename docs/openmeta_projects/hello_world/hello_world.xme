@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{2FCCEB8B-4087-4533-B553-BD737346511D}" cdate="Thu Feb 08 13:46:07 2018" mdate="Thu Feb 08 13:46:07 2018" version="" metaguid="{08AF6D47-590B-0A7D-137D-21B4C1D2DFCD}" metaversion="14.13-t34" metaname="CyPhyML">
+<project guid="{A37D8450-D07F-44E1-9F9D-291ACD349E9B}" cdate="Thu Feb 08 13:46:07 2018" mdate="Thu Feb 08 13:46:07 2018" version="" metaguid="{08AF6D47-590B-0A7D-137D-21B4C1D2DFCD}" metaversion="14.13-t34" metaname="CyPhyML">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
-	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x8" kind="RootFolder" guid="{2b90aeec-c9b3-4dd8-a8ea-0212c5312c64}">
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0xa" kind="RootFolder" guid="{2b90aeec-c9b3-4dd8-a8ea-0212c5312c64}">
 		<name>RootFolder</name>
 		<folder id="id-006a-00000002" relid="0x1" childrelidcntr="0xd" libref="UnitLibrary QUDT" kind="RootFolder" guid="{930ea234-c97f-40fd-aa87-a272824dfa19}">
 			<name>UnitLibrary QUDT</name>
@@ -23537,7 +23537,7 @@
 				<value>131619869740000000</value>
 			</regnode>
 		</folder>
-		<folder id="id-006a-00000018" relid="0x6" childrelidcntr="0x7" kind="Components" guid="{11ba35cf-4c8a-4932-97bf-bdf1bb08d6fa}">
+		<folder id="id-006a-00000018" relid="0x6" childrelidcntr="0x8" kind="Components" guid="{11ba35cf-4c8a-4932-97bf-bdf1bb08d6fa}">
 			<name>TeamMembers</name>
 			<model id="id-0065-00000260" kind="Component" guid="{10c3bb36-0c98-4399-af0b-1557d9a4e876}" relid="0x7" childrelidcntr="0x3">
 				<name>Alice</name>
@@ -24377,7 +24377,7 @@
 				</reference>
 			</model>
 		</folder>
-		<folder id="id-006a-0000001a" relid="0x7" childrelidcntr="0x3" kind="Testing" guid="{632704fa-1140-40aa-9945-5b8ba86ef828}">
+		<folder id="id-006a-0000001a" relid="0x7" childrelidcntr="0x4" kind="Testing" guid="{632704fa-1140-40aa-9945-5b8ba86ef828}">
 			<name>Testing</name>
 			<folder id="id-006a-0000001d" relid="0x3" childrelidcntr="0x1" kind="WorkflowDefinitionFolder" guid="{be6350e3-0055-4607-948f-7514dfca3e6f}">
 				<name>WorkflowDefinitions</name>
@@ -24671,8 +24671,269 @@
 					</regnode>
 				</reference>
 			</model>
+			<model id="id-0065-00000273" kind="TestBench" guid="{baabd7da-9de5-48c4-8322-5d89242790fb}" relid="0x4" childrelidcntr="0xa">
+				<name>AnalyzeTeams</name>
+				<regnode name="TestBenchUniqueName" isopaque="yes">
+					<value>AnalyzeTeams</value>
+				</regnode>
+				<attribute kind="CopyResults" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="SpreadsheetLoc" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Type" status="meta">
+					<value>SimpleCalc</value>
+				</attribute>
+				<reference id="id-0067-00000365" kind="WorkflowRef" role="WorkflowRef" guid="{4367be51-0c64-4d33-aefb-cf5e118f737d}" relid="0xa" referred="id-0065-0000026b">
+					<name>ValueAggregator</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>91,56</value>
+							</regnode>
+						</regnode>
+					</regnode>
+				</reference>
+				<reference id="id-0067-00000366" kind="TopLevelSystemUnderTest" role="TopLevelSystemUnderTest" guid="{cdf6d191-effd-46ea-877c-d14f05a3d774}" relid="0x9" referred="id-0065-0000026d">
+					<name>MyTeam</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>266,49</value>
+							</regnode>
+						</regnode>
+					</regnode>
+				</reference>
+				<reference id="id-0067-00000367" kind="Metric" role="Metric" guid="{c477a0d0-07b7-4b3f-8185-6119c23b5abe}" relid="0x6">
+					<name>AverageTeamTenure</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>378,196</value>
+							</regnode>
+						</regnode>
+						<regnode name="ExternalPorts" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>483,280</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>483,280</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>483,280</value>
+							</regnode>
+						</regnode>
+						<regnode name="TBValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>483,280</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Description">
+						<value>AverageTeamTenure = YearsEmployedAverage</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="meta">
+						<value></value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000368" kind="Property" role="Property" guid="{197e243f-cfaa-44fb-a259-7f4e163f92d0}" relid="0x5">
+					<name>YearsEmployedAverage</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>42,196</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,294</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,294</value>
+							</regnode>
+						</regnode>
+						<regnode name="TBValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,294</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description">
+						<value>YearsEmployed,*,AVERAGE</value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value></value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000369" kind="Metric" role="Metric" guid="{a516e345-9cd5-4821-b87d-ce6c1eda48eb}" relid="0x4">
+					<name>TeamSalary</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>378,154</value>
+							</regnode>
+						</regnode>
+						<regnode name="ExternalPorts" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>483,280</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>483,280</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>483,280</value>
+							</regnode>
+						</regnode>
+						<regnode name="TBValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>483,280</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Description">
+						<value>TeamSalary = SalarySum</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="meta">
+						<value></value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-0000036a" kind="Property" role="Property" guid="{785816d7-59f6-4d92-8030-34f172c13c1f}" relid="0x3">
+					<name>SalarySum</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>42,154</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,294</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,294</value>
+							</regnode>
+						</regnode>
+						<regnode name="TBValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,294</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description">
+						<value>Salary,*,SUM</value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value></value>
+					</attribute>
+				</reference>
+			</model>
 		</folder>
-		<folder id="id-006a-0000001b" relid="0x8" childrelidcntr="0x1" kind="ComponentAssemblies" guid="{22ee955a-3ae7-4ce6-b62e-cc1ee8bc7d84}">
+		<folder id="id-006a-0000001b" relid="0x8" childrelidcntr="0x2" kind="ComponentAssemblies" guid="{22ee955a-3ae7-4ce6-b62e-cc1ee8bc7d84}">
 			<name>Teams</name>
 			<model id="id-0065-00000269" kind="ComponentAssembly" guid="{8d2e42bf-3f64-4738-9d09-683434aded94}" relid="0x1" childrelidcntr="0x5">
 				<name>MyTeam</name>
@@ -24794,6 +25055,1641 @@
 					</attribute>
 					<attribute kind="NumAssociatedConfigs" status="meta">
 						<value></value>
+					</attribute>
+				</reference>
+			</model>
+		</folder>
+		<folder id="id-006a-0000001e" relid="0x9" childrelidcntr="0x1" kind="DesignSpace" guid="{3a778f88-9044-4ec6-a0c6-7aa53e523805}">
+			<name>DesignSpaces</name>
+			<model id="id-0065-0000026d" kind="DesignContainer" guid="{87fd007b-beee-4b3d-b597-aef543bc1075}" relid="0x1" childrelidcntr="0x9">
+				<name>ProgrammingTeam</name>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ContainerType" status="meta">
+					<value>Compound</value>
+				</attribute>
+				<attribute kind="DecisionGroup" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="GenerationSemantics" status="meta">
+					<value>Normal</value>
+				</attribute>
+				<attribute kind="ID">
+					<value>2</value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs">
+					<value>2/2</value>
+				</attribute>
+				<model id="id-0065-0000027c" kind="DesignContainer" role="DesignContainer" guid="{4b2ad83f-e161-48f7-9b65-e461076e7832}" relid="0x8" childrelidcntr="0x3">
+					<name>SupportingProgrammer</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="AbstractPortAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="BondGraphAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="Car" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="ConnectorAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="DesignSpaceAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="DynamicsAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="ModelicaAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="RFAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="SchematicAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect2" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+						<regnode name="ValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>693,441</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<regnode name="icon" isopaque="yes">
+						<value>alternative_ds.png</value>
+					</regnode>
+					<attribute kind="Cardinality" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ContainerType">
+						<value>Alternative</value>
+					</attribute>
+					<attribute kind="DecisionGroup" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="GenerationSemantics" status="meta">
+						<value>Normal</value>
+					</attribute>
+					<attribute kind="ID">
+						<value>11</value>
+					</attribute>
+					<attribute kind="NumAssociatedConfigs">
+						<value>2/2</value>
+					</attribute>
+					<reference id="id-0067-00000379" kind="ComponentRef" role="ComponentRef" guid="{b23a1427-a575-482f-a13d-48e8ae0e0021}" relid="0x1" referred="id-0065-00000272">
+						<name>Allen</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>469,238</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Cardinality" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>9</value>
+						</attribute>
+						<attribute kind="InstanceGUID">
+							<value>b23a1427-a575-482f-a13d-48e8ae0e0021</value>
+						</attribute>
+						<attribute kind="NumAssociatedConfigs">
+							<value>1/2</value>
+						</attribute>
+					</reference>
+					<reference id="id-0067-0000037a" kind="ComponentRef" role="ComponentRef" guid="{0ab14296-ff1e-415a-8e16-a3041049b3e8}" relid="0x2" referred="id-0065-00000270">
+						<name>Sara</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="All" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>483,385</value>
+								</regnode>
+							</regnode>
+							<regnode name="DesignSpaceAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>84,70</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="Cardinality" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID">
+							<value>10</value>
+						</attribute>
+						<attribute kind="InstanceGUID">
+							<value>0ab14296-ff1e-415a-8e16-a3041049b3e8</value>
+						</attribute>
+						<attribute kind="NumAssociatedConfigs">
+							<value>1/2</value>
+						</attribute>
+					</reference>
+					<reference id="id-0067-0000038c" kind="CWCReference" role="CWCReference" guid="{634ca788-1de1-4352-890b-42130d2c3f95}" relid="0x3" referred="id-0065-0000027d">
+						<name>configurations ref</name>
+					</reference>
+				</model>
+				<model id="id-0065-0000027d" kind="Configurations" role="Configurations" guid="{5659091b-4425-4f6c-b718-5869e7859c03}" relid="0x9" childrelidcntr="0x2">
+					<name>Exported-Configurations-at--02-09--13-44-56</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="DesignSpaceAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>518,259</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ID" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="applyAll">
+						<value>false</value>
+					</attribute>
+					<attribute kind="configSize">
+						<value>2</value>
+					</attribute>
+					<attribute kind="isArchived" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="isDirty">
+						<value>false</value>
+					</attribute>
+					<model id="id-0065-0000027e" kind="CWC" role="CWC" guid="{0b92f2f9-4a68-4228-8e1a-097f61180c29}" relid="0x1" childrelidcntr="0x2">
+						<name>cfg1</name>
+						<attribute kind="CfgID">
+							<value>421CAE6F</value>
+						</attribute>
+						<attribute kind="ID">
+							<value>0b92f2f9-4a68-4228-8e1a-097f61180c29</value>
+						</attribute>
+						<reference id="id-0067-0000038b" kind="DesignEntityRef" role="DesignEntityRef" guid="{ac2c9cc9-08b0-4ccf-b23a-a8d1dbab0d8b}" relid="0x1" referred="id-0067-00000379">
+							<name>Allen_ref</name>
+						</reference>
+						<reference id="id-0067-0000038d" kind="DesignEntityRef" role="DesignEntityRef" guid="{b2042709-1a58-4729-9553-49120e7dafe8}" relid="0x2" referred="id-0067-00000378">
+							<name>Joe_ref</name>
+							<regnode name="PartRegs" status="undefined">
+								<value></value>
+								<regnode name="ConfigurationAspect" status="undefined">
+									<value></value>
+									<regnode name="Position" isopaque="yes">
+										<value>84,7</value>
+									</regnode>
+								</regnode>
+							</regnode>
+						</reference>
+					</model>
+					<model id="id-0065-0000027f" kind="CWC" role="CWC" guid="{753ceae4-f28a-4902-8896-14ff019a1c4f}" relid="0x2" childrelidcntr="0x2">
+						<name>cfg2</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="ConfigurationAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>91,91</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="CfgID">
+							<value>80B884E0</value>
+						</attribute>
+						<attribute kind="ID">
+							<value>753ceae4-f28a-4902-8896-14ff019a1c4f</value>
+						</attribute>
+						<reference id="id-0067-0000038e" kind="DesignEntityRef" role="DesignEntityRef" guid="{a76f6451-319e-44cd-a3f9-caf4245930cc}" relid="0x1" referred="id-0067-0000037a">
+							<name>Sara_ref</name>
+						</reference>
+						<reference id="id-0067-0000038f" kind="DesignEntityRef" role="DesignEntityRef" guid="{2eab9b0d-484e-40c7-bc07-3c093e0fb6f9}" relid="0x2" referred="id-0067-00000378">
+							<name>Joe_ref</name>
+						</reference>
+					</model>
+				</model>
+				<reference id="id-0067-00000378" kind="ComponentRef" role="ComponentRef" guid="{ab633a01-05e8-4b24-9183-5dae9f765597}" relid="0x4" referred="id-0065-00000271">
+					<name>Joe</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>420,259</value>
+							</regnode>
+						</regnode>
+						<regnode name="DesignSpaceAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>385,448</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Cardinality" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID">
+						<value>8</value>
+					</attribute>
+					<attribute kind="InstanceGUID">
+						<value>ab633a01-05e8-4b24-9183-5dae9f765597</value>
+					</attribute>
+					<attribute kind="NumAssociatedConfigs">
+						<value>2/2</value>
+					</attribute>
+				</reference>
+			</model>
+		</folder>
+		<folder id="id-006a-0000001f" relid="0xa" childrelidcntr="0x9" kind="Components" guid="{d2f77ef2-c766-40ba-912f-d5ee9464c019}">
+			<name>AdvancedTeamMembers</name>
+			<model id="id-0065-0000026e" kind="Component" guid="{113c2e7d-e17d-48a4-97b1-80d61d36393b}" relid="0x8" childrelidcntr="0x3">
+				<name>Employee</name>
+				<attribute kind="AVMID">
+					<value>9d1ff30c-fcec-4f66-a622-85910cf5e1cb</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>3</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>113c2e7d-e17d-48a4-97b1-80d61d36393b</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>components/idx5yiwt/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<reference id="id-0067-00000357" kind="Property" role="Property" guid="{6469a85d-6fec-4993-a392-41676ef12cbb}" relid="0x1">
+					<name>YearsEmployed</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>63,84</value>
+							</regnode>
+						</regnode>
+						<regnode name="BehaviorModelsAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="ManufacturingAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="ValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>2</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000358" kind="Property" role="Property" guid="{ece2516e-138b-401d-97ae-06f197f01908}" relid="0x2">
+					<name>Salary</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>63,42</value>
+							</regnode>
+						</regnode>
+						<regnode name="BehaviorModelsAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="ManufacturingAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+						<regnode name="ValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>147,161</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>50000</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-000003a9" kind="Property" role="Property" guid="{439dbd7e-0e15-4da5-ba93-77fab4c0acea}" relid="0x3">
+					<name>ID</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>63,126</value>
+							</regnode>
+						</regnode>
+						<regnode name="BehaviorModelsAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>525,56</value>
+							</regnode>
+						</regnode>
+						<regnode name="ManufacturingAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>525,56</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>525,56</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>525,56</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>525,56</value>
+							</regnode>
+						</regnode>
+						<regnode name="ValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>525,56</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="meta">
+						<value></value>
+					</attribute>
+				</reference>
+			</model>
+			<model id="id-0065-0000026f" kind="Component" guid="{725bc1b6-2a6d-4aaa-b997-3f3eecf1dead}" derivedfrom="id-0065-0000026e" isinstance="no" isprimary="yes" relid="0x2" childrelidcntr="0x1">
+				<name>Programmer</name>
+				<attribute kind="AVMID">
+					<value>3146fe69-ce9a-46f9-9efb-b56b655f02ae</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>4</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>725bc1b6-2a6d-4aaa-b997-3f3eecf1dead</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>./components/rooytr5y/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<reference id="id-0067-00000359" kind="Property" role="Property" guid="{beb1628a-68fa-4009-a3b8-6583cfd36200}" derivedfrom="id-0067-00000357" isinstance="no" isprimary="no" isbound="yes">
+					<name>YearsEmployed</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>2</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-0000035a" kind="Property" role="Property" guid="{3fb57d7e-80bd-41d4-a27d-f1fae19f3612}" derivedfrom="id-0067-00000358" isinstance="no" isprimary="no" isbound="yes">
+					<name>Salary</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>60000</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-0000035b" kind="Property" role="Property" guid="{3f662b9d-be0d-4bf5-a198-56e9b7c5e1c6}" relid="0x1">
+					<name>Language</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>329,42</value>
+							</regnode>
+						</regnode>
+						<regnode name="BehaviorModelsAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>105,175</value>
+							</regnode>
+						</regnode>
+						<regnode name="ManufacturingAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>105,175</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>105,175</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>105,175</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>105,175</value>
+							</regnode>
+						</regnode>
+						<regnode name="ValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>105,175</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>C++</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-000003aa" kind="Property" role="Property" guid="{908656fd-03da-49f2-b16a-585106ce73da}" derivedfrom="id-0067-000003a9" isinstance="no" isprimary="no" isbound="yes">
+					<name>ID</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="meta">
+						<value></value>
+					</attribute>
+				</reference>
+			</model>
+			<model id="id-0065-00000270" kind="Component" guid="{55b4d5bb-7569-4ab4-a504-9ce9ee2d82e5}" derivedfrom="id-0065-0000026f" isinstance="yes" isprimary="yes" relid="0x3" childrelidcntr="0x0">
+				<name>Sara</name>
+				<attribute kind="AVMID">
+					<value>b274f708-9fe8-4499-abac-ad46ba9e03bb</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>5</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>55b4d5bb-7569-4ab4-a504-9ce9ee2d82e5</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>./components/vo0pe4vz/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<reference id="id-0067-0000035c" kind="Property" role="Property" guid="{6fe332e9-61c7-4d4f-bf97-928f68f086ba}" derivedfrom="id-0067-0000035b" isinstance="yes" isprimary="no" isbound="yes">
+					<name>Language</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>C++</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-0000035d" kind="Property" role="Property" guid="{00ba040e-2c23-4356-9aad-4371880f44a1}" derivedfrom="id-0067-0000035a" isinstance="yes" isprimary="no" isbound="yes">
+					<name>Salary</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>70000</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-0000035e" kind="Property" role="Property" guid="{ede12c81-b790-44dc-8c15-5db5472e230b}" derivedfrom="id-0067-00000359" isinstance="yes" isprimary="no" isbound="yes">
+					<name>YearsEmployed</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>2</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-000003ab" kind="Property" role="Property" guid="{9a85a18c-85da-4e43-8610-9e17a46331f8}" derivedfrom="id-0067-000003aa" isinstance="yes" isprimary="no" isbound="yes">
+					<name>ID</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>3</value>
+					</attribute>
+				</reference>
+			</model>
+			<model id="id-0065-00000271" kind="Component" guid="{f1c2cb0f-f534-480d-964c-a73646c46554}" derivedfrom="id-0065-0000026f" isinstance="yes" isprimary="yes" relid="0x4" childrelidcntr="0x0">
+				<name>Joe</name>
+				<regnode name="PartRegs" status="undefined">
+					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>490,294</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="AVMID" status="inherited">
+					<value>3146fe69-ce9a-46f9-9efb-b56b655f02ae</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>6</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>f1c2cb0f-f534-480d-964c-a73646c46554</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs">
+					<value>1/1</value>
+				</attribute>
+				<attribute kind="Path" status="inherited">
+					<value>./components/rooytr5y/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<reference id="id-0067-0000035f" kind="Property" role="Property" guid="{e8502cb9-0e18-49b9-952b-ac0904701c59}" derivedfrom="id-0067-0000035b" isinstance="yes" isprimary="no" isbound="yes">
+					<name>Language</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>Python</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000360" kind="Property" role="Property" guid="{aa2b521f-3d42-4e02-90e8-d127f634e196}" derivedfrom="id-0067-0000035a" isinstance="yes" isprimary="no" isbound="yes">
+					<name>Salary</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>90000</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000361" kind="Property" role="Property" guid="{c6d10c5b-6484-4193-9f94-8492d89af172}" derivedfrom="id-0067-00000359" isinstance="yes" isprimary="no" isbound="yes">
+					<name>YearsEmployed</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>2</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-000003ac" kind="Property" role="Property" guid="{dbb439ce-2f55-4594-ba3d-b8830fda2df1}" derivedfrom="id-0067-000003aa" isinstance="yes" isprimary="no" isbound="yes">
+					<name>ID</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>2</value>
+					</attribute>
+				</reference>
+			</model>
+			<model id="id-0065-00000272" kind="Component" guid="{8dad3d60-f35f-47f5-ab4e-7ee155688ef6}" derivedfrom="id-0065-0000026f" isinstance="yes" isprimary="yes" relid="0x5" childrelidcntr="0x0">
+				<name>Allen</name>
+				<regnode name="PartRegs" status="undefined">
+					<value></value>
+					<regnode name="All" status="undefined">
+						<value></value>
+						<regnode name="Position" isopaque="yes">
+							<value>616,294</value>
+						</regnode>
+					</regnode>
+				</regnode>
+				<attribute kind="AVMID" status="inherited">
+					<value>3146fe69-ce9a-46f9-9efb-b56b655f02ae</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>7</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>8dad3d60-f35f-47f5-ab4e-7ee155688ef6</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs">
+					<value>1/1</value>
+				</attribute>
+				<attribute kind="Path" status="inherited">
+					<value>./components/rooytr5y/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<reference id="id-0067-00000362" kind="Property" role="Property" guid="{e6791deb-6646-4357-92ff-49cda1b29275}" derivedfrom="id-0067-0000035b" isinstance="yes" isprimary="no" isbound="yes">
+					<name>Language</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>C++</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000363" kind="Property" role="Property" guid="{7d4a48b6-1607-4fb9-82f0-9536945c3471}" derivedfrom="id-0067-0000035a" isinstance="yes" isprimary="no" isbound="yes">
+					<name>Salary</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>60000</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000364" kind="Property" role="Property" guid="{13b5f8ac-3f3f-438a-9378-641fb2c004b8}" derivedfrom="id-0067-00000359" isinstance="yes" isprimary="no" isbound="yes">
+					<name>YearsEmployed</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>4</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-000003ad" kind="Property" role="Property" guid="{bab87757-1d4d-4b72-b840-f0d636c2917f}" derivedfrom="id-0067-000003aa" isinstance="yes" isprimary="no" isbound="yes">
+					<name>ID</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>1</value>
+					</attribute>
+				</reference>
+			</model>
+			<model id="id-0065-00000284" kind="Component" guid="{13b300f7-c6e7-41ef-be42-211bae6841c4}" derivedfrom="id-0065-0000026f" isinstance="yes" isprimary="yes" relid="0x9" childrelidcntr="0x0">
+				<name>Jeff</name>
+				<attribute kind="AVMID">
+					<value>28233a3b-a4ef-4efc-9dc3-f921e3a147c3</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID">
+					<value>12</value>
+				</attribute>
+				<attribute kind="InstanceGUID">
+					<value>13b300f7-c6e7-41ef-be42-211bae6841c4</value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>./components/rjstrj12/</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<reference id="id-0067-000003a6" kind="Property" role="Property" guid="{3aca5ae4-0e0d-44e9-a5f5-25beed4796b7}" derivedfrom="id-0067-0000035a" isinstance="yes" isprimary="no" isbound="yes">
+					<name>Salary</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>60000</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-000003a7" kind="Property" role="Property" guid="{94a62c0d-5d28-4227-ba34-8dbcc5163d65}" derivedfrom="id-0067-00000359" isinstance="yes" isprimary="no" isbound="yes">
+					<name>YearsEmployed</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>2</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-000003a8" kind="Property" role="Property" guid="{940b5d33-c791-478f-a5e4-afd3584e4416}" derivedfrom="id-0067-0000035b" isinstance="yes" isprimary="no" isbound="yes">
+					<name>Language</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value" status="inherited">
+						<value>C++</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-000003ae" kind="Property" role="Property" guid="{3351f723-efea-4bb6-8c32-107c32525355}" derivedfrom="id-0067-000003aa" isinstance="yes" isprimary="no" isbound="yes">
+					<name>ID</name>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType" status="meta">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="IsProminent" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>4</value>
 					</attribute>
 				</reference>
 			</model>
