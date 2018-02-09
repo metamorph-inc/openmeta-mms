@@ -56,3 +56,30 @@ Unlike *Components* which store their resources in the ``results\`` folder,
 ``designs\`` folder as you can see below:
 
 .. image:: images/object_inspector.png
+
+.. _component_composition:
+
+Component Composition
+---------------------
+
+Components are designed to be composed with other components via their
+**Connectors**. When two component connectors are composed, then their
+corresponding **Role** elements are also matched, and the
+**DomainPorts** so mapped will be connected together in a generated
+domain model.
+
+In the example shown below, two components each have embedded Domain
+Models of type **ModelicaModel**. They also each feature **Connector**
+objects that share a common definition. The **role** objects within each
+**connector** instance are mapped to the **Modelica connectors** of each
+component's Modelica model. In the generated Modelica model, the
+corresponding Modelica class representing each component is
+instantiated, and their connectors are joined by following the :menuselection:`Modelica
+Connector --> Role --> Connector --> Connector --> Role --> Modelica
+Connector` chain from the source OpenMETA composition.
+
+.. figure:: images/CompositionExample.png
+   :align: center
+   :alt: Composition Example
+
+   Example of Composition
