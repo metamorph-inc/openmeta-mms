@@ -3,6 +3,8 @@
 Common Utilities
 ================
 
+.. _value_aggregator:
+
 Value Aggregator
 ----------------
 
@@ -13,7 +15,7 @@ In OpenMETA we can pass values between different Parameters and Properties
 using *ValueFlow* connections. You can also use SimpleFormula and
 ComplexFormula blocks to perform calculations with the values as they are
 passed around. When a Test Bench is executed with a Component Assembly as
-the *TopLevelSystemUnderTest* reference, the CyPhyFormulaEvaluator runs and 
+the *TopLevelSystemUnderTest* reference, the CyPhyFormulaEvaluator runs and
 resolves the values.
 
 We can also use these Value Flow connections to "wire out" values from the
@@ -48,23 +50,23 @@ can add one by Right-clicking the Testing Folder and selecting:
 To configure a Workflow to execute the **ValueAggregator.py** script, follow
 the steps below:
 
-#. Add a Task to the *Workflow* by left-click-dragging a **Task** from the 
+#. Add a Task to the *Workflow* by left-click-dragging a **Task** from the
    GME Part Browser onto the canvas.
-   
+
    .. image:: images/workflow_add_task.png
       :alt: Adding a "Task" to a Workflow Definition
-      
-      
-   
+
+
+
 #. Then select **CyPhyPython Interpreter** in the dialog box that appears,
    and click **OK**.
 
    .. image:: images/workflow_cyphypython.png
       :alt: Selecting the CyPhyPython Interpreter
-      
+
 #.  Double-click the resulting Task object and enter "ValueAggregator.py"
     into the **script** field, then close the window.
-    
+
     .. image:: images/workflow_script_parameter.png
        :alt: Configuring the "script" field.
 
@@ -79,7 +81,7 @@ place the definition of the query.
 
 .. figure:: images/value_aggregator_tb_property.png
    :alt: A Test Bench Property with a Value Aggregator Query in the Description
-   
+
    A Test Bench Property with a Value Aggregator Query in the
    Description
 
@@ -89,22 +91,22 @@ has the following meaning:
 1. **name**: The name of the property that will be found in the model.
 
    -  This name must be an exact match and is case-sensitive.
-   
+
 2. **classification**: The classification node used to filter the query.
 
    -  Each component has a *Classifications* field that is normally
       used to hold the ontological classes to which that component belongs.
-      The **classification** field of the query must match one of the 
+      The **classification** field of the query must match one of the
       nodes defined in the *Classifications* field of the parent component
       of the property. Again, the match must be exact and is case-sensitive.
    -  Leaving the **classification** field blank or using an asterisk signifies
       that there is no restriction based on classification.
-      
+
 3. **operator**: the operator field holds the function that is to be applied
    to the values of all the properties that match the **name** and
    **classification** fields of the query. The following operators are
    supported:
-   
+
    +-----------------------+--------------------------------+
    | **Operator**          | **Description**                |
    +-----------------------+--------------------------------+
@@ -134,9 +136,9 @@ has the following meaning:
    |                       | the values that are            |
    |                       | found.                         |
    +-----------------------+--------------------------------+
-   
-   
-   
+
+
+
 For example, the query in the images above, ``Mass,*,+``, would return
 the summation of all the values in properties or parameters named "Mass" in
 components in the *TopLevelSystemUnderTest*, and ``Mass,,COUNT`` would return
@@ -154,14 +156,14 @@ an assignment statement to the *Description* attribute of a Test Bench
 
 .. figure:: images/value_aggregator_tb_metric.png
    :alt: A Test Bench Metric with a Value Aggregator Assignment in the Description
-   
+
    A Test Bench Metric with a Value Aggregator Assignment in the Description
 
 In the image above, you can see that the **Total Mass** that was calculated
 with a query is being assigned to the **VehicleMass** metric.
 
 .. note:: These assignments are evaluated in Python and have
-   access to all of Python's built-in functions for manipulating numbers as well as the ``math`` module. 
+   access to all of Python's built-in functions for manipulating numbers as well as the ``math`` module.
    See `Section 2: Built-in Functions
    <https://docs.python.org/2/library/functions.html#>`_ and `Section 9.2:
    Mathematical functions <https://docs.python.org/2/library/math.html>`_
