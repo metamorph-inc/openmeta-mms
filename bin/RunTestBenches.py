@@ -280,6 +280,7 @@ if __name__ == '__main__':
                         configurations = [config for config in sut.Referred.ChildFCOs if config.MetaBase.Name == 'Configurations']
                         if not configurations:
                             add_fail(masterContext, 'invalid', 'Error: design has no Configurations models. Try using the --run_desert option')
+                            continue
                         configurations = configurations[0]
                         cwcs = [cwc for cwc in configurations.ChildFCOs if cwc.MetaBase.Name == 'CWC' and cwc.Name]
                         if not cwcs:
