@@ -19,19 +19,40 @@ following the previous section's discussion of the modeling of a
 component, we will describe component connectivity, testing models, and
 design spaces.
 
-The Component Assembly
-----------------------
+Component Assembly Semantics
+----------------------------
 
-Components can be combined into a system or subsystem description by
-creating a Component Assembly Model. Assemblies are combinations of
-components that implement a desired function or behavior. For example,
+*Component Assemblies* are used to model systems and subsystems.
+*Component Assemblies* define which components are part of a given system
+and how they are integrated together to serve a common purpose. For example,
 the subsystem could produce torque to create acceleration of a vehicle,
 or it could produce air flow to cool a heat exchanger.
 
-In OpenMETA models, component assemblies are built by creating references to
-one or more components and then creating relationships between their
-interfaces.
+What's Inside a Component Assembly Model?
+-----------------------------------------
 
-Assemblies may be *nested*, that is, assemblies may contain other
-assemblies. Assemblies may have externally visible ports to allow
-connections to flow across subsystem boundaries.
+Syntactically, *Component Assemblies* are virtually identical to *Components*.
+They can contain *Properties*, *Parameters*, various *Domain-Specific Ports*,
+and even *Domain-Specific Models*. The latter is especially important when the
+behavior of an assembly is difficult or impossible to decompose into its
+constituent components.
+
+.. figure:: images/audio_distortor_small.png
+   :alt: Component Assembly Representing the Distortion Circuit of a Guitar Preamp
+
+   Component Assembly Representing the Distortion Circuit of a Guitar Preamp
+
+In OpenMETA models, component assemblies are generally built by creating
+references to one or more components and then creating relationships between
+their interfaces by means of connections between their exposed ports. Assemblies
+may be *nested* -- that is, assemblies may contain other assemblies; this allows
+us to model systems of systems.
+
+Resources
+~~~~~~~~~
+
+Unlike *Components* which store their resources in the ``results\`` folder,
+*Component Assemblies* store their resources in a unique directory in the
+``designs\`` folder as you can see below:
+
+.. image:: images/object_inspector.png
