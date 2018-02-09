@@ -5,6 +5,8 @@ using System.Text;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using MfgBom.OctoPart;
+using MfgBom.CostEstimation;
 
 namespace BomCostAnalysis
 {
@@ -34,10 +36,17 @@ namespace BomCostAnalysis
                 return result;
             }
 
-
-            // Process costing request
-            var estimationResult = MfgBom.CostEstimation.Estimation.ProcessRequest(request);
-
+            CostEstimationResult estimationResult;
+            try
+            {
+                // Process costing request
+                estimationResult = MfgBom.CostEstimation.Estimation.ProcessRequest(request);
+            }
+            catch (OctopartQueryException e)
+            {
+                Console.Error.WriteLine(e.Message);
+                return 2;
+            }
 
             // Dump result to JSON
             var pathResult = Path.Combine(pathResultsFolder,
