@@ -234,6 +234,19 @@ if __name__ == '__main__':
                 for designContainer in designContainers:
                     desert.InvokeEx(project, designContainer, Dispatch("MGA.MgaFCOs"), 128)
 
+            def add_fail(masterContext, configName, message):
+                def fail(self):
+                    raise ValueError(message)
+                fail.__name__ = str('test_' + masterContext.Name + "__" + configName)
+                setattr(TestBenchTest, fail.__name__, fail)
+
+            def add_test(masterContext, mi_config, config):
+                def testTestBench(self):
+                    self._testTestBench(masterContext, master, mi_config)
+                # testTestBench.__name__ = str('test_' + masterContext.Name + "_" + masterContext.ID + "__" + config.Name)
+                testTestBench.__name__ = str('test_' + masterContext.Name + "__" + config.Name)
+                setattr(TestBenchTest, testTestBench.__name__, testTestBench)
+
             master = Dispatch("CyPhyMasterInterpreter.CyPhyMasterInterpreterAPI")
             master.Initialize(project)
 
@@ -255,16 +268,18 @@ if __name__ == '__main__':
                 if not configs:
                     suts = [sut for sut in testBench.ChildFCOs if sut.MetaRole.Name == 'TopLevelSystemUnderTest']
                     if len(suts) == 0:
-                        raise ValueError('Error: TestBench "{}" has no TopLevelSystemUnderTest'.format(testBench.Name))
+                        add_fail(masterContext, 'invalid', 'Error: TestBench "{}" has no TopLevelSystemUnderTest'.format(testBench.Name))
+                        continue
                     if len(suts) > 1:
-                        raise ValueError('Error: TestBench "{}" has more than one TopLevelSystemUnderTest'.format(testBench.Name))
+                        add_fail(masterContext, 'invalid', 'Error: TestBench "{}" has more than one TopLevelSystemUnderTest'.format(testBench.Name))
+                        continue
                     sut = suts[0]
                     if sut.Referred.MetaBase.Name == 'ComponentAssembly':
                         configs = [sut.Referred]
                     else:
                         configurations = [config for config in sut.Referred.ChildFCOs if config.MetaBase.Name == 'Configurations']
                         if not configurations:
-                            raise ValueError('Error: design has no Configurations models. Try using the --run_desert option')
+                            add_fail(masterContext, 'invalid', 'Error: design has no Configurations models. Try using the --run_desert option')
                         configurations = configurations[0]
                         cwcs = [cwc for cwc in configurations.ChildFCOs if cwc.MetaBase.Name == 'CWC' and cwc.Name]
                         if not cwcs:
@@ -285,12 +300,6 @@ if __name__ == '__main__':
                     # mi_config.KeepTemporaryModels = True
                     mi_config.PostToJobManager = False
 
-                    def add_test(masterContext, mi_config, config):
-                        def testTestBench(self):
-                            self._testTestBench(masterContext, master, mi_config)
-                        # testTestBench.__name__ = str('test_' + masterContext.Name + "_" + masterContext.ID + "__" + config.Name)
-                        testTestBench.__name__ = str('test_' + masterContext.Name + "__" + config.Name)
-                        setattr(TestBenchTest, testTestBench.__name__, testTestBench)
                     add_test(masterContext, mi_config, config)
         finally:
             project.CommitTransaction()
