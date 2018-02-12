@@ -55,6 +55,6 @@ options, and attributes that are afforded by them.
 If you are getting started, the next chapter will guide you through installing
 the OpenMETA tools, and the :ref:`hello_world` chapter will walk you through
 creating your first OpenMETA project.
-When you have complete both these chapters, the :ref:`next_steps` chapter
+When you have completed both these chapters, the :ref:`next_steps` chapter
 will help you find the most useful next steps to gaining proficiency with
 OpenMETA.

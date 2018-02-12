@@ -4,7 +4,7 @@ Next Steps
 ==========
 
 Now that you have installed the tools and successfully run a simple
-analysis with OpenMETA, we recommend you complete the one or more of
+analysis with OpenMETA, we recommend you complete one or more of
 the tutorials in the following chapters.
 
 Tutorials
@@ -16,13 +16,13 @@ The :ref:`walkthroughs` chapter showcases a couple of example models that
 demonstrate the power of the OpenMETA tools.
 
 
-Then when you are comfortable with the tools, reading the reference chapters
+When you are comfortable with the tools, reading the reference chapters
 will help solidify the concepts of the OpenMETA modeling environment.
 
 Reference - Modeling
 --------------------
 
-The :ref:`openmeta_projects` explains more about how an OpenMETA projects
+The :ref:`openmeta_projects` chapter explains more about how OpenMETA projects
 are stored on your computer and how they can be managed using a Version
 Control System (VCS).
 
@@ -30,7 +30,7 @@ The :ref:`components`, :ref:`component_assemblies`, and :ref:`design_spaces`
 chapters cover the key concepts and modeling elements used to create a model
 of a system and express the variability of that system.
 
-The :ref:`interpreters`, :ref:`test_benches` chapters describe the tools
+The :ref:`interpreters` and :ref:`test_benches` chapters describe the tools
 used for code generation or the creation of executable analysis in a single
 domain.
 
@@ -61,4 +61,3 @@ OpenMETA.
 
 Finally, the :ref:`olddocs` chapter links to the old version of the
 documentation.
-

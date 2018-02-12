@@ -15,7 +15,7 @@ GME is an open-source, configurable editor for domain-specific modeling.
 In the case of OpenMETA, we will use GME with the CyPhyML paradigm, which
 is short for Cyber-Physical Modeling Language.
 
-Since GME was installed by with OpenMETA, begin by launching the "GME"
+Since GME was installed with OpenMETA, begin by launching the "GME"
 Desktop app.
 Make sure to only select the version that is not suffixed by "(64 bit)".
 
