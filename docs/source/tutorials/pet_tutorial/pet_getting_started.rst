@@ -33,22 +33,19 @@ Create a new PET within the Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 6. Inside the **GME Browser** window, right-click on the **RootFolder**
-and select **Insert Folder->Testing**.
+and select :menuselection:`Insert Folder --> Testing`.
 
-.. figure:: images/parameterstudy_tutorial_5.png
-   :alt: text
+.. image:: images/parameterstudy_tutorial_5.png
 
 7. Right-click on the newly created **Testing** folder and select
-**Insert Folder->Parametric Exploration**.
+   :menuselection:`Insert Folder --> Parametric Exploration`.
 
-.. figure:: images/parameterstudy_tutorial_6.png
-   :alt: text
+.. image:: images/parameterstudy_tutorial_6.png
 
 8. Right-click on the newly created **Parametric Exploration** folder
-and select **Insert Model->Parametric Exploration**.
+and select :menuselection:`Insert Model --> Parametric Exploration`.
 
-.. figure:: images/parameterstudy_tutorial_7.png
-   :alt: text
+.. image:: images/parameterstudy_tutorial_7.png
 
 9. Double-click on the newly created **ParametricExploration** model
 to open it in the main GME window. It should appear as a blank canvas.

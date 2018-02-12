@@ -37,11 +37,10 @@ Create a new PET within the Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 4. Inside the **GME Browser** window, right-click on the
-**RootFolder->Testing->Parametric Exploration** folder and select
-**Insert Model->Parametric Exploration**.
+   :menuselection:`RootFolder --> Testing --> Parametric Exploration` folder
+   and select :menuselection:`Insert Model --> Parametric Exploration`.
 
-.. figure:: images/optimizer_tutorial_1_a.png
-   :alt: text
+.. image:: images/optimizer_tutorial_1_a.png
 
 5. Change the name of the newly created **ParametricExploration** model to
 "**optimizer-tutorial**".
@@ -57,29 +56,26 @@ It should appear as a blank canvas.
 
 Instead of redoing work, let's copy our existing work from the Parameter Study tutorial.
 
-7. Inside the **GME Browser** window, double-click on the
-**RootFolder->Testing->Parametric Exploration->parameterstudy-tutorial**
+7. Inside the **GME Browser** window, double-click on the :menuselection:`
+RootFolder --> Testing --> Parametric Exploration --> parameterstudy-tutorial`
 to open it in a window.
 
-.. figure:: images/optimizer_tutorial_3.png
-   :alt: text
+.. image:: images/optimizer_tutorial_3.png
 
 8. Left-click and drag within **parameterstudy-tutorial**'s canvas to select everything.
-9. Press :kbd:`(control-c)` to copy the selected area.
+9. Press :kbd:`(Control-C)` to copy the selected area.
 
-.. figure:: images/optimizer_tutorial_4.png
-   :alt: text
+.. image:: images/optimizer_tutorial_4.png
 
-10. Return to the **optimizer-tutorial** canvas and press :kbd:`(control-v)`
+10. Return to the **optimizer-tutorial** canvas and press :kbd:`(Control-V)`
 to paste **ParameterStudy** and **Paraboloid** into **optimizer-tutorial**.
 
-.. figure:: images/optimizer_tutorial_5.png
-   :alt: text
+.. image:: images/optimizer_tutorial_5.png
 
 Now, we don't actually need **ParameterStudy** since the plan is to use
 an Optimizer driver instead.
 
-11. Left-click on **ParameterStudy** and press :kbd:`(delete)`.
+11. Left-click on **ParameterStudy** and press :kbd:`(Delete)`.
 
 .. figure:: images/optimizer_tutorial_6.png
    :alt: text
