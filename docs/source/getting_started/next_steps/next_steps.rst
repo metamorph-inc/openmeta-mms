@@ -10,8 +10,8 @@ the tutorials in the following chapters.
 Tutorials
 ---------
 
-The :ref:`led_tutorial` guides the user through the building and
-analysis of a simple LED example model.
+The :ref:`led_tutorial` guides you through building and
+analyzing a simple LED circuit project.
 The :ref:`walkthroughs` chapter showcases a couple of example models that
 demonstrate the power of the OpenMETA tools.
 

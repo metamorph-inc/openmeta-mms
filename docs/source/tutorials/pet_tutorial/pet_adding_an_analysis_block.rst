@@ -28,7 +28,7 @@ OpenMETA. We are going
 to model our Paraboloid using a Python script and then load that script into
 the PythonWrapper Component in our PET.
 
-.. note:: For more information on OpenMDAO Component scripts and how to write them, 
+.. note:: For more information on OpenMDAO Component scripts and how to write them,
    reference the OpenMDAO documentation: http://openmdao.readthedocs.io/en/1.7.3/usr-guide/basics.html#component
 
 3. Open Notepad (or your favorite text editor) and copy-paste in the code below.
@@ -74,7 +74,7 @@ the PythonWrapper Component in our PET.
 .. figure:: images/parameterstudy_tutorial_11.png
    :alt: text
 
-4. Select **File->Save As...**
+4. Select :menuselection:`File --> Save As...`
 
 .. figure:: images/parameterstudy_tutorial_12.png
    :alt: text

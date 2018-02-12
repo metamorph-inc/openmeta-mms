@@ -94,7 +94,7 @@ a given PET. (For an 'Archive' or 'MergedPet' this will always be
 1.)
 
 **Name:** This is the name of the PET, which is either taken from the PET name
-in the OpenMETA model, or specified by the user if the result has been renamed
+in the OpenMETA project, or specified by the user if the result has been renamed
 or merged.
 
 **Time:** This is the time at which the PET execution was initiated by the Master
@@ -151,9 +151,9 @@ This pane shows details about the currently-highlighted dataset in the
 PET Dataset Pane. The displayed information in the header includes:
 
 -  Name of the PET
--  Location of the PET in the OpenMETA model
+-  Location of the PET in the OpenMETA project
 -  Time of execution
--  Hyperlink to the project .mga
+-  Hyperlink to the project ``.mga``
 -  Count of the individual points sampled in this PET
 -  Count of the discrete configurations evaluated
 
@@ -229,10 +229,10 @@ Column Headers
 
 **Dataset Types:** 'TestBenchResult' is the only type of Test Bench List items.
 
-**Name:** This name is taken from the OpenMETA model at the time of execution by
+**Name:** This name is taken from the OpenMETA project at the time of execution by
 the Master Interpreter
 
-**Design:** This design name is taken from the OpenMETA model at the time of
+**Design:** This design name is taken from the OpenMETA project at the time of
 execution by the Master Interpreter
 
 **Status:** This is the status taken from the Test Bench Manifest. The possible
@@ -295,7 +295,7 @@ Column Headers
 **Title:** The title of the job, as generated at the time of execution by the
 Master Interpreter.
 
-**Test Bench Name:** This name is taken from the OpenMETA model at the time of execution by
+**Test Bench Name:** This name is taken from the OpenMETA project at the time of execution by
 the Master Interpreter.
 
 **Working Directory:** This the directory that the job is executing or was executed in. You can
@@ -348,7 +348,7 @@ website.
 
 Establishing a Server Connection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   
+
 To switch to remote execution, click the "Local Execution" dropdown on the
 status bar, and select "Remote Execution..." from the menu.
 

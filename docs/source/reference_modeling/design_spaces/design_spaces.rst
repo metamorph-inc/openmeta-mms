@@ -26,7 +26,7 @@ e.g. one alternative may only be valid when another component is also selected.
 Design Container Types
 ----------------------
 
-The OpenMETA model editor offers a simple syntax for expressing design
+The OpenMETA language offers a simple syntax for expressing design
 options. This is done by using a **Design Container** instead of a Component
 Assembly. Design Containers come in three flavors: **Compound**,
 **Alternative**, and **Optional**; this is set in the *Type* attribute in the

@@ -6,18 +6,18 @@ Advanced Topics
 Common Workflows
 ----------------
 
-Using a Test Bench to Extract Properties 
+Using a Test Bench to Extract Properties
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Often various Property and Parameter values from Components or Component
-Assemblies in the OpenMETA model are needed in the context of a PET to
+Assemblies in the OpenMETA project are needed in the context of a PET to
 drive the parameters of the various Analysis Blocks; the best way to get these
 values is to use a Test Bench.
 
 .. figure:: images/HillClimbPET.png
-   :alt: PET with a Test Bench to extract Properties from the OpenMETA Model
+   :alt: PET with a Test Bench to extract Properties from the OpenMETA Project
 
-   PET with a Test Bench to extract Properties from the OpenMETA Model
+   PET with a Test Bench to extract Properties from the OpenMETA Project
 
 See the :ref:`testbench_utilities` section of
 the Test Bench chapter for information on how to do this.
@@ -30,12 +30,12 @@ Optimization
 Hot Start vs. Cold Start
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is fairly common to have an Optimizer PET Driver that 
+It is fairly common to have an Optimizer PET Driver that
 runs repeatedly as part of a larger Design of Experiments
 *(e.g. see :ref:`pet_nesting_with_drivers`)*.
 
 In these situations the user can choose between "Hot Start"
-and "Cold Start." 
+and "Cold Start."
 
 What is "Hot Start?"
 ^^^^^^^^^^^^^^^^^^^^
@@ -66,7 +66,7 @@ Parameter Study Driver generally changes its Design Variables in an incremental 
 the lower-level Optimizer Driver's previous solution is usually much closer to the new
 solution vs. whatever its initial Design Variable values were.
 
-"Hot Start" is the default behavior for the Optimizer PET Driver's 
+"Hot Start" is the default behavior for the Optimizer PET Driver's
 COBYLA optimization method.
 
 What is "Cold Start?"
@@ -98,7 +98,7 @@ one another. Occasionally, with the Optimizer Driver's COBYLA method, an optimiz
 causing the Design Variable values to violate their range constraints. In a "Hot Start" setup, one
 divergence will likely "ruin" all subsequent Optimizer Driver runs, but in a "Cold Start" setup, the
 forced restart limits the impact of outliers on the entire set of results.
-   
+
 Setting Initial Conditions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

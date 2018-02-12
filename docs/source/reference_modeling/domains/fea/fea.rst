@@ -14,7 +14,7 @@ The diagram and the description below details the full workflow.
 4. MSC Patran imports the model, converting the geometry to surfaces.
 5. The model is meshed and Patran exports images of the resulting mesh.
 6. Patran attaches material properties, constraints, and loads to the model
-   based on the constructs in the OpenMETA model and prepares a deck for
+   based on the constructs in the OpenMETA project and prepares a deck for
    analysis using Nastran.
 7. Nastran executes the analysis.
 8. Patran opens the Nastran results, performs post-processing, and generates

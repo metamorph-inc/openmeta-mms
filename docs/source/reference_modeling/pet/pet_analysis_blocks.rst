@@ -9,7 +9,7 @@ Blocks serve as modular building blocks that can be combined within a single PET
 to perform a full-system analysis using subanalyses from multiple domains.
 
 .. figure:: images/AllWrappersAndTestbench.png
-   
+
    An example PET with all three types of available wrappers and a Test Bench.
 
 In addition to the complex analyses that can be performed using
@@ -20,7 +20,7 @@ analysis tools
 
 For examples of PETs with different analysis blocks see the
 `Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
-project in the 
+project in the
 `Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
 repository.
 
@@ -42,14 +42,15 @@ this is accomplished in one of two ways:
 -  You can **Drag-and-drop** the desired Test Bench onto a PET
    canvas with a **Right-click** and select **Create Reference** from
    the drop-down menu.
-   
+
    .. figure:: images/AddTestBenchToPET.png
-   
+
 
 -  Or you can **Right-click** on the desired Test Bench and select **copy**
    from the drop-down menu and then **Right-click** in the PET canvas
-   and select **Paste Special -> As Reference** from the context menu.
-   
+   and select :menuselection:`Paste Special --> As Reference` from the context
+   menu.
+
    .. figure:: images/AddTestBenchToPETAlternatively.png
 
 Excel Wrappers
@@ -80,7 +81,7 @@ Adding Excel Wrappers to a PET
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To add an Excel Wrapper to a PET, simply drag the Excel Wrapper icon from the
-Part Browser and onto the PET canvas. Double-click on the Excel Wrapper and use 
+Part Browser and onto the PET canvas. Double-click on the Excel Wrapper and use
 the **Open** dialogue to select the Excel file to be added to the PET.
 
 .. figure:: images/ExcelWrapperAddition.png
@@ -154,7 +155,7 @@ Below is a template Python Wrapper OpenMDAO Component script:
 
 .. note:: For more information on OpenMDAO Component scripts and how to write them, reference
    the OpenMDAO documentation: http://openmdao.readthedocs.io/en/1.7.3/usr-guide/basics.html#component
-			
+
 Loading Python Wrappers
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -176,11 +177,11 @@ Reloading Python Wrappers
 
 .. note:: You have to manually reload Python Wrappers whenever you
    change the exposed Params and Unknowns within the Python script.
-   
+
    Reloading also allows you to quickly switch between different
    versions of a Python script in your PET.
 
-To load a Python Wrapper with a different Python script (or reload the same script), 
+To load a Python Wrapper with a different Python script (or reload the same script),
 left-click on the |RELOAD| button and select the desired Python file.
 
 .. |RELOAD| image:: images/icons/reload.png
@@ -210,7 +211,7 @@ To edit a Python Wrapper script from within OpenMETA, left-click on the |EDIT| i
    :alt: text
 
    Editing a Python Wrapper script
-   
+
 MATLAB Wrappers
 ---------------
 
@@ -275,9 +276,9 @@ of different types of inputs:
    output2 = input2 * 2
    output3 = strcat(input3, input3)
    output4 = [input4, input4]
-   
+
 You cannot define functions in a *Bare File* style MATLAB integration file;
-however, you can call other function files that you have defined. 
+however, you can call other function files that you have defined.
 
 
 MATLAB Data Type Conversion
@@ -289,7 +290,7 @@ blocks is managed by Python, the table below describes the conversions
 that occur when data is passed into or out of a MATLAB Wrapper block.
 
 =========================  ======================  =========================
-Python                     to MATLAB               to Python 
+Python                     to MATLAB               to Python
 =========================  ======================  =========================
 Boolean                    Logical                 Boolean
 Int                        N/A [1]_
@@ -317,21 +318,21 @@ Dictionary                 Struct                  Dictionary [4]_
    a single float value as they are passed to the next analysis block.
    E.g. A 1x1 Numpy Array will become a double in MATLAB and will result in a
    double in OpenMDAO when it is passed to the next analysis block.
-   
+
 .. [4] Structs in MATLAB can only accept fieldnames that meet the following
    three criteria:
-   
+
    #. Start with a letter
    #. Contain only letters, numbers, and/or the underscore character
    #. Must be no longer than ``namelengthmax`` (currently 63) characters
-   
+
    Although Python can handle arbitrary strings as the keys in dictionaries,
    you must meet these criteria if you are going to pass the dictionaries
    to a MATLAB Wrapper block.
 
 For examples of the conversion see the "MatlabConversions" PET in the
 `Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
-project in the 
+project in the
 `Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
 repository.
 
@@ -356,21 +357,21 @@ Open dialogue to select the MATLAB script to be added to the PET.
    :alt: text
 
    A MATLAB Wrapper loaded with a MATLAB script
-   
+
 If you subsequently want to make changes to the script, you can do so
-directly from GME by using the Edit ( |EDIT| ) button. Alternatively, 
+directly from GME by using the Edit ( |EDIT| ) button. Alternatively,
 if you make edits to your script outside of GME, you can reload the
 script using the Reload ( |RELOAD| ) button.
 
 .. tip::
-   
+
    You can change the default editor in GME by opening
    :menuselection:`Tools --> Options` and checking **Enable External
    Text Editor**
-   
+
    .. figure:: images/ExternalEditor.png
       :alt: GME Options Dialogue
-      
+
       Configuring Notepad++ as the External Editor
 
 

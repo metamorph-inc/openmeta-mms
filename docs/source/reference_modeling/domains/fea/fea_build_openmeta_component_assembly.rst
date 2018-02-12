@@ -11,7 +11,8 @@ user to test a *Design Space* (multiple configurations) of a model instead of ea
 individually. The following steps will walk you through the construction of
 a CyPhy component assembly
 
-1. In the GME Browser, right-click **Component Assemblies -> insert model -> Component Assembly**
+1. In the GME Browser, right-click **Component Assemblies** and choose
+   :menuselection:`Insert Model --> Component Assembly`
 2. Rename it as **Cube_Assembly**
 3. Double left-click **Cube_Assembly** to open the blank component canvas
 4. In the Part Browser under the `All` tab, find the **ComponentRef** and drag and drop into the workspace

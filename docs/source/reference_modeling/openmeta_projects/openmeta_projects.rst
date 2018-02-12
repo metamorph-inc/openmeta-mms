@@ -3,10 +3,10 @@
 OpenMETA Projects
 =================
 
-An OpenMETA Project comprises a OpenMETA model file and a number of associated
-folders. Since the relative location of all the items must stay constant
-throughout the life of the project, it is customary to create a separate folder
-for each project.
+An OpenMETA Project comprises an OpenMETA project file and a number of
+associated folders. Since the relative location of all the items must stay
+constant throughout the life of the project, it is customary to create a
+separate folder for each project.
 
 Project Folder Structure
 ------------------------
@@ -19,8 +19,8 @@ looks like.
 
    A Typical OpenMETA Project Directory
 
-OpenMETA Model Files
-^^^^^^^^^^^^^^^^^^^^
+OpenMETA Project Files
+^^^^^^^^^^^^^^^^^^^^^^
 
 Both the ``docs.mga`` and ``docs.xme`` files store the project data in its
 entirety. The difference between these two formats is described in the
@@ -74,8 +74,9 @@ Project File Extensions
 
 The native storage format for OpenMETA projects is the ``.mga`` file. This
 format is a binary format and therefore usually the smaller of the two formats.
-When you are editing an OpenMETA model in GME and click :menuselection:`File -->
-Save` or hit :kbd:`Ctrl-S` on the keyboard, this is the format that is saved.
+When you are editing an OpenMETA project in GME and click :menuselection:`File
+--> Save` or hit :kbd:`Control-S` on the keyboard, this is the format that is
+saved.
 
 .xme
 ^^^^
@@ -109,7 +110,7 @@ What to Check In
 
 Given the complexity of the project, it may only be necessary to track changes
 to the project file itself. For this purpose we suggest you check in the
-``.xme`` format of the OpenMETA Model. Using this format allows Git to easily
+``.xme`` format of the OpenMETA project. Using this format allows Git to easily
 recognize the difference between subsequent revisions and efficiently store the
 history.
 

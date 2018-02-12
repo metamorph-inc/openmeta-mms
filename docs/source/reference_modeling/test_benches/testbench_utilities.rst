@@ -24,12 +24,12 @@ the Test Bench below, three properties from the model of a truck are extracted
 to Test Bench Metrics.
 
 .. figure:: images/ExtractPropertiesTestBench.png
-   :alt: Test Bench to extract Properties from an OpenMETA Model
+   :alt: Test Bench to extract Properties from an OpenMETA Project
 
-   Test Bench to extract Properties from an OpenMETA Model
+   Test Bench to extract Properties from an OpenMETA Project
 
 Depending how few different components and properties you have in your
-OpenMETA model, it may be possible to use Value Flow to wire all the needed
+OpenMETA project, it may be possible to use Value Flow to wire all the needed
 values out of your model, but as the complexity of the model increases, it
 quickly becomes infeasible to wire out every property you want to extract
 from a system model. The **ValueAggregator.py** script was designed to make

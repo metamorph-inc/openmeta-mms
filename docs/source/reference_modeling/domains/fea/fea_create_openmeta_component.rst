@@ -32,11 +32,13 @@ A component houses the Creo part reference, as well as defining objects for the 
 
 1. In your **GME Browser**, open the *RootFolder* by left-clicking
    the plus box to the left of the name.
-2. Right-click **RootFolder -> Insert folder -> Component Assembly**.
-3. Right-click **RootFolder -> Insert folder -> Components**.
-4. **Right-click** the **Components folder -> Insert Model ->
-   Component**.
-5. Rename **Simple\_Cube**.
+2. Right-click the **RootFolder** and choose :menuselection:`Insert Folder
+   --> Component Assembly`.
+3. Right-click the **RootFolder** and choose :menuselection:`Insert Folder
+   --> Components`.
+4. Right-click the new **Component** folder and choose :menuselection:`Insert
+   model --> Component`.
+5. Rename the component **Simple\_Cube**.
 6. Double left-click **Simple\_Cube** to open the blank component
    canvas.
 7. Located on the left is the **Part Browser**; left-click the **Solid

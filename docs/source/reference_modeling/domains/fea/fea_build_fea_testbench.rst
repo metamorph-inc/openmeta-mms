@@ -15,10 +15,12 @@ Tool Features
 
 Before we can start building the TestBench, we have to give it a home folder.
 
-1. Right-click on **Root folder -> Insert folder ->Testing**
-2. Right-click on **Testing -> Insert model ->StructuralFEATestBench**
+1. Right-click on the **Root folder** and choose :menuselection:`Insert Folder
+   --> Testing`
+2. Right-click on the new **Testing** folder and choose :menuselection:`Insert
+   model --> StructuralFEATestBench`
 3. Rename this **Simple_Cube_FEA**
-4. Double left-click **Simple_Cube_FEA** to open the blank TestBench canvas
+4. Double-left-click **Simple_Cube_FEA** to open the blank TestBench canvas
 5. In the `Part Browser`, locate **Mesh Parameters** and drag it into the workspace
 6. Select the **Mesh Parameters** and change the values in the **Attributes tab**
    of the Object Inspector as shown below
@@ -27,10 +29,13 @@ Before we can start building the TestBench, we have to give it a home folder.
    :alt: Solid Modeling Demo
 
 7. In the `Part Browser`, locate **WorkflowRef** and drag it into the workspace
-8. In the `GME Browser` Right-click on **Testing -> Insert folder -> Workflow Definitions**
-9. Right-click on **Workflow Definitions -> Insert model -> Workflow**
+8. In the `GME Browser` Right-click on **Testing** and choose
+   :menuselection:`Insert Folder --> Workflow Definitions`
+9. Right-click on the new **Workflow Definitions** folder and choose
+   :menuselection:`Insert Model --> Workflow`
 10. Rename this `Workflow` **CADAssembly**
-11. Right-click on **CADAssembly -> Insert atom -> Task -> CyPhy2CAD**
+11. Right-click on the new **CADAssembly** workflow and choose
+    :menuselection:`Insert Atom --> Task --> CyPhy2CAD`
 
 .. figure:: images/IMAGE12_75.png
    :alt: Solid Modeling Demo
@@ -96,13 +101,13 @@ as a pressure (Weight of book / Area of cube).
    Change the `Face Icon name` in the `Preferences` tab of the `Object Inspector`
    to **Surface.png**
 4. Double left-click the face to edit it. Inside, drop a **ReferencePoint**
-5. Direct back to **Simple_Cube_FEA**. Copy this edited **Face** and paste 1 more 
+5. Direct back to **Simple_Cube_FEA**. Copy this edited **Face** and paste 1 more
    (for the bottom and top faces of the cube)
 6. Rename the faces **Face_Ref_Top** and **Face_Ref_Bottom**
 7. Connect these faces to **SURF_REF_TOP** and **SURF_REF_BOTTOM**
 8. In the `Part Browser` locate the **DisplacementConstraint** oject and drag it
    into the workspace.
-9. Double left-click the **DisplacementConstraint** to edit it. 
+9. Double left-click the **DisplacementConstraint** to edit it.
    Add in a **Rotation** and **Translation** part
 10. Select the rotation part, and in the `Attributes` tab of the`Object Inspector`
     change the X,Y,Z directions from **Scalar** to **Free**
@@ -115,10 +120,10 @@ as a pressure (Weight of book / Area of cube).
 12. In the `Part Browser`, drag and drop the **PressureLoadParam** into the workspace
 13. Double left-click the **PressureLoadParam** and add in a **PressureLoad**
 14. In the 'Object Inspector' set the ``value`` to **15**
-15. To assign proper units: left-click the plus box next to
-    **UnitLibrary QUDT-> TypeSpecifications-> Units**. Locate MegaPascals and drop
+15. To assign proper units: left-click the plus box next to :menuselection:`
+    UnitLibrary QUDT --> TypeSpecifications --> Units`. Locate MegaPascals and drop
     it on top of the **PressureLoad**
-	
+
 .. figure:: images/IMAGE16.png
    :alt: Solid Modeling Demo
 

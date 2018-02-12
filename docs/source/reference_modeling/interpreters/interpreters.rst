@@ -4,9 +4,9 @@ Interpreters
 ============
 
 *Interpreter* is the general term for any program or code invoked from within
-GME that interacts with an OpenMETA model and produces a desired effect.
-Interpreters are primarily used to perform modifications to OpenMETA models
-or to consume and transform OpenMETA models in order to generate executable
+GME that interacts with an OpenMETA project and produces a desired effect.
+Interpreters are primarily used to perform modifications to OpenMETA projects
+or to consume and transform OpenMETA projects in order to generate executable
 analyses.
 
 Utility Interpreters
@@ -31,7 +31,7 @@ Test Bench Interpreters
 -----------------------
 
 Test Bench Interpreters are those interpreters that are designed to consume
-the OpenMETA model and generate artifacts or executable analyses.
+the OpenMETA project and generate artifacts or executable analyses.
 Test Bench Interpreters are intended to be invoked in the context of
 :ref:`test_benches`.
 
