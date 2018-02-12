@@ -5,7 +5,7 @@ Analyzing Our Company
 
 A model of our team is not very useful unless we have a way to execute
 operations on the model to generate meaningful and significant results.
-In OpenMETA :ref:`test_benches` are used to transform a model to new
+In OpenMETA, :ref:`test_benches` are used to transform a model to new
 representations, generate simulation code, and calculate metrics.
 
 For the given exercise, we would like to calculate some meaningful metrics about
