@@ -3,14 +3,14 @@
 Creating a Team
 ===============
 
-Now that we have modeled ourself some fellow team members, let's create a most
+Now that we have modeled ourselves some fellow team members, let's create a most
 basic organizational structure by organizing the modeled persons into a team.
 
 Adding a Component Assemblies Folder
 ------------------------------------
 
-Just as we did before creating a *Component*, we need to create a *Component
-Assemblies* Folder.
+Just as we created a *Components* folder before creating a *Component*, we need to create a *Component
+Assemblies* Folder before creating a *Component Assembly*.
 
 #. Right-click on the **RootFolder** in the GME Browser, and choose
    :menuselection:`Insert Folder --> Component Assemblies`.

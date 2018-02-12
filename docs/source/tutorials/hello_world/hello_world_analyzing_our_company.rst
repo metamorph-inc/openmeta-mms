@@ -5,7 +5,7 @@ Analyzing Our Company
 
 A model of our team is not very useful unless we have a way to execute
 operations on the model to generate meaningful and significant results.
-In OpenMETA :ref:`test_benches` are used to perform operations on a system
+In OpenMETA, :ref:`test_benches` are used to perform operations on a system
 model and transform the model to new representations, generate simulation code,
 and calculate metrics.
 
