@@ -32,10 +32,10 @@ Components Folder
 
 The ``components`` folder is the second key component of an OpenMETA project
 directory. This folder includes the resources associated with all the components
-that included in the OpenMETA Project. In the model file, each component has a
-reference that points to a subfolder in the ``components`` folder. These folders
-can be renamed, but this action is best done from within GME by adjusting the
-*Path* attribute of the component in the Object Inspector.
+that are included in the OpenMETA Project. In the model file, each component has
+a reference that points to a subfolder in the ``components`` folder. These
+folders can be renamed, but this action is best done from within GME by
+adjusting the *Path* attribute of the component in the Object Inspector.
 
 .. figure:: images/adjusting_component_folder.png
    :alt: Properly Renaming an OpenMETA Component Resource Folder
@@ -88,10 +88,10 @@ next section. To save your project in the ``.xme`` format, you need to click
 Collaboration
 -------------
 
-Given the complexity and cross-discipline nature of the systems modeled in
+Given the complexity and cross-disciplinary nature of the systems modeled in
 OpenMETA, it is common for more than one user to be developing a model
 simultaneously. To address this use case we describe two separate, though
-not mutually exclusive, solutions below for dealing with the management of the
+not mutually exclusive, solutions below for dealing with the management of an
 OpenMETA Project.
 
 Version Control System
@@ -132,7 +132,9 @@ As you continue to work with an OpenMETA project, many files will be generated
 in the project directory. It is not useful to check in these files as they can
 always be regenerated using the model itself as desired. Generating a
 ``.gitignore`` file in the root of your project directory can be a useful way to
-ensure that you are only checking in necessary files to your repository.
+ensure that you are only checking in necessary files to your repository. For
+example, the following file prevents the ``log``, ``merged``, ``results``,
+``requirements``, and ``design-spaces`` directories from being checked in. 
 
 .. code-block:: text
    :name: .gitignore
@@ -144,8 +146,8 @@ ensure that you are only checking in necessary files to your repository.
    requirements/
    design-spaces/
 
-The above file could be used as a starting point for building a ``.gitignore``
-file that suits the needs of a specific project.
+This could be used as a starting point for building a ``.gitignore`` file that
+suits the needs of a specific project.
 
 Branching and Merging
 ~~~~~~~~~~~~~~~~~~~~~
