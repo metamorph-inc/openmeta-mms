@@ -42,7 +42,7 @@ constituent components.
 
    Component Assembly Representing the Distortion Circuit of a Guitar Preamp
 
-In OpenMETA models, component assemblies are generally built by creating
+In OpenMETA projects, component assemblies are generally built by creating
 references to one or more components and then creating relationships between
 their interfaces by means of connections between their exposed ports. Assemblies
 may be *nested* -- that is, assemblies may contain other assemblies; this allows

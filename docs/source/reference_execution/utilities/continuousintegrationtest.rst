@@ -2,7 +2,7 @@
 
 Continuous Integration and Testing
 ==================================
-OpenMETA models can be integrated with Continuous Integration (CI) methods to provide automatic testing for regressions. OpenMETA includes a utility script that automatically runs Test Benches and PETs and checks the resulting Metric values against target values provided by the model author in the form of Metric Constraints.
+OpenMETA projects can be integrated with Continuous Integration (CI) methods to provide automatic testing for regressions. OpenMETA includes a utility script that automatically runs Test Benches and PETs and checks the resulting Metric values against target values provided by the model author in the form of Metric Constraints.
 
 Configuring the Jenkins job
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,7 +33,7 @@ Let's break down this command:
 #. ``"C:\Program Files (x86)\META\bin\Python27\Scripts\python"``: Use OpenMETA's Python environment
 #. ``"C:\Program Files (x86)\META\bin\RunTestBenches.py"``: This is the automation script
 #. ``--max_configs 2``: *(optional)* If a Test Bench or PET has a Design Space as its System Under Test, choose at most 2 configurations to test
-#. ``CyPhy_Model\ExampleSat_3_1.xme``: This is the path to the OpenMETA model to test
+#. ``CyPhy_Model\ExampleSat_3_1.xme``: This is the path to the OpenMETA project to test
 #. ``--``: Parameters after this mark are passed to the Python *nose* testing framework
 #. ``-s``: Don’t capture stdout (any stdout output will be printed immediately)
 #. ``--with-xunit``: Produce a JUnit-compatible XML file as output
@@ -52,8 +52,8 @@ control over the testing:
 
 - ``-m <pattern>``: Include only the tests with names that match the pattern
   ``<pattern>``.
-  
-  - You may supply any number of ``-m`` arguments. 
+
+  - You may supply any number of ``-m`` arguments.
   - Once you've supplied at least one ``-m`` argument, only the tests that
     match all of the provided patterns will be executed.
   - E.g. ``-m CI`` would include any test that has the string
@@ -77,7 +77,7 @@ control over the testing:
 
 Examples of the these different patterns can be found in the
 `Continuous Integration <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/continuous-integration>`_
-project in the 
+project in the
 `Openmeta Examples And Templates <https://github.com/metamorph-inc/openmeta-examples-and-templates>`_
 repository.
 
@@ -94,8 +94,8 @@ Test reports in Jenkins include a list of tests, markings for those passing and 
    :alt: CI test report
    :width: 400px
 
-Configuring the OpenMETA Model
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Configuring the OpenMETA Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 By default, the automation script will run each Test Bench and inform Jenkins if any of them fail to run. However, the model creator can add more detail, setting target and threshold values for Test Bench parameters. If the Test Bench results fail to meet these targets, the test report will mark them as failing tests.
 
 This can be useful for regression-testing the performance of a design, warning when performance has been compromised by a new model change.

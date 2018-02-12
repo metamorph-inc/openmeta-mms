@@ -229,10 +229,10 @@ Column Headers
 
 **Dataset Types:** 'TestBenchResult' is the only type of Test Bench List items.
 
-**Name:** This name is taken from the OpenMETA model at the time of execution by
+**Name:** This name is taken from the OpenMETA project at the time of execution by
 the Master Interpreter
 
-**Design:** This design name is taken from the OpenMETA model at the time of
+**Design:** This design name is taken from the OpenMETA project at the time of
 execution by the Master Interpreter
 
 **Status:** This is the status taken from the Test Bench Manifest. The possible
@@ -295,7 +295,7 @@ Column Headers
 **Title:** The title of the job, as generated at the time of execution by the
 Master Interpreter.
 
-**Test Bench Name:** This name is taken from the OpenMETA model at the time of execution by
+**Test Bench Name:** This name is taken from the OpenMETA project at the time of execution by
 the Master Interpreter.
 
 **Working Directory:** This the directory that the job is executing or was executed in. You can

@@ -43,18 +43,18 @@ will respond to changes in these filters.
    all discrete choices are included.
 
 -  **Design Configuration Tree**: This section displays a tree representing
-   the Design Container hierarchy present in the OpenMETA model.
+   the Design Container hierarchy present in the OpenMETA project.
    Clicking on a component will toggle it between the included
    ( |INCLUDED_STATE| ) and excluded ( |EXCLUDED_STATE| ) states. Setting a
    component to the excluded state will filter out any configurations
    that included that component from the "Filtered" dataset.
-   
+
 -  **Enumerated Select Boxes:** These filters exclude from the "Filtered" dataset
    data points that for the given variable have a value not in the selected
    options. You can use :kbd:`Shift` to select contiguous options,
    :kbd:`Control` to select or deselect individual options, and :kbd:`Control-a`
    after clicking one of the options to select all options.
-   
+
 -  **Numeric Sliders:** These filters exclude from the "Filtered" dataset data
    points that for the given variable have a value that falls outside of the
    ranges specified by the slider.
@@ -70,7 +70,7 @@ will respond to changes in these filters.
    new values set for the filter; if either or both of the fields are
    left blank or containing non-numeric numbers, they are ignored when
    this button is clicked.
-   
+
 .. |INCLUDED_STATE| image:: images/design_tree_included_state.png
    :alt: Included State
    :width: 26px

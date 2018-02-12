@@ -20,13 +20,13 @@ Key connection points on CAD resources are marked with *datums*,
 which can be constrained in OpenMETA to the datums of other connected
 components to generate an assembly. By expressing these constraints in OpenMETA
 on these connection points, instead of relative-position offsets, a
-complex component can be automatically composed out of 
+complex component can be automatically composed out of
 other simpler components using fixed and/or partially constrained joints.
 
 Preparing CAD Files
 ~~~~~~~~~~~~~~~~~~~
 
-Each part that is used in an OpenMETA model first needs to be prepared in the
+Each part that is used in an OpenMETA project first needs to be prepared in the
 native CAD environment. *Datums* that will be used for constraints as well as
 any *Parameters* that will be used to adjust the dimensions of the part in OpenMETA
 need to be added at this time.
@@ -141,7 +141,7 @@ see those changes reflected in the CAD representation.
 To open a connection between OpenMETA and the CAD tool, simply open the
 desired Component Assembly in the editor and click the Metalink Button
 |METALINK_BUTTON|.
-When you click different components in the OpenMETA model, you will
+When you click different components in the OpenMETA project, you will
 see the same components highlighted in the CAD representation.
 
 .. |METALINK_BUTTON| image:: images/metalink_button.png
@@ -153,7 +153,7 @@ see the same components highlighted in the CAD representation.
    Running Metalink with a Simple Assembly
 
 Metalink is also capable of regenerating the CAD representation as parameters
-in the OpenMETA model are changed or even entrirely new components are added
+in the OpenMETA project are changed or even entirely new components are added
 to the assembly.
 
 Examples
@@ -165,4 +165,3 @@ With Creo installed, check out the :ref:`spacecraft_model` walkthrough.
    :alt: Image of the Spacecraft Component Assembly and CAD Representation
 
    Image of the Spacecraft Component Assembly and CAD Representation
-

@@ -61,12 +61,12 @@ with an explanation for each of the objects.
 
    -  ``Filtered`` - the raw data that has been filtered by the different
       UI elements in the “Filters” section
-   
+
    -  ``Filters`` - the state of each of the sliders, selectInputs, etc. in
       the “Filters” section of the Visualizer UI
 
       -  ``<variable names>``
-   
+
          -  ``type`` - the “R” data-type of the variable, e.g. ‘factor,’
             ‘integer,’ or ‘numeric’
          -  ``selection`` - (if type is ‘factor’), list of all selected
@@ -76,7 +76,7 @@ with an explanation for each of the objects.
    -  ``meta``
 
       -  ``coloring``
-   
+
          -  ``<coloring names>``
 
             -  ``name`` - name of the coloring scheme
@@ -102,7 +102,7 @@ with an explanation for each of the objects.
                colors used for each variable
 
       -  ``comments`` [Not yet implemented]
-   
+
          -  ``<comment ids>``
 
             -  ``id`` - a guid associated with the comment
@@ -113,13 +113,13 @@ with an explanation for each of the objects.
 
       -  ``pet`` - contains information about the PET that generated these
          results
-      
+
          -  ``sampling_method`` - (string) ‘Full Factorial,’ ‘Central
             Composite,’ ‘Opt Latin Hypercube’, or ‘Uniform’
          -  ``num_samples`` - (integer) the ‘num\_samples’ value from the
-            ‘code’ field in the OpenMETA model
+            ‘code’ field in the OpenMETA project
          -  ``pet_name`` - (string) the name of the ‘Parametric Exploration’
-            in the OpenMETA model
+            in the OpenMETA project
          -  ``mga_name`` - (string) the name of the .mga file within which the
             PET resides
          -  ``generated_configuration_model`` - (string) the name of the
@@ -137,9 +137,9 @@ with an explanation for each of the objects.
          -  ``pet_config_filename`` - (string) the filename of the
             'pet\_config.json' file relative to the location of the
             'visualizer\_config.json' file.
-         
+
       -  ``sets`` [Not yet implemented]
-   
+
          -  ``<set names>``
 
             -  ``name`` - name of the set
@@ -149,7 +149,7 @@ with an explanation for each of the objects.
                design configurations
 
       -  ``variables``
-   
+
          -  ``<variable names>``
 
             -  ``name`` - corresponds to variable in ``data$raw`` df
@@ -354,7 +354,7 @@ should be able to open the ``Dig.Rprog`` project file at
 directly from RStudio.
 
 To enable breakpoints in RStudio in your tab file code you will have to
-comment (:kbd:`Control-Shift-C`) the ``debug`` call and uncomment the 
+comment (:kbd:`Control-Shift-C`) the ``debug`` call and uncomment the
 ``debugSource`` calls towards the top of ``server.R`` file.
 
 .. code:: R

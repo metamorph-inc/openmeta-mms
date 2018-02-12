@@ -37,7 +37,7 @@ The figure below shows a simple capacitor component as represented in OpenMETA.
 .. figure:: images/capacitor.png
    :align: center
 
-   *OpenMETA Model of a Capacitor*
+   *OpenMETA Component Model of a Capacitor*
 
 Domain-Specific Models
 ----------------------
