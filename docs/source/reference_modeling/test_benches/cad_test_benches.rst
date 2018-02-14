@@ -5,7 +5,7 @@ CAD Test Benches
 ================
 
 A CAD Test Bench can be used to
-build CAD assembly an OpenMETA given Component Assembly,
+build a CAD assembly from an OpenMETA Component Assembly,
 calculate certain metrics from the generated assembly,
 and export the complete assembly in a number of different formats
 (step, igs, etc).
@@ -22,6 +22,6 @@ As a minimum you must:
 
 Additionally you may:
 
--  Add a *CADComputationComponent* and add desired metrics within it, and
+-  Add a *CADComputationComponent*, add desired metrics within it, and
    wire those values to Metrics in the Test Bench.
--  Add Parameters that can be wired into a TestInjectionPoint reference. 
+-  Add Parameters that can be wired into a TestInjectionPoint reference.

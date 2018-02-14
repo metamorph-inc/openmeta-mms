@@ -11,7 +11,7 @@ What's Inside a Component Model?
 --------------------------------
 
 Inside a component, you will typically see one or more domain models
-and a number of interfaces exposing parts of the component the containing
+and a number of interfaces exposing parts of the component to the containing
 environment. For example, you could have a schematic model, CAD model,
 and Modelica model, along with many properties, connectors, and other
 essential parts. The component model captures several qualities of the
@@ -91,7 +91,7 @@ pins/nets are being joined) at the same time.
 
 In the screenshot below, the connector **Cathode** represents both an
 electrical terminal from the **SchematicModel** and an electrical
-interfaces from the **ModelicaModel**.
+interface from the **ModelicaModel**.
 
 .. note:: We need to update this image to include the new *Connector* look.
 

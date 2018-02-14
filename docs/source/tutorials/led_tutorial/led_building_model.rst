@@ -7,7 +7,7 @@ In this first section, we'll build a
 simple LED circuit. Engineers often use multiple types of analysis
 software to test their designs. This practice takes time; you need to
 learn each piece of software and compose a model for each one that will
-test for a parameter. However, the OpenMETA tools allow you to run
+test for a parameter. The OpenMETA tools, however, allow you to run
 multiple types of analyses by composing just one model.
 
 Creating a New Component Assembly
@@ -102,7 +102,7 @@ If something goes wrong, you can backtrack with "undo" :kbd:`(Control-Z)` or
 **Disconnect Mode**: :kbd:`(Control-3)` or
 |DISCONNECTMODE|.
 
-When you are done, return to **Edit Mode**: :kbd:`(Control-3)` or
+When you are done, return to **Edit Mode**: :kbd:`(Control-1)` or
 |EDITMODE|.
 
 .. |CONNECTMODE| image:: images/connectmode2.png

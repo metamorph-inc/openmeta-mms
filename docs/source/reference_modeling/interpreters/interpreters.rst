@@ -13,7 +13,7 @@ Utility Interpreters
 --------------------
 
 Utility Interpreters are those interpreters that are generally intended to be
-use in the context of *Components*, *Component Assemblies*, or *Design
+used in the context of *Components*, *Component Assemblies*, or *Design
 Containers*.
 For example, the AddConnector Interpreter assists a user in creating
 connectors around the bare pins in an electronics component model.

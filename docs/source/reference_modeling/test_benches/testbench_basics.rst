@@ -28,14 +28,13 @@ addition to the configuration of test conditions, the user can customize
 the data gathered through the execution of a test bench.
 
 While most test benches are used to perform analyses, other test benches
-perform design services for the user. For example, a user that has
-completed a OpenMETA design can run a test bench to auto-generate a
+can perform design services for the user. For example, a user that has
+completed an OpenMETA design can run a test bench to auto-generate a
 schematic of their design. Additionally, the user can run a CAD assembly
 test bench to build a 3D model of their design.
 
 A common use for test benches is the evaluation of system performance.
-In this application, a test bench is an executable specification of a
-system requirement. The parts of a Test Bench include:
+The parts of a Test Bench include:
 
 -  **Test Drivers:** Replicating the intended stimulus to the system.
 
@@ -49,6 +48,9 @@ system requirement. The parts of a Test Bench include:
 -  **System Under Test:** Either a single design or a design space (many
    designs). In the case of a design space, the test bench can be
    applied over the entire set of feasible designs.
+
+In the following application, the test bench is an executable specification of a
+system requirement.
 
 .. figure:: images/01-04-example-test-bench.png
    :alt: example test bench

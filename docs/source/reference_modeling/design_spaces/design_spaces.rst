@@ -52,7 +52,7 @@ may or may not be part of the design. Each Optional container in a design space
 will result in a doubling of the total considered configurations.
 
 *Compound* containers function identically to Component Assemblies but allow
-for the use of other Design Containers within themselves; This is not allowed
+for the use of other Design Containers within themselves; this is not allowed
 with Component Assemblies.
 
 Constraints

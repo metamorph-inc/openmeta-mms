@@ -4,7 +4,7 @@ Electronic Design Automation (EDA)
 ===================================
 
 Electronic Design Automation (EDA) tools enable the design and manufacture of
-electronic systems and integrated circuits. [1]_ In OpenMETA's integration of 
+electronic systems and integrated circuits. [1]_ In OpenMETA's integration of
 EDA tools, we capture the `Schematic Models`_ for all of the components used
 in a model and expose the pins of each component to be used for the composition
 in a design.
@@ -28,7 +28,7 @@ Schematic Models
 **Schematics** represent the elements of an electrical system using
 abstracted symbols of components. Schematics excel at providing a clean,
 efficient view of an electronic system. In electronic design the
-location of the symbols in a schematic do not necessary correlate with
+location of the symbols in a schematic do not necessarily correlate with
 the physical location of the components. META currently uses **Eagle**
 models to represent a component's schematic model.
 
@@ -74,7 +74,7 @@ for modeling devices in Eagle.
 Subsection Organization
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-The EAGLE library presents three different editing modes: 
+The EAGLE library presents three different editing modes:
 
 1. **Edit a Symbol** -- Used to design the schematic symbol, indicating schematic
    pins

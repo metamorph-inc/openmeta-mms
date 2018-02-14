@@ -35,7 +35,7 @@ its icon on the **GME Toolbar**:
    :alt: Master Interpreter on toolbar
 
 1. Click the **Master Interpreter** icon.
-2. Make sure **Post job to META manager** is checked.
+2. Make sure **Post to META Job Manager** is checked.
 3. Click **OK**.
 4. Once your job successfully completes and turns green in the **Active Jobs**
    tab of the :ref:`results_browser`, right-click it and select Show in explorer.
