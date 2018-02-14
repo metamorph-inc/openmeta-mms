@@ -4,8 +4,8 @@ Adding a PET Analysis Block
 ===========================
 
 At this point in the tutorial, we have created a PET
-(**parameterstudy-tutorial**) in GME; however, our PET is empty (and useless).
-Let's add a model that we can analyze to **parametricstudy-tutorial**.
+(**parameterstudy_tutorial**) in GME; however, our PET is empty (and useless).
+Let's add a model that we can analyze to **parameterstudy_tutorial**.
 
 1. Locate the **PythonWrapper** within the **Part Browser** window (you may have to
 scroll down to find it).

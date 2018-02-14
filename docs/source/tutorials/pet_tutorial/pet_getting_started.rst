@@ -54,9 +54,9 @@ to open it in the main GME window. It should appear as a blank canvas.
    :alt: text
 
 10. Select the **ParametricExploration** model by either left-clicking
-on the blank canvas you opened in Step 9 or left-clicking the
+on the blank canvas you opened in Step 9 or left-clicking
 the **Parametric Exploration** model within the **GME Browser** window
-11. Change the name of the model to "**parameterstudy-tutorial**" within the
+11. Change the name of the model to "**parameterstudy_tutorial**" within the
 **Object Inspector** window
 
 .. figure:: images/parameterstudy_tutorial_9.png

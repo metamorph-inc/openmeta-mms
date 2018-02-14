@@ -98,13 +98,13 @@ experiment with 961 total input combinations.
 .. note:: The **FullFactorial** DOE Type becomes cumbersome as the number of Design Variables
    increases.
 
-   For example, if there were 6 Design Variables in this examples, then
+   For example, if there were 6 Design Variables in this example, then
    **ParameterStudy** would attempt to test 887,503,681 input combinations!
 
    As the number of Design Variables increases, it is often
    more efficient to use one of the other DOE Types and/or reduce the size of the design space.
 
-16. Open the **parameterstudy-tutorial** window.
+16. Open the **parameterstudy_tutorial** window.
 
 Notice that Design Variables **x** and **y** as well as the Objective **f_xy**
 are now exposed as ports on the outside of the ParameterStudy model.
