@@ -16,10 +16,10 @@ Spacecraft Model
 
 The OpenMETA Spacecraft project is an open-source project developed by
 Metamorph to demonstrate the concepts of OpenMETA with a system model of a
-ficticious satellite.  The system model includes both CAD models and
+fictitious satellite. The system model includes both CAD models and
 OpenModelica models for a joint phyical and electrical analysis of the craft.
 
-The OpenMETA Vahana project is here on GitHub:
+The OpenMETA Spacecraft Study project is here on GitHub:
 `openmeta-spacecraft-study
 <https://github.com/metamorph-inc/openmeta-spacecraft-study>`_
 
