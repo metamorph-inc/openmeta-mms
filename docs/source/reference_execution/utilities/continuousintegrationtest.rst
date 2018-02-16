@@ -71,7 +71,7 @@ control over the testing:
 
 - ``-v --collect-only``: List all the tests that conform to the given available tests.
 
-  - This can be useful to use when you are trying to find the right
+  - This can be useful when you are trying to find the right
     combination of ``-m`` and ``-e`` arguments to select the desired
     tests.
 

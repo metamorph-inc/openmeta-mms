@@ -44,7 +44,9 @@ Shared Filesystem
 .. note::
    For the purposes of this guide, a shared filesystem is any directory structure to which both your Windows and Linux/HPC environments have access, whether a physical disk or network shared filesystem.
 
-Move your entire OpenMETA project folder to a location on the shared filesystem. This should be a location that both your Windows and Linux/HPC environments have access.
+Move your entire OpenMETA project folder to a location on the shared filesystem.
+This should be a location that both your Windows and Linux/HPC environments have
+access to.
 
 .. figure:: images/linux-hpc-shared-dir.png
    :alt: A shared directory
@@ -73,7 +75,7 @@ Using the terminal to your Linux/HPC environment, navigate to this location. Run
    ~/openmeta-venv/bin/python -m testbenchexecutor testbench_manifest.json
 
 The Test Bench may take some time to run. Once it is complete, launch or refresh
-OpenMETA's **Results Browser** to inspect the results of the analysis. 
+OpenMETA's **Results Browser** to inspect the results of the analysis.
 Because the analysis results are within the project directory, they will be
 accessible in the same Results Browser as analyses performed locally in the
 Windows environment.
