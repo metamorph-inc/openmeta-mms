@@ -6,10 +6,10 @@ Explore Tab
 The Explore Tab has three sub-tabs that dive progressively deeper into the
 given dataset.
 
-The `Pairs Plot Tab`_ tab provides a way to explore
-overall trends in the data. The `Single Plot Tab`_ tab offers the additional
+The `Pairs Plot Tab`_ provides a way to explore
+overall trends in the data. The `Single Plot Tab`_ offers the additional
 visualization aids such as contour and pareto plots to be overlaid on a plot of
-two specific variables. Lastly, the `Point Details Tab`_ tab allows for view or
+two specific variables. Lastly, the `Point Details Tab`_ allows for viewing or
 launching artifacts from a specific data point in the dataset.
 
 Pairs Plot Tab
@@ -25,7 +25,7 @@ Variables
 ^^^^^^^^^
 
 -  **Display Variables:** This is where you set what the variables are
-   displayed on the main plot
+   displayed on the main plot.
 
 -  **Render Plot:** This button is available only if 'Render
    Automatically' option is unselected. Clicking this button produces a
@@ -36,9 +36,9 @@ Plot Options
 
 -  **Render Automatically:** This option causes the pairs plot to
    automatically update anytime a setting is changed. If this box is
-   unselected, a ‘Render Plot’ button appears in the *Variables* panel
-   where the plot will wait to update until a user clicks this button.
-   This is useful when changing the variables for the plot when working
+   unselected, a ‘Render Plot’ button appears in the *Variables* panel,
+   and the plot will wait to update until a user clicks this button.
+   This is useful for changing the variables of the plot when working
    with a large dataset or relatively large number of variables.
 -  **Overlay Trendlines:** Activating this option displays trendlines
    pairs plot.

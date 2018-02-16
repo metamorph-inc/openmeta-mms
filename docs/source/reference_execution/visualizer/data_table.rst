@@ -39,7 +39,7 @@ upon the implementation available in the 'topsis' package on CRAN.
 
 The *rank* and *score* columns appear when data ranking is being used.
 The table is sorted by ascending rank. A score between 0 and 1 is
-assigned to each point based results of the TOPSIS analysis.
+assigned to each point based on the results of the TOPSIS analysis.
 
 Adding Classifications
 ~~~~~~~~~~~~~~~~~~~~~~

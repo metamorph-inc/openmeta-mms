@@ -66,7 +66,7 @@ will respond to changes in these filters.
 -  **Exact Entry Window:** When a numeric slider is 'double-clicked', a new
    window opens up allowing the user to enter an exact range for the
    filter. The window shows the name of the variable along with text
-   fields for minimum and maximum range. The 'apply' button applies the
+   fields for minimum and maximum range. The 'Apply' button applies the
    new values set for the filter; if either or both of the fields are
    left blank or containing non-numeric numbers, they are ignored when
    this button is clicked.
@@ -98,7 +98,7 @@ of three options:
    the Coloring panel to assign the **color** column.
 3. **<Saved Colorings>**: Different desirable coloring schemes can be saved
    using the "Add Current 'Live' Coloring" button. These colorings will
-   be persisted across the live of the session and can be applied by
+   be persisted across the life of the session and can be applied by
    selecting them here in the "Source" select input.
 
 Classifications

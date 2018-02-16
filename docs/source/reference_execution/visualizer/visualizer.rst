@@ -4,7 +4,7 @@
 Visualizer
 ==========
 
-The Visualizer is open-source, extensible platform for visualizing results
+The Visualizer is an open-source, extensible platform for visualizing results
 generated using the OpenMETA tools.
 
 The first two sections describe the Visualizer features that ship standard with

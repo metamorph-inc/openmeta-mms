@@ -31,14 +31,14 @@ Numeric Ranges
 
 -  **Original Numeric Ranges:** This section displays the min and max
    value, for each variable, before any filtering has been applied.
-   Clicking ‘Original’ inserts all these value to the New Ranges
-   (whereas clicking 1 apply adds the ‘new’ value for just a single
+   Clicking ‘Original’ inserts all of these values into the New Ranges
+   (whereas clicking an individual ‘Apply’ adds the ‘new’ value for just a single
    row).
 
 -  **Refined Numeric Ranges:** This section displays the min and max
    value, for each variable, post-filtering. Clicking ‘Refined’ inserts
-   all these value to the New Ranges (whereas clicking 1 apply adds the
-   ‘new’ value for just a single row).
+   all these value to the New Ranges (whereas clicking an individual
+   ‘Apply’ adds the ‘new’ value for just a single row).
 
 -  **New Numeric Ranges:** This section can be populated with the listed
    values using the appropriate 'Apply' button or new min and max values

@@ -35,8 +35,8 @@ Weighting Tab Variable Configuration
 Weighting Tab Variable Plots
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The plots for each of the variables are display immediately to the right
-or the variable options. Below is a legend for the plots; the default
+The plots for each of the variables are displayed immediately to the right
+of the variable options. Below is a legend for the plots; the default
 color for each element is listed in parentheses.
 
 -  **Plot Frame:** This will be 'Yellow' for 'Inputs' and 'Blue' for
@@ -65,7 +65,7 @@ Probability Queries
 
 This section allows us to evaluate the integration of the area under the
 resampled distributions below or above a certain threshold. These
-probabilities are used additionally in the *Design Ranking* Tab to rank
+probabilities are used additionally in the *Design Ranking Tab* to rank
 the designs.
 
 Design Ranking Tab
@@ -75,7 +75,7 @@ Design Ranking Tab
    :alt: Uncertainty Quantification Design Ranking Tab
    :width: 1227px
 
-The design ranking tab uses the 'TOPSIS' package on CRAN to perform a
+The Design Ranking Tab uses the 'TOPSIS' package on CRAN to perform a
 multi-criteria decision making optimization on the result of performing
 all of the queries on all of the different design configurations
 present. This allows the user to rank the designs based on the queries.

@@ -227,13 +227,13 @@ This pane on the left of the PET tab shows the available Test Benches.
 Column Headers
 ^^^^^^^^^^^^^^
 
-**Dataset Types:** 'TestBenchResult' is the only type of Test Bench List items.
+**Data Type:** 'TestBenchResult' is the only type of Test Bench List items.
 
 **Name:** This name is taken from the OpenMETA project at the time of execution by
-the Master Interpreter
+the Master Interpreter.
 
 **Design:** This design name is taken from the OpenMETA project at the time of
-execution by the Master Interpreter
+execution by the Master Interpreter.
 
 **Status:** This is the status taken from the Test Bench Manifest. The possible
 values are as follows:

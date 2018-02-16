@@ -3,8 +3,8 @@
 Custom Tabs
 ===========
 
-The Visualizer framework is extensible and allow one or more
-user-defined tabs to rendered in a given instance of the Visualizer. The
+The Visualizer framework is extensible, allowing one or more
+user-defined tabs to be rendered in a given instance of the Visualizer. The
 Visualizer is built using the statistical programming language
 `R <https://www.r-project.org/>`__ and a package called
 `Shiny <https://shiny.rstudio.com/>`__. When an instance of the
@@ -80,10 +80,10 @@ with an explanation for each of the objects.
          -  ``<coloring names>``
 
             -  ``name`` - name of the coloring scheme
-            -  ``type`` - ‘Max/Min’ or ‘Discrete
+            -  ``type`` - ‘Max/Min’ or ‘Discrete’
             -  ``var`` - the name of the variable that is the basis of the
                coloring
-            -  ``goal`` - (for ‘Max/Min’) ‘Maximize or ‘Minimize’
+            -  ``goal`` - (for ‘Max/Min’) ‘Maximize’ or ‘Minimize’
             -  ``palette`` - (for ‘Discrete’) ‘Rainbow,’ ‘Heat,’ ‘Terrain,’
                ‘Topo,’ or ‘Cm’
             -  ``rainbow_s`` - (if ‘Rainbow’ for palette) the saturation for
@@ -175,7 +175,7 @@ with an explanation for each of the objects.
       -  ``var_nums_and_ints()`` - (list) names of all the variables of
          class ‘numeric’ or ‘integer’
       -  ``abs_max()``, ``abs_min()`` - (list) the maximum and minimum
-         values for each variables in var\_nums\_and\_ints
+         values for each variable in var\_nums\_and\_ints
       -  ``var_range_nums_and_ints()`` - (list) names of all the variables
          of class ‘numeric’ or integer’ that vary across some range, i.e.
          are not constants
@@ -184,16 +184,16 @@ with an explanation for each of the objects.
       -  ``var_range()`` - (list) names of all variables that vary across
          some range, i.e. are not constants
       -  ``var_range_nums_and_ints_list()`` - (list of lists)
-         ``var_range_nums_and_ints()`` sorted into lists by type.
+         ``var_range_nums_and_ints()`` sorted into lists by type
       -  ``var_range_facs_list()`` - (list of lists) ``var_range_facs()``
-         sorted into lists by type.
+         sorted into lists by type
       -  ``var_range_list()`` - (list of lists) ``var_range()`` sorted into
-         lists by type.
+         lists by type
       -  ``var_constants()`` - (list) names of the variables of any class
-         that don’t vary in the dataset.
+         that don’t vary in the dataset
 
    -  ``raw$df`` - the raw data with no filtering or coloring applied as a
-      reactive value.
+      reactive value
 
 E.g. In your ``server`` function, you could find the type of the first
 variable by evaluating ``data$meta$variables[[1]]$type`` in either a
@@ -266,7 +266,7 @@ select box ``inputId`` and plot ``outputId`` are 'variable' and 'plot',
 respectively. The Visualizer framework implements the Shiny 'Module'
 concept to isolate the tabs and avoid input name collisions; this
 necessitates the ``ns <- NS(id)`` statement at the beginning of the
-function and the wrapping all the ``inputId`` and ``outputId``
+function and the wrapping of all the ``inputId`` and ``outputId``
 parameters to Shiny UI function calls in a call to ``ns()``.
 
 The ``server`` function, defined on lines 19-45, is where we describe
@@ -290,7 +290,7 @@ occurs when the data is initialized or classifications are added or
 removed.)
 
 This code block is fairly complex, but it provides a lot of
-functionality: it specifies a default value, if loads a value saved from
+functionality: it specifies a default value, loads a value saved from
 a previous session, and updates the 'variable' UI element dynamically as
 the dataset is altered. The ``selected`` variable is first assigned the
 current value of the input. This is done within an ``isolate()`` call
@@ -309,7 +309,7 @@ ensures that the saved choice is in the currently available options
 before applying the value. Lastly we call ``updateSelectInput`` to
 update the input with our new values.
 
-The final section of code on lines defines the 'plot' output to be a
+The final section of code on lines 38-43 defines the 'plot' output to be a
 histogram of the variable selected in the "Histogram Variable" select
 box with a title and x-axis label. The ``req()`` function allows us to
 break if a needed input is ``NULL`` as is the case with
@@ -341,7 +341,7 @@ your needs. The next time you launch the Visualizer, your tab will be
 included in the tabset.
 
 .. note:: The tabs are added in the order that they appear in this
-   directory, so it may be useful to prepend an number to the filename.
+   directory, so it may be useful to prepend a number to the filename.
 
 Developing your Application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

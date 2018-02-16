@@ -18,7 +18,7 @@ The Surrogate Modeling tab opens to a page containing selectors for each
 discrete design variable in your model, as well as a table containing a column
 for each numeric design variable and objective in the model.
 
-Begin by selecting a discrete configuration to analyze under "Design
+Begin by selecting a discrete configuration to analyze under "Discrete
 Variables:". Since the techniques being used are numerical in nature and don't
 attempt to model discrete variation, each combination of discrete design
 variables must be analyzed separately.
