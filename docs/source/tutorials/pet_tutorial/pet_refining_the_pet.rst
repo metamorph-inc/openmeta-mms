@@ -4,10 +4,10 @@ Refining the PET
 ================
 
 In the previous step, we used the PET Visualizer to estimate the
-Paraboloid's global minimum to be located around **(7,-8)**. Now
-if we were analyzing a more complicated function, we might choose
+Paraboloid's global minimum to be located around **(7,-8)**.
+If we were analyzing a more complicated function, we might choose
 to increase the number of Parameter Study sample points to get a
-clearer picture of the design space. However, in this case, we
+clearer picture of the design space. In this case, however, we
 are confident that our function is smooth and lacking local minima,
 so we will instead re-run our PET with the same number of samples
 while decreasing the sampled area.
@@ -52,7 +52,8 @@ You can see this in the **Results Browser**.
 .. FIXME: I need to update this step after the PET Refinement tab
 .. fixes so that the file path to the PET is actually correct.
 
-4. Select **parameterstudy-tutorial (1)** and left-click **Launch in Visualizer**.
+4. Select **parameterstudy_tutorial (1)** and left-click **Launch in OpenMETA
+Visualizer**.
 5. Left-click the **Single Plot** tab.
 6. Under the **Variables** section, set **x** as the **X-axis** and **y** as the **Y-axis**.
 7. Left-click the **Overlays** section to expand it.
@@ -72,4 +73,4 @@ surveying a design space and can reveal important trends, it is generally
 not ideal for optimization problems.
 
 In the next section, we will learn how to use the :ref:`pet_drivers_optimizer`
-PET Driver, which is often better suited for optimization/minimations problems.
+PET Driver, which is often better suited for optimization/minimization problems.

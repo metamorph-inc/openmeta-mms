@@ -39,7 +39,7 @@ When the PET finishes running successfully, its shading will turn green.
 .. figure:: images/parameterstudy_tutorial_40.png
    :alt: text
 
-5. Left-click **parameterstudy-tutorial** to display run information
+5. Left-click **parameterstudy_tutorial** to display run information
 on the right pane.
 
 .. figure:: images/parameterstudy_tutorial_40_a.png

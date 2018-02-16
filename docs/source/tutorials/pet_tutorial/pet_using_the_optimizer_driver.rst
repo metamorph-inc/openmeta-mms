@@ -8,7 +8,7 @@ the **x** and **y** values that minimize **f_xy**.
 
 In the previous :ref:`pet_adding_a_driver` section, we used the Parameter Study
 driver to obtain the **x** and **y** values needed to minimize **f_xy**. That method
-was rather ineffecient as it relied on a brute force sampling (961 samples)
+was rather inefficient as it relied on a brute force sampling (961 samples)
 of the design space in order to obtain a reasonable estimate of the optimal
 x and y values.
 
@@ -22,12 +22,12 @@ is better suited for optimization/minimization problems.
 Open an existing OpenMETA Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If the **parameterstudy-tutorial.mga** GME project is still open,
+If the **parameterstudy_tutorial.mga** GME project is still open,
 then you can skip Steps 1-3.
 
 1. Start GME.
 2. Within GME, open the **File** menu and select **Open Project...**.
-3. Left-click on the **parameterstudy-tutorial.mga** file that you created
+3. Left-click on the **parameterstudy_tutorial.mga** file that you created
    in the last tutorial then select **Open**.
 
 .. figure:: images/optimizer_tutorial_1.png
@@ -43,12 +43,12 @@ Create a new PET within the Project
 .. image:: images/optimizer_tutorial_1_a.png
 
 5. Change the name of the newly created **ParametricExploration** model to
-"**optimizer-tutorial**".
+"**optimizer_tutorial**".
 
 .. figure:: images/optimizer_tutorial_2.png
    :alt: text
 
-6. Double-click on **optimizer-tutorial** to open it in the main GME window.
+6. Double-click on **optimizer_tutorial** to open it in the main GME window.
 It should appear as a blank canvas.
 
 .. figure:: images/optimizer_tutorial_2_a.png
@@ -57,18 +57,18 @@ It should appear as a blank canvas.
 Instead of redoing work, let's copy our existing work from the Parameter Study tutorial.
 
 7. Inside the **GME Browser** window, double-click on the :menuselection:`
-RootFolder --> Testing --> Parametric Exploration --> parameterstudy-tutorial`
+RootFolder --> Testing --> Parametric Exploration --> parameterstudy_tutorial`
 to open it in a window.
 
 .. image:: images/optimizer_tutorial_3.png
 
-8. Left-click and drag within **parameterstudy-tutorial**'s canvas to select everything.
+8. Left-click and drag within **parameterstudy_tutorial**'s canvas to select everything.
 9. Press :kbd:`(Control-C)` to copy the selected area.
 
 .. image:: images/optimizer_tutorial_4.png
 
-10. Return to the **optimizer-tutorial** canvas and press :kbd:`(Control-V)`
-to paste **ParameterStudy** and **Paraboloid** into **optimizer-tutorial**.
+10. Return to the **optimizer_tutorial** canvas and press :kbd:`(Control-V)`
+to paste **ParameterStudy** and **Paraboloid** into **optimizer_tutorial**.
 
 .. image:: images/optimizer_tutorial_5.png
 
@@ -157,7 +157,7 @@ a MaxValue of **+50** and a MinValue of **-50**.
 .. figure:: images/optimizer_tutorial_15.png
    :alt: text
 
-31. Open the **optimizer-tutorial** window
+31. Open the **optimizer_tutorial** window
 
 Notice that Design Variables **x** and **y**, Optimizer Constraints **x_con**
 and **y_con**, and the Objective **f_xy** are now exposed as ports on the
@@ -180,14 +180,14 @@ Making connections within the PET
 .. figure:: images/optimizer_tutorial_17.png
    :alt: text
 
-34. Connect **Optimizer**'s Design Variables **x** and **y** to
-**Optimizer**'s Optimizer Constraints **x_con** and **y_con**.
+34. Connect **Paraboloid**'s Metric **f_xy** to **Optimizer**'s
+Objective **f_xy**.
 
 .. figure:: images/optimizer_tutorial_18.png
    :alt: text
 
-35. Connect **Paraboloid**'s Metric **f_xy** to **Optimizer**'s
-Objective **f_xy**.
+35. Connect **Optimizer**'s Design Variables **x** and **y** to
+**Optimizer**'s Optimizer Constraints **x_con** and **y_con**.
 
 .. figure:: images/optimizer_tutorial_19.png
    :alt: text
@@ -223,16 +223,16 @@ The **Results Browser** will open up.
    :alt: text
 
 
-40. Left-click **optimizer-tutorial** to display run information on the right pane.
+40. Left-click **optimizer_tutorial** to display run information on the right pane.
 
 .. figure:: images/optimizer_tutorial_23_a.png
    :alt: text
 
-You will notice that **optimizer-tutorial** generated **58** records, meaning
+You will notice that **optimizer_tutorial** generated **58** records, meaning
 that it converged in **58** iterations. As you can see it discovered the correct
 global minimum of **f_xy** at value of **-27.33**.
 
-Compared to **parameterstudy-tutorial**, **optimizer-tutorial** found
+Compared to **parameterstudy_tutorial**, **optimizer_tutorial** found
 **f_xy**'s minimum much more efficiently and accurately.
 
 .. note:: The (dis)advantage of using an Optimizer Driver
@@ -242,7 +242,8 @@ Compared to **parameterstudy-tutorial**, **optimizer-tutorial** found
 Visualizer Analysis
 ~~~~~~~~~~~~~~~~~~~
 
-41. Left-click **Launch in Visualizer** in the bottom-right corner of the **Results Browser**.
+41. Left-click **Launch in OpenMETA Visualizer** in the bottom-right corner of
+the **Results Browser**.
 
 A browser window will open with the Visualizer.
 

@@ -7,7 +7,7 @@ Data from each PET run is stored in a ``.csv`` file in the generated execution
 folder in the ``results`` directory;
 however, OpenMETA has a built-in data visualizer for analysis and filtering.
 
-1. Left-click **Launch in Visualizer** in the bottom-right corner of the
+1. Left-click **Launch in OpenMETA Visualizer** in the bottom-right corner of the
 **Results Browser**.
 
 A browser window will open with the Visualizer.
