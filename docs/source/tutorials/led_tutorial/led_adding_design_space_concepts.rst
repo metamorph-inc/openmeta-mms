@@ -82,8 +82,13 @@ can select up to nine configurations.
 3. Verify that there are nine configurations and select **Export All**.
 4. Click **Return to CyPhy**.
 
-It won't look like anything happened but there will be nine simulations
-(one for each **Design Point**) the next time you run a test bench.
+This process will automatically switch the canvas aspect to *Design Space*, which
+shows the newly exported configurations and the **NewDC__Resistor_1k** and
+**NewDC__Led_GREEN** Design Containers. Change the canvas aspect back to
+*All* by using the ``Aspect:`` dropdown menu at the top of the canvas. The
+**NewDC__SimpleLEDCircuit** Design Container won't look different, but there
+will now be nine simulations (one for each *Design Point*) the next time you
+run a test bench.
 
 .. |Design Space Exploration Tool icon| image:: images/04-design-space-exploration-tool-icon.png
       :alt: Design Space Refactorer icon

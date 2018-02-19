@@ -24,10 +24,31 @@ Generating Schematics
 
 1. Configure the **PlaceAndRoute_1x2** Test Bench with our new design
    space, **NewDC__SimpleLEDCircuit**.
-2. Click the **Master Interpreter** icon.
-3. Click **Select All** to select all configurations.
-4. Make sure **Post to META Job Manager** is checked.
-5. Click **OK**.
+
+Due to Eagle licensing constraints, some failures may occur when attempting to
+execute the **PlaceAndRoute_1x2** Test Bench on multiple configurations simultaneously.
+To avoid this issue, we'll disable simultaneous processing in the Results Browser.
+
+2. Open the Results Browser.
+
+.. image:: images/launch_results_browser.png
+   :alt: Launching the Results Browser
+
+3. Change ``Simultaneous processes:`` at the bottom of the Results Browser
+   window to 1 process.
+
+.. note:: You may change this setting back to default when not
+   executing the **PlaceAndRoute_1x2** Test Bench. For more information, see the
+   :ref:`results_browser` reference page.
+
+
+4. Back in GME, click the **Master Interpreter** icon.
+
+5. Click **Select All** to select all configurations.
+
+6. Make sure **Post to META Job Manager** is checked.
+
+7. Click **OK**.
 
 .. image:: images/03-06-design-space-eagle.png
    :alt: Place and Route test

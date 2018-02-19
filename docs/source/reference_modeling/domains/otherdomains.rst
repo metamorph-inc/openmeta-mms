@@ -6,9 +6,9 @@ Other Domains
 RF Models
 ^^^^^^^^^
 
-An RF model of a META component comprises three-dimensional geometric
+An RF model of an OpenMETA component comprises of three-dimensional geometric
 shapes associated with materials of different electromagnetic
-properties. The META tools currently support models that are in the
+properties. The OpenMETA tools currently support models that are in the
 CSXCAD format supported by the **OpenEMS** simulator.
 `OpenEMS <http://openems.de>`__ uses a finite-difference time-domain
 (FDTD) approach, where the problem space is first discretized along a

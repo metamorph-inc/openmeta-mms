@@ -4,7 +4,7 @@ Modelica
 ================
 
 OpenModelica is an open-source Modelica-based modeling and simulation environment
-intended for industrial and academic usage. META uses OpenModelica for
+intended for industrial and academic usage. OpenMETA uses OpenModelica for
 physics simulations, including mechanical, thermal, and power analysis.
 
 Installation
@@ -25,7 +25,7 @@ engineering domains such as electrical, hydraulic, mechanical, and
 thermal. For the purposes of Ara modules, we will be focusing on the
 power and thermal abilities provided by the Modelica solver.
 
-Within META components are Modelica models that contain a set of
+Within OpenMETA components are Modelica models that contain a set of
 Modelica ports and parameters. These ports represent the dynamics
 interfaces for the represented component, while the parameters capture
 the elements of the model that may be altered.
