@@ -1,7 +1,7 @@
 .. _reference:
 
-Appendix A: META Reference Guide
-================================
+META Reference Guide
+====================
 
 Parts, Ports & Connections
 --------------------------
@@ -639,7 +639,7 @@ Common Error Messages
 |                                       | its value from two different       |
 |                                       | places.                            |
 +---------------------------------------+------------------------------------+
-| Errored Constraint No: 1----------    | The error is caused by copying the | 
+| Errored Constraint No: 1----------    | The error is caused by copying the |
 | Constraint Set: constraints           | files from the imported components |
 | Constraint: VisualConstraint Context: | and not the design space           |
 | MyMassSpringDamper Context Error:     |                                    |

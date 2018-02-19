@@ -1,7 +1,7 @@
 .. _connectors:
 
-Appendix B: Connectors Explained
-================================
+Connectors Explained
+====================
 
 **Connectors** are a powerful concept for raising the level of
 abstraction for component composition. Think of them like a *bus* that
@@ -112,7 +112,6 @@ due to this inference, instead of by name:
 
 ::
 
-    [Warning] Non-name match: Port 1ModelicaConnector in Connector Connector1 and Port 2ModelicaConnector in Connector Connector2 
-    [Warning] Non-name match: Port 1Pin in Connector Connector1 and Port 2Pin in Connector Connector2 
-    [Warning] Non-name match: Port 1SystemCPort in Connector Connector1 and Port 2SystemCPort in Connector Connector2 
-
+    [Warning] Non-name match: Port 1ModelicaConnector in Connector Connector1 and Port 2ModelicaConnector in Connector Connector2
+    [Warning] Non-name match: Port 1Pin in Connector Connector1 and Port 2Pin in Connector Connector2
+    [Warning] Non-name match: Port 1SystemCPort in Connector Connector1 and Port 2SystemCPort in Connector Connector2
