@@ -77,6 +77,17 @@ to add a *CyPhyPython Interpreter* Task to the workflow. An example of this can
 be found in the :ref:`hello_world_analyzing_our_company` section of the
 :ref:`hello_world` tutorial.
 
+.. note:: If you don't see the CyPhyPython Button, |CYPHYPYTHON_BUTTON|, on the
+   toolbar, follow the instructions below to add it:
+
+   #. Open the **Components** manager from the menu bar,
+      :menuselection:`Tools --> Register Components...`.
+
+      .. image:: images/ComponentsManager.png
+
+   #. Select **CyPhyPython**.
+   #. Click **Enable**.
+
 
 Building an Interpreter
 ~~~~~~~~~~~~~~~~~~~~~~~
