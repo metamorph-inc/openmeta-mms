@@ -34,6 +34,9 @@ schematic of their design. Additionally, the user can run a CAD assembly
 test bench to build a 3D model of their design.
 
 A common use for test benches is the evaluation of system performance.
+In this application, a test bench is an executable specification of a
+system requirement.
+
 The parts of a Test Bench include:
 
 -  **Test Drivers:** Replicating the intended stimulus to the system.
@@ -49,16 +52,13 @@ The parts of a Test Bench include:
    designs). In the case of a design space, the test bench can be
    applied over the entire set of feasible designs.
 
-In the following application, the test bench is an executable specification of a
-system requirement.
-
 .. figure:: images/01-04-example-test-bench.png
    :alt: example test bench
 
    *An Example Test Bench*
 
-   **NewDC\_\_SimpleLEDCircuit** is the **System Under Test**, while the other
-   **Test Components** provide the **Wraparound Environment**.
+   "NewDC\_\_SimpleLEDCircuit" is the *System Under Test*, while the other
+   test components provide the *Wraparound Environment*.
 
 
 Systems Under Test
