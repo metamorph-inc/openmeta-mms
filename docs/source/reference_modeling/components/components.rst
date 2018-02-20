@@ -45,14 +45,15 @@ Domain-Specific Models
 For each of the domains represented in the component model, there is a
 domain-specific model that exposes the necessary features of that domain.
 
-For example, in the :ref:`capacitor` figure above we see that this capacitor has both an EDA and a
-SPICE model. The EDA model exposes the two pins which represent the phyiscal
-pads of the part footprint on a printed circuit board (PCB) to which other components need to
-connect. The SPICE model also exposes the two pins of the component but additionally exposes four values
-needed to construct an accurate representation of the capacitor in the SPICE
-domain. The **properties** that specify the appropriate values for the SPICE
-model as well as a number of other **properties** that describe this
-component are described in the next subsection.
+For example, in the :ref:`capacitor` figure above we see that this capacitor has
+both an EDA and a SPICE model. The EDA model exposes the two pins which
+represent the phyiscal pads of the part footprint on a printed circuit board
+(PCB) to which other components need to connect. The SPICE model also exposes
+the two pins of the component but additionally exposes four values needed to
+construct an accurate representation of the capacitor in the SPICE domain. The
+**properties** that specify the appropriate values for the SPICE model as well
+as a number of other **properties** that describe this component are described
+in the next subsection.
 
 Properties & Parameters
 -----------------------
@@ -115,14 +116,16 @@ instantiation*, and *component class inheritance*.
 Component References
 ~~~~~~~~~~~~~~~~~~~~
 
-Components can be added to CAs and DCs as references.
+The most common modeling paradigm in OpenMETA projects is to create or import
+OpenMETA Components and to use *references* of those components in the Component
+Assemblies and Design Containers used to express your design.
 This allows us to use the exact same component in multiple places.
 Without references, it would be necessary to update the component everywhere
 it is used when a change was made to its definition.
-We recommend keeping all the components in the project confined to
-Components Folders and using components references everywhere that component is
-used.
-This reduces the size of model?
+Although components can also exist directly within *Component Assemblies* and
+*Design Containers*, we recommend keeping all the components in the project
+confined to *Components Folders* and using component references everywhere
+components are used.
 
 Instantiation
 ~~~~~~~~~~~~~
@@ -139,3 +142,104 @@ This is useful for managing different classes of components that share
 many of the same attributes.
 When model objects are added to the base class components, they are
 automatically added to all derived component classes.
+
+Components Library
+------------------
+
+Browsing Your Component Library
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can access the components in your project by using the **GME Browser** (on
+the right hand side of the screen).
+In the GME Browser, Components are contained in red *Components Folders*,
+|COMPONENTS_FOLDER|. Component Folders can be nested and used for organization.
+
+.. |COMPONENTS_FOLDER| image:: images/components-folder.png
+
+.. figure:: images/component-library-organized.png
+   :alt: Example of Components in an OpenMETA Project
+
+   Example of Components in an OpenMETA Project
+
+To create a new folder, right-click on the parent folder, and choose
+:menuselection:`Insert Folder --> Components`.
+
+.. image:: images/create-new-folder.png
+
+To move a component from one folder to another, just drag-and-drop it to the new
+folder.
+
+Getting Components
+~~~~~~~~~~~~~~~~~~
+
+To build designs in OpenMETA, you'll need to have the necessary OpenMETA
+Components in your project. Components can be built from scratch, but they can
+also be imported.
+
+*Component packages* are ``.zip`` files that include everything needed to use a
+component in design and simulation, such as 3D CAD models, EAGLE schematics, and
+icons. In this format, components can be exchanged freely between users or
+downloaded from websites.
+
+If you are interested in electronics design, you can clone the `morph-components
+<https://bitbucket.org/metamorphsoftwareinc/morph-components>`_ repository
+published with the alpha release of the OpenMETA tools for a large library of
+electronics components.
+
+
+Importing Components
+~~~~~~~~~~~~~~~~~~~~
+
+Components can be shared in two forms, either as an ``.acm`` file with some
+other files and folders around it, or as a ``.zip`` package that includes all
+the file dependencies within it.
+
+To import a Component:
+
+#. Click the **Component Importer**, |COMPONENT_IMPORTER_ICON|.
+#. If you are importing a...
+
+    a. Component ``.acm`` file, navigate to and select the `.acm` file. The
+    importer will find the other files that this component depends on and import
+    them into your project's backend folders.
+
+    b. Component ``.zip`` package, navigate to and select the `.zip` file. The
+    ZIP file includes all of the files needed to use the component, and they'll
+    be copied into your project's backend folders.
+
+.. |COMPONENT_IMPORTER_ICON| image:: images/component_importer_icon.png
+
+After the component is imported, the GME Console will display a link to the
+component as well as its path within the Components Folder tree of your
+OpenMETA project.
+
+This process can be repeated for any components you feel will be necessary for
+your design. You can import multiple components at the same time by selecting
+all of them.
+
+Exporting Components
+~~~~~~~~~~~~~~~~~~~~
+
+The META tools include a utility which will create component packages from the
+components in your OpenMETA project. These packages are `.zip` files which
+contain everything that's needed to use a component.
+
+To export a single component:
+
+#. Open the component by double-clicking on it in the GME Browser.
+#. Click the **Component Exporter** button, |COMPONENT_EXPORTER_ICON|.
+
+   .. |COMPONENT_EXPORTER_ICON| image:: images/component_exporter_icon.png
+
+#. You'll be prompted for a location in which to save the component package
+   ``.zip`` file.
+#. A component package ZIP file will be produced in the folder you selected.
+
+To export *all* of the components in your OpenMETA project:
+
+#. Close all of your editing windows.
+#. Click the **Component Exporter** button, |COMPONENT_EXPORTER_ICON|.
+#. You'll be prompted for a location in which to save your component package
+   ``.zip`` files.
+#. For each component in your META project, a component package ZIP file will be
+   produced in the folder you selected.
