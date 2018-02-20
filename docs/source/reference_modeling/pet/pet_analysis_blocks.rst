@@ -221,7 +221,7 @@ There are two types of MATLAB scripts that can be integrated:
 *Function Files* and *Bare Files*. The MATLAB Wrapper
 determines the type by examining the script file.
 
-Currently, only MATLAB version 2016a and later are supported.
+Currently, only MATLAB version 2015a and later are supported.
 
 Function Files
 ~~~~~~~~~~~~~~
