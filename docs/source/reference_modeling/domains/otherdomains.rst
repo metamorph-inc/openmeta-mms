@@ -6,7 +6,7 @@ Other Domains
 RF Models
 ^^^^^^^^^
 
-An RF model of an OpenMETA component comprises of three-dimensional geometric
+An RF model of an OpenMETA component comprises three-dimensional geometric
 shapes associated with materials of different electromagnetic
 properties. The OpenMETA tools currently support models that are in the
 CSXCAD format supported by the **OpenEMS** simulator.
