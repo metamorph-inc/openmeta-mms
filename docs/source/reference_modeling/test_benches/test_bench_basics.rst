@@ -76,6 +76,62 @@ Workflows
 ---------
 
 A *Workflow* is an OpenMETA model object used to define steps necessary to
+<<<<<<< HEAD
 properly run an analysis. These steps may include *Tasks* to call
 model *Interpreters* at the time of job creation, *Executions Tasks* to
 define scripts to be run at the time of job execution, or both.
+=======
+properly run an analysis. Workflows must exist in a *Workflow Definitions*
+folder, which itself must exist in a *Testing* folder, and be added to the test
+bench by reference.
+
+.. figure:: images/workflow.png
+   :alt:
+
+   An Example Modelica Workflow
+
+Workflow steps may include *Tasks* to call model *Interpreters* at the time of
+job creation, *Executions Tasks* to define scripts to be run at the time of job
+execution, or both.
+
+Metrics and Metric Constraints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Metrics* are used to define the named values that will serve as the results of
+a given analysis or simulation. During the course of the execution, these
+values will be calculated and set by analysis.
+
+.. figure:: images/cad_computation_block.png
+   :alt: A CAD Computation Block Driving Test Bench Metrics
+
+   A CAD Computation Block Driving Test Bench Metrics
+
+*Metric Constraints* are used in conjunction with metrics to express the desired
+value of a given metric. After a metric constraint has been added to a test
+bench and connected to a metric, you can express the target type and value.
+
+.. image:: images/metric_constraint.png
+
+Metrics and metric constraints are not necessary for the execution of a test
+bench, and with `Artifacts-Generating Test Benches`_, they are often not
+present.
+
+Test Components
+~~~~~~~~~~~~~~~
+
+You can include *test components* to create a fixture around the system
+under test. They can be used as a stimulus so its performance can be analyzed.
+
+.. figure:: images/test_component.png
+   :alt: 5V Source Test Component Used to Power a Design for Evaluation
+
+   5V Source Test Component Used to Power a Design for Evaluation
+
+Other Objects
+~~~~~~~~~~~~~
+
+In addition to the major elements described above, there are many more models,
+references, and atoms that can exist in a test bench. Most of these provide
+more flexibility for defining the testing environment and system stimulus.
+Visit the :ref:`integrated_domains` chapter for more information.
+>>>>>>> 8f233cbab... OPENMETA-417 renamed 'domains' to 'integrated_domains.'
