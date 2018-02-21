@@ -169,8 +169,9 @@ OpenMETA. This utility makes it possible for two or more users to collaborate on
 an OpenMETA project. Collaborators can work within designated *subtrees*, and
 their edits can be re-incorporated into a master copy of the design model.
 
-In this subsection, we refer to a :ref:`Component Assembly`, and all of the
-objects contained within, as a *subtree*.
+In this subsection, we refer to a component assembly, and all of the objects
+contained within, as a *subtree*. See the :ref:`component_assemblies` chapter
+for more details on component assemblies.
 
 Workflow
 ~~~~~~~~
