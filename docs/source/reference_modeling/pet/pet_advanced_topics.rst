@@ -19,7 +19,7 @@ values is to use a Test Bench.
 
    PET with a Test Bench to extract Properties from the OpenMETA Project
 
-See the :ref:`testbench_utilities` section of
+See the :ref:`test_bench_utilities` section of
 the Test Bench chapter for information on how to do this.
 
 Optimization

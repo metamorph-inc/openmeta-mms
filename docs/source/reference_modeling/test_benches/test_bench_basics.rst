@@ -1,4 +1,4 @@
-.. _testbench_basics:
+.. _test_bench_basics:
 
 Test Bench Basics
 =================

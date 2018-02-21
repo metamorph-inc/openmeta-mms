@@ -13,5 +13,5 @@ continuous integration, refactoring, and more.
    runonhpc
 
 
-For infomation on Test Bench utilities see the :ref:`testbench_utilities`
+For infomation on Test Bench utilities see the :ref:`test_bench_utilities`
 section of the Test Benches chapter.

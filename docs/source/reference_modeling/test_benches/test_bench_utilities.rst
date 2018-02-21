@@ -1,4 +1,4 @@
-.. _testbench_utilities:
+.. _test_bench_utilities:
 
 Common Utilities
 ================
