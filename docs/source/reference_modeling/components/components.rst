@@ -116,32 +116,83 @@ instantiation*, and *component class inheritance*.
 Component References
 ~~~~~~~~~~~~~~~~~~~~
 
-The most common modeling paradigm in OpenMETA projects is to create or import
-OpenMETA Components and to use *references* of those components in the Component
+The most common approach for sharing component libraries
+is to create or import
+OpenMETA Components from a library and to use *references* of those components in the Component
 Assemblies and Design Containers used to express your design.
 This allows us to use the exact same component in multiple places.
-Without references, it would be necessary to update the component everywhere
-it is used when a change was made to its definition.
-Although components can also exist directly within *Component Assemblies* and
+
+To instantiate a Component into an open Component Assembly or Design Container,
+right-click and drag the Component from the GME Browser onto the canvas. 
+When prompted, select **Create Reference**.
+
+For an example, see **** REFERENCE TO HELLO_WORLD_CREATING_A_TEAM -- ASSIGNING MEMBERS TO A TEAM ****
+
+Although components can also be copied or created directly within *Component Assemblies* and
 *Design Containers*, we recommend keeping all the components in the project
 confined to *Components Folders* and using component references everywhere
 components are used.
 
-Instantiation
-~~~~~~~~~~~~~
-
-You can create instances of components in CA's, DCs, <what else?>.
-Offers the same benefits of references, but keeps the object in an
-expanded form.
-
 Class Inheritance
 ~~~~~~~~~~~~~~~~~
 
-Components can be subclasses of other Components.
-This is useful for managing different classes of components that share
-many of the same attributes.
+Components can be created as subclasses of other Components.
+This is useful for managing different classes of components that share many of the same characteristics.
 When model objects are added to the base class components, they are
-automatically added to all derived component classes.
+automatically added to the derived component classes.
+
+It's also a useful technique for building and managing large libraries of Components.
+
+To use Class Inheritance to streamline Component Authoring, let's revisit the :ref:`_hello_world_adding_team_members` 
+section of the :ref:`_hello_world` tutorial. 
+In the tutorial, we created four team members. 
+Even though each team member was different, they shared many Properties in common.
+We will use Class Inheritance to make managing these Properties more efficient.
+
+#. Right-click on the *RootFolder*, and choose :menuselection:`Insert Folder --> Components`.
+#. Rename this new *Components* folder **TeamMembersInheritance**.
+#. Right-click on the new **TeamMembersInheritance** folder and choose :menuselection:`Insert Model --> Component`.
+#. Rename this component to **Employee**.
+
+We will treat this **Employee** component as a *baseclass*, and use *subtyping* to derive specific team members from it.
+
+#. Right-click on **Employee** and choose :menuselection:`Copy`.
+#. Right-click on the **TeamMembersInheritance** folder and choose :menuselection:`Paste Special --> As Subtype`.
+#. You will see a new **Employee** Component which includes a small "s" next to its icon.
+#. Rename this Component to **Allen**.
+
+The **Allen** Component inherits from the **Employee** component. If we add Properties or other fields to **Employee**, they will be created within **Allen** as well.
+
+#. Double-click the **Employee** Component to open it.
+#. From the Parts Browser pane on the left of the window drag a **Property** onto the open canvas.
+#. Rename the property **Salary**. Do not set a value for **Salary** -- its value will differ for each employee.
+#. Double-click the **Allen** Component to open it. Notice that a **Salary** Property was automatically created.
+#. Set the value of **Allen**'s **Salary** to **50000**.
+
+Inheritance can extend to several levels of depth. Let's say that, within our company, we also have programmers.
+For programmers, we want to know their primary computer programming language.
+This property wouldn't make sense for non-programmer employees, so we need a special class for them.
+
+#. Right-click on **Employee** and choose :menuselection:`Copy`.
+#. Right-click on the **TeamMembersInheritance** folder and choose :menuselection:`Paste Special --> As Subtype`.
+#. You will see a new **Employee** Component which includes a small "s" next to its icon.
+#. Rename this Component to **Programmer**.
+#. Double-click the **Programmer** Component to open it.
+#. From the Parts Browser pane on the left of the window drag a **Property** onto the open canvas.
+#. Rename the property to **Language**. Do not set a value for **Language**.
+
+Now we have a special **Programmer** class of Component. It contains all of the Properties of **Employee**, 
+as well as additional fields that apply only to programmers.
+
+#. Right-click on **Programmer** and choose :menuselection:`Copy`.
+#. Right-click on the **TeamMembersInheritance** folder and choose :menuselection:`Paste Special --> As Subtype`.
+#. You will see a new **Programmer** Component which includes a small "s" next to its icon.
+#. Rename this Component to **Sara**.
+#. Double-click the **Sara** Component to open it.
+#. Set the value of **Sara**'s **Langauge** to **Python**.
+#. Set the value of **Sara**'s **Salary** to **70000**.
+
+
 
 Components Library
 ------------------
@@ -183,9 +234,7 @@ downloaded from websites.
 
 If you are interested in electronics design, you can clone the `morph-components
 <https://bitbucket.org/metamorphsoftwareinc/morph-components>`_ repository
-published with the alpha release of the OpenMETA tools for a large library of
-electronics components.
-
+for a large library of electronics components.
 
 Importing Components
 ~~~~~~~~~~~~~~~~~~~~
@@ -220,7 +269,7 @@ all of them.
 Exporting Components
 ~~~~~~~~~~~~~~~~~~~~
 
-The META tools include a utility which will create component packages from the
+OpenMETA includes a utility which will create component packages from the
 components in your OpenMETA project. These packages are `.zip` files which
 contain everything that's needed to use a component.
 
@@ -241,5 +290,5 @@ To export *all* of the components in your OpenMETA project:
 #. Click the **Component Exporter** button, |COMPONENT_EXPORTER_ICON|.
 #. You'll be prompted for a location in which to save your component package
    ``.zip`` files.
-#. For each component in your META project, a component package ZIP file will be
+#. For each component in your OpenMETA project, a component package ZIP file will be
    produced in the folder you selected.
