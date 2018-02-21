@@ -14,7 +14,7 @@ executing it, and analysing the results.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Sections
 
    pet_analysis_blocks
    pet_drivers

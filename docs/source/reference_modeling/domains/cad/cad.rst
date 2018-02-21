@@ -22,8 +22,7 @@ datums can then be used to compose CAD assemblies.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Sections
 
    cad_concepts
    cad_creo
-   
