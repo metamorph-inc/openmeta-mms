@@ -20,13 +20,24 @@ while decreasing the sampled area.
 .. figure:: images/parameterstudy_tutorial_49.png
    :alt: text
 
+The **Design Configurations** section enables you to manage your configuration
+names. Though our simple design has just one configuration, more complicated
+projects may have hundreds.
+
+2. Click ``Apply`` under the **Refined** heading to set the name of your
+   refined PET.
+
+.. figure:: images/parameterstudy_tutorial_49_a.png
+   :alt: Naming the refined PET
+
+
 The **Numeric Ranges** section enables you to change Design
 Variable ranges.
 
-1. Set **x**'s **New Minimum** and **New Maximum** fields to
+3. Set **x**'s **New Minimum** and **New Maximum** fields to
    **0** and **10** respectively.
 
-2. Set **y**'s **New Minimum** and **New Maximum** fields to
+4. Set **y**'s **New Minimum** and **New Maximum** fields to
    **-10** and **0** respectively.
 
 .. figure:: images/parameterstudy_tutorial_50.png
@@ -35,7 +46,7 @@ Variable ranges.
 .. FIXME: I need to update this image after the PET Refinement tab
 .. fixes so that the file path to the PET is actually correct.
 
-3. Left-click **Execute New PET**
+5. Left-click **Execute New PET**
 
 .. figure:: images/parameterstudy_tutorial_51.png
    :alt: text
@@ -52,13 +63,13 @@ You can see this in the **Results Browser**.
 .. FIXME: I need to update this step after the PET Refinement tab
 .. fixes so that the file path to the PET is actually correct.
 
-4. Select **parameterstudy_tutorial (1)** and left-click **Launch in OpenMETA
-Visualizer**.
-5. Left-click the **Single Plot** tab.
-6. Under the **Variables** section, set **x** as the **X-axis** and **y** as the **Y-axis**.
-7. Left-click the **Overlays** section to expand it.
-8. Set **f_xy** as the **Contour Variable**.
-9. Left-click the **Add Contour Plot** box to check it.
+6. Select **parameterstudy_tutorial (1)** and left-click **Launch in OpenMETA
+   Visualizer**.
+7. Left-click the **Single Plot** tab.
+8. Under the **Variables** section, set **x** as the **X-axis** and **y** as the **Y-axis**.
+9. Left-click the **Overlays** section to expand it.
+10. Set **f_xy** as the **Contour Variable**.
+11. Left-click the **Add Contour Plot** box to check it.
 
 .. figure:: images/parameterstudy_tutorial_53.png
    :alt: text

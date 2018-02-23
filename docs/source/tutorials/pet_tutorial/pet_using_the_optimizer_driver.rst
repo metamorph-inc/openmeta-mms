@@ -56,8 +56,7 @@ It should appear as a blank canvas.
 
 Instead of redoing work, let's copy our existing work from the Parameter Study tutorial.
 
-7. Inside the **GME Browser** window, double-click on the :menuselection:`
-RootFolder --> Testing --> Parametric Exploration --> parameterstudy_tutorial`
+7. Inside the **GME Browser** window, double-click on the :menuselection:`RootFolder --> Testing --> Parametric Exploration --> parameterstudy_tutorial`
 to open it in a window.
 
 .. image:: images/optimizer_tutorial_3.png
