@@ -7,7 +7,7 @@ Chip Fit
 This test bench is designed to estimate whether the components in your
 design will fit within a given circuit board area. Given the footprints
 of the individual components, it will try to find an arrangement that
-accomodates all parts. It will then report as to whether or not the elements
+accommodates all parts. It will then report as to whether or not the elements
 can fit within the given area.
 
 Note: The Chip Fit analysis should be used only to confirm that the

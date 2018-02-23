@@ -68,7 +68,7 @@ parameters exposed from this assembly, they will be visible in the Test
 Bench. You can in turn create Parameters in the Test Bench itself and use
 these to drive the parameters of the *TopLevelSystemUnderTest*.
 
-If the *TopLevelSystemUnderTest* is a *design space*, test bench can be executed
+If the *TopLevelSystemUnderTest* is a *design space*, a test bench can be executed
 with any or all of the discrete configurations when using the
 :ref:`master_interpreter`.
 

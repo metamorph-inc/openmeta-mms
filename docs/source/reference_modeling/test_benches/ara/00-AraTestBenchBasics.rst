@@ -17,7 +17,7 @@ one:
 Next, we must create a copy of the *test bench* we want to use.
 
 1. In the **GME Browser**, expand the purple folder labeled
-   ***TestBenches***.
+   ***TestBenchLibrary***.
 2. Expand the folder labeled ***AraTestBenches***.
 3. Right-click on the *test bench* you want to use, and select **Copy**.
 4. Right-click on your *test bench folder* and select **Paste**.

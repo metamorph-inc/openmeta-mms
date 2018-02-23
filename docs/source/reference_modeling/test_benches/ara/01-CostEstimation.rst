@@ -52,7 +52,7 @@ Outputs
 | ``BomTable.csv``   | A *bill-of-materials (BOM)* table for the design. It  |
 |                    | includes the cost of each part in the design, as well |
 |                    | as the parts-cost-per-unit for the given design       |
-|                    | quantity.This *comma-separated value (CSV)* file can  |
+|                    | quantity. This *comma-separated value (CSV)* file can |
 |                    | be opened by most spreadsheet programs, including     |
 |                    | Microsoft Excel, OpenOffice Calc, and Google Docs.    |
 +--------------------+-------------------------------------------------------+
@@ -85,4 +85,3 @@ An example of a correctly-configured component: |image1|
 
 .. |image0| image:: images/11-01-mpn-location.png
 .. |image1| image:: images/11-01-configured-component.png
-

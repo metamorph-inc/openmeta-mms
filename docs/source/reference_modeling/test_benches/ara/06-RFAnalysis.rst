@@ -9,7 +9,7 @@ the simulation space, then execute OpenEMS and the related
 post-processing tasks. The **Directivity** testbench is focused on the
 evaluation of the antenna performance (directivity, S11, ZIN, etc.) with
 the FDTD simulation space reduced to the size of the Ara endo. The
-**SAR** testbench, on the other hand, includes model both for an the
+**SAR** testbench, on the other hand, includes models both for an the
 entire Ara endo and a head phantom, over which the SAR is calculated.
 
 For details on using the RF analysis interpreter, refer to section
@@ -20,7 +20,7 @@ CyPhy2RF.
 Configure
 ~~~~~~~~~
 
-Create a copy of the **Directivity** of **SAR** testbench. Connect the
+Create a copy of the **Directivity** or **SAR** testbench. Connect the
 *Excitation* test component to the RF design under test, see the
 connection leading to *InvertedFAssembly* in the figure below:
 
