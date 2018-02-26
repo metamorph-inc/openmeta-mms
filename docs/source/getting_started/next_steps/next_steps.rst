@@ -55,8 +55,8 @@ Parametric Exploration Tool results.
 Appendices
 ----------
 
-The :ref:`reference` and :ref:`connectors` appendices are used for
-reference and understanding of some of the more complex concepts within
+The :ref:`reference_guide` and :ref:`connectors_explained` appendices are used
+for reference and understanding of some of the more complex concepts within
 OpenMETA.
 
 Finally, the :ref:`olddocs` chapter links to the old version of the

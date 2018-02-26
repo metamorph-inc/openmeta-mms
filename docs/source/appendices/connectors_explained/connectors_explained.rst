@@ -1,4 +1,4 @@
-.. _connectors:
+.. _connectors_explained:
 
 Connectors Explained
 ====================

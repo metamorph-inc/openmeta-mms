@@ -50,6 +50,6 @@ Welcome to OpenMETA's documentation!
    :maxdepth: 2
    :caption: Appendices
 
-   appendices/reference/reference
-   appendices/connectors/connectors
+   appendices/reference_guide/reference_guide
+   appendices/connectors_explained/connectors_explained
    appendices/olddocs

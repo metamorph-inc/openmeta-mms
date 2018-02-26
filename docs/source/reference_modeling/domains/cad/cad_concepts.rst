@@ -92,7 +92,7 @@ can be found at ``CAD/Antenna.prt`` relative to the component base folder.
 
 Any unneeded atoms in the CAD Model can be removed for readability.
 Additionally, CAD Models and Resources can be added to a component manually,
-but we recomment using the CAT as this becomes rather tedious when there
+but we recommend using the CAT as this becomes rather tedious when there
 are many CAD files that need to be added.
 
 CAD Joint Connectors
