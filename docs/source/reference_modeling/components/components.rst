@@ -84,7 +84,7 @@ simulating its behavior.
 Connectors
 ----------
 
-OpenMETA components also contains **connectors**, which define interfaces
+OpenMETA components also contain **connectors**, which define interfaces
 across multiple domain models. For the case of an electrical pin
 connecting to a printed circuit board (PCB), the joining of two
 connectors can capture the geometry (the center axis and mount plane

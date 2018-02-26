@@ -29,7 +29,7 @@ Schematic Models
 abstracted symbols of components. Schematics excel at providing a clean,
 efficient view of an electronic system. In electronic design the
 location of the symbols in a schematic do not necessarily correlate with
-the physical location of the components. META currently uses **Eagle**
+the physical location of the components. OpenMETA currently uses **Eagle**
 models to represent a component's schematic model.
 
 .. figure:: images/01-eagle-model-of-diode.png

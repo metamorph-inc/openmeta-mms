@@ -6,11 +6,11 @@ Building a CAD Component
 In this first section, we will build a 3D component. Engineers often use
 multiple types of analysis software to test their designs. This practice
 takes time; you need to learn each piece of software and compose a model
-for each one that will test for a parameter. However, Metamorphosys
+for each one that will test for a parameter. However, OpenMETA
 tools allow you to run multiple types of analyses by composing just one
 model.
 
-In the Metamorphosys tools, we start a design by instantiating
+In the OpenMETA tools, we start a design by instantiating
 components and joining their interfaces, yielding a **Component
 Assembly**. We call this process *composition*. From this composed
 design, we can generate new models and run analyses.
@@ -42,15 +42,15 @@ A component houses the Creo part reference, as well as defining objects for the 
 6. Double left-click **Simple\_Cube** to open the blank component
    canvas.
 7. Located on the left is the **Part Browser**; left-click the **Solid
-   Modeling** tab
+   Modeling** tab.
 8. Locate the **Property** object, left-click the image then drag and
    drop it onto the workspace.
 
-	 .. note:: make sure you have Property, and not complex metric.
+.. note:: Make sure you're using the Property object, not the Complex Metric.
 
-9. Click on the word "Property" and rename it as **PTC\_Material\_Name**
+9. Click on the word "Property" and rename it **PTC\_Material\_Name**.
 10. Click the empy box in the *Property* and type
-    ALUMINUM\_ALLOY\_6061\_T6
+    ALUMINUM\_ALLOY\_6061\_T6.
 
 .. figure:: images/IMAGE_1.png
    :alt: Solid Modeling Demo
@@ -62,18 +62,21 @@ This will be used later when defining the material type for the mesher and solve
 Reference the Creo Model
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-1. Select the component authoring tool denoted by the puzzle piece from
-   the top tool bar
+1. Select the Component Authoring Tool |METALINK_BUTTON| from
+   the top tool bar.
 2. Select the **Add CAD** tile.
 3. Locate and select the Creo versioned file **creo\_demo.prt**.
 
+.. |METALINK_BUTTON| image:: images/cat_tool.png
+   :width: 24px
+
 .. note:: This process may take a few seconds as it converts the key
-   feature of the Creo Model into objects to be used by GME.
+   features of the Creo Model into objects to be used by GME.
 
 Now you should see a CADModel that is populated with
-**SURF\_REF\_TOP,SURF\_REF\_BOTTOM, SURF\_REF\_FRONT, SURF\_REF\_BACK,
-SURF\_REF\_LEFT, SURF\_REF\_RIGHT, and CUBE\_CENTER\_REF**. These are
-points on the center of every face of the cube in the Creo model.
+**CUBE\_CENTER\_REF, SURF\_REF\_BOTTOM, SURF\_REF\_TOP,
+SURF\_REF\_RIGHT, SURF\_REF\_LEFT, SURF\_REF\_BACK,** and **SURF\_REF\_FRONT**.
+These are points on the center of every face of the cube in the Creo model.
 
 .. figure:: images/IMAGE_1_5.png
    :alt: Solid Modeling Demo
@@ -82,15 +85,14 @@ While they are defined in the model, they have not yet been defined in our
 component.
 
 1. Connect (Ctrl+2) the **PTC_Material_Name** to the Parameter with the matching
-   name in the `CAD Model`
-2. Select the `solid modeling` tab of the **Part Browser**
-3. Find the **point** object and drag and drop into the component
-   workspace
+   name in the `CAD Model`.
+2. Select the `Solid Modeling` tab of the **Part Browser**.
+3. Drag and drop the **point** object into the component workspace.
 4. Repeat this process 6 more times (one for every reference point on
    the model) and rename all points to match the names of the points in
-   the model
+   the CREO model.
 5. Enter **connect mode** (Ctrl+2) and connect all these points to their
-   corresponding points as **Port Composition** in the CADModel
+   corresponding points as **Port Composition** in the CADModel.
 
 .. figure:: images/IMAGE2.png
    :alt: Solid Modeling Demo
@@ -109,20 +111,20 @@ determined by the **Face** and **Material Contents** objects.
 Face
 ''''
 
-1. Find the **Face** object in the *Solid Modeling* tab of the *Part
-   Browser* and drag and drop into the component workspace
-2. Double click the Face object to edit it
+1. Drag and drop the **Face** object from the *Solid Modeling* tab of the *Part
+   Browser* into the component workspace.
+2. Double click the **Face** object to edit it.
 3. Add one **Direction\_Reference\_Point** and one **ReferencePoint**
    (put the Direction point above the Reference point to make future
    steps more visible).
-4. Direct back to the Component, and copy and paste 6 more of these
+4. Back in the **Simple_Cube** canvas, copy and paste 6 more of these
    edited faces (one for every point in the model)
 5. Rename these faces as "Face\_Ref\_Front, Face\_Ref\_Back, ..."
 
-After completing these steps, your component should be ordered like the
-following image.
+After completing these steps, your **Simple_Cube** component should be ordered
+similar to the following image.
 
-.. note:: Decending order is important here as it will make later steps
+.. note:: Descending order is important here as it will make later steps
    much more intuitive.
 
 .. figure:: images/IMAGE3.png
@@ -131,27 +133,27 @@ following image.
 Material Contents
 '''''''''''''''''
 
-1. Find the **MaterialContents** object in the *Solid Modeling* tab of
-   the \_Part Browser\_and drag and drop into the component workspace
-2. Double click the MaterialContents object to edit it
+1. Drag and drop the **MaterialContents** object from the *Solid Modeling* tab of
+   the **Part Browser** into the component workspace.
+2. Double click the MaterialContents object to edit it.
 3. Add the **MaterialLayer, End\_direction,** and **Start\_Direction**
-   atoms aligned below
+   atoms aligned as shown below.
 4. Select the MaterialLayer atom, and click the **Attributes tab** in
    the *Object Inspector* on the left.
-5. Set all values as shown below
+5. Set all values as shown below.
 
 .. figure:: images/IMAGE4.png
    :alt: Solid Modeling Demo
 
-6. Direct back to the Component, and copy and paste 6 more of these
-   edited MaterialContents (one for every point in the model)
+6. Back in the **Simple_Cube** canvas, copy and paste 6 more of these
+   edited MaterialContents (one for every point in the model).
 7. Rename these faces as "MaterialContents\_Front,
-   MaterialContents\_Back, ... etc"
+   MaterialContents\_Back, ... etc".
 
 After completing these steps, your component should be ordered like the
 following image.
 
-.. note:: Decending order is important here as it will make later steps
+.. note:: Descending order is important here as it will make later steps
    much more intuitive.
 
 .. figure:: images/IMAGE5.png

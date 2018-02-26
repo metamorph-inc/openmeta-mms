@@ -106,7 +106,7 @@ Viewing Signals
 ~~~~~~~~~~~~~~~
 
 The signals produced during a simulation can be found in ``schema.raw``
-and can be plotted by a number of waveform viewers. The META tools ship
+and can be plotted by a number of waveform viewers. The OpenMETA tools ship
 with a copy of **NGSpice**, which can also be used to plot signal data.
 
 To use **NGSpice** to plot signal data:

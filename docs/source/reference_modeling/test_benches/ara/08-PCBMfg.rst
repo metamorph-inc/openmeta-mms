@@ -86,7 +86,7 @@ The **CAM Processing** execution task runs an Eagle CAM job on the
 design's board file to produce Gerber files and n Excellon drill files.
 The mapping of Eagle board layers to Gerber and Excellon files is
 specified via a standard Eagle CAM file. The path to the CAM file is
-specified in META as the value of a test bench parameter named **CAM
+specified in OpenMETA as the value of a test bench parameter named **CAM
 file**. The resulting Gerber and Excellon files will be named as
 specified by the CAM job file.
 
@@ -98,7 +98,7 @@ each component on the board. The resulting file is named
 The **Get Assembly BOM** execution task produces a BOM CSV file, called
 ``assemblyBOM.csv``, based on the EAGLE model's reference designators.
 It does this by taking the cost estimation BOM and a cross reference
-between META components and Eagle CAD component reference designators.
+between OpenMETA components and Eagle CAD component reference designators.
 
 Assumptions
 ~~~~~~~~~~~

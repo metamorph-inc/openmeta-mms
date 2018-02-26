@@ -61,14 +61,14 @@ Exceptional Cases
 ~~~~~~~~~~~~~~~~~
 
 It's best practice for *connectors* to be identical on both sides of a
-*connector composition*. However, the **META** tools will try to resolve
+*connector composition*. However, the **OpenMETA** tools will try to resolve
 ambiguous matches.
 
 Names of Roles Don't Match
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If the name of a role within the first connector doesn't any role names
-in a second connector, the **META** tools will try to find a match.
+in a second connector, the **OpenMETA** tools will try to find a match.
 
 1. Within the first connector, is the role the only one of its port
    type?
@@ -100,7 +100,7 @@ each port type, but their names are different.
 
 .. image:: images/10-exceptional--mismatched-names--connector1.png
 
-Since each role's port type is unique within its connector, the **META**
+Since each role's port type is unique within its connector, the **OpenMETA**
 tools will try to match up the roles. The equivalent "elaborated"
 version is depicted below. Note especially the console messages, which
 tell us that a **non-name match** was established between these ports.

@@ -12,7 +12,7 @@ that is used by and included with the OpenMETA tools.
 NGSPICE Models
 ~~~~~~~~~~~~~~
 
-META components can use **NGSPICE** models to represent their electrical
+OpenMETA components can use **NGSPICE** models to represent their electrical
 behavior. They can do this by either parameterizing common SPICE primitives
 or by providing their own implementations in standalone files.
 
@@ -221,7 +221,7 @@ capacitor and three parasitic elements, as follows:
 -  R2 is an equivalent series resistance.
 -  L1 is the lead inductance.
 
-Other equivalent circuits for this capacitor with varying numbers of 
+Other equivalent circuits for this capacitor with varying numbers of
 parasitic elements and degrees of accuracy are also possible; however,
 exploring model-accuracy tradeoffs is beyond the scope of this subchapter.
 
