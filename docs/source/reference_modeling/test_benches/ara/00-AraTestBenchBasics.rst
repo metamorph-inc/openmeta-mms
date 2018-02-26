@@ -9,16 +9,16 @@ Configuring
 If you don't already have a *test bench* folder in your project, create
 one:
 
-1. In the **GME Browser**, right-click on the ***RootFolder***.
+1. In the **GME Browser**, right-click on the **RootFolder**.
 2. Select **Insert Folder --> Testing**.
-3. The default name of this folder is ***Testing***, but you may rename
+3. The default name of this folder is **Testing**, but you may rename
    it if you like.
 
 Next, we must create a copy of the *test bench* we want to use.
 
 1. In the **GME Browser**, expand the purple folder labeled
-   ***TestBenches***.
-2. Expand the folder labeled ***AraTestBenches***.
+   **TestBenches**.
+2. Expand the folder labeled **AraTestBenches**.
 3. Right-click on the *test bench* you want to use, and select **Copy**.
 4. Right-click on your *test bench folder* and select **Paste**.
 

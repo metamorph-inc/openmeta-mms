@@ -11,7 +11,7 @@ accomodates all parts. It will then report as to whether or not the elements
 can fit within the given area.
 
 Note: The Chip Fit analysis should be used only to confirm that the
-selected components ***will not*** fit within the given area. A
+selected components **will not** fit within the given area. A
 completed design will require more area for signal traces and other
 considerations. Consider a "no" answer definitive but a "yes"
 answer to require further investigation.
@@ -24,7 +24,7 @@ Consult the Ara MDK for details on each size.
 Configure
 ~~~~~~~~~
 
-First, you'll need to create a copy of one of the ***chipfit*** test
+First, you'll need to create a copy of one of the **chipfit** test
 benches. For instructions, refer to the section :ref:`ara_testbench_basics`.
 
 No additional configuration is needed to test a design against one of

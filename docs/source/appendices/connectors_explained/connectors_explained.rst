@@ -11,28 +11,28 @@ An Example
 ~~~~~~~~~~
 
 Consider the following example. In the component assembly
-***Assembly***, there are two component instances called
-***Component1*** and ***Component2***. They are both instances of
-***SampleComponent***. Each has a *connector* called ***Connector***.
+**Assembly**, there are two component instances called
+**Component1** and **Component2**. They are both instances of
+**SampleComponent**. Each has a *connector* called **Connector**.
 They are joined together within the assembly.
 
 .. image:: images/10-example-assemblyview.png
 
-If we navigate inside ***SampleComponent***, we can see its connector.
+If we navigate inside **SampleComponent**, we can see its connector.
 
 .. image:: images/10-example-connector-within-component.png
 
-If we navigate inside ***Connector***, we can see the *ports* that make
+If we navigate inside **Connector**, we can see the *ports* that make
 up its *Roles*. Each *role* is a port of a specific type, and has a
 unique name.
 
 In this example, we have:
 
--  A *ModelicaConnector* with role ***ModelicaConnector1***
--  A *ModelicaConnector* with role ***ModelicaConnector2***
--  A *Pin* with role ***Pin1***
--  A *Pin* with role ***Pin2***
--  A *SystemCPort* with role ***SystemCPort***
+-  A *ModelicaConnector* with role **ModelicaConnector1**
+-  A *ModelicaConnector* with role **ModelicaConnector2**
+-  A *Pin* with role **Pin1**
+-  A *Pin* with role **Pin2**
+-  A *SystemCPort* with role **SystemCPort**
 
 .. image:: images/10-example-connector-internals.png
 
@@ -50,8 +50,8 @@ Mixed Compositions
 ~~~~~~~~~~~~~~~~~~
 
 The top structure is equivalent with the bottom structure. Note that
-***Connector*** within the component assembly ***MixedComposition*** is
-identical to ***Connector*** within ***SubAsm***.
+**Connector** within the component assembly **MixedComposition** is
+identical to **Connector** within **SubAsm**.
 
 .. image:: images/10-mixed-composition--original.png
 
@@ -74,22 +74,22 @@ in a second connector, the **META** tools will try to find a match.
    type?
 
    -  *e.g.: Is it the only Pin within the first connector?*
-   -  If not, ***can't match***
+   -  If not, **can't match**
 
 2. Does the second connector have a role of the same port type?
 
    -  *e.g.: Does the second connector have a role of type Pin?*
-   -  If not, ***can't match***
+   -  If not, **can't match**
 
 3. Is that role's port type unique within the second connector?
 
    -  *e.g.: Is it the only Pin within the second connector?*
-   -  If not, ***can't match***
+   -  If not, **can't match**
 
-4. If all of the above, ***match the two roles***.
+4. If all of the above, **match the two roles**.
 
 Consider this example. Two *component assemblies* are composed via
-***SubAsm1***'s ***Connector1*** and ***SubAsm2***'s ***Connector2***.
+**SubAsm1**'s **Connector1** and **SubAsm2**'s **Connector2**.
 
 .. image:: images/10-exceptional--mismatched-names--assembly.png
 

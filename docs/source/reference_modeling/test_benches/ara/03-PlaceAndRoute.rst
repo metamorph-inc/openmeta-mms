@@ -17,7 +17,7 @@ paths in the CyPhy model.
 Configure
 ~~~~~~~~~
 
-First, you'll need to create a copy of one of the ***PlaceAndRoute***
+First, you'll need to create a copy of one of the **PlaceAndRoute**
 test benches. For instructions, refer to section :ref:`ara_testbench_basics`.
 
 PCB Component
@@ -25,7 +25,7 @@ PCB Component
 
 The characteristics of the to-be-generated printed circuit board (PCB)
 are captured in a component representing the PCB. This component is
-identified by its ***Classification*** attribute, using the string
+identified by its **Classification** attribute, using the string
 "pcb\_board". A design should contain no more than one PCB Component. A
 peek inside a PCB component defining a 4-layer PCB board is shown below:
 
@@ -38,7 +38,7 @@ If a PCB is to have power layers/regions defined, a connector in the PCB
 component must be present to define the mapping of CyPhy signals to
 EagleCAD polygon layers that typically represent power plane
 layers/regions in a PCB. The polygon layers are defined in the
-***boardTemplate*** EagleCAD file (see table below). The EagleCAD net
+**boardTemplate** EagleCAD file (see table below). The EagleCAD net
 name of the polygon layers is exposed by the pin names in the EDA model
 as shown in the picture below. These pin names are explicitly mapped, by
 connection, to the connector signals. In this way, the signals in a
@@ -173,8 +173,8 @@ Design Rules in Board Templates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The generated printed circuit board (PCB) includes the design rules
-specified using the ***designRules*** parameter. If the
-***designRules*** parameter is not provided, then the design rules
+specified using the **designRules** parameter. If the
+**designRules** parameter is not provided, then the design rules
 embedded in the board template are used. If no board template is
 provided, then the EAGLE's default design rules are used.
 
@@ -185,9 +185,9 @@ Board Dimensions
 ^^^^^^^^^^^^^^^^
 
 If you specify a printed circuit board (PCB) template using the
-***boardTemplate*** parameter, its outer geometry is not considered in
+**boardTemplate** parameter, its outer geometry is not considered in
 the layout process. Instead, the placement engine uses the rectangular
-dimensions given by ***boardWidth*** and ***boardHeight*** when building
+dimensions given by **boardWidth** and **boardHeight** when building
 the layout. The resulting layout is then rendered on the template board.
 If no board template is specified, then a new PCB is created with the
 width and height specified.
@@ -196,6 +196,6 @@ Multi-layer Boards
 ^^^^^^^^^^^^^^^^^^
 
 If you specify both a printed circuit board (PCB) template (using
-***boardTemplate***) AND a set of autorouter constraints (using
-***autorouterConfig***), be sure that they agree on the number of
+**boardTemplate**) AND a set of autorouter constraints (using
+**autorouterConfig**), be sure that they agree on the number of
 layers.

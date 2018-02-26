@@ -17,7 +17,7 @@ planned for a future release.
 Configure
 ~~~~~~~~~
 
-First, you'll need to create a copy of the ***CostEstimation*** test
+First, you'll need to create a copy of the **CostEstimation** test
 bench. For instructions, refer to the section :ref:`ara_testbench_basics`.
 
 To configure this *test bench* we need to select the design quantity
@@ -27,7 +27,7 @@ cost per design should go down.
 
 **To set the design quantity**:
 
-1. Click on the ***design\_quantity*** parameter
+1. Click on the **design\_quantity** parameter
 2. Set the **Value** attribute to be equal to the number of units that
    should be considered for the estimate
 
@@ -77,7 +77,7 @@ considered in the cost estimate for the design.
 2. Locate the *MPN* by looking at the value indicated by the **red box**
    in the image below: |image0|
 3. Create a *Property* within the *Component*
-4. Set the name of the *Property* to ***octopart\_mpn***
+4. Set the name of the *Property* to **octopart\_mpn**
 5. Set the **Value** attribute of the *Property* to the MPN found on the
    Octopart website
 
@@ -85,4 +85,3 @@ An example of a correctly-configured component: |image1|
 
 .. |image0| image:: images/11-01-mpn-location.png
 .. |image1| image:: images/11-01-configured-component.png
-
