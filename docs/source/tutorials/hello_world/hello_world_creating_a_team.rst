@@ -6,6 +6,8 @@ Creating a Team
 Now that we have modeled ourselves and some fellow team members, let's create a most
 basic organizational structure by organizing the modeled persons into a team.
 
+.. _hello_world_assigning_members_to_a_team:
+
 Adding a Component Assemblies Folder
 ------------------------------------
 
