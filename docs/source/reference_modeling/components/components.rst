@@ -116,32 +116,51 @@ instantiation*, and *component class inheritance*.
 Component References
 ~~~~~~~~~~~~~~~~~~~~
 
-The most common approach for sharing component libraries
-is to create or import
-OpenMETA Components from a library and to use *references* of those components in the Component
-Assemblies and Design Containers used to express your design.
+The most common approach for sharing component libraries is to create or import
+OpenMETA Components from a library and to use *references* of those components
+in the Component Assemblies and Design Containers used to express your design.
 This allows us to use the exact same component in multiple places.
 
 To instantiate a Component into an open Component Assembly or Design Container,
-right-click and drag the Component from the GME Browser onto the canvas.
-When prompted, select **Create Reference**.
+right-click and drag the Component from the GME Browser onto the canvas. When
+prompted, select **Create Reference**. For an example of this technique, see
+:ref:`hello_world_assigning_members_to_a_team`.
 
-For an example, see **** REFERENCE TO HELLO_WORLD_CREATING_A_TEAM – ASSIGNING MEMBERS TO A TEAM ****
+Although components can also be copied or created directly within *Component
+Assemblies* and *Design Containers*, we recommend keeping all the components in
+the project confined to *Components Folders* and using component references
+everywhere components are used.
 
-Although components can also be copied or created directly within *Component Assemblies* and
-*Design Containers*, we recommend keeping all the components in the project
-confined to *Components Folders* and using component references everywhere
-components are used.
+Object Instantiation
+~~~~~~~~~~~~~~~~~~~~
+
+Components can also be added to Component Assemblies and Design Spaces as
+*instances*, but this is not recommended. As instances, they behave similarly to
+components that are referenced, but are at times incompatible with the various
+interpreters.
+
+Instead, instances should be used when you want to have a single definition for
+an object and use it multiple times but the context precludes using references.
+For example, you will often have a number of components that share a common
+connector interface. It is useful to create a connector definition and then
+simply instantiate that connector in all the components that need it. If later
+it becomes necessary to add an additional domain to that interface, you only
+have to do so once in the definition and it will be replicated in all instances
+of that connector.
+
+.. figure:: images/connector_instance.png
+   :alt: Electronics Connector with Physical, Electrical, and Dynamics Domain Ports
+
+   Electronics Connector with Physical, Electrical, and Dynamics Domain Ports
 
 Class Inheritance
 ~~~~~~~~~~~~~~~~~
 
 Components can be created as subclasses of other Components.
-This is useful for managing different classes of components that share many of the same characteristics.
+This is useful for building and managing large libraries of Components that
+share many of the same characteristics.
 When model objects are added to the base class components, they are
 automatically added to the derived component classes.
-
-It's also a useful technique for building and managing large libraries of Components.
 
 To use Class Inheritance to streamline Component Authoring, let's revisit the :ref:`hello_world_adding_team_members`
 section of the :ref:`hello_world` tutorial.
@@ -149,42 +168,44 @@ In the tutorial, we created four team members.
 Even though each team member was different, they shared many Properties in common.
 We will use Class Inheritance to make managing these Properties more efficient.
 
-#. Right-click on the *RootFolder*, and choose :menuselection:`Insert Folder --> Components`.
+#. Right-click on the **RootFolder**, and choose :menuselection:`Insert Folder --> Components`.
 #. Rename this new *Components* folder **TeamMembersInheritance**.
 #. Right-click on the new **TeamMembersInheritance** folder and choose :menuselection:`Insert Model --> Component`.
 #. Rename this component to **Employee**.
 
-.. image:: images/inheritance_tutorial_1.png
-   :alt: TeamMembersInheritance folder w/ Employee base class component
+   .. image:: images/inheritance_tutorial_1.png
+      :alt: TeamMembersInheritance folder w/ Employee base class component
 
 We will treat this **Employee** component as a *baseclass*, and use *subtyping* to derive specific team members from it.
 
 #. Right-click on **Employee** and choose :menuselection:`Copy`.
 #. Right-click on the **TeamMembersInheritance** folder and choose :menuselection:`Paste Special --> As Subtype`.
 
-.. image:: images/inheritance_tutorial_2.png
-   :alt: Paste Special --> Subtype menu selection
+   .. image:: images/inheritance_tutorial_2.png
+      :alt: Paste Special --> Subtype menu selection
 
 #. You will see a new **Employee** Component which includes a small "s" next to its icon.
 #. Rename this Component to **Allen**.
 
-.. image:: images/inheritance_tutorial_3.png
-   :alt: Employee Subtype Allen
+   .. image:: images/inheritance_tutorial_3.png
+      :alt: Employee Subtype Allen
 
-The **Allen** Component inherits from the **Employee** component. If we add Properties or other fields to **Employee**, they will be created within **Allen** as well.
+The **Allen** Component inherits from the **Employee** component. If we add
+Properties or other fields to **Employee**, they will be created within
+**Allen** as well.
 
 #. Double-click the **Employee** Component to open it.
 #. From the Parts Browser pane on the left of the window drag a **Property** onto the open canvas.
 #. Rename the property **Salary**. Do not set a value for **Salary** -- its value will differ for each employee.
 
-.. image:: images/inheritance_tutorial_4.png
-   :alt: Employee component w/ property 'Salary'
+   .. image:: images/inheritance_tutorial_4.png
+      :alt: Employee component w/ property 'Salary'
 
 #. Double-click the **Allen** Component to open it. Notice that a **Salary** Property was automatically created.
 #. Set the value of **Allen**'s **Salary** to **50000**.
 
-.. image:: images/inheritance_tutorial_5.png
-   :alt: Employee Subtype Allen with inherited property 'Salary' set to 50000
+   .. image:: images/inheritance_tutorial_5.png
+      :alt: Employee Subtype Allen with inherited property 'Salary' set to 50000
 
 Inheritance can extend to several levels of depth. Let's say that, within our company, we also have programmers.
 For programmers, we want to know their primary computer programming language.
@@ -198,8 +219,8 @@ This property wouldn't make sense for non-programmer employees, so we need a spe
 #. From the Parts Browser pane on the left of the window drag a **Property** onto the open canvas.
 #. Rename the property to **Language**. Do not set a value for **Language**.
 
-.. image:: images/inheritance_tutorial_6.png
-   :alt: Employee subtype Programmer component w/ added property 'Language'
+   .. image:: images/inheritance_tutorial_6.png
+      :alt: Employee subtype Programmer component w/ added property 'Language'
 
 Now we have a special **Programmer** class of Component. It contains all of the Properties of **Employee**,
 as well as additional fields that apply only to programmers.
@@ -212,8 +233,12 @@ as well as additional fields that apply only to programmers.
 #. Set the value of **Sara**'s **Langauge** to **Python**.
 #. Set the value of **Sara**'s **Salary** to **70000**.
 
-.. image:: images/inheritance_tutorial_7.png
-   :alt: Programmer subtype Sara w/ inherited properties 'Salary' and 'Langauge' set to 70000 and Python
+   .. image:: images/inheritance_tutorial_7.png
+      :alt: Programmer subtype Sara w/ inherited properties 'Salary' and 'Langauge' set to 70000 and Python
+
+In the case of a small project, it may be expedient to simply create each
+component from scratch; but as the scale of a project grows, these techniques
+become indispensable.
 
 Components Library
 ------------------
