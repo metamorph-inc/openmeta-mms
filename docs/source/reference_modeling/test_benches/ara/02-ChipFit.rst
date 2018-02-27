@@ -7,7 +7,7 @@ Chip Fit
 This test bench is designed to estimate whether the components in your
 design will fit within a given circuit board area. Given the footprints
 of the individual components, it will try to find an arrangement that
-accomodates all parts. It will then report as to whether or not the elements
+accommodates all parts. It will then report as to whether or not the elements
 can fit within the given area.
 
 Note: The Chip Fit analysis should be used only to confirm that the
@@ -24,8 +24,8 @@ Consult the Ara MDK for details on each size.
 Configure
 ~~~~~~~~~
 
-First, you'll need to create a copy of one of the **chipfit** test
-benches. For instructions, refer to the section :ref:`ara_testbench_basics`.
+First, you'll need to create a copy of one of the **Chipfit** test
+benches. For instructions, refer to the section :ref:`ara_test_bench_basics`.
 
 No additional configuration is needed to test a design against one of
 the standard Ara sizes provided. However, if you would like to test for

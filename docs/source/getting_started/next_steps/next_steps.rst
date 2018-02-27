@@ -40,7 +40,7 @@ domains to be composed as analysis blocks in a single analysis workflow.
 These workflows can then be executed using design of experiments or
 optimization drivers.
 
-The :ref:`domains` chapter enumerates all the major domains that have been
+The :ref:`integrated_domains` chapter enumerates all the major domains that have been
 integrated with OpenMETA and covers how to configure OpenMETA with the
 necessary domain-specific external tools. Furthermore, this chapter explains
 the domain-specific model elements, attributes, and principles for each domain.

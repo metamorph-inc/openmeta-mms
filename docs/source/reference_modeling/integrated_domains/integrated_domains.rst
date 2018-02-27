@@ -1,4 +1,4 @@
-.. _domains:
+.. _integrated_domains:
 
 Integrated Domains
 ==================

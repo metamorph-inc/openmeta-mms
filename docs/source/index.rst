@@ -35,7 +35,7 @@ Welcome to OpenMETA's documentation!
    reference_modeling/interpreters/interpreters
    reference_modeling/test_benches/test_benches
    reference_modeling/pet/pet
-   reference_modeling/domains/domains
+   reference_modeling/integrated_domains/integrated_domains
 
 .. toctree::
    :maxdepth: 2

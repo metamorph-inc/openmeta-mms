@@ -1,4 +1,4 @@
-.. _testbench_utilities:
+.. _test_bench_utilities:
 
 Common Utilities
 ================
@@ -28,7 +28,7 @@ to Test Bench Metrics.
 
    Test Bench to extract Properties from an OpenMETA Project
 
-Depending how few different components and properties you have in your
+Depending on how few different components and properties you have in your
 OpenMETA project, it may be possible to use Value Flow to wire all the needed
 values out of your model, but as the complexity of the model increases, it
 quickly becomes infeasible to wire out every property you want to extract

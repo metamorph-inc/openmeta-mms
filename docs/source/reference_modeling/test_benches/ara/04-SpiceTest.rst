@@ -15,7 +15,7 @@ Configure
 ~~~~~~~~~
 
 First, you'll need to create a copy of the **SPICETest** test bench. For
-instructions, refer to the section :ref:`ara_testbench_basics`.
+instructions, refer to the section :ref:`ara_test_bench_basics`.
 
 The design under test must be connected to the **PwrGnd** connector of
 the **EndoDC5V** test component.

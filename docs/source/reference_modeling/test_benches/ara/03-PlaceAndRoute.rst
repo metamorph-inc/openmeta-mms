@@ -18,7 +18,7 @@ Configure
 ~~~~~~~~~
 
 First, you'll need to create a copy of one of the **PlaceAndRoute**
-test benches. For instructions, refer to section :ref:`ara_testbench_basics`.
+test benches. For instructions, refer to section :ref:`ara_test_bench_basics`.
 
 PCB Component
 ^^^^^^^^^^^^^
