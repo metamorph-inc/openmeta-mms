@@ -330,32 +330,60 @@ namespace CyPhy2Schematic.Layout
             Double dBoardWidth;
             if (false == Double.TryParse(boardWidth, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out dBoardWidth))
             {
-                Logger.WriteWarning("Exception while reading board width: {0}", boardWidth);
                 dBoardWidth = 40.0;
+                if (boardWidth == null)
+                {
+                    Logger.WriteWarning("Using default board width {0}", dBoardWidth);
+                }
+                else
+                {
+                    Logger.WriteWarning("Invalid board width '{0}'. Using default {1}", boardWidth, dBoardWidth);
+                }
             }
             boardLayout.boardWidth = dBoardWidth;
 
             Double dBoardHeight;
             if (false == Double.TryParse(boardHeight, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out dBoardHeight))
             {
-                Logger.WriteWarning("Exception while reading board height: {0}", boardHeight);
                 dBoardHeight = 40.0;
+                if (boardHeight == null)
+                {
+                    Logger.WriteWarning("Using default board height {0}", dBoardHeight);
+                }
+                else
+                {
+                    Logger.WriteWarning("Invalid board height '{0}'. Using default {1}", boardHeight, dBoardHeight);
+                }
             }
             boardLayout.boardHeight = dBoardHeight;
 
             Double dBoardEdgeSpace;
             if (false == Double.TryParse(boardEdgeSpace, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out dBoardEdgeSpace))
             {
-                Logger.WriteWarning("Exception while reading board edge space: {0}", dBoardEdgeSpace);
                 dBoardEdgeSpace = 0.5;
+                if (boardEdgeSpace == null)
+                {
+                    Logger.WriteWarning("Using default board edge spacing {0}", dBoardEdgeSpace);
+                }
+                else
+                {
+                    Logger.WriteWarning("Invalid board edge space '{0}'. Using default {1}", boardEdgeSpace, dBoardEdgeSpace);
+                }
             }
             boardLayout.boardEdgeSpace = dBoardEdgeSpace;
 
             Double dInterChipSpace;
             if (false == Double.TryParse(interChipSpace, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out dInterChipSpace))
             {
-                Logger.WriteWarning("Exception while reading board height: {0}", boardHeight);
                 dInterChipSpace = 0.2;
+                if (interChipSpace == null)
+                {
+                    Logger.WriteWarning("Using default inter-chip space {0}", dInterChipSpace);
+                }
+                else
+                {
+                    Logger.WriteWarning("Invalid inter-chip space '{0}'. Using default {1}", interChipSpace, dInterChipSpace);
+                }
             }
             boardLayout.interChipSpace = dInterChipSpace;
 

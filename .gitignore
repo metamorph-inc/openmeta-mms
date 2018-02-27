@@ -1121,3 +1121,6 @@ test/results.xml
 models/PET_simple_proof-of-concept/manifest.project.json
 **/.idea
 *.ncrunchsolution.user
+.vs/
+src/.vs/
+vs_cmd.cmd

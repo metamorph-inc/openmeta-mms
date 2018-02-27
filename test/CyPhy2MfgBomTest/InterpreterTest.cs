@@ -388,7 +388,6 @@ namespace CyPhy2MfgBomTest
             });
 
             interpreter.Main(parameters);
-            interpreter.DisposeLogger();
 
             // Load manifest
             string pathManifest = Path.Combine(pathOutput, "testbench_manifest.json");
