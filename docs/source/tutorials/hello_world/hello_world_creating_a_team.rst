@@ -29,8 +29,6 @@ You should now see the following in your GME Browser:
 
 .. image:: images/team_created.png
 
-.. _hello_world_assigning_members_to_a_team:
-
 Assigning Members to a Team
 ---------------------------
 
