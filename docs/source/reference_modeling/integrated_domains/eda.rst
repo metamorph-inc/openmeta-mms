@@ -15,7 +15,7 @@ Autodesk Eagle
 `Autodesk Eagle <https://www.autodesk.com/products/eagle/overview>`_ is a free
 schematic and layout editor for electronic circuit design and the creation of
 Printed Circuit Boards (PCBs). When used in conjunction with OpenMETA, the user
-is able compose designs using a rich library of components in the tools and
+is able to compose designs using a rich library of components in the tools and
 automatically generate ``.brd`` files from the model.
 
 We recommend using the latest version of the EAGLE tools that can
@@ -25,7 +25,7 @@ be found on the `Autodesk Eagle Download Page
 Schematic Models
 ~~~~~~~~~~~~~~~~
 
-**Schematics** represent the elements of an electrical system using
+*Schematics* represent the elements of an electrical system using
 abstracted symbols of components. Schematics excel at providing a clean,
 efficient view of an electronic system. In electronic design the
 location of the symbols in a schematic do not necessarily correlate with
@@ -82,7 +82,7 @@ The EAGLE library presents three different editing modes:
    SMD lands, through-hole pads, and silk screens
 3. **Edit a Device** -- Used to name and describe the device,
    select the symbol and package associated with the device,
-   and map symbol pins to package pads.
+   and map symbol pins to package pads
 
 The icons used to switch between these views are shown in the figure
 below.
@@ -160,11 +160,11 @@ Designing or finding an appropriate package footprint
 
 Mathematically designing a PCB land pattern for a surface-mount
 component is perhaps the most complicated step that may be needed in
-designing an Eagle device, involving fabrication, assembly, and
-component tolerances. How to do this is properly beyond the scope of
-this guideline. However, manufacturers often provide suggested
-footprints for their components, either near the end of a datasheet, or
-otherwise available online. And, sometimes a package can be reused from
+designing an Eagle device, as it involves fabrication, assembly, and
+component tolerances. How to do this properly is beyond the scope of
+this guide. However, manufacturers often provide suggested
+footprints for their components, either near the end of a datasheet or
+available elsewhere online. Additionally, sometimes a package may be reused from
 a similar component.
 
 Drawing footprint patterns on EAGLE layers
@@ -178,7 +178,7 @@ be combined to form a tooling file for a single PCB layer. The most
 common output file format is extended Gerber format, which contains a
 vector-graphic represention of photolithographic artwork. The following
 table gives an example of how EAGLE layers might be combined to form
-Gerber files. (This example is for a two-layer PCB using a both
+Gerber files. (This example is for a two-layer PCB using both
 through-hole and SMT components, with components and silk screen only on
 the top side.)
 
@@ -203,7 +203,7 @@ the top side.)
 +---------------------------+-----------------------+------------------------------------+
 
 In addition, layers 44 and 45 (Drills and Holes) may be combined to form
-an CNC drilling file, typically in "Excellon" format.
+a CNC drilling file, typically in "Excellon" format.
 
 The following table lists the EAGLE package editor layers, with
 suggestions for how they may be used when creating top-side devices.
@@ -402,9 +402,11 @@ http://ohm.bu.edu/~pbohn/__Engineering_Reference/pcb_layout/pcbmatrix/Component%
 Silkscreens
 '''''''''''
 
-In general, silkscreen artwork: - should not be placed over copper pads
-and lands, - should avoid excessively tiny text, and - should allow for
-registration tolerances.
+In general, silkscreen artwork:
+
+-  should not be placed over copper pads and lands,
+-  should avoid excessively tiny text, and
+-  should allow for registration tolerances.
 
 The minimum allowed width of silkscreen lines and the registration
 tolerances of the silkscreen relative to the board vary depending on

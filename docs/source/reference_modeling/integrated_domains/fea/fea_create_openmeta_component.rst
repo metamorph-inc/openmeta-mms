@@ -165,7 +165,7 @@ Making Connections
 ^^^^^^^^^^^^^^^^^^
 
 Now that we have all the necessary objects for the mesher and solver to
-fully define the the model, we need to make the appropriate connections
+fully define the model, we need to make the appropriate connections
 in our component. This can be done several ways, but the process
 described below produces the cleanest outcome.
 
@@ -174,15 +174,19 @@ Face Objects
 
 1. Enter into Connection mode (Ctrl+2), and connect the
    **Reference\_Point** "Ref" of **Face\_Ref\_Front** to
-   **SURF\_REF\_FRONT** exposed from the **CADModel**
-   `NOTE: All connections in the component building process will be port composition connections.`
+   **SURF\_REF\_FRONT** exposed from the **CADModel**.
+
+.. note:: All connections in the component building process will be port
+          composition connections.
+
 2. Repeat this step for every *Face Reference* so that they all connect
-   to the same name in the CADModel
+   to the same name in the CADModel.
 
 .. figure:: images/IMAGE6.png
    :alt: Solid Modeling Demo
 
-.. note:: Make sure all the faces **Normal Direction** option is listed as **Away_Reference_point**
+.. note:: Make sure that for all the faces, the **Normal Direction** option is
+          listed as **Away_Reference_point**.
 
 .. figure:: images/IMAGE6_5.png
    :alt: Solid Modeling Demo
@@ -192,67 +196,71 @@ real point in the model. Now we need to assign a direction for every
 point so that Patran/Nastran knows where the **normal** of each face
 points. We will need to use a point in the center of the cube so that
 every vector can be described as **Normal Away From** in the *Object
-Inspector* under the **Attributes** tab. you could just connect the
+Inspector* under the **Attributes** tab. You could just connect the
 *DirectionReferencePoint* of each face to the **Cube\_Center\_Ref**, but
 this would lead to a messy model with many connections. The cleanest way
-to do this is to **Chain** the *DirectionReferencePoints* together.
+to do this is to *Chain* the *DirectionReferencePoints* together.
 
-3. Connect the **Direction\_Reference\_Point** "Dir" of **Face\_Ref\_Front** to **Direction\_Reference\_Point** "Dir" of Face\_Ref\_Back.
+3. Connect the **Direction\_Reference\_Point** "Dir" of **Face\_Ref\_Front** to
+   **Direction\_Reference\_Point** "Dir" of Face\_Ref\_Back.
 
 .. figure:: images/IMAGE7.png
    :alt: Solid Modeling Demo
 
-4. Repeat this process from "Dir" to "Dir" ascending to the last "Face\_Ref\_..." object.
-5. Connect the **Direction\_Reference\_Point** "Dir" of **Face\_Ref\_Bottom** to **Cube\_Center\_Ref** on the CADModel
+4. Repeat this process from "Dir" to "Dir" ascending to the last "Face\_Ref\_..."
+   object.
+5. Connect the **Direction\_Reference\_Point** "Dir" of **Face\_Ref\_Center** to
+   **Cube\_Center\_Ref** on the CADModel.
 
 The Component should now look like this:
 
 .. figure:: images/IMAGE8.png
    :alt: Solid Modeling Demo
 
-We have completed the face reference portion of the Component, and all
+We have completed the face reference portion of the Component, so all
 that remains is connecting the MaterialContents.
 
 Material Contents Objects
 '''''''''''''''''''''''''
 
-We will follow a lot of the same steps used to connect the *Faces Objects* but this process is slightly different.
+We will follow a lot of the same steps used to connect the *Faces Objects* but
+this process is slightly different.
 
 1. Enter into Connection mode (Ctrl+2), and connect the **Start Point**
    "Sta" of **MaterialContents\_Front** to **ReferencePoint** "Ref" of
-   **Face\_Ref\_Front**
+   **Face\_Ref\_Front**.
 2. Connect the **End Point** "End" of **MaterialContents\_Front** to
-   **Start Point** "Sta" of *MaterialContents\_Back*
+   **Start Point** "Sta" of *MaterialContents\_Back*.
 
 .. figure:: images/IMAGE9.png
    :alt: Solid Modeling Demo
 
-We have now **Chained** the **MaterialContents\_Front** to both
+We have now *Chained* the **MaterialContents\_Front** to both
 **Face\_Ref\_Front** and to **MaterialContents\_Back**. Now
 **MaterialContents\_Front** starts at **Face\_Ref\_Front** in the
-CADModel as shown by the **Chain** from **MaterialContents\_Front** to
+CADModel as shown by the *Chain* from **MaterialContents\_Front** to
 **Face\_Ref\_Front** to **SURF\_REF\_FRONT** in the CADModel.
 
-3. Repeat step 2 for each material face so that they are connect as
-   shown
+3. Repeat step 2 for each material face so that they are connected as
+   shown.
 
-4. Connect the **Reference\_Point** "Ref" of **Face\_Ref\_Bottom** to
-   **Cube\_Center\_Ref** on the CADModel
+4. Connect the **End Point** "End" of **MaterialContents\_Center** to
+   **Cube_Center_Ref** in the CADModel.
 
 .. figure:: images/IMAGE10.png
    :alt: Solid Modeling Demo
 
-5. Connect **MaterialContents_Front** to **Face\_Ref\_Front**
+5. Connect **MaterialContents_Front** to **Face\_Ref\_Front**.
 
 .. figure:: images/IMAGE10_5.png
    :alt: Solid Modeling Demo
 
-6. Repeat this step for every `MaterialContents` and its corresponding face.
+6. Repeat this step for each *MaterialContents* and its corresponding *Face_Ref*.
 
 .. figure:: images/IMAGE10_75.png
    :alt: Solid Modeling Demo
 
 Now all of the MaterialContents objects are connected as needed. They
 reference the same point as their corresponding face object, and point
-in the direct of the previous Material Contents Object to the
-**Cube\_Center\_Ref**
+in the direction of the previous Material Contents Object to the
+**Cube\_Center\_Ref**.
