@@ -36,7 +36,7 @@ Adding a Test Bench to a PET
 When you want to use a Test Bench in a PET, you need to add a
 *reference* to the Test Bench. This is done in the same manner that
 you add components to Component Assembly. Just as described in the
-:ref:`populate_the_component_assembly` section of the LED Tutorial,
+:ref:`populate_the_component_assembly` section of the :ref:`led_tutorial`,
 this is accomplished in one of two ways:
 
 -  You can **Drag-and-drop** the desired Test Bench onto a PET
@@ -367,7 +367,7 @@ script using the Reload ( |RELOAD| ) button.
 
    You can change the default editor in GME by opening
    :menuselection:`Tools --> Options` and checking **Enable External
-   Text Editor**
+   Text Editor**.
 
    .. figure:: images/ExternalEditor.png
       :alt: GME Options Dialogue
@@ -400,7 +400,7 @@ Constants Blocks within a PET can contain Metrics that hold scalar values.
 To add a Metric to a Constants Block, double-click on the Constants Block
 to open it, then drag the Metric icon from the Parts Browser into the Constants
 Block canvas. The Metric can be renamed and its value can be set via
-Object Inspector > Attributes > Value.
+:menuselection:`Object Inspector --> Attributes --> Value`.
 
 .. figure:: images/Metric.png
    :alt: text
@@ -415,7 +415,7 @@ Object Inspector > Attributes > Value.
 .. figure:: images/MetricConnected.png
    :alt: text
 
-   A Constants's Metric connected to a PET Analysis Block
+   A Constant's Metric connected to a PET Analysis Block
 
 Multiple Metrics can be added to the same Constants Block. Each one will display as
 a separate port on the Constants Block model.
@@ -428,4 +428,4 @@ a separate port on the Constants Block model.
 .. figure:: images/MetricConnectedMultiple.png
    :alt: text
 
-   Two Constants's Metric connected to a PET Analysis Block
+   Two Constants' Metrics connected to a PET Analysis Block

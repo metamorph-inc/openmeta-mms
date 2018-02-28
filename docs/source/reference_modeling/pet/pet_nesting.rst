@@ -4,7 +4,7 @@ PET Nesting
 ===========
 
 PET Nesting allows the user to place a PET inside another PET
-and make connections between two PETs using the **Problem Input** 
+and make connections between two PETs using the **Problem Input**
 and **Problem Output** atoms.
 
 With PET Nesting, the user can add encapsulation
@@ -21,7 +21,7 @@ from the **Part Browser** and onto the PET canvas.
 
    A new PET in another PET
 
-Adding an existing PET to another PET 
+Adding an existing PET to another PET
 -------------------------------------
 
 To add an existing PET to a PET:
@@ -41,13 +41,13 @@ To add an existing PET to a PET:
    Pasting an existing PET into another PET
 
    As shown below, the newly added PET is now displayed on the parent PET's canvas
-   just like a regular PET Analysis Block
+   just like a regular PET Analysis Block.
 
 .. figure:: images/AddingExistingPET_3.png
    :alt: text
-   
+
    PET inside PET
-   
+
 Problem Inputs
 --------------
 
@@ -64,7 +64,7 @@ the **Part Browser** and onto the PET canvas.
    :alt: text
 
    A Problem Input connected to a Python Wrapper component
-   
+
 .. figure:: images/ConnectingToProblemInput.png
    :alt: text
 
@@ -76,8 +76,8 @@ Setting a Problem Input's Value Attribute
 By default, Problem Inputs expect to pass the double data type *(e.g. 0.0)*.
 If the Problem Input must pass another data type *(e.g. a PET Analysis block
 in the nested PET requires a string input)*, then an example of that data type
-must be entered in the Problem Input's **Value** attribute via the 
-**Object Inspector**. 
+must be entered in the Problem Input's **Value** attribute via the
+**Object Inspector**.
 
 .. note:: Under certain conditions, the Master Interpreter may
    prompt you to enter example data types for all Problem Inputs (including
@@ -145,4 +145,3 @@ where they are recorded by its Parameter Study driver.
 
 .. note:: Only the final result (of OptimizerPET's many iterations) is recorded by the TopLevel
    PET's Parameter Study Driver.
-   

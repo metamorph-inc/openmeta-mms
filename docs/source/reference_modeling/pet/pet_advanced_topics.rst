@@ -32,7 +32,7 @@ Hot Start vs. Cold Start
 
 It is fairly common to have an Optimizer PET Driver that
 runs repeatedly as part of a larger Design of Experiments
-*(e.g. see :ref:`pet_nesting_with_drivers`)*.
+(e.g. see :ref:`pet_nesting`).
 
 In these situations the user can choose between "Hot Start"
 and "Cold Start."
@@ -152,8 +152,8 @@ MaxValue to the Design Variable's desired minimum and maximum values.
 
    TireRadius Design Variable connected directly to corresponding Optimizer Constraint
 
-(In contrast no such workaround is needed if the Parameter Study PET Driver
-is being used).
+In contrast, no such workaround is needed if the Parameter Study PET Driver
+is being used)
 
 Checking Optimization Results
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -163,11 +163,11 @@ The Optimizer PET Driver is a powerful tool but it cannot be used blindly.
 Some functions (in particular non-convex functions) are quite difficult to optimize,
 and the Optimizer may not be able to reliably locate the global minimum.
 
-The Optimizer PET Driver may...
+The Optimizer PET Driver may:
 
-- fail to converge within the maximum number of iterations
-- locate a local minimum and not the global minimum
-- violate Optimizer Constraints in order to converge
+- fail to converge within the maximum number of iterations.
+- locate a local minimum and not the global minimum.
+- violate Optimizer Constraints in order to converge.
 
 The user must make sure that the final answer provided by the Optimizer
 does not significantly violate any of the Objective Constraints and that
@@ -198,9 +198,9 @@ Therefore, it is generally good practice to *rescale* or *normalize* Design Vari
 with ranges that differ by several orders of magnitude (or more).
 
 *For example, in the car problem above, the user could rescale the tire radius Design Variable
-(+ associated Optimizer Constraint - this is a constrained optimization problem!)
+(and associated Optimizer Constraint - this is a constrained optimization problem!)
 to vary from 130 to 170 units and the weight Design Variable
-(+ associated Optimizer Constraint!) to vary from 320 to 420 units. The user could
+(and associated Optimizer Constraint!) to vary from 320 to 420 units. The user could
 then insert PythonWrapper components to undo the scaling between the Design Variables
 and the CarExample PythonWrapper.*
 

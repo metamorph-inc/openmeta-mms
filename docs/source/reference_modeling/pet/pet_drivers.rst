@@ -33,14 +33,14 @@ Blocks.
 
 Adding a Design Variable to a PET Driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   
+
 To add a Design Variable to a PET Driver, simply open the PET Model
 by double-clicking on the PET Driver in the PET Canvas and drag
 the **Design Variable** icon from the Part Browser and onto the canvas.
 
 .. figure:: images/DesignVariable.png
    :alt: Adding Design Variables to a Parameter Study Driver
-   
+
    Adding Design Variables to a Parameter Study Driver
 
 Design Variable Range
@@ -93,9 +93,9 @@ Parameter Study
 The Parameter Study Driver generates a set of inputs based on the type
 of Design of Experiments (DOE) that is being conducted. Then
 the driver evaluates the analysis workflow at each of the generated
-inputs sets and records the values of the objectives.
+input sets and records the values of the objectives.
 
-The Parameter Study is configured by setting a adjusting a number
+The Parameter Study is configured by setting and adjusting a number
 of its attributes. These attributes can be accessed by left-clicking
 a Parameter Study and then looking under the **Attributes** tab of the
 **Object Inspector** window.
@@ -110,7 +110,7 @@ Code
 
 The **Code** attribute is used to pass configuration variables
 to underlying MDAO engine. For example, in the image above you can
-see entering we assigned the variable ``num_samples`` the value of ``10``.
+see we assigned the variable ``num_samples`` the value of ``10``.
 
 See the `DOE Types`_ section below for more
 information on what code variables need to be set for each type.
@@ -127,7 +127,7 @@ The **DOE Type** attribute determines the sampling method by which
 the Parameter Study explores the Design Variable space.
 Different DOE Types can be selected by left-clicking
 the **DOE Type** attribute field and selecting the desired method.
-The different types and there accompanying configuration are described below.
+The different types and their accompanying configurations are described below.
 
 Full Factorial
 ^^^^^^^^^^^^^^
@@ -172,8 +172,8 @@ The Uniform type generates **num_samples** input cases where **num_samples**
 is set in the **Code** attribute. The input cases are evenly distributed across
 the ranges of all Design Variables.
 
-If **num_samples=1**, then, in the resulting single input case, each
-Design Variable will be set to its minimum value.
+If **num_samples=1**, then each Design Variable will be set to its minimum value
+in the resulting single input case.
 
 CSV File
 ^^^^^^^^
@@ -190,7 +190,7 @@ directory when the PET is executed.
 
 .. figure:: images/driver_config_csv_file.png
    :alt: Example CSV File DOE Type Configuration for a Parameter Study Driver
-   
+
    Example CSV File DOE Type Configuration for a Parameter Study Driver
 
 All design variables that are unrepresented in the input CSV file will be
@@ -278,8 +278,8 @@ To set a Design Variable's range:
    Optimizer only sets the default optimization starting point for that
    variable to be the (minimum+maximum)/2.
 
-.. warning:: Setting a Design Variable's range DOES NOT keep the Optimizer from setting 
-   the Design Variable's value outside of that range during the optimization process. 
+.. warning:: Setting a Design Variable's range DOES NOT keep the Optimizer from setting
+   the Design Variable's value outside of that range during the optimization process.
    In order to properly constrain Design Variables, the user must add an additional
    Constraint to the Optimizer Driver for each constrained Design Variable,
    set that Constraint's **MinValue** and **MaxValue** attributes to the desired
@@ -355,12 +355,12 @@ the **Intermediate Variable** icon from the Part Browser and onto the Optimizer 
 Optimizer Constraint
 ~~~~~~~~~~~~~~~~~~~~
 
-At Optimizer Constraint placed inside an Optimizer
+An Optimizer Constraint placed inside an Optimizer
 will appear as a port on the Optimizer's PET model and PET Analysis
 Blocks can be connected to it.
 
 An Optimizer Constraint allows designated system outputs to influence
-the optimization process - if *(and this is an important if)* the 
+the optimization process - **if** the
 optimization method being used supports constraints!
 
 Adding an Optimizer Constraint to an Optimizer Driver
@@ -409,7 +409,7 @@ COBYLA
 ^^^^^^
 
 This Optimizer Uses the COBYLA function in SciPy's
-`optimize` library. COBYLA supports constrained optimization without 
+`optimize` library. COBYLA supports constrained optimization without
 defined gradients (or Jacobian matrixes).
 
 .. figure:: images/COBYLAOptimizerAttributes.png
@@ -460,8 +460,8 @@ epsilon             probability of performing a random (blind) target function e
 .. note:: If **n_iter_relearn=0** then there will be no relearning.
 
    **epsilon** can be given a double value between 0.0 and 1.0 inclusive.
-   Higher values result in more forced exploration whereas lower values result 
-   in a greater exploitation of the learned model.
+   Higher values result in more forced exploration whereas lower values result
+   in a greater exploration of the learned model.
 
    For more information on each parameter, additional
    parameters not covered here, the BayesOpt method library,
