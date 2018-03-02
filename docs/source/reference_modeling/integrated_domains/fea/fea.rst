@@ -24,9 +24,9 @@ The diagram and the description below details the full workflow.
 
    Diagram of the OpenMETA Structural FEA Test Bench Workflow
 
-in :ref:`led_tutorial`, so it may be necessary to complete that chapter
 The rest of this sub-chapter will serve as a tutorial that demonstrates the FEA
 analysis capabilities of OpenMETA. This tutorial builds upon the skills learned
+in :ref:`led_tutorial`, so it may be necessary to complete that chapter
 prior to attempting this one.
 
 .. toctree::

@@ -25,4 +25,3 @@ datums can then be used to compose CAD assemblies.
    :caption: Sections
 
    cad_concepts
-   cad_creo
