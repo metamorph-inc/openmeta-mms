@@ -107,6 +107,11 @@ connectors. For more information on how *Connectors* are used to compose
 OpenMETA *Components*, visit the :ref:`component_composition` section of the
 next chapter.
 
+.. figure:: images/LED_Diagram_lores.png
+   :align: center
+
+   *Concept drawing of an OpenMETA Component Model of an LED*
+
 Managing Complexity
 -------------------
 
