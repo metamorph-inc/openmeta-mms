@@ -35,7 +35,7 @@ namespace TestRemoteExecution
         public string remoteServerUri;
         public string username = "test_remote_execution";
         public string password;
-        private IntPtr win32job = CyPhyMetaLink.JobObjectPinvoke.CreateKillOnCloseJob();
+        private IntPtr win32job = CyPhyGUIs.JobObjectPinvoke.CreateKillOnCloseJob();
 
         public TestRemoteExecution()
         {
@@ -103,7 +103,7 @@ namespace TestRemoteExecution
             addUserInfo.RedirectStandardInput = true;
             addUserInfo.UseShellExecute = false;
             addUser.Start();
-            CyPhyMetaLink.JobObjectPinvoke.AssignProcessToJobObject(addUser, win32job);
+            CyPhyGUIs.JobObjectPinvoke.AssignProcessToJobObject(addUser, win32job);
             addUser.StandardInput.WriteLine(password);
             addUser.StandardInput.Close();
             addUser.WaitForExit();
@@ -142,7 +142,7 @@ namespace TestRemoteExecution
                 }
             };
             server.Start();
-            CyPhyMetaLink.JobObjectPinvoke.AssignProcessToJobObject(server, win32job);
+            CyPhyGUIs.JobObjectPinvoke.AssignProcessToJobObject(server, win32job);
             server.StandardInput.Close();
             server.BeginErrorReadLine();
             server.BeginOutputReadLine();
@@ -173,7 +173,7 @@ namespace TestRemoteExecution
             info.RedirectStandardInput = true;
             info.UseShellExecute = false;
             worker.Start();
-            CyPhyMetaLink.JobObjectPinvoke.AssignProcessToJobObject(worker, win32job);
+            CyPhyGUIs.JobObjectPinvoke.AssignProcessToJobObject(worker, win32job);
             worker.StandardInput.Close();
         }
 
