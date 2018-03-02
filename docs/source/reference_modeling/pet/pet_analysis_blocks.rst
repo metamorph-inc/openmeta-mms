@@ -15,8 +15,9 @@ to perform a full-system analysis using subanalyses from multiple domains.
 In addition to the complex analyses that can be performed using
 Test Benches as you saw in the previous :ref:`test_benches` chapter,
 virtually any external execution tool can be integrated using one of
-the provided wrappers. We have used the Python Wrapper to drive
-analysis tools
+the provided wrappers. For example, we have used the Python Wrapper to
+drive proprietary executables and legacy codes written in COBAL, Fortran, and
+C from the command line.
 
 For examples of PETs with different analysis blocks see the
 `Analysis Blocks <https://github.com/metamorph-inc/openmeta-examples-and-templates/tree/master/analysis-blocks>`_
