@@ -5,14 +5,15 @@ Building the Component Assembly
 
 We have successfully created the CyPhy Component which can be used to
 edit the Creo model directly with added parameters and internal Creo
-relationships. If you wish to check your work or start the tutorial here, open
-the FEA_tutorial_part2.xme.
+relationships.
 
 As we learned previously, the TestBench requires a referenced
 **Component Assembly** and not a Component directly. This allows for the
 user to test a *Design Space* (multiple configurations) of a model instead of each configuration
 individually. The following steps will walk you through the construction of
 a CyPhy component assembly.
+
+.. tip:: If you wish to start the tutorial here, open the FEA_tutorial_part1.xme.
 
 1. In the GME Browser, right-click **Component Assemblies** and choose
    :menuselection:`Insert Model --> Component Assembly`.

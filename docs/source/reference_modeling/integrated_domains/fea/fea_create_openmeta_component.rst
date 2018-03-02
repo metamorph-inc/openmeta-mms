@@ -65,7 +65,8 @@ Reference the Creo Model
 1. Select the Component Authoring Tool |METALINK_BUTTON| from
    the top tool bar.
 2. Select the **Add CAD** tile.
-3. Locate and select the Creo versioned file **creo\_demo.prt**.
+3. Navigate through :menuselection:`components --> zc3hnmz3 --> CAD` and select the
+   Creo versioned file **creo\_demo.prt**.
 
 .. |METALINK_BUTTON| image:: images/cat_tool.png
    :width: 24px
@@ -85,7 +86,8 @@ While they are defined in the model, they have not yet been defined in our
 component.
 
 1. Connect (Ctrl+2) the **PTC_Material_Name** to the Parameter with the matching
-   name in the `CAD Model`.
+   name in the `CAD Model`. (If this CAD Model Parameter is not visible,
+   make sure the canvas ``Aspect`` is set to **All**.)
 2. Select the `Solid Modeling` tab of the **Part Browser**.
 3. Drag and drop the **point** object into the component workspace.
 4. Repeat this process 6 more times (one for every reference point on

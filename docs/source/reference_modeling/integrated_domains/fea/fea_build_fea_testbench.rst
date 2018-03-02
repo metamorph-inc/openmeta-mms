@@ -10,6 +10,8 @@ large scale behavioral studies. The generic FEA TestBench consists of:
 * System Under Test
 * Test Injection Points
 
+.. tip:: If you wish to start the tutorial here, open the FEA_tutorial_part2.xme.
+
 Tool Features
 ^^^^^^^^^^^^^
 
