@@ -5,11 +5,11 @@
 
   <?define UpgradeCode='23137f50-9a2e-415a-9586-4da5622203ee' ?>
 
-  <Product Name='META toolchain' Id='*' UpgradeCode='$(var.UpgradeCode)'
-      Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)' Manufacturer='MetaMorph Software, Inc; Vanderbilt University, ISIS'>
+  <Product Name='OpenMETA' Id='*' UpgradeCode='$(var.UpgradeCode)'
+      Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)' Manufacturer='MetaMorph, Inc; Vanderbilt University, ISIS'>
 
     <Package Id='*' Description='Tonka Design Suite'
-        Manufacturer='MetaMorph Software, Inc; Vanderbilt University, ISIS'
+        Manufacturer='MetaMorph, Inc; Vanderbilt University, ISIS'
         InstallerVersion='405' Languages='1033' Compressed='yes' SummaryCodepage='1252'
         InstallPrivileges='elevated' InstallScope='perMachine' Platform='x64'
 		Comments='Created from $(var.VCSDESCRIPTION)'/>

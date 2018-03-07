@@ -1,4 +1,36 @@
+# coding: utf-8
 __author__ = 'Zsolt'
+
+__license__ = """
+ This file is part of OpenModelica.
+
+ Copyright (c) 1998-CurrentYear, Vanderbilt University; Metamorph Inc; Open Source Modelica Consortium (OSMC),
+ c/o Linköpings universitet, Department of Computer and Information Science,
+ SE-58183 Linköping, Sweden.
+
+ All rights reserved.
+
+ THIS PROGRAM IS PROVIDED UNDER THE TERMS OF THE BSD NEW LICENSE OR THE
+ GPL VERSION 3 LICENSE OR THE OSMC PUBLIC LICENSE (OSMC-PL) VERSION 1.2.
+ ANY USE, REPRODUCTION OR DISTRIBUTION OF THIS PROGRAM CONSTITUTES
+ RECIPIENT'S ACCEPTANCE OF THE OSMC PUBLIC LICENSE OR THE GPL VERSION 3,
+ ACCORDING TO RECIPIENTS CHOICE.
+
+ The OpenModelica software and the OSMC (Open Source Modelica Consortium)
+ Public License (OSMC-PL) are obtained from OSMC, either from the above
+ address, from the URLs: http://www.openmodelica.org or
+ http://www.ida.liu.se/projects/OpenModelica, and in the OpenModelica
+ distribution. GNU version 3 is obtained from:
+ http://www.gnu.org/copyleft/gpl.html. The New BSD License is obtained from:
+ http://www.opensource.org/licenses/BSD-3-Clause.
+
+ This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, EXCEPT AS
+ EXPRESSLY SET FORTH IN THE BY RECIPIENT SELECTED SUBSIDIARY LICENSE
+ CONDITIONS OF OSMC-PL.
+
+ Version: 1.1
+"""
 
 import os
 import sys
@@ -9,6 +41,7 @@ import subprocess
 import tempfile
 import pyparsing
 import re
+import struct
 
 if sys.platform == 'darwin':
     # on Mac let's assume omc is installed
@@ -19,6 +52,24 @@ if sys.platform == 'darwin':
 
 # TODO: replace this with the new parser
 from OMPython import OMTypedParser, OMParser
+
+def is_64bit_exe(exe):
+    if not os.path.isfile(exe):
+        return False
+
+    with open(exe) as pe:
+        # IMAGE_DOS_HEADER.e_lfanew
+        pe.seek(60)
+        pe_offset = pe.read(4)
+        if len(pe_offset) != 4:
+            return False
+        pe_offset = struct.unpack("I", pe_offset)[0]
+        pe.seek(pe_offset + 4)
+        # _IMAGE_FILE_HEADER.Machine
+        machine = pe.read(2)
+        if len(machine) != 2:
+            return False
+        return struct.unpack("H", machine)[0] == 0x8664
 
 
 class OMCSession(object):
@@ -33,13 +84,23 @@ class OMCSession(object):
         return self._omc_command
 
     def _start_omc(self):
-        self._server = None
         self._omc_command = None
         try:
             self.omhome = os.environ['OPENMODELICAHOME']
             # add OPENMODELICAHOME\lib to PYTHONPATH so python can load omniORB libraries
-            sys.path.append(os.path.join(self.omhome, 'lib'))
-            sys.path.append(os.path.join(self.omhome, 'lib', 'python'))
+
+            if is_64bit_exe(os.path.join(self.omhome, "lib", "python", "_omnipy.pyd")):
+                # we can't load OpenModelica's 64-bit _omnipy.pyd. So use the bin\Python27 one
+                # this needs an OpenModelica >1.9.7, but there's no x64 release <=1.9.7, so we are ok
+                index = len(sys.path)
+            else:
+                index = 0
+            sys.path.insert(index, os.path.join(self.omhome, 'lib'))
+            sys.path.insert(index, os.path.join(self.omhome, 'lib', 'python'))
+            # n.b. use OpenModelica bundled idl stubs. ours has _omnipy.checkVersion(3,0, __file__), but:
+            # OpenModelica 1.11, 1.12 have version 4.2
+            # OpenModelica 1.9.2, 1.9.7 have version 3.0
+            sys.path.insert(0, os.path.join(self.omhome, 'share/omc/scripts/PythonInterface'))
             # add OPENMODELICAHOME\bin to path so python can find the omniORB binaries
             pathVar = os.getenv('PATH')
             pathVar += ';'
@@ -63,7 +124,7 @@ class OMCSession(object):
                     self._start_server()
                 except Exception as ex:
                     self.logger.error("The OpenModelica compiler is missing in the System path, please install it")
-                    raise ex
+                    raise
 
     def _connect_to_omc(self):
         # import the skeletons for the global module
@@ -81,20 +142,17 @@ class OMCSession(object):
         self._ior_file = os.path.join(self._temp_dir, self._ior_file)
         self._omc_corba_uri = "file:///" + self._ior_file
         # See if the omc server is running
-        if os.path.isfile(self._ior_file):
-            self.logger.info("OMC Server is up and running at {0}".format(self._omc_corba_uri))
-        else:
-            attempts = 0
-            while True:
-                if not os.path.isfile(self._ior_file):
-                    time.sleep(0.25)
-                    attempts += 1
-                    if attempts == 10:
-                        self.logger.error("OMC Server is down. Please start it!")
-                        raise Exception
-                    else:
-                        self.logger.info("OMC Server is up and running at {0}".format(self._omc_corba_uri))
-                        break
+        attempts = 0
+        while True:
+            if not os.path.isfile(self._ior_file):
+                time.sleep(0.25)
+                attempts += 1
+                if attempts == 50:
+                    self.logger.error("OMC Server is down. Please start it!")
+                    raise Exception("OMC Server is down. Please start it!")
+            else:
+                self.logger.info("OMC Server is up and running at {0}".format(self._omc_corba_uri))
+                break
 
         #initialize the ORB with maximum size for the ORB set
         sys.argv.append("-ORBgiopMaxMsgSize")
@@ -113,11 +171,14 @@ class OMCSession(object):
         # Check if we are using the right object
         if self._omc is None:
             self.logger.error("Object reference is not valid")
-            raise Exception
+            raise Exception("Object reference is not valid")
 
     def __init__(self, readonly=False):
         self.readonly = readonly
         self.omc_cache = {}
+        self._omc = None
+        self._omc_log_file = None
+        self._server = None
 
         self._REGEX_PATTERN_getComponents = r'{?{?([\w\d\.]+),([\w\d\.]+),"([^\"]*)", "([\w]+)", ([\w]+), ([\w]+), ([\w]+), ([\w]+), "([\w]+)", "([\w]+)", "([\w]+)",{(([\d]*|:)(,([\d]*|:))*)'
         self._REGEX_getComponents = re.compile(self._REGEX_PATTERN_getComponents)
@@ -160,10 +221,12 @@ class OMCSession(object):
         self._connect_to_omc()
 
     def __del__(self):
-        self._omc.sendExpression("quit();") # FIXME: does not work in a virtual python environment
-        self._omc_log_file.close()
+        if self._omc:
+            self._omc.sendExpression("quit();")  # FIXME: does not work in a virtual python environment
+        if self._omc_log_file:
+            self._omc_log_file.close()
         # kill self._server process if it is still running/exists
-        if self._server.returncode is None:
+        if self._server is not None and self._server.returncode is None:
             self._server.kill()
 
     # TODO: this method will be replaced by the new parser
@@ -206,7 +269,7 @@ class OMCSession(object):
                 res = self._omc.sendExpression(expression)
         except Exception as e:
             # self.logger.debug("Failed: {0}({1}, parsed={2})".format(question, opt, parsed))
-            raise e
+            raise
 
         # save response
         self.omc_cache[p] = res

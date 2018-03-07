@@ -29,7 +29,7 @@ namespace PythonTest
             return CheckCommand(String.Format("import {0}", moduleName));
         }
 
-        private Exception CheckCommand(string command)
+        private Exception CheckPython(string command)
         {
             try
             {
@@ -37,15 +37,18 @@ namespace PythonTest
                 p.StartInfo = new ProcessStartInfo()
                 {
                     FileName = VersionInfo.PythonVEnvExe,
-                    Arguments = String.Format("-c \"{0}\"", command),
+                    Arguments = command,
                     CreateNoWindow = true,
-                    UseShellExecute = false
+                    UseShellExecute = false,
+
+                    RedirectStandardError = true
                 };
                 p.Start();
+                string stderr = p.StandardError.ReadToEnd();
                 p.WaitForExit();
                 if (p.ExitCode != 0)
                 {
-                    throw new Exception("python.exe exited with non-zero code " + p.ExitCode);
+                    throw new Exception("python.exe exited with non-zero code " + p.ExitCode + ". " + stderr);
                 }
             }
             catch (Exception e)
@@ -53,6 +56,11 @@ namespace PythonTest
                 return e;
             }
             return null;
+        }
+
+        private Exception CheckCommand(string command)
+        {
+            return CheckPython(String.Format("-c \"{0}\"", command));
         }
 
         [Fact]
@@ -67,6 +75,7 @@ namespace PythonTest
                     "PCC",
                     "py_modelica",
                     "py_modelica_exporter",
+                    "omniORB.CORBA", // needed by py_modelica_exporter for openmodelica
                     "run_mdao",
                     "run_mdao.cad.update_parameters",
                     "testbenchexecutor",
@@ -125,6 +134,20 @@ namespace PythonTest
             p.Start();
             p.WaitForExit();
             Assert.Equal(42, p.ExitCode);
+        }
+
+        [Fact]
+        public void TestModelicaExporter()
+        {
+            if (Environment.GetEnvironmentVariable("OPENMODELICAHOME") == null)
+            {
+                return;
+            }
+            var e = CheckPython("-m py_modelica_exporter --standard --json");
+            if (e != null)
+            {
+                Assert.True(e == null, "py_modelica_exporter failed: " + e.ToString());
+            }
         }
 
         [Fact]
