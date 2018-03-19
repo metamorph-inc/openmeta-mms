@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using CyPhyMasterInterpreter.Rules;
 using AVM.DDP;
+using System.Security;
 
 namespace CyPhyPET
 {
@@ -612,7 +613,15 @@ namespace CyPhyPET
 
         #region CyPhyPET Specific code
 
+        static readonly Func<ISIS.GME.Common.Interfaces.FCO, int> getYPosition = (fco_) =>
+        {
+            var valueFlow = ((GME.MGA.Meta.IMgaMetaModel)((MgaFCO)fco_.Impl).ParentModel.Meta).AspectByName["ValueFlowAspect"];
 
+            string icon;
+            int x = 1, y = 1;
+            ((MgaFCO)fco_.Impl).GetPartDisp(valueFlow).GetGmeAttrs(out icon, out x, out y);
+            return y;
+        };
 
         private void WorkInMainTransaction()
         {
@@ -1274,7 +1283,7 @@ namespace CyPhyPET
             }
             catch (Exception e)
             {
-                console.Error.WriteLine(e.Message);
+                console.Error.WriteLine(SecurityElement.Escape(e.Message).Replace("\n", "<br/>"));
             }
             finally
             {
@@ -1331,7 +1340,9 @@ namespace CyPhyPET
 
             };
 
-            int i = 1;
+            int maxMetricYPosition = tb.Children.MetricCollection.Select(getYPosition).DefaultIfEmpty().Max();
+            int maxParamYPosition = tb.Children.ParameterCollection.Select(getYPosition).DefaultIfEmpty().Max();
+
             foreach (var item in paramsAndUnknowns["unknowns"].OrderBy(x => x.Key))
             {
                 string name = item.Key;
@@ -1349,6 +1360,8 @@ namespace CyPhyPET
                     {
                         fileOutput = fileOutputCreate();
                         fileOutput.Name = name;
+                        maxMetricYPosition += 65;
+                        ((IMgaFCO)fileOutput.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 800, maxMetricYPosition);
                     }
                     else
                     {
@@ -1364,6 +1377,8 @@ namespace CyPhyPET
                         metric = metricCreate();
                         metric.Name = name;
                         // metric.Attributes.Description =
+                        maxMetricYPosition += 65;
+                        ((IMgaFCO)metric.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 800, maxMetricYPosition);
                     }
                     else
                     {
@@ -1378,10 +1393,8 @@ namespace CyPhyPET
                     ((MgaFCO)metric.Impl).SetRegistryValueDisp("pass_by_obj", pass_by_obj.ToString());
                     output = metric;
                 }
-                ((IMgaFCO)output.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 800, i * 65);
-                i++;
             }
-            i = 1;
+
             foreach (var item in paramsAndUnknowns["params"].OrderBy(x => x.Key))
             {
                 string name = item.Key;
@@ -1396,6 +1409,8 @@ namespace CyPhyPET
                     {
                         fileInput = fileInputCreate();
                         fileInput.Name = name;
+                        maxParamYPosition += 65;
+                        ((IMgaFCO)fileInput.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 20, maxParamYPosition);
                         // TODO: this isn't read by CyPhy, but maybe the user wants to see it
                         // fileInput.Attributes.FileName =
                     }
@@ -1412,6 +1427,8 @@ namespace CyPhyPET
                     {
                         param = paramCreate();
                         param.Name = name;
+                        maxParamYPosition += 65;
+                        ((IMgaFCO)param.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 20, maxParamYPosition);
                         // param.Attributes.Description =
                     }
                     else
@@ -1423,8 +1440,6 @@ namespace CyPhyPET
                     pass_by_obj = pass_by_obj ?? false;
                     ((MgaFCO)param.Impl).SetRegistryValueDisp("pass_by_obj", pass_by_obj.ToString());
                 }
-                ((IMgaFCO)input.Impl).GetPartDisp(valueFlow).SetGmeAttrs(null, 20, i * 65);
-                i++;
             }
             foreach (var metricOrParameter in metricsAndParameters)
             {
@@ -1450,6 +1465,7 @@ namespace CyPhyPET
             var fcos = (MgaFCOs)Activator.CreateInstance(Type.GetTypeFromProgID("Mga.MgaFCOs"));
 
             cyPhyPython.ComponentParameter["openmdao_py"] = filename;
+            cyPhyPython.ComponentParameter["_quiet_mode"] = true;
 
             cyPhyPython.InvokeEx(obj.Impl.Project, (MgaFCO)obj.Impl, fcos, 128);
 
@@ -1523,13 +1539,6 @@ namespace CyPhyPET
             }
 
             var valueFlow = ((GME.MGA.Meta.IMgaMetaModel)excel.Impl.MetaBase).AspectByName["ValueFlowAspect"];
-            Func<ISIS.GME.Common.Interfaces.FCO, int> getYPosition = (fco_) =>
-            {
-                string icon;
-                int x = 1, y = 1;
-                ((MgaFCO)fco_.Impl).GetPartDisp(valueFlow).GetGmeAttrs(out icon, out x, out y);
-                return y;
-            };
             int maxMetricYPosition = excel.Children.MetricCollection.Select(getYPosition).DefaultIfEmpty().Max();
             int maxParamYPosition = excel.Children.ParameterCollection.Select(getYPosition).DefaultIfEmpty().Max();
             ExcelInterop.GetExcelInputsAndOutputs(dialog.FileName, (string name, string refersTo) =>
