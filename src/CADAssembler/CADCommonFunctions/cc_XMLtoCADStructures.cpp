@@ -92,7 +92,7 @@ void stream_AssemblyTree( vector<AssemblyInterface::CADComponent>		&in_CADCompon
 					AssemblyInterface::Units units = ck->Units_child();
 					if ( units != Udm::null)
 					{
-						out_Stream << endl << in_Indent << "	  Units.Value             " << std::string(units.Value());     
+						out_Stream << endl << in_Indent << "        Units.Value           " << std::string(units.Value());
 					}
 
 				}  //for ( AssemblyType::CADComponent_type::ParametricParameters_type::CADParameter_const_iterator k( i->ParametricParameters().get().CADParameter().begin());
@@ -184,6 +184,11 @@ void SetCADParametricParameterAttributes( const AssemblyInterface::CADComponent	
 			CADParameter_temp.name  =  ci->Name();
 			CADParameter_temp.type  =  CADParameterType_enum(  ci->Type() );
 			CADParameter_temp.value =  ci->Value();       // this must remain a string for now, will convert when
+			auto units = static_cast<AssemblyInterface::Units>(ci->Units_child());
+			if (units)
+			{
+				CADParameter_temp.units = static_cast<std::string>(units.Value());
+			}
 
 			out_CADComponentData_map[ID].parametricParameters.push_back(CADParameter_temp);
 			out_CADComponentData_map[ID].parametricParametersPresent = true;
@@ -1359,7 +1364,7 @@ void PopulateAnalyses (	 const AssemblyInterface::Analyses &in_Analyses_FromXML,
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PopulateProEAssemblyStructures (	AssemblyInterface::Assemblies    &in_Assemblies_ptr,
+void PopulateCADAssemblyStructures (	AssemblyInterface::Assemblies    &in_Assemblies_ptr,
 										CADAssemblies					 &out_Assemblies,
 										std::map<std::string, CADComponentData> &out_CADComponentData_map )
 													throw (isis::application_exception)
@@ -1644,7 +1649,7 @@ void FromXMLFile_PopulateCADComponentAssemblyAndMap(
 			// Populate Assembly Structures
 			/////////////////////////////////
 
-			isis::PopulateProEAssemblyStructures ( Assemblies_ptr, out_CADComponentAssemblies, out_CADComponentData_map );
+			isis::PopulateCADAssemblyStructures ( Assemblies_ptr, out_CADComponentAssemblies, out_CADComponentData_map );
 
 			/////////////////////////
 			// Log Assembly Info

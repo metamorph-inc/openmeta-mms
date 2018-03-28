@@ -25,6 +25,7 @@
 #include <cc_CommonFunctions.h>
 #include <cc_CommonDefinitions.h>
 #include <cc_AssemblyUtilities.h>
+#include <cc_ApplyModelConstraints.h>
 
 
 namespace isis
@@ -320,9 +321,13 @@ void MetaLinkAssemblyEditor::AddComponentToAssembly(
     const std::vector<CADParameter>    &in_CADParameters,
     std::vector<isis::CADCreateAssemblyError> &out_ErrorList,
     std::vector<isis::CADComponentConnector> &in_ConnectorList
-)
-throw(isis::application_exception)
+)	throw(isis::application_exception)
 {
+
+	isis::cad::CadFactoryAbstract_global *cadFactoryAbstract_global_ptr = isis::cad::CadFactoryAbstract_global::instance();
+	isis::cad::CadFactoryAbstract::ptr	cAD_Factory_ptr = cadFactoryAbstract_global_ptr->getCadFactoryAbstract_ptr();
+	isis::cad::IModelOperations&         modelOperations = cAD_Factory_ptr->getModelOperations();
+
 
     isis_LOG(lg, isis_FILE, isis_INFO) << "***************** Begin MetaLinkAssemblyEditor::AddComponentToAssembly ******************";
     std::stringstream generalMsg;
@@ -530,12 +535,18 @@ throw(isis::application_exception)
         //isis_LOG(lg, isis_FILE, isis_INFO) << "cADComponentData_map_TEMP[in_ComponentInstanceID]:                   " << cADComponentData_map_TEMP[in_ComponentInstanceID];
         //isis_LOG(lg, isis_FILE, isis_INFO)  << "************ End Temp Structure - Call to Creo SDK to Add the Component ***************";
 
-        isis::Add_Subassemblies_and_Parts(//*m_cadfactory,
-                                          m_CADComponentData_map[parentAssemblyInstanceID].cADModel_hdl,
-                                          m_CADComponentData_map[parentAssemblyInstanceID].name,
-                                          toAddComponentInstanceIDs,
-                                          cADComponentData_map_TEMP,
-                                          m_addedToAssemblyOrdinal);
+        //isis::Add_Subassemblies_and_Parts(//*m_cadfactory,
+        //                                  m_CADComponentData_map[parentAssemblyInstanceID].cADModel_hdl,
+        //                                  m_CADComponentData_map[parentAssemblyInstanceID].name,
+        //                                  toAddComponentInstanceIDs,
+        //                                  cADComponentData_map_TEMP,
+        //                                  m_addedToAssemblyOrdinal);
+
+		modelOperations.addModelsToAssembly(	 parentAssemblyInstanceID,
+											 toAddComponentInstanceIDs,
+											 cADComponentData_map_TEMP,
+											 m_addedToAssemblyOrdinal);
+
 
         //isis::isis_ProMdlDisplay( cADComponentData_map_TEMP[in_ComponentInstanceID].modelHandle);
 
@@ -738,10 +749,10 @@ throw(isis::application_exception)
     componentIDsToBeConstrained.push_back(in_ConstraintComponentInstanceID);
 
 
-    isis_LOG(lg, isis_FILE, isis_INFO) << "**** Before call to ApplyModelConstraints ******";
+    isis_LOG(lg, isis_FILE, isis_INFO) << "**** Before call to ApplyListedModelsConstraints ******";
     isis_LOG(lg, isis_FILE, isis_INFO) << m_CADComponentData_map[in_ConstraintComponentInstanceID];
 
-    ApplyModelConstraints(//*m_cadfactory,
+    ApplyListedModelsConstraints(//*m_cadfactory,
                           //reinterpret_cast<ProSolid*>(&m_CADComponentData_map[topAssemblyComponentInstanceID].cADModel_hdl),
 						  topAssemblyComponentInstanceID,
                           componentIDsToBeConstrained,
@@ -761,7 +772,7 @@ throw(isis::application_exception)
 
     isis::isis_ProWindowRepaint(windowID);
 
-    isis_LOG(lg, isis_FILE, isis_INFO) << "**** After call to ApplyModelConstraints ******";
+    isis_LOG(lg, isis_FILE, isis_INFO) << "**** After call to ApplyListedModelsConstraints ******";
 
     isis_LOG(lg, isis_FILE, isis_INFO) << "Constraint applied successfully";
     isis_LOG(lg, isis_FILE, isis_INFO) << "***************** End MetaLinkAssemblyEditor::ConstrainComponent ******************";
@@ -815,64 +826,58 @@ void MetaLinkAssemblyEditor::ModifyParameters(const std::string  &in_ComponentIn
 
     // Verify in_ComponentInstanceID does not exists.  If it does exist, then an attempt is
     // being made to modify a parameter on a component that does not exist
-    if(m_CADComponentData_map.find(in_ComponentInstanceID) == m_CADComponentData_map.end())
+    auto in_ComponentInstanceIt = m_CADComponentData_map.find(in_ComponentInstanceID);
+    if(in_ComponentInstanceIt == m_CADComponentData_map.end())
     {
         std::stringstream errorString;
         errorString << "MetaLinkAssemblyEditor::ModifyParameters invoked, but in_ComponentInstanceID does not exist in the assembly. "
                     << "A ComponentInstanceID must exist before a parameter can be modifed on that component. in_ComponentInstanceID: " << in_ComponentInstanceID;
         throw isis::application_exception("C08010",errorString);
     }
+    auto& in_ComponentInstance = in_ComponentInstanceIt->second;
     /////////////////////////////
     // End Input Data Checks
     /////////////////////////////
 
-    // Verify in_ComponentInstanceID is not an empty string
-    if(in_ComponentInstanceID.size() == 0)
-    {
-        std::stringstream errorString;
-        errorString << "MetaLinkAssemblyEditor::ModifyParameters invoked, but in_ComponentInstanceID is an empty string."
-                    << "A ComponentInstanceID must exist before a constraint can be added.";
-        throw isis::application_exception("C08011",errorString);
-    }
-
-    std::string modelNameWithSuffix = AmalgamateModelNameWithSuffix(
-                                          m_CADComponentData_map[in_ComponentInstanceID].name,
-                                          m_CADComponentData_map[in_ComponentInstanceID].modelType);
+    std::string modelNameWithSuffix = AmalgamateModelNameWithSuffix(in_ComponentInstance.name, in_ComponentInstance.modelType);
 
     isis_LOG(lg, isis_FILE, isis_INFO) << "Internal data structure parameter values BEFORE modification:";
-    for each(CADParameter i in m_CADComponentData_map[in_ComponentInstanceID].parametricParameters)
+    for each(CADParameter i in in_ComponentInstance.parametricParameters)
     {
         isis_LOG(lg, isis_FILE, isis_INFO) << i;
     }
 
+    ProMdl* p_model = (ProMdl*)in_ComponentInstance.cADModel_ptr_ptr;
+    bool is_mmKs;
+    ParametricParameter_WarnForPartUnitsMismatch(in_ComponentInstance, &is_mmKs);
     // Change the paraqmeters
     for each(CADParameter i in in_Parameters)
     {
         SetParametricParameter(modelNameWithSuffix,
-                               m_CADComponentData_map[in_ComponentInstanceID].cADModel_ptr_ptr,
-                               i.name, i.type, i.value);
+			in_ComponentInstance.cADModel_ptr_ptr,
+                               i.name, i.type, i.value, i.units, is_mmKs); // FIXME
     }
 
     bool regenerationSucceeded;
-    isis::RegenerateModel(static_cast<ProSolid>(m_CADComponentData_map[in_ComponentInstanceID].cADModel_hdl),
-                          m_CADComponentData_map[in_ComponentInstanceID].name,
-                          m_CADComponentData_map[in_ComponentInstanceID].componentID,
-                          regenerationSucceeded);
+    isis::RegenerateModel(static_cast<ProSolid>(in_ComponentInstance.cADModel_hdl),
+							in_ComponentInstance.name,
+							in_ComponentInstance.componentID,
+							regenerationSucceeded);
 
     isis::isis_ProWindowRepaint(windowID);
 
-    // We must update the parameters in m_CADComponentData_map[in_ComponentInstanceID].parametricParameters
+    // We must update the parameters in in_ComponentInstance.parametricParameters
     // as follows:
     //    a) if the parameter already exists, must update its value
     //    b) if the parameter does not exist, add it
     for each(CADParameter i in in_Parameters)
     {
         std::list<CADParameter>::iterator itr;
-        itr = find(m_CADComponentData_map[in_ComponentInstanceID].parametricParameters.begin(),
-                   m_CADComponentData_map[in_ComponentInstanceID].parametricParameters.end(),
+        itr = find(in_ComponentInstance.parametricParameters.begin(),
+					in_ComponentInstance.parametricParameters.end(),
                    i);
 
-        if(itr != m_CADComponentData_map[in_ComponentInstanceID].parametricParameters.end())
+        if(itr != in_ComponentInstance.parametricParameters.end())
         {
             // Found, must modify
             itr->type    = i.type;    // would be an error if the types are different
@@ -881,12 +886,12 @@ void MetaLinkAssemblyEditor::ModifyParameters(const std::string  &in_ComponentIn
         else
         {
             // Not found, must add
-            m_CADComponentData_map[in_ComponentInstanceID].parametricParameters.push_back(i);
+			in_ComponentInstance.parametricParameters.push_back(i);
         }
     }
 
     isis_LOG(lg, isis_FILE, isis_INFO) << "Internal data structure parameter values AFTER modification:";
-    for each(CADParameter i in m_CADComponentData_map[in_ComponentInstanceID].parametricParameters)
+    for each(CADParameter i in in_ComponentInstance.parametricParameters)
     {
         isis_LOG(lg, isis_FILE, isis_INFO) << i;
     }
