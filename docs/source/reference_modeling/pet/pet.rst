@@ -17,6 +17,6 @@ executing it, and analysing the results.
    :caption: Sections
 
    pet_analysis_blocks
-   pet_drivers
+   drivers/pet_drivers
    pet_nesting
    pet_advanced_topics

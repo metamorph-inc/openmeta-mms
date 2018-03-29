@@ -12,7 +12,7 @@ was rather inefficient as it relied on a brute force sampling (961 samples)
 of the design space in order to obtain a reasonable estimate of the optimal
 x and y values.
 
-In this section, we will introduce the :ref:`pet_drivers_optimizer`. The Optimizer driver
+In this section, we will introduce the :ref:`optimizer_driver`. The Optimizer driver
 is better suited for optimization/minimization problems.
 
 .. note:: This section of the tutorial builds on the preceding Parameter Study sections.
@@ -285,5 +285,5 @@ For more information on PETs, Analysis Blocks, and Drivers, check out the
 :ref:`pet` chapter of the OpenMETA Documentation.
 
 For more information on the Optimizer PET Driver specifically, check out the
-:ref:`pet_drivers_optimizer` section as well as the Optimization section of
+:ref:`optimizer_driver` section as well as the Optimization section of
 :ref:`pet_advanced_topics`.

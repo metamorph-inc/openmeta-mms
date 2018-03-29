@@ -79,9 +79,9 @@ tab - which allows you to view all the results in table format.
 Once you are there, you can sort the results to identify the
 minimum **f_xy** value sampled and its corresponding **x** and **y** values.
 
-While the :ref:`pet_drivers_parameter_study` PET Driver is a useful tool for
+While the :ref:`parameter_study_driver` is a useful tool for
 surveying a design space and can reveal important trends, it is generally
 not ideal for optimization problems.
 
-In the next section, we will learn how to use the :ref:`pet_drivers_optimizer`
+In the next section, we will learn how to use the :ref:`optimizer_driver`
 PET Driver, which is often better suited for optimization/minimization problems.

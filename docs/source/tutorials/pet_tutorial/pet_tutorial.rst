@@ -8,14 +8,14 @@ OpenMETA design concept: the :ref:`pet`.
 
 You will learn how to create an OpenMETA PET analysis
 using :ref:`pet_analysis_blocks` and configure the analysis with a
-:ref:`pet_drivers_parameter_study` PET Driver.
+:ref:`parameter_study_driver`.
 
 Then, you will learn how to execute your PET with the *Master Interpreter*
 and analyze the results, using both the :ref:`results_browser` and
 the :ref:`visualizer`. From the results you will refine the analysis inputs
 and re-execute your analysis.
 
-Finally, you will be introduced to the :ref:`pet_drivers_optimizer` PET Driver
+Finally, you will be introduced to the :ref:`optimizer_driver` PET Driver
 and see how it can be used to discover a minimum in the design space.
 
 .. toctree::
