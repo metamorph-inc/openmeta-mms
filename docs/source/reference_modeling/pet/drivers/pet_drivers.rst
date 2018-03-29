@@ -13,5 +13,6 @@ A PET Driver allows the user to:
    :caption: Sections
 
    basics/pet_driver_basics
-   optimizer/optimizer_driver
    parameter_study/parameter_study_driver
+   optimizer/optimizer_driver
+   pcc/pcc_driver

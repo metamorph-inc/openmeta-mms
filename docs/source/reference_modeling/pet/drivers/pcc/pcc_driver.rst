@@ -7,32 +7,33 @@ The PCC driver helps estimate how well a model meets a set of requirements,
 given parameters with specified probability distributions.
 
 Getting Started
----------------
+~~~~~~~~~~~~~~~
 
 Examining the GME Browser, you should see a structure like this:
 
-[IMAGE]
+.. image:: images/Probability_of_Correctnes-002.png
 
 We will need to create an empty Parametric Exploration Model in order to
-proceed. To do this, right-click on “MyTestBenches” and select “Insert Folder” ->
-“Parametric Exploration”. Name this new folder “PCC”. Then right-click the PCC
-folder and select “Insert Model” -> “Parametric Exploration”. Name this model
-“MSD_Dymola” (or MSD_OM if working with OpenModelica). The GME Browser will now
-look like this:
+proceed. To do this, right-click on **MyTestBenches** and select
+:menuselection:`Insert Folder --> Parametric Exploration`. Name this new folder
+``PCC``. Then right-click the PCC folder and select :menuselection:`Insert
+Folder --> Parametric Exploration`. Name this model **MSD_Dymola** (or MSD_OM if
+working with OpenModelica). The GME Browser will now look like this:
 
-[IMAGE]
+.. image:: images/Probability_of_Correctnes-003.png
 
 Open up the newly created parametric exploration model by double clicking on
-“MSD_Dymola” in the GME browser. This will open a new editing window.
+**MSD_Dymola** in the GME browser. This will open a new editing window.
 
 If you are using the model you created using the MSD Tutorial, you may need to
-add parameters for “Mass” and “spring_constant” to the System_Dynamics_Dymola
-(or System_Dynamics_OM if using OpenModelica) editing window. This may be
-accomplished by copy/pasting the “Mass” and “spring_constant” parameters from
-the “DesignSpace MyMassSpringDamper” -> “MyMassSpringDamper” folder in the GME
-Browser. If this is done, the window will appear as follows:
+add parameters for **Mass** and **spring_constant** to the
+System_Dynamics_Dymola (or System_Dynamics_OM if using OpenModelica) editing
+window. This may be accomplished by copy/pasting the “Mass” and
+“spring_constant” parameters from the “DesignSpace MyMassSpringDamper” ->
+“MyMassSpringDamper” folder in the GME Browser. If this is done, the window will
+appear as follows:
 
-[IMAGE]
+.. image:: images/Probability_of_Correctnes-004.png
 
 Step 1: Inserting the Test Bench Model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -44,14 +45,14 @@ editing window. You can do this by right-clicking “System_Dynamics_Dymola” (
 Reference” to paste in a reference to the model. The editing window will now
 contain a reference, which appears as follows:
 
-[IMAGE]
+.. image:: images/Probability_of_Correctnes-005.png
 
 Step 2: Inserting a PCCDriver
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 From the Part Browser, drag a PCCDriver object into the editing window:
 
-[IMAGE]
+.. image:: images/Probability_of_Correctnes-006.png
 
 Step 3: Adding parameter objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,23 +65,31 @@ normally distributed. Drag two icons for the normal distribution from the Part
 Browser to the editing window, and rename them “Mass” and “spring_constant”, as
 follows:
 
-[IMAGE]
+.. image:: images/Probability_of_Correctnes-007.png
 
 Any object can be renamed easily using the Object Inspector. The four available
 parameter types each represent a different random variable distribution, each
 defined by distribution-specific parameters:
 
+.. image:: images/Probability_of_Correctnes-008.png
+
 The **Beta Distribution**: Unlike the normal distribution, the Beta distribution has
 finite upper and lower bounds (defined by upper and lower limits) and can be
 symmetric or non-symmetric (defined by two shape parameters).
+
+.. image:: images/Probability_of_Correctnes-009.png
 
 The **Log-Normal Distribution**: defined by a shape and a log scale parameter. The
 log-normal distribution is similar to the normal distribution but has a lower
 limit of 0 instead of –infinity.
 
+.. image:: images/Probability_of_Correctnes-010.png
+
 The **Normal Distribution**: defined by its mean and standard deviation. The normal
 distribution is always symmetric and is defined over the range [-infinity,
 infinity] .
+
+.. image:: images/Probability_of_Correctnes-011.png
 
 The **Uniform Distribution**: defined by its upper and lower limits. Every outcome
 between the limits is equally probable.
@@ -94,7 +103,10 @@ the Mass parameter to “.5” and the standard deviation to “.05”. Likewise
 set the mean of the spring_constant parameter to “1000” and the standard dev
 iation to “50”, as shown below:
 
-[IMAGE]
+|IMAGE_12| |IMAGE_13|
+
+.. |IMAGE_12| image:: images/Probability_of_Correctnes-012.png
+.. |IMAGE_13| image:: images/Probability_of_Correctnes-013.png
 
 Step 5: Adding PCCOutput objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,7 +116,7 @@ output of the test bench model it is desired to measure, and rename them
 appropriately. In this case, we are interested in the two continuous outputs,
 “Time_to_Zero” and “Final_Position”:
 
-[IMAGE]
+.. image:: images/Probability_of_Correctnes-014.png
 
 Step 6: Configuring the PCCOutput objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,7 +138,10 @@ seconds. Likewise, set the Min and Max values of Final_Position to 0 and 1
 respectively, with a 0.5 TargetPCCValue. This specifies that we desire at least
 a 50% probability that the final position of the mass will lie between 0 and 1:
 
-[IMAGE]
+|IMAGE_15| |IMAGE_16|
+
+.. |IMAGE_15| image:: images/Probability_of_Correctnes-015.png
+.. |IMAGE_16| image:: images/Probability_of_Correctnes-016.png
 
 Step 7: Selecting the Uncertainty Propagation (UP) and Sensitivity Analysis (SA) Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -138,7 +153,7 @@ the default option of a Taylor Series approximation for this tutorial, as it is
 very fast to calculate and requires only 5 simulations given the two inputs we
 are using:
 
-[IMAGE]
+.. image:: images/Probability_of_Correctnes-017.png
 
 Each of the available methods differs in the way it samples from the space
 defined by the parameter distributions:
@@ -214,11 +229,28 @@ PCCDriver, as follows:
 The “PCCDriver” object can be widened by setting “Preferences” -> “PortLabel
 Length” to “0” in the Object Inspector.
 
+Step 8: Connecting the Test Bench Model to the PCCDriver
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By this point, the parametric exploration model should have two components, a
+reference to the Test Bench Model, and the PCCDriver. Using the Connect Mode,
+connect each of the parameters on the PCCDriver to the corresponding parameter
+on the reference to the test bench model. Then connect each of the outputs from
+the reference to the Test Bench Model to the corresponding outputs on the
+PCCDriver, as follows:
+
+.. image:: images/Probability_of_Correctnes-018.png
+
+The “PCCDriver” object can be widened by setting “Preferences” -> “PortLabel
+Length” to “0” in the Object Inspector.
+
 Step 9: Running the Simulations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Click the CyPhy Master Interpreter button ([IMAGE]) in the toolbar.  Select the
-configurations to run, then click OK.
+Click the CyPhy Master Interpreter button (|MI_BUTTON|) in the toolbar.  Select
+the configurations to run, then click OK.
+
+.. |MI_BUTTON| image:: images/Probability_of_Correctnes-019.png
 
 Step 10: Interpreting the results
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
