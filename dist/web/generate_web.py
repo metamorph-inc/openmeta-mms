@@ -20,8 +20,10 @@ env = Environment(
     autoescape=select_autoescape(['html', 'xml'])
 )
 
-def main():
+def main(releaseId):
     version = subprocess.check_output(['git', 'describe', '--match', 'v*']).strip()
+    if releaseId != version:
+        raise ValueError('Version mismatch: {} {}'.format(releaseId, version))
     last_major_version = subprocess.check_output(['git', 'describe', '--match', 'v*', '--abbrev=0']).strip()
     now = date.today().strftime("%x")
     print(version)
@@ -61,7 +63,7 @@ def main():
     releases.append({
         "Version": version,
         "Release Date": now,
-        "Download Link": "/releases/" + version + "/META_bundle_x64.exe",
+        "Download Link": "/releases/" + version + "/META_" + version + ".exe",
         "Info Link": "/releases/" + version + "/index.html"
     })
 
@@ -105,4 +107,9 @@ def download(url, filename):
         raise
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description="generate_web.py")
+    parser.add_argument("releaseId")
+    args = parser.parse_args()
+
+    main(args.releaseId)
