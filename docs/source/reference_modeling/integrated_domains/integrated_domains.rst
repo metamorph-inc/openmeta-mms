@@ -14,4 +14,5 @@ following subchapters describe a few of the more significant ones:
    eda
    modelica
    spice
+   simulink
    otherdomains
