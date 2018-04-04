@@ -44,6 +44,11 @@ a Test Bench that includes the **CyPhy2Simulink** interpreter in its workflow:
     Simulink model.  This also copies the specified library to the execution
     directory.
 
+.. figure:: images/SimulinkTestBench.png
+   :alt: Example Simulink Test Bench
+
+   Example Simulink Test Bench
+
 Any other unconnected parameters in the Test Bench will be passed through to
 Simulink as simulation parameters.  A full list of available parameters is
 available within Simulink; some common useful parameters are listed below:
