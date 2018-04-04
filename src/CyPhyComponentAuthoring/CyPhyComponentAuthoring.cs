@@ -232,13 +232,6 @@ namespace CyPhyComponentAuthoring
                     AddButtontoDialogBox(CATgut, item.Item1, item.Item2, item.Item3);
                 }
                 CATgut.ResumeLayout();
-                CATgut.tableLayoutPanel0.CellPaint += (sender, e) =>
-                {
-                    if (e.Row > 2)
-                    {
-                        ControlPaint.DrawBorder3D(e.Graphics, e.CellBounds, Border3DStyle.Etched, Border3DSide.Top);
-                    }
-                };
 
                 // META-2679 Set the start position of CAT dialog box to the center of the screen.
                 CATgut.StartPosition = FormStartPosition.CenterScreen;
@@ -273,36 +266,18 @@ namespace CyPhyComponentAuthoring
             }
         }
 
-        private const int CAT_BUTTON_WIDTH = 130;
-        private const int CAT_BUTTON_HEIGHT = 50;
-        private const int CAT_DESCRIPTION_WIDTH = 510;
-        private const int CAT_DESCRIPTION_HEIGHT = 50;
-
         public void AddButtontoDialogBox(CyPhyComponentAuthoringToolGUI CATgut, CATName attr, Type classtype, MethodInfo meth)
         {
             // add the Event Handler to the Button List
             CATName a = (CATName)attr;
 
-            // setup button properties
-            Button button = new Button();
-            button.Name = a.NameVal;
-            button.Text = a.NameVal;
-            button.Anchor = AnchorStyles.Top;
-
-            // set the button size
-            button.Width = CAT_BUTTON_WIDTH;
-            button.Height = CAT_BUTTON_HEIGHT;
-
-            // make clicking the button an event we can handle
-            Type buttonType = typeof(Button);
-            EventInfo ev = buttonType.GetEvent("Click");
-            Delegate handler = null;
+            EventHandler handler;
 
             // create a delegate event handler for the button
             if (classtype.Name == typeof(CyPhyComponentAuthoringInterpreter).Name)
             {
                 // local methods don't require a new instance of CATModule
-                handler = Delegate.CreateDelegate(ev.EventHandlerType, this, meth);
+                handler = (EventHandler) Delegate.CreateDelegate(typeof(EventHandler), this, meth);
             }
             else
             {
@@ -313,35 +288,20 @@ namespace CyPhyComponentAuthoring
                 }
 
                 // create a delegate for the dialog button to call to invoke the method
-                handler = Delegate.CreateDelegate(ev.EventHandlerType, newinst, meth);
+                handler = (EventHandler) Delegate.CreateDelegate(typeof(EventHandler), newinst, meth);
             }
+
+            // Create our list view item
+            CatToolListViewItem listViewItem = new CatToolListViewItem(attr, CATgut.ComponentIconList);
+            listViewItem.Action += handler;
+
+            CATgut.CatModuleListView.Items.Add(listViewItem);
+
             // associate the event handler with the button click
-            ev.AddEventHandler(button, handler);
+            //ev.AddEventHandler(button, handler);
 
             // Add a second event handler to each button to close the CAT dialog box after executing the first event handler
-            ev.AddEventHandler(button, (EventHandler)((sender, e) => close_dialog_box(sender, e)));
-
-            // add another row to the table - each "row" is actually a smaller 2 column table
-            TableLayoutPanel new_mini_table = new TableLayoutPanel();
-            new_mini_table.AutoSize = true;
-            new_mini_table.ColumnCount = 2;
-            new_mini_table.RowCount = 1;
-
-            // create the button
-            new_mini_table.Controls.Add(button, 0, 0);
-
-            //setup description properties
-            Label description = new Label();
-            description.Text = a.DescriptionVal;
-            description.MinimumSize = new System.Drawing.Size(CAT_DESCRIPTION_WIDTH, CAT_DESCRIPTION_HEIGHT);
-            // description.Anchor = AnchorStyles.Top;
-            description.TextAlign = ContentAlignment.MiddleCenter;
-            
-            // set the description
-            new_mini_table.Controls.Add(description, 1, 0);
-
-            // add the new CAT module to the dialog box
-            CATgut.tableLayoutPanel0.Controls.Add(new_mini_table, 1, ++CATgut.tableLayoutPanel0.RowCount);
+            //ev.AddEventHandler(button, (EventHandler)((sender, e) => close_dialog_box(sender, e)));
         }
 
         public CATModule CreateCATModuleLogged(Type classtype)
@@ -385,6 +345,7 @@ namespace CyPhyComponentAuthoring
             public string NameVal;
             public string DescriptionVal;
             public Role RoleVal;
+            public string IconResourceKey;
         }
 
         [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]

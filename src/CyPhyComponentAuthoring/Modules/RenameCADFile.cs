@@ -34,16 +34,12 @@ namespace CyPhyComponentAuthoring.Modules
             // Close the calling dialog box if the module ran successfully
             if (Close_Dlg)
             {
-                // calling object is a button
-                Button callerBtn = (Button)sender;
-                // the button is in a layout panel
-                TableLayoutPanel innerTLP = (TableLayoutPanel)callerBtn.Parent;
-                // the layout panel is a table within a table
-                TableLayoutPanel outerTLP = (TableLayoutPanel)innerTLP.Parent;
-                // the TLP is in the dialog box
-                Form parentDB = (Form)outerTLP.Parent;
-                // the dialog box is what we want to close
-                parentDB.Close();
+                if (sender is Form)
+                {
+                    // the TLP is in the dialog box
+                    Form parentDB = (Form)sender;
+                    parentDB.Close();
+                }
             }
         }
 

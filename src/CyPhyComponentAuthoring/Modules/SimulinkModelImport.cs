@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -31,7 +32,8 @@ namespace CyPhyComponentAuthoring.Modules
         [CyPhyComponentAuthoringInterpreter.CATName(
             NameVal = "Add Simulink Model",
             DescriptionVal = "An existing Simulink model gets imported and associated with this CyPhy component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+            IconResourceKey = "CyPhy2Simulink"
            )
         ]
         public void ImportSimulinkModel_Delegate(object sender, EventArgs e)

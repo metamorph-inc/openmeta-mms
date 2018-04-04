@@ -118,6 +118,11 @@
     <Compile Include="Modules\SystemCModelImport.cs" />
     <Compile Include="Registrar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <!--$ADDITIONALFILES$-->
   </ItemGroup>
   <ItemGroup>
@@ -198,11 +203,20 @@
     <EmbeddedResource Include="GUIs\SimulinkLibraryBrowser.resx">
       <DependentUpon>SimulinkLibraryBrowser.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="CyPhyComponentAuthoring.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\OpenModelica.ico" />
+    <None Include="Resources\CyPhy2CAD.ico" />
+    <None Include="Resources\CyPhy2MfgBom.ico" />
+    <None Include="Resources\CyPhy2Simulink.ico" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
