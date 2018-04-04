@@ -19,7 +19,8 @@ namespace CyPhyComponentAuthoring.Modules
         [CyPhyComponentAuthoringInterpreter.CATName(
             NameVal = "Add Documentation",
             DescriptionVal = "An document is imported from a file into a resource object in this Component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+            IconResourceKey = "Document"
             )
         ]
         public void callAddDocument(object sender, EventArgs e)

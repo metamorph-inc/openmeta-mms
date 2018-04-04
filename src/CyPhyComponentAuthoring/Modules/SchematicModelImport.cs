@@ -46,7 +46,8 @@ namespace CyPhyComponentAuthoring.Modules
         [CyPhyComponentAuthoringInterpreter.CATName(
             NameVal = "Add Eagle Schematic",
             DescriptionVal = "An existing Eagle Schematic model gets imported and associated with this CyPhy component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+            IconResourceKey = "EagleOfficialIcon"
            )
         ]
         public void ImportEagleModel_Delegate(object sender, EventArgs e)

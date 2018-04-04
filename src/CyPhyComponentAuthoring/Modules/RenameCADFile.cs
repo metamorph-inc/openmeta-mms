@@ -24,7 +24,8 @@ namespace CyPhyComponentAuthoring.Modules
         [CyPhyComponentAuthoringInterpreter.CATName(
             NameVal = "Rename CAD File",
             DescriptionVal = "Rename a previously imported Creo CAD model in this CyPhy Component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Modify
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Modify,
+            IconResourceKey = "Rename"
             )
         ]
         public void callRenameCADFile(object sender, EventArgs e)

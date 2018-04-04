@@ -168,7 +168,27 @@ namespace CyPhyComponentAuthoring
 
         private void CyPhyComponentAuthoringToolGUI_Load(object sender, EventArgs e)
         {
+            // Set the default dialog font on each child control
+            //FixControlFont(this);
 
+            //ModuleNameLabel.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
+        }
+
+        /**
+         * Currently unused, because changing the control font to the system font
+         * makes our icons blurry.  Yay Winforms.
+         */
+        private void FixControlFont(Control c)
+        {
+            foreach (var subcontrol in c.Controls)
+            {
+                if (subcontrol is Control)
+                {
+                    FixControlFont(subcontrol as Control);
+                }
+            }
+
+            c.Font = SystemFonts.MessageBoxFont;
         }
 
         private void RunToolButton_Click(object sender, EventArgs e)

@@ -213,6 +213,13 @@
     <Content Include="CyPhyComponentAuthoring.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\octopart_blue.ico" />
+    <None Include="Resources\IconFile.ico" />
+    <None Include="Resources\PackageFolder.ico" />
+    <None Include="Resources\Rename.ico" />
+    <None Include="Resources\Document.ico" />
+    <None Include="Resources\OpenFolder.ico" />
+    <None Include="Resources\EagleOfficialIcon.ico" />
     <None Include="Resources\OpenModelica.ico" />
     <None Include="Resources\CyPhy2CAD.ico" />
     <None Include="Resources\CyPhy2MfgBom.ico" />

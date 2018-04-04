@@ -43,7 +43,8 @@ namespace CyPhyComponentAuthoring.Modules
             NameVal = "Add OctoPart Information",
             DescriptionVal = "An existing EDAModel's device name is queried with OctoPart and important " +
                              "component properties are populated, as well as an image and datasheet.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+            IconResourceKey = "octopart_blue"
            )
         ]
         public void OctoPartDataImport_Delegate(object sender, EventArgs e)

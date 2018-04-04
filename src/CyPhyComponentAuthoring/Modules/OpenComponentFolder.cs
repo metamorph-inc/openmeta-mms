@@ -19,7 +19,8 @@ namespace CyPhyComponentAuthoring.Modules
         [CyPhyComponentAuthoringInterpreter.CATName(
             NameVal = "Open Folder",
             DescriptionVal = "Locate the Component's resource folder on the disk, and open it in Windows Explorer.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Publish
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Publish,
+            IconResourceKey = "OpenFolder"
             )
         ]
         public void OpenFolder(object sender, EventArgs e)

@@ -35,7 +35,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.RunToolButton = new System.Windows.Forms.Button();
             this.ModuleDetailsTextBox = new System.Windows.Forms.TextBox();
-            this.ModuleNameLabel = new System.Windows.Forms.Label();
+            this.ModuleNameLabel = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -51,7 +51,7 @@
             this.CatModuleListView.Name = "CatModuleListView";
             this.CatModuleListView.Size = new System.Drawing.Size(527, 395);
             this.CatModuleListView.TabIndex = 0;
-            this.CatModuleListView.TileSize = new System.Drawing.Size(168, 48);
+            this.CatModuleListView.TileSize = new System.Drawing.Size(168, 56);
             this.CatModuleListView.UseCompatibleStateImageBehavior = false;
             this.CatModuleListView.View = System.Windows.Forms.View.Tile;
             this.CatModuleListView.ItemActivate += new System.EventHandler(this.CatModuleListView_ItemActivate);
@@ -77,9 +77,9 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.ModuleNameLabel);
             this.splitContainer1.Panel2.Controls.Add(this.RunToolButton);
             this.splitContainer1.Panel2.Controls.Add(this.ModuleDetailsTextBox);
-            this.splitContainer1.Panel2.Controls.Add(this.ModuleNameLabel);
             this.splitContainer1.Size = new System.Drawing.Size(767, 395);
             this.splitContainer1.SplitterDistance = 527;
             this.splitContainer1.TabIndex = 2;
@@ -103,21 +103,27 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ModuleDetailsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.ModuleDetailsTextBox.Location = new System.Drawing.Point(6, 16);
+            this.ModuleDetailsTextBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.ModuleDetailsTextBox.Location = new System.Drawing.Point(6, 22);
             this.ModuleDetailsTextBox.Multiline = true;
             this.ModuleDetailsTextBox.Name = "ModuleDetailsTextBox";
             this.ModuleDetailsTextBox.ReadOnly = true;
-            this.ModuleDetailsTextBox.Size = new System.Drawing.Size(227, 337);
+            this.ModuleDetailsTextBox.Size = new System.Drawing.Size(227, 331);
             this.ModuleDetailsTextBox.TabIndex = 1;
             // 
             // ModuleNameLabel
             // 
-            this.ModuleNameLabel.AutoSize = true;
+            this.ModuleNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ModuleNameLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ModuleNameLabel.Cursor = System.Windows.Forms.Cursors.Default;
             this.ModuleNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ModuleNameLabel.Location = new System.Drawing.Point(3, 0);
+            this.ModuleNameLabel.Location = new System.Drawing.Point(6, 3);
+            this.ModuleNameLabel.Multiline = true;
             this.ModuleNameLabel.Name = "ModuleNameLabel";
-            this.ModuleNameLabel.Size = new System.Drawing.Size(0, 13);
-            this.ModuleNameLabel.TabIndex = 0;
+            this.ModuleNameLabel.ReadOnly = true;
+            this.ModuleNameLabel.Size = new System.Drawing.Size(227, 20);
+            this.ModuleNameLabel.TabIndex = 3;
             // 
             // CyPhyComponentAuthoringToolGUI
             // 
@@ -146,8 +152,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button RunToolButton;
         private System.Windows.Forms.TextBox ModuleDetailsTextBox;
-        private System.Windows.Forms.Label ModuleNameLabel;
         public System.Windows.Forms.ImageList ComponentIconList;
+        private System.Windows.Forms.TextBox ModuleNameLabel;
     }
 }
 

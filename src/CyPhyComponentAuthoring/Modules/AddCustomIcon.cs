@@ -24,7 +24,8 @@ namespace CyPhyComponentAuthoring.Modules
         [CyPhyComponentAuthoringInterpreter.CATName(
             NameVal = "Add Icon",
             DescriptionVal = "An custom icon is imported from a file into a resource object in this CyPhy Component and set as the icon.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+            IconResourceKey = "IconFile"
             )
         ]
         public void callAddCustomIcon(object sender, EventArgs e)

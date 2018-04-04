@@ -15,7 +15,8 @@ namespace CyPhyComponentAuthoring.Modules
         [CyPhyComponentAuthoringInterpreter.CATName(
             NameVal = "Export Component Package",
             DescriptionVal = "Export an AVM Component Package in ZIP format, which will include any of this model's dependent artifacts.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Share
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Share,
+            IconResourceKey = "PackageFolder"
             )
         ]
         public void ExportComponentPackage(object sender, EventArgs e)
