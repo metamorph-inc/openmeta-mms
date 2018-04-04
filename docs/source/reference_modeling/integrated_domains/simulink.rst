@@ -7,7 +7,7 @@ The Simulink domain support allows Simulink models to be added to components and
 executed as part of a test bench.  Simulink support requires an installed copy
 of MATLAB and Simulink.
 
-Adding Simulink models to components
+Adding Simulink models to Components
 ------------------------------------
 
 Via the Component Authoring Tool
@@ -16,22 +16,24 @@ Via the Component Authoring Tool
 Simulink blocks in the Simulink standard library may be added to component
 models using the Component Authoring Tool:
 
- 1. To begin, click the Component Authoring Tool icon in the toolbar and select
-    "Add Simulink Model".
- 2. A dialog will appear listing available blocks in the Simulink standard
-    library (this may take a minute or two if Matlab has not been launched
+ #. To begin, click the **Component Authoring Tool** icon, |CAT_TOOL|, in the
+    toolbar and select **Add Simulink Model**.
+    A dialog will appear listing available blocks in the Simulink standard
+    library (this may take a minute or two if MATLAB has not been launched
     recently).
- 3. Select the desired block and click "OK".  A second dialog will appear
+ #. Select the desired block and click **OK**.  A second dialog will appear
     listing parameters available for the selected block.
- 4. Click the checkbox next to each parameter that should appear in the
-    component model, then click OK.  After closing the Component Authoring Tool,
-    the imported Simulink block will appear in the model.
+ #. Click the checkbox next to each parameter that should appear in the
+    component model, then click **OK**.  After closing the Component Authoring
+    Tool, the imported Simulink block will appear in the model.
+
+.. |CAT_TOOL| image:: ../../icons/cat_tool.png
 
 Running Simulink models in a Test Bench
 ---------------------------------------
 
-A number of parameters have special meaning when included in a Test Bench that
-includes the CyPhy2Simulink interpreter in its workflow:
+A number of specifically-named parameters have special meaning when included in
+a Test Bench that includes the **CyPhy2Simulink** interpreter in its workflow:
 
   * **CopyFile**:  Will copy the specified file (specified by a project-relative
     path) to the execution directory before executing the Simulink model.  This
