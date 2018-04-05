@@ -3,7 +3,7 @@
 Simulink
 ========
 
-The Simulink domain support allows Simulink models to be added to components and
+The Simulink domain support allows Simulink models to be added to Components and
 executed as part of a test bench.  Simulink support requires an installed copy
 of MATLAB and Simulink.
 
@@ -13,7 +13,7 @@ Adding Simulink models to Components
 Via the Component Authoring Tool
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simulink blocks in the Simulink standard library may be added to component
+Simulink blocks in the Simulink standard library may be added to Component
 models using the Component Authoring Tool:
 
  #. To begin, click the **Component Authoring Tool** icon, |CAT_TOOL|, in the
@@ -32,7 +32,7 @@ models using the Component Authoring Tool:
 Running Simulink models in a Test Bench
 ---------------------------------------
 
-A number of specifically-named parameters have special meaning when included in
+A number of specifically-named Parameters have special meaning when included in
 a Test Bench that includes the **CyPhy2Simulink** interpreter in its workflow:
 
   * **CopyFile**:  Will copy the specified file (specified by a project-relative
@@ -49,7 +49,7 @@ a Test Bench that includes the **CyPhy2Simulink** interpreter in its workflow:
 
    Example Simulink Test Bench
 
-Any other unconnected parameters in the Test Bench will be passed through to
+Any other unconnected Parameters in the Test Bench will be passed through to
 Simulink as simulation parameters.  A full list of available parameters is
 available within Simulink; some common useful parameters are listed below:
 
@@ -64,6 +64,6 @@ available within Simulink; some common useful parameters are listed below:
     tab of the "Model Configuration Parameters" dialog (accessible from the
     "Simulation" menu within Simulink).
 
-PostProcessing blocks are also supported within Simulink Test Benches; these may
-run user-specified Python code and will execute after the Simulink simulation
-completes.
+OpenMETA :ref:`post_processing_blocks` are also supported within Simulink Test
+Benches; these may run user-specified Python code and will execute after the
+Simulink simulation completes.

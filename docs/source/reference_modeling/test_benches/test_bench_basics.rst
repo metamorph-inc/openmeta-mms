@@ -124,6 +124,17 @@ under test. They can be used as a stimulus so its performance can be analyzed.
 
    5V Source Test Component Used to Power a Design for Evaluation
 
+.. _post_processing_blocks:
+
+PostProcessing Blocks
+~~~~~~~~~~~~~~~~~~~~~
+
+PostProcessing Blocks allow us specify a script to run at the conclusion of
+the main Test Bench execution step and are useful for calculating metrics from
+the generated results of a simulation.
+
+.. image:: images/postprocessing_block.png
+
 Other Objects
 ~~~~~~~~~~~~~
 
