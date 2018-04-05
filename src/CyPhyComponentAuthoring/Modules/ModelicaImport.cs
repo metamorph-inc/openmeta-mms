@@ -21,7 +21,7 @@ namespace CyPhyComponentAuthoring.Modules
                 NameVal = "Add Modelica",
                 DescriptionVal = "An existing Modelica model gets imported and associated with this CyPhy Component.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-                IconResourceKey = "OpenModelica",
+                IconResourceKey = "add_modelica",
                 SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]

@@ -376,6 +376,7 @@ namespace CyPhyComponentAuthoring
         };
 
         [Flags]
+        [ComVisible(true)]
         public enum SupportedDesignEntityType
         {
             None = 0,

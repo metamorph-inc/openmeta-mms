@@ -42,7 +42,7 @@ namespace CyPhyComponentAuthoring.Modules
                 NameVal = "Add Manufacturing",
                 DescriptionVal = "Allows adding an existing Manufacturing Model file to this CyPhy Component model.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-                IconResourceKey = "CyPhy2MfgBom",
+                IconResourceKey = "add_mfg",
                 SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
             )
         ]

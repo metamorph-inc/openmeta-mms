@@ -47,7 +47,7 @@ namespace CyPhyComponentAuthoring.Modules
                 NameVal = "Add Eagle Schematic",
                 DescriptionVal = "An existing Eagle Schematic model gets imported and associated with this CyPhy component.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-                IconResourceKey = "EagleOfficialIcon",
+                IconResourceKey = "add_eagle",
                 SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]

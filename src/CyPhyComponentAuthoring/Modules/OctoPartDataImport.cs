@@ -44,7 +44,7 @@ namespace CyPhyComponentAuthoring.Modules
                 DescriptionVal = "An existing EDAModel's device name is queried with OctoPart and important " +
                                  "component properties are populated, as well as an image and datasheet.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-                IconResourceKey = "octopart_blue",
+                IconResourceKey = "add_octopart",
                 SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]

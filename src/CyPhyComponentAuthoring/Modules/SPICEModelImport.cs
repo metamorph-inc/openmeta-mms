@@ -49,7 +49,8 @@ namespace CyPhyComponentAuthoring.Modules
                 NameVal = "Add SPICE Model",
                 DescriptionVal = "An existing NGSpice model gets imported and associated with this CyPhy component.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component,
+                IconResourceKey = "add_spice"
            )
         ]
         public void ImportSpiceModel_Delegate(object sender, EventArgs e)

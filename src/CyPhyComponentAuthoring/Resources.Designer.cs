@@ -63,6 +63,96 @@ namespace CyPhyComponentAuthoring {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon add_cad {
+            get {
+                object obj = ResourceManager.GetObject("add_cad", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon add_docs {
+            get {
+                object obj = ResourceManager.GetObject("add_docs", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon add_eagle {
+            get {
+                object obj = ResourceManager.GetObject("add_eagle", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon add_icon {
+            get {
+                object obj = ResourceManager.GetObject("add_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon add_mfg {
+            get {
+                object obj = ResourceManager.GetObject("add_mfg", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon add_modelica {
+            get {
+                object obj = ResourceManager.GetObject("add_modelica", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon add_octopart {
+            get {
+                object obj = ResourceManager.GetObject("add_octopart", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon add_simulink {
+            get {
+                object obj = ResourceManager.GetObject("add_simulink", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon add_spice {
+            get {
+                object obj = ResourceManager.GetObject("add_spice", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon CyPhy2CAD {
             get {
                 object obj = ResourceManager.GetObject("CyPhy2CAD", resourceCulture);
@@ -123,6 +213,26 @@ namespace CyPhyComponentAuthoring {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon export_component_folder {
+            get {
+                object obj = ResourceManager.GetObject("export_component_folder", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon generic_module {
+            get {
+                object obj = ResourceManager.GetObject("generic_module", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon IconFile {
             get {
                 object obj = ResourceManager.GetObject("IconFile", resourceCulture);
@@ -136,6 +246,16 @@ namespace CyPhyComponentAuthoring {
         internal static System.Drawing.Icon octopart_blue {
             get {
                 object obj = ResourceManager.GetObject("octopart_blue", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon open_folder {
+            get {
+                object obj = ResourceManager.GetObject("open_folder", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -176,6 +296,16 @@ namespace CyPhyComponentAuthoring {
         internal static System.Drawing.Icon Rename {
             get {
                 object obj = ResourceManager.GetObject("Rename", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon rename_cad {
+            get {
+                object obj = ResourceManager.GetObject("rename_cad", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

@@ -40,7 +40,7 @@ namespace CyPhyComponentAuthoring.Modules
                 NameVal = "Add CAD",
                 DescriptionVal = "Import an existing Creo CAD model and associate it with this CyPhy Component.  You must have Creo installed on this machine to convert the model file.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-                IconResourceKey = "CyPhy2CAD",
+                IconResourceKey = "add_cad",
                 SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
             )
         ]

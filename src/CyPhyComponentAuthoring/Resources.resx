@@ -154,4 +154,43 @@
   <data name="Rename" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Rename.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="add_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add_simulink" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_simulink.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add_cad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_cad.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add_docs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_docs.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add_eagle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_eagle.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add_mfg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_mfg.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add_modelica" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_modelica.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add_octopart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_octopart.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add_spice" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\add_spice.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="export_component_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\export_component_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="generic_module" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\generic_module.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="open_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\open_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rename_cad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\rename_cad.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

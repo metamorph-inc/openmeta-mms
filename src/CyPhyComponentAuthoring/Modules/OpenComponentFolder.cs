@@ -20,7 +20,7 @@ namespace CyPhyComponentAuthoring.Modules
                 NameVal = "Open Folder",
                 DescriptionVal = "Locate the Component's resource folder on the disk, and open it in Windows Explorer.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Publish,
-                IconResourceKey = "OpenFolder",
+                IconResourceKey = "open_folder",
                 SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component | CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.ComponentAssembly
             )
         ]

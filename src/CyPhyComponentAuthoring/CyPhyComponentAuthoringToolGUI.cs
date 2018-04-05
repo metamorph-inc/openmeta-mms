@@ -209,7 +209,7 @@ namespace CyPhyComponentAuthoring
 
             this.Text = attributes.NameVal;
 
-            var iconKey = attributes.IconResourceKey ?? "CyPhyComponentAuthoring";
+            var iconKey = attributes.IconResourceKey ?? "generic_module";
 
             var icon = Resources.ResourceManager.GetObject(iconKey) as Icon ?? Resources.CyPhyComponentAuthoring;
             icon = new Icon(icon, 48, 48);

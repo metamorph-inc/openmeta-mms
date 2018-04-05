@@ -25,7 +25,7 @@ namespace CyPhyComponentAuthoring.Modules
                 NameVal = "Rename CAD File",
                 DescriptionVal = "Rename a previously imported Creo CAD model in this CyPhy Component.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Modify,
-                IconResourceKey = "Rename",
+                IconResourceKey = "rename_cad",
                 SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
             )
         ]

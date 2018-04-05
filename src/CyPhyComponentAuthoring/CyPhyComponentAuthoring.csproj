@@ -213,6 +213,19 @@
     <Content Include="CyPhyComponentAuthoring.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\generic_module.ico" />
+    <None Include="Resources\export_component_folder.ico" />
+    <None Include="Resources\open_folder.ico" />
+    <None Include="Resources\rename_cad.ico" />
+    <None Include="Resources\add_spice.ico" />
+    <None Include="Resources\add_octopart.ico" />
+    <None Include="Resources\add_modelica.ico" />
+    <None Include="Resources\add_mfg.ico" />
+    <None Include="Resources\add_cad.ico" />
+    <None Include="Resources\add_eagle.ico" />
+    <None Include="Resources\add_docs.ico" />
+    <None Include="Resources\add_simulink.ico" />
+    <None Include="Resources\add_icon.ico" />
     <None Include="Resources\octopart_blue.ico" />
     <None Include="Resources\IconFile.ico" />
     <None Include="Resources\PackageFolder.ico" />

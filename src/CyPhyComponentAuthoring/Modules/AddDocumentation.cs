@@ -20,7 +20,7 @@ namespace CyPhyComponentAuthoring.Modules
             NameVal = "Add Documentation",
             DescriptionVal = "An document is imported from a file into a resource object in this Component.",
             RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-            IconResourceKey = "Document",
+            IconResourceKey = "add_docs",
             SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
             )
         ]

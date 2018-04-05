@@ -33,7 +33,7 @@ namespace CyPhyComponentAuthoring.Modules
                 NameVal = "Add Simulink Model",
                 DescriptionVal = "An existing Simulink model gets imported and associated with this CyPhy component.",
                 RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-                IconResourceKey = "CyPhy2Simulink",
+                IconResourceKey = "add_simulink",
                 SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]
