@@ -153,66 +153,6 @@ namespace CyPhyComponentAuthoring {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon CyPhy2CAD {
-            get {
-                object obj = ResourceManager.GetObject("CyPhy2CAD", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon CyPhy2MfgBom {
-            get {
-                object obj = ResourceManager.GetObject("CyPhy2MfgBom", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon CyPhy2Simulink {
-            get {
-                object obj = ResourceManager.GetObject("CyPhy2Simulink", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon CyPhyComponentAuthoring {
-            get {
-                object obj = ResourceManager.GetObject("CyPhyComponentAuthoring", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon Document {
-            get {
-                object obj = ResourceManager.GetObject("Document", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon EagleOfficialIcon {
-            get {
-                object obj = ResourceManager.GetObject("EagleOfficialIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
         internal static System.Drawing.Icon export_component_folder {
             get {
                 object obj = ResourceManager.GetObject("export_component_folder", resourceCulture);
@@ -233,69 +173,9 @@ namespace CyPhyComponentAuthoring {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon IconFile {
-            get {
-                object obj = ResourceManager.GetObject("IconFile", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon octopart_blue {
-            get {
-                object obj = ResourceManager.GetObject("octopart_blue", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
         internal static System.Drawing.Icon open_folder {
             get {
                 object obj = ResourceManager.GetObject("open_folder", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon OpenFolder {
-            get {
-                object obj = ResourceManager.GetObject("OpenFolder", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon OpenModelica {
-            get {
-                object obj = ResourceManager.GetObject("OpenModelica", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon PackageFolder {
-            get {
-                object obj = ResourceManager.GetObject("PackageFolder", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon Rename {
-            get {
-                object obj = ResourceManager.GetObject("Rename", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

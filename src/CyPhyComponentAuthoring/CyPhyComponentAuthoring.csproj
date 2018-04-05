@@ -226,17 +226,6 @@
     <None Include="Resources\add_docs.ico" />
     <None Include="Resources\add_simulink.ico" />
     <None Include="Resources\add_icon.ico" />
-    <None Include="Resources\octopart_blue.ico" />
-    <None Include="Resources\IconFile.ico" />
-    <None Include="Resources\PackageFolder.ico" />
-    <None Include="Resources\Rename.ico" />
-    <None Include="Resources\Document.ico" />
-    <None Include="Resources\OpenFolder.ico" />
-    <None Include="Resources\EagleOfficialIcon.ico" />
-    <None Include="Resources\OpenModelica.ico" />
-    <None Include="Resources\CyPhy2CAD.ico" />
-    <None Include="Resources\CyPhy2MfgBom.ico" />
-    <None Include="Resources\CyPhy2Simulink.ico" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
