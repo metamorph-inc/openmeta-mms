@@ -219,7 +219,7 @@ namespace SchematicUnitTests
                     CyPhy.Component component = CyPhyClasses.Component.Create(cf);
                     component.Name = identifier;
 
-                    module.SetCurrentComp(component);
+                    module.SetCurrentDesignElement(component);
                     module.CurrentObj = component.Impl as MgaFCO;
 
                     try
