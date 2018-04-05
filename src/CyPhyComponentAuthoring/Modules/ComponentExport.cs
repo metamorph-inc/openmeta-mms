@@ -4,6 +4,9 @@ using System.Windows.Forms;
 using GME.CSharp;
 using Exp = CyPhyComponentExporter;
 
+using CyPhy = ISIS.GME.Dsml.CyPhyML.Interfaces;
+using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
+
 namespace CyPhyComponentAuthoring.Modules
 {
     [CyPhyComponentAuthoringInterpreter.IsCATModule(ContainsCATmethod = true)]
@@ -13,10 +16,11 @@ namespace CyPhyComponentAuthoring.Modules
         private bool Close_Dlg;
 
         [CyPhyComponentAuthoringInterpreter.CATName(
-            NameVal = "Export Component Package",
-            DescriptionVal = "Export an AVM Component Package in ZIP format, which will include any of this model's dependent artifacts.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Share,
-            IconResourceKey = "PackageFolder"
+                NameVal = "Export Component Package",
+                DescriptionVal = "Export an AVM Component Package in ZIP format, which will include any of this model's dependent artifacts.",
+                RoleVal = CyPhyComponentAuthoringInterpreter.Role.Share,
+                IconResourceKey = "PackageFolder",
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
             )
         ]
         public void ExportComponentPackage(object sender, EventArgs e)
@@ -37,7 +41,7 @@ namespace CyPhyComponentAuthoring.Modules
 
         void export_component_package()
         {
-            var component = this.GetCurrentComp();
+            var component = (CyPhy.Component) this.GetCurrentDesignElement();
 
             this.Logger = new CyPhyGUIs.GMELogger(CurrentProj, this.GetType().Name);
             this.Logger.WriteDebug("Starting Component Export module...");

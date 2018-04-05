@@ -44,15 +44,16 @@ namespace CyPhyComponentAuthoring.Modules
         private CyPhyGUIs.GMELogger Logger { get; set; }
 
         [CyPhyComponentAuthoringInterpreter.CATName(
-            NameVal = "Add Eagle Schematic",
-            DescriptionVal = "An existing Eagle Schematic model gets imported and associated with this CyPhy component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-            IconResourceKey = "EagleOfficialIcon"
+                NameVal = "Add Eagle Schematic",
+                DescriptionVal = "An existing Eagle Schematic model gets imported and associated with this CyPhy component.",
+                RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+                IconResourceKey = "EagleOfficialIcon",
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]
         public void ImportEagleModel_Delegate(object sender, EventArgs e)
         {
-            ImportEagleModel(this.GetCurrentComp(), ((System.Windows.Forms.Control)sender).FindForm());
+            ImportEagleModel((CyPhy.Component) this.GetCurrentDesignElement(), ((System.Windows.Forms.Control)sender).FindForm());
         }
 
         private void LogMessage(String message, CyPhyGUIs.GMELogger.MessageType_enum type)
@@ -161,7 +162,7 @@ namespace CyPhyComponentAuthoring.Modules
         public void ImportSelectedEagleDevice(string selected, string eagleFilePath, CyPhy.Component comp = null)
         {
             if (comp == null) {
-                comp = GetCurrentComp();
+                comp = (CyPhy.Component) GetCurrentDesignElement();
             }
             //var selected = dp.selectedDevice;
             var splitSelected = selected.Split('\\');
@@ -241,7 +242,7 @@ namespace CyPhyComponentAuthoring.Modules
 
             // find the largest current Y value so our new elements are added below the existing design elements
             greatest_current_y = 0;
-            foreach (var child in GetCurrentComp().AllChildren)
+            foreach (var child in GetCurrentDesignElement().AllChildren)
             {
                 foreach (MgaPart item in (child.Impl as MgaFCO).Parts)
                 {

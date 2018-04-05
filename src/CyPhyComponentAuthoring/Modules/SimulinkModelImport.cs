@@ -30,15 +30,16 @@ namespace CyPhyComponentAuthoring.Modules
         private CyPhyGUIs.GMELogger Logger { get; set; }
         
         [CyPhyComponentAuthoringInterpreter.CATName(
-            NameVal = "Add Simulink Model",
-            DescriptionVal = "An existing Simulink model gets imported and associated with this CyPhy component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-            IconResourceKey = "CyPhy2Simulink"
+                NameVal = "Add Simulink Model",
+                DescriptionVal = "An existing Simulink model gets imported and associated with this CyPhy component.",
+                RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+                IconResourceKey = "CyPhy2Simulink",
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]
         public void ImportSimulinkModel_Delegate(object sender, EventArgs e)
         {
-            ImportSimulinkModel(this.GetCurrentComp(), sender);
+            ImportSimulinkModel((CyPhy.Component) this.GetCurrentDesignElement(), sender);
         }
 
         public void ImportSimulinkModel(CyPhy.Component component, object sender)

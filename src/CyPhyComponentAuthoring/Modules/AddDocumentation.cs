@@ -20,7 +20,8 @@ namespace CyPhyComponentAuthoring.Modules
             NameVal = "Add Documentation",
             DescriptionVal = "An document is imported from a file into a resource object in this Component.",
             RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-            IconResourceKey = "Document"
+            IconResourceKey = "Document",
+            SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
             )
         ]
         public void callAddDocument(object sender, EventArgs e)
@@ -82,7 +83,7 @@ namespace CyPhyComponentAuthoring.Modules
             try
             {
                 // Find the path of the current component
-                String path_Comp = GetCurrentComp().GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
+                String path_Comp = ((CyPhy.Component) GetCurrentDesignElement()).GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
                 String path_CompDocDir = Path.Combine(path_Comp, "doc");
                 if (Directory.Exists(path_CompDocDir) == false)
                 {
@@ -114,7 +115,7 @@ namespace CyPhyComponentAuthoring.Modules
 
             //- A Resource object should be created in the CyPhy Component which points to the file. 
             #region Create Resource
-            CyPhy.Resource ResourceObj = CyPhyClasses.Resource.Create(GetCurrentComp());
+            CyPhy.Resource ResourceObj = CyPhyClasses.Resource.Create((CyPhy.Component) GetCurrentDesignElement());
             ResourceObj.Attributes.ID = Guid.NewGuid().ToString("B");
             ResourceObj.Attributes.Path = "doc\\" + Path.GetFileName(path_DstDocFile);
             ResourceObj.Name = Path.GetFileName(path_DstDocFile);

@@ -18,10 +18,11 @@ namespace CyPhyComponentAuthoring.Modules
         private bool Close_Dlg;
 
         [CyPhyComponentAuthoringInterpreter.CATName(
-            NameVal = "Add Modelica",
-            DescriptionVal = "An existing Modelica model gets imported and associated with this CyPhy Component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
-            IconResourceKey = "OpenModelica"
+                NameVal = "Add Modelica",
+                DescriptionVal = "An existing Modelica model gets imported and associated with this CyPhy Component.",
+                RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+                IconResourceKey = "OpenModelica",
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]
         public void ImportModelicaModel(object sender, EventArgs e)
@@ -45,7 +46,7 @@ namespace CyPhyComponentAuthoring.Modules
             this.Logger = new CyPhyGUIs.GMELogger(CurrentProj, this.GetType().Name);
             this.Logger.WriteDebug("Starting Import Modelica Model module...");
 
-            var component = this.GetCurrentComp();
+            var component = this.GetCurrentDesignElement();
 
             Type type = Type.GetTypeFromProgID("MGA.Interpreter.ModelicaImporter");
             GME.MGA.IMgaComponentEx modelicaImporter = Activator.CreateInstance(type) as GME.MGA.IMgaComponentEx;

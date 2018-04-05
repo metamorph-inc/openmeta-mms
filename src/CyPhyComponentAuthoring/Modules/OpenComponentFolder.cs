@@ -17,10 +17,11 @@ namespace CyPhyComponentAuthoring.Modules
         private bool Close_Dlg;
 
         [CyPhyComponentAuthoringInterpreter.CATName(
-            NameVal = "Open Folder",
-            DescriptionVal = "Locate the Component's resource folder on the disk, and open it in Windows Explorer.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Publish,
-            IconResourceKey = "OpenFolder"
+                NameVal = "Open Folder",
+                DescriptionVal = "Locate the Component's resource folder on the disk, and open it in Windows Explorer.",
+                RoleVal = CyPhyComponentAuthoringInterpreter.Role.Publish,
+                IconResourceKey = "OpenFolder",
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
             )
         ]
         public void OpenFolder(object sender, EventArgs e)
@@ -43,7 +44,7 @@ namespace CyPhyComponentAuthoring.Modules
         {
             this.Logger = new CyPhyGUIs.GMELogger(CurrentProj, this.GetType().Name);
 
-            CyPhy.Component comp = GetCurrentComp();
+            CyPhy.Component comp = (CyPhy.Component) GetCurrentDesignElement();
             var absPath = comp.GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
 
             if (false == Directory.Exists(absPath))

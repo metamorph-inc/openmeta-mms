@@ -214,7 +214,7 @@ namespace ComponentAndArchitectureTeamTest
                 // new instance of the class to test
                 CyPhyComponentAuthoring.Modules.CADModelImport testcam = new CyPhyComponentAuthoring.Modules.CADModelImport();
                 // these class variables need to be set to avoid NULL references
-                testcam.SetCurrentComp(testcomp);
+                testcam.SetCurrentDesignElement(testcomp);
                 testcam.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the module with a part file to skip the CREO steps
@@ -295,7 +295,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.EDAModelImport CATModule = new CyPhyComponentAuthoring.Modules.EDAModelImport();
 
                 //// these class variables need to be set to avoid NULL references
-                CATModule.SetCurrentComp(testcomp);
+                CATModule.SetCurrentDesignElement(testcomp);
                 CATModule.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the primary function directly
@@ -366,7 +366,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.CustomIconAdd CATModule = new CyPhyComponentAuthoring.Modules.CustomIconAdd();
 
                 //// these class variables need to be set to avoid NULL references
-                CATModule.SetCurrentComp(testcomp);
+                CATModule.SetCurrentDesignElement(testcomp);
                 CATModule.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the primary function directly
@@ -425,7 +425,7 @@ namespace ComponentAndArchitectureTeamTest
                 {
                     CurrentObj = testcomp.Impl as MgaFCO
                 };
-                CATModule.SetCurrentComp(testcomp);
+                CATModule.SetCurrentDesignElement(testcomp);
                 CATModule.CurrentObj = (MgaFCO)testcomp.Impl;
 
                 var path_DocToAdd = Path.Combine(META.VersionInfo.MetaPath,
@@ -485,7 +485,7 @@ namespace ComponentAndArchitectureTeamTest
                 component.Name = nameTest;
 
                 var catModule = new CyPhyComponentAuthoring.Modules.SpiceModelImport();
-                catModule.SetCurrentComp(component);
+                catModule.SetCurrentDesignElement(component);
                 catModule.CurrentObj = (MgaFCO)component.Impl;
 
                 catModule.ImportSpiceModel(component, fullSpiceFileName);
@@ -635,14 +635,14 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.EDAModelImport SchematicCATModule = new CyPhyComponentAuthoring.Modules.EDAModelImport();
 
                 //// these class variables need to be set to avoid NULL references
-                SchematicCATModule.SetCurrentComp(component);
+                SchematicCATModule.SetCurrentDesignElement(component);
                 SchematicCATModule.CurrentObj = component.Impl as MgaFCO;
 
                 // call the primary function directly
                 SchematicCATModule.ImportSelectedEagleDevice("\\GENERATOR\\", generatorLbrPath);
 
                 var SpiceCATModule = new CyPhyComponentAuthoring.Modules.SpiceModelImport();
-                SpiceCATModule.SetCurrentComp(component);
+                SpiceCATModule.SetCurrentDesignElement(component);
                 SpiceCATModule.CurrentObj = (MgaFCO)component.Impl;
 
                 SpiceCATModule.ImportSpiceModel(component, fullSpiceFileName);
@@ -826,7 +826,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.MfgModelImport CATModule = new CyPhyComponentAuthoring.Modules.MfgModelImport();
 
                 //// these class variables need to be set to avoid NULL references
-                CATModule.SetCurrentComp(testcomp);
+                CATModule.SetCurrentDesignElement(testcomp);
                 CATModule.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the primary function directly
@@ -880,7 +880,7 @@ namespace ComponentAndArchitectureTeamTest
                 // Import a CAD file into the test project
                 CyPhyComponentAuthoring.Modules.CADModelImport importcam = new CyPhyComponentAuthoring.Modules.CADModelImport();
                 // these class variables need to be set to avoid NULL references
-                importcam.SetCurrentComp(testcomp);
+                importcam.SetCurrentDesignElement(testcomp);
                 importcam.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // import the CAD file
@@ -895,7 +895,7 @@ namespace ComponentAndArchitectureTeamTest
                 // Rename the CAD file
                 CyPhyComponentAuthoring.Modules.CADFileRename renamecam = new CyPhyComponentAuthoring.Modules.CADFileRename();
                 // these class variables need to be set to avoid NULL references
-                renamecam.SetCurrentComp(testcomp);
+                renamecam.SetCurrentDesignElement(testcomp);
                 renamecam.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the module with a part file and the new file name
@@ -1247,7 +1247,7 @@ namespace ComponentAndArchitectureTeamTest
                     CyPhyComponentAuthoring.Modules.OctoPartDataImport CATModule = new CyPhyComponentAuthoring.Modules.OctoPartDataImport();
 
                     //// these class variables need to be set to avoid NULL references
-                    CATModule.SetCurrentComp(comp);
+                    CATModule.SetCurrentDesignElement(comp);
                     CATModule.CurrentObj = compfco;
 
                     // call the primary function directly
@@ -1303,7 +1303,7 @@ namespace ComponentAndArchitectureTeamTest
                     CyPhyComponentAuthoring.Modules.OctoPartDataImport CATModule = new CyPhyComponentAuthoring.Modules.OctoPartDataImport();
 
                     //// these class variables need to be set to avoid NULL references
-                    CATModule.SetCurrentComp(comp);
+                    CATModule.SetCurrentDesignElement(comp);
                     CATModule.CurrentObj = compfco;
 
                     // call the primary function directly
@@ -1351,7 +1351,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.OctoPartDataImport CATModule = new CyPhyComponentAuthoring.Modules.OctoPartDataImport();
 
                 //// these class variables need to be set to avoid NULL references
-                CATModule.SetCurrentComp(comp);
+                CATModule.SetCurrentDesignElement(comp);
                 CATModule.CurrentObj = compfco;
 
                 // call the primary function directly
@@ -1386,7 +1386,7 @@ namespace ComponentAndArchitectureTeamTest
                     CyPhyComponentAuthoring.Modules.OctoPartDataImport CATModule = new CyPhyComponentAuthoring.Modules.OctoPartDataImport();
 
                     //// these class variables need to be set to avoid NULL references
-                    CATModule.SetCurrentComp(comp);
+                    CATModule.SetCurrentDesignElement(comp);
                     CATModule.CurrentObj = compfco;
 
                     // call the primary function directly

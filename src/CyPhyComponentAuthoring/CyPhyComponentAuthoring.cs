@@ -214,11 +214,16 @@ namespace CyPhyComponentAuthoring
                             // If it has the CATName attribute, we'll add it as a button.
                             foreach (CATName attr in meth.GetCustomAttributes(typeof(CATName), true))
                             {
-                                listofCATmethods.Add(new Tuple<CATName, Type, MethodInfo>(attr, classtype, meth));
+                                if ((attr.SupportedDesignEntityTypes & SupportedDesignEntityType.Component) ==
+                                    SupportedDesignEntityType.Component)
+                                {
+                                    listofCATmethods.Add(new Tuple<CATName, Type, MethodInfo>(attr, classtype, meth));
+                                }
                             }
 
                             foreach (CATDnD attr in meth.GetCustomAttributes(typeof(CATDnD), true))
                             {
+                                // NOTE: Drag and drop support only on components for now
                                 dictofCATDnDMethods.Add(attr.Extension.ToLowerInvariant(), new Tuple<Type, MethodInfo>(classtype, meth));
                             }
                         }
@@ -316,7 +321,7 @@ namespace CyPhyComponentAuthoring
             }
 
             // set the current component for use by the new class instance
-            newinst.SetCurrentComp(StashCurrentComponent);
+            newinst.SetCurrentDesignElement(StashCurrentComponent);
             newinst.CurrentObj = StashCurrentObj;
 
             return newinst;
@@ -339,6 +344,14 @@ namespace CyPhyComponentAuthoring
             Publish = 4
         };
 
+        [Flags]
+        public enum SupportedDesignEntityType
+        {
+            None = 0,
+            Component = 1,
+            ComponentAssembly = 2
+        }
+
         [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
         public class CATName : System.Attribute
         {
@@ -346,6 +359,7 @@ namespace CyPhyComponentAuthoring
             public string DescriptionVal;
             public Role RoleVal;
             public string IconResourceKey;
+            public SupportedDesignEntityType SupportedDesignEntityTypes;
         }
 
         [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]

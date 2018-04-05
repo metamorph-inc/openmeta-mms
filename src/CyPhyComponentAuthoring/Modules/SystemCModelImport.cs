@@ -44,14 +44,15 @@ namespace CyPhyComponentAuthoring.Modules
         private CyPhyGUIs.GMELogger Logger { get; set; }
         
         [CyPhyComponentAuthoringInterpreter.CATName(
-            NameVal = "Add SystemC Model",
-            DescriptionVal = "An existing SystemC model gets imported and associated with this CyPhy component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+                NameVal = "Add SystemC Model",
+                DescriptionVal = "An existing SystemC model gets imported and associated with this CyPhy component.",
+                RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]
         public void ImportSystemCModel_Delegate(object sender, EventArgs e)
         {
-            ImportSystemCModel(this.GetCurrentComp());
+            ImportSystemCModel((CyPhy.Component) this.GetCurrentDesignElement());
         }
 
         public void ImportSystemCModel(CyPhy.Component component, String[] path_SystemCFiles = null)
