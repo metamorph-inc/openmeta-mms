@@ -251,7 +251,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.CyPhyComponentAuthoringInterpreter testcai = new CyPhyComponentAuthoring.CyPhyComponentAuthoringInterpreter();
 
                 // Call the create dialog box method
-                testcai.PopulateDialogBox(true);
+                testcai.PopulateDialogBox(CyPhyComponentAuthoring.CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component, true);
                 // Get the dialog box location and verify it is in the center of the screen
                 Assert.True(testcai.ThisDialogBox.StartPosition == FormStartPosition.CenterScreen,
                             String.Format("CAT dialog box is not in the center of the screen")
