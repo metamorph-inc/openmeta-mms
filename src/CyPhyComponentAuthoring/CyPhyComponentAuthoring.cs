@@ -71,14 +71,14 @@ namespace CyPhyComponentAuthoring
 
         private MgaProject StashProject { get; set; }
         private MgaFCO StashCurrentObj { get; set; }
-        private CyPhy.Component StashCurrentComponent { get; set; }
+        private CyPhy.DesignElement StashCurrentComponent { get; set; }
 
         [ComVisible(false)]
         public void Main(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, ComponentStartMode startMode)
         {
             this.Logger.WriteInfo("Running Component Authoring interpreter.");
 
-            if (currentobj != null &&
+            /*if (currentobj != null &&
                 currentobj.Meta.Name == typeof(CyPhy.ComponentAssembly).Name)
             {
                 CyPhy.ComponentAssembly ca = CyPhyClasses.ComponentAssembly.Cast(currentobj);
@@ -108,7 +108,7 @@ namespace CyPhyComponentAuthoring
                 System.IO.File.Copy(fileName, System.IO.Path.Combine(IconFileDestPath, "icon.svg"), true);
                 this.Logger.WriteInfo("Successfully added icon.svg to " + currentobj.Name);
                 return;
-            }
+            }*/
             // verify we are running in a component and that it is not an instance or library
             string return_msg;
             if (!CheckPreConditions(currentobj, out return_msg))
@@ -121,10 +121,38 @@ namespace CyPhyComponentAuthoring
             // stash off the project, currentobj and CurrentComponent parameters for use in the event handlers
             StashProject = project;
             StashCurrentObj = currentobj;
-            StashCurrentComponent = CyPhyClasses.Component.Cast(currentobj);
+
+            if (currentobj.Meta.Name == typeof(CyPhy.Component).Name)
+            {
+                StashCurrentComponent = CyPhyClasses.Component.Cast(currentobj);
+            }
+            else if (currentobj.Meta.Name == typeof(CyPhy.ComponentAssembly).Name)
+            {
+                StashCurrentComponent = CyPhyClasses.ComponentAssembly.Cast(currentobj);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid design element passed to authoring tool");
+            }
+            
+
+            SupportedDesignEntityType designElementType;
+
+            if (StashCurrentComponent is CyPhy.Component)
+            {
+                designElementType = SupportedDesignEntityType.Component;
+            }
+            else if (StashCurrentComponent is CyPhy.ComponentAssembly)
+            {
+                designElementType = SupportedDesignEntityType.ComponentAssembly;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid design element passed to authoring tool");
+            }
 
             // use reflection to populate the dialog box objects
-            PopulateDialogBox();
+            PopulateDialogBox(designElementType);
 
             // To use the domain-specific API:
             //  Create another project with the same name as the paradigm name
@@ -140,10 +168,10 @@ namespace CyPhyComponentAuthoring
         {
             // check if the context is a Component
             if (currentobj == null ||
-                currentobj.Meta.Name != typeof(CyPhy.Component).Name)
+                !(currentobj.Meta.Name == typeof(CyPhy.Component).Name || currentobj.Meta.Name == typeof(CyPhy.ComponentAssembly).Name))
             {
                 // this is a really bad situation we must return
-                message = string.Format("Please open a Component and run this tool from that context.");
+                message = string.Format("Please open a Component or ComponentAssembly and run this tool from that context.");
                 return false;
             }
             else if (currentobj.IsInstance)
@@ -179,7 +207,7 @@ namespace CyPhyComponentAuthoring
         }
 
 
-        public void PopulateDialogBox(bool testonly = false)
+        public void PopulateDialogBox(SupportedDesignEntityType designElementType, bool testonly = false)
         {
             List<Tuple<CATName, Type, MethodInfo>> listofCATmethods = new List<Tuple<CATName, Type, MethodInfo>>();
 
@@ -214,17 +242,20 @@ namespace CyPhyComponentAuthoring
                             // If it has the CATName attribute, we'll add it as a button.
                             foreach (CATName attr in meth.GetCustomAttributes(typeof(CATName), true))
                             {
-                                if ((attr.SupportedDesignEntityTypes & SupportedDesignEntityType.Component) ==
-                                    SupportedDesignEntityType.Component)
+                                if ((attr.SupportedDesignEntityTypes & designElementType) ==
+                                    designElementType)
                                 {
                                     listofCATmethods.Add(new Tuple<CATName, Type, MethodInfo>(attr, classtype, meth));
                                 }
                             }
 
-                            foreach (CATDnD attr in meth.GetCustomAttributes(typeof(CATDnD), true))
+                            if (designElementType == SupportedDesignEntityType.Component)
                             {
-                                // NOTE: Drag and drop support only on components for now
-                                dictofCATDnDMethods.Add(attr.Extension.ToLowerInvariant(), new Tuple<Type, MethodInfo>(classtype, meth));
+                                foreach (CATDnD attr in meth.GetCustomAttributes(typeof(CATDnD), true))
+                                {
+                                    // NOTE: Drag and drop support only on components for now
+                                    dictofCATDnDMethods.Add(attr.Extension.ToLowerInvariant(), new Tuple<Type, MethodInfo>(classtype, meth));
+                                }
                             }
                         }
                     }
