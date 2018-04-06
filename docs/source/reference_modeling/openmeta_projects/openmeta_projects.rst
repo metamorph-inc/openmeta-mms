@@ -49,8 +49,7 @@ adjusting the *Path* attribute of the component in the Object Inspector.
 
    #. Open the component.
    #. Click the Component Authoring Tool (CAT) Button, |CAT_BUTTON|.
-   #. Click the **Open Component Folder** button at the bottom of the CAT
-      Dialog Window.
+   #. Doubl-click the **Open Component Folder** icon in the CAT Dialog Window.
 
 .. |CAT_BUTTON| image:: images/CAT_icon.png
       :alt: CAT Icon

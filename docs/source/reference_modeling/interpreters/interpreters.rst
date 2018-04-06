@@ -20,8 +20,9 @@ Containers*.
 For example, the AddConnector Interpreter assists a user in creating
 connectors around the bare pins in an electronics component model.
 
-.. figure:: images/CAT_trimmed.png
+.. figure:: images/cat_tool.png
    :alt: The Component Authoring Tool Interpreter Dialog
+   :width: 792px
 
    The Component Authoring Tool Interpreter Dialog
 
