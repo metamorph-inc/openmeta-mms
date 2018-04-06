@@ -26,7 +26,7 @@ namespace CyPhyComponentAuthoring.Modules
             DescriptionVal = "An custom icon is imported from a file into a resource object in this CyPhy Component and set as the icon.",
             RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
             IconResourceKey = "add_icon",
-            SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
+            SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component | CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.ComponentAssembly
             )
         ]
         public void callAddCustomIcon(object sender, EventArgs e)
@@ -94,8 +94,25 @@ namespace CyPhyComponentAuthoring.Modules
                 try
                 {
                     // Find the path of the current component
-                    IconFileDestPath = META.ComponentLibraryManager.EnsureComponentFolder((CyPhy.Component) GetCurrentDesignElement());
-                    IconFileDestPath = ((CyPhy.Component) GetCurrentDesignElement()).GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
+                    if (GetCurrentDesignElement() is CyPhy.Component)
+                    {
+                        IconFileDestPath =
+                            META.ComponentLibraryManager.EnsureComponentFolder(
+                                (CyPhy.Component) GetCurrentDesignElement());
+                        IconFileDestPath =
+                            ((CyPhy.Component) GetCurrentDesignElement()).GetDirectoryPath(ComponentLibraryManager
+                                .PathConvention.ABSOLUTE);
+                    }
+                    else if (GetCurrentDesignElement() is CyPhy.ComponentAssembly)
+                    {
+                        IconFileDestPath =
+                            ((CyPhy.ComponentAssembly)GetCurrentDesignElement()).GetDirectoryPath(ComponentLibraryManager
+                                .PathConvention.ABSOLUTE);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Received an invalid DesignElement");
+                    }
 
                     // copy the selected file
                     var FileName = "Icon" + Path.GetExtension(IconFileSourceName).ToLowerInvariant();
@@ -115,14 +132,29 @@ namespace CyPhyComponentAuthoring.Modules
             #region create_resource
             if (icon_file_chosen)
             {
-                CyPhy.Resource ResourceObj = CyPhyClasses.Resource.Create((CyPhy.Component) GetCurrentDesignElement());
+                CyPhy.Resource ResourceObj;
+                String iconPath_RelativeToProjRoot;
+                if (GetCurrentDesignElement() is CyPhy.Component)
+                {
+                    ResourceObj = CyPhyClasses.Resource.Create((CyPhy.Component)GetCurrentDesignElement());
+                    iconPath_RelativeToProjRoot = Path.Combine(((CyPhy.Component)GetCurrentDesignElement()).GetDirectoryPath(ComponentLibraryManager.PathConvention.REL_TO_PROJ_ROOT),
+                        Path.GetFileName(IconFileDestName));
+                }
+                else if (GetCurrentDesignElement() is CyPhy.ComponentAssembly)
+                {
+                    ResourceObj = CyPhyClasses.Resource.Create((CyPhy.ComponentAssembly)GetCurrentDesignElement());
+                    iconPath_RelativeToProjRoot = Path.Combine(((CyPhy.ComponentAssembly)GetCurrentDesignElement()).GetDirectoryPath(ComponentLibraryManager.PathConvention.REL_TO_PROJ_ROOT),
+                        Path.GetFileName(IconFileDestName));
+                }
+                else
+                {
+                    throw new ArgumentException("Received an invalid DesignElement");
+                }
+                
                 ResourceObj.Attributes.ID = Guid.NewGuid().ToString("B");
                 ResourceObj.Attributes.Path = Path.GetFileName(IconFileDestName);
                 ResourceObj.Attributes.Notes = "Custom icon for this component";
                 ResourceObj.Name = Path.GetFileName(IconFileDestName);
-
-                String iconPath_RelativeToProjRoot = Path.Combine(((CyPhy.Component) GetCurrentDesignElement()).GetDirectoryPath(ComponentLibraryManager.PathConvention.REL_TO_PROJ_ROOT),
-                                                                  Path.GetFileName(IconFileDestName));
 
                 if (Path.GetExtension(IconFileDestName) == ".png")
                 {
