@@ -56,6 +56,7 @@
       <HintPath>..\CyPhyMasterInterpreter\bin\Release\CyPhyMasterInterpreter.dll</HintPath>
     </Reference>
     <Reference Include="JobManagerLib, Version=2.0.5.0, Culture=neutral, PublicKeyToken=552171988599f6ff, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\src\JobManager\JobManagerLib\bin\Release\JobManagerLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
