@@ -11,6 +11,7 @@ import py_compile
 PYC_EXCLUDES = ('matlab_proxy', 'jinja2\\asyncsupport.py', 'jinja2\\asyncfilters.py', r'mpmath\libmp\exec_py3.py', r'mpmath\tests',
 r'PyQt4\uic\port_v3')
 
+
 def pyc_exclude(filename):
     for exclude in PYC_EXCLUDES:
         if exclude in filename:
@@ -19,8 +20,6 @@ def pyc_exclude(filename):
 
 
 def print_zip_safe():
-    safes = []
-
     for egg_dir in os.listdir('../bin/Python27/Lib/site-packages'):
         egg_dir = '../bin/Python27/Lib/site-packages/' + egg_dir
         if egg_dir.endswith('.dist-info'):
@@ -49,7 +48,7 @@ def compileall():
             continue
         if os.path.isdir(filename):
             continue
-        dfile = 'META\\' +  os.path.relpath(filename, '..')
+        dfile = 'META\\' + os.path.relpath(filename, '..')
 
         # tmp_name = '__tmp.pyc'   'cfile': tmp_name,
         kwargs = {'file': filename, 'dfile': dfile, 'doraise': True}
@@ -72,6 +71,8 @@ def zipall():
         # TODO add "markupsafe", "lazy_object_proxy" once .pyds are handled
         for package in ("dateutil", "excel_wrapper", "markdown", "mpl_toolkits", "mpmath", "networkx",
                 "OMPython", "colorama", "wrapt", "pytz",
+                # avoid `git grep getframe **pth` manipulators
+                "sphinxcontrib", "logilab", "mpl_toolkits",
                 "imagesize", "snowballstemmer"):
             ls_files = subprocess.Popen('git ls-files  ../bin/Python27/Lib/site-packages/{}/**'.format(package), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = ls_files.communicate()
