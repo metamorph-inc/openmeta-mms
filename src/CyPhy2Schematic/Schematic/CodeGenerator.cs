@@ -142,7 +142,8 @@ namespace CyPhy2Schematic.Schematic
         {
             // write layout file
             string layoutFile = Path.Combine(this.mainParameters.OutputDirectory, "layout-input.json");
-            var myLayout = new Layout.LayoutGenerator(eagle.drawing.Item as Eagle.schematic, TestBench_obj, Logger, this.mainParameters.OutputDirectory, this);
+            var myLayout = new Layout.LayoutGenerator(eagle.drawing.Item as Eagle.schematic, TestBench_obj, Logger, this.mainParameters.OutputDirectory, this,
+                onlyConsiderExactConstraints: ((CyPhy2Schematic_Settings)mainParameters.config).onlyConsiderExactConstraints);
             myLayout.Generate(layoutFile);
             GenerateLayoutCodeResult result = new GenerateLayoutCodeResult();
             result.bonesFound = myLayout.bonesFound;  // MOT-782

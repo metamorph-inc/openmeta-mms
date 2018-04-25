@@ -601,6 +601,7 @@ namespace CyPhy2Schematic
         {
             var config = (this.mainParameters.config as CyPhy2Schematic_Settings);
             string placementDotBat = "placement.bat";
+            string placementOnlyExactBat = "placement.bat --only-consider-exact-constraints";
             string placeonlyDotBat = "placeonly.bat";
 
             this.result.Success = true;
@@ -666,6 +667,10 @@ namespace CyPhy2Schematic
                 else if (config.doPlaceRoute != null)
                 {
                     this.result.RunCommand = placementDotBat;
+                    if (config.onlyConsiderExactConstraints)
+                    {
+                        this.result.RunCommand = placementOnlyExactBat;
+                    }
                 }
                 else if (config.doPlaceOnly != null)
                 {
@@ -688,6 +693,7 @@ namespace CyPhy2Schematic
 
                 // MOT-782: Prevent autorouting if we've placed components off the board.
                 if ((gcResult.bonesFound) && (this.result.RunCommand == placementDotBat))
+                    // FIXME placeonlyDotBat should work with only exact constraints   || this.result.RunCommand == placementOnlyExactBat))
                 {
                     // Found a bone, MOT-782.
                     Logger.WriteWarning("Skipping EAGLE autorouting, since components not found in layout.json were placed off the board.");

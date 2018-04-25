@@ -544,10 +544,109 @@ namespace SchematicUnitTests
             }
         }
 
+        [Fact]
+        public void FourLayerBoardGenerationPlaceAndRoute()
+        {
+            string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string OutputDir = Path.Combine(TestPath,
+                                            "output",
+                                            TestName);
+
+            string TestbenchPath = "/@Testing|kind=Testing|relpos=0/@AraTestBenches|kind=Testing|relpos=0/PlaceAndRoute|kind=TestBench|relpos=0";
+
+            RunInterpreterMain(OutputDir,
+                               TestbenchPath,
+                               new CyPhy2Schematic.CyPhy2Schematic_Settings() { doPlaceRoute = "true" });
+
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
+
+            // At this point, we've created a "layout-input.json" file, and we need to run the "placeonly.bat" file to
+            // synthesize a "schema.brd" file.
+            var pathBoardFile = RunPlaceOnly(OutputDir, "placement.bat");
+
+            // Check that the contents of the schema.brd file seems OK.
+            // See also: http://stackoverflow.com/questions/1427149/count-a-specifc-word-in-a-text-file-in-c-sharp
+            using (StreamReader reader = File.OpenText(pathBoardFile))
+            {
+                string contents = reader.ReadToEnd();
+                Assert.Contains("die meisten Anwendungen passen. Sollte ihre Platine", contents);
+            }
+        }
+
+        [Fact]
+        public void MOT_613_PlaceAndRoute()
+        {
+            string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string OutputDir = Path.Combine(TestPath,
+                                            "output",
+                                            TestName);
+
+            string TestbenchPath = "/@Testing|kind=Testing|relpos=0/@AraTestBenches|kind=Testing|relpos=0/Place_and_Route_for_MOT-613|kind=TestBench|relpos=0"; ;
+
+            RunInterpreterMain(OutputDir,
+                               TestbenchPath,
+                               new CyPhy2Schematic.CyPhy2Schematic_Settings() { doPlaceRoute = "true" });
+
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
+
+            // At this point, we've created a "layout-input.json" file, and we need to run the "placeonly.bat" file to
+            // synthesize a "schema.brd" file.
+            var pathBoardFile = RunPlaceOnly(OutputDir, "placement.bat");
+
+            // Check that the contents of the schema.brd file seems OK.
+            // See also: http://stackoverflow.com/questions/1427149/count-a-specifc-word-in-a-text-file-in-c-sharp
+            using (StreamReader reader = File.OpenText(pathBoardFile))
+            {
+                string contents = reader.ReadToEnd();
+                Assert.Contains("die meisten Anwendungen passen. Sollte ihre Platine", contents);
+            }
+        }
+
+        [Fact]
+        public void TestOnlyConsiderExactConstraints()
+        {
+            string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+
+            string OutputDir = Path.Combine(TestPath,
+                                            "output",
+                                            TestName);
+
+            string TestbenchPath = "/@TestBenches/PR_RelativeConstraintRelativeRotation";
+
+            RunInterpreterMain(OutputDir,
+                               TestbenchPath,
+                               new CyPhy2Schematic.CyPhy2Schematic_Settings() { doPlaceRoute = "true", onlyConsiderExactConstraints = true });
+
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedSchemaFile)), "Failed to generate " + generatedSchemaFile);
+            Assert.True(File.Exists(Path.Combine(OutputDir, generatedLayoutFile)), "Failed to generate " + generatedLayoutFile);
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Generated SPICE model (" + generatedSpiceTemplateFile + "), but shouldn't have.");
+            Assert.False(File.Exists(Path.Combine(OutputDir, generatedSpiceViewerLauncher)), "Generated " + generatedSpiceTemplateFile + ", but shouldn't have.");
+
+            // At this point, we've created a "layout-input.json" file, and we need to run the "placeonly.bat" file to
+            // synthesize a "schema.brd" file.
+            var pathBoardFile = RunPlaceOnly(OutputDir, "placement.bat", "--only-consider-exact-constraints");
+
+            // Check that the contents of the schema.brd file seems OK.
+            // See also: http://stackoverflow.com/questions/1427149/count-a-specifc-word-in-a-text-file-in-c-sharp
+            using (StreamReader reader = File.OpenText(pathBoardFile))
+            {
+                string contents = reader.ReadToEnd();
+                Assert.Contains("die meisten Anwendungen passen. Sollte ihre Platine", contents);
+            }
+        }
+
         /// <summary>
         /// Check for correct generation of Relative Layer constraints
         /// </summary>
-        [Fact]
+            [Fact]
         public void RelativeLayerConstraints()
         {
             string TestName = System.Reflection.MethodBase.GetCurrentMethod().Name;
