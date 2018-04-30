@@ -19,7 +19,9 @@ namespace CyPhyComponentAuthoring.Modules
         [CyPhyComponentAuthoringInterpreter.CATName(
             NameVal = "Add Documentation",
             DescriptionVal = "An document is imported from a file into a resource object in this Component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+            IconResourceKey = "add_docs",
+            SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
             )
         ]
         public void callAddDocument(object sender, EventArgs e)
@@ -29,15 +31,12 @@ namespace CyPhyComponentAuthoring.Modules
             // Close the calling dialog box if the module ran successfully
             if (Close_Dlg)
             {
-                // calling object is a button
-                Button callerBtn = (Button)sender;
-                // the button is in a layout panel
-                TableLayoutPanel innerTLP = (TableLayoutPanel)callerBtn.Parent;
-                // the layout panel is a table within a table
-                TableLayoutPanel outerTLP = (TableLayoutPanel)innerTLP.Parent;
-                // the TLP is in the dialog box
-                Form parentDB = (Form)outerTLP.Parent;
-                parentDB.Close();
+                if (sender is Form)
+                {
+                    // the TLP is in the dialog box
+                    Form parentDB = (Form)sender;
+                    parentDB.Close();
+                }
             }
         }
 
@@ -84,7 +83,7 @@ namespace CyPhyComponentAuthoring.Modules
             try
             {
                 // Find the path of the current component
-                String path_Comp = GetCurrentComp().GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
+                String path_Comp = ((CyPhy.Component) GetCurrentDesignElement()).GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
                 String path_CompDocDir = Path.Combine(path_Comp, "doc");
                 if (Directory.Exists(path_CompDocDir) == false)
                 {
@@ -116,7 +115,7 @@ namespace CyPhyComponentAuthoring.Modules
 
             //- A Resource object should be created in the CyPhy Component which points to the file. 
             #region Create Resource
-            CyPhy.Resource ResourceObj = CyPhyClasses.Resource.Create(GetCurrentComp());
+            CyPhy.Resource ResourceObj = CyPhyClasses.Resource.Create((CyPhy.Component) GetCurrentDesignElement());
             ResourceObj.Attributes.ID = Guid.NewGuid().ToString("B");
             ResourceObj.Attributes.Path = "doc\\" + Path.GetFileName(path_DstDocFile);
             ResourceObj.Name = Path.GetFileName(path_DstDocFile);

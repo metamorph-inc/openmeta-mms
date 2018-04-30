@@ -55,6 +55,10 @@
         [CyPhyGUIs.WorkflowConfigItem]
         [System.Xml.Serialization.XmlIgnore]
         public string skipGUI { get; set; }
+
+        [CyPhyGUIs.WorkflowConfigItem]
+        [System.Xml.Serialization.XmlIgnore]
+        public bool onlyConsiderExactConstraints { get; set; }
     }
 }
 

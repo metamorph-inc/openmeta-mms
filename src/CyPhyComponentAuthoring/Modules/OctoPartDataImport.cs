@@ -40,10 +40,12 @@ namespace CyPhyComponentAuthoring.Modules
         private CyPhyGUIs.GMELogger Logger { get; set; }
 
         [CyPhyComponentAuthoringInterpreter.CATName(
-            NameVal = "Add OctoPart Information",
-            DescriptionVal = "An existing EDAModel's device name is queried with OctoPart and important " +
-                             "component properties are populated, as well as an image and datasheet.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+                NameVal = "Add OctoPart Information",
+                DescriptionVal = "An existing EDAModel's device name is queried with OctoPart and important " +
+                                 "component properties are populated, as well as an image and datasheet.",
+                RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+                IconResourceKey = "add_octopart",
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component
            )
         ]
         public void OctoPartDataImport_Delegate(object sender, EventArgs e)
@@ -67,21 +69,18 @@ namespace CyPhyComponentAuthoring.Modules
             }
             else
             {
-                GetOctoPartData(this.GetCurrentComp());
+                GetOctoPartData((CyPhy.Component) this.GetCurrentDesignElement());
             }
 
             // Close the calling dialog box if the module ran successfully
             if (Close_Dlg)
             {
-                // calling object is a button
-                Button callerBtn = (Button)sender;
-                // the button is in a layout panel
-                TableLayoutPanel innerTLP = (TableLayoutPanel)callerBtn.Parent;
-                // the layout panel is a table within a table
-                TableLayoutPanel outerTLP = (TableLayoutPanel)innerTLP.Parent;
-                // the TLP is in the dialog box
-                Form parentDB = (Form)outerTLP.Parent;
-                parentDB.Close();
+                if (sender is Form)
+                {
+                    // the TLP is in the dialog box
+                    Form parentDB = (Form)sender;
+                    parentDB.Close();
+                }
             }
         }
 
@@ -303,7 +302,7 @@ namespace CyPhyComponentAuthoring.Modules
                 // choose the greater value of PARAMETER_START_X and greatest_current_x, to handle case where models
                 // have not yet been added (give user more space before the property list).
                 greatest_current_x = 0;
-                foreach (var child in GetCurrentComp().AllChildren)
+                foreach (var child in GetCurrentDesignElement().AllChildren)
                 {
                     foreach (MgaPart item in (child.Impl as MgaFCO).Parts)
                     {
@@ -412,7 +411,7 @@ namespace CyPhyComponentAuthoring.Modules
                 {
                     // Invoke icon module
                     CustomIconAdd iconModule = new CustomIconAdd();
-                    iconModule.SetCurrentComp(comp);
+                    iconModule.SetCurrentDesignElement(comp);
                     iconModule.CurrentObj = CurrentObj;
                     iconModule.AddCustomIcon(iconPath);
 
@@ -471,7 +470,7 @@ namespace CyPhyComponentAuthoring.Modules
                 {
                     // Invoke icon module
                     AddDocumentation docModule = new AddDocumentation();
-                    docModule.SetCurrentComp(comp);
+                    docModule.SetCurrentDesignElement(comp);
                     docModule.CurrentObj = CurrentObj;
                     docModule.AddDocument(datasheetPath);
 

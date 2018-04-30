@@ -1579,7 +1579,11 @@ void NewTraverser::EvaluateCADParameters()
 				}
 
 				auto angleRep = UnitUtil::DimensionRep::zeroes;
-				// FIXME: default to deg
+				angleRep.angle = 1;
+				if (incomingVURep.unitRep == angleRep)
+				{
+					unit_name = "deg";
+				}
 
 				ci->Unit() = unit_name;
 			}

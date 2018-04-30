@@ -88,7 +88,6 @@ Bundled Python packages
 * `PyQt4`, `sip.pyd` - [PyQt4](https://riverbankcomputing.com/software/pyqt/intro) - GPLv3
 * `_markerlib` - [Markerlib](https://bitbucket.org/dholth/markerlib/) - MIT License
 * `alabaster` - [Alabaster Sphinx theme](https://alabaster.readthedocs.io/) - BSD License
-* `astroid` - [Astroid](https://github.com/PyCQA/astroid) - LGPLv2.1
 * `babel` - [Babel](http://babel.pocoo.org/) - BSD License
 * `colorama` - [Colorama](https://github.com/tartley/colorama) - BSD License
 * `cycler.py` - [Cycler](https://github.com/matplotlib/cycler) - BSD License
@@ -117,7 +116,6 @@ Bundled Python packages
 * `pip` - [pip](https://pip.pypa.io/en/stable/) - MIT License
 * `pygame` - [PyGame](http://www.pygame.org/news) - LGPLv2.1
 * `pygments` - [Pygments](http://pygments.org/) - BSD License
-* `pylint` - [Pylint](https://github.com/PyCQA/pylint) - GPLv2
 * `pyparsing.py` - [Pyparsing](http://pyparsing.wikispaces.com/) - MIT License
 * `pyqtgraph` [PyQtGraph](http://www.pyqtgraph.org/) - MIT License
 * `pytz` [pytz](http://pythonhosted.org/pytz/) - MIT License

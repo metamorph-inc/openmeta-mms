@@ -46,14 +46,16 @@ namespace CyPhyComponentAuthoring.Modules
         private CyPhyGUIs.GMELogger Logger { get; set; }
         
         [CyPhyComponentAuthoringInterpreter.CATName(
-            NameVal = "Add SPICE Model",
-            DescriptionVal = "An existing NGSpice model gets imported and associated with this CyPhy component.",
-            RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct
+                NameVal = "Add SPICE Model",
+                DescriptionVal = "An existing NGSpice model gets imported and associated with this CyPhy component.",
+                RoleVal = CyPhyComponentAuthoringInterpreter.Role.Construct,
+                SupportedDesignEntityTypes = CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component,
+                IconResourceKey = "add_spice"
            )
         ]
         public void ImportSpiceModel_Delegate(object sender, EventArgs e)
         {
-            ImportSpiceModel(this.GetCurrentComp());
+            ImportSpiceModel((CyPhy.Component) this.GetCurrentDesignElement());
         }
 
         public void ImportSpiceModel(CyPhy.Component component, String path_SpiceFile = null)

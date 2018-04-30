@@ -33,7 +33,7 @@ namespace CyPhy2Schematic.Layout
     {
         // Exceptions just use the "name" and "type" from the base class.
     }
-        
+
     class RangeConstraint : Constraint
     {
         public string x { get; set; }
@@ -94,6 +94,7 @@ namespace CyPhy2Schematic.Layout
         public double yardWidth { set; get; }
         public double maxYardHeight { set; get; }
         private int boneCount;
+        public bool onlyConsiderExactConstraints;
 
 
         // Distance between the yard and the origin of the board:
@@ -104,7 +105,7 @@ namespace CyPhy2Schematic.Layout
 
         // Vertical distance between parts in the yard:
         public double verticalSeparation { set; get; }
-        
+
         public Boneyard()
         {
             bones = new List<Package>(); // Internal bones
@@ -134,23 +135,31 @@ namespace CyPhy2Schematic.Layout
         {
             foreach (Package extraPkg in bones)
             {
-                Debug.WriteLine("Package '{0}': ({3}, {4}) width = {1}, height = {2}", extraPkg.name, extraPkg.koWidth, extraPkg.koHeight, extraPkg.x, extraPkg.y );
+                Debug.WriteLine("Package '{0}': ({3}, {4}) width = {1}, height = {2}", extraPkg.name, extraPkg.koWidth, extraPkg.koHeight, extraPkg.x, extraPkg.y);
             }
         }
 
         public void PlaceBones()
         {
-            if( boneCount > 0 )
+            if (boneCount > 0)
             {
+                double widestBoneWidth;
                 // Get the width of the widest bone
-                double widestBoneWidth = Math.Ceiling( bones[boneCount - 1].koWidth.GetValueOrDefault(0.0) );
+                if (onlyConsiderExactConstraints)
+                {
+                    widestBoneWidth = bones.Max(b => b.koWidth.GetValueOrDefault(b.width));
+                }
+                else
+                {
+                    widestBoneWidth = Math.Ceiling(bones[boneCount - 1].koWidth.GetValueOrDefault(0.0));
+                }
                 bool placedOK = false;
                 for (double testYardWidth = widestBoneWidth; (testYardWidth < (5 * (widestBoneWidth + horizontalSeparation))) && (!placedOK); testYardWidth += (widestBoneWidth + horizontalSeparation))
                 {
                     placedOK = (checkYardPlacement(testYardWidth) < maxYardHeight);
                 }
             }
-         }
+        }
 
         public double checkYardPlacement(double testYardWidth)
         {
@@ -168,8 +177,17 @@ namespace CyPhy2Schematic.Layout
             foreach (Package bone in orderedBones)
             {
                 double remainingWidthInRow = yardWidth - rowWidthUsed;
-                double width =  bone.koWidth.GetValueOrDefault( 0.0 );
-                double height = bone.koHeight.GetValueOrDefault( 0.0 );
+                double width, height;
+                if (onlyConsiderExactConstraints)
+                {
+                    width = bone.koWidth.GetValueOrDefault(bone.width);
+                    height = bone.koHeight.GetValueOrDefault(bone.height);
+                }
+                else
+                {
+                    width = bone.koWidth.GetValueOrDefault(0.0);
+                    height = bone.koHeight.GetValueOrDefault(0.0);
+                }
 
                 // Check if the bone's width will fit in the current row.
                 if (remainingWidthInRow < width)
@@ -184,6 +202,11 @@ namespace CyPhy2Schematic.Layout
                 // Place the bone in the row.
                 bone.x = -(remainingWidthInRow + boardMargin);
                 bone.y = rowBaseHeight;
+                if (onlyConsiderExactConstraints && bone.package.Equals("__spaceClaim__"))
+                {
+                    bone.layer = 0;
+                    bone.rotation = 0;
+                }
                 rowWidthUsed += width + horizontalSeparation;
                 rowHeight = Math.Max(rowHeight, height);
             }
@@ -233,9 +256,9 @@ namespace CyPhy2Schematic.Layout
 
         public static string GetComponentAssemblyChainGuid(IMgaModel componentAssembly)
         {
-	        return componentAssembly.RegistryValue["Elaborator/InstanceGUID_Chain"];
+            return componentAssembly.RegistryValue["Elaborator/InstanceGUID_Chain"];
         }
-        
+
         public static string GetComponentAssemblyManagedGuid(IMgaModel componentAssembly)
         {
             return componentAssembly.StrAttrByName["ManagedGUID"];
@@ -290,14 +313,17 @@ namespace CyPhy2Schematic.Layout
         }
 
         private CodeGenerator CodeGenerator;
+        private bool onlyConsiderExactConstraints;
 
-        public LayoutGenerator(Eagle.schematic sch_obj, TestBench tb_obj, GMELogger inLogger, String pathOutput, CodeGenerator CodeGenerator)
+        public LayoutGenerator(Eagle.schematic sch_obj, TestBench tb_obj, GMELogger inLogger, String pathOutput, CodeGenerator CodeGenerator,
+            bool onlyConsiderExactConstraints)
         {
             this.Logger = inLogger;
             this.pkgPartMap = new Dictionary<Package, Eagle.part>();
             this.partPkgMap = new Dictionary<Eagle.part, Package>();
             this.preroutedPkgMap = new Dictionary<ComponentAssembly, Package>();
             this.CodeGenerator = CodeGenerator;
+            this.onlyConsiderExactConstraints = onlyConsiderExactConstraints;
 
             this.bonesFound = false;    // MOT-782.
 
@@ -395,15 +421,25 @@ namespace CyPhy2Schematic.Layout
             boardLayout.packages = new List<Package>();
             int pkg_idx = 0;
 
+            Boneyard myBoneyard = new Boneyard();
+            myBoneyard.onlyConsiderExactConstraints = onlyConsiderExactConstraints;
+
             // we want to handle prerouted assemblies as follows
             foreach (var ca in tb_obj.ComponentAssemblies)
             {
                 pkg_idx = HandlePreRoutedAsm(ca, pkg_idx);
             }
 
-            #region Add Packages to Layout Json
-            Boneyard myBoneyard = new Boneyard();
+            if (onlyConsiderExactConstraints)
+            {
+                // Boneyard the stuff that isn't exactly constrainted, but has layout data
+                foreach (var pkg in boardLayout.packages.Where(p => p.package.Equals("__spaceClaim__") && p.constraints == null))
+                {
+                    myBoneyard.Add(pkg);
+                }
+            }
 
+            #region Add Packages to Layout Json
             // compute part dimensions from 
             foreach (var part in sch_obj.parts.part)
             {
@@ -475,19 +511,22 @@ namespace CyPhy2Schematic.Layout
                             pkg.multiLayer = true;
 
                         #region GlobalConstraintExceptions
-                        // Global-constraint exceptions related to this part, MOT-728
-                        var exceptions =
+                        if (!onlyConsiderExactConstraints)
+                        {
+                            // Global-constraint exceptions related to this part, MOT-728
+                            var exceptions =
                             from conn in comp.SrcConnections.ApplyGlobalLayoutConstraintExceptionCollection
                             select conn.SrcEnds.GlobalLayoutConstraintException;
 
-                        foreach (var c in exceptions)
-                        {
-                            var pcons = ConvertGlobalLayoutConstraintException(c);
-                            if (pkg.constraints == null)
-                                pkg.constraints = new List<Constraint>();
-                            pkg.constraints.Add(pcons);
+                            foreach (var c in exceptions)
+                            {
+                                var pcons = ConvertGlobalLayoutConstraintException(c);
+                                if (pkg.constraints == null)
+                                    pkg.constraints = new List<Constraint>();
+                                pkg.constraints.Add(pcons);
+                            }
+                            #endregion
                         }
-                        #endregion
 
                         #region ExactConstraints
                         // exact constraints related to this part
@@ -503,25 +542,36 @@ namespace CyPhy2Schematic.Layout
 
                             ConvertExactConstraintFromOrigin(pcons, pkg.width, pkg.height, pkg.originX.Value, pkg.originY.Value);
                             pkg.constraints.Add(pcons);
+                            if (onlyConsiderExactConstraints)
+                            {
+                                // MEGAHACK Transfer the constraint to an absolute position
+                                pkg.x = pcons.x;
+                                pkg.y = pcons.y;
+                                pkg.rotation = pcons.rotation;
+                                pkg.layer = pcons.layer;
+                            }
                         }
                         #endregion
 
                         #region RangeConstraints
-                        // range constraints related to this part
-                        var rangeCons =
-                            from conn in comp.SrcConnections.ApplyRangeLayoutConstraintCollection
-                            select conn.SrcEnds.RangeLayoutConstraint;
-                        foreach (var c in rangeCons)
+                        if (!onlyConsiderExactConstraints)
                         {
-                            var pcons = ConvertRangeLayoutConstraint(c);
-                            if (pcons == null)
-                                continue;
+                            // range constraints related to this part
+                            var rangeCons =
+                                from conn in comp.SrcConnections.ApplyRangeLayoutConstraintCollection
+                                select conn.SrcEnds.RangeLayoutConstraint;
+                            foreach (var c in rangeCons)
+                            {
+                                var pcons = ConvertRangeLayoutConstraint(c);
+                                if (pcons == null)
+                                    continue;
 
-                            if (pkg.constraints == null)
-                                pkg.constraints = new List<Constraint>();
-                            pkg.constraints.Add(pcons);
+                                if (pkg.constraints == null)
+                                    pkg.constraints = new List<Constraint>();
+                                pkg.constraints.Add(pcons);
+                            }
+                            #endregion
                         }
-                        #endregion
 
                         #region PreRoutedAssemblyPart
                         // now handle if this component is part of a pre-routed sub-ckt
@@ -553,9 +603,26 @@ namespace CyPhy2Schematic.Layout
                             // pkg.RelComponentID = GetComponentAssemblyID(preRoutedAsm.Impl.Impl as GME.MGA.MgaModel);
                             pkg.doNotPlace = true;
                         }
+                        else
+                        {
+                            if (onlyConsiderExactConstraints)
+                            {
+                                // Not a prerouted part. Unless it had an exact constraint, put it in the boneyard.
+                                if ((pkg.constraints == null) || pkg.constraints.Any(c => c is ExactConstraint) == false)
+                                {
+                                    myBoneyard.Add(pkg);
+                                }
+                            }
+                        }
                         #endregion
                     }
                 }
+
+                if (onlyConsiderExactConstraints)
+                {
+                    pkg.constraints = null;
+                }
+
                 pkgPartMap.Add(pkg, part);  // add to map
                 partPkgMap.Add(part, pkg);
                 boardLayout.packages.Add(pkg);
@@ -650,7 +717,7 @@ namespace CyPhy2Schematic.Layout
                             }
                             else
                             {
-                                Logger.WriteWarning("Nor port matches package: {0} gate: {1} name: {2}.", pin.package, pin.gate, pin.name );
+                                Logger.WriteWarning("Nor port matches package: {0} gate: {1} name: {2}.", pin.package, pin.gate, pin.name);
                             }
 
                             // find the buildPort
@@ -677,7 +744,7 @@ namespace CyPhy2Schematic.Layout
                                     {
                                         onlyOnePreroute = false;
                                         Logger.WriteWarning("BuildPort: {0}, preRoute = {1} different from a prior port = {2}, port.ID = {3}, buildPort hash code = {4}",
-                                            buildPort.Name, preRouted.name, trace.name, port.ID, buildPort.GetHashCode() );
+                                            buildPort.Name, preRouted.name, trace.name, port.ID, buildPort.GetHashCode());
                                     }
                                 }
                             }
@@ -697,14 +764,14 @@ namespace CyPhy2Schematic.Layout
                     var port = CodeGenerator.polyNetMap.Where(pn => pn.Value == net).FirstOrDefault().Key;
                     if (port != null)
                     {
-                        Logger.WriteInfo("Power/Ground Plane Port: {0}.{1} on net {2}", 
+                        Logger.WriteInfo("Power/Ground Plane Port: {0}.{1} on net {2}",
                             port.Parent.Name, port.Name, net.name);
                         // get the polygon corresponding to the PCB port and convert to Json
                         var brd = (port.ComponentParent.SchematicLib != null) ?
                             port.ComponentParent.SchematicLib.drawing.Item as Eagle.board :
                             null;
                         var bsigs = (brd != null) ? brd.signals : null;
-                        var bsig = (bsigs != null) ? 
+                        var bsig = (bsigs != null) ?
                             bsigs.signal.Where(s => s.name.Equals(port.Name)).FirstOrDefault() :
                             null;
                         if (bsig == null)
@@ -768,256 +835,266 @@ namespace CyPhy2Schematic.Layout
             }
             #endregion
 
-            #region AddRelativeConstraintsToBoardLayout
-            // now process relative constraints - they require that all parts be mapped to packages already
-            foreach (var pkg in boardLayout.packages)
+            if (!onlyConsiderExactConstraints)
             {
-                if (!pkgPartMap.ContainsKey(pkg))
-                    continue;
-
-                var part = pkgPartMap[pkg];
-                var comp = CodeGenerator.partComponentMap.ContainsKey(part) ?
-                    CodeGenerator.partComponentMap[part] : null;
-                var impl = comp != null ? comp.Impl as Tonka.Component : null;
-
-                #region Relative Constraints
-                var relCons =
-                    from conn in impl.SrcConnections.ApplyRelativeLayoutConstraintCollection
-                    select conn.SrcEnds.RelativeLayoutConstraint;
-
-                foreach (var c in relCons)
+                #region AddRelativeConstraintsToBoardLayout
+                // now process relative constraints - they require that all parts be mapped to packages already
+                foreach (var pkg in boardLayout.packages)
                 {
-                    var pcons = new RelativeConstraint();
-                    pcons.type = "relative-pkg";
-                    try
+                    if (!pkgPartMap.ContainsKey(pkg))
+                        continue;
+
+                    var part = pkgPartMap[pkg];
+                    var comp = CodeGenerator.partComponentMap.ContainsKey(part) ?
+                        CodeGenerator.partComponentMap[part] : null;
+                    var impl = comp != null ? comp.Impl as Tonka.Component : null;
+
+                    #region Relative Constraints
+                    var relCons =
+                        from conn in impl.SrcConnections.ApplyRelativeLayoutConstraintCollection
+                        select conn.SrcEnds.RelativeLayoutConstraint;
+
+                    foreach (var c in relCons)
                     {
-                        if (!c.Attributes.XOffset.Equals(""))
-                            pcons.x = Convert.ToDouble(c.Attributes.XOffset, CultureInfo.InvariantCulture);
-                        if (!c.Attributes.YOffset.Equals(""))
-                            pcons.y = Convert.ToDouble(c.Attributes.YOffset, CultureInfo.InvariantCulture);
-                    }
-                    catch (System.FormatException ex)
-                    {
-                        Logger.WriteError("Error in Offset attribute of Constraint: {0}, {1}", c.Name, ex.Message);
-                    }
-                    if (c.Attributes.RelativeLayer != TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.No_Restriction)
-                    {
-                        if (c.Attributes.RelativeLayer == TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Same)
-                            pcons.layer = 0;
-                        else if (c.Attributes.RelativeLayer == TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Opposite)
-                            pcons.layer = 1;
+                        var pcons = new RelativeConstraint();
+                        pcons.type = "relative-pkg";
+                        try
+                        {
+                            if (!c.Attributes.XOffset.Equals(""))
+                                pcons.x = Convert.ToDouble(c.Attributes.XOffset, CultureInfo.InvariantCulture);
+                            if (!c.Attributes.YOffset.Equals(""))
+                                pcons.y = Convert.ToDouble(c.Attributes.YOffset, CultureInfo.InvariantCulture);
+                        }
+                        catch (System.FormatException ex)
+                        {
+                            Logger.WriteError("Error in Offset attribute of Constraint: {0}, {1}", c.Name, ex.Message);
+                        }
+                        if (c.Attributes.RelativeLayer != TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.No_Restriction)
+                        {
+                            if (c.Attributes.RelativeLayer == TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Same)
+                                pcons.layer = 0;
+                            else if (c.Attributes.RelativeLayer == TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Opposite)
+                                pcons.layer = 1;
+                            else
+                                throw new NotSupportedException("RelativeLayer value of " + c.Attributes.RelativeLayer.ToString() + " is not supported");
+                        }
+
+                        if (c.Attributes.RelativeRotation != TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum.No_Restriction)
+                        {
+                            switch (c.Attributes.RelativeRotation)
+                            {
+                                case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._0:
+                                    pcons.relativeRotation = 0;
+                                    break;
+                                case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._90:
+                                    pcons.relativeRotation = 1;
+                                    break;
+                                case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._180:
+                                    pcons.relativeRotation = 2;
+                                    break;
+                                case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._270:
+                                    pcons.relativeRotation = 3;
+                                    break;
+                            }
+                        }
+
+                        // find origin comp
+                        var origCompImpl = (from conn in c.SrcConnections.RelativeLayoutConstraintOriginCollection
+                                            select conn.SrcEnds.Component).FirstOrDefault();
+                        var origComp =
+                            ((origCompImpl != null) && CyPhyBuildVisitor.Components.ContainsKey(origCompImpl.ID)) ?
+                            CyPhyBuildVisitor.Components[origCompImpl.ID] :
+                            null;
+                        var origPart =
+                            ((origComp != null) && CodeGenerator.componentPartMap.ContainsKey(origComp)) ?
+                            CodeGenerator.componentPartMap[origComp] :
+                            null;
+                        var origPkg = ((origPart != null) && partPkgMap.ContainsKey(origPart)) ?
+                            partPkgMap[origPart] :
+                            null;
+                        pcons.pkg_idx = origPkg.pkg_idx.Value;
+
+                        if (origPkg != null)
+                        {
+                            ConvertRelativeConstraintFromOrigin(pcons, origPkg.width, origPkg.height, origPkg.originX.Value, origPkg.originY.Value, pkg.width, pkg.height, pkg.originX.Value, pkg.originY.Value);
+                        }
                         else
-                            throw new NotSupportedException("RelativeLayer value of " + c.Attributes.RelativeLayer.ToString() + " is not supported");
-                    }
-
-                    if (c.Attributes.RelativeRotation != TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum.No_Restriction)
-                    {
-                        switch (c.Attributes.RelativeRotation)
                         {
-                            case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._0:
-                                pcons.relativeRotation = 0;
-                                break;
-                            case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._90:
-                                pcons.relativeRotation = 1;
-                                break;
-                            case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._180:
-                                pcons.relativeRotation = 2;
-                                break;
-                            case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._270:
-                                pcons.relativeRotation = 3;
-                                break;
+                            ConvertRelativeConstraintFromOrigin(pcons, 0, 0, 0, 0, pkg.width, pkg.height, pkg.originX.Value, pkg.originY.Value);
                         }
+
+                        if (pkg.constraints == null)
+                            pkg.constraints = new List<Constraint>();
+                        pkg.constraints.Add(pcons);
                     }
+                    #endregion
 
-                    // find origin comp
-                    var origCompImpl = (from conn in c.SrcConnections.RelativeLayoutConstraintOriginCollection
-                                        select conn.SrcEnds.Component).FirstOrDefault();
-                    var origComp =
-                        ((origCompImpl != null) && CyPhyBuildVisitor.Components.ContainsKey(origCompImpl.ID)) ?
-                        CyPhyBuildVisitor.Components[origCompImpl.ID] :
-                        null;
-                    var origPart =
-                        ((origComp != null) && CodeGenerator.componentPartMap.ContainsKey(origComp)) ?
-                        CodeGenerator.componentPartMap[origComp] :
-                        null;
-                    var origPkg = ((origPart != null) && partPkgMap.ContainsKey(origPart)) ?
-                        partPkgMap[origPart] :
-                        null;
-                    pcons.pkg_idx = origPkg.pkg_idx.Value;
+                    #region Relative Range Constraints
+                    var relRangeCons =
+                        from conn in impl.SrcConnections.ApplyRelativeRangeLayoutConstraintCollection
+                        select conn.SrcEnds.RelativeRangeConstraint;
 
-                    if (origPkg != null)
+                    foreach (var c in relRangeCons)
                     {
-                        ConvertRelativeConstraintFromOrigin(pcons, origPkg.width, origPkg.height, origPkg.originX.Value, origPkg.originY.Value, pkg.width, pkg.height, pkg.originX.Value, pkg.originY.Value);
+                        var cons = ConvertRelativeRangeConstraint(c);
+                        if (pkg.constraints == null)
+                            pkg.constraints = new List<Constraint>();
+                        pkg.constraints.Add(cons);
                     }
-                    else
-                    {
-                        ConvertRelativeConstraintFromOrigin(pcons, 0, 0, 0, 0, pkg.width, pkg.height, pkg.originX.Value, pkg.originY.Value);
-                    }
-
-                    if (pkg.constraints == null)
-                        pkg.constraints = new List<Constraint>();
-                    pkg.constraints.Add(pcons);
-                }
-                #endregion
-
-                #region Relative Range Constraints
-                var relRangeCons =
-                    from conn in impl.SrcConnections.ApplyRelativeRangeLayoutConstraintCollection
-                    select conn.SrcEnds.RelativeRangeConstraint;
-
-                foreach (var c in relRangeCons)
-                {
-                    var cons = ConvertRelativeRangeConstraint(c);
-                    if (pkg.constraints == null)
-                        pkg.constraints = new List<Constraint>();
-                    pkg.constraints.Add(cons);
+                    #endregion
                 }
                 #endregion
             }
-            #endregion
 
-            #region Apply relative constraints to prerouted packages
-            foreach (var assemblyPackagePair in preroutedPkgMap)
+            if (!onlyConsiderExactConstraints)
             {
-                var componentAssembly = assemblyPackagePair.Key;
-                var componentAssemblyImpl = componentAssembly.Impl;
-
-                var pkg = assemblyPackagePair.Value;
-
-                #region Relative Constraints
-                var relCons =
-                    from conn in componentAssemblyImpl.SrcConnections.ApplyRelativeLayoutConstraintCollection
-                    select conn.SrcEnds.RelativeLayoutConstraint;
-
-                foreach (var c in relCons)
+                #region Apply relative constraints to prerouted packages
+                foreach (var assemblyPackagePair in preroutedPkgMap)
                 {
-                    var pcons = new RelativeConstraint();
-                    pcons.type = "relative-pkg";
-                    try
+                    var componentAssembly = assemblyPackagePair.Key;
+                    var componentAssemblyImpl = componentAssembly.Impl;
+
+                    var pkg = assemblyPackagePair.Value;
+
+                    #region Relative Constraints
+                    var relCons =
+                        from conn in componentAssemblyImpl.SrcConnections.ApplyRelativeLayoutConstraintCollection
+                        select conn.SrcEnds.RelativeLayoutConstraint;
+
+                    foreach (var c in relCons)
                     {
-                        if (!c.Attributes.XOffset.Equals(""))
-                            pcons.x = Convert.ToDouble(c.Attributes.XOffset, CultureInfo.InvariantCulture);
-                        if (!c.Attributes.YOffset.Equals(""))
-                            pcons.y = Convert.ToDouble(c.Attributes.YOffset, CultureInfo.InvariantCulture);
-                    }
-                    catch (System.FormatException ex)
-                    {
-                        Logger.WriteError("Error in Offset attribute of Constraint: {0}, {1}", c.Name, ex.Message);
-                    }
-                    if (c.Attributes.RelativeLayer != TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.No_Restriction)
-                    {
-                        if (c.Attributes.RelativeLayer == TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Same)
-                            pcons.layer = 0;
-                        else if (c.Attributes.RelativeLayer == TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Opposite)
-                            pcons.layer = 1;
+                        var pcons = new RelativeConstraint();
+                        pcons.type = "relative-pkg";
+                        try
+                        {
+                            if (!c.Attributes.XOffset.Equals(""))
+                                pcons.x = Convert.ToDouble(c.Attributes.XOffset, CultureInfo.InvariantCulture);
+                            if (!c.Attributes.YOffset.Equals(""))
+                                pcons.y = Convert.ToDouble(c.Attributes.YOffset, CultureInfo.InvariantCulture);
+                        }
+                        catch (System.FormatException ex)
+                        {
+                            Logger.WriteError("Error in Offset attribute of Constraint: {0}, {1}", c.Name, ex.Message);
+                        }
+                        if (c.Attributes.RelativeLayer != TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.No_Restriction)
+                        {
+                            if (c.Attributes.RelativeLayer == TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Same)
+                                pcons.layer = 0;
+                            else if (c.Attributes.RelativeLayer == TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeLayer_enum.Opposite)
+                                pcons.layer = 1;
+                            else
+                                throw new NotSupportedException("RelativeLayer value of " + c.Attributes.RelativeLayer.ToString() + " is not supported");
+                        }
+
+                        if (c.Attributes.RelativeRotation != TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum.No_Restriction)
+                        {
+                            switch (c.Attributes.RelativeRotation)
+                            {
+                                case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._0:
+                                    pcons.relativeRotation = 0;
+                                    break;
+                                case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._90:
+                                    pcons.relativeRotation = 1;
+                                    break;
+                                case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._180:
+                                    pcons.relativeRotation = 2;
+                                    break;
+                                case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._270:
+                                    pcons.relativeRotation = 3;
+                                    break;
+                            }
+                        }
+
+                        // find origin comp
+                        var origCompImpl = (from conn in c.SrcConnections.RelativeLayoutConstraintOriginCollection
+                                            select conn.SrcEnds.Component).FirstOrDefault();
+                        var origComp =
+                            ((origCompImpl != null) && CyPhyBuildVisitor.Components.ContainsKey(origCompImpl.ID)) ?
+                            CyPhyBuildVisitor.Components[origCompImpl.ID] :
+                            null;
+                        var origPart =
+                            ((origComp != null) && CodeGenerator.componentPartMap.ContainsKey(origComp)) ?
+                            CodeGenerator.componentPartMap[origComp] :
+                            null;
+                        var origPkg = ((origPart != null) && partPkgMap.ContainsKey(origPart)) ?
+                            partPkgMap[origPart] :
+                            null;
+                        pcons.pkg_idx = origPkg.pkg_idx.Value;
+
+                        if (origPkg != null)
+                        {
+                            //The space claims for pre-routed subassemblies don't seem to have an originX/originY value; we'll default
+                            //it to 0,0 (the center of the package) while respecting it if present (in case something changes later)
+                            var destOriginX = pkg.originX.GetValueOrDefault(0.0);
+                            var destOriginY = pkg.originY.GetValueOrDefault(0.0);
+                            ConvertRelativeConstraintFromOrigin(pcons, origPkg.width, origPkg.height, origPkg.originX.Value, origPkg.originY.Value, pkg.width, pkg.height, destOriginX, destOriginY);
+                        }
                         else
-                            throw new NotSupportedException("RelativeLayer value of " + c.Attributes.RelativeLayer.ToString() + " is not supported");
-                    }
-
-                    if (c.Attributes.RelativeRotation != TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum.No_Restriction)
-                    {
-                        switch (c.Attributes.RelativeRotation)
                         {
-                            case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._0:
-                                pcons.relativeRotation = 0;
-                                break;
-                            case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._90:
-                                pcons.relativeRotation = 1;
-                                break;
-                            case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._180:
-                                pcons.relativeRotation = 2;
-                                break;
-                            case TonkaClasses.RelativeLayoutConstraint.AttributesClass.RelativeRotation_enum._270:
-                                pcons.relativeRotation = 3;
-                                break;
+                            var destOriginX = pkg.originX.GetValueOrDefault(0.0);
+                            var destOriginY = pkg.originY.GetValueOrDefault(0.0);
+                            ConvertRelativeConstraintFromOrigin(pcons, 0, 0, 0, 0, pkg.width, pkg.height, destOriginX, destOriginY);
                         }
+
+                        if (pkg.constraints == null)
+                            pkg.constraints = new List<Constraint>();
+                        pkg.constraints.Add(pcons);
                     }
+                    #endregion
 
-                    // find origin comp
-                    var origCompImpl = (from conn in c.SrcConnections.RelativeLayoutConstraintOriginCollection
-                                        select conn.SrcEnds.Component).FirstOrDefault();
-                    var origComp =
-                        ((origCompImpl != null) && CyPhyBuildVisitor.Components.ContainsKey(origCompImpl.ID)) ?
-                        CyPhyBuildVisitor.Components[origCompImpl.ID] :
-                        null;
-                    var origPart =
-                        ((origComp != null) && CodeGenerator.componentPartMap.ContainsKey(origComp)) ?
-                        CodeGenerator.componentPartMap[origComp] :
-                        null;
-                    var origPkg = ((origPart != null) && partPkgMap.ContainsKey(origPart)) ?
-                        partPkgMap[origPart] :
-                        null;
-                    pcons.pkg_idx = origPkg.pkg_idx.Value;
+                    #region Relative Range Constraints
+                    var relRangeCons =
+                        from conn in componentAssemblyImpl.SrcConnections.ApplyRelativeRangeLayoutConstraintCollection
+                        select conn.SrcEnds.RelativeRangeConstraint;
 
-                    if (origPkg != null)
+                    foreach (var c in relRangeCons)
                     {
-                        //The space claims for pre-routed subassemblies don't seem to have an originX/originY value; we'll default
-                        //it to 0,0 (the center of the package) while respecting it if present (in case something changes later)
-                        var destOriginX = pkg.originX.GetValueOrDefault(0.0);
-                        var destOriginY = pkg.originY.GetValueOrDefault(0.0);
-                        ConvertRelativeConstraintFromOrigin(pcons, origPkg.width, origPkg.height, origPkg.originX.Value, origPkg.originY.Value, pkg.width, pkg.height, destOriginX, destOriginY);
+                        var cons = ConvertRelativeRangeConstraint(c);
+                        if (pkg.constraints == null)
+                            pkg.constraints = new List<Constraint>();
+                        pkg.constraints.Add(cons);
                     }
-                    else
-                    {
-                        var destOriginX = pkg.originX.GetValueOrDefault(0.0);
-                        var destOriginY = pkg.originY.GetValueOrDefault(0.0);
-                        ConvertRelativeConstraintFromOrigin(pcons, 0, 0, 0, 0, pkg.width, pkg.height, destOriginX, destOriginY);
-                    }
-
-                    if (pkg.constraints == null)
-                        pkg.constraints = new List<Constraint>();
-                    pkg.constraints.Add(pcons);
+                    #endregion
                 }
-                #endregion
 
-                #region Relative Range Constraints
-                var relRangeCons =
-                    from conn in componentAssemblyImpl.SrcConnections.ApplyRelativeRangeLayoutConstraintCollection
-                    select conn.SrcEnds.RelativeRangeConstraint;
 
-                foreach (var c in relRangeCons)
-                {
-                    var cons = ConvertRelativeRangeConstraint(c);
-                    if (pkg.constraints == null)
-                        pkg.constraints = new List<Constraint>();
-                    pkg.constraints.Add(cons);
-                }
                 #endregion
             }
-
-
-            #endregion
-
-            #region Check Parent Containers for Constraints
-            // now process relative constraints - they require that all parts be mapped to packages already
-            foreach (var pkg in boardLayout.packages)
+            if (!onlyConsiderExactConstraints)
             {
-                if (!pkgPartMap.ContainsKey(pkg))
-                    continue;
-
-                var part = pkgPartMap[pkg];
-                var comp = CodeGenerator.partComponentMap.ContainsKey(part) ?
-                    CodeGenerator.partComponentMap[part] : null;
-
-                var parentConstraints = GetConstraintsOfParents(comp);
-                if (parentConstraints != null)
+                #region Check Parent Containers for Constraints
+                // now process relative constraints - they require that all parts be mapped to packages already
+                foreach (var pkg in boardLayout.packages)
                 {
-                    if (pkg.constraints == null)
-                        pkg.constraints = new List<Constraint>();
+                    if (!pkgPartMap.ContainsKey(pkg))
+                        continue;
 
-                    foreach (Constraint parentConstraint in parentConstraints)
+                    var part = pkgPartMap[pkg];
+                    var comp = CodeGenerator.partComponentMap.ContainsKey(part) ?
+                        CodeGenerator.partComponentMap[part] : null;
+
+                    var parentConstraints = GetConstraintsOfParents(comp);
+                    if (parentConstraints != null)
                     {
-                        if (parentConstraint is ExactConstraint)
-                        {
-                            var exactConstraint = (ExactConstraint)parentConstraint;
-                            ConvertExactConstraintFromOrigin(exactConstraint, pkg.width, pkg.height, pkg.originX.Value, pkg.originY.Value);
-                        }
-                    }
+                        if (pkg.constraints == null)
+                            pkg.constraints = new List<Constraint>();
 
-                    pkg.constraints.AddRange(parentConstraints);
+                        foreach (Constraint parentConstraint in parentConstraints)
+                        {
+                            if (parentConstraint is ExactConstraint)
+                            {
+                                var exactConstraint = (ExactConstraint)parentConstraint;
+                                ConvertExactConstraintFromOrigin(exactConstraint, pkg.width, pkg.height, pkg.originX.Value, pkg.originY.Value);
+                            }
+                        }
+
+                        pkg.constraints.AddRange(parentConstraints);
+                    }
                 }
+                #endregion
             }
-            #endregion
+
+
 
             #region Add Template Border and Vias to Layout
             if (!String.IsNullOrWhiteSpace(boardLayout.boardTemplate))
@@ -1049,7 +1126,7 @@ namespace CyPhy2Schematic.Layout
                             curve = 0
                         };
                         Eagle.wire wire_seg = (Eagle.wire)border_seg;
-                        
+
                         border_segment.wire.x1 = Convert.ToDouble(wire_seg.x1);
                         border_segment.wire.x2 = Convert.ToDouble(wire_seg.x2);
                         border_segment.wire.y1 = Convert.ToDouble(wire_seg.y1);
@@ -1190,16 +1267,17 @@ namespace CyPhy2Schematic.Layout
          * form they use in GME) to being relative to lower left corner of the inner bounding box
          * (the form they need to be in for the layout solver)
          */
-        private void ConvertExactConstraintFromOrigin(ExactConstraint constraint, 
+        private void ConvertExactConstraintFromOrigin(ExactConstraint constraint,
             double packageWidth, double packageHeight,
             double originX, double originY)
         {
             int rotation = constraint.rotation != null ? constraint.rotation.Value : 0;
-            int layer = constraint.layer != null ? constraint.layer.Value : 0;  
+            int layer = constraint.layer != null ? constraint.layer.Value : 0;
             int mrot = (layer == 1) ? rotation + 2 : rotation;  // bottom layer needs mirroring
             mrot = mrot % 4;
 
-            switch(mrot) {
+            switch (mrot)
+            {
                 case 0:
                     if (constraint.x.HasValue) //constraint.x/constraint.y might not exist (they're nullable)--  if they don't, keep them null
                     {
@@ -1257,7 +1335,7 @@ namespace CyPhy2Schematic.Layout
             {
                 double constraintX = constraint.x.Value;
                 //No rotation
-                constraint.x  = (0.1) * Math.Ceiling(10.0 * (constraintX + (originPackageWidth / 2.0 - targetPackageWidth / 2.0) - (originPackageOriginX - targetPackageOriginX)));
+                constraint.x = (0.1) * Math.Ceiling(10.0 * (constraintX + (originPackageWidth / 2.0 - targetPackageWidth / 2.0) - (originPackageOriginX - targetPackageOriginX)));
                 //90 degrees CCW
                 constraint.x1 = (0.1) * Math.Ceiling(10.0 * (constraintX + (originPackageWidth / 2.0 - targetPackageHeight / 2.0) - (originPackageOriginX + targetPackageOriginY)));
                 //180 degrees CCW
@@ -1279,7 +1357,7 @@ namespace CyPhy2Schematic.Layout
             }
         }
 
-        private void GetLayoutParametersFromTestBench( TestBench tb_obj, LayoutJson.Layout boardLayout,
+        private void GetLayoutParametersFromTestBench(TestBench tb_obj, LayoutJson.Layout boardLayout,
             out string boardWidth,
             out string boardHeight,
             out string boardEdgeSpace,  // MOT-789
@@ -1317,7 +1395,7 @@ namespace CyPhy2Schematic.Layout
             var bes = tb_obj.Parameters.FirstOrDefault(p => p.Name.Equals("boardEdgeSpace"));
             var ics = tb_obj.Parameters.FirstOrDefault(p => p.Name.Equals("interChipSpace"));
             var bc = tb_obj.Parameters.FirstOrDefault(p => p.Name.Equals("boardCutouts"));
-            
+
             boardWidth = (bw != null) ? bw.Value : null;
             boardHeight = (bh != null) ? bh.Value : null;
             boardEdgeSpace = (bes != null) ? bes.Value : null;
@@ -1326,7 +1404,7 @@ namespace CyPhy2Schematic.Layout
 
         }
 
-  
+
         private void GetLayoutParametersFromPcbComponent(TestBench tb_obj, LayoutJson.Layout boardLayout,
             out string boardWidth, out string boardHeight, out string boardEdgeSpace, out string interChipSpace, out string boardCutouts)
         {
@@ -1349,7 +1427,7 @@ namespace CyPhy2Schematic.Layout
                 boardCutouts = null;
                 return;
             }
-            
+
             var comp = compImpl as Tonka.Component;
 
             boardLayout.boardTemplate = GetResource(comp, "boardTemplate");
@@ -1366,7 +1444,7 @@ namespace CyPhy2Schematic.Layout
             string resFile = null;
             var res = (comp != null) ? comp.Children.ResourceCollection.FirstOrDefault(r =>
                                             r.Name.ToUpper().Contains(resName.ToUpper()))
-                                            : null;            
+                                            : null;
             if (res != null)
             {
                 // This file is being copied into the results folder elsewhere.
@@ -1438,10 +1516,10 @@ namespace CyPhy2Schematic.Layout
                     rcBottom.y = rcTop.y = String.Format(CultureInfo.InvariantCulture, "{0}:{1}", cbox.MinY, cbox.MaxY);
                     boardLayout.constraints.Add(rcTop);
                     boardLayout.constraints.Add(rcBottom);
-                    Logger.WriteInfo("Adding board cutout constraint: X {0}:{1}, Y {2}:{3}", 
-                                     cbox.MinX, 
+                    Logger.WriteInfo("Adding board cutout constraint: X {0}:{1}, Y {2}:{3}",
+                                     cbox.MinX,
                                      cbox.MaxX,
-                                     cbox.MinY, 
+                                     cbox.MinY,
                                      cbox.MaxY);
                 }
             }
@@ -1634,7 +1712,7 @@ namespace CyPhy2Schematic.Layout
                 if (maximumRectangleX > boundingBox.MaxX) boundingBox.MaxX = maximumRectangleX;
                 if (minimumRectangleY < boundingBox.MinY) boundingBox.MinY = minimumRectangleY;
                 if (maximumRectangleY > boundingBox.MaxY) boundingBox.MaxY = maximumRectangleY;
-            } 
+            }
             foreach (Eagle.frame frame in spkg.Items.Where(s => s is Eagle.frame))
             {
                 if (frame == null) continue;
@@ -1704,7 +1782,7 @@ namespace CyPhy2Schematic.Layout
         private RangeConstraint ConvertRangeLayoutConstraint(Tonka.RangeLayoutConstraint c)
         {
             var pcons = new RangeConstraint();
-            
+
             var xRangeProvided = !String.IsNullOrWhiteSpace(c.Attributes.XRange);
             var yRangeProvided = !String.IsNullOrWhiteSpace(c.Attributes.YRange);
             var layerProvided = !String.IsNullOrWhiteSpace(c.Attributes.LayerRange);
@@ -1748,12 +1826,12 @@ namespace CyPhy2Schematic.Layout
                 Logger.WriteWarning("Layer Range using deprecated seperator '-', please update to ':'");
 
             if (xRangeProvided)
-                pcons.x = c.Attributes.XRange.Replace('-',':');
+                pcons.x = c.Attributes.XRange.Replace('-', ':');
             if (yRangeProvided)
-                pcons.y = c.Attributes.YRange.Replace('-',':');
+                pcons.y = c.Attributes.YRange.Replace('-', ':');
             if (layerProvided)
-                pcons.layer = c.Attributes.LayerRange.Replace('-',':');
-            
+                pcons.layer = c.Attributes.LayerRange.Replace('-', ':');
+
             return pcons;
         }
 
@@ -1822,18 +1900,18 @@ namespace CyPhy2Schematic.Layout
             // range constraints related to this assembly
             var rangeCons = from conn in asm.Impl.SrcConnections
                                                  .ApplyRangeLayoutConstraintCollection
-                                      select ConvertRangeLayoutConstraint(conn.SrcEnds.RangeLayoutConstraint);
+                            select ConvertRangeLayoutConstraint(conn.SrcEnds.RangeLayoutConstraint);
 
             if (rangeCons != null)
                 rtn.AddRange(rangeCons);
             #endregion
 
-            
+
             #region RelativeRangeConstraints
             // range constraints related to this assembly
             var relativeRangeCons = from conn in asm.Impl.SrcConnections
                                                     .ApplyRelativeRangeLayoutConstraintCollection
-                                        select ConvertRelativeRangeConstraint(conn.SrcEnds.RelativeRangeConstraint);
+                                    select ConvertRelativeRangeConstraint(conn.SrcEnds.RelativeRangeConstraint);
 
             if (relativeRangeCons != null)
                 rtn.AddRange(relativeRangeCons);
@@ -1850,6 +1928,7 @@ namespace CyPhy2Schematic.Layout
 
             // 4) all nets belonging to the pre-routed subcircuit are tagged with the spaceClaim part
             // 5) these nets are added to json with absolute location (same as parts above)
+
 
             if (CodeGenerator.preRouted.ContainsKey(obj))
             {
@@ -1916,7 +1995,7 @@ namespace CyPhy2Schematic.Layout
                     }
 
                     if (bbidx == 0)
-                    {                        
+                    {
                         preroutedPkgMap.Add(obj, pkg);
                         origPkgIdx = (int)pkg.pkg_idx;
 
@@ -1942,7 +2021,25 @@ namespace CyPhy2Schematic.Layout
 
                             ConvertExactConstraintFromOrigin(pcons, pkg.width, pkg.height, originX, originY);
 
-                            pkg.constraints.Add(pcons);
+                            if (onlyConsiderExactConstraints)
+                            {
+                                // Don't make a constraint, just set exact
+                                pkg.x = pcons.x;
+                                pkg.y = pcons.y;
+                                pkg.layer = pcons.layer;
+                                pkg.rotation = pcons.rotation;
+
+                                if (pkg.layer == null)
+                                {
+                                    pkg.layer = 0;
+                                }
+                                if (pkg.rotation == null)
+                                {
+                                    pkg.rotation = 0;
+                                }
+                            }
+                            else
+                                pkg.constraints.Add(pcons);
                         }
                         #endregion
                     }
@@ -2020,8 +2117,8 @@ namespace CyPhy2Schematic.Layout
         public void Generate(string layoutFile)
         {
             StreamWriter writer = new StreamWriter(layoutFile);
-            string sjson = JsonConvert.SerializeObject(boardLayout, Newtonsoft.Json.Formatting.Indented, 
-                new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore }) ;
+            string sjson = JsonConvert.SerializeObject(boardLayout, Newtonsoft.Json.Formatting.Indented,
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             writer.Write(sjson);
             writer.Close();
         }
@@ -2148,7 +2245,7 @@ namespace CyPhy2Schematic.Layout
             var buildPort = (port != null) &&
                 CyPhyBuildVisitor.Ports.ContainsKey(port.ID) ?
                 CyPhyBuildVisitor.Ports[port.ID] : null;
-            if (null == buildPort) 
+            if (null == buildPort)
             {
                 if (null == port)
                 {
@@ -2162,7 +2259,7 @@ namespace CyPhy2Schematic.Layout
             else if (portTraceMap.ContainsKey(buildPort))
             {
                 gmeLogger.WriteWarning("The buildPort {0} with hashCode {1} was already found in portTraceMap with net {2} instead of {3}.",
-                    buildPort.Name, buildPort.GetHashCode(), portTraceMap[buildPort].name,  n.name);
+                    buildPort.Name, buildPort.GetHashCode(), portTraceMap[buildPort].name, n.name);
             }
 
             // now remember this net with the spice-build port 
@@ -2170,7 +2267,7 @@ namespace CyPhy2Schematic.Layout
             if ((buildPort != null) && (!portTraceMap.ContainsKey(buildPort)))
             {
                 portTraceMap.Add(buildPort, n);
-                gmeLogger.WriteInfo("Mapping portTraceMap Build Port {0} with hashCode {1} to Net {2}", buildPort.Name, buildPort.GetHashCode(), n.name );
+                gmeLogger.WriteInfo("Mapping portTraceMap Build Port {0} with hashCode {1} to Net {2}", buildPort.Name, buildPort.GetHashCode(), n.name);
             }
 
             if (CodeGenerator.verbose)
@@ -2182,7 +2279,7 @@ namespace CyPhy2Schematic.Layout
             }
 
         }
-       
+
 
         public LayoutJson.Layout Parse(string layoutFile)
         {

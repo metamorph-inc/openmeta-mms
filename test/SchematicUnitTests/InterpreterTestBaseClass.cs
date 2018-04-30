@@ -66,9 +66,8 @@ namespace SchematicUnitTests
             return result;
         }
 
-        public static String RunPlaceOnly(string OutputDir)
+        public static String RunPlaceOnly(string OutputDir, string batchFileName="placeonly.bat", string batchFileArgs="")
         {
-            string batchFileName = "placeonly.bat";
             var pathBatchFile = Path.Combine(OutputDir,
                                              batchFileName);
             Assert.True(File.Exists(pathBatchFile));
@@ -78,7 +77,7 @@ namespace SchematicUnitTests
                                              generatedBoardFileName);
 
             // Run the "placeonly.bat" batch file
-            var processInfo = new ProcessStartInfo("cmd.exe", "/c \"" + batchFileName + "\"")
+            var processInfo = new ProcessStartInfo("cmd.exe", "/c \"" + batchFileName + "\" " + batchFileArgs)
             {
                 WorkingDirectory = OutputDir,
                 CreateNoWindow = true,
@@ -87,15 +86,47 @@ namespace SchematicUnitTests
                 RedirectStandardOutput = true
             };
 
-            using (var process = Process.Start(processInfo))
+            using (var process = new Process())
             {
-                process.WaitForExit(10000);
+                process.StartInfo = processInfo;
+                StringBuilder stdout = new StringBuilder(), stderr = new StringBuilder();
+                process.OutputDataReceived += (s, d) =>
+                {
+                    if (d.Data != null)
+                    {
+                        lock (stdout)
+                        {
+                            stdout.AppendLine(d.Data);
+                        }
+                    }
+                };
+                process.ErrorDataReceived += (s, d) =>
+                {
+                    if (d.Data != null)
+                    {
+                        lock (stderr)
+                        {
+                            stderr.AppendLine(d.Data);
+                        }
+                    }
+                };
+                process.Start();
+                process.BeginErrorReadLine();
+                process.BeginOutputReadLine();
 
-                // Read the streams
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
+                int timeout = 60;
+                if (process.WaitForExit(timeout * 1000) == false)
+                {
+                    throw new TimeoutException(String.Format("{0} {1} did not complete within {2} seconds", batchFileName, batchFileArgs, timeout));
+                }
 
-                Assert.True(0 == process.ExitCode, output + Environment.NewLine + error);
+                lock (stdout)
+                {
+                    lock (stderr)
+                    {
+                        Assert.True(0 == process.ExitCode, String.Format("{0} {1} failed with code {2}\n", batchFileName, batchFileArgs, process.ExitCode) + stdout.ToString() + Environment.NewLine + stderr.ToString());
+                    }
+                }
             }
 
             // Check that the "schema.brd" file exists.

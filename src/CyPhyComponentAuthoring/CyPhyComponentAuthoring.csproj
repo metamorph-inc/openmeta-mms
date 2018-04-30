@@ -115,9 +115,13 @@
     <Compile Include="Modules\OpenComponentFolder.cs" />
     <Compile Include="Modules\SPICEModelImport.cs" />
     <Compile Include="Modules\RenameCADFile.cs" />
-    <Compile Include="Modules\SystemCModelImport.cs" />
     <Compile Include="Registrar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <!--$ADDITIONALFILES$-->
   </ItemGroup>
   <ItemGroup>
@@ -198,11 +202,29 @@
     <EmbeddedResource Include="GUIs\SimulinkLibraryBrowser.resx">
       <DependentUpon>SimulinkLibraryBrowser.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="CyPhyComponentAuthoring.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\generic_module.ico" />
+    <None Include="Resources\export_component_folder.ico" />
+    <None Include="Resources\open_folder.ico" />
+    <None Include="Resources\rename_cad.ico" />
+    <None Include="Resources\add_spice.ico" />
+    <None Include="Resources\add_octopart.ico" />
+    <None Include="Resources\add_modelica.ico" />
+    <None Include="Resources\add_mfg.ico" />
+    <None Include="Resources\add_cad.ico" />
+    <None Include="Resources\add_eagle.ico" />
+    <None Include="Resources\add_docs.ico" />
+    <None Include="Resources\add_simulink.ico" />
+    <None Include="Resources\add_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

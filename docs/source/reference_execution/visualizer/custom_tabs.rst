@@ -379,6 +379,6 @@ comment (:kbd:`Control-Shift-C`) the ``debug`` call and uncomment the
     187|)
 
 In some cases you may not experience proper breaking behaviour using standard
-breakpoints. You can place a ``broswer()`` call in your code at the location
+breakpoints. You can place a ``browser()`` call in your code at the location
 you desire to break, and this should result in the execution pausing and an
 interactive prompt being shown when the call is reached.

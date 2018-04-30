@@ -104,7 +104,7 @@ namespace ComponentCreator
 
                 var import = new CyPhyComponentAuthoring.Modules.EDAModelImport();
 
-                import.SetCurrentComp(cyPhyComponent);
+                import.SetCurrentDesignElement(cyPhyComponent);
                 import.CurrentObj = component;
 
                 import.ImportSelectedEagleDevice(deviceName, eagleFilePath, cyPhyComponent);

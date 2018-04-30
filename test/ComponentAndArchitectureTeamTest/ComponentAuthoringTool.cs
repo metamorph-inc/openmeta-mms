@@ -214,7 +214,7 @@ namespace ComponentAndArchitectureTeamTest
                 // new instance of the class to test
                 CyPhyComponentAuthoring.Modules.CADModelImport testcam = new CyPhyComponentAuthoring.Modules.CADModelImport();
                 // these class variables need to be set to avoid NULL references
-                testcam.SetCurrentComp(testcomp);
+                testcam.SetCurrentDesignElement(testcomp);
                 testcam.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the module with a part file to skip the CREO steps
@@ -251,7 +251,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.CyPhyComponentAuthoringInterpreter testcai = new CyPhyComponentAuthoring.CyPhyComponentAuthoringInterpreter();
 
                 // Call the create dialog box method
-                testcai.PopulateDialogBox(true);
+                testcai.PopulateDialogBox(CyPhyComponentAuthoring.CyPhyComponentAuthoringInterpreter.SupportedDesignEntityType.Component, true);
                 // Get the dialog box location and verify it is in the center of the screen
                 Assert.True(testcai.ThisDialogBox.StartPosition == FormStartPosition.CenterScreen,
                             String.Format("CAT dialog box is not in the center of the screen")
@@ -295,7 +295,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.EDAModelImport CATModule = new CyPhyComponentAuthoring.Modules.EDAModelImport();
 
                 //// these class variables need to be set to avoid NULL references
-                CATModule.SetCurrentComp(testcomp);
+                CATModule.SetCurrentDesignElement(testcomp);
                 CATModule.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the primary function directly
@@ -366,7 +366,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.CustomIconAdd CATModule = new CyPhyComponentAuthoring.Modules.CustomIconAdd();
 
                 //// these class variables need to be set to avoid NULL references
-                CATModule.SetCurrentComp(testcomp);
+                CATModule.SetCurrentDesignElement(testcomp);
                 CATModule.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the primary function directly
@@ -425,7 +425,7 @@ namespace ComponentAndArchitectureTeamTest
                 {
                     CurrentObj = testcomp.Impl as MgaFCO
                 };
-                CATModule.SetCurrentComp(testcomp);
+                CATModule.SetCurrentDesignElement(testcomp);
                 CATModule.CurrentObj = (MgaFCO)testcomp.Impl;
 
                 var path_DocToAdd = Path.Combine(META.VersionInfo.MetaPath,
@@ -485,7 +485,7 @@ namespace ComponentAndArchitectureTeamTest
                 component.Name = nameTest;
 
                 var catModule = new CyPhyComponentAuthoring.Modules.SpiceModelImport();
-                catModule.SetCurrentComp(component);
+                catModule.SetCurrentDesignElement(component);
                 catModule.CurrentObj = (MgaFCO)component.Impl;
 
                 catModule.ImportSpiceModel(component, fullSpiceFileName);
@@ -635,14 +635,14 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.EDAModelImport SchematicCATModule = new CyPhyComponentAuthoring.Modules.EDAModelImport();
 
                 //// these class variables need to be set to avoid NULL references
-                SchematicCATModule.SetCurrentComp(component);
+                SchematicCATModule.SetCurrentDesignElement(component);
                 SchematicCATModule.CurrentObj = component.Impl as MgaFCO;
 
                 // call the primary function directly
                 SchematicCATModule.ImportSelectedEagleDevice("\\GENERATOR\\", generatorLbrPath);
 
                 var SpiceCATModule = new CyPhyComponentAuthoring.Modules.SpiceModelImport();
-                SpiceCATModule.SetCurrentComp(component);
+                SpiceCATModule.SetCurrentDesignElement(component);
                 SpiceCATModule.CurrentObj = (MgaFCO)component.Impl;
 
                 SpiceCATModule.ImportSpiceModel(component, fullSpiceFileName);
@@ -826,7 +826,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.MfgModelImport CATModule = new CyPhyComponentAuthoring.Modules.MfgModelImport();
 
                 //// these class variables need to be set to avoid NULL references
-                CATModule.SetCurrentComp(testcomp);
+                CATModule.SetCurrentDesignElement(testcomp);
                 CATModule.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the primary function directly
@@ -880,7 +880,7 @@ namespace ComponentAndArchitectureTeamTest
                 // Import a CAD file into the test project
                 CyPhyComponentAuthoring.Modules.CADModelImport importcam = new CyPhyComponentAuthoring.Modules.CADModelImport();
                 // these class variables need to be set to avoid NULL references
-                importcam.SetCurrentComp(testcomp);
+                importcam.SetCurrentDesignElement(testcomp);
                 importcam.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // import the CAD file
@@ -895,7 +895,7 @@ namespace ComponentAndArchitectureTeamTest
                 // Rename the CAD file
                 CyPhyComponentAuthoring.Modules.CADFileRename renamecam = new CyPhyComponentAuthoring.Modules.CADFileRename();
                 // these class variables need to be set to avoid NULL references
-                renamecam.SetCurrentComp(testcomp);
+                renamecam.SetCurrentDesignElement(testcomp);
                 renamecam.CurrentObj = testcomp.Impl as MgaFCO;
 
                 // call the module with a part file and the new file name
@@ -968,166 +968,6 @@ namespace ComponentAndArchitectureTeamTest
         };
 
 
-        [Fact]
-        public void SystemCImport()     // MOT-419
-        {
-            String nameTest = "SystemCImport";
-
-            fixture.proj.PerformInTransaction(delegate
-            {
-                // SystemC header file name
-                string shortScHeaderFileName = "ccled.h";
-
-                // SystemC source file name
-                string shortScSourceFileName = "ccled.cpp";
-
-                // Set the SystemC file path
-                string scFilesDirectoryPath = getScTestFileDirectory();
-
-                // Set the combined path to the SPICE file
-                string[] fullSystemCFileNames = 
-                {
-                    Path.Combine(scFilesDirectoryPath, shortScHeaderFileName),
-                    Path.Combine(scFilesDirectoryPath, shortScSourceFileName)
-                };
-
-                Assert.True( File.Exists( fullSystemCFileNames[ 0 ] ) );
-                Assert.True( File.Exists( fullSystemCFileNames[ 1 ] ) );
-
-
-                var rf = CyPhyClasses.RootFolder.GetRootFolder(fixture.proj);
-                var cf = CyPhyClasses.Components.Create(rf);
-                cf.Name = nameTest;
-                CyPhy.Component component = CyPhyClasses.Component.Create(cf);
-                component.Name = nameTest;
-
-                var catModule = new CyPhyComponentAuthoring.Modules.SystemCModelImport();
-
-                catModule.ImportSystemCModel(component, fullSystemCFileNames);
-
-                // Check that one and only one CyPhy SystemC model exists in the component.
-                Assert.Equal(1, component.Children.SystemCModelCollection.Count());
-
-                var newSystemCModel = component.Children.SystemCModelCollection.First();
-
-                // Check that the CyPhy SystemC model has 13 ports.
-                Assert.Equal(13, newSystemCModel.Children.SystemCPortCollection.Count());
-
-                portData_s[] expectedPortData =     
-                {
-                    new portData_s( "le", SystemCAttributesClass.Directionality_enum.@in, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "oeBar", SystemCAttributesClass.Directionality_enum.@in, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-
-                    new portData_s( "out0", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "out1", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "out2", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "out3", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "out4", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "out5", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "out6", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "out7", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-
-                    new portData_s( "sdi", SystemCAttributesClass.Directionality_enum.@in, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                    new portData_s( "sdi_clk", SystemCAttributesClass.Directionality_enum.@in, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-
-                    new portData_s( "sdo", SystemCAttributesClass.Directionality_enum.@out, SystemCAttributesClass.DataType_enum.sc_logic, 1 ),
-                };
-
-
-                // Check the SystemC model's port names, etc.
-                Dictionary<string, portData_s> portDict = new Dictionary<string, portData_s>();
-                foreach (var newPort in expectedPortData )
-                {
-                    portDict.Add(newPort.name, newPort);
-                }
-
-                // Check that each port matches an expected set of attributes.
-                foreach (var newPort in newSystemCModel.Children.SystemCPortCollection)
-                {
-                    portData_s expectedPort = portDict[newPort.Name];
-                    Assert.NotNull(expectedPort);
-                    Assert.Equal<string>(expectedPort.name, newPort.Name);
-                    Assert.Equal(expectedPort.type, newPort.Attributes.DataType);
-                    Assert.Equal(expectedPort.direction, newPort.Attributes.Directionality);
-                    Assert.Equal(expectedPort.dimension, newPort.Attributes.DataTypeDimension);
-                }
-
-                // Check that there are two resources.
-                Assert.Equal(2, component.Children.ResourceCollection.Count());
-                var firstResource = component.Children.ResourceCollection.First();
-                var secondResource = component.Children.ResourceCollection.ElementAt(1);
-                var sourceResource = firstResource;
-                var headerResource = secondResource;
-                if (Path.GetExtension(sourceResource.Attributes.Path) == ".h")
-                {
-                    headerResource = sourceResource;
-                    sourceResource = secondResource;
-                }
-
-                // Check the sourceResource file.
-
-                // Check that the it's named correctly.
-                Assert.Equal("SystemCModelSourceFile", sourceResource.Name);
-
-                // Check that the resource has the copied-SystemC-file's relative path.
-                Assert.Equal(Path.Combine("SystemC", "ccled.cpp"), sourceResource.Attributes.Path);
-
-                // Check connection between the SystemC model and the sourceResource
-                var srcConnections = sourceResource.SrcConnections.UsesResourceCollection;
-                var dstConnections = sourceResource.DstConnections.UsesResourceCollection;
-                var connUnion = srcConnections.Union(dstConnections);
-                int connectionCount = 0;
-                foreach (var connection in connUnion)
-                {
-                    if ((connection.DstEnd.ID == sourceResource.ID) ||
-                        (connection.SrcEnd.ID == sourceResource.ID))
-                    {
-                        connectionCount += 1;
-                    }
-                }
-                Assert.Equal(1, connectionCount);
-
-                // Check the header resource file
-
-                // Check that the resource is named correctly.
-                Assert.Equal("SystemCModelHeaderFile", headerResource.Name);
-
-                // Check that the resource has the copied-SystemC-file's relative path.
-                Assert.Equal(Path.Combine("SystemC", "ccled.h"), headerResource.Attributes.Path);
-
-                // Check connection between the SystemC model and the headerResource
-                srcConnections = headerResource.SrcConnections.UsesResourceCollection;
-                dstConnections = headerResource.DstConnections.UsesResourceCollection;
-                connUnion = srcConnections.Union(dstConnections);
-                connectionCount = 0;
-                foreach (var connection in connUnion)
-                {
-                    if ((connection.DstEnd.ID == headerResource.ID) ||
-                        (connection.SrcEnd.ID == headerResource.ID))
-                    {
-                        connectionCount += 1;
-                    }
-                }
-                Assert.Equal(1, connectionCount);
-
-                //// Check that there are 13 port compositions
-                Assert.Equal(13, newSystemCModel.Children.SystemCPortCollection.Count());
-
-                // Create a path to the current component folder
-                string PathForComp = component.GetDirectoryPath(ComponentLibraryManager.PathConvention.ABSOLUTE);
-
-                // Verify that the systemC header file has been copied to its destination
-                string destinationFilePath = Path.Combine(PathForComp, headerResource.Attributes.Path);
-                string sourceFilePath = fullSystemCFileNames[0];
-                Assert.True(FileCompare(sourceFilePath, destinationFilePath));
-
-                // Verify that the systemC source file has been copied to its destination
-                destinationFilePath = Path.Combine(PathForComp, sourceResource.Attributes.Path);
-                sourceFilePath = fullSystemCFileNames[1];
-                Assert.True(FileCompare(sourceFilePath, destinationFilePath));
-            });
-        }
-                    
         //--------------------------------------------------------------------------------------------------
         /// <summary>
         /// VerboseFileCompare -- compares the contents of two text files for equality, ignoring newlines.
@@ -1247,7 +1087,7 @@ namespace ComponentAndArchitectureTeamTest
                     CyPhyComponentAuthoring.Modules.OctoPartDataImport CATModule = new CyPhyComponentAuthoring.Modules.OctoPartDataImport();
 
                     //// these class variables need to be set to avoid NULL references
-                    CATModule.SetCurrentComp(comp);
+                    CATModule.SetCurrentDesignElement(comp);
                     CATModule.CurrentObj = compfco;
 
                     // call the primary function directly
@@ -1303,7 +1143,7 @@ namespace ComponentAndArchitectureTeamTest
                     CyPhyComponentAuthoring.Modules.OctoPartDataImport CATModule = new CyPhyComponentAuthoring.Modules.OctoPartDataImport();
 
                     //// these class variables need to be set to avoid NULL references
-                    CATModule.SetCurrentComp(comp);
+                    CATModule.SetCurrentDesignElement(comp);
                     CATModule.CurrentObj = compfco;
 
                     // call the primary function directly
@@ -1351,7 +1191,7 @@ namespace ComponentAndArchitectureTeamTest
                 CyPhyComponentAuthoring.Modules.OctoPartDataImport CATModule = new CyPhyComponentAuthoring.Modules.OctoPartDataImport();
 
                 //// these class variables need to be set to avoid NULL references
-                CATModule.SetCurrentComp(comp);
+                CATModule.SetCurrentDesignElement(comp);
                 CATModule.CurrentObj = compfco;
 
                 // call the primary function directly
@@ -1386,7 +1226,7 @@ namespace ComponentAndArchitectureTeamTest
                     CyPhyComponentAuthoring.Modules.OctoPartDataImport CATModule = new CyPhyComponentAuthoring.Modules.OctoPartDataImport();
 
                     //// these class variables need to be set to avoid NULL references
-                    CATModule.SetCurrentComp(comp);
+                    CATModule.SetCurrentDesignElement(comp);
                     CATModule.CurrentObj = compfco;
 
                     // call the primary function directly
