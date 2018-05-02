@@ -303,6 +303,7 @@ RetryIOleFilter.lib
 
 externals/desert/**/Release/*
 src/bin/
+src/x64/bin/
 src/**/Release/*
 src/**/ReleaseUnicode/*
 src/**/Debug/*
