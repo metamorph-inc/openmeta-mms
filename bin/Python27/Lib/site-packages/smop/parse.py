@@ -14,10 +14,10 @@ from . import yacc
 from .lexer import tokens
 from . import lexer
 
-#import builtins
+# import builtins
 import smop.node as node
-#from node import *
-from . import resolve,options
+# from node import *
+from . import options
 
 # ident properties (set in parse.py)
 # ----------------------------------
