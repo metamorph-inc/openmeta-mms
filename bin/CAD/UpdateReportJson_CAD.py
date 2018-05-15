@@ -66,7 +66,7 @@ def update_manifest(tbmanifest, computedValuesXml):
                                                                                    metric['Unit']))
                         else:
                             # metric was not found in results
-                            logger.debug('ComputedMetrics.xml key error: {0}'.format(key))
+                            logger.debug('{1} key error: {0}'.format(key, computedValuesXml))
             else:
                 # create warning message
                 logger.debug('% does not contain Metrics' % tbmanifest)
