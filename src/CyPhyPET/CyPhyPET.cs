@@ -1221,6 +1221,7 @@ namespace CyPhyPET
                     string mgaDir = Path.GetDirectoryName(Path.GetFullPath(((MgaFCO)fco).Project.ProjectConnStr.Substring("MGA=".Length)));
                     var oldPath = Path.Combine(mgaDir, oldFilename);
                     OpenFileDialog dialog = new OpenFileDialog();
+                    dialog.RestoreDirectory = true;
                     dialog.DefaultExt = defaultExt;
                     dialog.CheckFileExists = true;
                     if (String.IsNullOrEmpty(oldFilename) == false
@@ -1511,6 +1512,7 @@ namespace CyPhyPET
             var filename = excel.Attributes.ExcelFilename;
             filename = Path.Combine(mgaDir, filename);
             OpenFileDialog dialog = new OpenFileDialog();
+            dialog.RestoreDirectory = true;
             dialog.DefaultExt = ".xlsx";
             dialog.CheckFileExists = true;
             if (String.IsNullOrEmpty(filename) == false
