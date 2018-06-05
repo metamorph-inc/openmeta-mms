@@ -54,7 +54,8 @@
   
   <Target Name="DownloadNuGetPackages">
     <Exec Command="..\bin\Python27\Scripts\python.exe -c &quot;import build_msi; build_msi.get_nuget_packages()&quot;" WorkingDirectory="$(MSBuildThisFileDirectory)\deploy"
-        CustomErrorRegularExpression="subprocess.CalledProcessError:"/>
+        CustomErrorRegularExpression="is not found in the following primary source"
+    />
   </Target>
 
   <Target Name="GenerateDocumentation">
