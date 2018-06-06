@@ -286,6 +286,9 @@ deploy/CAD_Installs/META.ExtractACM-XMLfromCreoModels.1.5.2.17-gitcdd109ed/
 *.VC.opendb
 trail.txt.*
 **/CyPhyPET_combine.cmd
+**/CAD/config.pro
+**/CAD/rels.inf
+**/CAD/std.out
 tmp.mga
 license.rtf
 ComponentLib.tlb
