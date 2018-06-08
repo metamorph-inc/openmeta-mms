@@ -83,7 +83,7 @@
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 0;
-            this.OkButton.Text = "OK";
+            this.OkButton.Text = "Select";
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
@@ -99,13 +99,15 @@
             // 
             // SimulinkLibraryBrowser
             // 
+            this.AcceptButton = this.OkButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(662, 436);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "SimulinkLibraryBrowser";
-            this.Text = "SimulinkLibraryBrowser";
+            this.Text = "Select Simulink block to import";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);

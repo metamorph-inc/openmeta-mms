@@ -89,6 +89,10 @@ namespace CyPhyComponentAuthoring.GUIs
                 OkButton.Enabled = false;
             }
         }
+
+        private void SimulinkLibraryGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+        }
     }
 
     public class SimulinkLibrary

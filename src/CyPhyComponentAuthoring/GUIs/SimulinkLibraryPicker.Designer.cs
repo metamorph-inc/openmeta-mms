@@ -57,6 +57,7 @@
             this.SimulinkLibraryGridView.Size = new System.Drawing.Size(572, 195);
             this.SimulinkLibraryGridView.TabIndex = 0;
             this.SimulinkLibraryGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.SimulinkLibraryGridView_CellContentClick);
+            this.SimulinkLibraryGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.SimulinkLibraryGridView_CellDoubleClick);
             this.SimulinkLibraryGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.SimulinkLibraryGridView_SelectionChanged);
             this.SimulinkLibraryGridView.SelectionChanged += new System.EventHandler(this.SimulinkLibraryGridView_SelectionChanged);
             // 
@@ -65,11 +66,11 @@
             this.OkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OkButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OkButton.Enabled = false;
-            this.OkButton.Location = new System.Drawing.Point(429, 214);
+            this.OkButton.Location = new System.Drawing.Point(413, 214);
             this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(75, 23);
+            this.OkButton.Size = new System.Drawing.Size(91, 23);
             this.OkButton.TabIndex = 1;
-            this.OkButton.Text = "OK";
+            this.OkButton.Text = "Load Library";
             this.OkButton.UseVisualStyleBackColor = true;
             // 
             // CancelButton
@@ -103,14 +104,16 @@
             // 
             // SimulinkLibraryPicker
             // 
+            this.AcceptButton = this.OkButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(597, 249);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.SimulinkLibraryGridView);
             this.Name = "SimulinkLibraryPicker";
-            this.Text = "SimulinkLibraryPicker";
+            this.Text = "Select Simulink library";
             ((System.ComponentModel.ISupportInitialize)(this.SimulinkLibraryGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
