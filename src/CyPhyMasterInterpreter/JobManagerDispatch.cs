@@ -156,7 +156,7 @@ namespace CyPhyMasterInterpreter
                 string exe = Path.Combine(assemblyDir, "PETBrowser.exe");
                 if (!File.Exists(exe))
                 {
-                    exe = Path.getFullPath(Path.Combine(assemblyDir, "..\\..\\..\\PETBrowser\\bin\\Release\\PETBrowser.exe"));
+                    exe = Path.GetFullPath(Path.Combine(assemblyDir, "..\\..\\..\\PETBrowser\\bin\\Release\\PETBrowser.exe"));
                 }
 
                 if (!File.Exists(exe))
