@@ -103,6 +103,44 @@ namespace CyPhyComponentExporter
             }
         }
 
+        [ComVisible(true)]
+        public void ExportComponent(IMgaFCO component, String s_outFilePath)
+        {
+            if (component.Meta.Name != typeof(Component).Name)
+            {
+                throw new ApplicationException("Component must be of kind 'Component'");
+            }
+            var dsmlComponent = new CyPhyClasses.Component();
+            dsmlComponent.Impl = component;
+            var avmComponentModel = CyPhyML2AVM.AVMComponentBuilder.CyPhyML2AVM(dsmlComponent);
+            SerializeAvmComponent(avmComponentModel, s_outFilePath);
+        }
+
+        [ComVisible(true)]
+        public void ExportAllComponents(IMgaProject project, String outputDirectory)
+        {
+            var cyPhyComponentSet = CyPhy2ComponentModel.ComponentLister.getCyPhyMLComponentSet(project.RootFolder);
+            foreach (var component in cyPhyComponentSet)
+            {
+                var avmComponentModel = CyPhyML2AVM.AVMComponentBuilder.CyPhyML2AVM(component);
+                var safe_component_name = InvalidFileNameRegex.Replace(component.Name, "_");
+                SerializeAvmComponent(avmComponentModel, Path.Combine(outputDirectory, safe_component_name + ".acm"));
+            }
+        }
+
+        [ComVisible(true)]
+        public string ExportComponentToString(IMgaFCO component)
+        {
+            if (component.Meta.Name != typeof(Component).Name)
+            {
+                throw new ApplicationException("Component must be of kind 'Component'");
+            }
+            var dsmlComponent = new CyPhyClasses.Component();
+            dsmlComponent.Impl = component;
+            var avmComponentModel = CyPhyML2AVM.AVMComponentBuilder.CyPhyML2AVM(dsmlComponent);
+            return SerializeAvmComponentToString(avmComponentModel);
+        }
+
         public static void SerializeAvmComponent(avm.Component avmComponent, String s_outFilePath)
         {
             avmComponent.SchemaVersion = "2.5";
@@ -111,10 +149,14 @@ namespace CyPhyComponentExporter
             using (stream)
             {
                 XSD2CSharp.AvmXmlSerializer.Serialize(avmComponent, stream);
-                stream.Close();
             }
         }
 
+        public static string SerializeAvmComponentToString(avm.Component avmComponent)
+        {
+            avmComponent.SchemaVersion = "2.5";
+            return XSD2CSharp.AvmXmlSerializer.Serialize(avmComponent);
+        }
 
 
         // RB 8/16/13
