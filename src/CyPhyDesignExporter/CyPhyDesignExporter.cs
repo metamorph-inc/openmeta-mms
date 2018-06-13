@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Xml;
 using META;
 using Ionic.Zip;
+using CyPhyCOMInterfaces;
 
 namespace CyPhyDesignExporter
 {
@@ -265,13 +266,9 @@ namespace CyPhyDesignExporter
         private string ExportToFile(CyPhy.DesignEntity de, String s_outFolder)
         {
             // Elaborate first
-            bool elaboratorSucceeded = CallElaborator(de.Impl.Project, de.Impl as MgaFCO, null, 128, true);
-            if (elaboratorSucceeded == false)
-            {
-                throw new ApplicationException("Elaborator failed");
-            }
+            var traceability = CallElaborator(de.Impl.Project, de.Impl as MgaFCO, null, 128, true);
             
-            var dm = CyPhy2DesignInterchange.CyPhy2DesignInterchange.Convert(de);
+            var dm = CyPhy2DesignInterchange.CyPhy2DesignInterchange.Convert(de, traceability);
             String s_outFilePath = String.Format("{0}\\{1}.adm", s_outFolder, Safeify(de.Name));
             //dm.SaveToFile(s_outFilePath);
             XSD2CSharp.AvmXmlSerializer.SaveToFile(Path.GetFullPath(Path.Combine(s_outFolder, Safeify(de.Name) + ".adm")), dm);
@@ -311,15 +308,15 @@ namespace CyPhyDesignExporter
                         pathCA += "//";
                     }
 
+                    string dirName = componentAssembly.Attributes.ID.ToString();
+                    string managedGUID = componentAssembly.Attributes.ManagedGUID;
+                    if (string.IsNullOrEmpty(managedGUID) == false)
+                    {
+                        dirName = managedGUID;
+                    }
                     foreach (var file in Directory.EnumerateFiles(pathCA, "*.*", SearchOption.AllDirectories))
                     {
                         var relpath = Path.GetDirectoryName(ComponentLibraryManager.MakeRelativePath(pathCA, file));
-                        string dirName = componentAssembly.Attributes.ID.ToString();
-                        string managedGUID = componentAssembly.Attributes.ManagedGUID;
-                        if (string.IsNullOrEmpty(managedGUID) == false)
-                        {
-                            dirName = managedGUID;
-                        }
                         zip.AddFile(file, dirName + "/" + relpath);
                     }
 
@@ -376,7 +373,7 @@ namespace CyPhyDesignExporter
             return false;
         }
 
-        private bool CallElaborator(
+        private IMgaTraceability CallElaborator(
             MgaProject project,
             MgaFCO currentobj,
             MgaFCOs selectedobjs,
@@ -395,16 +392,20 @@ namespace CyPhyDesignExporter
                 result = elaborator.RunInTransaction(project, currentobj, selectedobjs, verbosity);
 
                 if (Logger != null)
+                {
                     Logger.WriteInfo("Elaboration is done.");
+                }
+                if (result == true)
+                {
+                    return elaborator.Traceability;
+                }
             }
             catch (Exception ex)
             {
                 if (Logger != null)
                     Logger.WriteError("Exception occurred in Elaborator : {0}", ex.ToString());
-                result = false;
             }
-
-            return result;
+            throw new ApplicationException("Elaborator failed");
         }
 
         /// <summary>
