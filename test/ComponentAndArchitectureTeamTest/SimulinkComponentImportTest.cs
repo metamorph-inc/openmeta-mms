@@ -77,21 +77,21 @@ namespace ComponentAndArchitectureTeamTest
         {
             if (_fixture.Connector != null)
             {
-                IDictionary<int, string> inPorts;
-                IDictionary<int, string> outPorts;
+                IDictionary<string, string> inPorts;
+                IDictionary<string, string> outPorts;
 
                 _fixture.Connector.ListSystemObjects("simulink");
                 _fixture.Connector.ListPorts("simulink/Commonly Used Blocks/Mux", out inPorts, out outPorts);
 
                 Assert.Equal(2, inPorts.Count);
-                Assert.True(inPorts.ContainsKey(1));
-                Assert.Equal("", inPorts[1]);
-                Assert.True(inPorts.ContainsKey(2));
-                Assert.Equal("", inPorts[2]);
+                Assert.True(inPorts.ContainsKey("1"));
+                Assert.Equal("", inPorts["1"]);
+                Assert.True(inPorts.ContainsKey("2"));
+                Assert.Equal("", inPorts["2"]);
 
                 Assert.Equal(1, outPorts.Count);
-                Assert.True(outPorts.ContainsKey(1));
-                Assert.Equal("", outPorts[1]);
+                Assert.True(outPorts.ContainsKey("1"));
+                Assert.Equal("", outPorts["1"]);
             }
         }
     }
