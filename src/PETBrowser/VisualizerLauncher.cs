@@ -157,19 +157,26 @@ namespace PETBrowser
                         {
                             var testbenchManifestFilePath = Path.Combine(dataDirectoryPath, DatasetStore.ResultsDirectory, folder);
                             var directoryToWatch = Directory.GetParent(testbenchManifestFilePath).FullName;
-                            Console.WriteLine("Watching {0}", directoryToWatch);
-                            var watcher = new FileSystemWatcher(directoryToWatch);
-                            //watcher.NotifyFilter = NotifyFilters.Size | NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-                            watcher.Filter = "output.csv";
+                            if (Directory.Exists(directoryToWatch))
+                            {
+                                Console.WriteLine("Watching {0}", directoryToWatch);
+                                var watcher = new FileSystemWatcher(directoryToWatch);
+                                //watcher.NotifyFilter = NotifyFilters.Size | NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+                                watcher.Filter = "output.csv";
 
-                            watcher.Changed += OnChanged;
-                            watcher.Created += OnChanged;
-                            watcher.Deleted += OnChanged;
-                            watcher.Renamed += OnRenamed;
+                                watcher.Changed += OnChanged;
+                                watcher.Created += OnChanged;
+                                watcher.Deleted += OnChanged;
+                                watcher.Renamed += OnRenamed;
 
-                            watcher.EnableRaisingEvents = true;
+                                watcher.EnableRaisingEvents = true;
 
-                            Watchers.Add(watcher);
+                                Watchers.Add(watcher);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Not watching {0}; it doesn't appear to exist", directoryToWatch);
+                            }
                         }
                     }
                     else

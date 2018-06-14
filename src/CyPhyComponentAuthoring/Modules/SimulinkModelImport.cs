@@ -80,55 +80,68 @@ namespace CyPhyComponentAuthoring.Modules
 
             try
             {
-                using (var browser = new SimulinkLibraryBrowser())
+                var picker = new SimulinkLibraryPicker();
+                var pickerResult = picker.ShowDialog();
+
+                if (pickerResult == DialogResult.OK)
                 {
-                    using (var simulinkConnector = new SimulinkConnector(Logger))
+                    var selectedLibrary = picker.SelectedSimulinkLibraryName;
+
+                    using (var browser = new SimulinkLibraryBrowser())
                     {
-                        browser.BlockNames = simulinkConnector.ListSystemObjects("simulink").ToList();
-
-                        var result = browser.ShowDialog(senderParentForm);
-
-                        if (result == DialogResult.OK)
+                        using (var simulinkConnector = new SimulinkConnector(Logger))
                         {
-                            Logger.WriteInfo("Selected Block: {0}", browser.SelectedBlockName);
+                            browser.BlockNames = simulinkConnector.ListSystemObjects(selectedLibrary).ToList();
 
-                            var paramNames = simulinkConnector.ListBlockParameters(browser.SelectedBlockName);
+                            var result = browser.ShowDialog(senderParentForm);
 
-                            using (var paramPicker = new SimulinkParameterPicker())
+                            if (result == DialogResult.OK)
                             {
-                                paramPicker.ParamNames = paramNames.ToList();
+                                Logger.WriteInfo("Selected Block: {0}", browser.SelectedBlockName);
 
-                                var result2 = paramPicker.ShowDialog(senderParentForm);
+                                var paramNames = simulinkConnector.ListBlockParameters(browser.SelectedBlockName);
 
-                                if (result2 == DialogResult.OK)
+                                using (var paramPicker = new SimulinkParameterPicker())
                                 {
-                                    foreach (var param in paramPicker.SelectedParams)
+                                    paramPicker.ParamNames = paramNames.ToList();
+
+                                    var result2 = paramPicker.ShowDialog(senderParentForm);
+
+                                    if (result2 == DialogResult.OK)
                                     {
-                                        Logger.WriteInfo(param);
+                                        foreach (var param in paramPicker.SelectedParams)
+                                        {
+                                            Logger.WriteInfo(param);
+                                        }
+
+                                        IDictionary<string, string> inPorts;
+                                        IDictionary<string, string> outPorts;
+
+                                        simulinkConnector.ListPorts(browser.SelectedBlockName, out inPorts,
+                                            out outPorts);
+
+                                        AddSimulinkObjectToModel(component, browser.SelectedBlockName,
+                                            paramPicker.SelectedParams,
+                                            inPorts, outPorts);
                                     }
-
-                                    IDictionary<int, string> inPorts;
-                                    IDictionary<int, string> outPorts;
-
-                                    simulinkConnector.ListPorts(browser.SelectedBlockName, out inPorts, out outPorts);
-
-                                    AddSimulinkObjectToModel(component, browser.SelectedBlockName,
-                                        paramPicker.SelectedParams,
-                                        inPorts, outPorts);
-                                }
-                                else
-                                {
-                                    Logger.WriteInfo("Simulink import cancelled");
+                                    else
+                                    {
+                                        Logger.WriteInfo("Simulink import cancelled");
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            Logger.WriteInfo("Simulink import cancelled");
-                        }
+                            else
+                            {
+                                Logger.WriteInfo("Simulink import cancelled");
+                            }
 
-                        Logger.WriteInfo("Complete");
+                            Logger.WriteInfo("Complete");
+                        }
                     }
+                }
+                else
+                {
+                    Logger.WriteInfo("Simulink import cancelled");
                 }
 
 
@@ -164,7 +177,7 @@ namespace CyPhyComponentAuthoring.Modules
         }
 
         public void AddSimulinkObjectToModel(CyPhy.Component component, string blockPath, IEnumerable<string> selectedParams,
-            IDictionary<int, string> inPorts, IDictionary<int, string> outPorts)
+            IDictionary<string, string> inPorts, IDictionary<string, string> outPorts)
         {
             const int INNER_LEFT_COLUMN_X = 50;
             const int INNER_RIGHT_COLUMN_X = 500;
@@ -396,11 +409,11 @@ namespace CyPhyComponentAuthoring.Modules
 
             public IEnumerable<string> ListSystemObjects(string systemName)
             {
-                _matlabInstance.Execute("load_system('simulink');");
+                _matlabInstance.Execute(string.Format("load_system('{0}');", MatlabEscapeString(systemName)));
 
                 object result;
 
-                _matlabInstance.Feval("find_system", 1, out result, "simulink");
+                _matlabInstance.Feval("find_system", 1, out result, systemName);
 
                 //We're going to make some assumptions about the format of this output
                 //'result' is a single-element array, containing an Object[,] which is
@@ -424,10 +437,10 @@ namespace CyPhyComponentAuthoring.Modules
                 return resultArray.Cast<string>();
             }
 
-            public void ListPorts(string blockName, out IDictionary<int,string> inPorts, out IDictionary<int, string> outPorts)
+            public void ListPorts(string blockName, out IDictionary<string,string> inPorts, out IDictionary<string, string> outPorts)
             {
-                inPorts = new SortedDictionary<int, string>();
-                outPorts= new SortedDictionary<int, string>();
+                inPorts = new SortedDictionary<string, string>();
+                outPorts= new SortedDictionary<string, string>();
 
                 var parameters = ListBlockParameters(blockName);
 
@@ -441,13 +454,19 @@ namespace CyPhyComponentAuthoring.Modules
                     DebugExecute("portHandles = get_param('{0}', 'PortHandles')", blockName);
                     DebugExecute("inPortCount = length(portHandles.Inport)");
                     DebugExecute("outPortCount = length(portHandles.Outport)");
+                    DebugExecute("lconnPortCount = length(portHandles.LConn)");
+                    DebugExecute("rconnPortCount = length(portHandles.RConn)");
 
-                    object inPortCountObj, outPortCountObj;
+                    object inPortCountObj, outPortCountObj, lconnPortCountObj, rconnPortCountObj;
                     _matlabInstance.GetWorkspaceData("inPortCount", "base", out inPortCountObj);
                     _matlabInstance.GetWorkspaceData("outPortCount", "base", out outPortCountObj);
+                    _matlabInstance.GetWorkspaceData("lconnPortCount", "base", out lconnPortCountObj);
+                    _matlabInstance.GetWorkspaceData("rconnPortCount", "base", out rconnPortCountObj);
 
                     int inPortCount = (int) ((double) inPortCountObj); //inPortCountObj is actually a Double; can't cast directly to int from object
                     int outPortCount = (int) ((double) outPortCountObj);
+                    int lconnPortCount = (int)((double) lconnPortCountObj);
+                    int rconnPortCount = (int)((double)rconnPortCountObj);
 
                     _logger.WriteDebug("{0} in, {1} out", inPortCount, outPortCount);
 
@@ -479,7 +498,7 @@ namespace CyPhyComponentAuthoring.Modules
                             portName = "";
                         }
 
-                        inPorts[portNumber] = portName;
+                        inPorts[portNumber.ToString()] = portName;
                     }
 
                     var outPortNumberObjs = new object[outPortCount];
@@ -510,7 +529,71 @@ namespace CyPhyComponentAuthoring.Modules
                             portName = "";
                         }
 
-                        outPorts[portNumber] = portName;
+                        outPorts[portNumber.ToString()] = portName;
+                    }
+
+                    var lconnPortNumberObjs = new object[lconnPortCount];
+                    var lconnPortNameObjs = new object[lconnPortCount];
+
+                    for (int i = 1; i <= lconnPortCount; i++)
+                    {
+                        _logger.WriteDebug("Getting Port LConn{0} Metadata:", i);
+                        DebugExecute("portHandle = portHandles.LConn({0})", i);
+                        DebugExecute("portMeta = get(portHandle)");
+                        DebugExecute("portNumber = portMeta.PortNumber");
+                        DebugExecute("portName = portMeta.Name");
+
+                        //Declaring portNumberObj/portNameObj here only works on one iteration through the loop--
+                        //Matlab COM bug? (We use the arrays above instead)
+                        //object portNumberObj = null, portNameObj = null;
+
+                        _matlabInstance.GetWorkspaceData("portNumber", "base", out lconnPortNumberObjs[i - 1]);
+                        _matlabInstance.GetWorkspaceData("portName", "base", out lconnPortNameObjs[i - 1]);
+
+                        int portNumber = (int)((double)lconnPortNumberObjs[i - 1]);
+                        string portName = (string)lconnPortNameObjs[i - 1];
+
+                        _logger.WriteDebug("LConn Port {0} ({1})", portNumber, portName);
+
+                        if (portName == null)
+                        {
+                            portName = "";
+                        }
+
+                        inPorts["LConn" + portNumber.ToString()] = portName;
+                        outPorts["LConn" + portNumber.ToString()] = portName;
+                    }
+
+                    var rconnPortNumberObjs = new object[rconnPortCount];
+                    var rconnPortNameObjs = new object[rconnPortCount];
+
+                    for (int i = 1; i <= rconnPortCount; i++)
+                    {
+                        _logger.WriteDebug("Getting Port RConn{0} Metadata:", i);
+                        DebugExecute("portHandle = portHandles.RConn({0})", i);
+                        DebugExecute("portMeta = get(portHandle)");
+                        DebugExecute("portNumber = portMeta.PortNumber");
+                        DebugExecute("portName = portMeta.Name");
+
+                        //Declaring portNumberObj/portNameObj here only works on one iteration through the loop--
+                        //Matlab COM bug? (We use the arrays above instead)
+                        //object portNumberObj = null, portNameObj = null;
+
+                        _matlabInstance.GetWorkspaceData("portNumber", "base", out rconnPortNumberObjs[i - 1]);
+                        _matlabInstance.GetWorkspaceData("portName", "base", out rconnPortNameObjs[i - 1]);
+
+                        int portNumber = (int)((double)rconnPortNumberObjs[i - 1]);
+                        string portName = (string)rconnPortNameObjs[i - 1];
+
+                        _logger.WriteDebug("RConn Port {0} ({1})", portNumber, portName);
+
+                        if (portName == null)
+                        {
+                            portName = "";
+                        }
+
+                        inPorts["RConn" + portNumber.ToString()] = portName;
+                        outPorts["RConn" + portNumber.ToString()] = portName;
                     }
                 }
             }
@@ -529,6 +612,16 @@ namespace CyPhyComponentAuthoring.Modules
 
                     _matlabInstance = null;
                 }
+            }
+
+            /**
+             * Escapes quotes contained in a MATLAB string--  the only escape
+             * required (or valid) in a MATLAB string is ' (single quote) to
+             * '' (two single quotes).
+             */
+            private string MatlabEscapeString(string toEscape)
+            {
+                return toEscape.Replace("'", "''");
             }
         }
         
