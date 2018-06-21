@@ -149,6 +149,14 @@ namespace ComponentInterchangeTest
         }
 
         [Fact]
+        public void TestRelativePathCanonicalization()
+        {
+            Assert.Equal("CAD\\part.prt.1", CyPhyComponentExporter.CyPhyComponentExporterInterpreter.canonicalizeRelativePath(".\\CAD\\part.prt.1"));
+            Assert.Equal("CAD\\part.prt.1", CyPhyComponentExporter.CyPhyComponentExporterInterpreter.canonicalizeRelativePath(".\\CAD/part.prt.1"));
+            Assert.Equal("CAD\\part.prt.1", CyPhyComponentExporter.CyPhyComponentExporterInterpreter.canonicalizeRelativePath("./CAD/part.prt.1"));
+        }
+
+        [Fact]
         [Trait("Interchange", "CAD")]
         [Trait("Interchange", "CAD Datum Map")]
         public void SingleSurfaceFeatureMapTest()

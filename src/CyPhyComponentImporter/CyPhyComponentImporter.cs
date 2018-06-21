@@ -16,6 +16,7 @@ using CyPhyClasses = ISIS.GME.Dsml.CyPhyML.Classes;
 using META;
 using CyPhyGUIs;
 using System.Xml.Serialization;
+using System.Security;
 
 namespace CyPhyComponentImporter
 {
