@@ -43,18 +43,14 @@ run_cadunittests.cmd/$)
                 bat($/jenkins_build.cmd/$)
 
                 bat("move /y deploy\\META_bundle_x64.exe deploy\\META_${releaseId}.exe")
+                bat("move /y deploy\\META_bundle_x64_offline.exe deploy\\META_${releaseId}_offline.exe")
 
                 bat($/echo TONKA_BUILD_NUMBER=%BUILD_NUMBER% > build.properties/$)
             }
             post {
-                success {
-                    archiveArtifacts artifacts: "deploy/META*.msi,deploy/META_x64.wixpdb,deploy/*.msp,deploy/META_${releaseId}.exe"
-                }
-                unstable {
-                    archiveArtifacts artifacts: "deploy/META*.msi,deploy/META_x64.wixpdb,deploy/*.msp,deploy/META_${releaseId}.exe"
-                }
                 always {
                     junit keepLongStdio: true, testResults: 'test/junit_results.xml'
+                    archiveArtifacts artifacts: "deploy/META*.msi,deploy/META_x64.wixpdb,deploy/*.msp,deploy/META_${releaseId}.exe,deploy/META_${releaseId}_offline.exe"
                 }
             }
         }
@@ -83,6 +79,7 @@ run_cadunittests.cmd/$)
 
                 withAWS(credentials:'AWS-jenkins-tonka-release-uploader', region:'us-east-2') {
                   s3Upload(file: "deploy/META_${releaseId}.exe", bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/META_${releaseId}.exe")
+                  s3Upload(file: "deploy/META_${releaseId}_offline.exe", bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/META_${releaseId}_offline.exe")
                   s3Upload(file: 'index.html', bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/index.html")
                   s3Upload(file: 'index.html', bucket: 'releases.metamorphsoftware.com', path: "index.html", cacheControl:'public,max-age=120')
                   s3Upload(file: 'releases.csv', bucket: 'releases.metamorphsoftware.com', path: "releases.csv", cacheControl:'public,max-age=0')

@@ -105,7 +105,7 @@ def generate_license_rtf():
         rtf.write('\n}')
 
 
-def build_msi():
+def build_msi(offline, source_wxs='META_x64.wxs'):
     get_nuget_packages()
 
     generate_license_rtf()
@@ -198,10 +198,6 @@ def build_msi():
     vcshash = get_githash()
 
     import glob
-    if len(sys.argv[1:]) > 0:
-        source_wxs = sys.argv[1]
-    else:
-        source_wxs = 'META_x64.wxs'
     sources_all = glob.glob(sourcedir + '*.wxi') + glob.glob(sourcedir + source_wxs)
     sources = []
     include_wxis = []
@@ -269,6 +265,7 @@ def build_msi():
     defines.append(('VERSIONSTR', version))
     defines.append(('VCSHASH', vcshash))
     defines.append(('VCSDESCRIPTION', vcsdescription))
+    defines.append(('Compressed', ("yes" if offline else "no")))
 
     from multiprocessing.pool import ThreadPool
     pool = ThreadPool()
@@ -314,7 +311,7 @@ def build_msi():
             six.reraise(*pool_exceptions[0])
         system('candle.exe META_bundle_x64.wxs -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension'.split() + ['-d' + d[0] + '=' + d[1] for d in defines])
         system('candle.exe META_bundle_ba.wxi -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension'.split() + ['-d' + d[0] + '=' + d[1] for d in defines])
-        system('light.exe -o META_bundle_x64.exe META_bundle_ba.wixobj META_bundle_x64.wixobj -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension -ext WixNetFxExtension'.split())
+        system(('light.exe -o META_bundle_x64' + ('_offline' if offline else '') + '.exe META_bundle_ba.wixobj META_bundle_x64.wixobj -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension -ext WixNetFxExtension').split())
 
         print "elapsed time: %d seconds" % (datetime.datetime.now() - starttime).seconds
     else:
@@ -331,7 +328,13 @@ if __name__ == '__main__':
     os.chdir(this_dir)
     import traceback
     try:
-        build_msi()
+        import argparse
+
+        parser = argparse.ArgumentParser(description='Build the installer')
+        parser.add_argument('--offline', action='store_true')
+        command_line_args = parser.parse_args()
+
+        build_msi(command_line_args.offline)
     except:
         traceback.print_exc(None, MSBuildErrorWriter())
         sys.exit(2)
