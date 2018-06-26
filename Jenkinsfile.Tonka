@@ -86,7 +86,6 @@ run_cadunittests.cmd/$)
                     git clone git@bitbucket.org:metamorphsoftwareinc/openmeta-site.git""")
 
                     dir("openmeta-site") {
-                        bat("git checkout -b master")
                         bat("""copy "..\\${releaseId}.html" ".\\_releases\\" """)
                         bat("""git add ".\\_releases\\${releaseId}.html" """)
                         bat("""git commit -m "Add release page for ${releaseId}" """)
