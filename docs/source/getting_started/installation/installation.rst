@@ -29,11 +29,26 @@ Follow the steps below to install OpenMETA:
 
 1. Download the latest installer from `Releases Page
    <https://openmeta.metamorphsoftware.com/releases>`_ on the OpenMETA website.
-2. After the download is complete, run the installer  ``META_<version>.exe``.
-3. Click **Agree** when agree to the license terms and conditions.
+
+   .. image:: images/downloadPage.png
+
+   .. note:: The "Offline" version of the installer includes all the necessary
+      dependencies and should therefore be used only when you need to install
+      OpenMETA in an environment that does not have access to the Internet.
+
+2. After the download is complete, run the installer  ``META_<version>.exe``
+   where *<version>* corresponds to the version you downloaded.
+3. Check **I agree to the license terms and conditions** and then click
+   **Install** when the license dialog appears.
+
+   .. image:: images/licenseDialog.png
+
+4. Click **Yes** if prompted for permission to make changes to your system.
 
 When you are upgrading, you should not need to uninstall the OpenMETA tools --
 the installer will automatically remove any unneeded components.
+
+
 
 Included Tools
 ~~~~~~~~~~~~~~
