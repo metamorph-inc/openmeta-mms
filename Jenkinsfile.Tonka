@@ -81,12 +81,20 @@ run_cadunittests.cmd/$)
 
                 echo("This is our release ID: '${releaseId}'")
 
+                withCredentials([sshUserPrivateKey(credentialsId: 'fc1479fa-af84-4b86-a723-cd6ae1c9fb2c', keyFileVariable: 'SSH_KEY')]) {
+                    bat("""rmdir /s /q openmeta-site
+                    git clone git@bitbucket.org:metamorphsoftwareinc/openmeta-site.git""")
+
+                    dir("openmeta-site") {
+                        bat("""copy "..\\${releaseId}.html" ".\\_releases\\" """)
+                        bat("""git add ".\\_releases\\${releaseId}.html" """)
+                        bat("""git commit -m "Add release page for ${releaseId}" """)
+                        bat("""git push origin master""")
+                    }
+                }
+
                 withAWS(credentials:'AWS-jenkins-tonka-release-uploader', region:'us-east-2') {
                   s3Upload(file: "deploy/META_${releaseId}.exe", bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/META_${releaseId}.exe")
-                  s3Upload(file: 'index.html', bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/index.html")
-                  s3Upload(file: 'index.html', bucket: 'releases.metamorphsoftware.com', path: "index.html", cacheControl:'public,max-age=120')
-                  s3Upload(file: 'releases.csv', bucket: 'releases.metamorphsoftware.com', path: "releases.csv", cacheControl:'public,max-age=0')
-                  s3Upload(file: 'previous_releases.html', bucket: 'releases.metamorphsoftware.com', path: "previous_releases.html", cacheControl:'public,max-age=120')
                 }
 
                 //Build our updated docs
