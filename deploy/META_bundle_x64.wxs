@@ -81,7 +81,11 @@
 
     <bal:Condition Message="Installation failed because your version of Windows is too old. $(var.ProductName) requires Windows 7 SP1 or newer."><![CDATA[Installed OR VersionNT > v6.1 OR (VersionNT = v6.1 AND ServicePackLevel >= 1)]]></bal:Condition>
     <Chain>
+      <?if $(var.Compressed)=yes ?>
+      <PackageGroupRef Id="NetFx45Redist"/>
+      <?else ?>
       <PackageGroupRef Id="NetFx45Web"/>
+      <?endif ?>
 
       <ExePackage Id="vcredist_2015_x86.exe"
                   Name="vc_redist.x86.$(var.VcRedistVersion).exe"
@@ -168,8 +172,8 @@
       </MsiPackage>
 
       <MsiPackage Id="OpenMETA_Visualizer"
-                  Name="openmeta-visualizer_v2.0.1.msi"
-                  DownloadUrl="https://github.com/metamorph-inc/openmeta-visualizer/releases/download/v2.0.1/openmeta-visualizer_x64.msi"
+                  Name="openmeta-visualizer_v2.1.4.msi"
+                  DownloadUrl="https://github.com/metamorph-inc/openmeta-visualizer/releases/download/v2.1.4/openmeta-visualizer_x64.msi"
                   Compressed="yes"
                   Visible="yes"
                   ForcePerMachine="yes"
