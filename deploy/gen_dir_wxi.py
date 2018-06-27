@@ -179,10 +179,11 @@ class WixProcessingInstructionHandler(ContentHandler):
 def download_bundle_deps(bundle_wxs):
     defines = WixProcessingInstructionHandler()
     xml.sax.parse("bundle_defines.xml", defines)
+    xml.sax.parse("META_bundle_x64.wxs", defines)
 
     def eval_vars(attr):
         for name, val in defines.defines.iteritems():
-            attr = attr.replace('$(var.{})'.format(name), val)
+            attr = attr.replace('$(var.{})'.format(name), str(val))
         return attr
 
     tree = ElementTree.parse(bundle_wxs, parser=CommentedTreeBuilder()).getroot()

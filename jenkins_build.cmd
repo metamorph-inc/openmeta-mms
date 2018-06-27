@@ -17,6 +17,7 @@ popd
 @rem BUILD INSTALLER
 pushd deploy
 ..\bin\Python27\Scripts\python.exe build_msi.py || (popd & exit /b !ERRORLEVEL!)
+..\bin\Python27\Scripts\python.exe build_msi.py --offline || (popd & exit /b !ERRORLEVEL!)
 popd
 
 rem .\bin\Python27\Scripts\python.exe copy_pdbs.py
