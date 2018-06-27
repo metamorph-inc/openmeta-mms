@@ -81,7 +81,11 @@
 
     <bal:Condition Message="Installation failed because your version of Windows is too old. $(var.ProductName) requires Windows 7 SP1 or newer."><![CDATA[Installed OR VersionNT > v6.1 OR (VersionNT = v6.1 AND ServicePackLevel >= 1)]]></bal:Condition>
     <Chain>
+      <?if $(var.Compressed)=yes ?>
+      <PackageGroupRef Id="NetFx45Redist"/>
+      <?else ?>
       <PackageGroupRef Id="NetFx45Web"/>
+      <?endif ?>
 
       <ExePackage Id="vcredist_2015_x86.exe"
                   Name="vc_redist.x86.$(var.VcRedistVersion).exe"
