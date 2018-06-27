@@ -8,7 +8,7 @@ https://github.com/metamorph-inc/meta-core
 
 ## Obtaining OpenMETA
 The easiest way to get started with OpenMETA is to download an installer for Windows. OpenMETA installers for Windows are frequently released by MetaMorph, Inc at their website:
-http://www.metamorphsoftware.com/openmeta/
+https://openmeta.metamorphsoftware.com/
 
 To build OpenMETA from source, see **[BUILD.md](BUILD.md)**.
 
