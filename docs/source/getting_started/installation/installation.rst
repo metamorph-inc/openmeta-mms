@@ -7,6 +7,7 @@ System Requirements
 ~~~~~~~~~~~~~~~~~~~
 
 -  **Platform:** Windows 7, 8.1, or 10.
+-  **CPU:** 64-bit processor
 -  **RAM:** 1.5 GB minimum (4 GB or more recommended)
 -  **HDD:** 2 GB minimum (10 GB or more recommended)
 -  Connection to the Internet (for downloading tools during installation)
