@@ -32,10 +32,6 @@ Follow the steps below to install OpenMETA:
 
    .. image:: images/downloadPage.png
 
-   .. note:: The "Offline" version of the installer includes all the necessary
-      dependencies and should therefore be used only when you need to install
-      OpenMETA in an environment that does not have access to the Internet.
-
 2. After the download is complete, run the installer  ``META_<version>.exe``
    where *<version>* corresponds to the version you downloaded.
 3. Check **I agree to the license terms and conditions** and then click
@@ -47,8 +43,6 @@ Follow the steps below to install OpenMETA:
 
 When you are upgrading, you should not need to uninstall the OpenMETA tools --
 the installer will automatically remove any unneeded components.
-
-
 
 Included Tools
 ~~~~~~~~~~~~~~
