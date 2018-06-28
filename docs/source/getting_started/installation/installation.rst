@@ -32,6 +32,7 @@ Follow the steps below to install OpenMETA:
    <https://openmeta.metamorphsoftware.com/releases>`_ on the OpenMETA website.
 
    .. image:: images/downloadPage.png
+      :width: 708 px
 
 2. After the download is complete, run the installer  ``META_<version>.exe``
    where *<version>* corresponds to the version you downloaded.
@@ -39,6 +40,7 @@ Follow the steps below to install OpenMETA:
    **Install** when the license dialog appears.
 
    .. image:: images/licenseDialog.png
+      :width: 481 px
 
 4. Click **Yes** if prompted for permission to make changes to your system.
 
