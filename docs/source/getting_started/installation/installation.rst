@@ -32,7 +32,7 @@ Follow the steps below to install OpenMETA:
    <https://openmeta.metamorphsoftware.com/releases>`_ on the OpenMETA website.
 
    .. image:: images/downloadPage.png
-      :width: 970 px
+      :width: 625 px
 
    .. note:: The "Offline" version of the installer includes all the necessary
       dependencies and should therefore be used only when you need to install
