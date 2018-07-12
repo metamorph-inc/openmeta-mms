@@ -9,8 +9,13 @@ namespace PETBrowser
 {
     public class SingleInstanceManager : IDisposable
     {
-        public const string PortName = "MetaPETBrowser";
+        public const string PortNameBase = "MetaPETBrowser";
         public const string ServerName = "BrowserInstance";
+
+        public static string PortName
+        {
+            get { return PortNameBase + Environment.UserName; }
+        }
 
         private InstanceImpl Instance { get; set; }
         private IpcServerChannel ServerChannel { get; set; }
