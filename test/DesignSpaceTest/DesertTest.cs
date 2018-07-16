@@ -12,16 +12,16 @@ using System.Runtime.InteropServices;
 
 namespace DesignSpaceTest
 {
-    public class ToyDSFixture : IDisposable
+    public class DSFixtureBase : IDisposable
     {
-        public ToyDSFixture()
+        public DSFixtureBase(string xmePath)
         {
             try
             {
                 string connection;
                 MgaUtils.ImportXMEForTest(
                     Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(this.GetType()).CodeBase.Substring("file:///".Length)),
-                    @"..\..\..\..\models\DesignSpace\ToyDS.xme"),
+                    xmePath),
                     out connection);
 
                 Type type = Type.GetTypeFromProgID("Mga.MgaProject");
@@ -56,9 +56,25 @@ namespace DesignSpaceTest
         }
     }
 
-    public class DesertTest : IUseFixture<ToyDSFixture>
+    public class ToyDSFixture : DSFixtureBase, IDisposable
     {
-        public void DesertTestBase(string dsPath, Action<IEnumerable<Configurations>> helperTest, Action<Configurations> exporterTest)
+        public ToyDSFixture() :
+            base(@"..\..\..\..\models\DesignSpace\ToyDS.xme")
+        {
+        }
+    }
+
+    public class DomainModelDSFixture : DSFixtureBase, IDisposable
+    {
+        public DomainModelDSFixture() :
+            base(@"..\..\..\..\models\DesignSpace\DomainModel.xme")
+        {
+        }
+    }
+
+    public abstract class DesertTestBaseClass
+    {
+        public void DesertTestBase(MgaProject project, string dsPath, Action<IEnumerable<Configurations>> helperTest, Action<Configurations> exporterTest)
         {
             var gateway = new MgaGateway(project);
             Type desertType = Type.GetTypeFromProgID("MGA.Interpreter.DesignSpaceHelper");
@@ -105,85 +121,15 @@ namespace DesignSpaceTest
                 });
             }
         }
+    }
 
-        [Fact]
-        void TestDesertAutomation()
-        {
-            DesertTestBase("/@DesignSpaces/@DesignContainer", (configurations) =>
-            {
-                Assert.Equal(1, configurations.Count());
-                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
-            }, (configs) =>
-            {
-                foreach (var cwc in configs.Children.CWCCollection)
-                {
-                    Assert.Equal(1, cwc.DstConnections.Config2CACollection.Count());
-                    var caConn = cwc.DstConnections.Config2CACollection.First();
-                    // ((MgaModel)ca.Impl).GetDescendantFCOs(project.CreateFilter()).Count
-                    var ca = ISIS.GME.Dsml.CyPhyML.Classes.ComponentAssemblyRef.Cast(caConn.DstEnd.Impl).Referred.ComponentAssembly;
-                    Assert.Equal(1, ca.Children.ConnectorCollection.Count());
-                }
-            });
-
-        }
-
-        [Fact]
-        void TestDesert_DesignContainer_SimpleProp()
-        {
-            DesertTestBase("/@DesignSpaces/@DesignContainer_SimpleProp", (configurations) =>
-            {
-                Assert.Equal(1, configurations.Count());
-                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
-            }, null);
-
-        }
-
-        [Fact(Skip = "Fails due to desert bug")]
-        void TestDesert_DesignContainer_Alt_SimpleProp()
-        {
-            DesertTestBase("/@DesignSpaces/@DesignContainer_Alt_SimpleProp", (configurations) =>
-            {
-                Assert.Equal(1, configurations.Count());
-                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
-            }, null);
-
-        }
-
-        [Fact]
-        void TestDesert_DesignContainer_DupPropName()
-        {
-            // bug was fixed where desert would stack overflow. Now the model is rejected
-            Assert.Throws(typeof(COMException), () =>
-                DesertTestBase("/@DesignSpaces/@DesignContainer_DupPropName", (configurations) =>
-                {
-                }, null));
-
-        }
-
-        [Fact]
-        void TestDesert_DesignContainer_Formula()
-        {
-            DesertTestBase("/@DesignSpaces/@DesignContainer_Formula", (configurations) =>
-            {
-                Assert.Equal(1, configurations.Count());
-                Assert.Equal(1, configurations.First().Children.CWCCollection.Count());
-            }, null);
-        }
-
-        [Fact]
-        void TestDesert_DesignContainerParamConstraint()
-        {
-            DesertTestBase("/@DesignSpaces/@DesignContainerParamConstraint", (configurations) =>
-            {
-                Assert.Equal(1, configurations.Count());
-                Assert.Equal(1, configurations.First().Children.CWCCollection.Count());
-            }, null);
-        }
+    public class DomainModelDesertTest : DesertTestBaseClass, IUseFixture<DomainModelDSFixture>
+    {
 
         [Fact]
         void TestCAExport_DomainModel()
         {
-            DesertTestBase("/@DesignSpaces/@DesignContainer_DomainModel", (configurations) =>
+            DesertTestBase((MgaProject)fixture.proj, "/@DesignSpaces/@DesignContainer_DomainModel", (configurations) =>
             {
                 Assert.Equal(1, configurations.Count());
                 Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
@@ -218,10 +164,92 @@ namespace DesignSpaceTest
             });
         }
 
+        private DomainModelDSFixture fixture;
+        public void SetFixture(DomainModelDSFixture data)
+        {
+            this.fixture = data;
+        }
+    }
+
+    public class DesertTest : DesertTestBaseClass, IUseFixture<ToyDSFixture>
+    {
+        [Fact]
+        void TestDesertAutomation()
+        {
+            DesertTestBase(project, "/@DesignSpaces/@DesignContainer", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
+            }, (configs) =>
+            {
+                foreach (var cwc in configs.Children.CWCCollection)
+                {
+                    Assert.Equal(1, cwc.DstConnections.Config2CACollection.Count());
+                    var caConn = cwc.DstConnections.Config2CACollection.First();
+                    // ((MgaModel)ca.Impl).GetDescendantFCOs(project.CreateFilter()).Count
+                    var ca = ISIS.GME.Dsml.CyPhyML.Classes.ComponentAssemblyRef.Cast(caConn.DstEnd.Impl).Referred.ComponentAssembly;
+                    Assert.Equal(1, ca.Children.ConnectorCollection.Count());
+                }
+            });
+
+        }
+
+        [Fact]
+        void TestDesert_DesignContainer_SimpleProp()
+        {
+            DesertTestBase(project, "/@DesignSpaces/@DesignContainer_SimpleProp", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
+            }, null);
+
+        }
+
+        [Fact(Skip = "Fails due to desert bug")]
+        void TestDesert_DesignContainer_Alt_SimpleProp()
+        {
+            DesertTestBase(project, "/@DesignSpaces/@DesignContainer_Alt_SimpleProp", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
+            }, null);
+
+        }
+
+        [Fact]
+        void TestDesert_DesignContainer_DupPropName()
+        {
+            // bug was fixed where desert would stack overflow. Now the model is rejected
+            Assert.Throws(typeof(COMException), () =>
+                DesertTestBase(project, "/@DesignSpaces/@DesignContainer_DupPropName", (configurations) =>
+                {
+                }, null));
+
+        }
+
+        [Fact]
+        void TestDesert_DesignContainer_Formula()
+        {
+            DesertTestBase(project, "/@DesignSpaces/@DesignContainer_Formula", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(1, configurations.First().Children.CWCCollection.Count());
+            }, null);
+        }
+
+        [Fact]
+        void TestDesert_DesignContainerParamConstraint()
+        {
+            DesertTestBase(project, "/@DesignSpaces/@DesignContainerParamConstraint", (configurations) =>
+            {
+                Assert.Equal(1, configurations.Count());
+                Assert.Equal(1, configurations.First().Children.CWCCollection.Count());
+            }, null);
+        }
         [Fact]
         void TestDesert_DesignContainer_Opt_Constraint()
         {
-            DesertTestBase("/@DesignSpaces/@DesignContainer_Opt_Constraint", (configurations) =>
+            DesertTestBase(project, "/@DesignSpaces/@DesignContainer_Opt_Constraint", (configurations) =>
             {
                 Assert.Equal(1, configurations.Count());
                 Assert.Equal(3, configurations.First().Children.CWCCollection.Count());
@@ -231,7 +259,7 @@ namespace DesignSpaceTest
         [Fact]
         void TestDesert_DesignContainer_Opt_Constraint2()
         {
-            DesertTestBase("/@DesignSpaces/@DesignContainer_Opt_Constraint2", (configurations) =>
+            DesertTestBase(project, "/@DesignSpaces/@DesignContainer_Opt_Constraint2", (configurations) =>
             {
                 Assert.Equal(1, configurations.Count());
                 Assert.Equal(2, configurations.First().Children.CWCCollection.Count());
@@ -241,7 +269,7 @@ namespace DesignSpaceTest
         [Fact]
         void TestDesert_DesignContainer_Opt_Constraint3()
         {
-            DesertTestBase("/@DesignSpaces/@DesignContainer_Opt_Constraint3", (configurations) =>
+            DesertTestBase(project, "/@DesignSpaces/@DesignContainer_Opt_Constraint3", (configurations) =>
             {
                 Assert.Equal(1, configurations.Count());
                 Assert.Equal(3, configurations.First().Children.CWCCollection.Count());
