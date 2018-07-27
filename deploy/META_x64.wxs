@@ -156,6 +156,7 @@
     <DirectoryRef Id="ApplicationProgramsFolder">
       <Component Id="ApplicationShortcut" Guid="{C5414B00-7AB4-47F4-85A9-A66ACFF764B2}">
         <Shortcut Id="JobManagerShortcut" Name="META Job Manager" Description="META Job Manager" Target="[#JobManager.exe]"/>
+        <Shortcut Id="ResultsBrowserShortcut" Name="META Results Browser" Description="META Results Browser" Target="[#PETBrowser.exe]"/>
         <RemoveFolder Id='ApplicationProgramsFolderDir' On='uninstall' />
         <RegistryValue Root="HKCU" Key="Software\Microsoft\META" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
@@ -164,7 +165,7 @@
         <RegistryValue Root="HKCU" Key="Software\Microsoft\META" Name="HtmlDocumentation" Type="string" Value="[#HtmlDocumentationShortcut]" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
-    
+
     <DirectoryRef Id="INSTALLDIR_META">
       <Component Win64='no'>
         <File Name="CyPhyML.mta" Source="..\generated\CyPhyML\models\CyPhyML.mta" />
@@ -288,7 +289,7 @@
       <Component Win64='no'>
         <File Source="..\src\ISIS.Web\bin\Release\ISIS.Web.dll"/>
       </Component>
-      
+
       <Component Win64='no'>
         <File Source="..\meta\Complexity\ComplexityDomainLib_vs10\bin\Release\ComplexityDomainLib_vs10.dll"/>
       </Component>
@@ -308,7 +309,7 @@
         <File Source="..\src\bin\desert.dll" />
       </Component>
     </DirectoryRef>
-    
+
     <Component Directory="INSTALLDIR_BIN" Win64="no">
       <File Source="..\meta\DesignDataPackage\lib\csharp\XSD2CSharp\bin\Release\XSD2CSharp.dll"/>
     </Component>
@@ -330,7 +331,7 @@
     <!-- =========================================================== -->
     <Feature Id='Complete' Title='META Toolchain' Description='The complete package' Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
       <ComponentGroupRef Id='tonka'/>
-    
+
       <ComponentGroupRef Id='WebGME'/>
       <ComponentRef Id='CPMDecorator.dll'/>
       <ComponentRef Id='ApplicationShortcut'/>
@@ -383,7 +384,7 @@
       <ComponentGroupRef Id="CyPhySignalBlocksAddOn_x64"/>
       <ComponentGroupRef Id="CyPhyPython"/>
       <ComponentGroupRef Id="python_packages"/>
-	  
+
       <ComponentGroupRef Id='CyPhyMasterInterpreter'/>
 	  <ComponentGroupRef Id='CyPhyPrepareIFab'/>
 	  <ComponentGroupRef Id='CyPhyCADAnalysis'/>
@@ -394,11 +395,11 @@
       <ComponentRef Id='CyPhyMasterExe.exe'/>
       <ComponentGroupRef Id='CLM_light'/>
       <ComponentRef Id='ClmLib.dll'/>
-      
+
       <ComponentRef Id='ISIS.Jenkins.dll'/>
       <ComponentRef Id='ISIS.VehicleForge.dll'/>
       <ComponentRef Id='ISIS.Web.dll'/>
-      
+
       <ComponentRef Id='ComplexityDomainLib_vs10.dll'/>
       <ComponentRef Id='MetaDesignInterchange2ComplexityLib_vs10.dll'/>
       <ComponentRef Id='CyPhy2DesignInterchange.dll'/>
@@ -422,7 +423,7 @@
       <ComponentGroupRef Id='CyPhyCar'/>
 
 	  <ComponentGroupRef Id='DesignConsistencyChecker'/>
-      
+
       <ComponentRef Id='CyPhyElaborate.dll'/>
 
       <ComponentRef Id='ReferenceSwitcher.dll'/>
