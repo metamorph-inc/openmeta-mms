@@ -33,7 +33,7 @@
                 <Button x:Name="SelectResultsFolderButton" Click="SelectResultsFolderButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource FolderOpenIcon}" />
-                        <TextBlock Margin="3,0,0,0">Select Results Folder</TextBlock>
+                        <TextBlock Margin="3,0,0,0">Select Project Folder</TextBlock>
                     </StackPanel>
                 </Button>
                 <Button x:Name="RefreshButton" Click="RefreshButton_OnClick" IsEnabled="{Binding DatasetLoaded}">
