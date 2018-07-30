@@ -235,7 +235,7 @@ and the CarExample PythonWrapper.*
    Undoing scaling for system analysis
 
 .. note:: You would have to generate **DivideBy10** and **MultiplyBy10** blocks
-   yourself. See the :ref:`pet_analysis_blocks_python_wrappers` section for
+   yourself. See the :ref:`python_wrappers` section for
    details on creating your own Python Wrapper blocks.
 
 Optimizing Non-convex Functions
