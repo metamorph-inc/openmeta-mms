@@ -16,7 +16,7 @@ executing it, and analysing the results.
    :maxdepth: 2
    :caption: Sections
 
-   pet_analysis_blocks
+   analysis_blocks/pet_analysis_blocks
    drivers/pet_drivers
    pet_nesting
    pet_advanced_topics

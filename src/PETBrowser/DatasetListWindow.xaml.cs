@@ -147,10 +147,7 @@ namespace PETBrowser
             {
                 if (exception is FileNotFoundException || exception is DirectoryNotFoundException)
                 {
-                    ShowErrorDialog("Error loading datasets",
-                        "The selected folder doesn't appear to be a valid data folder.",
-                        "Make sure the selected folder contains a \"results\" folder with a \"results.metaresults.json\" file within it.",
-                        exception.ToString());
+                    SelectResultsFolderButton_Click(this, null);
                 }
                 else
                 {
@@ -166,12 +163,49 @@ namespace PETBrowser
         {
             var folderDialog = new VistaFolderBrowserDialog();
             folderDialog.ShowNewFolderButton = false;
+            folderDialog.Description = "Select project folder";
+            folderDialog.UseDescriptionForTitle = true;
 
             if (folderDialog.ShowDialog() == true)
             {
                 LoadDataset(folderDialog.SelectedPath);
             }
         }
+
+        /*private void ShowInvalidResultsFolderErrorDialog(string title, string mainInstruction, string content, string exceptionDetails)
+        {
+            var taskDialog = new TaskDialog
+            {
+                WindowTitle = title,
+                MainInstruction = mainInstruction,
+                Content = content,
+                ExpandedControlText = "Exception details",
+                ExpandFooterArea = true,
+                ExpandedInformation = exceptionDetails,
+                MainIcon = TaskDialogIcon.Information
+            };
+
+            var selectFolderButton = new TaskDialogButton()
+            {
+                ButtonType = ButtonType.Custom,
+                Text = "Select project folder",
+                CommandLinkNote =
+                    "Browse for a different OpenMETA project folder."
+            };
+            taskDialog.Buttons.Add(selectFolderButton);
+
+            taskDialog.Buttons.Add(new TaskDialogButton(ButtonType.Cancel));
+            taskDialog.CenterParent = true;
+
+            taskDialog.ButtonStyle = TaskDialogButtonStyle.CommandLinks;
+
+            var selectedButton = taskDialog.ShowDialog(this);
+
+            if (selectedButton == selectFolderButton)
+            {
+                SelectResultsFolderButton_Click(this, null);
+            }
+        }*/
 
         private void ShowErrorDialog(string title, string mainInstruction, string content, string exceptionDetails)
         {

@@ -11,7 +11,7 @@ in a design.
 
    *CAD model of a Light-Emitting Diode (LED)*
 
-.. TODO: replac with better figure:: images/cad_assembly.png
+.. TODO: replace with better figure:: images/cad_assembly.png
 
    <Insert image of CAD assembly>
 
@@ -25,3 +25,4 @@ datums can then be used to compose CAD assemblies.
    :caption: Sections
 
    cad_concepts
+   metalink

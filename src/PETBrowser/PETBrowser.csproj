@@ -57,6 +57,9 @@
   <PropertyGroup>
     <StartupObject>PETBrowser.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>CyPhyResultsViewer.ico</ApplicationIcon>
+  </PropertyGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0'">
       <PropertyGroup>

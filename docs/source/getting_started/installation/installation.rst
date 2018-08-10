@@ -4,16 +4,17 @@ Installation
 ============
 
 System Requirements
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 -  **Platform:** Windows 7, 8.1, or 10.
 -  **CPU:** 64-bit processor
 -  **RAM:** 1.5 GB minimum (4 GB or more recommended)
 -  **HDD:** 2 GB minimum (10 GB or more recommended)
+-  **Java:** JDK 7 or higher (Required for :ref:`metalink`)
 -  Connection to the Internet (for downloading tools during installation)
 
 License
-~~~~~~~
+-------
 
 OpenMETA is licensed under the MIT License. For more information please see
 the
@@ -23,7 +24,7 @@ file in the
 GitHub repository.
 
 Install Steps
-~~~~~~~~~~~~~
+-------------
 
 The OpenMETA tools can be downloaded and installed using a single installer.
 Follow the steps below to install OpenMETA:
@@ -52,7 +53,7 @@ When you are upgrading, you should not need to uninstall the OpenMETA tools --
 the installer will automatically remove any unneeded components.
 
 Included Tools
-~~~~~~~~~~~~~~
+--------------
 
 The OpenMETA Bundle installer combines of a number of tools that work together
 to provide the functionality of OpenMETA as a whole. The individual tools and
