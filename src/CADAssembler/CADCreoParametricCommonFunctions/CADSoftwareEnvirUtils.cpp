@@ -272,11 +272,7 @@ namespace isis
 
 		//std::cout << std::endl << "InstallDir: " <<  installDir;
 		
-		DWORD bufferSize = static_cast<DWORD>(installDir.size() * 2);  // the shortname should be less, allocated double the space as a safety measure
-		char *installPath_ShortName = new char[bufferSize ];  
-		GetShortPathNameA(  installDir.c_str(), installPath_ShortName, bufferSize );						
-		out_CreoParametricInstallPath =  installPath_ShortName + std::string("\\");
-		delete installPath_ShortName;
+		out_CreoParametricInstallPath = installDir + "\\";
 
 		out_CreoParametricCommMsgExe =  commonFilesLocation + "\\x86e_win64\\obj\\pro_comm_msg";
 	
@@ -418,10 +414,15 @@ namespace isis
 			}
 			_putenv_s( "PRO_COMM_MSG_EXE",  EnvVariableCOMM_MSG_EXE );
 
+			std::string CreoParametricInstallPath = EnvVariable_INSTALL_PATH;
+			if (CreoParametricInstallPath.back() != '\\') {
+				CreoParametricInstallPath += "\\";
+			}
+
 			//out_CreoStartCommand = EnvVariable_INSTALL_PATH + creoStartCommandSuffix;
 			out_CreoStartCommand = 	BuildCreoStartCommand(	in_GraphicsModeOn,
 															in_CreoExceptInputFromThisProgramAndCreoUI, 
-															EnvVariable_INSTALL_PATH );
+															CreoParametricInstallPath);
 
 		}
 
