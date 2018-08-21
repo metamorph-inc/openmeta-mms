@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
+using System.Security.Principal;
 using System.Threading;
 
 namespace PETBrowser
@@ -14,7 +15,7 @@ namespace PETBrowser
 
         public static string PortName
         {
-            get { return PortNameBase + Environment.UserName; }
+            get { return PortNameBase + WindowsIdentity.GetCurrent().User; }
         }
 
         private InstanceImpl Instance { get; set; }
