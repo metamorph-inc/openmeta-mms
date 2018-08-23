@@ -818,7 +818,7 @@ namespace AVM2CyPhyML
             return dsmlCasts[kind](conn);
         }
 
-        private static IMgaFCO GetFCOObject(object cyPhyMLObjectSrc)
+        public static IMgaFCO GetFCOObject(object cyPhyMLObjectSrc)
         {
             IMgaFCO source;
             if (cyPhyMLObjectSrc is ISIS.GME.Common.Interfaces.FCO)
@@ -832,7 +832,7 @@ namespace AVM2CyPhyML
 
             return source;
         }
-        private static IMgaReference GetFCOObjectReference(object cyPhyMLObjectSrc)
+        public static IMgaReference GetFCOObjectReference(object cyPhyMLObjectSrc)
         {
             IMgaReference source_rp;
             if (cyPhyMLObjectSrc is ISIS.GME.Common.Interfaces.FCO)
@@ -853,6 +853,11 @@ namespace AVM2CyPhyML
             {
                 var avmSimpleFormula = avmSimpleFormulaWithOwner.Key as avm.SimpleFormula;
                 var cyPhyMLSimpleFormula = _avmCyPhyMLObjectMap[avmSimpleFormula];
+
+                if (avmSimpleFormula.Operand.Count == 1 && avmSimpleFormula.Operand[0] == "")
+                {
+                    continue;
+                }
 
                 foreach (var operandID in avmSimpleFormula.Operand)
                 {
