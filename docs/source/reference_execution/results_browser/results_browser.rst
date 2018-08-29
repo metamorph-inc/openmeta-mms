@@ -15,6 +15,20 @@ The Results Browser provides a layer of management and organization
 on top of the raw results in the file system. This chapter explains the
 features of the Results Browser.
 
+Launching the Results Browser
+-----------------------------
+
+The Results Browser is launched automatically when you initiate an analysis
+using the :ref:`master_interpreter`. It can also be launched at any time using
+the Results Browser toolbar button |RESULTS_BROWSER_BUTTON| from within
+OpenMETA or by searching for **Results Browser** in the Window Start menu.
+
+.. |RESULTS_BROWSER_BUTTON| image:: images/resultsBrowserButton.png
+   :width: 22px
+
+.. image:: images/resultsBrowserStartMenu.png
+   :width: 392px
+
 Toolbar
 -------
 
@@ -276,6 +290,8 @@ sections provides information that is encoded in the
    execution.
 -  **Visualization Artifacts:** A list of the recorded visual artifacts from
    the Test Bench execution.
+
+.. _active_jobs_tab:
 
 Active Jobs Tab
 ---------------

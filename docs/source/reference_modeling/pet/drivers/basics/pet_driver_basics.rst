@@ -33,8 +33,10 @@ the **Design Variable** icon from the Part Browser and onto the canvas.
 
    Adding Design Variables to a Parameter Study Driver
 
-Design Variable Range
-^^^^^^^^^^^^^^^^^^^^^
+.. _design_variable_range_attribute:
+
+Range Attribute
+^^^^^^^^^^^^^^^
 
 Each Design Variable has **Range** attribute
 that can be set by the user.
