@@ -173,7 +173,7 @@ namespace CyPhyComponentAuthoring.Modules
             }
             #endregion
 
-            clean_up( icon_file_chosen && !test_mode );
+            clean_up(icon_file_chosen && !test_mode);
         }
 
         // Display a file dialog box to select the Custom Icon file to import
