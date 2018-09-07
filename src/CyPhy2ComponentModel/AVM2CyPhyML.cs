@@ -830,7 +830,8 @@ namespace AVM2CyPhyML
             }
         }
 
-        protected static void connectAcrossHierarchy(object cyphy_source, object cyphy_target, String connectionKind)
+        protected static void connectAcrossHierarchy(object cyphy_source, object cyphy_target, String connectionKind,
+            bool createAsPortConnection=false)
         {
             Model source_parent;
             FCO source_connector;
@@ -862,7 +863,7 @@ namespace AVM2CyPhyML
                 || (AVM2CyPhyML.AVM2CyPhyMLBuilder.GetFCOObjectReference(cyphy_source) == null && target_parent.ID == source_parent.ParentContainer.ID)
                 )
             {
-                makeConnection(cyphy_source, cyphy_target, connectionKind);
+                makeConnection(cyphy_source, cyphy_target, connectionKind, createAsPortConnection: createAsPortConnection);
                 return;
             }
             // AVM2CyPhyML.AVM2CyPhyMLBuilder.GetFCOObject(
@@ -909,7 +910,9 @@ namespace AVM2CyPhyML
                 Model parent = source_parents[i];
                 MgaMetaRole connectorRole = ((MgaMetaModel)parent.Impl.MetaBase).RoleByName[source_connector.Impl.MetaBase.Name];
                 var newIntermediary = new ISIS.GME.Common.Classes.FCO();
-                newIntermediary.Impl = ((MgaModel)parent.Impl).DeriveChildObject((MgaFCO)source_connector.Impl, connectorRole, true);
+                MgaFCO newIntermediaryFCO;
+                newIntermediary.Impl = newIntermediaryFCO =((MgaModel)parent.Impl).DeriveChildObject((MgaFCO)source_connector.Impl, connectorRole, true);
+                newIntermediaryFCO.SetStrAttrByNameDisp("ID", "id-" + Guid.NewGuid().ToString("D"));
                 if (reverse == false)
                 {
                     makeConnection(srcIntermediary, newIntermediary, connectionKind);
@@ -1764,7 +1767,7 @@ namespace AVM2CyPhyML
                         createAsPortConnection = true;
                     }
 
-                    makeConnection(cyPhyMLObjectDst, cyPhyMLObjectSrc, typeof(CyPhyML.PortComposition).Name, createAsPortConnection: createAsPortConnection);
+                    connectAcrossHierarchy(cyPhyMLObjectDst, cyPhyMLObjectSrc, typeof(CyPhyML.PortComposition).Name, createAsPortConnection: createAsPortConnection);
                 }
 
                 if (iteratorAVMPort is avm.cad.Plane)
