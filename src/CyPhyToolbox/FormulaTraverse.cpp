@@ -571,9 +571,7 @@ bool NewTraverser::IsRootNode(const CyPhyML::ValueFlowTarget &vft)
 
 		if (srcVFs.size() > 1)
 		{
-			string message = "FormulaEvaluator -" + vft.getPath2("/", false) + " has >1 incoming VFs!";
-			GMEConsole::Console::writeLine(message, MSG_ERROR);
-			throw udm_exception (message);
+			throwOverspecified(vft);
 		}
 
 		if (vftParent == m_BoundingBox)
@@ -629,9 +627,7 @@ bool NewTraverser::IsLeafNode(const CyPhyML::ValueFlowTarget &vft)
 
 		if (srcVFs.size() > 1)
 		{
-			string message = "FormulaEvaluator -" + vft.getPath2("/", false) + "has >1 incoming VFs!";
-			GMEConsole::Console::writeLine(message, MSG_ERROR);
-			throw udm_exception (message);
+			throwOverspecified(vft);
 		}
 
 		if (!dstVFs.empty())
@@ -1007,9 +1003,7 @@ bool NewTraverser::EvaluatePPC(CyPhyML::ValueFlowTarget &vf, UnitUtil::ValueUnit
 
 		if (VF_Set.size() > 1)
 		{
-			string message = "FormulaEvaluator -" + vf.getPath2("/", false) + " has >1 incoming ValueFlow connections.";
-			GMEConsole::Console::writeLine(message, MSG_ERROR);
-			throw udm_exception(message);
+			throwOverspecified(vf);
 		}
 
 		CyPhyML::ValueFlowTarget src_vfTarget = (CyPhyML::ValueFlow(*VF_Set.begin())).srcValueFlow_end();
@@ -1444,9 +1438,7 @@ void NewTraverser::EvaluateCarParameters()
 
 			if (portMap_Set.size() > 1)
 			{
-				string message = "FormulaEvaluator - CarParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
-				GMEConsole::Console::writeLine(message, MSG_ERROR);
-				throw udm_exception(message);
+				throwOverspecified(*ci, "portMap");
 			}
 
 			double value = 0;
@@ -1519,9 +1511,7 @@ void NewTraverser::EvaluateCADParameters()
 		{
 			if (portMap_Set.size() > 1)
 			{
-				string message = "FormulaEvaluator - CADParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
-				GMEConsole::Console::writeLine(message, MSG_ERROR);
-				throw udm_exception(message);
+				throwOverspecified(*ci, "portMap");
 			}
 
 			CyPhyML::ValueFlowTarget vft = portMap_Set.begin()->srcCADParameterPortMap_end();
@@ -1628,9 +1618,7 @@ void NewTraverser::EvaluateManufactureParameters()
 
 			if (portMap_Set.size() > 1)
 			{
-				string message = "FormulaEvaluator - ManufactureParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
-				GMEConsole::Console::writeLine(message, MSG_ERROR);
-				throw udm_exception(message);
+				throwOverspecified(*ci, "portMap");
 			}
 
 			double value = 0;
@@ -1967,9 +1955,7 @@ void NewTraverser::EvaluateModelicaParameters()
 
 			if (portMap_Set.size() > 1)
 			{
-				string message = "FormulaEvaluator - ModelicaParameter has >1 incoming portMap connection [" + ci->getPath2("/", false) + "]";
-				GMEConsole::Console::writeLine(message, MSG_ERROR);
-				throw udm_exception(message);
+				throwOverspecified(*ci, "portMap");
 			}
 
 			double value = 0;
