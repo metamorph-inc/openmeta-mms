@@ -104,6 +104,12 @@
     </Compile>
     <Compile Include="Modules\AddCustomIcon.cs" />
     <Compile Include="Modules\AddDocumentation.cs" />
+    <Compile Include="GUIs\CADProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\CADProgress.Designer.cs">
+      <DependentUpon>CADProgress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Modules\CADModelImport.cs" />
     <Compile Include="Modules\MfgModelImport.cs" />
     <Compile Include="Modules\ComponentExport.cs" />
@@ -210,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\SimulinkLibraryBrowser.resx">
       <DependentUpon>SimulinkLibraryBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\CADProgress.resx">
+      <DependentUpon>CADProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
