@@ -10,7 +10,7 @@ physics simulations, including mechanical, thermal, and power analysis.
 Installation
 ^^^^^^^^^^^^
 
-1. Download `OpenModelica <https://build.openmodelica.org/omc/builds/windows/releases/1.9.1/beta2/OpenModelica-1.9.1-Beta2-revision-19512.exe>`_.
+1. Download `OpenModelica 1.12.0 <https://build.openmodelica.org/omc/builds/windows/releases/1.12/final/64bit/OpenModelica-v1.12.0-64bit.exe>`_.
 2. Run the executable.
 
 Modelica Models
