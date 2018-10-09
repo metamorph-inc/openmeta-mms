@@ -345,6 +345,7 @@ namespace MfgBom.Bom
             dynamic dynJson = JsonConvert.DeserializeObject(OctopartResult);
             string rVal = "";
             bool done = false;
+            const int targetLength = 25;
 
             if ((dynJson != null) && (dynJson.descriptions != null))
             {
@@ -355,13 +356,20 @@ namespace MfgBom.Bom
                     bool hasSources = item.attribution.sources.HasValues;
                     if (!hasSources)
                     {
-                        Console.Out.WriteLine("Thing");
                         continue;
                     }
 
                     string desc = item.value;
                     string supplier = item.attribution.sources[0].name;
-                    mapSourceToDescription.Add(supplier, desc);
+                    string oldDesc;
+                    if (mapSourceToDescription.TryGetValue(supplier, out oldDesc))
+                    {
+                        if (Math.Abs(oldDesc.Length - targetLength) < Math.Abs(desc.Length - targetLength))
+                        {
+                            desc = oldDesc;
+                        }
+                    }
+                    mapSourceToDescription[supplier] = desc;
                 }
             }
 
@@ -383,7 +391,6 @@ namespace MfgBom.Bom
             if (!done)
             {
                 // No favorite source was found, so find the description that's closest to a target length.
-                const int targetLength = 25;
                 int minError = Int32.MaxValue;
                 foreach (KeyValuePair<string, string> entry in mapSourceToDescription)
                 {
