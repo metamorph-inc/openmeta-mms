@@ -331,7 +331,6 @@
     <Feature Id='Complete' Title='META Toolchain' Description='The complete package' Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
       <ComponentGroupRef Id='tonka'/>
 
-      <ComponentGroupRef Id='WebGME'/>
       <ComponentRef Id='CPMDecorator.dll'/>
       <ComponentRef Id='ApplicationShortcut'/>
       <ComponentRef Id='CyPhyML.mta'/>
