@@ -76,7 +76,7 @@ private:
 public:
 	CStatusDlg(CWnd* pParent = NULL, bool silent= false);   // standard constructor
 	void SetStatus(StatusID s_id);
-	unsigned long StepInState(short percentage);
+	void StepInState(short percentage);
 
 
 // Dialog Data
@@ -105,7 +105,6 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
-CStatusDlg * GetStatusDlg(CStatusDlg * set_dlg);
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

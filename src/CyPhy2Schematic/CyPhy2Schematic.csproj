@@ -105,8 +105,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="XSD2CSharp">
-      <HintPath>..\..\src\CyPhy2DesignInterchange\bin\Release\XSD2CSharp.dll</HintPath>
+    <Reference Include="OpenMETA.Interchange">
+      <HintPath>..\..\src\CyPhy2DesignInterchange\bin\Release\OpenMETA.Interchange.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

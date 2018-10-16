@@ -66,7 +66,7 @@ namespace TonkaDDPTest
                         entryADM.Extract(path_Test, ExtractExistingFileAction.OverwriteSilently);
 
                         var xml = File.ReadAllText(Path.Combine(path_Test, entryADM.FileName));
-                        exportedDesign = XSD2CSharp.AvmXmlSerializer.Deserialize<avm.Design>(xml);
+                        exportedDesign = OpenMETA.Interchange.AvmXmlSerializer.Deserialize<avm.Design>(xml);
                     }
 
                     var importer = new CyPhyDesignImporter.AVMDesignImporter(null, proj as IMgaProject, null);

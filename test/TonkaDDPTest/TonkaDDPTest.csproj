@@ -84,8 +84,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="XSD2CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3af12afa0e5a8bb2, processorArchitecture=MSIL">
-      <HintPath>..\..\meta\DesignDataPackage\lib\csharp\XSD2CSharp\bin\Release\XSD2CSharp.dll</HintPath>
+    <Reference Include="OpenMETA.Interchange, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3af12afa0e5a8bb2, processorArchitecture=MSIL">
+      <HintPath>..\..\meta\DesignDataPackage\lib\csharp\OpenMETA.Interchange\bin\Release\OpenMETA.Interchange.dll</HintPath>
     </Reference>
     <Reference Include="xunit">
       <HintPath>..\..\3rdParty\xunit-1.9.1\xunit.dll</HintPath>

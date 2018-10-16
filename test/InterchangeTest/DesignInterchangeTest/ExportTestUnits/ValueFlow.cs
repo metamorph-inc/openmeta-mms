@@ -730,6 +730,7 @@ namespace DesignExporterUnitTests
             Assert.IsType<avm.ParametricValue>(primitiveProperty.Value.ValueExpression);
             var parametricValue = primitiveProperty.Value.ValueExpression as avm.ParametricValue;
             return parametricValue;
-        }        
+        }
+
     }
 }

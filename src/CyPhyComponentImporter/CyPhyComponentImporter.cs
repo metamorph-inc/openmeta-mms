@@ -675,7 +675,7 @@ namespace CyPhyComponentImporter
 
             System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(reader, xmlReaderSettings);
 
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Component), XSD2CSharp.AvmXmlSerializer.getAVMClasses());
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Component), OpenMETA.Interchange.AvmXmlSerializer.getAVMClasses());
             serializer.UnknownElement += new XmlElementEventHandler(DeSerializer_UnknownElement);
             avm.Component ac_import = (avm.Component)serializer.Deserialize(xmlReader);
             return ac_import;
@@ -713,7 +713,7 @@ namespace CyPhyComponentImporter
 
         public static avm.Component DeserializeAvmComponentXml(TextReader reader)
         {
-            return XSD2CSharp.AvmXmlSerializer.Deserialize<Component>(reader);
+            return OpenMETA.Interchange.AvmXmlSerializer.Deserialize<Component>(reader);
         }
 
         #region IMgaComponentEx Members
