@@ -8,7 +8,7 @@ many different modeling and simulation tools at once. For example, an OpenMETA
 project may be used to synchronize a 3D CAD and physical dynamics models for a
 given system. (as with the :ref:`spacecraft_model`).
 
-OpenMETA does this by first establishing a hierarchical model of the system,
+OpenMETA does this by first establishing a structural model of the system,
 where key elements of the system *(e.g.: battery, solar panel, antenna)* have
 Component models, and those Component models are connected together.
 
