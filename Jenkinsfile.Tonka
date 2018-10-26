@@ -51,6 +51,7 @@ run_cadunittests.cmd/$)
                 always {
                     junit keepLongStdio: true, testResults: 'test/junit_results.xml'
                     archiveArtifacts artifacts: "deploy/META*.msi,deploy/META_x64.wixpdb,deploy/*.msp,deploy/META_${releaseId}.exe,deploy/META_${releaseId}_offline.exe"
+                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'docs\\_build\\html', reportFiles: 'index.html', reportName: 'OpenMETA Documentation', reportTitles: ''])
                 }
             }
         }

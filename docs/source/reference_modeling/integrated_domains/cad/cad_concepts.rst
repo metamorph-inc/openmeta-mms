@@ -1,143 +1,110 @@
 .. _cad_concepts:
 
-CAD Concepts
-============
+Conceptual Overview
+===================
 
-This section briefly describes the process for adding CAD resources to
-OpenMETA Components and generating CAD assemblies by integrating a number of
-OpenMETA Components into an OpenMETA Component Assembly and launching
-:ref:`Metalink`.
+OpenMETA helps analysts synchronize representations of their system across
+many different modeling and simulation tools at once. For example, an OpenMETA
+project may be used to synchronize a 3D CAD model and a physics simulation model
+at the same time (as with the :ref:`spacecraft_model`).
 
-OpenMETA currently has a single publically-available CAD integration:
-PTC Creo Parametric 3.0. For this reason, the below concepts will be
-explained using Creo.
+OpenMETA does this by first establishing a structural model of the system,
+where key elements of the system *(e.g.: battery, solar panel, antenna)* have
+Component models, and those Component models are connected together.
 
-Constraint Methodology
-----------------------
+Each Component model contains references to one or more domain-specific models,
+such as 3D CAD models and physics simulation models.
 
-Key connection points on CAD resources are marked with *datums*,
-which can be constrained in OpenMETA to the datums of other connected
-components to generate an assembly. By expressing these constraints in OpenMETA
-on these connection points, instead of relative-position offsets, a
-complex component can be automatically composed out of
-other simpler components using fixed and/or partially constrained joints.
+The connections between the Components tell OpenMETA how to join these
+individual models together to create a model of the overall system in each
+targeted tool.
 
-Preparing CAD Files
--------------------
+For more background on how OpenMETA's Component concept works, read the section
+on :ref:`components`.
 
-Each part that is used in an OpenMETA project first needs to be prepared in the
-native CAD environment. *Datums* that will be used for constraints as well as
-any *Parameters* that will be used to adjust the dimensions of the part in OpenMETA
-need to be added at this time.
+.. figure:: images/spacecraft.png
+   :alt: Image of the Spacecraft Component Assembly and CAD Representation
+
+   Image of the Spacecraft OpenMETA project and the resulting 3D CAD assembly
+
+
+Concepts for Construction and Composition
+-----------------------------------------
+
+Geometric constraints are used as the composition mechanism for 3D CAD models
+in OpenMETA.
+
+Key connection features on CAD resources are marked with named *datums*.
+These named datums may be:
+
+* points
+* axes
+* surfaces
+* coordinate systems
+
+A connection between two Components in OpenMETA specifies how the named datums
+in one model should be constrained to the named datums in another model.
+
+When OpenMETA builds the system model, it asks the CAD tool to add each of the system's
+parts to an assembly and to constrain those geometric features together in space.
+
+Example
+-------
+With this example from the :ref:`spacecraft_model`, we'll see how this concept
+applies in practice.
+
+The antenna of the spacecraft is designed to mount to the top of the cargo bay.
+In the antenna's CAD model, there are 3 named surfaces:
+
+* **BASE_MOUNT_PLN**: This surface is in the plane of the antenna mount's base.
+* **RIGHT_CENTER_PLN**: This surface is along the vertical centerline axis of the antenna, and oriented towards the right side.
+* **FRONT_CENTER_PLN**: This surface is along the vertical centerline axis of the antenna, and oriented towards the front side.
 
 .. figure:: images/antenna_planes.png
 
    Antenna part with three datum planes to define a mounting interface
 
-In the *Antenna* CAD part above, you can see three planes at the base of
-the antenna that will be used to constrain it to another component in a
-larger assembly.
+The cargo module has 3 named surfaces, in a similar configuration,
+at the location where the antenna should be mounted:
 
-.. _component_authoring_tool:
+* **CARGO_TOP_MOUNT_PLN**: This surfaces is in the plane of the top of the cargo bay, where the antenna will mount.
+* **STARBOARD_CENTER_PLN**: This surface is in the plane of the vertical centerline of the cargo bay, facing the starboard side.
+* **FORWARD_CENTER_PLN**: This surface is in the plane of the vertical centerline of the cargo bay, facing the front side.
 
-Component Authoring Tool
-------------------------
+The cargo module has many other named surfaces as well, but these are the 3
+that are relevant for composing with the antenna.
 
-The Component Authoring Tool (CAT) makes it easy to add a CAD resource to
-an OpenMETA component by simply selecting the native part or assembly file
-that you want added to the component.
-To use the CAT, open the OpenMETA component for which you wish to add a
-CAD resource and click the |CAT_TOOL| button on the toolbar.
+.. figure:: images/cargo_planes.png
 
-.. |CAT_TOOL| image:: images/cat_tool.png
-   :width: 24px
+   Cargo module part with three datum planes to define a mounting interface
 
-.. figure:: ../../interpreters/images/cat_tool.png
-  :alt: The Component Authoring Tool Interpreter Dialog
-  :width: 792px
+In our OpenMETA project, we have Component representations for both the
+Antenna and Cargo Module. The **Cargo_to_Antenna** ports through with they are
+connected provides rules for how the surfaces of one should be constraints
+to the surfaces of the other:
 
-The CAT can be used to add many different types of domain models to an OpenMETA
-component, but to add a CAD resource, simply double-click the "Add CAD" icon.
-The next section describes the artifacts generated by the CAT.
-
-
-CAD Models
-----------
-
-The most important artifact generated by the CAT is a *CAD Model* model.
-This model contains references to any datums *(planes, axis,
-coordinate systems, and points)* that are defined in the geometry.
-A *CAD Model* model can also contain parameters, which are used to pass
-values from OpenMETA into the CAD tool.
-In the CAD tool these are often used as inputs to formulas
-or to dimension geometry.
-
-.. figure:: images/antenna_cat_artifacts.png
-   :alt: CAD Model created from the Antenna.prt CAD file
-
-   CAD Model created from the Antenna.prt CAD file
-
-Each OpenMETA component has a corresponding folder in the ``components/``
-folder in the project directory;
-this is where any domain specific files are stored.
-The *Resource* atom that is connected to the CAD Model specifies
-the location of the referenced native CAD file relative to the component
-directory.
-For the Antenna component shown above, the referenced native CAD file
-can be found at ``CAD/Antenna.prt`` relative to the component base folder.
-
-.. note:: Creo versions its files by appending a numerical extention,
-   but it only considers the latest; e.g. if you have both a
-   ``CAD/Antenna.prt`` and a ``CAD/Antenna.prt.1`` file in your component
-   folder, only the latter will be used by Creo.
-
-Any unneeded atoms in the CAD Model can be removed for readability.
-Additionally, CAD Models and Resources can be added to a component manually,
-but we recommend using the CAT as this becomes rather tedious when there
-are many CAD files that need to be added.
-
-CAD Joint Connectors
---------------------
-
-OpenMETA Connectors allow us to wrap multiple domain ports into
-a single exposed connector on an OpenMETA component.
-For CAD purposes we often wrap a collection of datums that represent
-a joint into a single connector.
-Below you can see the three planes of the antenna part being wrapped
-by a single "Cargo_To_Antenna" connector.
-
-.. figure:: images/antenna_component_cleaned.png
-   :alt: Antenna component with a CAD Joint Connector
-
-   Antenna component with a CAD Joint Connector
-
-See the :ref:`connectors` section of the :ref:`components` chapter for
-more information on Connectors.
-
-Composing Assemblies
---------------------
-
-Composing CAD assemblies in OpenMETA is as simple as adding components
-to an OpenMETA Component Assembly and creating a connection between the
-desired connectors.
+================ =============== ====================
+Antenna          Constraint Type Cargo Module
+================ =============== ====================
+BASE_MOUNT_PLN   align           CARGO_TOP_MOUNT_PLN
+RIGHT_CENTER_PLN align           STARBOARD_CENTER_PLN
+FRONT_CENTER_PLN align           FORWARD_CENTER_PLN
+================ =============== ====================
 
 .. figure:: images/simple_assembly.png
    :alt: Simple OpenMETA Assembly
 
-   Simple OpenMETA Assembly
+   Simple OpenMETA Assembly of Antenna and Cargo module
 
-After an assembly is created, you can view the composed CAD geometry
-by executing a CAD Test Bench or running Metalink.
-Visit the :ref:`cad_test_benches` section to see how to properly set up and
-execute a CAD Test Bench.
-The :ref:`metalink` tool is described in the next section.
+When OpenMETA builds the system model, it asks the CAD tool to add both the
+antenna and cargo bay parts into an assembly and to constrain these
+geometric features together in space.
 
-Examples
---------
+.. figure:: images/antenna_cargo_assembly.png
+   :alt: Simple Creo Assembly
 
-With Creo installed, check out the :ref:`spacecraft_model` walkthrough.
+   Resulting 3D CAD Assembly Model
 
-.. figure:: images/spacecraft.png
-   :alt: Image of the Spacecraft Component Assembly and CAD Representation
-
-   Image of the Spacecraft Component Assembly and CAD Representation
+Through repetition of this process with the interfaces between the other
+parts of the spacecraft, the whole assembly can be created from the
+OpenMETA project.

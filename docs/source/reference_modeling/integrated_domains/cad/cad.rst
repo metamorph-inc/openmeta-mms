@@ -6,14 +6,11 @@ Computer-Aided Design (CAD)
 Computer-Aided Design (CAD) allows for a 3-D representation of the components
 in a design.
 
-.. figure:: images/01-01-led-cad-model.png
-   :alt: LED CAD model
+.. figure:: images/spacecraft.png
+   :alt: Image of the Spacecraft Component Assembly and CAD Representation
 
-   *CAD model of a Light-Emitting Diode (LED)*
+   Image of the Spacecraft OpenMETA project and the resulting 3D CAD assembly
 
-.. TODO: replace with better figure:: images/cad_assembly.png
-
-   <Insert image of CAD assembly>
 
 OpenMETA has generic support for integrating CAD tools. This support allows
 for OpenMETA components to reference CAD part and assembly files and to expose
@@ -25,4 +22,5 @@ datums can then be used to compose CAD assemblies.
    :caption: Sections
 
    cad_concepts
+   working_with_cad
    metalink
