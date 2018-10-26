@@ -27,8 +27,8 @@ Preparing CAD Files
 
 Each part that is used in an OpenMETA project first needs to be prepared in the
 native CAD environment. *Datums* that will be used for constraints as well as
-any *Parameters* that will be used to adjust the dimensions of the part in OpenMETA
-need to be added at this time.
+any *Parameters* that will be used to adjust the dimensions of the part in
+OpenMETA need to be added at this time.
 
 .. figure:: images/antenna_planes.png
 
@@ -86,7 +86,7 @@ directory.
 For the Antenna component shown above, the referenced native CAD file
 can be found at ``CAD/Antenna.prt`` relative to the component base folder.
 
-.. note:: Creo versions its files by appending a numerical extention,
+.. note:: Creo versions its files by appending a numerical extension,
    but it only considers the latest; e.g. if you have both a
    ``CAD/Antenna.prt`` and a ``CAD/Antenna.prt.1`` file in your component
    folder, only the latter will be used by Creo.
@@ -99,7 +99,7 @@ are many CAD files that need to be added.
 Connectors
 ----------
 
-OpenMETA Connectors allow us to wrap multipe domain ports into
+OpenMETA Connectors allow us to wrap multiple domain ports into
 a single exposed connector on an OpenMETA Component.
 For CAD purposes we often wrap a collection of datums that represent
 an interface into a single connector.

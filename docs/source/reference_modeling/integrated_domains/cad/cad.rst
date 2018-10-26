@@ -3,8 +3,8 @@
 Computer-Aided Design (CAD)
 ===========================
 
-Computer-Aided Design (CAD) allows for a 3-D representation of the components
-in a design.
+Computer-Aided Design (CAD) allows for a 3-dimensional (3D) representation of
+the physical components in a design.
 
 .. figure:: images/spacecraft.png
    :alt: Image of the Spacecraft Component Assembly and CAD Representation

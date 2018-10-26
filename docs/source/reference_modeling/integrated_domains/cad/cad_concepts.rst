@@ -5,10 +5,10 @@ Conceptual Overview
 
 OpenMETA helps analysts synchronize representations of their system across
 many different modeling and simulation tools at once. For example, an OpenMETA
-project may be used to synchronize a 3D CAD model and a physics simulation model
-at the same time (as with the :ref:`spacecraft_model`).
+project may be used to synchronize a 3D CAD and physical dynamics models for a
+given system. (as with the :ref:`spacecraft_model`).
 
-OpenMETA does this by first establishing a structural model of the system,
+OpenMETA does this by first establishing a hierarchical model of the system,
 where key elements of the system *(e.g.: battery, solar panel, antenna)* have
 Component models, and those Component models are connected together.
 
@@ -45,11 +45,13 @@ These named datums may be:
 A connection between two Components in OpenMETA specifies how the named datums
 in one model should be constrained to the named datums in another model.
 
-When OpenMETA builds the system model, it asks the CAD tool to add each of the system's
-parts to an assembly and to constrain those geometric features together in space.
+When OpenMETA builds the system model, it asks the CAD tool to add each of the
+system's parts to an assembly and to constrain those geometric features together
+in space.
 
 Example
 -------
+
 With this example from the :ref:`spacecraft_model`, we'll see how this concept
 applies in practice.
 
@@ -79,8 +81,8 @@ that are relevant for composing with the antenna.
    Cargo module part with three datum planes to define a mounting interface
 
 In our OpenMETA project, we have Component representations for both the
-Antenna and Cargo Module. The **Cargo_to_Antenna** ports through with they are
-connected provides rules for how the surfaces of one should be constraints
+Antenna and Cargo Module. The **Cargo_to_Antenna** ports through which they are
+connected provides rules for how the surfaces of one should be constrained
 to the surfaces of the other:
 
 ================ =============== ====================
