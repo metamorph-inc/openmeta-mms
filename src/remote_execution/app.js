@@ -239,7 +239,7 @@ app.post('/testbench/createItem', function(req, res){
         });
     }
 });
-app.post(/^\/testbench\/job\/(\w+)\/build/, function(req, res) {
+app.post(/^\/testbench\/job\/([^/]+)\/build/, function(req, res) {
     var jobname = req.params[0];
     var parsed_request = url.parse(req.url, true);
     var jenkins_req = superagent
@@ -302,7 +302,7 @@ var server = require('http').createServer(function(req, res) {
   var target = config.target;
   var parsed_request = url.parse(req.url);
   // console.log(parsed_request.pathname);
-  if (routes[parsed_request.pathname] || /^\/testbench\/job\/\w+\/build/.test(parsed_request.pathname)) {
+  if (routes[parsed_request.pathname] || /^\/testbench\/job\/[^/]+\/build/.test(parsed_request.pathname)) {
     target = "http://127.0.0.1:" + app_http.address().port;
   } else {
     if (req.url.indexOf("/testbench") === 0) {
