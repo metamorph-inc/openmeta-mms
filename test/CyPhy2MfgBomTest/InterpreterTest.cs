@@ -79,7 +79,7 @@ namespace CyPhy2MfgBomTest
             }
         }
 
-        [Fact]
+        [Fact(Skip="Octopart API key needed")]
         public void EndToEnd_SingleLevel()
         {
             /* What do we want to do?
