@@ -11,7 +11,7 @@ namespace CyPhy2MfgBomTest
     {
         private static String API_KEY = "22becbab";
 
-        [Fact]
+        [Fact(Skip="Octopart API key needed")]
         public void QueryAndParse_ManyMPNs()
         {
             var listMpn = new List<String>()

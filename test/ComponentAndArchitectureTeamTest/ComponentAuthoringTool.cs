@@ -1064,7 +1064,7 @@ namespace ComponentAndArchitectureTeamTest
             }
         }
         
-        [Fact]
+        [Fact(Skip="Octopart API key needed")]
         public void OctopartImporter_TypicalCase()
         {            
             MgaProject proj = this.fixture.proj;
@@ -1120,7 +1120,7 @@ namespace ComponentAndArchitectureTeamTest
         }
 
 
-        [Fact]
+        [Fact(Skip="Octopart API key needed")]
         public void OctopartImporter_EmptyReturnCategory()
         {
             MgaProject proj = this.fixture.proj;
@@ -1203,7 +1203,7 @@ namespace ComponentAndArchitectureTeamTest
         }
 
 
-        [Fact]
+        [Fact(Skip="Octopart API key needed")]
         public void Octopart_Importer_NoEDAModelButMPNProperty()
         {
             MgaProject proj = this.fixture.proj;

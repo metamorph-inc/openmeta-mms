@@ -31,6 +31,7 @@ using META;
 using System.Threading.Tasks;
 using CyPhyMetaLinkBridgeClient;
 using CyPhyGUIs;
+using System.Text.RegularExpressions;
 
 namespace CyPhyMetaLink
 {
@@ -105,6 +106,13 @@ namespace CyPhyMetaLink
 
         // The main message queue
         ConcurrentQueue<MetaLinkProtobuf.Edit> queuedMessages = new ConcurrentQueue<Edit>();
+        public CyPhyMLClasses.CADModel.AttributesClass.FileFormat_enum CadFormat
+        {
+            get
+            {
+                return CyPhyMLClasses.CADModel.AttributesClass.FileFormat_enum.Creo;
+            }
+        }
 
         public CyPhyMetaLinkAddon()
         {
@@ -322,14 +330,22 @@ namespace CyPhyMetaLink
                 {
                     if (GMEConsole != null && createAssembly.ExitCode != 0)
                     {
-                        string errlog = "CADCreoParametricCreateAssembly_err.log";
-                        using (StreamWriter writer = new StreamWriter(errlog))
+                        string message = String.Format("CADCreoParametricMetaLink exited with code {0}", createAssembly.ExitCode);
+                        // CADCreoParametricMetaLink attempts to log everything in its log file
+                        // Ignore stderr if it doesn't contain anything useful
+                        string stdErrString = stderrData.ToString();
+                        if (Regex.Match(stdErrString, "\\S").Success)
                         {
-                            writer.Write(stderrData.ToString());
-                            writer.Close();
+                            string errlog = "CADCreoParametricCreateAssembly_err.log";
+                            using (StreamWriter writer = new StreamWriter(errlog))
+                            {
+                                writer.Write(stdErrString);
+                                writer.Close();
+                            }
+                            message += String.Format(", the logfile is {0} ", errlog);
                         }
-                        GMEConsole.Error.WriteLine(String.Format("CADCreoParametricMetaLink exited with code {0}, the logfile is {1}", createAssembly.ExitCode, errlog));
-                        SyncControl.Invoke((System.Action)(() => StartupFailureCallback(stderrData.ToString(), logfile)));
+                        GMEConsole.Error.WriteLine(message);
+                        SyncControl.Invoke((System.Action)(() => StartupFailureCallback(stdErrString, logfile)));
                     }
                 }
             };
@@ -342,7 +358,7 @@ namespace CyPhyMetaLink
             createAssembly.BeginOutputReadLine();
             createAssembly.BeginErrorReadLine();
             createAssembly.StandardInput.Close();
-            GMEConsole.Info.WriteLine("Creo is starting, the logfile is at: <a href=\"file:///{0}\" target=\"_blank\">{0}</a>", Path.Combine(workingDir, "log", logfile));
+            GMEConsole.Info.WriteLine("Creo is starting, the logfile is " + SmartLogger.GetGMEConsoleFileLink(logfile));
             ShowStartupDialog(true);
             // createAssembly.WaitForExit(10 * 1000);
         }
@@ -582,7 +598,7 @@ namespace CyPhyMetaLink
                 cadSettings._metaLink = true;
 
                 CyPhy2CAD_CSharp.Logger.Instance.Reset();
-                CyPhy2CAD_CSharp.CADFlatDataCreator datacreator = new CyPhy2CAD_CSharp.CADFlatDataCreator(cadSettings.OutputDirectory, GetProjectDir(), metalink: true);
+                CyPhy2CAD_CSharp.CADFlatDataCreator datacreator = new CyPhy2CAD_CSharp.CADFlatDataCreator(cadSettings.OutputDirectory, GetProjectDir(), CadFormat, metalink: true);
 
                 datacreator.CreateFlatData(assembly);
                 CyPhy2CAD_CSharp.DataRep.CADContainer cadcontainer = datacreator.CreateCADDataContainer(assembly.Guid.ToString(), CyPhy2CAD_CSharp.UtilityHelpers.CleanString2(assembly.Name));

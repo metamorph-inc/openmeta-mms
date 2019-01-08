@@ -330,7 +330,10 @@ namespace CyPhyComponentAuthoring.Modules
 
                     // copy the selected file
                     string cadFileCopyPath = System.IO.Path.Combine(finalPathName, cpsrcfile);
-                    System.IO.File.Copy(cadFilename, cadFileCopyPath, true);
+                    if (Path.GetFullPath(cadFilename) != Path.GetFullPath(cadFileCopyPath))
+                    {
+                        System.IO.File.Copy(cadFilename, cadFileCopyPath, true);
+                    }
 
                     // Set "primary" file as the first in the list.
                     importedCADFiles.Add(Path.Combine("CAD", Path.GetFileName(cadFileCopyPath)));
@@ -350,9 +353,8 @@ namespace CyPhyComponentAuthoring.Modules
                             // iterate through each file listed in the resourcedependency section
                             while (reader.ReadToFollowing("ResourceDependency") == true)
                             {
-                                string res_name = reader.GetAttribute("Name");
                                 string res_path = reader.GetAttribute("Path");
-                                this.Logger.WriteDebug("Copying this file: " + res_path + "\\" + res_name);
+                                this.Logger.WriteDebug("Copying this file: " + res_path);
 
                                 // CAD files end in .1 .2 etc. Pick the latest ones
                                 var allFiles = Directory.EnumerateFiles(Path.GetDirectoryName(res_path), "*prt." /*n.b. literal dot*/ + "*")
@@ -370,14 +372,18 @@ namespace CyPhyComponentAuthoring.Modules
                                         string latestFilename = latest.basename + "." + latest.version;
                                         // Need to limit this down to just the filename in question
                                         // The XML file changes the name to all caps, so compare apples to apples
-                                        if (latestFilename.ToUpper().StartsWith(res_name.ToUpper()))
+                                        if (latestFilename.ToUpperInvariant().StartsWith(Path.GetFileName(res_path).ToUpperInvariant()))
                                         {
                                             string destpathandname = Path.Combine(finalPathName, latestFilename);
                                             if (!importedCADFiles.Contains(Path.Combine("CAD", Path.GetFileName(destpathandname))))
                                             {
                                                 importedCADFiles.Add(Path.Combine("CAD", Path.GetFileName(destpathandname)));
                                             }
-                                            File.Copy(Path.Combine(Path.GetDirectoryName(res_path), latestFilename), destpathandname, true);
+                                            var sourcepathandname = Path.Combine(Path.GetDirectoryName(res_path), latestFilename);
+                                            if (Path.GetFullPath(sourcepathandname) != Path.GetFullPath(destpathandname))
+                                            {
+                                                File.Copy(sourcepathandname, destpathandname, true);
+                                            }
                                             break;
                                         }
                                     }

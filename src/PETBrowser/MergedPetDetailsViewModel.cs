@@ -21,7 +21,8 @@ namespace PETBrowser
         {
             "CfgID",
             "GUID",
-            "DesignContainer"
+            "DesignContainer",
+            "AnalysisError"
         });
 
         public class Metric

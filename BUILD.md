@@ -19,7 +19,7 @@ When installing Visual Studio, select these packages (at minimum):
 
 You must also install:
 - Visual Studio 2015 Build Tools ([download](https://www.microsoft.com/en-us/download/details.aspx?id=48159))
-- Visual C++ 2015 Build Tools ([download](http://landinghub.visualstudio.com/visual-cpp-build-tools))
+- Visual C++ 2015 Build Tools ([download](https://my.visualstudio.com/Downloads?q=2015%20build%20tools&wt.mc_id=o~msft~vscom~older-downloads))
   - Select the *"ATL/MFC SDK"* package (at minimum) 
 
 ### If you have Visual Studio 2015 (Community or above)
@@ -31,6 +31,8 @@ When installing Visual Studio, select these packages (at minimum):
 
 You must also install Microsoft Visual Studio 2015 Update 3
 ([download](https://www.visualstudio.com/en-us/news/releasenotes/vs2015-update3-vs))
+
+## .NETFramework Version 4.5
 
 ## Java JDK 7 or above
 [Download it here](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
