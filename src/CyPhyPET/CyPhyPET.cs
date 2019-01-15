@@ -531,6 +531,7 @@ namespace CyPhyPET
             if (this.Logger == null)
             {
                 var Logger = new CyPhyGUIs.GMELogger(this.mainParameters.Project, this.ComponentName);
+                Logger.Traceability = parameters.GetTraceability();
                 this.Logger = Logger;
                 disposeLogger = true;
                 if (this.mainParameters.VerboseConsole)
@@ -567,7 +568,7 @@ namespace CyPhyPET
                 if (this.result.Success)
                 {
                     this.Logger.WriteInfo("CyPhyPET finished successfully.");
-                    this.Logger.WriteInfo("Generated files are here: <a href=\"file:///{0}\" target=\"_blank\">{0}</a>", this.mainParameters.OutputDirectory);
+                    this.Logger.WriteInfo("Generated files are here: {0}", SmartLogger.GetGMEConsoleFileLink(parameters.OutputDirectory));
                     this.Logger.WriteDebug("[SUCCESS: {0}, Labels: {1}]", this.result.Success, this.result.Labels);
                 }
                 else
@@ -579,6 +580,7 @@ namespace CyPhyPET
             {
                 this.result.Success = false;
                 this.Logger.WriteError(String.Format("PET Interpreter failed: {0}", e.Message));
+                this.Logger.WriteDebug(String.Format("PET Interpreter failed: {0}", e));
             }
             catch (Exception e)
             {
@@ -1702,7 +1704,7 @@ namespace CyPhyPET
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
-                Arguments = String.Format("-m {0} \"{1}\"", pythonModule, filename),
+                Arguments = String.Format("-E -m {0} \"{1}\"", pythonModule, filename),
             };
 
             getParamsAndUnknowns.Start();
