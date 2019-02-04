@@ -586,6 +586,7 @@ namespace CyPhyPET
             {
                 this.result.Success = false;
                 this.Logger.WriteError(String.Format("PET Interpreter failed: {0}", e.Message));
+                this.Logger.WriteDebug(String.Format("PET Interpreter failed: {0}", e));
                 throw;
             }
             finally

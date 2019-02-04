@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from openmdao.api import IndepVarComp, Component, Problem, Group
+from openmdao.api import IndepVarComp, Component, Problem, Group, AnalysisError
 
 class Paraboloid(Component):
     """ Evaluates the equation f(x,y) = (x-3)^2 + xy + (y+4)^2 - 3 """
@@ -20,18 +20,10 @@ class Paraboloid(Component):
         x = params['x']
         y = params['y']
 
+        if -7.5 <= y and y <= -6.5:
+            raise AnalysisError("Parameter out of range")
+
         unknowns['f_xy'] = (x-3.0)**2 + x*y + (y+4.0)**2 - 3.0
-
-    def linearize(self, params, unknowns, resids):
-        """ Jacobian for our paraboloid."""
-
-        x = params['x']
-        y = params['y']
-        J = {}
-
-        J['f_xy', 'x'] = 2.0*x - 6.0 + y
-        J['f_xy', 'y'] = 2.0*y + 8.0 + x
-        return J
 
 if __name__ == "__main__":
 
