@@ -397,8 +397,7 @@ bool CreateVariableProperties(UdmDesertMap& des_map, DesertUdmMap &inv_des_map, 
 	int pos = 0;
 	std::set<DesertIface::Element, DepthSort> sortedElements;
 	std::copy(elements.begin(), elements.end(), std::inserter(sortedElements, sortedElements.begin()));
-	DepthSort sort;
-
+	
 	for (auto i = sortedElements.begin(); i != sortedElements.end(); i++)
 	{
 		Element e= *i;
@@ -478,7 +477,7 @@ bool CreateVariableProperties(UdmDesertMap& des_map, DesertUdmMap &inv_des_map, 
 						DoMap(vp, des_map, inv_des_map, vp_id);
 						TRACE("Added VariableProperty: (name %s, owner: %d) :%d\n", ((string)vp.name()).c_str(), owner_id,long(vp_id));
 					}
-				}		
+				}			
 			}
 		};//eo for(vp_i)
 		//progress bar status update

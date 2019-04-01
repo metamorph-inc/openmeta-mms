@@ -20,6 +20,8 @@ using namespace DesertIface;
 #include <boost/crc.hpp>  // for boost::crc_32_type
 #include <sstream>
 
+#include <boost/dynamic_bitset.hpp>
+
 //we need MFC CList....
 #include <afxtempl.h>
 //DesertIfaceBack stuff
@@ -208,6 +210,7 @@ BOOL CDesertToolApp::InitInstance()
 	bool isSilent= false;
 	uint64_t maxConfigs = -1;
 	bool multiRun = false;
+	bool countMode = false;
 	CString consList;
 	TCHAR** consGroupNames = NULL;
 	TCHAR** consGroups = NULL;
@@ -233,7 +236,8 @@ BOOL CDesertToolApp::InitInstance()
 				usage.Append(_T("/c \"constraint1 : constraint2\": apply the constraint list directly without GUI shown up\r\n"));
 				usage.Append(_T("/c \"applyAll\": apply all constraints directly without GUI shown up\r\n"));
 				usage.Append(_T("/c \"none\": does not apply any constraint and computes total no. of configurations, without GUI shown up\r\n"));
-				usage.Append(_T("/m : when used calls desert process for \"none\", \"applyAll\", and all given constraint groups (with names using '__CG__' prefix) one by one, without GUI shown up\r\n"));
+				usage.Append(_T("/m : when used, calls desert process for \"none\", \"applyAll\", and all given constraint groups (with names using '__CG__' prefix) one by one, without GUI shown up\r\n"));
+				usage.Append(_T("/C : Outputs the number of times an element is used in all valid configurations\r\n"));
 				usage.Append(_T("/M number : maximum number of configs to write\r\n"));
 				std::cout << usage;
 				AfxMessageBox(usage,MB_ICONINFORMATION);
@@ -244,7 +248,16 @@ BOOL CDesertToolApp::InitInstance()
 				|| _tcsstr(m_lpCmdLine, _T(".XML")) || _tcsstr(m_lpCmdLine, _T(".MEM")) || _tcsstr(m_lpCmdLine, _T(".MGA")))
 			{
 				CWzdCommandLineInfo cmdInfo;
-				ParseCommandLine(cmdInfo);
+				try
+				{
+					ParseCommandLine(cmdInfo);
+				}
+				catch (const std::exception& e)
+				{
+					fprintf(stderr, "%s\n", e.what());
+					returnCode = 2;
+					return FALSE;
+				}
 
 				//seems to be a valid file name
 				command_arg_ok = true;
@@ -256,10 +269,13 @@ BOOL CDesertToolApp::InitInstance()
 				
 				isSilent = cmdInfo.silent;
 				maxConfigs = cmdInfo.maxConfigs;
-				if (cmdInfo.applyCons)
-					consList = cmdInfo.consList;
+				consList = cmdInfo.consList;
 
-				if(cmdInfo.multiRun) {
+				if (cmdInfo.countMode) {
+					countMode = true;
+					isSilent = true;
+				}
+				else if (cmdInfo.multiRun) {
 					int ncgs = cmdInfo.consGroupNames.GetCount();
 					numConsGroups = ncgs;
 					if(ncgs > 0) {
@@ -393,7 +409,7 @@ BOOL CDesertToolApp::InitInstance()
 			{
 				Space sp;
 				Element dummy;
-
+				
 				for (sp_iterator = spaces.begin(); sp_iterator != spaces.end(); sp_iterator++)
 				{
 					Space sp = *(sp_iterator);
@@ -401,7 +417,7 @@ BOOL CDesertToolApp::InitInstance()
 					CreateDesertSpace(sp, dummy, des_map, inv_des_map, elements, true, UpdateStatus);
 				}//eo for (sp_iterator)
 			}//if (!spaces.empty())
-
+			
 			//create relations
 			s_dlg.SetStatus(SD_ERS);
 			CreateElementRelations(ds, des_map, inv_des_map, UpdateStatus);
@@ -440,13 +456,13 @@ BOOL CDesertToolApp::InitInstance()
 			//create constant properties
 			s_dlg.SetStatus(SD_CPS);
 			CreateConstantProperties(des_map, inv_des_map, elements, custom_members, UpdateStatus);
-
+	
 			//create simpleformula for properties
 			CreateSimpleFormulas(ds, des_map, inv_des_map);
 			//create assignments for VariableProperties
 			s_dlg.SetStatus(SD_ASS);
 			CreateAssignments(des_map, inv_des_map, elements, custom_members, UpdateStatus);
-
+	
 			//invoking Desert UI
 			s_dlg.SetStatus(SD_GUI);
 
@@ -455,7 +471,48 @@ BOOL CDesertToolApp::InitInstance()
 			fprintf(fdDcif, "<?xml version=\"1.0\"?>\n");
 			fprintf(fdDcif, "<DesertConfigurations>\n");
 
-			if (multiRun) {
+			if (countMode) {
+				std::map<__int64, __int64> counts;
+				int numCfgs = 0;
+				auto cb = [&](const BackIfaceFunctions::DBConfiguration& config) {
+					numCfgs++;
+					POSITION pos2 = config.alt_assignments.GetStartPosition();
+					while (pos2)
+					{
+						long alt, alt_of;
+						config.alt_assignments.GetNextAssoc(pos2, alt_of, alt);
+
+						// auto alt_of_input = inv_des_map.find(alt_of);
+						auto alt_input = inv_des_map.find(alt);
+						// fprintf(fdDcif, "%s\n", static_cast<const std::string>(alt_of_input->second.name()).c_str());
+						// fprintf(fdDcif, "%s\n", static_cast<const std::string>(alt_input->second.name()).c_str());
+						// std::string type = alt_input->second.type().name();
+						// auto x = alt_input->second.name();
+						// auto x2 = (__int64)alt_input->second.externalID();
+
+						auto countIt = counts.find(alt_input->second.id());
+						if (countIt == counts.end()) {
+							counts[alt_input->second.id()] = 1;
+						}
+						else {
+							counts[alt_input->second.id()] = countIt->second + 1;
+						}
+					}
+					return 0;
+				};
+				typedef decltype(cb) cb_t;
+				auto cbVoid = [](void* cb_, const BackIfaceFunctions::DBConfiguration& config) {
+					return (*((cb_t*)cb_))(config);
+				};
+				typedef int(*BuildConfigurationsCallbackFunction_t)(void*, const BackIfaceFunctions::DBConfiguration&);
+				DBConfigurations * confs = (DBConfigurations *)DesertFinit(true, isSilent, consList == "" ? NULL : static_cast<LPCTSTR>(consList),
+					(BuildConfigurationsCallbackFunction_t)cbVoid, &cb);
+				fprintf(fdDcif, "  <NumberOfConfigurations count=\"%d\"/>\n", numCfgs);
+				for (auto countsIt = counts.begin(); countsIt != counts.end(); ++countsIt) {
+					fprintf(fdDcif, "  <Count id=\"%I64d\" count=\"%I64d\"/>\n", countsIt->first, countsIt->second);
+				}
+			}
+			else if (multiRun) {
 				// Initialize
 				std::cout << "Starting Multirun" << std::endl;
 				DesertFinitWithMultirun_Pre(numConsGroups, consGroupNames, consGroups);
@@ -501,7 +558,7 @@ BOOL CDesertToolApp::InitInstance()
 				std::cout << "Running with constraint set: \t" << consList << std::endl;
 				DBConfigurations * confs = (DBConfigurations *)DesertFinit(true, isSilent, consList == "" ? NULL : (LPCTSTR)consList);
 				int numCfgs = (confs) ? confs->GetCount() : 0;
-
+				
 				tstring strConsList = trimSpaces(tstring(consList));
 				if (strConsList.length() == 0 || strConsList.compare(_T("None")) == 0 || strConsList.compare(_T("none")) == 0) {
 					fprintf(fdDcif, "\t<None NumConfigs=\"%d\"/>\n", numCfgs);
@@ -516,7 +573,7 @@ BOOL CDesertToolApp::InitInstance()
 				}
 				std::cout << "Configs: " << numCfgs << std::endl;
 				std::cout.flush();
-
+			
 				if (confs)
 				{
 					//open file dialog to write out configurations
@@ -539,16 +596,16 @@ BOOL CDesertToolApp::InitInstance()
 					}
 					if (!cancel_output)
 					{
-
+				
 						//create data network
 						Udm::SmartDataNetwork bw(DesertIfaceBack::diagram);
 						DesertIfaceBack::DesertBackSystem dbs;
 						bw.CreateNew(
 							//(LPCTSTR)SaveAs.GetFileName(), 
 							std::string(CStringA(output_file)),
-							"DesertIfaceBack",
+							"DesertIfaceBack",	
 							DesertIfaceBack::DesertBackSystem::meta,
-							Udm::CHANGES_PERSIST_ALWAYS);
+							Udm::CHANGES_PERSIST_ALWAYS);	
 
 						//get&take care of the root object
 						dbs = DesertIfaceBack::DesertBackSystem::Cast(bw.GetRootObject());
@@ -563,7 +620,7 @@ BOOL CDesertToolApp::InitInstance()
 						s_dlg.SetStatus(SD_PREP);
 						while (pos)
 						{
-
+		
 							DBConfiguration * config = confs->GetNext(pos);
 							// config->id starts at 1
 							if (config && config->id - 1 >= maxConfigs)
@@ -578,7 +635,7 @@ BOOL CDesertToolApp::InitInstance()
 								POSITION pos1 = config->assignments.GetHeadPosition();
 								while (pos1)
 								{
-									long valid_ass = config->assignments.GetNext(pos1);
+									long valid_ass = config->assignments.GetNext(pos1);				
 									BackIfaceFunctions::CreatePropertyAssignment(dbs, dummy, inv_des_map, des_map, valid_ass, false);
 								}
 								POSITION pos2 = config->alt_assignments.GetStartPosition();
@@ -612,12 +669,12 @@ BOOL CDesertToolApp::InitInstance()
 								s.Format(_T("Conf. no: %d"), config->id);
 								dib_conf.name() = static_cast<LPCSTR>(CStringA(s));
 								dib_conf.id() = config->id;
-
+							
 
 								POSITION pos1 = config->assignments.GetHeadPosition();
 								while (pos1)
 								{
-									long valid_ass = config->assignments.GetNext(pos1);
+									long valid_ass = config->assignments.GetNext(pos1);				
 									BackIfaceFunctions::CreatePropertyAssignment(dbs, dib_conf, inv_des_map, des_map, valid_ass, true);
 								}
 								POSITION pos2 = config->alt_assignments.GetStartPosition();
@@ -627,7 +684,7 @@ BOOL CDesertToolApp::InitInstance()
 									config->alt_assignments.GetNextAssoc(pos2, alt_of, alt);
 									BackIfaceFunctions::CreateAlternativeAssignment(dbs, dib_conf, inv_des_map, alt_of, alt, true);
 								};
-
+							
 								TRACE("Got %d of configurations!\n", confs->GetCount());
 
 
@@ -635,10 +692,10 @@ BOOL CDesertToolApp::InitInstance()
 							}//eo if (config)
 							s_dlg.StepInState((double)(((double)(++count)) / ((double)(confs->GetCount())))*100.0);	//progress bar
 						}//eo while(pos)
-
+					
 						delete confs;
-
-						set<DesertIfaceBack::Configuration> cfgs = dbs.Configuration_kind_children();
+			
+						set<DesertIfaceBack::Configuration> cfgs = dbs.Configuration_kind_children();		
 						for (set<DesertIfaceBack::Configuration>::iterator it = cfgs.begin(); it != cfgs.end(); ++it)
 						{
 							DesertIfaceBack::Configuration cfg = *it;
@@ -666,32 +723,32 @@ BOOL CDesertToolApp::InitInstance()
 
 				//all done
 				s_dlg.SetStatus(SD_FINIT);
-
+			
 				/*{
 					//debug test
 					set<ConstraintSet> ts_set = ds.ConstraintSet_kind_children();
-
+				
 					set<ConstraintSet>::iterator i = ts_set.begin();
 					ConstraintSet cts = *i;
-
+				
 					Constraint ct = Constraint::Create(cts);
-
+				
 					ct.id() = 1234567890;
 					ct.externalID() = -1234567890;
 					ct.name() = "fuck name";
 					ct.expression() = "fuck expression";
-
+				
 
 					set<Space> sp_set = ds.Space_kind_children();
 					set<Space> :: iterator j = sp_set.begin();
 					Space sp = *j;
-
+				
 					set<Element> e_set = sp.Element_kind_children();
 					set<Element> :: iterator k = e_set.begin();
 					Element e = *k;
-
+				
 					ct.context() = e;
-
+				
 
 
 				}*/
@@ -702,6 +759,29 @@ BOOL CDesertToolApp::InitInstance()
 			fclose(fdDcif);
 
 		}//eo try
+		// catch (CMemoryException *e)
+		catch (CSimpleException *e)
+		{
+			if (fdDcif)
+			{
+				if (ftell(fdDcif))
+				{
+					fprintf(fdDcif, "</DesertConfigurations>\n");
+				}
+				fclose(fdDcif);
+			}
+			if (isSilent) {
+				TCHAR errorMessage[1024];
+				e->GetErrorMessage(errorMessage, _countof(errorMessage), 0);
+				_ftprintf(stderr, _T("%s\n"), errorMessage);
+			}
+			else {
+				e->ReportError();
+			}
+			//	throw e;
+			returnCode = 1;
+			return FALSE;
+		}
 		catch (CDesertException *e)
 		{
 			if (fdDcif)
@@ -741,7 +821,7 @@ BOOL CDesertToolApp::InitInstance()
 			returnCode = 2;
 			return FALSE;
 		}
-
+	
 	}//eo if (Open.DoModal())
 
 	returnCode = 0;
@@ -757,8 +837,8 @@ BOOL CDesertToolApp::InitInstance()
 // CWzdCommandLineInfo
 CWzdCommandLineInfo::CWzdCommandLineInfo():
     desert_file (""), outputFileNeedsToBeRead(false), desert_output_file(""),
-	silent(false), applyCons(false), consList(""), multiRun(false),
-	maxConfigs(-1), maxConfigsNeedsToBeRead(false)
+	silent(false), constraintListNeedsToBeRead(false), consList(""), multiRun(false),
+	maxConfigs(-1), maxConfigsNeedsToBeRead(false), countMode(false)
 {
 }
 
@@ -791,10 +871,16 @@ void CWzdCommandLineInfo::ParseParam(const TCHAR* pszParam, BOOL bFlag,
 	else if (sArg == "M")
 	{
 		maxConfigsNeedsToBeRead = true;
+		if (bLast) {
+			throw runtime_error("/M requires an argument");
+		}
 	}
 	else if(sArg=="o")
 	{
 		outputFileNeedsToBeRead = true;
+		if (bLast) {
+			throw runtime_error("/o requires an argument");
+		}
 	}
 	else if(outputFileNeedsToBeRead)
 	{
@@ -808,16 +894,28 @@ void CWzdCommandLineInfo::ParseParam(const TCHAR* pszParam, BOOL bFlag,
 	else if(sArg=="c")
 	{
 		silent = true;
-		applyCons = true;
+		constraintListNeedsToBeRead = true;
+		if (bLast) {
+			throw runtime_error("/c requires an argument");
+		}
 	}
-	else if(applyCons)
+	else if(constraintListNeedsToBeRead)
 	{
 		consList = sArg;
+		constraintListNeedsToBeRead = false;
+	}
+	else if (sArg == "C")
+	{
+		silent = true;
+		countMode = true;
 	}
 	else if(sArg=="m")
 	{
 		silent = true;
 		multiRun = true;
+		if (bLast) {
+			throw runtime_error("/m requires an argument");
+		}
 	}
 	else if(multiRun)
 	{

@@ -55,13 +55,14 @@ public:
 public:
     CString desert_file;
 	bool silent;
-	bool applyCons;
+	bool constraintListNeedsToBeRead;
 	CString consList;
 	bool outputFileNeedsToBeRead;
 	CString desert_output_file;
 	uint64_t maxConfigs;
 	bool maxConfigsNeedsToBeRead;
 	bool multiRun;
+	bool countMode;
 	CStringList consGroupNames;
 	CStringList consGroups;
 

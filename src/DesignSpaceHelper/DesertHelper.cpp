@@ -9,6 +9,9 @@
 #include <fstream>
 #include <sstream>
 
+#include <codecvt>
+#include <locale>
+
 #include "StatusDialog.h"
 #include "DesertStatusDlg.h"
 
@@ -75,6 +78,22 @@ std::string getPath( const std::string& filepath, bool deleteTerminatingBackSlas
 	else
 		filename.erase();
 	return filename;
+}
+
+string wstringToString(const std::wstring& wstr)
+{
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+	return converterX.to_bytes(wstr);
+}
+
+wstring stringToWstring(const std::string& str)
+{
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+	return converterX.from_bytes(str);
 }
 
 void DesertHelper::morphMatrixInitialize1() {
@@ -203,10 +222,11 @@ DesertHelper::~DesertHelper()
 void DesertHelper::close()
 {
 	//reverse the DesignEntity ID
-	for(auto it=CyPhy2Desert::originalIDs.begin();it!=CyPhy2Desert::originalIDs.end();++it)
+	for(auto it = CyPhy2Desert::originalIDs.begin(); it != CyPhy2Desert::originalIDs.end(); ++it)
 	{
 		(*it).first.ID() = (*it).second;
 	}
+	CyPhy2Desert::originalIDs.clear();
 
 	if(cfg_models!=Udm::null)
 	{
@@ -668,17 +688,17 @@ void DesertHelper::applyAllConstraints(bool dsRefresh)
 	runDesertFinit_1("applyAll", dsRefresh);
 }
 
-void DesertHelper::runDesertFinit_1(const std::string &constraints, bool refresh)
+void DesertHelper::buildDesertSystem(DesertSystem& ds, bool refresh)
 {
 	using namespace DesertIface;
 
-	DesertSystem ds = DesertSystem::Cast(ds_dn->GetRootObject());
+	ds = DesertSystem::Cast(ds_dn->GetRootObject());
 
 	if(refresh)
 	{
 		des_map.clear();
 		inv_des_map.clear();
-	//	desertlogFile = (std::string)ds.SystemName()+"_desert.log";
+		//	desertlogFile = (std::string)ds.SystemName()+"_desert.log";
 		DesertInit(utf82cstring(desertlogFile), true);
 		set<Space> spaces = ds.Space_kind_children();
 		set<Space>::iterator sp_iterator;
@@ -728,14 +748,20 @@ void DesertHelper::runDesertFinit_1(const std::string &constraints, bool refresh
 		CreateSimpleFormulas(ds,des_map,inv_des_map);
 		//create assignments for VariableProperties
 		CreateAssignments(des_map, inv_des_map, elements, custom_members, noop);
+	}
+}
 
-		if(!defaultConstraints.empty())
-		{
-			if(DesertFinit_preApply())
-				DesertFinit_Apply(_T(""));
-			else
-				throw new CDesertException(CString("invalid Constraint"));
-		}
+void DesertHelper::runDesertFinit_1(const std::string &constraints, bool refresh)
+{
+	DesertSystem ds;
+	buildDesertSystem(ds, refresh);
+
+	if (!defaultConstraints.empty())
+	{
+		if (DesertFinit_preApply())
+			DesertFinit_Apply(_T(""));
+		else
+			throw new CDesertException(CString("invalid Constraint"));
 	}
 
 	long configCount = -1;
@@ -1507,6 +1533,175 @@ void DesertHelper::executeAll(bool applyConstraints)
 			if (applyConstraints)
 				applyAllConstraints(true);
 			cfgs = runDesertFinit_2();
+		}
+	}
+}
+
+void DesertHelper::exportXml(std::wstring exportPath)
+{
+	desertIfaceFile = wstringToString(exportPath);
+	runCyPhy2Desert();
+}
+
+std::wstring DesertHelper::importConfigsFromXml(std::wstring desertXmlPath, std::wstring desertBackXmlPath)
+{
+	ds_dn = std::unique_ptr<Udm::SmartDataNetwork>(new Udm::SmartDataNetwork(DesertIface::diagram));
+	ds_dn->OpenExisting(wstringToString(desertXmlPath), "DesertIface.xsd", Udm::CHANGES_LOST_DEFAULT);
+
+	dbs_dn = std::unique_ptr<Udm::SmartDataNetwork>(new Udm::SmartDataNetwork(DesertIfaceBack::diagram));
+	dbs_dn->OpenExisting(wstringToString(desertBackXmlPath), "DesertIfaceBack.xsd", Udm::CHANGES_LOST_DEFAULT);
+
+
+
+	DesertSystem ds;
+	buildDesertSystem(ds, true);
+
+	DesertBackSystem dbs = DesertBackSystem::Cast(dbs_dn->GetRootObject());
+
+	remapAlternativeElementIds(ds, rootDC);
+
+	//generate desertIfaceElemMap
+	desertIfaceElemMap.clear();
+	set<DesertIface::Space> spaces = ds.Space_kind_children();
+
+	DesertIface::Space space = *(spaces.begin());
+	set<DesertIface::Element> dselems = space.Element_kind_children();
+	makeDesertIfaceElemMap(dselems);   //Null can exist in Desert, but not in Cyphy
+
+	for (map<CyPhyML::DesignEntity, DesertIface::Element>::iterator mit = com2elemMap.begin(); mit != com2elemMap.end(); ++mit)
+	{
+		CyPhyML::DesignEntity cd = (*mit).first;
+		cyPhyDesignElemMap[cd.ID()] = cd;
+	}
+
+
+	cfgCount = 0;
+	configMap.clear();
+	configElemMap.clear();
+
+	set<DesertIfaceBack::Configuration> cfgs = dbs.Configuration_kind_children();
+	for (set<DesertIfaceBack::Configuration>::iterator cfg_it = cfgs.begin(); cfg_it != cfgs.end(); ++cfg_it)
+	{
+		DesertIfaceBack::Configuration cfg = *cfg_it;
+		int id = cfg.id();
+		configMap[id - 1] = cfg;
+		std::string n = cfg.name();
+		cfgCount++;
+		makeConfigElemMap(cfg);
+	}
+
+	//generate desertIfaceBackElemMap
+	desertIfaceBackElemMap.clear();
+	set<DesertIfaceBack::Element> elems = dbs.Element_kind_children();
+	for (set<DesertIfaceBack::Element>::iterator it_elem = elems.begin(); it_elem != elems.end(); ++it_elem)
+	{
+		DesertIfaceBack::Element elem = *it_elem;
+		desertIfaceBackElemMap[elem.externalID()] = elem;
+	}
+	desertFinit_2_fail = false;
+
+	char cnt_buff[10];
+	_itoa(cfgCount, cnt_buff, 10);
+	std::string cfgSizeStr = (std::string)cnt_buff;
+
+	updateNumAssociatedConfigs(rootDC, cfgSizeStr);
+	// Also, set the NumAssociatedConfigs attribute value for the root container, see META-1686
+	rootDC.NumAssociatedConfigs() = cfgSizeStr + "/" + cfgSizeStr;
+
+	createNewConfigurations();
+	set<int> ids;
+	// int cnt = m_cfglist.GetItemCount();
+	for (int i = 0; i < cfgCount; ++i)
+	{
+		ids.insert(i);
+	}
+
+	morphMatrixInitialize1();
+
+	exportModel_ex(ids);
+
+	return stringToWstring(cfg_models.name());
+}
+
+void DesertHelper::remapAlternativeElementIds(const DesertSystem &ds, DesignContainer &rootDC)
+{
+	// Find the root of the DESERT system
+	set<Space> spaces = ds.Space_kind_children();
+
+	if(spaces.empty())
+	{
+		throw udm_exception("DESERT system is missing space");
+	}
+
+	Space space = *(spaces.begin());
+
+	set<DesertIface::Element> elements = space.Element_children();
+
+	if(elements.empty())
+	{
+		throw udm_exception("DESERT system is missing root element");
+	}
+
+	DesertIface::Element rootElement = *(elements.begin());
+
+	//Verify that the roots appear to be the same element
+	if(string(rootElement.name()) != string(rootDC.name()))
+	{
+		stringstream s;
+		s << "Root element name mismatch: DESERT: " << rootElement.name() << ", CyPhy: " << rootDC.name();
+		throw udm_exception(s.str().c_str());
+	}
+
+	remapAlternativeElementIdsInner(rootElement, rootDC);
+}
+
+void DesertHelper::remapAlternativeElementIdsInner(DesertIface::Element &desertElement, DesignEntity &cyPhyElement)
+{
+	// Make sure we don't overwrite the original ID if it already exists in this map somehow
+	// (i.e. it's already been changed once)
+	if(CyPhy2Desert::originalIDs.count(cyPhyElement) == 0)
+	{
+		CyPhy2Desert::originalIDs[cyPhyElement] = cyPhyElement.ID();
+	}
+
+	cyPhyElement.ID() = desertElement.externalID();
+
+	set<DesertIface::Element> children = desertElement.Element_children();
+
+	if (Uml::IsDerivedFrom(cyPhyElement.type(), DesignContainer::meta)) {
+		DesignContainer dc = DesignContainer::Cast(cyPhyElement);
+
+		set<DesignEntity> cyPhyChildren = dc.DesignEntity_kind_children();
+
+		for (auto it = children.begin(); it != children.end(); it++)
+		{
+			// Find matching cyphy element child
+			string name = it->name();
+
+			if(name == "null")
+			{
+				continue;
+			}
+
+			auto matchingElement = find_if(cyPhyChildren.begin(), cyPhyChildren.end(), [name](DesignEntity cpc)->bool { return name == string(cpc.name()); });
+			if(matchingElement == cyPhyChildren.end())
+			{
+				stringstream s;
+				s << "Couldn't find matching CyPhy element for " << name;
+				throw udm_exception(s.str().c_str());
+			}
+
+			DesertIface::Element nextElement = *it;
+			DesignEntity nextEntity = *matchingElement;
+
+			remapAlternativeElementIdsInner(nextElement, nextEntity);
+		}
+	} else {
+		if(!children.empty())
+		{
+			stringstream s;
+			s << "DESERT element " << desertElement.name() << " should not have children";
+			throw udm_exception(s.str().c_str());
 		}
 	}
 }
