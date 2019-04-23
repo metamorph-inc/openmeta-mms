@@ -37,18 +37,6 @@ models to represent a component's schematic model.
 
    EAGLE Model of a Light-Emitting Diode (LED)
 
-Bill of Materials Analysis
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-When a component is created and a Schematic Model is added using the
-Component Authoring Tool, OpenMETA automatically generates and populates a
-collection of properties based on the provided part number of the Schematic
-Model.
-
-These part numbers are later used to quickly generate a Bill of Materials
-(BOM) from the parts present in a particular design. This feature relies upon
-the `Octopart <https://octopart.com/>`_ API.
-
 Modeling Guidelines
 ~~~~~~~~~~~~~~~~~~~
 

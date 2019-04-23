@@ -33,5 +33,7 @@ goto end
 :help
 %SPHINXBUILD% -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS%
 
+echo The default is make.bat html
+
 :end
 popd

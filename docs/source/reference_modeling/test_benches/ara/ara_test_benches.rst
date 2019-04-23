@@ -12,7 +12,6 @@ for Project Ara.
    :caption: Project Ara Test Bench Guides
 
    00-AraTestBenchBasics
-   01-CostEstimation
    02-ChipFit
    03-PlaceAndRoute
    04-SpiceTest
