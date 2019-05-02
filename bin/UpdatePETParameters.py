@@ -158,7 +158,7 @@ if __name__ == '__main__':
         with open(command_line_args.pet_config) as input_json:
             args = json.load(input_json)
         project = Dispatch("Mga.MgaProject")
-        project.Open("MGA=" + os.path.abspath(args["MgaFilename"]))
+        project.OpenEx("MGA=" + os.path.abspath(args["MgaFilename"]), "CyPhyML", None)
 
         project.BeginTransactionInNewTerr()
         try:
