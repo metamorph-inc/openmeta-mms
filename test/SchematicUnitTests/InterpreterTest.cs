@@ -968,14 +968,14 @@ namespace SchematicUnitTests
             Assert.Contains("\nXResistor ", sch);
             Assert.Contains("\nLInductor ", sch);
             Assert.Equal(4, Regex.Matches(sch, "[^$][$][{]([A-Za-z]+)[}]").Count);
-            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5(\\.0+\\d*)?e-10 Resistance=180").Success);
             Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
 
             RunPopulateSchemaTemplate(OutputDir);
             sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceFile), System.Text.Encoding.UTF8);
             Assert.Contains("\nXResistor ", sch);
             Assert.Contains("\nLInductor ", sch);
-            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5(\\.0+\\d*)?e-10 Resistance=180").Success);
             Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE 3.253e-12 1.001 1000 1.293e-13").Success);
         }
 
@@ -1001,14 +1001,14 @@ namespace SchematicUnitTests
             string sch = File.ReadAllText(Path.Combine(TestBenchDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
             Assert.Contains("\nXResistor ", sch);
             Assert.Contains("\nLInductor ", sch);
-            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5(\\.0+\\d*)?e-10 Resistance=180").Success);
             Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} \\$\\{Frequency\\} \\$\\{Delay\\}").Success);
 
             RunPopulateSchemaTemplate(TestBenchDir);
             sch = File.ReadAllText(Path.Combine(TestBenchDir, generatedSpiceFile), System.Text.Encoding.UTF8);
             Assert.Contains("\nXResistor ", sch);
             Assert.Contains("\nLInductor ", sch);
-            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5e-10 Resistance=180").Success);
+            Assert.True(Regex.Match(sch, "XResistor \\d+ \\d+ R_CHIP Cp=4e-14 Ls=5(\\.0+\\d*)?e-10 Resistance=180").Success);
             Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE 3.253e-12 1.001 1000 1.293e-13").Success);
         }
 
@@ -1031,7 +1031,7 @@ namespace SchematicUnitTests
             Assert.True(File.Exists(Path.Combine(OutputDir, generatedSpiceTemplateFile)), "Failed to generate " + generatedSpiceTemplateFile);
 
             string sch = File.ReadAllText(Path.Combine(OutputDir, generatedSpiceTemplateFile), System.Text.Encoding.UTF8);
-            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} 1e\\+06 \\$\\{Delay\\}").Success);
+            Assert.True(Regex.Match(sch, "VRFGen \\d+ \\d+  SINE \\$\\{Offset\\} \\$\\{Amplitude\\} 1000000 \\$\\{Delay\\}").Success);
 
             //Check for warning in log.
         }
