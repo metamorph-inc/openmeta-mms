@@ -1174,7 +1174,7 @@ namespace ComponentAndArchitectureTeamTest
         }
 
 
-        [Fact]
+        [Fact(Skip = "Octopart API key needed")]
         public void OctopartImporter_InvalidMPN()
         {
             MgaProject proj = this.fixture.proj;

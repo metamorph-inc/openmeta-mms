@@ -15,11 +15,28 @@ namespace ComponentAndArchitectureTeamTest
     public class FormulaEvaluatorFixture : IDisposable
     {
         public string mgaPath;
+        public static readonly string testPath = Path.Combine(
+            META.VersionInfo.MetaPath,
+            "models",
+            "ComponentsAndArchitectureTeam",
+            "FormulaEvaluator"
+            );
+
+        public virtual string xmePath
+        {
+            get
+            {
+                return Path.Combine(
+                    testPath,
+                    "FormulaEvaluator.xme"
+                    );
+            }
+        }
 
         public FormulaEvaluatorFixture()
         {
             String mgaConnectionString;
-            GME.MGA.MgaUtils.ImportXMEForTest(FormulaEvaluator.xmePath, out mgaConnectionString);
+            GME.MGA.MgaUtils.ImportXMEForTest(xmePath, out mgaConnectionString);
             mgaPath = mgaConnectionString.Substring("MGA=".Length);
 
             Assert.True(File.Exists(Path.GetFullPath(mgaPath)),
@@ -66,19 +83,6 @@ namespace ComponentAndArchitectureTeamTest
 
     public class FormulaEvaluator : IUseFixture<FormulaEvaluatorFixture>
     {
-        #region Path Variables
-        public static readonly string testPath = Path.Combine(
-            META.VersionInfo.MetaPath,
-            "models",
-            "ComponentsAndArchitectureTeam",
-            "FormulaEvaluator"
-            );
-        public static readonly string xmePath = Path.Combine(
-            testPath,
-            "FormulaEvaluator.xme"
-            );
-        #endregion
-
         #region Fixture
         FormulaEvaluatorFixture fixture;
         public void SetFixture(FormulaEvaluatorFixture data)
@@ -205,7 +209,7 @@ namespace ComponentAndArchitectureTeamTest
                 {
                     RunFormulaEvaluator(comp.Impl as MgaFCO);
                 });
-                
+
                 var prop3_NewValue = prop3.Attributes.Value;
                 Assert.True(prop3_OldValue == prop3_NewValue, "Value of Prop3 shouldn't have changed");
             });
@@ -604,10 +608,53 @@ namespace ComponentAndArchitectureTeamTest
 
                 RunFormulaEvaluator(comp as MgaFCO);
 
-                Assert.Equal((2 * 3 *4 * 100 * 100).ToString(), output.StrAttrByName["Value"]);
+                Assert.Equal((2 * 3 * 4 * 100 * 100).ToString(), output.StrAttrByName["Value"]);
             });
         }
 
+    }
 
+    public class FormulaEvaluator2Fixture : FormulaEvaluatorFixture
+    {
+        public override string xmePath
+        {
+            get
+            {
+                return Path.Combine(
+                    testPath,
+                    "FormulaEvaluator2.xme"
+                    );
+            }
+        }
+    }
+    public class FormulaEvaluator2 : IUseFixture<FormulaEvaluator2Fixture>
+    {
+
+        #region Fixture
+        FormulaEvaluator2Fixture fixture;
+        public void SetFixture(FormulaEvaluator2Fixture data)
+        {
+            fixture = data;
+        }
+        #endregion
+
+        [Fact]
+        public void GenericParameters()
+        {
+            fixture.proj.PerformInTransaction(delegate
+            {
+                var asm = fixture.proj.ObjectByPath["/@ComponentAssemblies/@GenericParameters"];
+
+                CyPhyElaborateCS.CyPhyElaborateCSInterpreter elaborator = new CyPhyElaborateCS.CyPhyElaborateCSInterpreter();
+                elaborator.Initialize(asm.Project);
+                int verbosity = 128;
+                elaborator.RunInTransaction(asm.Project, (MgaFCO)asm, null, verbosity);
+
+                var output = (IMgaFCO)asm.ObjectByPath["@ComponentWithGeneric/@GenericDomainModel/@GenericDomainModelParameter1"];
+                Assert.Equal("1 2 3", output.StrAttrByName["Value"]);
+                output = (IMgaFCO)asm.ObjectByPath["@ComponentWithGeneric/@GenericDomainModel/@GenericDomainModelParameter2"];
+                Assert.Equal("123", output.StrAttrByName["Value"]);
+            });
+        }
     }
 }
