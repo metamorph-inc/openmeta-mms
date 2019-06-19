@@ -1,13 +1,18 @@
+from __future__ import absolute_import
+from __future__ import print_function
+import six
+from six.moves import range
+
 __author__ = 'Zsolt'
 
 import logging
 import json
 import os
 import sys
+import collections
 
-from omc_session import OMCSession
-from generate_icons import IconExporter
-from modelica_classes import *
+from .omc_session import OMCSession
+from .modelica_classes import Connector, Extend, Parameter, RedeclareParameter, Package, Import, Connection, ComponentAssembly, Component, ComponentShell
 
 try:
     from lxml import etree
@@ -35,6 +40,9 @@ except ImportError:
                 except ImportError as ex:
                     print("Failed to import ElementTree from any known place")
                     raise ex
+
+ModelicaComponent = collections.namedtuple('ModelicaComponent', ('mo_type', 'mo_name', 'mo_annotation', 'mo_modification', 'v_1',
+    'v_2', 'v_3', 'isReplaceable', 'component_type', 'v_5', 'v_6', 'v_7'))
 
 
 class ParsingException(Exception):
@@ -65,6 +73,7 @@ class ComponentExporter(object):
         self.logger.setLevel(logging.NOTSET)
 
         self.logger.info('Initializing ComponentExporter({0})'.format(external_packages))
+        self.connectors = {}
 
         # start om session
         self.omc = OMCSession()
@@ -78,6 +87,7 @@ class ComponentExporter(object):
             icon_dir_name = 'Icons'
             if not os.path.isdir(icon_dir_name):
                 os.mkdir(icon_dir_name)
+            from .generate_icons import IconExporter
             self.icon_exporter = IconExporter(self.omc, icon_dir_name)
 
     def load_packages(self, external_package_paths):
@@ -118,7 +128,7 @@ class ComponentExporter(object):
         except Exception as exception:
             component = Component()
             component.full_name = 'Exception'
-            component.comment = exception.message
+            component.comment = getattr(exception, 'message', 'unknown error')
             json_result['components'].append(component.json())
             self.logger.info('Could not get information for {0}'.format(modelica_uri))
 
@@ -144,6 +154,67 @@ class ComponentExporter(object):
 
         return xml_result
 
+    def create_connector(self, modelica_uri, c):
+        connector = Connector()
+        connector.full_name = c.mo_type
+        connector.name = c.mo_name
+        connector.description = c.mo_annotation
+
+        modifier_names = self.omc.getComponentModifierNames(modelica_uri, c.mo_name)
+        modifiers = dict()
+        modifiers['modifications'] = c.mo_modification
+        for modifier_name in modifier_names:
+            modifier_value = self.omc.getComponentModifierValue(modelica_uri,
+                                                                '{0}.{1}'.format(c.mo_name, modifier_name))
+            modifiers[modifier_name] = modifier_value
+            connector.modifiers = modifiers
+
+        for connector_component in self.omc.getComponents(c.mo_type):
+            connector_component = ModelicaComponent(*connector_component)
+            if self.omc.isConnector(connector_component.mo_type):
+                connector.connectors.append(self.create_connector(c.mo_type, connector_component))
+            elif c.component_type == 'parameter':
+                connector.parameters.append(self.create_parameter(c.mo_type, connector_component))
+            else:
+                connector.variables.append({'type': connector_component.mo_type, 'name': connector_component.mo_name})
+        return connector
+
+    def create_parameter(self, modelica_uri, c):
+        parameter = Parameter()
+        if c.mo_modification != 'public':
+            parameter.is_public = False
+
+        parameter.name = c.mo_name
+        parameter.description = c.mo_annotation
+        parameter.full_name = c.mo_type
+        parameter.value = self.omc.getParameterValue(modelica_uri, c.mo_name)
+
+        value_type = type(parameter.value)
+
+        if value_type == tuple:
+            parameter.dimension = len(parameter.value)  # log the length of the tuple
+        elif value_type == str:
+            if parameter.value == '':
+                parameter.dimension = 0  # 0 indicates an empty string
+            elif '[' in parameter.value:
+                semicolon_split = parameter.value.split(';')
+                if len(semicolon_split) > 1:
+                    # this means a table with dimension (n,m); should we actually log the values? or only '-1'?
+                    parameter.dimension = -1
+                else:
+                    # if there are no semicolons, then this is a 1-d array (?)
+                    comma_split = parameter.value.split(',')
+                    parameter.dimension = len(comma_split)
+
+        for modifier_name in self.omc.getComponentModifierNames(modelica_uri, c.mo_name):
+            modifier_value = self.omc.getComponentModifierValue(modelica_uri,
+                                                                '{0}.{1}'.format(c.mo_name, modifier_name))
+            parameter.modifiers.update({modifier_name: modifier_value})
+
+        if self.omc.isType(c.mo_type):
+            parameter.full_name = get_parameter_base_type_and_modifiers(self.omc, c.mo_type, parameter.modifiers)
+        return parameter
+
     def extract_component_content(self, modelica_uri, components):
         """
         Recursively populates components with extracted_components,
@@ -152,6 +223,7 @@ class ComponentExporter(object):
         component = Component()
         component.full_name = modelica_uri
         component.comment = self.omc.getClassComment(modelica_uri)
+        component.type = self.omc.getClassInformation(modelica_uri)[0]
 
         components.append(component)
 
@@ -166,7 +238,7 @@ class ComponentExporter(object):
                 package.value = replaceable_package['value']
                 component.packages.append(package)
 
-            for extends_class, extends_package in mo_extends_packages.iteritems():
+            for extends_class, extends_package in six.iteritems(mo_extends_packages):
                 package = Package()
                 package.name = extends_package['name']
                 package.value = extends_package['value']
@@ -184,76 +256,35 @@ class ComponentExporter(object):
         except ValueError as value_error_exception:
             if value_error_exception.args[0] == 'Could not parse OMC response.':
                 self.logger.warning('Could not parse OMC response for getComponents({0})'.format(modelica_uri))
-                raise ParsingException
+                raise ParsingException()
+        if mo_components == 'Error':
+            self.logger.warning('OMC error for getComponents({0})'.format(modelica_uri))
+            raise ParsingException()
+        for c in mo_components:
+            c = ModelicaComponent(*c)
 
-        for (mo_type, mo_name, mo_annotation, mo_modification, v_1, v_2, v_3, isReplaceable, component_type, v_5, v_6,
-             v_7) in mo_components:
+            if self.omc.isConnector(c.mo_type):
+                #     pass
+                # elif False:
+                connector = self.create_connector(modelica_uri, c)
 
-            if self.omc.isConnector(mo_type):
-                connector = Connector()
-                connector.full_name = mo_type
-                connector.name = mo_name
-                connector.description = mo_annotation
-
-                modifier_names = self.omc.getComponentModifierNames(modelica_uri, mo_name)
-                modifiers = dict()
-                modifiers['modifications'] = mo_modification
-                for modifier_name in modifier_names:
-                    modifier_value = self.omc.getComponentModifierValue(modelica_uri,
-                                                                        '{0}.{1}'.format(mo_name, modifier_name))
-                    modifiers[modifier_name] = modifier_value
-                    connector.modifiers = modifiers
-
-                if (len(component.packages) != 0) and ('Modelica.Fluid.Interfaces.FluidPort_' in mo_type):
-                    port_redeclare = self.omc.getPortRedeclares(modelica_uri, mo_type, mo_name)
+                if (len(component.packages) != 0) and ('Modelica.Fluid.Interfaces.FluidPort_' in c.mo_type):
+                    port_redeclare = self.omc.getPortRedeclares(modelica_uri, c.mo_type, c.mo_name)
                     if port_redeclare:
                         for package in component.packages:
                             if port_redeclare[1] == package.name:
                                 redeclare_parameter = RedeclareParameter()
                                 redeclare_parameter.name = port_redeclare[0]
                                 redeclare_parameter.value = port_redeclare[1]
-                                #redeclare_parameter.value = package.value
+                                # redeclare_parameter.value = package.value
 
                                 connector.redeclare_parameters.append(redeclare_parameter)
                                 break
 
                 component.connectors.append(connector)
 
-            elif component_type == 'parameter':
-                parameter = Parameter()
-                if mo_modification != 'public':
-                    parameter.is_public = False
-
-                parameter.name = mo_name
-                parameter.description = mo_annotation
-                parameter.full_name = mo_type
-                parameter.value = self.omc.getParameterValue(modelica_uri, mo_name)
-
-                value_type = type(parameter.value)
-
-                if value_type == tuple:
-                    parameter.dimension = len(parameter.value)  # log the length of the tuple
-                elif value_type == str:
-                    if parameter.value == '':
-                        parameter.dimension = 0  # 0 indicates an empty string
-                    elif '[' in parameter.value:
-                        semicolon_split = parameter.value.split(';')
-                        if len(semicolon_split) > 1:
-                            # this means a table with dimension (n,m); should we actually log the values? or only '-1'?
-                            parameter.dimension = -1
-                        else:
-                            # if there are no semicolons, then this is a 1-d array (?)
-                            comma_split = parameter.value.split(',')
-                            parameter.dimension = len(comma_split)
-
-                for modifier_name in self.omc.getComponentModifierNames(modelica_uri, mo_name):
-                    modifier_value = self.omc.getComponentModifierValue(modelica_uri,
-                                                                        '{0}.{1}'.format(mo_name, modifier_name))
-                    parameter.modifiers.update({modifier_name: modifier_value})
-
-                if self.omc.isType(mo_type):
-                    parameter.full_name = get_parameter_base_type_and_modifiers(self.omc, mo_type, parameter.modifiers)
-
+            elif c.component_type == 'parameter':
+                parameter = self.create_parameter(modelica_uri, c)
                 component.parameters.append(parameter)
 
             else:
@@ -525,7 +556,6 @@ class PackageExporter(object):
                 #     class_details['Description'] = self.omc.getClassComment(c_name)
                 #     self.class_details.append(class_details)
 
-
     def json(self):
         """
         Generate a dictionary from the Packages
@@ -713,7 +743,7 @@ def make_paths_safe_for_omc(path_list):
         path.strip()
 
         if python_version_major >= 3:
-            omc_safe_path = path.encode('unicode-escape').replace('\\\\', '/').replace('\\', '/')
+            omc_safe_path = path.replace('\\\\', '/').replace('\\', '/')
             safe_paths.append(omc_safe_path)
         else:
             omc_safe_path = path.encode('string-escape').replace('\\\\', '/').replace('\\', '/')

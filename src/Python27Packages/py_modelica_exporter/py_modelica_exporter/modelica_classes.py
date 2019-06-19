@@ -1,3 +1,8 @@
+from __future__ import absolute_import
+from __future__ import print_function
+import six
+from six.moves import map
+
 __author__ = 'Zsolt'
 
 try:
@@ -165,13 +170,13 @@ class RedeclareParameter(Parameter):
 class Extend(object):
     """
     A Python wrapper for the Modelica 'Extend' type
-    
+
     """
 
     def __init__(self):
         """
         Create an instance
-        
+
         """
         self.full_name = None
         self.parameters = list()  # Parameter
@@ -181,7 +186,7 @@ class Extend(object):
     def json(self):
         """
         return an dictionary representation
-        
+
         """
         json_result = dict()
         json_result['fullName'] = self.full_name
@@ -194,7 +199,7 @@ class Extend(object):
     def xml(self):
         """
         return an xml representation
-        
+
         """
         xml_result = etree.Element("Extend")
         xml_result.set("FullName", self.full_name)
@@ -209,9 +214,9 @@ class Extend(object):
 class Connector(object):
     """
     A Python wrapper for the Modelica 'Connector' type
-    
+
     """
-    
+
     def __init__(self):
         """
         Create an instance
@@ -224,6 +229,8 @@ class Connector(object):
         self.parameters = list()  # Parameter
         self.redeclare_parameters = list()  # RedeclareParameter
         self.modifiers = {}
+        self.variables = []
+        self.connectors = []
 
     def json(self):
         """
@@ -236,6 +243,8 @@ class Connector(object):
         json_result['parameters'] = [json_value.json() for json_value in self.parameters]
         json_result['redeclare_parameters'] = [json_value.json() for json_value in self.redeclare_parameters]
         json_result['modifiers'] = self.modifiers
+        json_result['variables'] = self.variables
+        json_result['connectors'] = list(map(Connector.json, self.connectors))
 
         return json_result
 
@@ -294,6 +303,7 @@ class Component(object):
         """
         self.full_name = None
         self.comment = None
+        self.type = None
         self.parameters = list()  # Parameter
         self.redeclare_parameters = list()  # RedeclareParameter
         self.connectors = list()  # Connector
@@ -311,6 +321,7 @@ class Component(object):
         json_result = dict()
         json_result['fullName'] = self.full_name
         json_result['comment'] = self.comment
+        json_result['type'] = self.type
         json_result['parameters'] = [json_value.json() for json_value in self.parameters]
         json_result['redeclare_parameters'] = [json_value.json() for json_value in self.redeclare_parameters]
         json_result['connectors'] = [json_value.json() for json_value in self.connectors]
@@ -367,7 +378,7 @@ class ComponentAssembly(object):
         json_result['comment'] = self.comment
         json_result['connectors'] = [json_value.json() for json_value in self.connectors]
         json_result['connections'] = [json_value.json() for json_value in self.connections]
-        json_result['component_shells'] = [{k: v.json()} for k, v in self.component_shells.iteritems()]
+        json_result['component_shells'] = [{k: v.json()} for k, v in six.iteritems(self.component_shells)]
 
         return json_result
 

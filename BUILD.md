@@ -34,7 +34,7 @@ You must also install Microsoft Visual Studio 2015 Update 3
 
 ## .NETFramework Version 4.5
 
-## Java JDK 7 or above
+## Java JDK version 7 to 11
 [Download it here](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 
 _NOTE: Either x86 or x64 is okay_
@@ -94,7 +94,7 @@ For the tests to pass, OpenEMS must be installed to `C:\OpenEMS`
 Clone this repository to your disk.
 
 # Build
-1. Open Visual Studio Command Prompt (2015 or 2017) with "Run as administrator". (Do not use a Visual Studio x64 command prompt)
+1. Open Visual Studio Command Prompt (2015 or 2017) with "Run as administrator". (Do not use "x64 Native Tools Command Prompt" or "x86 x64 Cross Tools Command Prompt")
 2. From the root repository directory, run `build_both.cmd`. This may take 30 minutes to build. _(Warnings may be ignored, but there should be no errors.)_
 
 If you encounter errors, try to build once more. There may be some remaining race conditions in the build scripts.

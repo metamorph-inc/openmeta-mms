@@ -1,4 +1,7 @@
 # coding: utf-8
+from __future__ import absolute_import
+
+from __future__ import print_function
 __author__ = 'Zsolt'
 
 __license__ = """
@@ -42,6 +45,7 @@ import tempfile
 import pyparsing
 import re
 import struct
+import platform
 
 if sys.platform == 'darwin':
     # on Mac let's assume omc is installed
@@ -53,11 +57,12 @@ if sys.platform == 'darwin':
 # TODO: replace this with the new parser
 from OMPython import OMTypedParser, OMParser
 
+
 def is_64bit_exe(exe):
     if not os.path.isfile(exe):
         return False
 
-    with open(exe) as pe:
+    with open(exe, 'rb') as pe:
         # IMAGE_DOS_HEADER.e_lfanew
         pe.seek(60)
         pe_offset = pe.read(4)
@@ -85,13 +90,28 @@ class OMCSession(object):
 
     def _start_omc(self):
         self._omc_command = None
+        if platform.system() == 'Linux':
+            self._set_omc_corba_command('omc')
+            self._start_server()
+            return
+        if sys.platform == 'darwin':
+            # FIXME: what is this case? are we looking at platform specifics? or different versions of OpenModelica?
+            try:
+                self._set_omc_corba_command('/opt/local/bin/omc')
+                self._start_server()
+            except:
+                self.logger.exception("The OpenModelica compiler did not start")
+                raise
+            return
         try:
             self.omhome = os.environ['OPENMODELICAHOME']
             # add OPENMODELICAHOME\lib to PYTHONPATH so python can load omniORB libraries
-
-            if is_64bit_exe(os.path.join(self.omhome, "lib", "python", "_omnipy.pyd")):
+            if (platform.architecture()[0] == '64bit') != is_64bit_exe(os.path.join(self.omhome, "lib", "python", "_omnipy.pyd")):
                 # we can't load OpenModelica's 64-bit _omnipy.pyd. So use the bin\Python27 one
                 # this needs an OpenModelica >1.9.7, but there's no x64 release <=1.9.7, so we are ok
+                index = len(sys.path)
+            elif sys.version_info[0] >= 3:
+                # OpenModelica's omniORB is older and does not work with Python 3
                 index = len(sys.path)
             else:
                 index = 0
@@ -103,28 +123,20 @@ class OMCSession(object):
             sys.path.insert(0, os.path.join(self.omhome, 'share/omc/scripts/PythonInterface'))
             # add OPENMODELICAHOME\bin to path so python can find the omniORB binaries
             pathVar = os.getenv('PATH')
-            pathVar += ';'
+            pathVar += os.pathsep
             pathVar += os.path.join(self.omhome, 'bin')
             os.putenv('PATH', pathVar)
             self._set_omc_corba_command(os.path.join(self.omhome, 'bin', 'omc'))
             self._start_server()
         except:
+            self.logger.exception("Exception")
             # FIXME: what is this case? are we looking at platform specifics? or different versions of OpenModelica?
-            try:
-                import OMConfig
+            import OMConfig
 
-                PREFIX = OMConfig.DEFAULT_OPENMODELICAHOME
-                self.omhome = os.path.join(PREFIX)
-                self._set_omc_corba_command(os.path.join(self.omhome, 'bin', 'omc'))
-                self._start_server()
-            except:
-                # FIXME: what is this case? are we looking at platform specifics? or different versions of OpenModelica?
-                try:
-                    self._set_omc_corba_command('/opt/local/bin/omc')
-                    self._start_server()
-                except Exception as ex:
-                    self.logger.error("The OpenModelica compiler is missing in the System path, please install it")
-                    raise
+            PREFIX = OMConfig.DEFAULT_OPENMODELICAHOME
+            self.omhome = os.path.join(PREFIX)
+            self._set_omc_corba_command(os.path.join(self.omhome, 'bin', 'omc'))
+            self._start_server()
 
     def _connect_to_omc(self):
         # import the skeletons for the global module
