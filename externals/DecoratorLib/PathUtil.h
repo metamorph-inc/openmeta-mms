@@ -1,9 +1,60 @@
 
 #include <vector>
+#include <algorithm>
+#include <iterator>
 
 class PathUtil {
 	std::vector<CString> 				m_vecPaths;
 	bool								m_bArePathsValid;
+
+	void addLibraryPaths(std::vector<CString>& vecPathes, IMgaProject* Project) {
+		std::vector<CString> newPaths;
+		CComBSTR ProjectConnStr;
+		COMTHROW(Project->get_ProjectConnStr(&ProjectConnStr));
+		CString projectPath = CString(static_cast<const wchar_t*>(ProjectConnStr));
+		projectPath = projectPath.Right(projectPath.GetLength() - wcslen(L"MGA="));
+		wchar_t projectFullPath[MAX_PATH] = { 0 };
+		wchar_t* filepart;
+		if (GetFullPathNameW(static_cast<const wchar_t*>(projectPath), _countof(projectFullPath), projectFullPath, &filepart) && filepart)
+		{
+			*filepart = L'\0';
+		}
+
+		CComPtr<IMgaFolder> rootFolder;
+		COMTHROW(Project->get_RootFolder(&rootFolder));
+		CComPtr<IMgaFolders> rootFolders;
+		COMTHROW(rootFolder->get_ChildFolders(&rootFolders));
+		long count;
+		COMTHROW(rootFolders->get_Count(&count));
+		for (int i = 1; i <= count; i++) {
+			CComPtr<IMgaFolder> rootFolder;
+			COMTHROW(rootFolders->get_Item(i, &rootFolder));
+			CComBSTR libraryName;
+			rootFolder->get_LibraryName(&libraryName);
+			if (libraryName && libraryName.Length()) {
+				CString path;
+				wchar_t fullPath[MAX_PATH] = { 0 };
+				if (GetFullPathNameW(static_cast<const wchar_t*>(libraryName), _countof(fullPath), fullPath, nullptr)) {
+					if (wcscmp(static_cast<const wchar_t*>(libraryName), fullPath) == 0) {
+						path = fullPath;
+					}
+					else {
+						path = CString(projectFullPath) + static_cast<const wchar_t*>(libraryName);
+					}
+					wchar_t* filepart;
+					if (GetFullPathNameW(static_cast<const wchar_t*>(path), _countof(fullPath), fullPath, &filepart) && filepart) {
+						*filepart = 0;
+						newPaths.push_back(fullPath);
+						newPaths.push_back(CString(fullPath) + L"icons\\");
+					}
+				}
+			}
+		}
+
+		std::sort(newPaths.begin(), newPaths.end());
+		newPaths.erase(std::unique(newPaths.begin(), newPaths.end()), newPaths.end());
+		std::copy(newPaths.begin(), newPaths.end(), std::back_inserter(vecPathes));
+	}
 
 public:
 
@@ -98,6 +149,8 @@ public:
 				m_vecPaths.push_back( strDir );
 			}
 			m_vecPaths.push_back( _T(".\\") );
+
+			addLibraryPaths(m_vecPaths, pProject);
 
 			m_bArePathsValid = true;
 		}
