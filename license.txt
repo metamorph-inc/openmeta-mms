@@ -1,5 +1,5 @@
-Copyright (C) 2011-2017 Vanderbilt University
-Copyright (C) 2013-2017 MetaMorph Software, Inc
+Copyright (C) 2011-2019 Vanderbilt University
+Copyright (C) 2013-2019 MetaMorph Software, Inc
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this data, including any software or models in source or binary
@@ -26,8 +26,7 @@ This version of the META tools is a fork of an original version produced
 by Vanderbilt University's Institute for Software Integrated Systems (ISIS).
 Their license statement:
 
-Copyright (C) 2011-2018 Vanderbilt University
-Copyright (C) 2015-2018 Metamorph Inc.
+Copyright (C) 2011-2019 Vanderbilt University
 
 Developed with the sponsorship of the Defense Advanced Research Projects
 Agency (DARPA) and delivered to the U.S. Government with Unlimited Rights
