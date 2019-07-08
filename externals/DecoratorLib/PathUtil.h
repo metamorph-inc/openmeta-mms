@@ -150,9 +150,14 @@ public:
 			}
 			m_vecPaths.push_back( _T(".\\") );
 
-			addLibraryPaths(m_vecPaths, pProject);
+			long status = 0;
+			pProject->get_ProjectStatus(&status);
+			// need to be in a transaction to read library paths
+			if (status & 0x8) {
+				addLibraryPaths(m_vecPaths, pProject);
 
-			m_bArePathsValid = true;
+				m_bArePathsValid = true;
+			}
 		}
 
 		return m_bArePathsValid;
