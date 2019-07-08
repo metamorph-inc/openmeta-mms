@@ -206,9 +206,10 @@ namespace CyPhyMetaLink
                     catch
                     {
                     }
+                    this.TestMode_LastException = e.ToString();
                     // FIXME: who knows what state we're in now. Should we disconnect from MetaLink?
                     /*
-                     * TODO: send debug info back to ISIS
+                     * TODO: send debug info back to HQ
                     string dllPath = Assembly.GetExecutingAssembly().Location;
                     Dictionary<string, string> debugInfo = new Dictionary<string,string>();
                     debugInfo["edit_mode"] = msg.editMode.ToString();

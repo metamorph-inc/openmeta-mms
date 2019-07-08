@@ -143,7 +143,7 @@ void ModelComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMe
 			L"BuiltDesignEntityRef",
 			L"ComponentAssemblyRef",
 			L"ComponentRef",
-			L"DesignEntityRef", // TODO: set Decorator=Mga.CPMDecorator in the meta
+			L"DesignEntityRef",
 			L"TestBenchRef",
 			L"TestInjectionPoint",
 			L"TopLevelSystemUnderTest",

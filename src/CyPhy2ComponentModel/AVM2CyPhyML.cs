@@ -28,11 +28,18 @@ namespace AVM2CyPhyML
         }
 
         protected IMgaProject project { get { return _cyPhyMLRootFolder.Impl.Project; } }
-        protected Dictionary<String, CyPhyML.unit> _unitSymbolCyPhyMLUnitMap = new Dictionary<string, CyPhyML.unit>();
 
         protected CyPhyML.RootFolder _cyPhyMLRootFolder;
-        protected List<CyPhyML.Units> _cyPhyMLUnitsFolders;
         protected List<CyPhyML.Ports> _cyPhyMLPorts;
+
+        protected Dictionary<String, CyPhyML.unit> _unitSymbolCyPhyMLUnitMap
+        {
+            get
+            {
+                return unitMap._unitSymbolCyPhyMLUnitMap;
+            }
+        }
+        protected CyPhyUnitMap unitMap = new CyPhyUnitMap();
 
         /// <summary>
         /// Tracks whether any incoming members have layout data.
@@ -381,26 +388,6 @@ namespace AVM2CyPhyML
             }
         }
 
-        public void setUnitMap(Dictionary<String, CyPhyML.unit> unitSymbolCyPhyMLUnitMap)
-        {
-            _unitSymbolCyPhyMLUnitMap = unitSymbolCyPhyMLUnitMap;
-        }
-        public Dictionary<String, CyPhyML.unit> getUnitMap()
-        {
-            return _unitSymbolCyPhyMLUnitMap;
-        }
-
-        private void getCyPhyMLUnits(CyPhyML.RootFolder rootFolder)
-        {
-            foreach (CyPhyML.TypeSpecifications typeSpecifications in rootFolder.Children.TypeSpecificationsCollection)
-            {
-                foreach (CyPhyML.Units units in typeSpecifications.Children.UnitsCollection)
-                {
-                    _cyPhyMLUnitsFolders.Add(units);
-                }
-            }
-        }
-
         protected PropertyInfo getPropertyInfo(Type type, string propertyName)
         {
             return type.GetProperty(propertyName);
@@ -423,23 +410,6 @@ namespace AVM2CyPhyML
         }
 
 
-        protected void getCyPhyMLUnits()
-        {
-            _cyPhyMLUnitsFolders = new List<CyPhyML.Units>();
-
-            // Collect all of the Root Folders in the project.
-            // They will be sorted, with the QUDT lib in front, followed by all other libs, then the user's Root Folder.
-            var cyPhyMLRootFolderList = new List<CyPhyML.RootFolder>();
-            cyPhyMLRootFolderList.AddRange(_cyPhyMLRootFolder.LibraryCollection
-                                                             .OrderByDescending(lc => lc.Name.Equals("UnitLibrary QUDT")));
-            cyPhyMLRootFolderList.Add(_cyPhyMLRootFolder);
-
-            // Now, for each Root Folder that we gathered, go through and find all units, and add them to our master index.
-            if (cyPhyMLRootFolderList.Count > 0)
-            {
-                cyPhyMLRootFolderList.ForEach(lrf => getCyPhyMLUnits(lrf));
-            }
-        }
 
         private static bool isUnitless(CyPhyML.unit cyPhyMLUnit)
         {
@@ -472,54 +442,6 @@ namespace AVM2CyPhyML
 
             CyPhyML.reference_unit cyPhyMLreference_unit = reference_unitList.ElementAt(0);
             return reference_unitList.Count == 1 ? isUnitless(cyPhyMLreference_unit.Referred.unit) : false;
-        }
-
-        protected void getCyPhyMLNamedUnits(bool resetUnitLibrary = false)
-        {
-            if (false == _cyPhyMLUnitsFolders.Any())
-            {
-                return;
-            }
-
-            // If the caller has passed in this map already
-            if (resetUnitLibrary)
-            {
-                _unitSymbolCyPhyMLUnitMap.Clear();
-            }
-
-            if (_unitSymbolCyPhyMLUnitMap.Count > 0)
-            {
-                return;
-            }
-
-            foreach (CyPhyML.unit cyPhyMLUnit in _cyPhyMLUnitsFolders
-                //  .OrderBy(unit => unit.Path.Contains("QUDT") ? "AAAAAA" + unit.Path : unit.Path)
-                .SelectMany(uf => uf.Children.unitCollection))
-            {
-                // Angle-type measures are an exception to this rule.
-                /*
-				if (cyPhyMLUnit.Attributes.Abbreviation != "rad" &&
-					cyPhyMLUnit.Attributes.Abbreviation != "deg" &&
-					isUnitless(cyPhyMLUnit))
-				{
-					continue;
-				}*/
-                foreach (var symbol in new[] { new {dict= _unitSymbolCyPhyMLUnitMap, attr= (Func<CyPhyML.unit, string>) (x=> x.Attributes.Abbreviation) },
-                    new {dict=_unitSymbolCyPhyMLUnitMap, attr= (Func<CyPhyML.unit, string>) (x=> x.Attributes.Symbol) },
-                    new {dict= _unitSymbolCyPhyMLUnitMap, attr= (Func<CyPhyML.unit, string>) (x=> x.Attributes.FullName) }})
-                {
-                    var dict = symbol.dict;
-                    if (!dict.ContainsKey(symbol.attr(cyPhyMLUnit)) || (dict[symbol.attr(cyPhyMLUnit)].Kind != "si_unit" && cyPhyMLUnit.Kind == "si_unit")) // prefer si_unit in case of name collision
-                    {
-                        if (dict.ContainsKey(symbol.attr(cyPhyMLUnit)) && dict[symbol.attr(cyPhyMLUnit)].Kind != "si_unit" && cyPhyMLUnit.Kind == "si_unit")
-                        {
-                            Console.Write("asdf");
-                            // Debugger.Break();
-                        }
-                        dict[symbol.attr(cyPhyMLUnit)] = cyPhyMLUnit;
-                    }
-                }
-            }
         }
 
 
@@ -1375,8 +1297,8 @@ namespace AVM2CyPhyML
 
         protected void init(bool resetUnitLibrary = false)
         {
-            getCyPhyMLUnits();
-            getCyPhyMLNamedUnits(resetUnitLibrary);
+            unitMap._cyPhyMLRootFolder = _cyPhyMLRootFolder;
+            unitMap.init(resetUnitLibrary);
 
             getCyPhyMLPorts();
             getCyPhyMLModelPorts();

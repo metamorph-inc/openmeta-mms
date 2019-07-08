@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -120,7 +120,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist %25windir%25\sysnative\reg.exe (%25windir%25\sysnative\reg.exe query HKLM\Software\Classes\CLSID\{F1D6BB06-42EE-11D4-B3F4-005004D38590} 2&gt;NUL &gt;NUL &amp;&amp; %25windir%25\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe /codebase "$(TargetPath)" || exit /b 0 )
-$(SolutionDir)..\instrumentdll $(TargetDir) $(TargetFileName) $(ProjectDir)\AssemblySignature.snk</PostBuildEvent>
+"$(SolutionDir)..\instrumentdll" "$(TargetDir)" "$(TargetFileName)" "$(ProjectDir)\AssemblySignature.snk"</PostBuildEvent>
   </PropertyGroup>
   <!--
   <Target Name="BeforeBuild">
