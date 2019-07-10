@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{72A90652-6C4C-464E-A5BF-4C3B21AFB2E1}" cdate="Tue Jul  2 16:28:16 2019" mdate="Tue Jul  2 16:28:16 2019" version="" metaguid="{C84D2738-4519-44F2-B4C1-114F73567576}" metaversion="" metaname="MetaGME">
+<project guid="{51AB2BF3-4FE1-43D0-BC0A-AE03F03F3FAF}" cdate="Wed Jul 10 12:09:23 2019" mdate="Wed Jul 10 12:09:23 2019" version="" metaguid="{C84D2738-4519-44F2-B4C1-114F73567576}" metaversion="" metaname="MetaGME">
 	<name>CyPhyML-core</name>
 	<comment></comment>
 	<author></author>
@@ -3885,8 +3885,8 @@ Log Normal</value>
 					<attribute kind="ConnLineType">
 						<value>dash</value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Metric Constraint Binding</value>
 					</attribute>
 					<attribute kind="DstAttrLabel1" status="meta">
 						<value></value>
@@ -6982,8 +6982,8 @@ dName = dstPPInput2PPOutput
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Post Processing</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -15967,11 +15967,11 @@ ITARDistributionD</value>
 					<attribute kind="AutoRouterPref" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="Decorator" status="meta">
-						<value></value>
+					<attribute kind="Decorator">
+						<value>MGA.CPMDecorator</value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Generic Domain Model Port</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -19256,8 +19256,8 @@ dName = dstNotCompatibleWith</value>
 					<attribute kind="ConnLineType" status="meta">
 						<value>solid</value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Connector Composition</value>
 					</attribute>
 					<attribute kind="DstAttrLabel1" status="meta">
 						<value></value>
@@ -19616,8 +19616,10 @@ sRefParent=srcConnectorComposition_refport_parent
 					<attribute kind="DisplayedName" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="GeneralPreferences" status="meta">
-						<value></value>
+					<attribute kind="GeneralPreferences">
+						<value>treeIcon=PortsFolder.png
+expandedTreeIcon=PortsFolder_b.png
+</value>
 					</attribute>
 					<attribute kind="InRootFolder">
 						<value>false</value>
@@ -19781,8 +19783,10 @@ sRefParent=srcConnectorComposition_refport_parent
 					<attribute kind="DisplayedName" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="GeneralPreferences" status="meta">
-						<value></value>
+					<attribute kind="GeneralPreferences">
+						<value>treeIcon=ConnectorsFolder.png
+expandedTreeIcon=ConnectorsFolder_b.png
+</value>
 					</attribute>
 					<attribute kind="InRootFolder" status="meta">
 						<value>true</value>
@@ -19860,8 +19864,8 @@ sRefParent=srcConnectorComposition_refport_parent
 					<attribute kind="ConnLineType" status="meta">
 						<value>solid</value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Port Composition</value>
 					</attribute>
 					<attribute kind="DstAttrLabel1" status="meta">
 						<value></value>
@@ -20290,8 +20294,8 @@ sRefParent=srcPortComposition_refport_parent
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Reference Coordinate System</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -22032,8 +22036,8 @@ sRefParent=srcPortComposition_refport_parent
 					<attribute kind="ConnLineType" status="meta">
 						<value>solid</value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Uses Resource</value>
 					</attribute>
 					<attribute kind="DstAttrLabel1" status="meta">
 						<value></value>
@@ -24849,8 +24853,8 @@ dName = dstUsesResource</value>
 					<attribute kind="ConnLineType" status="meta">
 						<value>solid</value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Value Flow</value>
 					</attribute>
 					<attribute kind="DstAttrLabel1" status="meta">
 						<value></value>
@@ -27233,8 +27237,8 @@ Minimum</value>
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Simple Formula</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -27910,8 +27914,8 @@ Minimum</value>
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Custom Formula</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -40411,8 +40415,8 @@ rrName = referedbyWorkflowRef
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Execution Task</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -41316,8 +41320,8 @@ rrName = referedbyWorkflowRef
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Test Bench Suite</value>
 					</attribute>
 					<attribute kind="GeneralPreferences">
 						<value>treeIcon = TestBenchSuite.png</value>
@@ -43744,8 +43748,8 @@ rrName = referedbyWorkflowRef
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Parametric Test Bench</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -48542,8 +48546,8 @@ rrName = referedbyObjective
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>MDAO Driver</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -58221,8 +58225,8 @@ constraints-&gt;isUnique(c:gme::Object| c.name)</value>
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Visual Constraint</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -60089,8 +60093,8 @@ dName = dstImplies
 					<attribute kind="Decorator" status="meta">
 						<value></value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Decision Group</value>
 					</attribute>
 					<attribute kind="GeneralPreferences" status="meta">
 						<value></value>
@@ -60263,8 +60267,8 @@ dName = dstImplies
 					<attribute kind="ConnLineType">
 						<value>dash</value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Property Constraint Binding</value>
 					</attribute>
 					<attribute kind="DstAttrLabel1" status="meta">
 						<value></value>
@@ -62712,8 +62716,8 @@ Retain as Component Assembly,AsCA</value>
 					<attribute kind="Decorator">
 						<value>MGA.CPMDecorator</value>
 					</attribute>
-					<attribute kind="DisplayedName" status="meta">
-						<value></value>
+					<attribute kind="DisplayedName">
+						<value>Design Container</value>
 					</attribute>
 					<attribute kind="GeneralPreferences">
 						<value>portLabelLength=7
@@ -68056,8 +68060,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Requirements</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=RequirementsFolder.png
+expandedTreeIcon=RequirementsFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder" status="meta">
 					<value>true</value>
@@ -68107,8 +68113,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=DataTypesFolder.png
+expandedTreeIcon=DataTypesFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>false</value>
@@ -68299,8 +68307,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Components</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=ComponentsFolder.png
+expandedTreeIcon=ComponentsFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>true</value>
@@ -68388,8 +68398,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=MeasuresFolder.png
+expandedTreeIcon=MeasuresFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>false</value>
@@ -68571,8 +68583,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Task Definitions</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=TaskFolderFolder.png
+expandedTreeIcon=TaskFolderFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>false</value>
@@ -68646,8 +68660,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Testing</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=TestingFolder.png
+expandedTreeIcon=TestingFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>true</value>
@@ -68938,8 +68954,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Workflow Definitions</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=WorkflowDefinitionFolderFolder.png
+expandedTreeIcon=WorkflowDefinitionFolderFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>false</value>
@@ -69234,8 +69252,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Parametric Exploration</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=ParametricExplorationFolderFolder.png
+expandedTreeIcon=ParametricExplorationFolderFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>false</value>
@@ -69410,8 +69430,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=UnitsFolder.png
+expandedTreeIcon=UnitsFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>false</value>
@@ -69836,8 +69858,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Test Components</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=TestComponentsFolder.png
+expandedTreeIcon=TestComponentsFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>false</value>
@@ -70019,8 +70043,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Design Spaces</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=DesignSpaceFolder.png
+expandedTreeIcon=DesignSpaceFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>true</value>
@@ -70067,8 +70093,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Materials Definition</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=MaterialsDefinitionFolder.png
+expandedTreeIcon=MaterialsDefinitionFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>true</value>
@@ -70115,8 +70143,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Test Bench Suites</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=TestBenchSuiteFolderFolder.png
+expandedTreeIcon=TestBenchSuiteFolderFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>false</value>
@@ -70281,8 +70311,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Component Assemblies</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=ComponentAssembliesFolder.png
+expandedTreeIcon=ComponentAssembliesFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder">
 					<value>true</value>
@@ -70592,8 +70624,10 @@ childAtoms-&gt;isUnique(c:gme::Object| c.name)</value>
 				<attribute kind="DisplayedName">
 					<value>Type Specifications</value>
 				</attribute>
-				<attribute kind="GeneralPreferences" status="meta">
-					<value></value>
+				<attribute kind="GeneralPreferences">
+					<value>treeIcon=TypeSpecificationsFolder.png
+expandedTreeIcon=TypeSpecificationsFolder_b.png
+</value>
 				</attribute>
 				<attribute kind="InRootFolder" status="meta">
 					<value>true</value>
