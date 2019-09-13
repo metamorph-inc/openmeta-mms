@@ -21,8 +21,22 @@ namespace ComponentImporterUnitTests
         {
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+
+            DataReceivedEventHandler printIt = (o, d) =>
+            {
+                if (d.Data != null)
+                {
+                    Console.Out.WriteLine(d.Data);
+                }
+            };
+            process.OutputDataReceived += printIt;
+            process.ErrorDataReceived += printIt;
 
             process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
             process.WaitForExit();
 
             return process.ExitCode;
@@ -70,7 +84,12 @@ namespace ComponentImporterUnitTests
             process.StartInfo.Arguments += "DesiredResult.mga";
             process.StartInfo.Arguments += " InputModel.mga";
 
-            return processCommon(process);
+            int retval = processCommon(process);
+            if (retval != 0)
+            {
+                Assert.True(0 == retval, String.Format("Imported model doesn't match expected. Files are in {0}", process.StartInfo.WorkingDirectory));
+            }
+            return retval;
         }
 
         [Fact]

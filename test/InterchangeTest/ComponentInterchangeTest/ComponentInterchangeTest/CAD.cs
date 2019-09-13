@@ -99,7 +99,8 @@ namespace ComponentInterchangeTest
             Assert.True(rtnCode == 0, String.Format("Importer failed on one or more components"));
 
             var desiredMgaPath = Path.Combine(testPath, "CAD.mga");
-            Assert.True(0 == CommonFunctions.RunCyPhyMLComparator(desiredMgaPath, importMgaPath), "Imported model doesn't match expected.");
+            Assert.True(0 == CommonFunctions.RunCyPhyMLComparator(desiredMgaPath, importMgaPath),
+                String.Format("Imported model '{0}' doesn't match expected '{1}'.", importMgaPath, desiredMgaPath));
         }
 
         [Fact]

@@ -64,8 +64,12 @@ namespace ComponentInterchangeTest
             return mgaPath;
         }
 
-        public static int processCommon(Process process, bool redirect = false)
+        public static int processCommon(Process process, bool redirect = false, StringBuilder stdout = null)
         {
+            if (stdout == null)
+            {
+                stdout = new StringBuilder();
+            }
             using (process)
             {
                 process.StartInfo.UseShellExecute = false;
@@ -77,7 +81,6 @@ namespace ComponentInterchangeTest
                 }
                 
                 process.StartInfo.CreateNoWindow = true;
-                StringBuilder stdout = new StringBuilder();
                 if (process.StartInfo.RedirectStandardOutput)
                 {
                     process.OutputDataReceived += (o, dataArgs) =>
@@ -165,7 +168,8 @@ namespace ComponentInterchangeTest
                 process.StartInfo.Arguments += " -f " + subfolder;
             }
 
-            return CommonFunctions.processCommon(process, true);
+            StringBuilder stdout = new StringBuilder();
+            return CommonFunctions.processCommon(process, true, stdout);
         }
 
         public static int RunXmlComparator(string exported, string desired)
