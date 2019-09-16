@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="e67e0ce7-127f-4506-965c-1cd2c9213560" Name="EDA_Mappings" Version="" xmlns="avm">
-  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" Author="author" Notes="notes" XPosition="343" YPosition="147" Name="EDAModel" ID="id-2e358a5c-7807-4223-8338-32d6642fd83d" Package="package" Device="device" Library="library" DeviceSet="deviceset" xmlns="">
-    <Pin ID="id-9cf98ae9-f8b5-49a7-a460-04eeac2f6f6f" PortMap="id-600e9bbf-d726-4e15-be42-9d91db7ec496 id-c44d5315-33f0-49e9-8cc6-7a8583cb71d4" Notes="instancenotes" Definition="definition" Name="Pin2" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
-    <Pin ID="id-aebeae8e-fe73-4556-b75d-3ad1233b8fbe" PortMap="id-e96c7a2c-76c2-47c0-b5f7-deac9e60a8a2 id-a155c492-fe3b-495f-a35d-571a7c72ca44" Notes="instancenotes" Definition="definition" Name="Pin1" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
-    <Parameter Locator="Parameter1">
-      <Value ID="id-2fb59d73-ca48-4e35-ab7d-ff01b8637492" Unit="A">
-        <ValueExpression xmlns:q2="avm" xsi:type="q2:DerivedValue" ValueSource="id-713fd5ea-5d86-4295-b53f-8df2097b66c0" />
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" Author="author" Notes="notes" XPosition="343" YPosition="147" Name="EDAModel" ID="id-ceec3cec-cff3-425e-9d7f-4a3f5bf7b1eb" Package="package" Device="device" Library="library" DeviceSet="deviceset" xmlns="">
+    <Pin ID="id-9cf98ae9-f8b5-49a7-a460-04eeac2f6f6f" PortMap="id-c44d5315-33f0-49e9-8cc6-7a8583cb71d4 id-600e9bbf-d726-4e15-be42-9d91db7ec496" Notes="instancenotes" XPosition="625" Definition="definition" YPosition="25" Name="Pin2" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
+    <Pin ID="id-aebeae8e-fe73-4556-b75d-3ad1233b8fbe" PortMap="id-e96c7a2c-76c2-47c0-b5f7-deac9e60a8a2 id-a155c492-fe3b-495f-a35d-571a7c72ca44" Notes="instancenotes" XPosition="525" Definition="definition" YPosition="25" Name="Pin1" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
+    <Parameter XPosition="275" YPosition="25" Locator="Parameter2">
+      <Value ID="id-c13dfb2e-4d4f-4d89-a822-30d29cb7d247" Unit="mm">
+        <ValueExpression xmlns:q2="avm" xsi:type="q2:DerivedValue" ValueSource="id-08c5e9a4-c9ea-46d6-8a97-57115c8c841a" />
       </Value>
     </Parameter>
-    <Parameter Locator="Parameter2">
-      <Value ID="id-6ec1249d-8693-4f9f-bc56-a20e0121168a" Unit="mm">
-        <ValueExpression xmlns:q3="avm" xsi:type="q3:DerivedValue" ValueSource="id-08c5e9a4-c9ea-46d6-8a97-57115c8c841a" />
+    <Parameter XPosition="25" YPosition="25" Locator="Parameter1">
+      <Value ID="id-b2a112f1-8841-4e03-b976-4acb432e5abc" Unit="A">
+        <ValueExpression xmlns:q3="avm" xsi:type="q3:DerivedValue" ValueSource="id-713fd5ea-5d86-4295-b53f-8df2097b66c0" />
       </Value>
     </Parameter>
   </DomainModel>
   <Property xmlns:q4="avm" xsi:type="q4:PrimitiveProperty" Name="Property" OnDataSheet="false" ID="property.id-713fd5ea-5d86-4295-b53f-8df2097b66c0" XPosition="49" YPosition="280" xmlns="">
-    <Value ID="id-713fd5ea-5d86-4295-b53f-8df2097b66c0" DimensionType="Scalar" Dimensions="" Unit="A" DataType="Real">
+    <Value ID="id-713fd5ea-5d86-4295-b53f-8df2097b66c0" Dimensions="" Unit="A" DimensionType="Scalar" DataType="Real">
       <ValueExpression xsi:type="q4:FixedValue">
         <Value>0.5</Value>
       </ValueExpression>
     </Value>
   </Property>
   <Property xmlns:q5="avm" xsi:type="q5:PrimitiveProperty" Name="Parameter" ID="param.id-08c5e9a4-c9ea-46d6-8a97-57115c8c841a" XPosition="7" YPosition="210" xmlns="">
-    <Value ID="id-08c5e9a4-c9ea-46d6-8a97-57115c8c841a" DimensionType="Scalar" Dimensions="" Unit="mm" DataType="Real">
+    <Value ID="id-08c5e9a4-c9ea-46d6-8a97-57115c8c841a" Dimensions="" Unit="mm" DimensionType="Scalar" DataType="Real">
       <ValueExpression xsi:type="q5:ParametricValue">
         <Default xsi:type="q5:FixedValue">
           <Value>202</Value>
@@ -34,10 +34,10 @@
     </Value>
   </Property>
   <Connector ConnectorComposition="" ID="id-11c1bdcc-93ad-4c60-aab4-32e2c1a40348" ApplyJoinData="" XPosition="63" YPosition="364" Notes="" Definition="" Name="Connector" xmlns="">
-    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-600e9bbf-d726-4e15-be42-9d91db7ec496" PortMap="" Name="Pin2" Notes="instancenotes" Definition="definition" XPosition="119" YPosition="21" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
-    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-a155c492-fe3b-495f-a35d-571a7c72ca44" PortMap="" Name="Pin1" Notes="instancenotes" Definition="definition" XPosition="119" YPosition="98" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
+    <Role xmlns:q6="schematic" xsi:type="q6:Pin" ID="id-a155c492-fe3b-495f-a35d-571a7c72ca44" PortMap="" Notes="instancenotes" XPosition="119" Definition="definition" YPosition="98" Name="Pin1" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
+    <Role xmlns:q7="schematic" xsi:type="q7:Pin" ID="id-600e9bbf-d726-4e15-be42-9d91db7ec496" PortMap="" Notes="instancenotes" XPosition="119" Definition="definition" YPosition="21" Name="Pin2" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
   </Connector>
-  <Port xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-c44d5315-33f0-49e9-8cc6-7a8583cb71d4" PortMap="" Name="Pin2" Notes="instancenotes" Definition="definition" XPosition="119" YPosition="21" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" xmlns="" />
-  <Port xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-e96c7a2c-76c2-47c0-b5f7-deac9e60a8a2" PortMap="" Name="Pin1" Notes="instancenotes" Definition="definition" XPosition="119" YPosition="98" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" xmlns="" />
+  <Port xmlns:q8="schematic" xsi:type="q8:Pin" ID="id-e96c7a2c-76c2-47c0-b5f7-deac9e60a8a2" PortMap="" Notes="instancenotes" XPosition="119" Definition="definition" YPosition="98" Name="Pin1" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" xmlns="" />
+  <Port xmlns:q9="schematic" xsi:type="q9:Pin" ID="id-c44d5315-33f0-49e9-8cc6-7a8583cb71d4" PortMap="" Notes="instancenotes" XPosition="119" Definition="definition" YPosition="21" Name="Pin2" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" xmlns="" />
   <Classifications xmlns="" />
 </Component>

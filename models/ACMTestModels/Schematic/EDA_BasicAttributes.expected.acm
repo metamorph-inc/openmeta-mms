@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="d54851fc-2662-43f9-a0c6-3d74ef9532d6" Name="EDA_BasicAttributes" Version="" xmlns="avm">
-  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" Author="author" Notes="notes" XPosition="343" YPosition="147" Name="EDAModel" ID="id-502836f7-923c-4d1b-8d39-4a0491386f96" Package="package" HasMultiLayerFootprint="true" Device="device" Library="library" DeviceSet="deviceset" xmlns="" />
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" Author="author" Notes="notes" XPosition="343" YPosition="147" Name="EDAModel" ID="id-11090e8a-f469-4956-86e4-30ee29376b37" Package="package" HasMultiLayerFootprint="true" Device="device" Library="library" DeviceSet="deviceset" xmlns="" />
   <Classifications xmlns="" />
 </Component>

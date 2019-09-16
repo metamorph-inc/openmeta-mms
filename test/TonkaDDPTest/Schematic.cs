@@ -31,7 +31,7 @@ namespace TonkaACMTest
                 Directory.Delete(Schematic.modelOutputPath, true);
 
             // Next, export all component models from the content model
-            var args = String.Format("{0} -f {1}", Schematic.schematicMgaPath, Schematic.modelOutputPath).Split();
+            var args = new String[] { Schematic.schematicMgaPath, "-f", Schematic.modelOutputPath };
             CyPhyComponentExporterCL.CyPhyComponentExporterCL.Main(args);
 
             Assert.True(Directory.Exists(Schematic.modelOutputPath), "Model output path doesn't exist; Exporter may have failed.");
