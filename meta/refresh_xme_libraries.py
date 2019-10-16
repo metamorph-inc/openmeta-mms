@@ -27,6 +27,31 @@ xme.Resolver = resolver
 xme.ParseProject(mga, xmefile)
 pythoncom.PumpWaitingMessages()
 pythoncom.PumpWaitingMessages()
+
+def use_si_units():
+    mga.BeginTransactionInNewTerr()
+    try:
+        si_units = {}
+        filter = mga.CreateFilter()
+        filter.Kind = "si_unit"
+        for si_unit in mga.AllFCOs(filter):
+            si_units[si_unit.Name] = si_unit
+
+        filter = mga.CreateFilter()
+        filter.Kind = "conversion_based_unit"
+        for conversion_based_unit in mga.AllFCOs(filter):
+            si_unit = si_units.get(conversion_based_unit.Name)
+            if si_unit is None:
+                continue
+            for fco in conversion_based_unit.ReferencedBy:
+                if fco.IsLibObject:
+                    continue
+                fco.Referred = si_unit
+                print fco.Name
+    finally:
+        mga.CommitTransaction()
+# use_si_units()
+
 mga.Save("MGA=" + xmefile + ".mga", False)
 
 dumper = win32com.client.DispatchEx("Mga.MgaDumper")

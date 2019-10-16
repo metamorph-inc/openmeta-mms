@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c87cd5cb-0ebc-4b62-8428-2cd65505567c" Name="EDA_PinsAndParameters" Version="" xmlns="avm">
-  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" Author="author" Notes="notes" XPosition="343" YPosition="147" Name="EDAModel" ID="id-875f2d6e-e4dc-43ed-9a57-e8ab2476d7a4" Package="package" Device="device" Library="library" DeviceSet="deviceset" xmlns="">
-    <Pin ID="id-d2e4dedf-adb4-4490-9432-d9a8ab6eb062" PortMap="" Notes="instancenotes" XPosition="525" Definition="definition" YPosition="25" Name="Pin1" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
+  <DomainModel xmlns:q1="eda" xsi:type="q1:EDAModel" Author="author" Notes="notes" XPosition="343" YPosition="147" Name="EDAModel" ID="id-651350b7-e87e-4f69-8c5e-c3b0d633fdfc" Package="package" Device="device" Library="library" DeviceSet="deviceset" xmlns="">
     <Pin ID="id-38d27d08-7d79-4682-bdbe-3e753985d867" PortMap="" Notes="instancenotes" XPosition="625" Definition="definition" YPosition="25" Name="Pin2" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
-    <Parameter XPosition="275" YPosition="25" Locator="Parameter2">
-      <Value ID="id-dcc9683d-bcb6-45e0-a289-deed17eb8ad8">
+    <Pin ID="id-d2e4dedf-adb4-4490-9432-d9a8ab6eb062" PortMap="" Notes="instancenotes" XPosition="525" Definition="definition" YPosition="25" Name="Pin1" EDAGate="gate" EDASymbolLocationX="symbollocationx" EDASymbolLocationY="symbollocationy" EDASymbolRotation="symbolrotation" SPICEPortNumber="0" />
+    <Parameter XPosition="25" YPosition="25" Locator="Parameter1">
+      <Value ID="id-f4f38409-b3f1-45e0-93af-276480338e76">
         <ValueExpression xmlns:q2="avm" xsi:type="q2:FixedValue">
-          <Value>0.212</Value>
+          <Value>1023</Value>
         </ValueExpression>
       </Value>
     </Parameter>
-    <Parameter XPosition="25" YPosition="25" Locator="Parameter1">
-      <Value ID="id-9e236130-0302-4680-ad2b-f4ad1afa9113">
+    <Parameter XPosition="275" YPosition="25" Locator="Parameter2">
+      <Value ID="id-9023dde0-e180-460b-a07c-cfc2a4168dee">
         <ValueExpression xmlns:q3="avm" xsi:type="q3:FixedValue">
-          <Value>1023</Value>
+          <Value>0.212</Value>
         </ValueExpression>
       </Value>
     </Parameter>

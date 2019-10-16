@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{13F8F87E-368A-4B3E-B065-7E1E1164E965}" cdate="Fri Sep 13 15:24:58 2019" mdate="Fri Sep 13 15:24:58 2019" version="" metaguid="{85CD4FB8-841A-079D-1B83-837878ABB1AE}" metaversion="14.13-t38" metaname="CyPhyML">
+<project guid="{41F45054-C72B-4AE4-81C3-3D2B6DE78130}" cdate="Wed Oct 16 13:09:19 2019" mdate="Wed Oct 16 13:09:19 2019" version="" metaguid="{85CD4FB8-841A-079D-1B83-837878ABB1AE}" metaversion="14.13-t38" metaname="CyPhyML">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
@@ -2473,12 +2473,12 @@
 				</model>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699080000000</value>
+				<value>132131277520000000</value>
 			</regnode>
 		</folder>
 		<folder id="id-006a-00000002" relid="0x2" childrelidcntr="0xd" kind="Components" guid="{1d289b1a-d012-4db8-af41-cd06da0b3555}">
 			<name>Components</name>
-			<model id="id-0065-00000470" kind="Component" guid="{a4ec52cc-016f-44ac-aaa9-965b80bf8398}" relid="0xd" childrelidcntr="0x5">
+			<model id="id-0065-00000470" kind="Component" guid="{84ce0eaa-9b93-444f-aa97-2c135cb140dd}" relid="0xd" childrelidcntr="0x5">
 				<name>WithManuf</name>
 				<attribute kind="AVMID">
 					<value>bbf9036b-5052-4bc8-97f0-ae63f320ae85</value>
@@ -2505,7 +2505,7 @@
 					<value></value>
 				</attribute>
 				<attribute kind="Path">
-					<value>.\components\o2oes30t</value>
+					<value>.\components\vfwn0dac</value>
 				</attribute>
 				<attribute kind="Revision" status="meta">
 					<value></value>
@@ -2516,86 +2516,7 @@
 				<attribute kind="Version" status="meta">
 					<value></value>
 				</attribute>
-				<connection id="id-0068-0000002d" kind="ManufacturingParameterPortMap" role="ManufacturingParameterPortMap" guid="{1444d5ca-375f-4095-b759-6f1a46f93da6}" relid="0x4">
-					<name></name>
-					<connpoint role="dst" target="id-0067-00000629"/>
-					<connpoint role="src" target="id-0067-00000628"/>
-				</connection>
-				<model id="id-0065-00000471" kind="ManufacturingModel" role="ManufacturingModel" guid="{3316e74d-58e5-47e9-983c-b13978c1be26}" relid="0x3" childrelidcntr="0x2">
-					<name>ManufacturingModel</name>
-					<regnode name="PartRegs" status="undefined">
-						<value></value>
-						<regnode name="All" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>203,70</value>
-							</regnode>
-						</regnode>
-						<regnode name="ManufacturingAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>203,70</value>
-							</regnode>
-						</regnode>
-					</regnode>
-					<attribute kind="Author">
-						<value></value>
-					</attribute>
-					<attribute kind="FilePathWithinResource" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Notes">
-						<value></value>
-					</attribute>
-					<reference id="id-0067-00000629" kind="ManufacturingModelParameter" role="ManufacturingModelParameter" guid="{1ede246a-d41b-4714-8920-d0682f41615c}" relid="0x1" referred="id-0065-000002fc">
-						<name>Param2</name>
-						<regnode name="PartRegs" status="undefined">
-							<value></value>
-							<regnode name="ManufacturingAspect" status="undefined">
-								<value></value>
-								<regnode name="Position" isopaque="yes">
-									<value>119,224</value>
-								</regnode>
-							</regnode>
-						</regnode>
-						<attribute kind="DefaultValue" status="meta">
-							<value></value>
-						</attribute>
-						<attribute kind="Notes">
-							<value>A sample Parameter</value>
-						</attribute>
-						<attribute kind="Value">
-							<value>1042</value>
-						</attribute>
-					</reference>
-					<reference id="id-0067-0000062a" kind="ManufacturingModelParameter" role="ManufacturingModelParameter" guid="{5b7926f0-f815-45fd-82fd-a95ada44a532}" relid="0x2" referred="id-0065-00000307">
-						<name>Param1</name>
-						<regnode name="PartRegs" status="undefined">
-							<value></value>
-							<regnode name="ManufacturingAspect" status="undefined">
-								<value></value>
-								<regnode name="Position" isopaque="yes">
-									<value>119,63</value>
-								</regnode>
-							</regnode>
-						</regnode>
-						<attribute kind="DefaultValue" status="meta">
-							<value></value>
-						</attribute>
-						<attribute kind="Notes">
-							<value>A sample Parameter</value>
-						</attribute>
-						<attribute kind="Value">
-							<value>2093</value>
-						</attribute>
-					</reference>
-				</model>
-				<connection id="id-0068-0000002e" kind="ManufacturingParameterPortMap" role="ManufacturingParameterPortMap" guid="{702b871c-ee04-475b-a5d1-07043d326627}" relid="0x5">
-					<name></name>
-					<connpoint role="dst" target="id-0067-0000062a"/>
-					<connpoint role="src" target="id-0067-00000627"/>
-				</connection>
-				<reference id="id-0067-00000627" kind="Property" role="Property" guid="{92d8a386-d01d-417b-874c-3b8c0debb640}" relid="0x1" referred="id-0065-00000307">
+				<reference id="id-0067-00000627" kind="Property" role="Property" guid="{0d9cb55b-1d98-435d-bf92-47e66e841e63}" relid="0x1" referred="id-0066-000000f0">
 					<name>Meter</name>
 					<regnode name="PartRegs" status="undefined">
 						<value></value>
@@ -2679,7 +2600,86 @@
 						<value>2093</value>
 					</attribute>
 				</reference>
-				<reference id="id-0067-00000628" kind="Parameter" role="Parameter" guid="{e4824b7e-6919-4003-94d0-ecb13a72e2b2}" relid="0x2" referred="id-0065-000002fc">
+				<model id="id-0065-00000471" kind="ManufacturingModel" role="ManufacturingModel" guid="{2e9bb492-ebdc-48ee-a931-5b12bb9284fd}" relid="0x3" childrelidcntr="0x2">
+					<name>ManufacturingModel</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>203,70</value>
+							</regnode>
+						</regnode>
+						<regnode name="ManufacturingAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>203,70</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Author">
+						<value></value>
+					</attribute>
+					<attribute kind="FilePathWithinResource" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Notes">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-0000062a" kind="ManufacturingModelParameter" role="ManufacturingModelParameter" guid="{3c88ec45-1d0a-4955-81a2-bb0f01a0c9bf}" relid="0x2" referred="id-0066-000000f0">
+						<name>Param1</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="ManufacturingAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>119,63</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="DefaultValue" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Notes">
+							<value>A sample Parameter</value>
+						</attribute>
+						<attribute kind="Value">
+							<value>2093</value>
+						</attribute>
+					</reference>
+					<reference id="id-0067-00000629" kind="ManufacturingModelParameter" role="ManufacturingModelParameter" guid="{606dcb8a-43ed-4b52-84c8-6d7cc9dc53e1}" relid="0x1" referred="id-0065-000002fc">
+						<name>Param2</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="ManufacturingAspect" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>119,224</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="DefaultValue" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="Notes">
+							<value>A sample Parameter</value>
+						</attribute>
+						<attribute kind="Value">
+							<value>1042</value>
+						</attribute>
+					</reference>
+				</model>
+				<connection id="id-0068-0000002d" kind="ManufacturingParameterPortMap" role="ManufacturingParameterPortMap" guid="{7ac29a46-753b-4c78-911f-416fe6d6efab}" relid="0x4">
+					<name></name>
+					<connpoint role="dst" target="id-0067-00000629"/>
+					<connpoint role="src" target="id-0067-00000628"/>
+				</connection>
+				<connection id="id-0068-0000002e" kind="ManufacturingParameterPortMap" role="ManufacturingParameterPortMap" guid="{d7d79984-b55e-49a4-96e2-eef8e5cd44d3}" relid="0x5">
+					<name></name>
+					<connpoint role="dst" target="id-0067-0000062a"/>
+					<connpoint role="src" target="id-0067-00000627"/>
+				</connection>
+				<reference id="id-0067-00000628" kind="Parameter" role="Parameter" guid="{e782160d-4dd2-4b12-bc3a-7a9c421e5bb9}" relid="0x2" referred="id-0065-000002fc">
 					<name>Mega Hertz per Tesla</name>
 					<attribute kind="ComputationType" status="meta">
 						<value>Addition</value>
@@ -3668,7 +3668,7 @@
 				</atom>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699060000000</value>
+				<value>132131277510000000</value>
 			</regnode>
 		</folder>
 		<folder id="id-006a-0000001b" relid="0x32" childrelidcntr="0xd" libref="UnitLibrary QUDT" kind="RootFolder" guid="{930ea234-c97f-40fd-aa87-a272824dfa19}">
@@ -17957,7 +17957,7 @@
 				</folder>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699039538084</value>
+				<value>132131277495000521</value>
 			</regnode>
 		</folder>
 		<folder id="id-006a-00000027" relid="0x36" childrelidcntr="0x2b" libref="TestBenchLibrary" kind="RootFolder" guid="{cb8c0be2-fcb7-4ee5-a21c-6adbcb40f254}">
@@ -18365,7 +18365,7 @@
 					<name>ChipFit</name>
 					<folder id="id-006a-0000002d" relid="0x1" childrelidcntr="0x3" kind="Testing" guid="{0e362bbf-b320-45d8-9cf4-fc30ecda2273}">
 						<name>fits_ara_rear</name>
-						<model id="id-0065-000004c0" kind="TestBench" guid="{4778e77d-69dc-4fde-805d-55461f54a26f}" relid="0x2" childrelidcntr="0x5">
+						<model id="id-0065-000004b6" kind="TestBench" guid="{4778e77d-69dc-4fde-805d-55461f54a26f}" relid="0x2" childrelidcntr="0x5">
 							<name>fits_ara_rear_1x1</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -18394,7 +18394,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-0000066c" kind="Parameter" role="Parameter" guid="{103cb14f-8dff-4cde-a677-cb09ccdf680d}" relid="0x5" referred="id-0065-000004c4">
+							<reference id="id-0067-0000066f" kind="Parameter" role="Parameter" guid="{103cb14f-8dff-4cde-a677-cb09ccdf680d}" relid="0x5" referred="id-0065-000004c4">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18460,7 +18460,7 @@
 									<value>18</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000066b" kind="Metric" role="Metric" guid="{46251359-4814-4881-a4bf-f6036496021d}" relid="0x2">
+							<reference id="id-0067-0000066e" kind="Metric" role="Metric" guid="{46251359-4814-4881-a4bf-f6036496021d}" relid="0x2">
 								<name>fits_18_by_18</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18499,7 +18499,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000668" kind="WorkflowRef" role="WorkflowRef" guid="{98e014cd-c30c-477c-81e0-f07b179fea24}" relid="0x3" referred="id-0065-000004ba">
+							<reference id="id-0067-0000066b" kind="WorkflowRef" role="WorkflowRef" guid="{98e014cd-c30c-477c-81e0-f07b179fea24}" relid="0x3" referred="id-0065-000004c3">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18517,7 +18517,7 @@
 									<value>MGA.Decorator.Workflow</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-0000066a" kind="Metric" role="Metric" guid="{d2c5e21d-39da-40d2-82c8-f35de552a626}" relid="0x1">
+							<reference id="id-0067-0000066d" kind="Metric" role="Metric" guid="{d2c5e21d-39da-40d2-82c8-f35de552a626}" relid="0x1">
 								<name>pct_occupied_18_by_18</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18556,7 +18556,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000669" kind="Parameter" role="Parameter" guid="{d8364362-aa9a-43cb-9d5f-63b1407fff67}" relid="0x4" referred="id-0065-000004c4">
+							<reference id="id-0067-0000066c" kind="Parameter" role="Parameter" guid="{d8364362-aa9a-43cb-9d5f-63b1407fff67}" relid="0x4" referred="id-0065-000004c4">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18623,7 +18623,7 @@
 								</attribute>
 							</reference>
 						</model>
-						<model id="id-0065-000004bf" kind="TestBench" guid="{a7b6995c-b322-4a5a-b6c5-8449356453a0}" relid="0x1" childrelidcntr="0x5">
+						<model id="id-0065-000004b5" kind="TestBench" guid="{a7b6995c-b322-4a5a-b6c5-8449356453a0}" relid="0x1" childrelidcntr="0x5">
 							<name>fits_ara_rear_2x2</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -18652,7 +18652,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-00000667" kind="Metric" role="Metric" guid="{03b323c7-5a84-4ffe-bf48-f17436ab27f0}" relid="0x2">
+							<reference id="id-0067-0000066a" kind="Metric" role="Metric" guid="{03b323c7-5a84-4ffe-bf48-f17436ab27f0}" relid="0x2">
 								<name>pct_occupied_39.5_by_41</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18691,7 +18691,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000666" kind="Parameter" role="Parameter" guid="{828b227e-109c-49ec-9ac9-a1e3f97836f1}" relid="0x4" referred="id-0065-000004c4">
+							<reference id="id-0067-00000669" kind="Parameter" role="Parameter" guid="{828b227e-109c-49ec-9ac9-a1e3f97836f1}" relid="0x4" referred="id-0065-000004c4">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18757,7 +18757,7 @@
 									<value>41</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000665" kind="Parameter" role="Parameter" guid="{978b5256-fc42-4bd5-87aa-deaf7f09b0e7}" relid="0x5" referred="id-0065-000004c4">
+							<reference id="id-0067-00000668" kind="Parameter" role="Parameter" guid="{978b5256-fc42-4bd5-87aa-deaf7f09b0e7}" relid="0x5" referred="id-0065-000004c4">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18823,7 +18823,7 @@
 									<value>39.5</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000664" kind="Metric" role="Metric" guid="{d8e4dd36-dea2-44e0-800f-dd2e95ed15e3}" relid="0x1">
+							<reference id="id-0067-00000667" kind="Metric" role="Metric" guid="{d8e4dd36-dea2-44e0-800f-dd2e95ed15e3}" relid="0x1">
 								<name>fits_39.5_by_41</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18862,7 +18862,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000663" kind="WorkflowRef" role="WorkflowRef" guid="{fb41fc8f-8959-464c-80b8-b15218a03cbf}" relid="0x3" referred="id-0065-000004ba">
+							<reference id="id-0067-00000666" kind="WorkflowRef" role="WorkflowRef" guid="{fb41fc8f-8959-464c-80b8-b15218a03cbf}" relid="0x3" referred="id-0065-000004c3">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18881,7 +18881,7 @@
 								</regnode>
 							</reference>
 						</model>
-						<model id="id-0065-000004be" kind="TestBench" guid="{c02eeada-79d2-4683-b7f4-60fcdd52d881}" relid="0x3" childrelidcntr="0x5">
+						<model id="id-0065-000004b4" kind="TestBench" guid="{c02eeada-79d2-4683-b7f4-60fcdd52d881}" relid="0x3" childrelidcntr="0x5">
 							<name>fits_ara_rear_1x2</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -18910,7 +18910,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-0000065e" kind="WorkflowRef" role="WorkflowRef" guid="{2eca51d2-dc0d-47e5-af91-95b57da445ed}" relid="0x3" referred="id-0065-000004ba">
+							<reference id="id-0067-00000661" kind="WorkflowRef" role="WorkflowRef" guid="{2eca51d2-dc0d-47e5-af91-95b57da445ed}" relid="0x3" referred="id-0065-000004c3">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18928,7 +18928,7 @@
 									<value>MGA.Decorator.Workflow</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000662" kind="Metric" role="Metric" guid="{6c63d9bd-e504-47f8-afd1-9a6a10b153fb}" relid="0x1">
+							<reference id="id-0067-00000665" kind="Metric" role="Metric" guid="{6c63d9bd-e504-47f8-afd1-9a6a10b153fb}" relid="0x1">
 								<name>pct_occupied_18_by_40.5</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18967,7 +18967,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000661" kind="Parameter" role="Parameter" guid="{84ac141f-e0e6-4ca4-aba0-442c864c5476}" relid="0x4" referred="id-0065-000004c4">
+							<reference id="id-0067-00000664" kind="Parameter" role="Parameter" guid="{84ac141f-e0e6-4ca4-aba0-442c864c5476}" relid="0x4" referred="id-0065-000004c4">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19033,7 +19033,7 @@
 									<value>18</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000660" kind="Metric" role="Metric" guid="{aa657b9a-385e-4ae2-a8f1-aa848e530be9}" relid="0x2">
+							<reference id="id-0067-00000663" kind="Metric" role="Metric" guid="{aa657b9a-385e-4ae2-a8f1-aa848e530be9}" relid="0x2">
 								<name>fits_18_by_40.5</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19072,7 +19072,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000065f" kind="Parameter" role="Parameter" guid="{fa70a5fb-3f2e-4b53-a3e7-5c4116e2325e}" relid="0x5" referred="id-0065-000004c4">
+							<reference id="id-0067-00000662" kind="Parameter" role="Parameter" guid="{fa70a5fb-3f2e-4b53-a3e7-5c4116e2325e}" relid="0x5" referred="id-0065-000004c4">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19142,9 +19142,9 @@
 					</folder>
 					<folder id="id-006a-0000002c" relid="0x4" childrelidcntr="0x1" kind="TestBenchSuiteFolder" guid="{b54e9862-07c8-4c7b-92d6-79ae9d2fee1e}">
 						<name>check_fit_all_ara_sizes</name>
-						<model id="id-0065-000004bd" kind="TestBenchSuite" guid="{4e34a59b-a2cf-4f24-a36f-9a40930c3839}" relid="0x1" childrelidcntr="0x5">
+						<model id="id-0065-000004b3" kind="TestBenchSuite" guid="{4e34a59b-a2cf-4f24-a36f-9a40930c3839}" relid="0x1" childrelidcntr="0x5">
 							<name>check_fit_all_ara_sizes</name>
-							<reference id="id-0067-0000065d" kind="TestBenchRef" role="TestBenchRef" guid="{42e009a7-79af-483c-add1-bcf928adea2b}" relid="0x4" referred="id-0065-000004be">
+							<reference id="id-0067-00000660" kind="TestBenchRef" role="TestBenchRef" guid="{42e009a7-79af-483c-add1-bcf928adea2b}" relid="0x4" referred="id-0065-000004b4">
 								<name>fits_ara_rear_1x2</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19159,7 +19159,7 @@
 									<value>0</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-0000065c" kind="TestBenchRef" role="TestBenchRef" guid="{4ba62087-8970-4fae-a405-117d4858ea98}" relid="0x3" referred="id-0065-000004c0">
+							<reference id="id-0067-0000065f" kind="TestBenchRef" role="TestBenchRef" guid="{4ba62087-8970-4fae-a405-117d4858ea98}" relid="0x3" referred="id-0065-000004b6">
 								<name>fits_ara_rear_1x1</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19174,7 +19174,7 @@
 									<value>0</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-0000065b" kind="TestBenchRef" role="TestBenchRef" guid="{8842c468-a22e-4dbb-9792-3efc543d547e}" relid="0x5" referred="id-0065-000004bf">
+							<reference id="id-0067-0000065e" kind="TestBenchRef" role="TestBenchRef" guid="{8842c468-a22e-4dbb-9792-3efc543d547e}" relid="0x5" referred="id-0065-000004b5">
 								<name>fits_ara_rear_2x2</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19189,7 +19189,7 @@
 									<value>0</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-0000065a" kind="TestBenchRef" role="TestBenchRef" guid="{dd1addc4-5950-42f6-8906-f1d51dede301}" relid="0x1" referred="id-0065-000004bb">
+							<reference id="id-0067-0000065d" kind="TestBenchRef" role="TestBenchRef" guid="{dd1addc4-5950-42f6-8906-f1d51dede301}" relid="0x1" referred="id-0065-000004b1">
 								<name>fits_ara_front_H</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19204,7 +19204,7 @@
 									<value>0</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000659" kind="TestBenchRef" role="TestBenchRef" guid="{f402bcf5-c350-42e0-ac6b-ce2f3b1f98ca}" relid="0x2" referred="id-0065-000004bc">
+							<reference id="id-0067-0000065c" kind="TestBenchRef" role="TestBenchRef" guid="{f402bcf5-c350-42e0-ac6b-ce2f3b1f98ca}" relid="0x2" referred="id-0065-000004b2">
 								<name>fits_ara_rear_I</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19223,7 +19223,7 @@
 					</folder>
 					<folder id="id-006a-0000002b" relid="0x2" childrelidcntr="0x2" kind="Testing" guid="{bfbe7b7d-b7e8-4646-b209-b00117deb14e}">
 						<name>fits_ara_front</name>
-						<model id="id-0065-000004bc" kind="TestBench" guid="{a8939598-c928-4c7e-a5b0-25a2fe1b93ea}" relid="0x2" childrelidcntr="0x5">
+						<model id="id-0065-000004b2" kind="TestBench" guid="{a8939598-c928-4c7e-a5b0-25a2fe1b93ea}" relid="0x2" childrelidcntr="0x5">
 							<name>fits_ara_front_I</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -19252,7 +19252,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-00000658" kind="Parameter" role="Parameter" guid="{186cc5c1-d1d5-4659-bb5e-05aa33a7e93d}" relid="0x4" referred="id-0065-000004c4">
+							<reference id="id-0067-0000065b" kind="Parameter" role="Parameter" guid="{186cc5c1-d1d5-4659-bb5e-05aa33a7e93d}" relid="0x4" referred="id-0065-000004c4">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19318,7 +19318,7 @@
 									<value>62.5</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000657" kind="Metric" role="Metric" guid="{20f03ec7-74d0-45af-8d1d-39d78ab6e7f0}" relid="0x1">
+							<reference id="id-0067-0000065a" kind="Metric" role="Metric" guid="{20f03ec7-74d0-45af-8d1d-39d78ab6e7f0}" relid="0x1">
 								<name>fits_62.5_by_115.7</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19357,7 +19357,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000656" kind="Parameter" role="Parameter" guid="{4e02a931-4d3e-4677-be2d-4c6e26607b80}" relid="0x5" referred="id-0065-000004c4">
+							<reference id="id-0067-00000659" kind="Parameter" role="Parameter" guid="{4e02a931-4d3e-4677-be2d-4c6e26607b80}" relid="0x5" referred="id-0065-000004c4">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19423,7 +19423,7 @@
 									<value>115.7</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000654" kind="WorkflowRef" role="WorkflowRef" guid="{62847cb5-b41c-47ef-ba14-2e29446e4166}" relid="0x3" referred="id-0065-000004ba">
+							<reference id="id-0067-00000657" kind="WorkflowRef" role="WorkflowRef" guid="{62847cb5-b41c-47ef-ba14-2e29446e4166}" relid="0x3" referred="id-0065-000004c3">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19441,7 +19441,7 @@
 									<value>MGA.Decorator.Workflow</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000655" kind="Metric" role="Metric" guid="{b1fe90fb-de72-4929-b113-2db0bd6708ce}" relid="0x2">
+							<reference id="id-0067-00000658" kind="Metric" role="Metric" guid="{b1fe90fb-de72-4929-b113-2db0bd6708ce}" relid="0x2">
 								<name>pct_occupied_62.5_by_115.7</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19481,7 +19481,7 @@
 								</attribute>
 							</reference>
 						</model>
-						<model id="id-0065-000004bb" kind="TestBench" guid="{b8c42ab3-87cb-40f3-ae75-31eb3d49a8ad}" relid="0x1" childrelidcntr="0x5">
+						<model id="id-0065-000004b1" kind="TestBench" guid="{b8c42ab3-87cb-40f3-ae75-31eb3d49a8ad}" relid="0x1" childrelidcntr="0x5">
 							<name>fits_ara_front_H</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -19510,7 +19510,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-0000064f" kind="WorkflowRef" role="WorkflowRef" guid="{07dfa6fa-c246-47be-b502-9ebe2fa4dd11}" relid="0x3" referred="id-0065-000004ba">
+							<reference id="id-0067-00000652" kind="WorkflowRef" role="WorkflowRef" guid="{07dfa6fa-c246-47be-b502-9ebe2fa4dd11}" relid="0x3" referred="id-0065-000004c3">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19528,7 +19528,7 @@
 									<value>MGA.Decorator.Workflow</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000653" kind="Parameter" role="Parameter" guid="{4e12e7d9-2e49-4f7c-862d-8f64d1ec1bba}" relid="0x5" referred="id-0065-000004c4">
+							<reference id="id-0067-00000656" kind="Parameter" role="Parameter" guid="{4e12e7d9-2e49-4f7c-862d-8f64d1ec1bba}" relid="0x5" referred="id-0065-000004c4">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19594,7 +19594,7 @@
 									<value>9.5</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000652" kind="Metric" role="Metric" guid="{b932a986-b31c-4ffc-bbb8-c4c3a428cec7}" relid="0x1">
+							<reference id="id-0067-00000655" kind="Metric" role="Metric" guid="{b932a986-b31c-4ffc-bbb8-c4c3a428cec7}" relid="0x1">
 								<name>fits_62.8_by_9.5</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19633,7 +19633,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000651" kind="Metric" role="Metric" guid="{bf0cd302-893f-49c0-a042-aeb1e20498c4}" relid="0x2">
+							<reference id="id-0067-00000654" kind="Metric" role="Metric" guid="{bf0cd302-893f-49c0-a042-aeb1e20498c4}" relid="0x2">
 								<name>pct_occupied_62.8_by_9.5</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19672,7 +19672,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000650" kind="Parameter" role="Parameter" guid="{c23f8f73-021a-4502-b30d-dcc0bdadd44d}" relid="0x4" referred="id-0065-000004c4">
+							<reference id="id-0067-00000653" kind="Parameter" role="Parameter" guid="{c23f8f73-021a-4502-b30d-dcc0bdadd44d}" relid="0x4" referred="id-0065-000004c4">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19741,9 +19741,9 @@
 						</model>
 					</folder>
 				</folder>
-				<folder id="id-006a-00000029" relid="0x1" childrelidcntr="0x11" kind="WorkflowDefinitionFolder" guid="{b33c3d9e-b286-42ad-a90e-713089683980}">
+				<folder id="id-006a-0000002e" relid="0x1" childrelidcntr="0x11" kind="WorkflowDefinitionFolder" guid="{b33c3d9e-b286-42ad-a90e-713089683980}">
 					<name>Workflows</name>
-					<model id="id-0065-000004ba" kind="Workflow" guid="{12e9dc12-b6dd-4154-a9e6-2be7105d44f7}" relid="0x5" childrelidcntr="0x1">
+					<model id="id-0065-000004c3" kind="Workflow" guid="{12e9dc12-b6dd-4154-a9e6-2be7105d44f7}" relid="0x5" childrelidcntr="0x1">
 						<name>CyPhy2EAGLE_chipfit</name>
 						<atom id="id-0066-000001ca" kind="Task" role="Task" guid="{db6d8cff-1fd3-48e0-9848-1f118d57ccad}" relid="0x1">
 							<name>Task</name>
@@ -19761,7 +19761,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b9" kind="Workflow" guid="{18c07643-05c1-4bf8-8e0a-fa22e4b82893}" relid="0xb" childrelidcntr="0x1">
+					<model id="id-0065-000004c2" kind="Workflow" guid="{18c07643-05c1-4bf8-8e0a-fa22e4b82893}" relid="0xb" childrelidcntr="0x1">
 						<name>Visualize_SavedLayout</name>
 						<atom id="id-0066-000001c9" kind="Task" role="Task" guid="{a820e87c-6611-4c5b-bdaf-a881128f9140}" relid="0x1">
 							<name>Task</name>
@@ -19792,7 +19792,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b8" kind="Workflow" guid="{4f8dd828-9f48-41db-b9ff-6f444b31b4bf}" relid="0xa" childrelidcntr="0x4">
+					<model id="id-0065-000004c1" kind="Workflow" guid="{4f8dd828-9f48-41db-b9ff-6f444b31b4bf}" relid="0xa" childrelidcntr="0x4">
 						<name>PlaceRouteAndVisualize</name>
 						<atom id="id-0066-000001c8" kind="Task" role="Task" guid="{3f11dbe7-9c7f-480f-93e3-9d0d72ce7599}" relid="0x2">
 							<name>Task</name>
@@ -19858,7 +19858,7 @@
 							<connpoint role="src" target="id-0066-000001c8"/>
 						</connection>
 					</model>
-					<model id="id-0065-000004b7" kind="Workflow" guid="{59a463e3-73ac-4f21-b172-39f8c0f4547c}" relid="0x9" childrelidcntr="0x9">
+					<model id="id-0065-000004c0" kind="Workflow" guid="{59a463e3-73ac-4f21-b172-39f8c0f4547c}" relid="0x9" childrelidcntr="0x9">
 						<name>PCB_Mfg</name>
 						<atom id="id-0066-000001c6" kind="ExecutionTask" role="ExecutionTask" guid="{10c9a9b6-305e-483c-ba46-7bd1243832bd}" relid="0x2">
 							<name>CAM Processing</name>
@@ -19980,7 +19980,7 @@
 							<connpoint role="src" target="id-0066-000001c3"/>
 						</connection>
 					</model>
-					<model id="id-0065-000004b6" kind="Workflow" guid="{76d51e43-9f7d-4a54-aa26-5249d39a4819}" relid="0x6" childrelidcntr="0x1">
+					<model id="id-0065-000004bf" kind="Workflow" guid="{76d51e43-9f7d-4a54-aa26-5249d39a4819}" relid="0x6" childrelidcntr="0x1">
 						<name>SystemCWorkflow</name>
 						<atom id="id-0066-000001c2" kind="Task" role="Task" guid="{09c783bf-45ea-44c5-971a-4995e516a9a1}" relid="0x1">
 							<name>Task</name>
@@ -20004,7 +20004,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b5" kind="Workflow" guid="{806e74eb-ed80-40be-a37f-6296751f183d}" relid="0x8" childrelidcntr="0x2">
+					<model id="id-0065-000004be" kind="Workflow" guid="{806e74eb-ed80-40be-a37f-6296751f183d}" relid="0x8" childrelidcntr="0x2">
 						<name>CyPhy2RF_SAR</name>
 						<atom id="id-0066-000001c1" kind="Task" role="Task" guid="{633b8cf3-4cfd-49ba-876a-47cb3258acec}" relid="0x1">
 							<name>Task</name>
@@ -20032,7 +20032,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b4" kind="Workflow" guid="{910eb75c-5011-4e8e-9f42-31a0190e4dd3}" relid="0xe" childrelidcntr="0x1">
+					<model id="id-0065-000004bd" kind="Workflow" guid="{910eb75c-5011-4e8e-9f42-31a0190e4dd3}" relid="0xe" childrelidcntr="0x1">
 						<name>CAD</name>
 						<atom id="id-0066-000001c0" kind="Task" role="Task" guid="{0ea9f0c6-0036-45ae-b14a-29aaa386f02d}" relid="0x1">
 							<name>Task</name>
@@ -20056,7 +20056,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b3" kind="Workflow" guid="{97171012-3f01-4fa2-8897-8c0b13d39f2f}" relid="0xd" childrelidcntr="0xa">
+					<model id="id-0065-000004bc" kind="Workflow" guid="{97171012-3f01-4fa2-8897-8c0b13d39f2f}" relid="0xd" childrelidcntr="0xa">
 						<name>PCB_Mfg_MacroFab</name>
 						<connection id="id-0068-00000056" kind="Flow" role="Flow" guid="{0783c2d6-7e92-4bd7-b7a4-de93a09793ef}" relid="0x5">
 							<name></name>
@@ -20210,7 +20210,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b2" kind="Workflow" guid="{a59c08e9-ec49-41a0-9454-3e7d607f22da}" relid="0xf" childrelidcntr="0x1">
+					<model id="id-0065-000004bb" kind="Workflow" guid="{a59c08e9-ec49-41a0-9454-3e7d607f22da}" relid="0xf" childrelidcntr="0x1">
 						<name>Modelica</name>
 						<atom id="id-0066-000001ba" kind="Task" role="Task" guid="{872f4e5b-8c41-4b43-87bf-e34be5620803}" relid="0x1">
 							<name>Task</name>
@@ -20237,7 +20237,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b1" kind="Workflow" guid="{ab8c8121-b1c6-43bb-afb7-53a3a44b309b}" relid="0xc" childrelidcntr="0x1">
+					<model id="id-0065-000004ba" kind="Workflow" guid="{ab8c8121-b1c6-43bb-afb7-53a3a44b309b}" relid="0xc" childrelidcntr="0x1">
 						<name>Visualize_Layout</name>
 						<atom id="id-0066-000001b9" kind="Task" role="Task" guid="{3221639f-aae9-4081-95d6-b1fd37ddab67}" relid="0x1">
 							<name>Task</name>
@@ -20268,7 +20268,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b0" kind="Workflow" guid="{b1d3a97b-2efc-4c07-a683-7124777a2219}" relid="0x11" childrelidcntr="0x3">
+					<model id="id-0065-000004b9" kind="Workflow" guid="{b1d3a97b-2efc-4c07-a683-7124777a2219}" relid="0x11" childrelidcntr="0x3">
 						<name>SpiceNoGUI</name>
 						<atom id="id-0066-000001b8" kind="Task" role="Task" guid="{fea68a33-ebf7-4174-96ef-7a56d3410e5b}" relid="0x1">
 							<name>Task</name>
@@ -20301,7 +20301,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004af" kind="Workflow" guid="{ca04c3a6-4938-4e2b-8479-2a834e0a4b59}" relid="0x10" childrelidcntr="0x1">
+					<model id="id-0065-000004b8" kind="Workflow" guid="{ca04c3a6-4938-4e2b-8479-2a834e0a4b59}" relid="0x10" childrelidcntr="0x1">
 						<name>PlaceRouteNoGUI</name>
 						<atom id="id-0066-000001b7" kind="Task" role="Task" guid="{391d6378-d26f-487c-82c2-cdb468eec043}" relid="0x1">
 							<name>Task</name>
@@ -20334,7 +20334,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004ae" kind="Workflow" guid="{e2990429-6514-4dc1-a6ab-aa3845f4d548}" relid="0x7" childrelidcntr="0x2">
+					<model id="id-0065-000004b7" kind="Workflow" guid="{e2990429-6514-4dc1-a6ab-aa3845f4d548}" relid="0x7" childrelidcntr="0x2">
 						<name>CyPhy2RF_Directivity</name>
 						<atom id="id-0066-000001b6" kind="Task" role="Task" guid="{c4098add-7e11-4fd5-8384-83c987035b65}" relid="0x2">
 							<name>Task</name>
@@ -20354,9 +20354,9 @@
 						</atom>
 					</model>
 				</folder>
-				<folder id="id-006a-0000002e" relid="0x13" childrelidcntr="0x3" kind="Testing" guid="{d891bfca-e87f-4f4a-87f7-37f8670bc477}">
+				<folder id="id-006a-00000029" relid="0x13" childrelidcntr="0x3" kind="Testing" guid="{d891bfca-e87f-4f4a-87f7-37f8670bc477}">
 					<name>Visualizer</name>
-					<model id="id-0065-000004c3" kind="TestBench" guid="{1cec0b2d-84c9-485b-a4b2-62bbdd9d9608}" relid="0x3" childrelidcntr="0x1">
+					<model id="id-0065-000004b0" kind="TestBench" guid="{1cec0b2d-84c9-485b-a4b2-62bbdd9d9608}" relid="0x3" childrelidcntr="0x1">
 						<name>Visualize_Layout</name>
 						<attribute kind="CopyResults" status="meta">
 							<value>false</value>
@@ -20367,7 +20367,7 @@
 						<attribute kind="Type" status="meta">
 							<value>SimpleCalc</value>
 						</attribute>
-						<reference id="id-0067-0000066f" kind="WorkflowRef" role="WorkflowRef" guid="{819d5bd2-8bf0-4478-93fe-c370a322dcf1}" relid="0x1" referred="id-0065-000004b1">
+						<reference id="id-0067-00000651" kind="WorkflowRef" role="WorkflowRef" guid="{819d5bd2-8bf0-4478-93fe-c370a322dcf1}" relid="0x1" referred="id-0065-000004ba">
 							<name>Visualize_Layout</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20383,7 +20383,7 @@
 							</regnode>
 						</reference>
 					</model>
-					<model id="id-0065-000004c2" kind="TestBench" guid="{3d54e327-fb32-4fb6-b8b7-9a0047460a36}" relid="0x2" childrelidcntr="0x1">
+					<model id="id-0065-000004af" kind="TestBench" guid="{3d54e327-fb32-4fb6-b8b7-9a0047460a36}" relid="0x2" childrelidcntr="0x1">
 						<name>Visualize_SavedLayout</name>
 						<attribute kind="CopyResults" status="meta">
 							<value>false</value>
@@ -20394,7 +20394,7 @@
 						<attribute kind="Type" status="meta">
 							<value>SimpleCalc</value>
 						</attribute>
-						<reference id="id-0067-0000066e" kind="WorkflowRef" role="WorkflowRef" guid="{3ce25497-09e0-470c-a763-e288813d2127}" relid="0x1" referred="id-0065-000004b9">
+						<reference id="id-0067-00000650" kind="WorkflowRef" role="WorkflowRef" guid="{3ce25497-09e0-470c-a763-e288813d2127}" relid="0x1" referred="id-0065-000004c2">
 							<name>Visualize_SavedLayout</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20410,7 +20410,7 @@
 							</regnode>
 						</reference>
 					</model>
-					<model id="id-0065-000004c1" kind="TestBench" guid="{e1303921-2a9e-4960-ae8e-42c5ed3ba6ee}" relid="0x1" childrelidcntr="0x1">
+					<model id="id-0065-000004ae" kind="TestBench" guid="{e1303921-2a9e-4960-ae8e-42c5ed3ba6ee}" relid="0x1" childrelidcntr="0x1">
 						<name>PlaceRouteAndVisualize</name>
 						<attribute kind="CopyResults" status="meta">
 							<value>false</value>
@@ -20421,7 +20421,7 @@
 						<attribute kind="Type" status="meta">
 							<value>SimpleCalc</value>
 						</attribute>
-						<reference id="id-0067-0000066d" kind="WorkflowRef" role="WorkflowRef" guid="{75a68664-c37a-497b-a701-00c4b7c0ddf4}" relid="0x1" referred="id-0065-000004b8">
+						<reference id="id-0067-0000064f" kind="WorkflowRef" role="WorkflowRef" guid="{75a68664-c37a-497b-a701-00c4b7c0ddf4}" relid="0x1" referred="id-0065-000004c1">
 							<name>PlaceRouteAndVisualize</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20452,7 +20452,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<reference id="id-0067-0000064e" kind="WorkflowRef" role="WorkflowRef" guid="{11f15ed7-688b-4531-b42f-0a3c5e7965a8}" relid="0x1" referred="id-0065-000004b7">
+					<reference id="id-0067-0000064e" kind="WorkflowRef" role="WorkflowRef" guid="{11f15ed7-688b-4531-b42f-0a3c5e7965a8}" relid="0x1" referred="id-0065-000004c0">
 						<name>PCB_Mfg</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20716,7 +20716,7 @@
 							<value>2450e6</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-0000064b" kind="WorkflowRef" role="WorkflowRef" guid="{861ba993-034c-4339-a9a6-de77d9dfa8b5}" relid="0x9" referred="id-0065-000004b5">
+					<reference id="id-0067-0000064b" kind="WorkflowRef" role="WorkflowRef" guid="{861ba993-034c-4339-a9a6-de77d9dfa8b5}" relid="0x9" referred="id-0065-000004be">
 						<name>CyPhy2RF_SAR</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20971,7 +20971,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<reference id="id-0067-00000647" kind="WorkflowRef" role="WorkflowRef" guid="{1f6971a1-c236-42dd-a414-2ca27c5d731e}" relid="0x4" referred="id-0065-000004b3">
+					<reference id="id-0067-00000647" kind="WorkflowRef" role="WorkflowRef" guid="{1f6971a1-c236-42dd-a414-2ca27c5d731e}" relid="0x4" referred="id-0065-000004bc">
 						<name>PCB_Mfg_MacroFab</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21124,7 +21124,7 @@
 							<value>1000</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-00000644" kind="WorkflowRef" role="WorkflowRef" guid="{a19ed1c6-1e52-4a2b-b85f-e351d59562a4}" relid="0x3" referred="id-0065-000004b6">
+					<reference id="id-0067-00000644" kind="WorkflowRef" role="WorkflowRef" guid="{a19ed1c6-1e52-4a2b-b85f-e351d59562a4}" relid="0x3" referred="id-0065-000004bf">
 						<name>SystemCWorkflow</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -22611,7 +22611,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<reference id="id-0067-0000063b" kind="WorkflowRef" role="WorkflowRef" guid="{444f801d-a691-41f8-a608-c045aec112e6}" relid="0x6" referred="id-0065-000004ae">
+					<reference id="id-0067-0000063b" kind="WorkflowRef" role="WorkflowRef" guid="{444f801d-a691-41f8-a608-c045aec112e6}" relid="0x6" referred="id-0065-000004b7">
 						<name>CyPhy2RF_Directivity</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -22791,7 +22791,7 @@
 				</model>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699100000000</value>
+				<value>132131277520000000</value>
 			</regnode>
 		</folder>
 		<folder id="id-006a-0000001e" relid="0x33" childrelidcntr="0x14" libref="PortLibrary CyPhy_PortLib" kind="RootFolder" guid="{e30db627-2b68-46a7-ad9b-fff19a95efda}">
@@ -23799,7 +23799,7 @@
 				</folder>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699050000000</value>
+				<value>132131277500000000</value>
 			</regnode>
 		</folder>
 	</folder>

@@ -11,7 +11,6 @@ from py_modelica_exporter.exporters import ComponentExporter, TreeExporter, Pack
 import logging
 import timeit
 
-# create logger with 'spam_application'
 logger = logging.getLogger('py_modelica_exporter')
 logger.setLevel(logging.DEBUG)
 
@@ -62,6 +61,9 @@ def main():
 
     (opts, args) = parser.parse_args()
 
+    if args:
+        parser.print_help()
+        return 1
     if opts.version:
         print((py_modelica_exporter.__version__))
     elif opts.components:
@@ -148,7 +150,8 @@ def main():
             with open('component_assemblies.json', 'w') as f_out:
                 json.dump(extracted_assemblies, f_out)
     else:
-        print((help(py_modelica_exporter)))
+        parser.print_help()
+        return 1
 
     return 0
 

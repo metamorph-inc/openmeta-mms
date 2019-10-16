@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ComponentImporterUnitTests
 {
-    public class PyLibTestFixture : IDisposable
+    public class PyLibTestFixture
     {
         public PyLibTestFixture()
         {
@@ -22,14 +22,9 @@ namespace ComponentImporterUnitTests
             GME.MGA.MgaUtils.ImportXME(PyLibTest.xmePath, PyLibTest.mgaPath);
             Assert.True(File.Exists(PyLibTest.mgaPath));
 
-            var args = (PyLibTest.mgaPath + " -f " + PyLibTest.acmFilesPath).Split();
+            var args = new string[] {PyLibTest.mgaPath, "-f", PyLibTest.acmFilesPath};
             var rtnCode = CyPhyComponentExporterCL.CyPhyComponentExporterCL.Main(args);
             Assert.True(rtnCode == 0, "Component Exporter had non-zero return code.");
-        }
-
-        public void Dispose()
-        {
-            // No state, so nothing to do here.
         }
     }
 

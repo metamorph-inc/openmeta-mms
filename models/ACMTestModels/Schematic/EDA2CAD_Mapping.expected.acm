@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0893f898-8d7b-4957-88b3-1322e7b57b98" Name="EDA2CAD_Mapping" Version="" xmlns="avm">
-  <DomainModel xmlns:q1="cad" xsi:type="q1:CADModel" Author="" Notes="" XPosition="546" YPosition="105" Name="CADModel" ID="id-2a47d0c7-3694-491a-9f50-172b523804c4" Format="Creo" xmlns="" />
-  <DomainModel xmlns:q2="eda" xsi:type="q2:EDAModel" Author="" Notes="" XPosition="133" YPosition="105" Name="EDAModel" ID="id-dd947c2a-06d5-4dca-82b7-1a19faa11b19" Package="" Device="" Library="" DeviceSet="" xmlns="" />
+  <DomainModel xmlns:q1="cad" xsi:type="q1:CADModel" Author="" Notes="" XPosition="546" YPosition="105" Name="CADModel" ID="id-101b3dab-29c7-42b4-ad75-0ebc097eba4e" Format="Creo" xmlns="" />
+  <DomainModel xmlns:q2="eda" xsi:type="q2:EDAModel" Author="" Notes="" XPosition="133" YPosition="105" Name="EDAModel" ID="id-64b536b9-fd36-4005-b9ab-3e534a62a324" Package="" Device="" Library="" DeviceSet="" xmlns="" />
   <Classifications xmlns="" />
-  <DomainMapping xmlns:q3="domainmapping" xsi:type="q3:CAD2EDATransform" RotationX="1.1" RotationY="2.2" RotationZ="-3.3" TranslationX="-1.1" TranslationY="2.2" TranslationZ="3.3" ScaleX="0" ScaleY="0.5" ScaleZ="-1" EDAModel="id-dd947c2a-06d5-4dca-82b7-1a19faa11b19" CADModel="id-2a47d0c7-3694-491a-9f50-172b523804c4" xmlns="" />
+  <DomainMapping xmlns:q3="domainmapping" xsi:type="q3:CAD2EDATransform" RotationX="1.1" RotationY="2.2" RotationZ="-3.3" TranslationX="-1.1" TranslationY="2.2" TranslationZ="3.3" ScaleX="0" ScaleY="0.5" ScaleZ="-1" EDAModel="id-64b536b9-fd36-4005-b9ab-3e534a62a324" CADModel="id-101b3dab-29c7-42b4-ad75-0ebc097eba4e" xmlns="" />
 </Component>

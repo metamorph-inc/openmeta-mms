@@ -47,6 +47,13 @@ import re
 import struct
 import platform
 
+
+try:
+    from functools import lru_cache
+except ImportError:
+    from backports.functools_lru_cache import lru_cache
+
+
 if sys.platform == 'darwin':
     # on Mac let's assume omc is installed
     # OMPython packages are coming from here
@@ -85,7 +92,8 @@ class OMCSession(object):
         return self._server
 
     def _set_omc_corba_command(self, omc_path='omc'):
-        self._omc_command = "{0} +d=interactiveCorba +c={1}".format(omc_path, self._random_string)
+        #  +d=failtrace +d=interactivedump
+        self._omc_command = "{0} +d=interactiveCorba +c={1} --showErrorMessages".format(omc_path, self._random_string)
         return self._omc_command
 
     def _start_omc(self):
@@ -187,7 +195,6 @@ class OMCSession(object):
 
     def __init__(self, readonly=False):
         self.readonly = readonly
-        self.omc_cache = {}
         self._omc = None
         self._omc_log_file = None
         self._server = None
@@ -211,7 +218,7 @@ class OMCSession(object):
         # r'  Modelica.Fluid.Interfaces.FluidPort_b port_b\([.\r\n\s\S]*?redeclare package Medium = ([\w|\d|\.]*)[\)|,]'
         # r'  Modelica.Fluid.Interfaces.FluidPort_[a|b] (\w+)\([\w\W]*?redeclare package[^\w]+(\w+)[^\w]*=[^\w]*(\w+)[\)|,]'
         #self._REGEX_PATTERN_getPortRedeclares = r'  {0} {1}\([.\r\n\s\S]*?redeclare {2} (\w+) = ([\w|\d|\.]*)[\)|,]'
-        self._REGEX_PATTERN_getPortRedeclares = r'  {0} {1}\([\w\W]*?redeclare {2}[^\w]*(\w+)[^\w]*=[^\w]*(\w+)[\)|,]' # {0} is class, {1} is portName, {2} is redeclareType
+        self._REGEX_PATTERN_getPortRedeclares = r'  {0} {1}(?:\[[\w\s]*\])?\([\w\W]*?redeclare\s+(?:each\s+)?(?:final\s+)?{2}[^\w]*(\w+)[^\w]*=[^\w]*(\w+)[\)|,]'  # {0} is class, {1} is portName, {2} is redeclareType
 
         self._REGEX_PATTERN_checkParameterArrayValue = r'(\[[.,; e\-\d\r\n]+\])'
         self._REGEX_checkParameterArrayValue = re.compile(self._REGEX_PATTERN_checkParameterArrayValue)
@@ -231,6 +238,16 @@ class OMCSession(object):
 
         # connect to the running omc instance using CORBA
         self._connect_to_omc()
+        if readonly:
+            self.sendExpression_cached = lru_cache(maxsize=2048)(self.sendExpression_cached)
+
+    def sendExpression(self, command):
+        if command == 'getErrorString':
+            return self._omc.sendExpression(command)
+        return self.sendExpression_cached(command)
+
+    def sendExpression_cached(self, command):
+        return self._omc.sendExpression(command)
 
     def __del__(self):
         if self._omc:
@@ -243,7 +260,7 @@ class OMCSession(object):
 
     # TODO: this method will be replaced by the new parser
     def execute(self, command):
-        result = self._omc.sendExpression(command)
+        result = self.sendExpression(command)
         return OMTypedParser.parseString(result)
 
         # try:
@@ -262,13 +279,6 @@ class OMCSession(object):
         #     raise e
 
     def ask(self, question, opt=None, parsed=True):
-        p = (question, opt, parsed)
-
-        if self.readonly and question != 'getErrorString':
-            # can use cache if readonly
-            if p in self.omc_cache:
-                return self.omc_cache[p]
-
         if opt:
             expression = '{0}({1})'.format(question, opt)
         else:
@@ -278,14 +288,10 @@ class OMCSession(object):
             if parsed:
                 res = self.execute(expression)
             else:
-                res = self._omc.sendExpression(expression)
+                res = self.sendExpression(expression)
         except Exception as e:
             # self.logger.debug("Failed: {0}({1}, parsed={2})".format(question, opt, parsed))
             raise
-
-        # save response
-        self.omc_cache[p] = res
-
         return res
 
     # TODO: Open Modelica Compiler API functions. Would be nice to generate these.
@@ -308,7 +314,7 @@ class OMCSession(object):
         return self.ask('isPackage', className)
 
     def isPrimitive(self, className):
-        return self.ask('isPrimitive', className)
+        return self.ask('isPrimitive', className, parsed=False) == 'true\n'
 
     def isConnector(self, className):
         try:
@@ -408,6 +414,7 @@ class OMCSession(object):
     def getPortRedeclares(self, className, portType, portName, redeclareType='package'):
 
         raw_text = self.ask('list', className, parsed=False)
+        # FIXME portType may not be fully-qualified in raw_text
         custom_pattern = self._REGEX_PATTERN_getPortRedeclares.format(portType, portName, redeclareType)
 
         redeclare = None
@@ -416,7 +423,7 @@ class OMCSession(object):
         if regex_findall:
             redeclare = regex_findall[0]
         else:
-            print('what?')
+            print('Could not get port redeclare for {}'.format(className))
 
         return redeclare
 
@@ -545,10 +552,9 @@ class OMCSession(object):
 
     def getParameterValue(self, className, parameterName):
         try:
-            return self.ask('getParameterValue', '{0}, {1}'.format(className, parameterName))
-        except pyparsing.ParseException as ex:
-
             raw_text = self.ask('getParameterValue', '{0}, {1}'.format(className, parameterName), parsed=False)
+            return OMTypedParser.parseString(raw_text)
+        except pyparsing.ParseException as ex:
 
             regex_findall = self._REGEX_checkParameterArrayValue.findall(raw_text)
 

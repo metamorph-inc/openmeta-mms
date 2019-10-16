@@ -76,7 +76,7 @@ class ComponentExporter(object):
         self.connectors = {}
 
         # start om session
-        self.omc = OMCSession()
+        self.omc = OMCSession(readonly=True)
 
         # load all packages
         self.load_packages(self.external_package_paths)
@@ -105,9 +105,13 @@ class ComponentExporter(object):
                 if self.omc.loadFile(package_path):         # try to load the package file
                     self.logger.info('Library loaded from : {0}'.format(package_path))
                 else:
-                    self.logger.warning('Failed to load: {0}'.format(package_path))
+                    message = 'Failed to load: \'{0}\''.format(package_path)
+                    self.logger.warning(message)
+                    raise ValueError(message)
             else:
-                self.logger.warning('File does not exist! Failed to load: {0}'.format(package_path))
+                message = 'File does not exist! Failed to load: \'{0}\''.format(package_path)
+                self.logger.warning(message)
+                raise ValueError(message)
 
     def get_component_json(self, modelica_uri):
         """
@@ -122,6 +126,7 @@ class ComponentExporter(object):
             json_result['icon_path'] = self.icon_exporter.export_icon(modelica_uri)
 
         try:
+            self.extracted_components = set()
             self.extract_component_content(modelica_uri, components)
             [json_result['components'].append(component.json()) for component in components]
 
@@ -130,7 +135,8 @@ class ComponentExporter(object):
             component.full_name = 'Exception'
             component.comment = getattr(exception, 'message', 'unknown error')
             json_result['components'].append(component.json())
-            self.logger.info('Could not get information for {0}'.format(modelica_uri))
+            self.logger.error('Could not get information for {0}'.format(modelica_uri))
+            # raise
 
         return json_result
 
@@ -145,6 +151,7 @@ class ComponentExporter(object):
         """
         Extracts component and returns a xml tree
         """
+        self.extracted_components = set()
         components = []
         self.extract_component_content(modelica_uri, components)
 
@@ -220,15 +227,21 @@ class ComponentExporter(object):
         Recursively populates components with extracted_components,
         starting from modelica_uri and goes through the extends.
         """
+        if modelica_uri in self.extracted_components:
+            return
         component = Component()
         component.full_name = modelica_uri
         component.comment = self.omc.getClassComment(modelica_uri)
         component.type = self.omc.getClassInformation(modelica_uri)[0]
 
         components.append(component)
+        self.extracted_components.add(modelica_uri)
+
+        if self.omc.isPrimitive(modelica_uri):
+            return
 
         try:
-            #mo_packages = self.omc.getPackages(modelica_uri)
+            # mo_packages = self.omc.getPackages(modelica_uri)
             mo_replaceables = self.omc.getReplaceables(modelica_uri)
             mo_extends_packages = self.omc.getPackagesFromExtends(modelica_uri)
 
@@ -286,8 +299,12 @@ class ComponentExporter(object):
             elif c.component_type == 'parameter':
                 parameter = self.create_parameter(modelica_uri, c)
                 component.parameters.append(parameter)
-
+            elif self.omc.isModel(c.mo_type) or self.omc.isBlock(c.mo_type):
+                parameter = self.create_parameter(modelica_uri, c)
+                component.components.append(parameter)
+                self.extract_component_content(c.mo_type, components)
             else:
+                # TODO: e.g. self.omc.isType(c.mo_type) or isRecord
                 pass  # the object is not a connector or a parameter
 
         mo_inheritance_count = self.omc.getInheritanceCount(modelica_uri)
@@ -477,9 +494,7 @@ class PackageExporter(object):
                     if self.omc.loadFile(package_path):     # try to load the package file
                         self.package_names.append(package_name)  # log successful load
                         self.logger.info('Library loaded from : {0}'.format(package_path))
-                    else:
-                        self.failed_load_package_names.append("FAILED_" + package_name)    # log failure
-                        self.logger.warning('Failed to load: {0}'.format(package_path))
+                        continue
                 else:
                     file_path, file_extension = os.path.splitext(package_path)
                     if file_extension == '.mo':                             # make sure it is a '.mo' file
@@ -487,18 +502,10 @@ class PackageExporter(object):
                         if self.omc.loadFile(package_path):         # try to load the package file
                             self.package_names.append(package_name)  # log successful load
                             self.logger.info('Library loaded from : {0}'.format(package_path))
-                        else:
-                            self.failed_load_package_names.append("FAILED_" + package_name)    # log failure
-                            self.logger.warning('Failed to load: {0}'.format(package_path))
+                            continue
             else:
-                file_path, file_extension = os.path.splitext(package_path)
-                if file_extension == '.mo':                            # make sure it is a '.mo' file
-                    package_name = os.path.basename(file_path)          # get the name of the file
-                    if package_name == 'package':
-                        package_name = os.path.basename(os.path.dirname(file_path))
-
-                    self.failed_load_package_names.append(package_name)
-                    self.logger.warning('Failed to load: {0}'.format(package_path))
+                raise ValueError('Failed to load \'{0}\': file does not exist'.format(package_path))
+            raise ValueError('Failed to load \'{0}\''.format(package_path))
 
     def get_class_details(self, package_names):
         """
@@ -587,7 +594,7 @@ class ComponentAssemblyExporter(object):
         """
         Create an instance of the ComponentAssemblyExporter
         """
-        self.logger = logging.getLogger('py_modelica_exporter::ComponentExporter')
+        self.logger = logging.getLogger('py_modelica_exporter.ComponentAssemblyExporter')
         self.logger.setLevel(logging.DEBUG)
         # create console handler with a higher log level
         self.logger_console_handler = logging.StreamHandler()
@@ -600,8 +607,6 @@ class ComponentAssemblyExporter(object):
         # add the handlers to the logger
         self.logger.addHandler(self.logger_console_handler)
 
-        # start om session
-        self.omc = OMCSession()
         # start om session
         self.omc = OMCSession()
 

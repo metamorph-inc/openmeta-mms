@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{529A40E9-BF35-48C7-AA1B-C0E0DB03CE0F}" cdate="Fri Sep 13 15:25:12 2019" mdate="Fri Sep 13 15:25:12 2019" version="" metaguid="{85CD4FB8-841A-079D-1B83-837878ABB1AE}" metaversion="14.13-t38" metaname="CyPhyML">
+<project guid="{0D140C31-08EE-4069-AFE9-A55ADD98C26A}" cdate="Wed Oct 16 13:10:07 2019" mdate="Wed Oct 16 13:10:07 2019" version="" metaguid="{85CD4FB8-841A-079D-1B83-837878ABB1AE}" metaversion="14.13-t38" metaname="CyPhyML">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
@@ -2473,7 +2473,7 @@
 				</model>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699080000000</value>
+				<value>132131277520000000</value>
 			</regnode>
 		</folder>
 		<folder id="id-006a-00000023" relid="0x9" childrelidcntr="0x16" libref="MaterialLibrary CyPhy_MaterialLib" kind="RootFolder" guid="{5057546a-d298-4963-b477-b9ccbdb4da76}">
@@ -3427,7 +3427,7 @@
 				</atom>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699060000000</value>
+				<value>132131277510000000</value>
 			</regnode>
 		</folder>
 		<folder id="id-006a-0000001b" relid="0x7" childrelidcntr="0xd" libref="UnitLibrary QUDT" kind="RootFolder" guid="{930ea234-c97f-40fd-aa87-a272824dfa19}">
@@ -17716,18 +17716,18 @@
 				</folder>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699039538084</value>
+				<value>132131277495000521</value>
 			</regnode>
 		</folder>
 		<folder id="id-006a-00000027" relid="0xb" childrelidcntr="0x2b" libref="TestBenchLibrary" kind="RootFolder" guid="{cb8c0be2-fcb7-4ee5-a21c-6adbcb40f254}">
 			<name>TestBenchLibrary</name>
-			<folder id="id-006a-00000031" relid="0x2b" childrelidcntr="0x1" kind="Testing" guid="{4339def9-bf4d-4efb-adff-911366ee989a}">
+			<folder id="id-006a-00000028" relid="0x2b" childrelidcntr="0x1" kind="Testing" guid="{4339def9-bf4d-4efb-adff-911366ee989a}">
 				<name>Workflows</name>
-				<folder id="id-006a-00000032" relid="0x1" childrelidcntr="0x5" kind="WorkflowDefinitionFolder" guid="{806a6776-7c7a-4806-8d81-1f29e16d10fb}">
+				<folder id="id-006a-00000029" relid="0x1" childrelidcntr="0x5" kind="WorkflowDefinitionFolder" guid="{806a6776-7c7a-4806-8d81-1f29e16d10fb}">
 					<name>WorkflowDefinitions</name>
-					<model id="id-0065-000004cf" kind="Workflow" guid="{1848ad79-2d2b-4e9f-862e-82496d8247c9}" relid="0x3" childrelidcntr="0x1">
+					<model id="id-0065-000004a5" kind="Workflow" guid="{1848ad79-2d2b-4e9f-862e-82496d8247c9}" relid="0x3" childrelidcntr="0x1">
 						<name>CAD</name>
-						<atom id="id-0066-000001d4" kind="Task" role="Task" guid="{e73635dc-0b13-445c-adbb-03adcf9c0874}" relid="0x1">
+						<atom id="id-0066-000001ad" kind="Task" role="Task" guid="{e73635dc-0b13-445c-adbb-03adcf9c0874}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -17749,9 +17749,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004ce" kind="Workflow" guid="{e90a4140-6c72-4834-8c72-ce8475eb9230}" relid="0x4" childrelidcntr="0x3">
+					<model id="id-0065-000004a4" kind="Workflow" guid="{e90a4140-6c72-4834-8c72-ce8475eb9230}" relid="0x4" childrelidcntr="0x3">
 						<name>SpiceNoGUI</name>
-						<atom id="id-0066-000001d3" kind="Task" role="Task" guid="{b101cecd-be08-4dc6-afd6-ec1db9e834be}" relid="0x1">
+						<atom id="id-0066-000001ac" kind="Task" role="Task" guid="{b101cecd-be08-4dc6-afd6-ec1db9e834be}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -17782,9 +17782,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004cd" kind="Workflow" guid="{eb0477c5-141a-471e-a379-becc33b30f96}" relid="0x1" childrelidcntr="0x1">
+					<model id="id-0065-000004a3" kind="Workflow" guid="{eb0477c5-141a-471e-a379-becc33b30f96}" relid="0x1" childrelidcntr="0x1">
 						<name>Modelica</name>
-						<atom id="id-0066-000001d2" kind="Task" role="Task" guid="{bf271677-503e-4399-adbf-e373254cacba}" relid="0x1">
+						<atom id="id-0066-000001ab" kind="Task" role="Task" guid="{bf271677-503e-4399-adbf-e373254cacba}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -17809,9 +17809,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004cc" kind="Workflow" guid="{eefb0585-8284-4d79-988f-1184b03dff42}" relid="0x5" childrelidcntr="0x1">
+					<model id="id-0065-000004a2" kind="Workflow" guid="{eefb0585-8284-4d79-988f-1184b03dff42}" relid="0x5" childrelidcntr="0x1">
 						<name>PlaceRouteNoGUI</name>
-						<atom id="id-0066-000001d1" kind="Task" role="Task" guid="{f53d48c3-56c5-4254-818c-8479ccee08fa}" relid="0x1">
+						<atom id="id-0066-000001aa" kind="Task" role="Task" guid="{f53d48c3-56c5-4254-818c-8479ccee08fa}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -17842,9 +17842,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004cb" kind="Workflow" guid="{ff97635f-4e48-425b-847f-b1d38a415062}" relid="0x2" childrelidcntr="0x1">
+					<model id="id-0065-000004a1" kind="Workflow" guid="{ff97635f-4e48-425b-847f-b1d38a415062}" relid="0x2" childrelidcntr="0x1">
 						<name>ValueAggregator</name>
-						<atom id="id-0066-000001d0" kind="Task" role="Task" guid="{6db838d0-4a8a-4c1f-8538-e8f93b1accd8}" relid="0x1">
+						<atom id="id-0066-000001a9" kind="Task" role="Task" guid="{6db838d0-4a8a-4c1f-8538-e8f93b1accd8}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -17872,11 +17872,11 @@
 					</model>
 				</folder>
 			</folder>
-			<folder id="id-006a-0000002f" relid="0x16" childrelidcntr="0x1" kind="TypeSpecifications" guid="{edae399d-e93b-4061-a4bb-a4695c55cac4}">
+			<folder id="id-006a-0000002a" relid="0x16" childrelidcntr="0x1" kind="TypeSpecifications" guid="{edae399d-e93b-4061-a4bb-a4695c55cac4}">
 				<name>Units</name>
-				<folder id="id-006a-00000030" relid="0x1" childrelidcntr="0x7" kind="Units" guid="{f1782b35-a43f-49a6-988b-f5efcf309e54}">
+				<folder id="id-006a-0000002b" relid="0x1" childrelidcntr="0x7" kind="Units" guid="{f1782b35-a43f-49a6-988b-f5efcf309e54}">
 					<name>Units</name>
-					<atom id="id-0066-000001cf" kind="si_unit" guid="{103b961c-0cda-49ee-9098-159a7020c9df}" relid="0x6">
+					<atom id="id-0066-000001b1" kind="si_unit" guid="{103b961c-0cda-49ee-9098-159a7020c9df}" relid="0x6">
 						<name>Second</name>
 						<attribute kind="Abbreviation">
 							<value>s</value>
@@ -17915,7 +17915,7 @@
 							<value>1</value>
 						</attribute>
 					</atom>
-					<atom id="id-0066-000001ce" kind="si_unit" guid="{3f1a41ab-9129-475f-abcf-8bd4b6726bb6}" relid="0x5">
+					<atom id="id-0066-000001b0" kind="si_unit" guid="{3f1a41ab-9129-475f-abcf-8bd4b6726bb6}" relid="0x5">
 						<name>Meter</name>
 						<attribute kind="Abbreviation">
 							<value>m</value>
@@ -17954,7 +17954,7 @@
 							<value>0</value>
 						</attribute>
 					</atom>
-					<atom id="id-0066-000001cd" kind="si_unit" guid="{651b1d4f-6b7b-4ce2-986c-28788f8470b1}" relid="0x3">
+					<atom id="id-0066-000001af" kind="si_unit" guid="{651b1d4f-6b7b-4ce2-986c-28788f8470b1}" relid="0x3">
 						<name>Ampere</name>
 						<attribute kind="Abbreviation">
 							<value>A</value>
@@ -17993,7 +17993,7 @@
 							<value>0</value>
 						</attribute>
 					</atom>
-					<model id="id-0065-000004ca" kind="derived_unit" guid="{75da7ab1-4045-49f6-a22c-60aa804aafb0}" relid="0x7" childrelidcntr="0x3">
+					<model id="id-0065-000004a7" kind="derived_unit" guid="{75da7ab1-4045-49f6-a22c-60aa804aafb0}" relid="0x7" childrelidcntr="0x3">
 						<name>Watt</name>
 						<attribute kind="Abbreviation">
 							<value>W</value>
@@ -18007,7 +18007,7 @@
 						<attribute kind="URI" status="meta">
 							<value></value>
 						</attribute>
-						<reference id="id-0067-00000676" kind="derived_unit_element" role="derived_unit_element" guid="{5b450806-50b0-445b-a0a0-a31a7b415cca}" relid="0x1" referred="id-0066-000001ce">
+						<reference id="id-0067-0000063e" kind="derived_unit_element" role="derived_unit_element" guid="{5b450806-50b0-445b-a0a0-a31a7b415cca}" relid="0x1" referred="id-0066-000001b0">
 							<name>Meter</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -18022,13 +18022,13 @@
 								<value>2</value>
 							</attribute>
 						</reference>
-						<reference id="id-0067-00000675" kind="derived_unit_element" role="derived_unit_element" guid="{98c3506a-6c1f-4d02-a462-4732581f8d46}" relid="0x3" referred="id-0066-000001cf">
+						<reference id="id-0067-0000063d" kind="derived_unit_element" role="derived_unit_element" guid="{98c3506a-6c1f-4d02-a462-4732581f8d46}" relid="0x3" referred="id-0066-000001b1">
 							<name>Second</name>
 							<attribute kind="exponent">
 								<value>-3</value>
 							</attribute>
 						</reference>
-						<reference id="id-0067-00000674" kind="derived_unit_element" role="derived_unit_element" guid="{ef82f3cd-2cc5-4b64-9710-e5d75e230117}" relid="0x2" referred="id-0066-000001cc">
+						<reference id="id-0067-0000063c" kind="derived_unit_element" role="derived_unit_element" guid="{ef82f3cd-2cc5-4b64-9710-e5d75e230117}" relid="0x2" referred="id-0066-000001ae">
 							<name>Kilogram</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -18044,7 +18044,7 @@
 							</attribute>
 						</reference>
 					</model>
-					<model id="id-0065-000004c9" kind="conversion_based_unit" guid="{91371bdc-838f-46d0-8844-819c38d06557}" relid="0x1" childrelidcntr="0x1">
+					<model id="id-0065-000004a6" kind="conversion_based_unit" guid="{91371bdc-838f-46d0-8844-819c38d06557}" relid="0x1" childrelidcntr="0x1">
 						<name>Millimeter</name>
 						<attribute kind="Abbreviation">
 							<value>mm</value>
@@ -18058,7 +18058,7 @@
 						<attribute kind="URI" status="meta">
 							<value></value>
 						</attribute>
-						<reference id="id-0067-00000673" kind="reference_unit" role="reference_unit" guid="{3bd471a4-893f-4a94-a1fe-2be00b5155b2}" relid="0x1" referred="id-0066-000001ce">
+						<reference id="id-0067-0000063b" kind="reference_unit" role="reference_unit" guid="{3bd471a4-893f-4a94-a1fe-2be00b5155b2}" relid="0x1" referred="id-0066-000001b0">
 							<name>Meter</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -18077,7 +18077,7 @@
 							</attribute>
 						</reference>
 					</model>
-					<atom id="id-0066-000001cc" kind="si_unit" guid="{fbb6cf3d-a57f-40de-87ee-1d7138b6b96d}" relid="0x4">
+					<atom id="id-0066-000001ae" kind="si_unit" guid="{fbb6cf3d-a57f-40de-87ee-1d7138b6b96d}" relid="0x4">
 						<name>Kilogram</name>
 						<attribute kind="Abbreviation">
 							<value>kg</value>
@@ -18118,13 +18118,13 @@
 					</atom>
 				</folder>
 			</folder>
-			<folder id="id-006a-00000028" relid="0x1" childrelidcntr="0x14" kind="Testing" guid="{f7aff718-9d5b-4ee9-8d4a-23e11b2d27a0}">
+			<folder id="id-006a-0000002c" relid="0x1" childrelidcntr="0x14" kind="Testing" guid="{f7aff718-9d5b-4ee9-8d4a-23e11b2d27a0}">
 				<name>AraTestBenches</name>
-				<folder id="id-006a-00000029" relid="0xb" childrelidcntr="0x4" kind="Testing" guid="{162d272b-2099-4bbe-89e0-30ca8ab6cf31}">
+				<folder id="id-006a-0000002f" relid="0xb" childrelidcntr="0x4" kind="Testing" guid="{162d272b-2099-4bbe-89e0-30ca8ab6cf31}">
 					<name>ChipFit</name>
-					<folder id="id-006a-0000002a" relid="0x1" childrelidcntr="0x3" kind="Testing" guid="{0e362bbf-b320-45d8-9cf4-fc30ecda2273}">
+					<folder id="id-006a-00000032" relid="0x1" childrelidcntr="0x3" kind="Testing" guid="{0e362bbf-b320-45d8-9cf4-fc30ecda2273}">
 						<name>fits_ara_rear</name>
-						<model id="id-0065-000004b5" kind="TestBench" guid="{4778e77d-69dc-4fde-805d-55461f54a26f}" relid="0x2" childrelidcntr="0x5">
+						<model id="id-0065-000004cf" kind="TestBench" guid="{4778e77d-69dc-4fde-805d-55461f54a26f}" relid="0x2" childrelidcntr="0x5">
 							<name>fits_ara_rear_1x1</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -18153,7 +18153,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-00000660" kind="Parameter" role="Parameter" guid="{103cb14f-8dff-4cde-a677-cb09ccdf680d}" relid="0x5" referred="id-0065-000004c9">
+							<reference id="id-0067-00000676" kind="Parameter" role="Parameter" guid="{103cb14f-8dff-4cde-a677-cb09ccdf680d}" relid="0x5" referred="id-0065-000004a6">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18219,7 +18219,7 @@
 									<value>18</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000065f" kind="Metric" role="Metric" guid="{46251359-4814-4881-a4bf-f6036496021d}" relid="0x2">
+							<reference id="id-0067-00000675" kind="Metric" role="Metric" guid="{46251359-4814-4881-a4bf-f6036496021d}" relid="0x2">
 								<name>fits_18_by_18</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18258,7 +18258,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000065c" kind="WorkflowRef" role="WorkflowRef" guid="{98e014cd-c30c-477c-81e0-f07b179fea24}" relid="0x3" referred="id-0065-000004c5">
+							<reference id="id-0067-00000672" kind="WorkflowRef" role="WorkflowRef" guid="{98e014cd-c30c-477c-81e0-f07b179fea24}" relid="0x3" referred="id-0065-000004c9">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18276,7 +18276,7 @@
 									<value>MGA.Decorator.Workflow</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-0000065e" kind="Metric" role="Metric" guid="{d2c5e21d-39da-40d2-82c8-f35de552a626}" relid="0x1">
+							<reference id="id-0067-00000674" kind="Metric" role="Metric" guid="{d2c5e21d-39da-40d2-82c8-f35de552a626}" relid="0x1">
 								<name>pct_occupied_18_by_18</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18315,7 +18315,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000065d" kind="Parameter" role="Parameter" guid="{d8364362-aa9a-43cb-9d5f-63b1407fff67}" relid="0x4" referred="id-0065-000004c9">
+							<reference id="id-0067-00000673" kind="Parameter" role="Parameter" guid="{d8364362-aa9a-43cb-9d5f-63b1407fff67}" relid="0x4" referred="id-0065-000004a6">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18382,7 +18382,7 @@
 								</attribute>
 							</reference>
 						</model>
-						<model id="id-0065-000004b4" kind="TestBench" guid="{a7b6995c-b322-4a5a-b6c5-8449356453a0}" relid="0x1" childrelidcntr="0x5">
+						<model id="id-0065-000004ce" kind="TestBench" guid="{a7b6995c-b322-4a5a-b6c5-8449356453a0}" relid="0x1" childrelidcntr="0x5">
 							<name>fits_ara_rear_2x2</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -18411,7 +18411,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-0000065b" kind="Metric" role="Metric" guid="{03b323c7-5a84-4ffe-bf48-f17436ab27f0}" relid="0x2">
+							<reference id="id-0067-00000671" kind="Metric" role="Metric" guid="{03b323c7-5a84-4ffe-bf48-f17436ab27f0}" relid="0x2">
 								<name>pct_occupied_39.5_by_41</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18450,7 +18450,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000065a" kind="Parameter" role="Parameter" guid="{828b227e-109c-49ec-9ac9-a1e3f97836f1}" relid="0x4" referred="id-0065-000004c9">
+							<reference id="id-0067-00000670" kind="Parameter" role="Parameter" guid="{828b227e-109c-49ec-9ac9-a1e3f97836f1}" relid="0x4" referred="id-0065-000004a6">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18516,7 +18516,7 @@
 									<value>41</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000659" kind="Parameter" role="Parameter" guid="{978b5256-fc42-4bd5-87aa-deaf7f09b0e7}" relid="0x5" referred="id-0065-000004c9">
+							<reference id="id-0067-0000066f" kind="Parameter" role="Parameter" guid="{978b5256-fc42-4bd5-87aa-deaf7f09b0e7}" relid="0x5" referred="id-0065-000004a6">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18582,7 +18582,7 @@
 									<value>39.5</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000658" kind="Metric" role="Metric" guid="{d8e4dd36-dea2-44e0-800f-dd2e95ed15e3}" relid="0x1">
+							<reference id="id-0067-0000066e" kind="Metric" role="Metric" guid="{d8e4dd36-dea2-44e0-800f-dd2e95ed15e3}" relid="0x1">
 								<name>fits_39.5_by_41</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18621,7 +18621,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000657" kind="WorkflowRef" role="WorkflowRef" guid="{fb41fc8f-8959-464c-80b8-b15218a03cbf}" relid="0x3" referred="id-0065-000004c5">
+							<reference id="id-0067-0000066d" kind="WorkflowRef" role="WorkflowRef" guid="{fb41fc8f-8959-464c-80b8-b15218a03cbf}" relid="0x3" referred="id-0065-000004c9">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18640,7 +18640,7 @@
 								</regnode>
 							</reference>
 						</model>
-						<model id="id-0065-000004b3" kind="TestBench" guid="{c02eeada-79d2-4683-b7f4-60fcdd52d881}" relid="0x3" childrelidcntr="0x5">
+						<model id="id-0065-000004cd" kind="TestBench" guid="{c02eeada-79d2-4683-b7f4-60fcdd52d881}" relid="0x3" childrelidcntr="0x5">
 							<name>fits_ara_rear_1x2</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -18669,7 +18669,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-00000652" kind="WorkflowRef" role="WorkflowRef" guid="{2eca51d2-dc0d-47e5-af91-95b57da445ed}" relid="0x3" referred="id-0065-000004c5">
+							<reference id="id-0067-00000668" kind="WorkflowRef" role="WorkflowRef" guid="{2eca51d2-dc0d-47e5-af91-95b57da445ed}" relid="0x3" referred="id-0065-000004c9">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18687,7 +18687,7 @@
 									<value>MGA.Decorator.Workflow</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000656" kind="Metric" role="Metric" guid="{6c63d9bd-e504-47f8-afd1-9a6a10b153fb}" relid="0x1">
+							<reference id="id-0067-0000066c" kind="Metric" role="Metric" guid="{6c63d9bd-e504-47f8-afd1-9a6a10b153fb}" relid="0x1">
 								<name>pct_occupied_18_by_40.5</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18726,7 +18726,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000655" kind="Parameter" role="Parameter" guid="{84ac141f-e0e6-4ca4-aba0-442c864c5476}" relid="0x4" referred="id-0065-000004c9">
+							<reference id="id-0067-0000066b" kind="Parameter" role="Parameter" guid="{84ac141f-e0e6-4ca4-aba0-442c864c5476}" relid="0x4" referred="id-0065-000004a6">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18792,7 +18792,7 @@
 									<value>18</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000654" kind="Metric" role="Metric" guid="{aa657b9a-385e-4ae2-a8f1-aa848e530be9}" relid="0x2">
+							<reference id="id-0067-0000066a" kind="Metric" role="Metric" guid="{aa657b9a-385e-4ae2-a8f1-aa848e530be9}" relid="0x2">
 								<name>fits_18_by_40.5</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18831,7 +18831,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000653" kind="Parameter" role="Parameter" guid="{fa70a5fb-3f2e-4b53-a3e7-5c4116e2325e}" relid="0x5" referred="id-0065-000004c9">
+							<reference id="id-0067-00000669" kind="Parameter" role="Parameter" guid="{fa70a5fb-3f2e-4b53-a3e7-5c4116e2325e}" relid="0x5" referred="id-0065-000004a6">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18899,11 +18899,11 @@
 							</reference>
 						</model>
 					</folder>
-					<folder id="id-006a-0000002b" relid="0x4" childrelidcntr="0x1" kind="TestBenchSuiteFolder" guid="{b54e9862-07c8-4c7b-92d6-79ae9d2fee1e}">
+					<folder id="id-006a-00000031" relid="0x4" childrelidcntr="0x1" kind="TestBenchSuiteFolder" guid="{b54e9862-07c8-4c7b-92d6-79ae9d2fee1e}">
 						<name>check_fit_all_ara_sizes</name>
-						<model id="id-0065-000004b6" kind="TestBenchSuite" guid="{4e34a59b-a2cf-4f24-a36f-9a40930c3839}" relid="0x1" childrelidcntr="0x5">
+						<model id="id-0065-000004cc" kind="TestBenchSuite" guid="{4e34a59b-a2cf-4f24-a36f-9a40930c3839}" relid="0x1" childrelidcntr="0x5">
 							<name>check_fit_all_ara_sizes</name>
-							<reference id="id-0067-00000665" kind="TestBenchRef" role="TestBenchRef" guid="{42e009a7-79af-483c-add1-bcf928adea2b}" relid="0x4" referred="id-0065-000004b3">
+							<reference id="id-0067-00000667" kind="TestBenchRef" role="TestBenchRef" guid="{42e009a7-79af-483c-add1-bcf928adea2b}" relid="0x4" referred="id-0065-000004cd">
 								<name>fits_ara_rear_1x2</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18918,7 +18918,7 @@
 									<value>0</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000664" kind="TestBenchRef" role="TestBenchRef" guid="{4ba62087-8970-4fae-a405-117d4858ea98}" relid="0x3" referred="id-0065-000004b5">
+							<reference id="id-0067-00000666" kind="TestBenchRef" role="TestBenchRef" guid="{4ba62087-8970-4fae-a405-117d4858ea98}" relid="0x3" referred="id-0065-000004cf">
 								<name>fits_ara_rear_1x1</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18933,7 +18933,7 @@
 									<value>0</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000663" kind="TestBenchRef" role="TestBenchRef" guid="{8842c468-a22e-4dbb-9792-3efc543d547e}" relid="0x5" referred="id-0065-000004b4">
+							<reference id="id-0067-00000665" kind="TestBenchRef" role="TestBenchRef" guid="{8842c468-a22e-4dbb-9792-3efc543d547e}" relid="0x5" referred="id-0065-000004ce">
 								<name>fits_ara_rear_2x2</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18948,7 +18948,7 @@
 									<value>0</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000662" kind="TestBenchRef" role="TestBenchRef" guid="{dd1addc4-5950-42f6-8906-f1d51dede301}" relid="0x1" referred="id-0065-000004b7">
+							<reference id="id-0067-00000664" kind="TestBenchRef" role="TestBenchRef" guid="{dd1addc4-5950-42f6-8906-f1d51dede301}" relid="0x1" referred="id-0065-000004ca">
 								<name>fits_ara_front_H</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18963,7 +18963,7 @@
 									<value>0</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-00000661" kind="TestBenchRef" role="TestBenchRef" guid="{f402bcf5-c350-42e0-ac6b-ce2f3b1f98ca}" relid="0x2" referred="id-0065-000004b8">
+							<reference id="id-0067-00000663" kind="TestBenchRef" role="TestBenchRef" guid="{f402bcf5-c350-42e0-ac6b-ce2f3b1f98ca}" relid="0x2" referred="id-0065-000004cb">
 								<name>fits_ara_rear_I</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -18980,9 +18980,9 @@
 							</reference>
 						</model>
 					</folder>
-					<folder id="id-006a-0000002c" relid="0x2" childrelidcntr="0x2" kind="Testing" guid="{bfbe7b7d-b7e8-4646-b209-b00117deb14e}">
+					<folder id="id-006a-00000030" relid="0x2" childrelidcntr="0x2" kind="Testing" guid="{bfbe7b7d-b7e8-4646-b209-b00117deb14e}">
 						<name>fits_ara_front</name>
-						<model id="id-0065-000004b8" kind="TestBench" guid="{a8939598-c928-4c7e-a5b0-25a2fe1b93ea}" relid="0x2" childrelidcntr="0x5">
+						<model id="id-0065-000004cb" kind="TestBench" guid="{a8939598-c928-4c7e-a5b0-25a2fe1b93ea}" relid="0x2" childrelidcntr="0x5">
 							<name>fits_ara_front_I</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -19011,7 +19011,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-0000066f" kind="Parameter" role="Parameter" guid="{186cc5c1-d1d5-4659-bb5e-05aa33a7e93d}" relid="0x4" referred="id-0065-000004c9">
+							<reference id="id-0067-00000662" kind="Parameter" role="Parameter" guid="{186cc5c1-d1d5-4659-bb5e-05aa33a7e93d}" relid="0x4" referred="id-0065-000004a6">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19077,7 +19077,7 @@
 									<value>62.5</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000066e" kind="Metric" role="Metric" guid="{20f03ec7-74d0-45af-8d1d-39d78ab6e7f0}" relid="0x1">
+							<reference id="id-0067-00000661" kind="Metric" role="Metric" guid="{20f03ec7-74d0-45af-8d1d-39d78ab6e7f0}" relid="0x1">
 								<name>fits_62.5_by_115.7</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19116,7 +19116,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000066d" kind="Parameter" role="Parameter" guid="{4e02a931-4d3e-4677-be2d-4c6e26607b80}" relid="0x5" referred="id-0065-000004c9">
+							<reference id="id-0067-00000660" kind="Parameter" role="Parameter" guid="{4e02a931-4d3e-4677-be2d-4c6e26607b80}" relid="0x5" referred="id-0065-000004a6">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19182,7 +19182,7 @@
 									<value>115.7</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-0000066b" kind="WorkflowRef" role="WorkflowRef" guid="{62847cb5-b41c-47ef-ba14-2e29446e4166}" relid="0x3" referred="id-0065-000004c5">
+							<reference id="id-0067-0000065e" kind="WorkflowRef" role="WorkflowRef" guid="{62847cb5-b41c-47ef-ba14-2e29446e4166}" relid="0x3" referred="id-0065-000004c9">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19200,7 +19200,7 @@
 									<value>MGA.Decorator.Workflow</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-0000066c" kind="Metric" role="Metric" guid="{b1fe90fb-de72-4929-b113-2db0bd6708ce}" relid="0x2">
+							<reference id="id-0067-0000065f" kind="Metric" role="Metric" guid="{b1fe90fb-de72-4929-b113-2db0bd6708ce}" relid="0x2">
 								<name>pct_occupied_62.5_by_115.7</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19240,7 +19240,7 @@
 								</attribute>
 							</reference>
 						</model>
-						<model id="id-0065-000004b7" kind="TestBench" guid="{b8c42ab3-87cb-40f3-ae75-31eb3d49a8ad}" relid="0x1" childrelidcntr="0x5">
+						<model id="id-0065-000004ca" kind="TestBench" guid="{b8c42ab3-87cb-40f3-ae75-31eb3d49a8ad}" relid="0x1" childrelidcntr="0x5">
 							<name>fits_ara_front_H</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -19269,7 +19269,7 @@
 							<attribute kind="Type" status="meta">
 								<value>SimpleCalc</value>
 							</attribute>
-							<reference id="id-0067-00000666" kind="WorkflowRef" role="WorkflowRef" guid="{07dfa6fa-c246-47be-b502-9ebe2fa4dd11}" relid="0x3" referred="id-0065-000004c5">
+							<reference id="id-0067-00000659" kind="WorkflowRef" role="WorkflowRef" guid="{07dfa6fa-c246-47be-b502-9ebe2fa4dd11}" relid="0x3" referred="id-0065-000004c9">
 								<name>CyPhy2EAGLE_chipfit</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19287,7 +19287,7 @@
 									<value>MGA.Decorator.Workflow</value>
 								</regnode>
 							</reference>
-							<reference id="id-0067-0000066a" kind="Parameter" role="Parameter" guid="{4e12e7d9-2e49-4f7c-862d-8f64d1ec1bba}" relid="0x5" referred="id-0065-000004c9">
+							<reference id="id-0067-0000065d" kind="Parameter" role="Parameter" guid="{4e12e7d9-2e49-4f7c-862d-8f64d1ec1bba}" relid="0x5" referred="id-0065-000004a6">
 								<name>boardHeight</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19353,7 +19353,7 @@
 									<value>9.5</value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000669" kind="Metric" role="Metric" guid="{b932a986-b31c-4ffc-bbb8-c4c3a428cec7}" relid="0x1">
+							<reference id="id-0067-0000065c" kind="Metric" role="Metric" guid="{b932a986-b31c-4ffc-bbb8-c4c3a428cec7}" relid="0x1">
 								<name>fits_62.8_by_9.5</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19392,7 +19392,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000668" kind="Metric" role="Metric" guid="{bf0cd302-893f-49c0-a042-aeb1e20498c4}" relid="0x2">
+							<reference id="id-0067-0000065b" kind="Metric" role="Metric" guid="{bf0cd302-893f-49c0-a042-aeb1e20498c4}" relid="0x2">
 								<name>pct_occupied_62.8_by_9.5</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19431,7 +19431,7 @@
 									<value></value>
 								</attribute>
 							</reference>
-							<reference id="id-0067-00000667" kind="Parameter" role="Parameter" guid="{c23f8f73-021a-4502-b30d-dcc0bdadd44d}" relid="0x4" referred="id-0065-000004c9">
+							<reference id="id-0067-0000065a" kind="Parameter" role="Parameter" guid="{c23f8f73-021a-4502-b30d-dcc0bdadd44d}" relid="0x4" referred="id-0065-000004a6">
 								<name>boardWidth</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -19500,11 +19500,11 @@
 						</model>
 					</folder>
 				</folder>
-				<folder id="id-006a-0000002d" relid="0x1" childrelidcntr="0x11" kind="WorkflowDefinitionFolder" guid="{b33c3d9e-b286-42ad-a90e-713089683980}">
+				<folder id="id-006a-0000002e" relid="0x1" childrelidcntr="0x11" kind="WorkflowDefinitionFolder" guid="{b33c3d9e-b286-42ad-a90e-713089683980}">
 					<name>Workflows</name>
-					<model id="id-0065-000004c5" kind="Workflow" guid="{12e9dc12-b6dd-4154-a9e6-2be7105d44f7}" relid="0x5" childrelidcntr="0x1">
+					<model id="id-0065-000004c9" kind="Workflow" guid="{12e9dc12-b6dd-4154-a9e6-2be7105d44f7}" relid="0x5" childrelidcntr="0x1">
 						<name>CyPhy2EAGLE_chipfit</name>
-						<atom id="id-0066-000001cb" kind="Task" role="Task" guid="{db6d8cff-1fd3-48e0-9848-1f118d57ccad}" relid="0x1">
+						<atom id="id-0066-000001d4" kind="Task" role="Task" guid="{db6d8cff-1fd3-48e0-9848-1f118d57ccad}" relid="0x1">
 							<name>Task</name>
 							<regnode name="decorator" isopaque="yes">
 								<value>MGA.Decorator.Workflow</value>
@@ -19520,9 +19520,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004c4" kind="Workflow" guid="{18c07643-05c1-4bf8-8e0a-fa22e4b82893}" relid="0xb" childrelidcntr="0x1">
+					<model id="id-0065-000004c8" kind="Workflow" guid="{18c07643-05c1-4bf8-8e0a-fa22e4b82893}" relid="0xb" childrelidcntr="0x1">
 						<name>Visualize_SavedLayout</name>
-						<atom id="id-0066-000001ca" kind="Task" role="Task" guid="{a820e87c-6611-4c5b-bdaf-a881128f9140}" relid="0x1">
+						<atom id="id-0066-000001d3" kind="Task" role="Task" guid="{a820e87c-6611-4c5b-bdaf-a881128f9140}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19551,9 +19551,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004c3" kind="Workflow" guid="{4f8dd828-9f48-41db-b9ff-6f444b31b4bf}" relid="0xa" childrelidcntr="0x4">
+					<model id="id-0065-000004c7" kind="Workflow" guid="{4f8dd828-9f48-41db-b9ff-6f444b31b4bf}" relid="0xa" childrelidcntr="0x4">
 						<name>PlaceRouteAndVisualize</name>
-						<atom id="id-0066-000001c9" kind="Task" role="Task" guid="{3f11dbe7-9c7f-480f-93e3-9d0d72ce7599}" relid="0x2">
+						<atom id="id-0066-000001d2" kind="Task" role="Task" guid="{3f11dbe7-9c7f-480f-93e3-9d0d72ce7599}" relid="0x2">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19583,7 +19583,7 @@
 }</value>
 							</attribute>
 						</atom>
-						<atom id="id-0066-000001c8" kind="Task" role="Task" guid="{c59ca778-8e04-44e6-a6a1-c525709b48c4}" relid="0x1">
+						<atom id="id-0066-000001d1" kind="Task" role="Task" guid="{c59ca778-8e04-44e6-a6a1-c525709b48c4}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19613,13 +19613,13 @@
 						</atom>
 						<connection id="id-0068-00000058" kind="Flow" role="Flow" guid="{d3e741ad-dc94-4a8c-958d-3e5056e23167}" relid="0x4">
 							<name>Flow</name>
-							<connpoint role="dst" target="id-0066-000001c8"/>
-							<connpoint role="src" target="id-0066-000001c9"/>
+							<connpoint role="dst" target="id-0066-000001d1"/>
+							<connpoint role="src" target="id-0066-000001d2"/>
 						</connection>
 					</model>
-					<model id="id-0065-000004c2" kind="Workflow" guid="{59a463e3-73ac-4f21-b172-39f8c0f4547c}" relid="0x9" childrelidcntr="0x9">
+					<model id="id-0065-000004c6" kind="Workflow" guid="{59a463e3-73ac-4f21-b172-39f8c0f4547c}" relid="0x9" childrelidcntr="0x9">
 						<name>PCB_Mfg</name>
-						<atom id="id-0066-000001c7" kind="ExecutionTask" role="ExecutionTask" guid="{10c9a9b6-305e-483c-ba46-7bd1243832bd}" relid="0x2">
+						<atom id="id-0066-000001d0" kind="ExecutionTask" role="ExecutionTask" guid="{10c9a9b6-305e-483c-ba46-7bd1243832bd}" relid="0x2">
 							<name>CAM Processing</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19646,7 +19646,7 @@
 								<value></value>
 							</attribute>
 						</atom>
-						<atom id="id-0066-000001c6" kind="ExecutionTask" role="ExecutionTask" guid="{1de08d85-6539-4681-ba75-f3bfba36c385}" relid="0x4">
+						<atom id="id-0066-000001cf" kind="ExecutionTask" role="ExecutionTask" guid="{1de08d85-6539-4681-ba75-f3bfba36c385}" relid="0x4">
 							<name>Get Assembly BOM</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19673,7 +19673,7 @@
 								<value></value>
 							</attribute>
 						</atom>
-						<atom id="id-0066-000001c5" kind="ExecutionTask" role="ExecutionTask" guid="{1e1471aa-b348-460c-8591-ff5801420e6d}" relid="0x3">
+						<atom id="id-0066-000001ce" kind="ExecutionTask" role="ExecutionTask" guid="{1e1471aa-b348-460c-8591-ff5801420e6d}" relid="0x3">
 							<name>Get Centroids</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19702,15 +19702,15 @@
 						</atom>
 						<connection id="id-0068-00000057" kind="Flow" role="Flow" guid="{45b11c33-fad2-4345-b76c-4c1468b68647}" relid="0x7">
 							<name></name>
-							<connpoint role="dst" target="id-0066-000001c6"/>
-							<connpoint role="src" target="id-0066-000001c5"/>
+							<connpoint role="dst" target="id-0066-000001cf"/>
+							<connpoint role="src" target="id-0066-000001ce"/>
 						</connection>
 						<connection id="id-0068-00000056" kind="Flow" role="Flow" guid="{8b22470e-6ec4-4f7d-8c41-04193dbbac74}" relid="0x6">
 							<name></name>
-							<connpoint role="dst" target="id-0066-000001c5"/>
-							<connpoint role="src" target="id-0066-000001c7"/>
+							<connpoint role="dst" target="id-0066-000001ce"/>
+							<connpoint role="src" target="id-0066-000001d0"/>
 						</connection>
-						<atom id="id-0066-000001c4" kind="Task" role="Task" guid="{a50ed943-5ae2-46df-a94c-813ee77aa380}" relid="0x1">
+						<atom id="id-0066-000001cd" kind="Task" role="Task" guid="{a50ed943-5ae2-46df-a94c-813ee77aa380}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19735,13 +19735,13 @@
 						</atom>
 						<connection id="id-0068-00000055" kind="Flow" role="Flow" guid="{fa2a9dcb-a18a-4ddd-b7da-e57bf816a9c8}" relid="0x5">
 							<name></name>
-							<connpoint role="dst" target="id-0066-000001c7"/>
-							<connpoint role="src" target="id-0066-000001c4"/>
+							<connpoint role="dst" target="id-0066-000001d0"/>
+							<connpoint role="src" target="id-0066-000001cd"/>
 						</connection>
 					</model>
-					<model id="id-0065-000004c1" kind="Workflow" guid="{76d51e43-9f7d-4a54-aa26-5249d39a4819}" relid="0x6" childrelidcntr="0x1">
+					<model id="id-0065-000004c5" kind="Workflow" guid="{76d51e43-9f7d-4a54-aa26-5249d39a4819}" relid="0x6" childrelidcntr="0x1">
 						<name>SystemCWorkflow</name>
-						<atom id="id-0066-000001c3" kind="Task" role="Task" guid="{09c783bf-45ea-44c5-971a-4995e516a9a1}" relid="0x1">
+						<atom id="id-0066-000001cc" kind="Task" role="Task" guid="{09c783bf-45ea-44c5-971a-4995e516a9a1}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19763,9 +19763,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004c0" kind="Workflow" guid="{806e74eb-ed80-40be-a37f-6296751f183d}" relid="0x8" childrelidcntr="0x2">
+					<model id="id-0065-000004c4" kind="Workflow" guid="{806e74eb-ed80-40be-a37f-6296751f183d}" relid="0x8" childrelidcntr="0x2">
 						<name>CyPhy2RF_SAR</name>
-						<atom id="id-0066-000001c2" kind="Task" role="Task" guid="{633b8cf3-4cfd-49ba-876a-47cb3258acec}" relid="0x1">
+						<atom id="id-0066-000001cb" kind="Task" role="Task" guid="{633b8cf3-4cfd-49ba-876a-47cb3258acec}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19791,9 +19791,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004bf" kind="Workflow" guid="{910eb75c-5011-4e8e-9f42-31a0190e4dd3}" relid="0xe" childrelidcntr="0x1">
+					<model id="id-0065-000004c3" kind="Workflow" guid="{910eb75c-5011-4e8e-9f42-31a0190e4dd3}" relid="0xe" childrelidcntr="0x1">
 						<name>CAD</name>
-						<atom id="id-0066-000001c1" kind="Task" role="Task" guid="{0ea9f0c6-0036-45ae-b14a-29aaa386f02d}" relid="0x1">
+						<atom id="id-0066-000001ca" kind="Task" role="Task" guid="{0ea9f0c6-0036-45ae-b14a-29aaa386f02d}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19815,14 +19815,14 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004be" kind="Workflow" guid="{97171012-3f01-4fa2-8897-8c0b13d39f2f}" relid="0xd" childrelidcntr="0xa">
+					<model id="id-0065-000004c2" kind="Workflow" guid="{97171012-3f01-4fa2-8897-8c0b13d39f2f}" relid="0xd" childrelidcntr="0xa">
 						<name>PCB_Mfg_MacroFab</name>
 						<connection id="id-0068-00000054" kind="Flow" role="Flow" guid="{0783c2d6-7e92-4bd7-b7a4-de93a09793ef}" relid="0x5">
 							<name></name>
-							<connpoint role="dst" target="id-0066-000001bc"/>
-							<connpoint role="src" target="id-0066-000001bf"/>
+							<connpoint role="dst" target="id-0066-000001c5"/>
+							<connpoint role="src" target="id-0066-000001c8"/>
 						</connection>
-						<atom id="id-0066-000001c0" kind="ExecutionTask" role="ExecutionTask" guid="{681f5415-c8fa-407e-a8ba-640ebf9c1b71}" relid="0x3">
+						<atom id="id-0066-000001c9" kind="ExecutionTask" role="ExecutionTask" guid="{681f5415-c8fa-407e-a8ba-640ebf9c1b71}" relid="0x3">
 							<name>Get Centroids</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19851,10 +19851,10 @@
 						</atom>
 						<connection id="id-0068-00000053" kind="Flow" role="Flow" guid="{758ac268-fe06-479a-b63e-d7e032757b09}" relid="0x9">
 							<name></name>
-							<connpoint role="dst" target="id-0066-000001be"/>
-							<connpoint role="src" target="id-0066-000001bd"/>
+							<connpoint role="dst" target="id-0066-000001c7"/>
+							<connpoint role="src" target="id-0066-000001c6"/>
 						</connection>
-						<atom id="id-0066-000001bf" kind="Task" role="Task" guid="{78d90086-d85c-4d24-900d-30ffd5516848}" relid="0x1">
+						<atom id="id-0066-000001c8" kind="Task" role="Task" guid="{78d90086-d85c-4d24-900d-30ffd5516848}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19879,10 +19879,10 @@
 						</atom>
 						<connection id="id-0068-00000052" kind="Flow" role="Flow" guid="{8ac72ba0-1b15-4ba5-ae4c-5fe75b5bae77}" relid="0x6">
 							<name></name>
-							<connpoint role="dst" target="id-0066-000001c0"/>
-							<connpoint role="src" target="id-0066-000001bc"/>
+							<connpoint role="dst" target="id-0066-000001c9"/>
+							<connpoint role="src" target="id-0066-000001c5"/>
 						</connection>
-						<atom id="id-0066-000001be" kind="ExecutionTask" role="ExecutionTask" guid="{c6c456ce-e719-4702-b0dc-a8587ee78439}" relid="0x8">
+						<atom id="id-0066-000001c7" kind="ExecutionTask" role="ExecutionTask" guid="{c6c456ce-e719-4702-b0dc-a8587ee78439}" relid="0x8">
 							<name>Get MacroFab XYRS</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19909,7 +19909,7 @@
 								<value></value>
 							</attribute>
 						</atom>
-						<atom id="id-0066-000001bd" kind="ExecutionTask" role="ExecutionTask" guid="{ce7dcdca-50d4-4fa6-b004-5f8b81175e1d}" relid="0x4">
+						<atom id="id-0066-000001c6" kind="ExecutionTask" role="ExecutionTask" guid="{ce7dcdca-50d4-4fa6-b004-5f8b81175e1d}" relid="0x4">
 							<name>Get Assembly BOM</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19938,10 +19938,10 @@
 						</atom>
 						<connection id="id-0068-00000051" kind="Flow" role="Flow" guid="{fcdf5aec-2a92-435d-99d1-01ed4edcff83}" relid="0x7">
 							<name></name>
-							<connpoint role="dst" target="id-0066-000001bd"/>
-							<connpoint role="src" target="id-0066-000001c0"/>
+							<connpoint role="dst" target="id-0066-000001c6"/>
+							<connpoint role="src" target="id-0066-000001c9"/>
 						</connection>
-						<atom id="id-0066-000001bc" kind="ExecutionTask" role="ExecutionTask" guid="{fce8d373-822d-4333-ae04-3beee67852be}" relid="0x2">
+						<atom id="id-0066-000001c5" kind="ExecutionTask" role="ExecutionTask" guid="{fce8d373-822d-4333-ae04-3beee67852be}" relid="0x2">
 							<name>CAM Processing</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19969,9 +19969,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004bd" kind="Workflow" guid="{a59c08e9-ec49-41a0-9454-3e7d607f22da}" relid="0xf" childrelidcntr="0x1">
+					<model id="id-0065-000004c1" kind="Workflow" guid="{a59c08e9-ec49-41a0-9454-3e7d607f22da}" relid="0xf" childrelidcntr="0x1">
 						<name>Modelica</name>
-						<atom id="id-0066-000001bb" kind="Task" role="Task" guid="{872f4e5b-8c41-4b43-87bf-e34be5620803}" relid="0x1">
+						<atom id="id-0066-000001c4" kind="Task" role="Task" guid="{872f4e5b-8c41-4b43-87bf-e34be5620803}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -19996,9 +19996,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004bc" kind="Workflow" guid="{ab8c8121-b1c6-43bb-afb7-53a3a44b309b}" relid="0xc" childrelidcntr="0x1">
+					<model id="id-0065-000004c0" kind="Workflow" guid="{ab8c8121-b1c6-43bb-afb7-53a3a44b309b}" relid="0xc" childrelidcntr="0x1">
 						<name>Visualize_Layout</name>
-						<atom id="id-0066-000001ba" kind="Task" role="Task" guid="{3221639f-aae9-4081-95d6-b1fd37ddab67}" relid="0x1">
+						<atom id="id-0066-000001c3" kind="Task" role="Task" guid="{3221639f-aae9-4081-95d6-b1fd37ddab67}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20027,9 +20027,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004bb" kind="Workflow" guid="{b1d3a97b-2efc-4c07-a683-7124777a2219}" relid="0x11" childrelidcntr="0x3">
+					<model id="id-0065-000004bf" kind="Workflow" guid="{b1d3a97b-2efc-4c07-a683-7124777a2219}" relid="0x11" childrelidcntr="0x3">
 						<name>SpiceNoGUI</name>
-						<atom id="id-0066-000001b9" kind="Task" role="Task" guid="{fea68a33-ebf7-4174-96ef-7a56d3410e5b}" relid="0x1">
+						<atom id="id-0066-000001c2" kind="Task" role="Task" guid="{fea68a33-ebf7-4174-96ef-7a56d3410e5b}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20060,9 +20060,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004ba" kind="Workflow" guid="{ca04c3a6-4938-4e2b-8479-2a834e0a4b59}" relid="0x10" childrelidcntr="0x1">
+					<model id="id-0065-000004be" kind="Workflow" guid="{ca04c3a6-4938-4e2b-8479-2a834e0a4b59}" relid="0x10" childrelidcntr="0x1">
 						<name>PlaceRouteNoGUI</name>
-						<atom id="id-0066-000001b8" kind="Task" role="Task" guid="{391d6378-d26f-487c-82c2-cdb468eec043}" relid="0x1">
+						<atom id="id-0066-000001c1" kind="Task" role="Task" guid="{391d6378-d26f-487c-82c2-cdb468eec043}" relid="0x1">
 							<name>Task</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20093,9 +20093,9 @@
 							</attribute>
 						</atom>
 					</model>
-					<model id="id-0065-000004b9" kind="Workflow" guid="{e2990429-6514-4dc1-a6ab-aa3845f4d548}" relid="0x7" childrelidcntr="0x2">
+					<model id="id-0065-000004bd" kind="Workflow" guid="{e2990429-6514-4dc1-a6ab-aa3845f4d548}" relid="0x7" childrelidcntr="0x2">
 						<name>CyPhy2RF_Directivity</name>
-						<atom id="id-0066-000001b7" kind="Task" role="Task" guid="{c4098add-7e11-4fd5-8384-83c987035b65}" relid="0x2">
+						<atom id="id-0066-000001c0" kind="Task" role="Task" guid="{c4098add-7e11-4fd5-8384-83c987035b65}" relid="0x2">
 							<name>Task</name>
 							<regnode name="decorator" isopaque="yes">
 								<value>MGA.Decorator.Workflow</value>
@@ -20113,9 +20113,9 @@
 						</atom>
 					</model>
 				</folder>
-				<folder id="id-006a-0000002e" relid="0x13" childrelidcntr="0x3" kind="Testing" guid="{d891bfca-e87f-4f4a-87f7-37f8670bc477}">
+				<folder id="id-006a-0000002d" relid="0x13" childrelidcntr="0x3" kind="Testing" guid="{d891bfca-e87f-4f4a-87f7-37f8670bc477}">
 					<name>Visualizer</name>
-					<model id="id-0065-000004c8" kind="TestBench" guid="{1cec0b2d-84c9-485b-a4b2-62bbdd9d9608}" relid="0x3" childrelidcntr="0x1">
+					<model id="id-0065-000004bc" kind="TestBench" guid="{1cec0b2d-84c9-485b-a4b2-62bbdd9d9608}" relid="0x3" childrelidcntr="0x1">
 						<name>Visualize_Layout</name>
 						<attribute kind="CopyResults" status="meta">
 							<value>false</value>
@@ -20126,7 +20126,7 @@
 						<attribute kind="Type" status="meta">
 							<value>SimpleCalc</value>
 						</attribute>
-						<reference id="id-0067-00000672" kind="WorkflowRef" role="WorkflowRef" guid="{819d5bd2-8bf0-4478-93fe-c370a322dcf1}" relid="0x1" referred="id-0065-000004bc">
+						<reference id="id-0067-00000658" kind="WorkflowRef" role="WorkflowRef" guid="{819d5bd2-8bf0-4478-93fe-c370a322dcf1}" relid="0x1" referred="id-0065-000004c0">
 							<name>Visualize_Layout</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20142,7 +20142,7 @@
 							</regnode>
 						</reference>
 					</model>
-					<model id="id-0065-000004c7" kind="TestBench" guid="{3d54e327-fb32-4fb6-b8b7-9a0047460a36}" relid="0x2" childrelidcntr="0x1">
+					<model id="id-0065-000004bb" kind="TestBench" guid="{3d54e327-fb32-4fb6-b8b7-9a0047460a36}" relid="0x2" childrelidcntr="0x1">
 						<name>Visualize_SavedLayout</name>
 						<attribute kind="CopyResults" status="meta">
 							<value>false</value>
@@ -20153,7 +20153,7 @@
 						<attribute kind="Type" status="meta">
 							<value>SimpleCalc</value>
 						</attribute>
-						<reference id="id-0067-00000671" kind="WorkflowRef" role="WorkflowRef" guid="{3ce25497-09e0-470c-a763-e288813d2127}" relid="0x1" referred="id-0065-000004c4">
+						<reference id="id-0067-00000657" kind="WorkflowRef" role="WorkflowRef" guid="{3ce25497-09e0-470c-a763-e288813d2127}" relid="0x1" referred="id-0065-000004c8">
 							<name>Visualize_SavedLayout</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20169,7 +20169,7 @@
 							</regnode>
 						</reference>
 					</model>
-					<model id="id-0065-000004c6" kind="TestBench" guid="{e1303921-2a9e-4960-ae8e-42c5ed3ba6ee}" relid="0x1" childrelidcntr="0x1">
+					<model id="id-0065-000004ba" kind="TestBench" guid="{e1303921-2a9e-4960-ae8e-42c5ed3ba6ee}" relid="0x1" childrelidcntr="0x1">
 						<name>PlaceRouteAndVisualize</name>
 						<attribute kind="CopyResults" status="meta">
 							<value>false</value>
@@ -20180,7 +20180,7 @@
 						<attribute kind="Type" status="meta">
 							<value>SimpleCalc</value>
 						</attribute>
-						<reference id="id-0067-00000670" kind="WorkflowRef" role="WorkflowRef" guid="{75a68664-c37a-497b-a701-00c4b7c0ddf4}" relid="0x1" referred="id-0065-000004c3">
+						<reference id="id-0067-00000656" kind="WorkflowRef" role="WorkflowRef" guid="{75a68664-c37a-497b-a701-00c4b7c0ddf4}" relid="0x1" referred="id-0065-000004c7">
 							<name>PlaceRouteAndVisualize</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20197,7 +20197,7 @@
 						</reference>
 					</model>
 				</folder>
-				<model id="id-0065-000004b2" kind="TestBench" guid="{1391f5df-1828-4e62-a825-9ed3d3bb57ff}" relid="0x12" childrelidcntr="0x3">
+				<model id="id-0065-000004b9" kind="TestBench" guid="{1391f5df-1828-4e62-a825-9ed3d3bb57ff}" relid="0x12" childrelidcntr="0x3">
 					<name>PCB_Manufacturing</name>
 					<regnode name="TestBenchUniqueName" isopaque="yes">
 						<value>PCB_Manufacturing</value>
@@ -20211,7 +20211,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<reference id="id-0067-00000651" kind="WorkflowRef" role="WorkflowRef" guid="{11f15ed7-688b-4531-b42f-0a3c5e7965a8}" relid="0x1" referred="id-0065-000004c2">
+					<reference id="id-0067-00000655" kind="WorkflowRef" role="WorkflowRef" guid="{11f15ed7-688b-4531-b42f-0a3c5e7965a8}" relid="0x1" referred="id-0065-000004c6">
 						<name>PCB_Mfg</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20226,7 +20226,7 @@
 							<value>MGA.Decorator.Workflow</value>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000650" kind="Parameter" role="Parameter" guid="{950c2915-1679-4fbe-a58f-d8d50dd14f8e}" relid="0x3">
+					<reference id="id-0067-00000654" kind="Parameter" role="Parameter" guid="{950c2915-1679-4fbe-a58f-d8d50dd14f8e}" relid="0x3">
 						<name>CAM file</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20290,7 +20290,7 @@
 						</attribute>
 					</reference>
 				</model>
-				<model id="id-0065-000004b0" kind="TestBench" guid="{3dd208af-95a5-4dbc-a8dd-8cde361a3ef0}" relid="0x11" childrelidcntr="0xa">
+				<model id="id-0065-000004b7" kind="TestBench" guid="{3dd208af-95a5-4dbc-a8dd-8cde361a3ef0}" relid="0x11" childrelidcntr="0xa">
 					<name>RF_SAR</name>
 					<attribute kind="CopyResults" status="meta">
 						<value>false</value>
@@ -20301,7 +20301,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<model id="id-0065-000004b1" kind="TestComponent" role="TestComponent" guid="{13fb9280-5848-4966-b7ed-6a768dead145}" relid="0xa" childrelidcntr="0x1">
+					<model id="id-0065-000004b8" kind="TestComponent" role="TestComponent" guid="{13fb9280-5848-4966-b7ed-6a768dead145}" relid="0xa" childrelidcntr="0x1">
 						<name>Excitation</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20393,7 +20393,7 @@
 						<attribute kind="NumAssociatedConfigs" status="meta">
 							<value></value>
 						</attribute>
-						<atom id="id-0066-000001b6" kind="RFPort" role="RFPort" guid="{8a42042c-92fa-41f2-ae48-4dc6cf1bb3b9}" relid="0x1">
+						<atom id="id-0066-000001bf" kind="RFPort" role="RFPort" guid="{8a42042c-92fa-41f2-ae48-4dc6cf1bb3b9}" relid="0x1">
 							<name>RFOut</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -20430,7 +20430,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<reference id="id-0067-0000064f" kind="Parameter" role="Parameter" guid="{36df1537-57c5-4868-99ce-bb32801a24d1}" relid="0x1">
+					<reference id="id-0067-00000653" kind="Parameter" role="Parameter" guid="{36df1537-57c5-4868-99ce-bb32801a24d1}" relid="0x1">
 						<name>Frequency</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20475,7 +20475,7 @@
 							<value>2450e6</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-0000064e" kind="WorkflowRef" role="WorkflowRef" guid="{861ba993-034c-4339-a9a6-de77d9dfa8b5}" relid="0x9" referred="id-0065-000004c0">
+					<reference id="id-0067-00000652" kind="WorkflowRef" role="WorkflowRef" guid="{861ba993-034c-4339-a9a6-de77d9dfa8b5}" relid="0x9" referred="id-0065-000004c4">
 						<name>CyPhy2RF_SAR</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20490,7 +20490,7 @@
 							<value>MGA.Decorator.Workflow</value>
 						</regnode>
 					</reference>
-					<reference id="id-0067-0000064d" kind="Parameter" role="Parameter" guid="{9ef2135b-1879-413b-a290-5ef605655abe}" relid="0x2">
+					<reference id="id-0067-00000651" kind="Parameter" role="Parameter" guid="{9ef2135b-1879-413b-a290-5ef605655abe}" relid="0x2">
 						<name>Slot</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20553,7 +20553,7 @@
 							<value>5</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-0000064c" kind="Parameter" role="Parameter" guid="{9f9746a3-b0aa-4ce1-9d8c-f01e1b42cd39}" relid="0x3">
+					<reference id="id-0067-00000650" kind="Parameter" role="Parameter" guid="{9f9746a3-b0aa-4ce1-9d8c-f01e1b42cd39}" relid="0x3">
 						<name>Resolution</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20617,7 +20617,7 @@
 						</attribute>
 					</reference>
 				</model>
-				<model id="id-0065-000004af" kind="TestBench" guid="{3fc0825f-403b-4bbf-8603-5527d1435524}" relid="0x2" childrelidcntr="0x2">
+				<model id="id-0065-000004b6" kind="TestBench" guid="{3fc0825f-403b-4bbf-8603-5527d1435524}" relid="0x2" childrelidcntr="0x2">
 					<name>ThermalTest</name>
 					<regnode name="TestBenchUniqueName" isopaque="yes">
 						<value>AAA_Thermal_TestRig</value>
@@ -20631,7 +20631,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<reference id="id-0067-0000064b" kind="WorkflowRef" role="WorkflowRef" guid="{02eb1468-3dd0-4915-acc2-5a3bfd7fa24a}" relid="0x2" referred="id-0065-000004cd">
+					<reference id="id-0067-0000064f" kind="WorkflowRef" role="WorkflowRef" guid="{02eb1468-3dd0-4915-acc2-5a3bfd7fa24a}" relid="0x2" referred="id-0065-000004a3">
 						<name>Modelica</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20670,7 +20670,7 @@
 							<value>MGA.Decorator.Workflow</value>
 						</regnode>
 					</reference>
-					<atom id="id-0066-000001b5" kind="SolverSettings" role="SolverSettings" guid="{f21a05b7-ffd0-44f4-b5a0-9b2935c25a5d}" relid="0x1">
+					<atom id="id-0066-000001be" kind="SolverSettings" role="SolverSettings" guid="{f21a05b7-ffd0-44f4-b5a0-9b2935c25a5d}" relid="0x1">
 						<name>SolverSettings</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20716,7 +20716,7 @@
 						</attribute>
 					</atom>
 				</model>
-				<model id="id-0065-000004ae" kind="TestBench" guid="{4a0e6f73-3ef3-4305-8db2-cb09baa07249}" relid="0x14" childrelidcntr="0x4">
+				<model id="id-0065-000004b5" kind="TestBench" guid="{4a0e6f73-3ef3-4305-8db2-cb09baa07249}" relid="0x14" childrelidcntr="0x4">
 					<name>PCB_Manufacturing_for_MacroFab</name>
 					<regnode name="TestBenchUniqueName" isopaque="yes">
 						<value>PCB_Manufacturing</value>
@@ -20730,7 +20730,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<reference id="id-0067-0000064a" kind="WorkflowRef" role="WorkflowRef" guid="{1f6971a1-c236-42dd-a414-2ca27c5d731e}" relid="0x4" referred="id-0065-000004be">
+					<reference id="id-0067-0000064e" kind="WorkflowRef" role="WorkflowRef" guid="{1f6971a1-c236-42dd-a414-2ca27c5d731e}" relid="0x4" referred="id-0065-000004c2">
 						<name>PCB_Mfg_MacroFab</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20745,7 +20745,7 @@
 							<value>MGA.Decorator.Workflow</value>
 						</regnode>
 					</reference>
-					<reference id="id-0067-00000649" kind="Parameter" role="Parameter" guid="{8b519cb4-d8be-451c-b1cf-a7fb57b24308}" relid="0x3">
+					<reference id="id-0067-0000064d" kind="Parameter" role="Parameter" guid="{8b519cb4-d8be-451c-b1cf-a7fb57b24308}" relid="0x3">
 						<name>CAM file</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20809,7 +20809,7 @@
 						</attribute>
 					</reference>
 				</model>
-				<model id="id-0065-000004ad" kind="TestBench" guid="{80fb2e6d-eb66-4c17-ba7f-48e6edb3a211}" relid="0xe" childrelidcntr="0x6">
+				<model id="id-0065-000004b4" kind="TestBench" guid="{80fb2e6d-eb66-4c17-ba7f-48e6edb3a211}" relid="0xe" childrelidcntr="0x6">
 					<name>SystemCBehavior</name>
 					<regnode name="_detachedFrom" isopaque="yes">
 						<value>{0310d6a6-b20f-403b-a55b-e304b1e908d9}</value>
@@ -20838,7 +20838,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<reference id="id-0067-00000648" kind="Parameter" role="Parameter" guid="{3c75725b-1dd3-4587-b1ec-51ddd8abb2b2}" relid="0x6" referred="id-0066-000001cf">
+					<reference id="id-0067-0000064c" kind="Parameter" role="Parameter" guid="{3c75725b-1dd3-4587-b1ec-51ddd8abb2b2}" relid="0x6" referred="id-0066-000001b1">
 						<name>simulationTime</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20883,7 +20883,7 @@
 							<value>1000</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-00000647" kind="WorkflowRef" role="WorkflowRef" guid="{a19ed1c6-1e52-4a2b-b85f-e351d59562a4}" relid="0x3" referred="id-0065-000004c1">
+					<reference id="id-0067-0000064b" kind="WorkflowRef" role="WorkflowRef" guid="{a19ed1c6-1e52-4a2b-b85f-e351d59562a4}" relid="0x3" referred="id-0065-000004c5">
 						<name>SystemCWorkflow</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -20902,7 +20902,7 @@
 						</regnode>
 					</reference>
 				</model>
-				<model id="id-0065-000004ac" kind="TestBench" guid="{ab300ca2-48ea-4559-b52a-bb3b1615b7fe}" relid="0x6" childrelidcntr="0x3">
+				<model id="id-0065-000004b3" kind="TestBench" guid="{ab300ca2-48ea-4559-b52a-bb3b1615b7fe}" relid="0x6" childrelidcntr="0x3">
 					<name>PlaceAndRoute_1x2</name>
 					<regnode name="TestBenchUniqueName" isopaque="yes">
 						<value>AA6_PlaceAndRoute_TestBench</value>
@@ -20959,7 +20959,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<reference id="id-0067-00000646" kind="Parameter" role="Parameter" guid="{a817ea97-026f-4ae6-afc2-c00a3ef596d0}" relid="0x2" referred="id-0065-000004c9">
+					<reference id="id-0067-0000064a" kind="Parameter" role="Parameter" guid="{a817ea97-026f-4ae6-afc2-c00a3ef596d0}" relid="0x2" referred="id-0065-000004a6">
 						<name>boardWidth</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21022,7 +21022,7 @@
 							<value>18</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-00000645" kind="Parameter" role="Parameter" guid="{b3e67568-f59d-4245-aab2-d94e24dfab75}" relid="0x3" referred="id-0065-000004c9">
+					<reference id="id-0067-00000649" kind="Parameter" role="Parameter" guid="{b3e67568-f59d-4245-aab2-d94e24dfab75}" relid="0x3" referred="id-0065-000004a6">
 						<name>boardHeight</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21085,7 +21085,7 @@
 							<value>40.5</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-00000644" kind="WorkflowRef" role="WorkflowRef" guid="{c61cf5a3-9f43-4d23-97cb-127040ad7104}" relid="0x1" referred="id-0065-000004cc">
+					<reference id="id-0067-00000648" kind="WorkflowRef" role="WorkflowRef" guid="{c61cf5a3-9f43-4d23-97cb-127040ad7104}" relid="0x1" referred="id-0065-000004a2">
 						<name>PlaceRouteNoGUI</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21101,7 +21101,7 @@
 						</regnode>
 					</reference>
 				</model>
-				<model id="id-0065-000004a3" kind="TestBench" guid="{af8ad358-0417-43b0-b13b-7813567ba525}" relid="0xf" childrelidcntr="0x7">
+				<model id="id-0065-000004aa" kind="TestBench" guid="{af8ad358-0417-43b0-b13b-7813567ba525}" relid="0xf" childrelidcntr="0x7">
 					<name>SPICETest</name>
 					<regnode name="TestBenchUniqueName" isopaque="yes">
 						<value>AA3_SPICE_TestRig</value>
@@ -21158,7 +21158,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<atom id="id-0066-000001aa" kind="SolverSettings" role="SolverSettings" guid="{28126508-7c93-44c5-b68f-06d9fee00b02}" relid="0x3">
+					<atom id="id-0066-000001b3" kind="SolverSettings" role="SolverSettings" guid="{28126508-7c93-44c5-b68f-06d9fee00b02}" relid="0x3">
 						<name>SolverSettings</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21203,7 +21203,7 @@
 							<value>.TRAN 0.00001 1</value>
 						</attribute>
 					</atom>
-					<model id="id-0065-000004a7" kind="TestComponent" role="TestComponent" guid="{4afcc590-7694-4948-9cfa-d77a3e0b93c7}" relid="0x2" childrelidcntr="0x8">
+					<model id="id-0065-000004ae" kind="TestComponent" role="TestComponent" guid="{4afcc590-7694-4948-9cfa-d77a3e0b93c7}" relid="0x2" childrelidcntr="0x8">
 						<name>Gnd</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21291,20 +21291,20 @@
 						</attribute>
 						<connection id="id-0068-00000050" kind="PortComposition" role="PortComposition" guid="{00d19579-bdf9-42c6-a2b2-3e9e851c7ef6}" relid="0x6">
 							<name>PortComposition</name>
-							<connpoint role="dst" target="id-0066-000001b2"/>
-							<connpoint role="src" target="id-0066-000001b3"/>
+							<connpoint role="dst" target="id-0066-000001bb"/>
+							<connpoint role="src" target="id-0066-000001bc"/>
 						</connection>
 						<connection id="id-0068-0000004f" kind="PortComposition" role="PortComposition" guid="{0ac1e283-ced3-478e-8b9c-eec60783bff4}" relid="0x8">
 							<name>PortComposition</name>
-							<connpoint role="dst" target="id-0066-000001b1"/>
-							<connpoint role="src" target="id-0066-000001b2"/>
+							<connpoint role="dst" target="id-0066-000001ba"/>
+							<connpoint role="src" target="id-0066-000001bb"/>
 						</connection>
 						<connection id="id-0068-0000004e" kind="PortComposition" role="PortComposition" guid="{636041b3-d6fb-421d-8a75-1fc4965317a9}" relid="0x5">
 							<name>PortComposition</name>
-							<connpoint role="dst" target="id-0066-000001b3"/>
-							<connpoint role="src" target="id-0066-000001b4"/>
+							<connpoint role="dst" target="id-0066-000001bc"/>
+							<connpoint role="src" target="id-0066-000001bd"/>
 						</connection>
-						<atom id="id-0066-000001b1" kind="SchematicModelPort" role="SchematicModelPort" guid="{98b2443d-ca64-4cdc-9022-7b9584b67cfa}" relid="0x4">
+						<atom id="id-0066-000001ba" kind="SchematicModelPort" role="SchematicModelPort" guid="{98b2443d-ca64-4cdc-9022-7b9584b67cfa}" relid="0x4">
 							<name>gnd</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -21345,10 +21345,10 @@
 						</atom>
 						<connection id="id-0068-0000004d" kind="PortComposition" role="PortComposition" guid="{9d7b4582-c783-456f-8395-f45ebb5c6882}" relid="0x7">
 							<name>PortComposition</name>
-							<connpoint role="dst" target="id-0066-000001b4"/>
-							<connpoint role="src" target="id-0066-000001b1"/>
+							<connpoint role="dst" target="id-0066-000001bd"/>
+							<connpoint role="src" target="id-0066-000001ba"/>
 						</connection>
-						<model id="id-0065-000004ab" kind="SPICEModel" role="SPICEModel" guid="{c6ee242f-a934-4fa1-8afa-2c7b9197aafe}" relid="0x2" childrelidcntr="0x1">
+						<model id="id-0065-000004b2" kind="SPICEModel" role="SPICEModel" guid="{c6ee242f-a934-4fa1-8afa-2c7b9197aafe}" relid="0x2" childrelidcntr="0x1">
 							<name>SPICEModel</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -21371,7 +21371,7 @@
 							<attribute kind="Notes" status="meta">
 								<value></value>
 							</attribute>
-							<atom id="id-0066-000001b4" kind="SchematicModelPort" role="SchematicModelPort" guid="{a759dc0f-ec89-48f7-b7c5-287863d88320}" relid="0x1">
+							<atom id="id-0066-000001bd" kind="SchematicModelPort" role="SchematicModelPort" guid="{a759dc0f-ec89-48f7-b7c5-287863d88320}" relid="0x1">
 								<name>gnd</name>
 								<attribute kind="Definition" status="meta">
 									<value></value>
@@ -21402,7 +21402,7 @@
 								</attribute>
 							</atom>
 						</model>
-						<model id="id-0065-000004a9" kind="Connector" role="Connector" guid="{f36c2cf3-b5c9-4b55-89b0-a4fcfca2c2c0}" relid="0x3" childrelidcntr="0x2">
+						<model id="id-0065-000004b0" kind="Connector" role="Connector" guid="{f36c2cf3-b5c9-4b55-89b0-a4fcfca2c2c0}" relid="0x3" childrelidcntr="0x2">
 							<name>n</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -21425,7 +21425,7 @@
 							<attribute kind="InstanceNotes" status="meta">
 								<value></value>
 							</attribute>
-							<atom id="id-0066-000001b3" kind="SchematicModelPort" role="SchematicModelPort" guid="{dacd2224-0575-4295-879f-226c289dea8c}" relid="0x2">
+							<atom id="id-0066-000001bc" kind="SchematicModelPort" role="SchematicModelPort" guid="{dacd2224-0575-4295-879f-226c289dea8c}" relid="0x2">
 								<name>Sch</name>
 								<attribute kind="Definition" status="meta">
 									<value></value>
@@ -21455,7 +21455,7 @@
 									<value>0</value>
 								</attribute>
 							</atom>
-							<model id="id-0065-000004aa" kind="ModelicaConnector" role="ModelicaConnector" guid="{f2f3842c-4814-4615-99b3-2045e16c1218}" relid="0x1" childrelidcntr="0x0">
+							<model id="id-0065-000004b1" kind="ModelicaConnector" role="ModelicaConnector" guid="{f2f3842c-4814-4615-99b3-2045e16c1218}" relid="0x1" childrelidcntr="0x0">
 								<name>pwr</name>
 								<attribute kind="Class" status="meta">
 									<value></value>
@@ -21477,7 +21477,7 @@
 								</attribute>
 							</model>
 						</model>
-						<model id="id-0065-000004a8" kind="EDAModel" role="EDAModel" guid="{fa91142f-fd98-4288-a9b1-4a31004c9449}" relid="0x1" childrelidcntr="0x1">
+						<model id="id-0065-000004af" kind="EDAModel" role="EDAModel" guid="{fa91142f-fd98-4288-a9b1-4a31004c9449}" relid="0x1" childrelidcntr="0x1">
 							<name>SchematicModel</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -21512,7 +21512,7 @@
 							<attribute kind="Package" status="meta">
 								<value></value>
 							</attribute>
-							<atom id="id-0066-000001b2" kind="SchematicModelPort" role="SchematicModelPort" guid="{ea735234-3b19-44d2-aa52-9073da898ce3}" relid="0x1">
+							<atom id="id-0066-000001bb" kind="SchematicModelPort" role="SchematicModelPort" guid="{ea735234-3b19-44d2-aa52-9073da898ce3}" relid="0x1">
 								<name>gnd</name>
 								<attribute kind="Definition" status="meta">
 									<value></value>
@@ -21544,7 +21544,7 @@
 							</atom>
 						</model>
 					</model>
-					<reference id="id-0067-00000641" kind="Metric" role="Metric" guid="{4dbcdb7e-2670-4b5d-956b-0490fc4ba62c}" relid="0x7" referred="id-0065-000004ca">
+					<reference id="id-0067-00000645" kind="Metric" role="Metric" guid="{4dbcdb7e-2670-4b5d-956b-0490fc4ba62c}" relid="0x7" referred="id-0065-000004a7">
 						<name>MaxPower</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21583,7 +21583,7 @@
 							<value></value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-00000640" kind="Metric" role="Metric" guid="{6889f6a0-34c5-4abb-b41f-7ff84a453a3d}" relid="0x6" referred="id-0066-000001cd">
+					<reference id="id-0067-00000644" kind="Metric" role="Metric" guid="{6889f6a0-34c5-4abb-b41f-7ff84a453a3d}" relid="0x6" referred="id-0066-000001af">
 						<name>MaxCurrent</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21624,10 +21624,10 @@
 					</reference>
 					<connection id="id-0068-00000048" kind="PortComposition" role="PortComposition" guid="{83887604-9403-4abc-b15f-0fffa00b5b5c}" relid="0x5">
 						<name>PortComposition</name>
-						<connpoint role="dst" target="id-0066-000001ab"/>
-						<connpoint role="src" target="id-0066-000001b1"/>
+						<connpoint role="dst" target="id-0066-000001b4"/>
+						<connpoint role="src" target="id-0066-000001ba"/>
 					</connection>
-					<reference id="id-0067-0000063f" kind="WorkflowRef" role="WorkflowRef" guid="{b7836f7a-6595-428c-be91-06813a67f608}" relid="0x4" referred="id-0065-000004ce">
+					<reference id="id-0067-00000643" kind="WorkflowRef" role="WorkflowRef" guid="{b7836f7a-6595-428c-be91-06813a67f608}" relid="0x4" referred="id-0065-000004a4">
 						<name>SpiceWorkflow</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21642,7 +21642,7 @@
 							<value>MGA.Decorator.Workflow</value>
 						</regnode>
 					</reference>
-					<model id="id-0065-000004a4" kind="TestComponent" role="TestComponent" guid="{dda152eb-1fe5-4311-ac7a-da1724de4c54}" relid="0x1" childrelidcntr="0x8">
+					<model id="id-0065-000004ab" kind="TestComponent" role="TestComponent" guid="{dda152eb-1fe5-4311-ac7a-da1724de4c54}" relid="0x1" childrelidcntr="0x8">
 						<name>EndoDC5V</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -21731,7 +21731,7 @@
 						<attribute kind="NumAssociatedConfigs" status="meta">
 							<value></value>
 						</attribute>
-						<atom id="id-0066-000001ac" kind="SchematicModelPort" role="SchematicModelPort" guid="{00a97398-9345-49fd-917f-3eb016d3d5e4}" relid="0x2">
+						<atom id="id-0066-000001b5" kind="SchematicModelPort" role="SchematicModelPort" guid="{00a97398-9345-49fd-917f-3eb016d3d5e4}" relid="0x2">
 							<name>VCC</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -21785,7 +21785,7 @@
 								<value>0</value>
 							</attribute>
 						</atom>
-						<model id="id-0065-000004a6" kind="Connector" role="Connector" guid="{2c78d845-ed25-4f97-a1d0-c8cd3b7900ce}" relid="0x6" childrelidcntr="0x2">
+						<model id="id-0065-000004ad" kind="Connector" role="Connector" guid="{2c78d845-ed25-4f97-a1d0-c8cd3b7900ce}" relid="0x6" childrelidcntr="0x2">
 							<name>PwrGnd</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -21862,7 +21862,7 @@
 							<attribute kind="InstanceNotes" status="meta">
 								<value></value>
 							</attribute>
-							<atom id="id-0066-000001b0" kind="SchematicModelPort" role="SchematicModelPort" guid="{1548617c-746d-488d-9ee5-04d36c041003}" relid="0x1">
+							<atom id="id-0066-000001b9" kind="SchematicModelPort" role="SchematicModelPort" guid="{1548617c-746d-488d-9ee5-04d36c041003}" relid="0x1">
 								<name>GND</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -21916,7 +21916,7 @@
 									<value>0</value>
 								</attribute>
 							</atom>
-							<atom id="id-0066-000001af" kind="SchematicModelPort" role="SchematicModelPort" guid="{b58f2d56-b671-46c9-8e66-b548c840484e}" relid="0x2">
+							<atom id="id-0066-000001b8" kind="SchematicModelPort" role="SchematicModelPort" guid="{b58f2d56-b671-46c9-8e66-b548c840484e}" relid="0x2">
 								<name>VCC</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -21971,7 +21971,7 @@
 								</attribute>
 							</atom>
 						</model>
-						<model id="id-0065-000004a5" kind="SPICEModel" role="SPICEModel" guid="{3a32c59e-f7b7-4341-8e0c-3c9bdaa1c387}" relid="0x1" childrelidcntr="0x4">
+						<model id="id-0065-000004ac" kind="SPICEModel" role="SPICEModel" guid="{3a32c59e-f7b7-4341-8e0c-3c9bdaa1c387}" relid="0x1" childrelidcntr="0x4">
 							<name>SPICEModel</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -22006,7 +22006,7 @@
 							<attribute kind="Notes">
 								<value>Since &quot;V&quot; is a SPICE primitive, no component SPICE model is included with this component.</value>
 							</attribute>
-							<reference id="id-0067-00000643" kind="SPICEModelParameter" role="SPICEModelParameter" guid="{414a97c5-70a5-42da-9867-5c029009d1d6}" relid="0x1">
+							<reference id="id-0067-00000647" kind="SPICEModelParameter" role="SPICEModelParameter" guid="{414a97c5-70a5-42da-9867-5c029009d1d6}" relid="0x1">
 								<name>value</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -22024,7 +22024,7 @@
 									<value>DC</value>
 								</attribute>
 							</reference>
-							<atom id="id-0066-000001ae" kind="SchematicModelPort" role="SchematicModelPort" guid="{821fd670-5195-4d83-86a5-eb12e43ed0b0}" relid="0x2">
+							<atom id="id-0066-000001b7" kind="SchematicModelPort" role="SchematicModelPort" guid="{821fd670-5195-4d83-86a5-eb12e43ed0b0}" relid="0x2">
 								<name>1</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -22072,7 +22072,7 @@
 									<value>1</value>
 								</attribute>
 							</atom>
-							<atom id="id-0066-000001ad" kind="SchematicModelPort" role="SchematicModelPort" guid="{bd15fd13-a367-4391-896a-e84a28ac77d7}" relid="0x4">
+							<atom id="id-0066-000001b6" kind="SchematicModelPort" role="SchematicModelPort" guid="{bd15fd13-a367-4391-896a-e84a28ac77d7}" relid="0x4">
 								<name>2</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -22120,7 +22120,7 @@
 									<value>2</value>
 								</attribute>
 							</atom>
-							<reference id="id-0067-00000642" kind="SPICEModelParameter" role="SPICEModelParameter" guid="{c564f8cf-3377-407f-8e34-65f196ee0a64}" relid="0x3">
+							<reference id="id-0067-00000646" kind="SPICEModelParameter" role="SPICEModelParameter" guid="{c564f8cf-3377-407f-8e34-65f196ee0a64}" relid="0x3">
 								<name>value1</name>
 								<regnode name="PartRegs" status="undefined">
 									<value></value>
@@ -22139,7 +22139,7 @@
 								</attribute>
 							</reference>
 						</model>
-						<atom id="id-0066-000001ab" kind="SchematicModelPort" role="SchematicModelPort" guid="{5bbf802a-7dbb-4ec1-8c98-8d49e6e428af}" relid="0x8">
+						<atom id="id-0066-000001b4" kind="SchematicModelPort" role="SchematicModelPort" guid="{5bbf802a-7dbb-4ec1-8c98-8d49e6e428af}" relid="0x8">
 							<name>GND</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -22198,16 +22198,16 @@
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{5d151a6c-4a7b-448f-8a17-6c9579cc8e09}</value>
 							</regnode>
-							<connpoint role="dst" target="id-0066-000001ad"/>
-							<connpoint role="src" target="id-0066-000001b0"/>
+							<connpoint role="dst" target="id-0066-000001b6"/>
+							<connpoint role="src" target="id-0066-000001b9"/>
 						</connection>
 						<connection id="id-0068-0000004b" kind="PortComposition" role="PortComposition" guid="{90599fed-2dac-47a1-bc76-e249a28361e7}" relid="0x3">
 							<name>PortComposition</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{026a8ba1-b533-4109-82e0-b46d8fd2ba60}</value>
 							</regnode>
-							<connpoint role="dst" target="id-0066-000001ac"/>
-							<connpoint role="src" target="id-0066-000001ae"/>
+							<connpoint role="dst" target="id-0066-000001b5"/>
+							<connpoint role="src" target="id-0066-000001b7"/>
 						</connection>
 						<connection id="id-0068-0000004a" kind="PortComposition" role="PortComposition" guid="{abeb9f21-b087-481c-82b4-c29edbb2f7d2}" relid="0x7">
 							<name>PortComposition</name>
@@ -22217,20 +22217,20 @@
 							<regnode name="autorouterPref" isopaque="yes">
 								<value>w</value>
 							</regnode>
-							<connpoint role="dst" target="id-0066-000001ab"/>
-							<connpoint role="src" target="id-0066-000001ad"/>
+							<connpoint role="dst" target="id-0066-000001b4"/>
+							<connpoint role="src" target="id-0066-000001b6"/>
 						</connection>
 						<connection id="id-0068-00000049" kind="PortComposition" role="PortComposition" guid="{cd2b68ac-1739-42bc-ad71-857ef76398fc}" relid="0x5">
 							<name>PortComposition</name>
 							<regnode name="_detachedFrom" isopaque="yes">
 								<value>{05a62e5d-0333-4347-8eeb-d5bc4e394b12}</value>
 							</regnode>
-							<connpoint role="dst" target="id-0066-000001ae"/>
-							<connpoint role="src" target="id-0066-000001af"/>
+							<connpoint role="dst" target="id-0066-000001b7"/>
+							<connpoint role="src" target="id-0066-000001b8"/>
 						</connection>
 					</model>
 				</model>
-				<model id="id-0065-000004a1" kind="TestBench" guid="{cab87f1d-7866-45f5-a9da-98c06c4bed65}" relid="0x10" childrelidcntr="0x8">
+				<model id="id-0065-000004a8" kind="TestBench" guid="{cab87f1d-7866-45f5-a9da-98c06c4bed65}" relid="0x10" childrelidcntr="0x8">
 					<name>RF_Directivity</name>
 					<attribute kind="CopyResults" status="meta">
 						<value>false</value>
@@ -22241,7 +22241,7 @@
 					<attribute kind="Type" status="meta">
 						<value>SimpleCalc</value>
 					</attribute>
-					<model id="id-0065-000004a2" kind="TestComponent" role="TestComponent" guid="{204e34a3-e1b7-44e6-bc5d-90b10f2aed05}" relid="0x8" childrelidcntr="0x1">
+					<model id="id-0065-000004a9" kind="TestComponent" role="TestComponent" guid="{204e34a3-e1b7-44e6-bc5d-90b10f2aed05}" relid="0x8" childrelidcntr="0x1">
 						<name>Excitation</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -22333,7 +22333,7 @@
 						<attribute kind="NumAssociatedConfigs" status="meta">
 							<value></value>
 						</attribute>
-						<atom id="id-0066-000001a9" kind="RFPort" role="RFPort" guid="{3e9fe094-7678-4a70-a68c-5d3080f820d9}" relid="0x1">
+						<atom id="id-0066-000001b2" kind="RFPort" role="RFPort" guid="{3e9fe094-7678-4a70-a68c-5d3080f820d9}" relid="0x1">
 							<name>RFOut</name>
 							<regnode name="PartRegs" status="undefined">
 								<value></value>
@@ -22370,7 +22370,7 @@
 							</attribute>
 						</atom>
 					</model>
-					<reference id="id-0067-0000063e" kind="WorkflowRef" role="WorkflowRef" guid="{444f801d-a691-41f8-a608-c045aec112e6}" relid="0x6" referred="id-0065-000004b9">
+					<reference id="id-0067-00000642" kind="WorkflowRef" role="WorkflowRef" guid="{444f801d-a691-41f8-a608-c045aec112e6}" relid="0x6" referred="id-0065-000004bd">
 						<name>CyPhy2RF_Directivity</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -22385,7 +22385,7 @@
 							<value>MGA.Decorator.Workflow</value>
 						</regnode>
 					</reference>
-					<reference id="id-0067-0000063d" kind="Parameter" role="Parameter" guid="{8b552ee8-e820-4a2a-a9ee-e49684df4f2e}" relid="0x3">
+					<reference id="id-0067-00000641" kind="Parameter" role="Parameter" guid="{8b552ee8-e820-4a2a-a9ee-e49684df4f2e}" relid="0x3">
 						<name>Resolution</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -22448,7 +22448,7 @@
 							<value>1</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-0000063c" kind="Parameter" role="Parameter" guid="{add5970c-b72f-419b-bb33-7645ac620c46}" relid="0x1">
+					<reference id="id-0067-00000640" kind="Parameter" role="Parameter" guid="{add5970c-b72f-419b-bb33-7645ac620c46}" relid="0x1">
 						<name>Frequency</name>
 						<attribute kind="ComputationType" status="meta">
 							<value>Addition</value>
@@ -22484,7 +22484,7 @@
 							<value>2450e6</value>
 						</attribute>
 					</reference>
-					<reference id="id-0067-0000063b" kind="Parameter" role="Parameter" guid="{b57cc296-b179-4c17-8c20-f473696bd233}" relid="0x2">
+					<reference id="id-0067-0000063f" kind="Parameter" role="Parameter" guid="{b57cc296-b179-4c17-8c20-f473696bd233}" relid="0x2">
 						<name>Slot</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -22550,132 +22550,12 @@
 				</model>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699100000000</value>
+				<value>132131277520000000</value>
 			</regnode>
 		</folder>
 		<folder id="id-006a-00000002" relid="0x0" childrelidcntr="0x6" kind="Components" guid="{d27bc179-f909-478f-9eb7-3606aafcea09}">
 			<name>Components</name>
-			<model id="id-0065-00000475" kind="Component" guid="{188c9289-d6bf-45f9-8a3a-54602341a029}" relid="0x5" childrelidcntr="0x1">
-				<name>ParamAssignedVal</name>
-				<attribute kind="AVMID">
-					<value>011c52c6-063f-430a-9e2f-373d26795441</value>
-				</attribute>
-				<attribute kind="Cardinality" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Classifications">
-					<value></value>
-				</attribute>
-				<attribute kind="Description" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="ID" status="meta">
-					<value>0</value>
-				</attribute>
-				<attribute kind="InstanceGUID" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="ManagedGUID" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="NumAssociatedConfigs" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Path">
-					<value>.\components\1rryo3xs</value>
-				</attribute>
-				<attribute kind="Revision" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Supercedes">
-					<value></value>
-				</attribute>
-				<attribute kind="Version" status="meta">
-					<value></value>
-				</attribute>
-				<reference id="id-0067-0000062b" kind="Parameter" role="Parameter" guid="{59a0b5b8-5253-4ae2-b479-96188b1936a4}" relid="0x1">
-					<name>P1</name>
-					<regnode name="PartRegs" status="undefined">
-						<value></value>
-						<regnode name="All" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>98,63</value>
-							</regnode>
-						</regnode>
-						<regnode name="BehaviorModelsAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>98,63</value>
-							</regnode>
-						</regnode>
-						<regnode name="ManufacturingAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>98,63</value>
-							</regnode>
-						</regnode>
-						<regnode name="SimulinkAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>98,63</value>
-							</regnode>
-						</regnode>
-						<regnode name="SolidModeling" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>98,63</value>
-							</regnode>
-						</regnode>
-						<regnode name="SystemCAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>98,63</value>
-							</regnode>
-						</regnode>
-						<regnode name="ValueFlowAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>98,63</value>
-							</regnode>
-						</regnode>
-					</regnode>
-					<attribute kind="ComputationType" status="meta">
-						<value>Addition</value>
-					</attribute>
-					<attribute kind="DataType">
-						<value>Integer</value>
-					</attribute>
-					<attribute kind="DefaultValue">
-						<value>10</value>
-					</attribute>
-					<attribute kind="Description" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Dimension">
-						<value></value>
-					</attribute>
-					<attribute kind="Disable" status="meta">
-						<value>false</value>
-					</attribute>
-					<attribute kind="ID">
-						<value>id-5331c2b0-6412-445a-8fe6-e4a831b3b166</value>
-					</attribute>
-					<attribute kind="ManagedGUID" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Range" status="meta">
-						<value>-inf..inf</value>
-					</attribute>
-					<attribute kind="Type" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Value">
-						<value>12</value>
-					</attribute>
-				</reference>
-			</model>
-			<model id="id-0065-00000473" kind="Component" guid="{af1a95ce-924f-4e70-90b7-dbd142c7d055}" relid="0x4" childrelidcntr="0x1">
+			<model id="id-0065-00000473" kind="Component" guid="{0ce0190e-161d-4b2f-a990-bdac7e0280bc}" relid="0x4" childrelidcntr="0x1">
 				<name>ModelicaWithParam</name>
 				<attribute kind="AVMID">
 					<value>7cc2a416-0fa1-4d37-a96d-3784a3a67cc5</value>
@@ -22702,7 +22582,7 @@
 					<value></value>
 				</attribute>
 				<attribute kind="Path">
-					<value>.\components\l4dspsd4</value>
+					<value>.\components\dkrcotjc</value>
 				</attribute>
 				<attribute kind="Revision" status="meta">
 					<value></value>
@@ -22713,7 +22593,7 @@
 				<attribute kind="Version" status="meta">
 					<value></value>
 				</attribute>
-				<model id="id-0065-00000474" kind="ModelicaModel" role="ModelicaModel" guid="{219c03dd-7c03-4ec6-84fa-740eacebd43e}" relid="0x1" childrelidcntr="0x1">
+				<model id="id-0065-00000474" kind="ModelicaModel" role="ModelicaModel" guid="{93f4e327-4f1e-44ed-bcda-ee4085fe09c7}" relid="0x1" childrelidcntr="0x1">
 					<name>ModelicaModel</name>
 					<regnode name="PartRegs" status="undefined">
 						<value></value>
@@ -22742,7 +22622,7 @@
 					<attribute kind="Notes">
 						<value></value>
 					</attribute>
-					<reference id="id-0067-0000062a" kind="ModelicaParameter" role="ModelicaParameter" guid="{0093942f-8358-4b1c-a5dd-ed3654c35d37}" relid="0x1" referred="id-0065-00000307">
+					<reference id="id-0067-0000062a" kind="ModelicaParameter" role="ModelicaParameter" guid="{1aee5817-b32a-4228-993f-b58a1f5e00bd}" relid="0x1" referred="id-0066-000000f0">
 						<name>Param</name>
 						<regnode name="PartRegs" status="undefined">
 							<value></value>
@@ -22765,346 +22645,7 @@
 					</reference>
 				</model>
 			</model>
-			<model id="id-0065-00000471" kind="Component" guid="{cc367979-e9f5-424e-b2e8-5d2f1025a6ec}" relid="0x3" childrelidcntr="0x2">
-				<name>CADWithParam</name>
-				<attribute kind="AVMID">
-					<value>7db6bfb5-9b83-45d3-a544-b7d060c949b3</value>
-				</attribute>
-				<attribute kind="Cardinality" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Classifications">
-					<value></value>
-				</attribute>
-				<attribute kind="Description" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="ID" status="meta">
-					<value>0</value>
-				</attribute>
-				<attribute kind="InstanceGUID" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="ManagedGUID" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="NumAssociatedConfigs" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Path">
-					<value>.\components\5lhl0xy5</value>
-				</attribute>
-				<attribute kind="Revision" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Supercedes">
-					<value></value>
-				</attribute>
-				<attribute kind="Version" status="meta">
-					<value></value>
-				</attribute>
-				<atom id="id-0066-000000f4" kind="ReferenceCoordinateSystem" role="ReferenceCoordinateSystem" guid="{ef87820e-7bde-496c-b4c7-3df58df77b1b}" relid="0x2">
-					<name>AssemblyRoot</name>
-					<regnode name="PartRegs" status="undefined">
-						<value></value>
-						<regnode name="All" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>25,25</value>
-							</regnode>
-						</regnode>
-						<regnode name="SolidModeling" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>25,25</value>
-							</regnode>
-						</regnode>
-					</regnode>
-					<attribute kind="Definition" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="DefinitionNotes" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="ID" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="InstanceNotes" status="meta">
-						<value></value>
-					</attribute>
-				</atom>
-				<model id="id-0065-00000472" kind="CADModel" role="CADModel" guid="{fb66e917-47b6-49b1-b88a-429966370747}" relid="0x1" childrelidcntr="0x1">
-					<name>CADModel</name>
-					<regnode name="PartRegs" status="undefined">
-						<value></value>
-						<regnode name="All" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>275,150</value>
-							</regnode>
-						</regnode>
-						<regnode name="SolidModeling" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>275,150</value>
-							</regnode>
-						</regnode>
-					</regnode>
-					<attribute kind="Author">
-						<value></value>
-					</attribute>
-					<attribute kind="FileFormat">
-						<value>Creo</value>
-					</attribute>
-					<attribute kind="FilePathWithinResource" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="FileType" status="meta">
-						<value>Part</value>
-					</attribute>
-					<attribute kind="Notes">
-						<value></value>
-					</attribute>
-					<reference id="id-0067-00000629" kind="CADParameter" role="CADParameter" guid="{79112238-eb28-44b7-b4f5-224fe2d0c67e}" relid="0x1" referred="id-0065-00000307">
-						<name>Parameter</name>
-						<regnode name="PartRegs" status="undefined">
-							<value></value>
-							<regnode name="SolidModeling" status="undefined">
-								<value></value>
-								<regnode name="Position" isopaque="yes">
-									<value>25,25</value>
-								</regnode>
-							</regnode>
-						</regnode>
-						<attribute kind="CADParameterType">
-							<value>Float</value>
-						</attribute>
-						<attribute kind="DefaultValue" status="meta">
-							<value></value>
-						</attribute>
-						<attribute kind="ID" status="meta">
-							<value></value>
-						</attribute>
-						<attribute kind="ParameterName">
-							<value>Parameter</value>
-						</attribute>
-						<attribute kind="Range" status="meta">
-							<value>-inf..inf</value>
-						</attribute>
-						<attribute kind="Unit">
-							<value>m</value>
-						</attribute>
-						<attribute kind="Value">
-							<value>202</value>
-						</attribute>
-					</reference>
-				</model>
-			</model>
-			<model id="id-0065-00000470" kind="Component" guid="{dc4ff886-64e1-4434-aa5c-186845b340ab}" relid="0x2" childrelidcntr="0x2">
-				<name>AssignedUnit</name>
-				<attribute kind="AVMID">
-					<value>id204</value>
-				</attribute>
-				<attribute kind="Cardinality" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Classifications">
-					<value></value>
-				</attribute>
-				<attribute kind="Description" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="ID" status="meta">
-					<value>0</value>
-				</attribute>
-				<attribute kind="InstanceGUID" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="ManagedGUID" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="NumAssociatedConfigs" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Path">
-					<value>.\components\k40ia5pz</value>
-				</attribute>
-				<attribute kind="Revision" status="meta">
-					<value></value>
-				</attribute>
-				<attribute kind="Supercedes">
-					<value></value>
-				</attribute>
-				<attribute kind="Version" status="meta">
-					<value></value>
-				</attribute>
-				<reference id="id-0067-00000627" kind="Property" role="Property" guid="{198c9942-fab5-4c45-a0ff-821032c9f596}" relid="0x1" referred="id-0065-00000307">
-					<name>Property</name>
-					<regnode name="PartRegs" status="undefined">
-						<value></value>
-						<regnode name="All" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,210</value>
-							</regnode>
-						</regnode>
-						<regnode name="BehaviorModelsAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,210</value>
-							</regnode>
-						</regnode>
-						<regnode name="ManufacturingAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,210</value>
-							</regnode>
-						</regnode>
-						<regnode name="SimulinkAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,210</value>
-							</regnode>
-						</regnode>
-						<regnode name="SolidModeling" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,210</value>
-							</regnode>
-						</regnode>
-						<regnode name="SystemCAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,210</value>
-							</regnode>
-						</regnode>
-						<regnode name="ValueFlowAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,210</value>
-							</regnode>
-						</regnode>
-					</regnode>
-					<attribute kind="ComputationType" status="meta">
-						<value>Addition</value>
-					</attribute>
-					<attribute kind="DataType">
-						<value>String</value>
-					</attribute>
-					<attribute kind="DefaultValue" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Description" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Dimension">
-						<value></value>
-					</attribute>
-					<attribute kind="Disable" status="meta">
-						<value>false</value>
-					</attribute>
-					<attribute kind="ID">
-						<value>a1</value>
-					</attribute>
-					<attribute kind="IsProminent">
-						<value>false</value>
-					</attribute>
-					<attribute kind="ManagedGUID" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Tolerance" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Type" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Value">
-						<value>4</value>
-					</attribute>
-				</reference>
-				<reference id="id-0067-00000628" kind="Parameter" role="Parameter" guid="{92837346-f038-4c4f-9b0b-d947a3a94f4f}" relid="0x2" referred="id-0065-00000307">
-					<name>Parameter</name>
-					<regnode name="PartRegs" status="undefined">
-						<value></value>
-						<regnode name="All" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,119</value>
-							</regnode>
-						</regnode>
-						<regnode name="BehaviorModelsAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,119</value>
-							</regnode>
-						</regnode>
-						<regnode name="ManufacturingAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,119</value>
-							</regnode>
-						</regnode>
-						<regnode name="SimulinkAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,119</value>
-							</regnode>
-						</regnode>
-						<regnode name="SolidModeling" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,119</value>
-							</regnode>
-						</regnode>
-						<regnode name="SystemCAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,119</value>
-							</regnode>
-						</regnode>
-						<regnode name="ValueFlowAspect" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>308,119</value>
-							</regnode>
-						</regnode>
-					</regnode>
-					<attribute kind="ComputationType" status="meta">
-						<value>Addition</value>
-					</attribute>
-					<attribute kind="DataType">
-						<value>String</value>
-					</attribute>
-					<attribute kind="DefaultValue">
-						<value>3</value>
-					</attribute>
-					<attribute kind="Description" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Dimension">
-						<value></value>
-					</attribute>
-					<attribute kind="Disable" status="meta">
-						<value>false</value>
-					</attribute>
-					<attribute kind="ID">
-						<value>a4</value>
-					</attribute>
-					<attribute kind="ManagedGUID" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Range" status="meta">
-						<value>-inf..inf</value>
-					</attribute>
-					<attribute kind="Type" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Value">
-						<value>2</value>
-					</attribute>
-				</reference>
-			</model>
-			<model id="id-0065-00000476" kind="Component" guid="{de8db1d0-4a5c-4551-a2c3-3fecab5f3470}" relid="0x6" childrelidcntr="0x2">
+			<model id="id-0065-00000476" kind="Component" guid="{4e603ac5-386d-4ee0-8a6e-21b22f31e963}" relid="0x6" childrelidcntr="0x2">
 				<name>PropertyProminence</name>
 				<attribute kind="AVMID">
 					<value>81788fec-c0ca-4f86-8792-28963134f820</value>
@@ -23131,7 +22672,7 @@
 					<value></value>
 				</attribute>
 				<attribute kind="Path">
-					<value>.\components\ivse3dlf</value>
+					<value>.\components\v5qpb0ez</value>
 				</attribute>
 				<attribute kind="Revision" status="meta">
 					<value></value>
@@ -23142,7 +22683,7 @@
 				<attribute kind="Version" status="meta">
 					<value></value>
 				</attribute>
-				<reference id="id-0067-0000062c" kind="Property" role="Property" guid="{1f94051c-f820-4e80-8eb5-f0a3331ebc17}" relid="0x1">
+				<reference id="id-0067-0000062d" kind="Property" role="Property" guid="{6088af3c-5d9b-42bf-97f6-b5eef71ced30}" relid="0x2">
 					<name>Prominent</name>
 					<regnode name="PartRegs" status="undefined">
 						<value></value>
@@ -23226,7 +22767,7 @@
 						<value>x</value>
 					</attribute>
 				</reference>
-				<reference id="id-0067-0000062d" kind="Property" role="Property" guid="{c90b2b8b-76c1-4144-8e07-9cbf0d234e7e}" relid="0x2">
+				<reference id="id-0067-0000062c" kind="Property" role="Property" guid="{d7d0602a-a604-4290-94c6-461ad4c2bb8b}" relid="0x1">
 					<name>Not</name>
 					<regnode name="PartRegs" status="undefined">
 						<value></value>
@@ -23310,6 +22851,450 @@
 						<value>x</value>
 					</attribute>
 				</reference>
+			</model>
+			<model id="id-0065-00000470" kind="Component" guid="{693506cd-7c18-4e40-90ef-6df1671f1786}" relid="0x2" childrelidcntr="0x2">
+				<name>AssignedUnit</name>
+				<attribute kind="AVMID">
+					<value>id204</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="InstanceGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>.\components\34uwi3rf</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<reference id="id-0067-00000627" kind="Property" role="Property" guid="{841a3ed2-ab68-4a5e-8a2e-0d913c53154e}" relid="0x1" referred="id-0066-000000f0">
+					<name>Property</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,210</value>
+							</regnode>
+						</regnode>
+						<regnode name="BehaviorModelsAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,210</value>
+							</regnode>
+						</regnode>
+						<regnode name="ManufacturingAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,210</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,210</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,210</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,210</value>
+							</regnode>
+						</regnode>
+						<regnode name="ValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,210</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID">
+						<value>a1</value>
+					</attribute>
+					<attribute kind="IsProminent">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Tolerance" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>4</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000628" kind="Parameter" role="Parameter" guid="{d257bbc4-7f40-4380-ae6a-25ca5dbc3455}" relid="0x2" referred="id-0066-000000f0">
+					<name>Parameter</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,119</value>
+							</regnode>
+						</regnode>
+						<regnode name="BehaviorModelsAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,119</value>
+							</regnode>
+						</regnode>
+						<regnode name="ManufacturingAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,119</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,119</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,119</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,119</value>
+							</regnode>
+						</regnode>
+						<regnode name="ValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>308,119</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType">
+						<value>String</value>
+					</attribute>
+					<attribute kind="DefaultValue">
+						<value>3</value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID">
+						<value>a4</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Range" status="meta">
+						<value>-inf..inf</value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>2</value>
+					</attribute>
+				</reference>
+			</model>
+			<model id="id-0065-00000475" kind="Component" guid="{d991b08f-8e78-4e74-8dc7-21bf00a1447c}" relid="0x5" childrelidcntr="0x1">
+				<name>ParamAssignedVal</name>
+				<attribute kind="AVMID">
+					<value>011c52c6-063f-430a-9e2f-373d26795441</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="InstanceGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>.\components\o2spk0im</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<reference id="id-0067-0000062b" kind="Parameter" role="Parameter" guid="{1159f358-d4e3-47ac-87ff-0b5ade5a83f7}" relid="0x1">
+					<name>P1</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,63</value>
+							</regnode>
+						</regnode>
+						<regnode name="BehaviorModelsAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,63</value>
+							</regnode>
+						</regnode>
+						<regnode name="ManufacturingAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,63</value>
+							</regnode>
+						</regnode>
+						<regnode name="SimulinkAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,63</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,63</value>
+							</regnode>
+						</regnode>
+						<regnode name="SystemCAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,63</value>
+							</regnode>
+						</regnode>
+						<regnode name="ValueFlowAspect" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>98,63</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="ComputationType" status="meta">
+						<value>Addition</value>
+					</attribute>
+					<attribute kind="DataType">
+						<value>Integer</value>
+					</attribute>
+					<attribute kind="DefaultValue">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Description" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Dimension">
+						<value></value>
+					</attribute>
+					<attribute kind="Disable" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="ID">
+						<value>id-5331c2b0-6412-445a-8fe6-e4a831b3b166</value>
+					</attribute>
+					<attribute kind="ManagedGUID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Range" status="meta">
+						<value>-inf..inf</value>
+					</attribute>
+					<attribute kind="Type" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Value">
+						<value>12</value>
+					</attribute>
+				</reference>
+			</model>
+			<model id="id-0065-00000471" kind="Component" guid="{e8f3d11b-445a-4c71-8d2e-a86fae3683be}" relid="0x3" childrelidcntr="0x2">
+				<name>CADWithParam</name>
+				<attribute kind="AVMID">
+					<value>7db6bfb5-9b83-45d3-a544-b7d060c949b3</value>
+				</attribute>
+				<attribute kind="Cardinality" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Classifications">
+					<value></value>
+				</attribute>
+				<attribute kind="Description" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ID" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="InstanceGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="ManagedGUID" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="NumAssociatedConfigs" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Path">
+					<value>.\components\csievyi1</value>
+				</attribute>
+				<attribute kind="Revision" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Supercedes">
+					<value></value>
+				</attribute>
+				<attribute kind="Version" status="meta">
+					<value></value>
+				</attribute>
+				<atom id="id-0066-000000f4" kind="ReferenceCoordinateSystem" role="ReferenceCoordinateSystem" guid="{342d945c-45de-4436-a9d5-175c68a2c276}" relid="0x2">
+					<name>AssemblyRoot</name>
+					<attribute kind="Definition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="DefinitionNotes" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="ID" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="InstanceNotes" status="meta">
+						<value></value>
+					</attribute>
+				</atom>
+				<model id="id-0065-00000472" kind="CADModel" role="CADModel" guid="{368ad16f-ad46-4d2c-a099-fa15e3603a4d}" relid="0x1" childrelidcntr="0x1">
+					<name>CADModel</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="All" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>275,150</value>
+							</regnode>
+						</regnode>
+						<regnode name="SolidModeling" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>275,150</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Author">
+						<value></value>
+					</attribute>
+					<attribute kind="FileFormat">
+						<value>Creo</value>
+					</attribute>
+					<attribute kind="FilePathWithinResource" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="FileType" status="meta">
+						<value>Part</value>
+					</attribute>
+					<attribute kind="Notes">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000629" kind="CADParameter" role="CADParameter" guid="{a109f666-8693-4d4b-9ff3-02e393cb416b}" relid="0x1" referred="id-0066-000000f0">
+						<name>Parameter</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="SolidModeling" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>25,25</value>
+								</regnode>
+							</regnode>
+						</regnode>
+						<attribute kind="CADParameterType">
+							<value>Float</value>
+						</attribute>
+						<attribute kind="DefaultValue" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ID" status="meta">
+							<value></value>
+						</attribute>
+						<attribute kind="ParameterName">
+							<value>Parameter</value>
+						</attribute>
+						<attribute kind="Range" status="meta">
+							<value>-inf..inf</value>
+						</attribute>
+						<attribute kind="Unit">
+							<value>m</value>
+						</attribute>
+						<attribute kind="Value">
+							<value>202</value>
+						</attribute>
+					</reference>
+				</model>
 			</model>
 		</folder>
 		<folder id="id-006a-0000001e" relid="0x8" childrelidcntr="0x14" libref="PortLibrary CyPhy_PortLib" kind="RootFolder" guid="{e30db627-2b68-46a7-ad9b-fff19a95efda}">
@@ -24317,7 +24302,7 @@
 				</folder>
 			</folder>
 			<regnode name="modtime" isopaque="yes">
-				<value>132128699050000000</value>
+				<value>132131277500000000</value>
 			</regnode>
 		</folder>
 	</folder>
