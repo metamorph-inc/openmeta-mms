@@ -251,6 +251,21 @@ namespace JobManagerFramework
                 psi.WorkingDirectory = Path.Combine(job.WorkingDirectory);
                 //psi.EnvironmentVariables["PATH"] = META.VersionInfo.PythonVEnvPath + "\\Scripts;" + System.Environment.GetEnvironmentVariable("PATH");
 
+                // Normalize Python environment:  always clear PYTHONHOME, and clear PYTHONPATH unless OPENMETA_PYTHONPATH is set
+                // This avoids issues with testbenchexecutor, run_mdao, and other packages shipped with OpenMETA if something
+                // external to OpenMETA has set those environment variables (without having to take the nuclear option and pass
+                // -E to every Python instance we ever start)
+                psi.EnvironmentVariables["PYTHONHOME"] = null;
+
+                if (psi.EnvironmentVariables["OPENMETA_PYTHONPATH"] != null)
+                {
+                    psi.EnvironmentVariables["PYTHONPATH"] = psi.EnvironmentVariables["OPENMETA_PYTHONPATH"];
+                }
+                else
+                {
+                    psi.EnvironmentVariables["PYTHONPATH"] = null;
+                }
+
                 psi.RedirectStandardOutput = true;
                 psi.RedirectStandardError = true;
                 psi.RedirectStandardInput = true;
