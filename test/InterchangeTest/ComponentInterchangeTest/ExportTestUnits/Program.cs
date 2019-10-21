@@ -118,7 +118,7 @@ namespace ComponentExporterUnitTests
             process.StartInfo.Arguments += "\"components/Components/drawbar/drawbar.component.acm\"";
             process.StartInfo.Arguments += " InputModel.mga";
 
-            return Common.processCommon(process, true);
+            return Common.processCommon(process);
         }
 
         private int runCyPhyComponentImporterCLHull(string testName)
@@ -244,7 +244,7 @@ namespace ComponentExporterUnitTests
 
 
             process.StartInfo.Arguments += String.Format(" -e \"{0}\" -d \"{1}\" -m Component", exported, desired);
-            return Common.processCommon(process, true);
+            return Common.processCommon(process);
         }
 
         [Fact]

@@ -26,33 +26,33 @@ namespace ComponentExporterUnitTests
             return mgaPath;
         }
 
-        public static int processCommon(Process process, bool redirect = false)
+        public static int processCommon(Process process)
         {
             using (process)
             {
                 process.StartInfo.UseShellExecute = false;
-                if (redirect)
-                {
-                    process.StartInfo.RedirectStandardError = true;
-                    //process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.CreateNoWindow = true;
-                }
-
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.CreateNoWindow = true;
-                process.Start();
-                if (redirect)
-                {
-                    char[] buffer = new char[4096];
-                    while (true)
-                    {
-                        int read = process.StandardError.Read(buffer, 0, 4096);
-                        if (read == 0)
-                        {
-                            break;
-                        }
-                        Console.Error.Write(buffer, 0, read);
-                    }
 
+                process.OutputDataReceived += (o, e) =>
+                {
+                    if (e != null && e.Data != null)
+                    {
+                        Console.Out.WriteLine(e.Data);
+                    }
+                };
+                process.Start();
+                process.BeginOutputReadLine();
+                char[] buffer = new char[4096];
+                while (true)
+                {
+                    int read = process.StandardError.Read(buffer, 0, 4096);
+                    if (read == 0)
+                    {
+                        break;
+                    }
+                    Console.Error.Write(buffer, 0, read);
                 }
                 process.WaitForExit();
 
@@ -131,7 +131,7 @@ namespace ComponentExporterUnitTests
 
             process.StartInfo.Arguments += String.Format(" \"{0}\" \"{1}\"", mgaPath, testPath);
 
-            return Common.processCommon(process,true);
+            return Common.processCommon(process);
         }
 
         public static int RunXmlComparator(string exported, string desired)
