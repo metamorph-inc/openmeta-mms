@@ -13,7 +13,7 @@
     "libxmljs": "~0.8.1",
     "mkdirp": "~0.3.5",
     "optimist": "^0.6.1",
-    "request": "~2.33.0",
+    "request": "~2.88.0",
     "underscore": "~1.5.2",
     "xml2js": "~0.4.1"
   },
