@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "async": "~0.2.10",
-    "express": "3.4.0",
+    "express": "4.17.1",
     "gulp": "~3.5.2",
     "jade": "*",
     "libxmljs": "~0.8.1",
