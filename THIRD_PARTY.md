@@ -15,6 +15,7 @@ Primarily tools used at build/development time
   * `doxygen` - [Doxygen](http://www.stack.nl/~dimitri/doxygen/) - GPLv2
   * `Ionic.Zip` - [Ionic.Zip](https://dotnetzip.codeplex.com/) - Microsoft Public License
   * `json_spirit` - [JSON Spirit](https://www.codeproject.com/Articles/20027/JSON-Spirit-A-C-JSON-Parser-Generator-Implemented) - MIT License
+  * `Json.NET` - [Json.NET](https://www.newtonsoft.com/json) - MIT License
   * `libcmdline` - [Command Line Parser Library](https://commandline.codeplex.com/) - MIT License
   * `MetaGME2Doc` - *Unknown*
   * `muparser` - [muParser][muparser] - MIT License
@@ -27,10 +28,6 @@ Primarily tools used at build/development time
   * `xsd2code` - [Xsd2Code community edition](https://xsd2code.codeplex.com/) - MIT License
   * `xunit-1.9.1` - [xUnit.net](https://xunit.github.io/) - Apache License 2.0
   * `Microsoft.Office.Interop.Excel.dll`, `Office.dll` - Office Primary Interop Assemblies
-
-`meta\DesignDataPackage\tools` directory
----------------
-  * `jaxb-ri-2.2.6` - CDDL 1.1
 
 `bin` directory
 ---------------
@@ -58,8 +55,12 @@ Installer source files, plus merge modules and other resources for some dependen
 ---------------------
 
   * `DecoratorLib`
-  * `desert`
+  * `desert` - [DESERT](http://repo.isis.vanderbilt.edu/) - MIT License
   * `HCDDES`
+  
+`meta\DesignDataPackage\tools` directory
+---------------
+  * `jaxb-ri-2.2.6` - [Java Architecture for XML Binding](https://www.oracle.com/technical-resources/articles/javase/jaxb.html) CDDL 1.1
 
 NuGet dependencies
 ------------------
@@ -82,13 +83,14 @@ NuGet dependencies
 
 Bundled Python packages
 -----------------------
-* `BeautifulSoup.py`, `BeautifulSoupTests.py` - [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) - MIT License
-* `Cheetah` - [Cheetah Template](http://cheetahtemplate.org/) - BSD-like license
-* `OMPython`, `OMPythonIDL` - [OpenModelica-Python API Interface](https://github.com/OpenModelica/OMPython) - BSD, OSMC-PL 1.2, GPL (user's choice)
-* `PyQt4`, `sip.pyd` - [PyQt4](https://riverbankcomputing.com/software/pyqt/intro) - GPLv3
+
 * `_markerlib` - [Markerlib](https://bitbucket.org/dholth/markerlib/) - MIT License
+* `adodbapi` - [adodbapi](http://sourceforge.net/projects/adodbapi) - LGPLv2.1
 * `alabaster` - [Alabaster Sphinx theme](https://alabaster.readthedocs.io/) - BSD License
 * `babel` - [Babel](http://babel.pocoo.org/) - BSD License
+* `backports`, `backports.functools_lru_cache` - [backports.functools_lru_cache](https://github.com/jaraco/backports.functools_lru_cache) - MIT license
+* `BeautifulSoup.py`, `BeautifulSoupTests.py` - [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) - MIT License
+* `Cheetah` - [Cheetah Template](http://cheetahtemplate.org/) - BSD-like license
 * `colorama` - [Colorama](https://github.com/tartley/colorama) - BSD License
 * `cycler.py` - [Cycler](https://github.com/matplotlib/cycler) - BSD License
 * `dateutil` - [python-dateutil](https://dateutil.readthedocs.io/en/stable/) - BSD License
@@ -98,6 +100,7 @@ Bundled Python packages
 * `euclid.py` - [Euclid](https://code.google.com/archive/p/pyeuclid/) - LGPLv2.1+
 * `excel_wrapper` - [OpenMDAO Excel Wrapper](https://github.com/metamorph-inc/excel_wrapper) - GPLv2
 * `imagesize` - [imagesize](https://github.com/shibukawa/imagesize_py) - MIT License
+* `isodate` - [isodate](https://github.com/gweis/isodate/) - BSD License
 * `jinja2` - [Jinja](http://jinja.pocoo.org/) - BSD License
 * `lazy_object_proxy` - [lazy_object_proxy](https://github.com/ionelmc/python-lazy-object-proxy) - BSD license
 * `logilab` - [logilab-common](https://www.logilab.org/project/logilab-common) - LGPLv2.1
@@ -106,6 +109,7 @@ Bundled Python packages
 * `markupsafe` - [MarkupSafe](https://github.com/pallets/markupsafe) - BSD License
 * `matlab_proxy`, `matlab_wrapper`, `pylab.py` - [MATLAB OpenMDAO Component](https://github.com/metamorph-inc/matlab_wrapper) - MIT License
 * `matplotlib`, `mpl_toolkits` - [Matplotlib](http://matplotlib.org/) - [Matplotlib license](https://github.com/matplotlib/matplotlib/blob/master/LICENSE/LICENSE)
+* `mgardf` - [mgardf](https://github.com/metamorph-inc/mgardf) - MIT License
 * `mpmath` - [mpmath](http://mpmath.org/) - BSD License
 * `networkx` - [NetworkX](http://networkx.github.io/) - BSD License
 * `nose` - [Nose](https://nose.readthedocs.io/en/latest/) - LGPL
@@ -113,14 +117,17 @@ Bundled Python packages
 * `numpy`, `numpydoc` - [NumPy](http://www.numpy.org/) - BSD License
 * `openmdao` - [OpenMDAO](http://openmdao.org/) - Apache License, Version 2.0
 * `omniORB` - [omniORB](http://www.omniorb.net) - LGPL2.1 or later + explicit Python link permission
+* `OMPython`, `OMPythonIDL` - [OpenModelica-Python API Interface](https://github.com/OpenModelica/OMPython) - BSD, OSMC-PL 1.2, GPL (user's choice)
 * `pip` - [pip](https://pip.pypa.io/en/stable/) - MIT License
 * `pygame` - [PyGame](http://www.pygame.org/news) - LGPLv2.1
 * `pygments` - [Pygments](http://pygments.org/) - BSD License
 * `pyparsing.py` - [Pyparsing](http://pyparsing.wikispaces.com/) - MIT License
+* `PyQt4`, `sip.pyd` - [PyQt4](https://riverbankcomputing.com/software/pyqt/intro) - GPLv3
 * `pyqtgraph` [PyQtGraph](http://www.pyqtgraph.org/) - MIT License
 * `pytz` [pytz](http://pythonhosted.org/pytz/) - MIT License
-* `pywin32-219-py2.7-win32.egg`, `pywin32-220-py2.7-win32.egg` - [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) - Python Software Foundation License
+* `pywin32-219-py2.7-win32.egg`, `pywin32-220-py2.7-win32.egg`, `isapi` - [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) - Python Software Foundation License
 * `pyxb` - [PyXB](http://pyxb.sourceforge.net/) - Apache License, Version 2.0
+* `rdflib` - [RDFLib](https://github.com/RDFLib/rdflib) - BSD License
 * `requests` - [Requests](http://python-requests.org/) - Apache License, Version 2.0
 * `scipy` - [SciPy](https://www.scipy.org/) - BSD License
 * `setuptools`, `easy_install.py`, `pkg_resources` - [Setuptools](https://github.com/pypa/setuptools) - MIT license
