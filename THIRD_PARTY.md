@@ -107,17 +107,17 @@ Bundled Python packages
 * `lxml` - [lxml](http://lxml.de/) - BSD License
 * `markdown` - [Python-Markdown](https://pythonhosted.org/Markdown/) - BSD License
 * `markupsafe` - [MarkupSafe](https://github.com/pallets/markupsafe) - BSD License
-* `matlab_proxy`, `matlab_wrapper`, `pylab.py` - [MATLAB OpenMDAO Component](https://github.com/metamorph-inc/matlab_wrapper) - MIT License
-* `matplotlib`, `mpl_toolkits` - [Matplotlib](http://matplotlib.org/) - [Matplotlib license](https://github.com/matplotlib/matplotlib/blob/master/LICENSE/LICENSE)
+* `matlab_proxy`, `matlab_wrapper` - [MATLAB OpenMDAO Component](https://github.com/metamorph-inc/matlab_wrapper) - MIT License
+* `matplotlib`, `mpl_toolkits`, `pylab.py` - [Matplotlib](http://matplotlib.org/) - [Matplotlib license](https://github.com/matplotlib/matplotlib/blob/master/LICENSE/LICENSE)
 * `mgardf` - [mgardf](https://github.com/metamorph-inc/mgardf) - MIT License
 * `mpmath` - [mpmath](http://mpmath.org/) - BSD License
 * `networkx` - [NetworkX](http://networkx.github.io/) - BSD License
 * `nose` - [Nose](https://nose.readthedocs.io/en/latest/) - LGPL
 * `numexpr` - [NumExpr](https://github.com/pydata/numexpr) - MIT License
 * `numpy`, `numpydoc` - [NumPy](http://www.numpy.org/) - BSD License
-* `openmdao` - [OpenMDAO](http://openmdao.org/) - Apache License, Version 2.0
 * `omniORB` - [omniORB](http://www.omniorb.net) - LGPL2.1 or later + explicit Python link permission
 * `OMPython`, `OMPythonIDL` - [OpenModelica-Python API Interface](https://github.com/OpenModelica/OMPython) - BSD, OSMC-PL 1.2, GPL (user's choice)
+* `openmdao` - [OpenMDAO](http://openmdao.org/) - Apache License, Version 2.0
 * `pip` - [pip](https://pip.pypa.io/en/stable/) - MIT License
 * `pygame` - [PyGame](http://www.pygame.org/news) - LGPLv2.1
 * `pygments` - [Pygments](http://pygments.org/) - BSD License
@@ -125,7 +125,7 @@ Bundled Python packages
 * `PyQt4`, `sip.pyd` - [PyQt4](https://riverbankcomputing.com/software/pyqt/intro) - GPLv3
 * `pyqtgraph` [PyQtGraph](http://www.pyqtgraph.org/) - MIT License
 * `pytz` [pytz](http://pythonhosted.org/pytz/) - MIT License
-* `pywin32-219-py2.7-win32.egg`, `pywin32-220-py2.7-win32.egg`, `isapi` - [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) - Python Software Foundation License
+* `pywin32-219-py2.7-win32.egg`, `pywin32-220-py2.7-win32.egg`, `isapi`, `win32`, `win32com`, `win32context` - [Python for Windows Extensions](https://sourceforge.net/projects/pywin32/) - Python Software Foundation License
 * `pyxb` - [PyXB](http://pyxb.sourceforge.net/) - Apache License, Version 2.0
 * `rdflib` - [RDFLib](https://github.com/RDFLib/rdflib) - BSD License
 * `requests` - [Requests](http://python-requests.org/) - Apache License, Version 2.0
