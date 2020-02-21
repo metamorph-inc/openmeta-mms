@@ -132,7 +132,7 @@ namespace JobManagerFramework
 
         #endregion
 
-        #region Primitive Properties
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -149,7 +149,7 @@ namespace JobManagerFramework
             {
                 OnTitleChanging(value);
                 ReportPropertyChanging("Title");
-                _Title = StructuralObject.SetValidValue(value, false);
+                _Title = StructuralObject.SetValidValue(value, false, "Title");
                 ReportPropertyChanged("Title");
                 OnTitleChanged();
             }
@@ -173,7 +173,7 @@ namespace JobManagerFramework
             {
                 OnWorkingDirectoryChanging(value);
                 ReportPropertyChanging("WorkingDirectory");
-                _WorkingDirectory = StructuralObject.SetValidValue(value, false);
+                _WorkingDirectory = StructuralObject.SetValidValue(value, false, "WorkingDirectory");
                 ReportPropertyChanged("WorkingDirectory");
                 OnWorkingDirectoryChanged();
             }
@@ -197,7 +197,7 @@ namespace JobManagerFramework
             {
                 OnRunCommandChanging(value);
                 ReportPropertyChanging("RunCommand");
-                _RunCommand = StructuralObject.SetValidValue(value, false);
+                _RunCommand = StructuralObject.SetValidValue(value, false, "RunCommand");
                 ReportPropertyChanged("RunCommand");
                 OnRunCommandChanged();
             }
@@ -221,7 +221,7 @@ namespace JobManagerFramework
             {
                 OnStatusChanging(value);
                 ReportPropertyChanging("Status");
-                _Status = StructuralObject.SetValidValue(value, false);
+                _Status = StructuralObject.SetValidValue(value, false, "Status");
                 ReportPropertyChanged("Status");
                 OnStatusChanged();
             }
@@ -247,7 +247,7 @@ namespace JobManagerFramework
                 {
                     OnJobNameChanging(value);
                     ReportPropertyChanging("JobName");
-                    _JobName = StructuralObject.SetValidValue(value, false);
+                    _JobName = StructuralObject.SetValidValue(value, false, "JobName");
                     ReportPropertyChanged("JobName");
                     OnJobNameChanged();
                 }
@@ -272,7 +272,7 @@ namespace JobManagerFramework
             {
                 OnVFUrlChanging(value);
                 ReportPropertyChanging("VFUrl");
-                _VFUrl = StructuralObject.SetValidValue(value, true);
+                _VFUrl = StructuralObject.SetValidValue(value, true, "VFUrl");
                 ReportPropertyChanged("VFUrl");
                 OnVFUrlChanged();
             }
@@ -283,10 +283,8 @@ namespace JobManagerFramework
 
         #endregion
 
-    
     }
 
     #endregion
 
-    
 }
