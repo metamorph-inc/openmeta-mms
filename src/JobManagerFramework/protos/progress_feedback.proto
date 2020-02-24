@@ -1,0 +1,20 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "JobManagerFramework.ProgressFeedback.Gen";
+
+package progress_feedback;
+
+service ProgressFeedback {
+	rpc UpdateProgress(ProgressUpdate) returns (ProgressResult) {}
+}
+
+message ProgressUpdate {
+	string job_id = 1;
+	string message = 2;
+
+	sint32 current_progress = 3;
+	sint32 total_progress = 4; // If set to zero or below, total progress should be indicated as indeterminate
+}
+
+message ProgressResult {
+}

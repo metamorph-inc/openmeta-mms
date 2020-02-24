@@ -40,6 +40,10 @@ namespace JobManagerFramework
 
             this.RerunEnabled = true;
 
+            this.ProgressMessage = "";
+            this.ProgressCurrent = 0;
+            this.ProgressTotal = 0;
+
             this.Stat = new Statistics()
             {
                 Id = this.Id,
@@ -92,6 +96,18 @@ namespace JobManagerFramework
                     Trace.TraceWarning(exc.ToString());
                 }
             }
+        }
+
+        public string ProgressMessage { get; private set; }
+        public int ProgressCurrent { get; private set; }
+        public int ProgressTotal { get; private set; }
+
+        public void UpdateProgress(string message, int currentProgress, int totalProgress)
+        {
+            //TODO: Fire off event to indicate that progress has been updated
+            ProgressMessage = message;
+            ProgressCurrent = currentProgress;
+            ProgressTotal = totalProgress;
         }
 
         private void UpdateStatistics(StatusEnum newStatus)

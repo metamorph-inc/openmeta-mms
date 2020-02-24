@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Management;
 using JobManager;
+using JobManagerFramework.ProgressFeedback;
 
 namespace JobManagerFramework
 {
@@ -33,6 +34,8 @@ namespace JobManagerFramework
         CancellationTokenSource ts { get; set; }
         CancellationToken ct { get; set; }
 
+        private ProgressFeedbackServerManager ProgressFeedbackManager { get; }
+
         public static int GetNumberOfPhysicalCores()
         {
             int coreCount = 0;
@@ -49,6 +52,9 @@ namespace JobManagerFramework
          */
         public LocalPool(int initialThreadCount = 0)
         {
+            ProgressFeedbackManager = new ProgressFeedbackServerManager(updateProgressFeedback);
+            ProgressFeedbackManager.Start();
+
             ts = new CancellationTokenSource();
             ct = ts.Token;
 
@@ -114,6 +120,12 @@ namespace JobManagerFramework
             }
         }
 
+        private void updateProgressFeedback(string jobId, string message, int currentProgress,
+            int totalProgress)
+        {
+            Console.Write("{0} {1} {2} {3}", jobId, message, currentProgress, totalProgress);
+        }
+
         private bool disposed = false;
         /// <summary>
         /// Kills all currently running/pending tasks.
@@ -143,6 +155,8 @@ namespace JobManagerFramework
                     }
                     ShutdownPool.Dispose();
                     startInitialThreads.Dispose();
+
+                    ProgressFeedbackManager.Dispose();
                 }
             }
         }
@@ -250,6 +264,9 @@ namespace JobManagerFramework
                 psi.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
                 psi.WorkingDirectory = Path.Combine(job.WorkingDirectory);
                 //psi.EnvironmentVariables["PATH"] = META.VersionInfo.PythonVEnvPath + "\\Scripts;" + System.Environment.GetEnvironmentVariable("PATH");
+
+                psi.EnvironmentVariables["OPENMETA_PROGRESS_FEEDBACK_ADDR"] = ProgressFeedbackManager.ServerAddress;
+                psi.EnvironmentVariables["OPENMETA_PROGRESS_FEEDBACK_ID"] = Guid.NewGuid().ToString(); // TODO: Store this somewhere
 
                 psi.RedirectStandardOutput = true;
                 psi.RedirectStandardError = true;
