@@ -34,6 +34,9 @@ namespace JobManagerFramework.ProgressFeedback
         {
             ServerStarted = true;
             GrpcServer.Start();
+
+            // Can't log before the job manager starts (Master Interpreter looks for the first newline to decide when it's safe to send commands)
+            //Console.WriteLine("Listening for progress feedback on address {0}", ServerAddress);
         }
 
         public void Stop()

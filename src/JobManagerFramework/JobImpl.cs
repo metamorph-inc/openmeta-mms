@@ -98,16 +98,32 @@ namespace JobManagerFramework
             }
         }
 
+        public delegate void JobProgressChangedHandler(JobImpl job, string progressMessage, int progressCurrent,
+            int progressTotal);
+
+        public event JobProgressChangedHandler JobProgressChanged;
+
         public string ProgressMessage { get; private set; }
         public int ProgressCurrent { get; private set; }
         public int ProgressTotal { get; private set; }
 
         public void UpdateProgress(string message, int currentProgress, int totalProgress)
         {
-            //TODO: Fire off event to indicate that progress has been updated
+            
             ProgressMessage = message;
-            ProgressCurrent = currentProgress;
-            ProgressTotal = totalProgress;
+
+            //Allow update of message without update of progress by sending -1 as values here
+            if (currentProgress != -1)
+            {
+                ProgressCurrent = currentProgress;
+            }
+
+            if (totalProgress != -1)
+            {
+                ProgressTotal = totalProgress;
+            }
+
+            JobProgressChanged?.Invoke(this, ProgressMessage, ProgressCurrent, ProgressTotal);
         }
 
         private void UpdateStatistics(StatusEnum newStatus)

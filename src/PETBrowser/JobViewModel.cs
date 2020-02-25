@@ -16,6 +16,50 @@ namespace PETBrowser
         public string WorkingDirectory { get { return Job.WorkingDirectory; } }
         public string RunCommand { get { return Job.RunCommand; } }
         public Job.StatusEnum Status { get { return Job.Status; } }
+        public string ProgressMessage
+        {
+            get { return ((JobImpl) Job).ProgressMessage; }
+        }
+
+        public int ProgressCurrent
+        {
+            get
+            {
+                if (!ProgressIsIndeterminate)
+                {
+                    return ((JobImpl)Job).ProgressCurrent;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+        public int ProgressTotal
+        {
+            get
+            {
+                if (!ProgressIsIndeterminate)
+                {
+                    return ((JobImpl)Job).ProgressTotal;
+                }
+                else
+                {
+                    return 100;
+                }
+            }
+        }
+
+        public bool ProgressIsIndeterminate
+        {
+            get
+            {
+                    return ((JobImpl)Job).ProgressTotal <= 0;
+            }
+        }
+
+        public string ProgressMessageHistory { get; private set; }
 
         public bool AllowReRun
         {
@@ -28,6 +72,31 @@ namespace PETBrowser
         {
             Job = job;
             ((JobImpl) job).JobStatusChanged += JobStatusChanged;
+            ((JobImpl) job).JobProgressChanged += OnJobProgressChanged;
+        }
+
+        private void OnJobProgressChanged(JobImpl job, string progressMessage, int progressCurrent, int progressTotal)
+        {
+            if (!string.IsNullOrEmpty(ProgressMessageHistory))
+            {
+                ProgressMessageHistory += "\n";
+            }
+
+            if (!ProgressIsIndeterminate)
+            {
+                ProgressMessageHistory += $"({ProgressCurrent}/{ProgressTotal}) {ProgressMessage}";
+            }
+            else
+            {
+                ProgressMessageHistory += $"({ProgressCurrent}) {ProgressMessage}";
+            }
+            
+
+            PropertyChanged.Notify(() => ProgressMessage);
+            PropertyChanged.Notify(() => ProgressCurrent);
+            PropertyChanged.Notify(() => ProgressTotal);
+            PropertyChanged.Notify(() => ProgressIsIndeterminate);
+            PropertyChanged.Notify(() => ProgressMessageHistory);
         }
 
         private void JobStatusChanged(JobImpl job, Job.StatusEnum status)
@@ -36,6 +105,11 @@ namespace PETBrowser
             PropertyChanged.Notify(() => Status);
             PropertyChanged.Notify(() => AllowReRun);
             PropertyChanged.Notify(() => AllowAbort);
+
+            PropertyChanged.Notify(() => ProgressMessage);
+            PropertyChanged.Notify(() => ProgressCurrent);
+            PropertyChanged.Notify(() => ProgressTotal);
+            PropertyChanged.Notify(() => ProgressIsIndeterminate);
         }
     }
 }

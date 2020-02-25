@@ -47,4 +47,71 @@
     <SolidColorBrush x:Key="RunningBrush" Color="{StaticResource RunningColor}" />
     <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
     <SolidColorBrush x:Key="FailedBrush" Color="{StaticResource FailedColor}" />
+
+    <Style x:Key="JobsGridProgressBar" TargetType="{x:Type ProgressBar}">
+        <Setter Property="Foreground" Value="#44000000"/>
+        <Setter Property="Background" Value="transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <Grid Name="TemplateRoot" SnapsToDevicePixels="true">
+                        <Rectangle Fill="{TemplateBinding Background}"/>
+                        <Rectangle Name="PART_Track" Margin="0"/>
+                        <Decorator x:Name="PART_Indicator" HorizontalAlignment="Left" Margin="0">
+                            <Grid Name="Foreground">
+                                <Rectangle Fill="{TemplateBinding Foreground}" Name="Indicator" />
+                                <Grid x:Name="Animation" ClipToBounds="true" Visibility="Hidden">
+                                    <Rectangle Fill="{TemplateBinding Foreground}" Name="HiderPre" Margin="0,0,50,0">
+                                        <Rectangle.RenderTransform>
+                                            <ScaleTransform x:Name="HiderPreTransform" ScaleX="0"/>
+                                        </Rectangle.RenderTransform>
+                                    </Rectangle>
+                                    <Rectangle Fill="{TemplateBinding Foreground}" Name="HiderPost" RenderTransformOrigin="1, 0" Margin="50,0,0,0">
+                                        <Rectangle.RenderTransform>
+                                            <ScaleTransform x:Name="HiderPostTransform" ScaleX="1"  />
+                                        </Rectangle.RenderTransform>
+                                    </Rectangle>
+                                </Grid>
+                                <Grid Name="Overlay">
+                                </Grid>
+                            </Grid>
+                        </Decorator>
+
+                        <Border BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsIndeterminate" Value="true">
+                            <Setter TargetName="Animation" Property="Visibility" Value="Visible" />
+
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                                        Storyboard.TargetName="HiderPreTransform"
+                                        Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                        To="1"
+                                        Duration="0:00:4" AutoReverse="True"/>
+                                        <DoubleAnimation
+                                        Storyboard.TargetName="HiderPostTransform"
+                                        Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                        To="0"
+                                        Duration="0:00:4" AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="Gray" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
 </ResourceDictionary>

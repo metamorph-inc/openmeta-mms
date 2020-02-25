@@ -52,6 +52,7 @@ namespace JobManagerFramework
          */
         public LocalPool(int initialThreadCount = 0)
         {
+            progressFeedbackJobs = new ConcurrentDictionary<string, Job>();
             ProgressFeedbackManager = new ProgressFeedbackServerManager(updateProgressFeedback);
             ProgressFeedbackManager.Start();
 
@@ -120,10 +121,32 @@ namespace JobManagerFramework
             }
         }
 
+        private ConcurrentDictionary<string, Job> progressFeedbackJobs;
+        private void registerJobForProgressFeedback(string jobGuid, Job job)
+        {
+            progressFeedbackJobs[jobGuid] = job;
+        }
+
+        private void unregisterJobForProgressFeedback(string jobGuid)
+        {
+            Job ignored;
+            progressFeedbackJobs.TryRemove(jobGuid, out ignored);
+        }
+
         private void updateProgressFeedback(string jobId, string message, int currentProgress,
             int totalProgress)
         {
-            Console.Write("{0} {1} {2} {3}", jobId, message, currentProgress, totalProgress);
+            Job jobToUpdate;
+
+            bool jobPresent = progressFeedbackJobs.TryGetValue(jobId, out jobToUpdate);
+
+            if (jobPresent)
+            {
+                if (jobToUpdate is JobImpl)
+                {
+                    ((JobImpl) jobToUpdate).UpdateProgress(message, currentProgress, totalProgress);
+                }
+            }
         }
 
         private bool disposed = false;
@@ -266,7 +289,10 @@ namespace JobManagerFramework
                 //psi.EnvironmentVariables["PATH"] = META.VersionInfo.PythonVEnvPath + "\\Scripts;" + System.Environment.GetEnvironmentVariable("PATH");
 
                 psi.EnvironmentVariables["OPENMETA_PROGRESS_FEEDBACK_ADDR"] = ProgressFeedbackManager.ServerAddress;
-                psi.EnvironmentVariables["OPENMETA_PROGRESS_FEEDBACK_ID"] = Guid.NewGuid().ToString(); // TODO: Store this somewhere
+                string jobGuid = Guid.NewGuid().ToString();
+                psi.EnvironmentVariables["OPENMETA_PROGRESS_FEEDBACK_ID"] = jobGuid; // TODO: Store this somewhere
+
+                registerJobForProgressFeedback(jobGuid, job);
 
                 psi.RedirectStandardOutput = true;
                 psi.RedirectStandardError = true;
@@ -412,6 +438,7 @@ namespace JobManagerFramework
                     }
                     finally
                     {
+                        unregisterJobForProgressFeedback(jobGuid);
                         RemoveAndCloseAbortJobEvent(job);
                     }
                 }

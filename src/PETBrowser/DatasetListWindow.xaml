@@ -406,7 +406,74 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Title}" ClipboardContentBinding="{x:Null}" Header="Title" IsReadOnly="True" Width="200"/>
                         <DataGridTextColumn Binding="{Binding TestBenchName}" ClipboardContentBinding="{x:Null}" Header="Test Bench Name" IsReadOnly="True" Width="200"/>
-                        <DataGridTextColumn Binding="{Binding WorkingDirectory}" ClipboardContentBinding="{x:Null}" Header="Working Directory" IsReadOnly="True" Width="200"/>
+                            <DataGridTextColumn Binding="{Binding WorkingDirectory}" ClipboardContentBinding="{x:Null}" Header="Working Directory" IsReadOnly="True" Width="200"/>
+                            <DataGridTemplateColumn Header="Progress" Width="200">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0">
+                                        <ProgressBar
+                                            Margin="0"
+                                            Minimum="0"
+                                            Maximum="{Binding Path=ProgressTotal, Mode=OneWay}"
+                                            Value="{Binding Path=ProgressCurrent, Mode=OneWay}"
+                                            Style="{StaticResource JobsGridProgressBar}" />
+                                        <DockPanel Margin="0">
+                                            <ToggleButton Name="DetailButton" BorderBrush="{x:Null}"
+                                                          Background="Transparent"
+                                                          DockPanel.Dock="Right" Padding="6,1" IsTabStop="False">
+                                                <Path Margin="0,0,0,0" VerticalAlignment="Center" Width="6"
+                                                      Stretch="Uniform" HorizontalAlignment="Right"
+                                                      Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z ">
+                                                    <Path.Style>
+                                                        <Style TargetType="Path">
+                                                            <Style.Triggers>
+                                                                <DataTrigger
+                                                                    Binding="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=IsMouseOver}"
+                                                                    Value="True">
+                                                                    <Setter Property="Fill"
+                                                                            Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                                                                </DataTrigger>
+                                                                <DataTrigger
+                                                                    Binding="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=IsMouseOver}"
+                                                                    Value="False">
+                                                                    <Setter Property="Fill"
+                                                                            Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=DataGridCell}}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Path.Style>
+                                                </Path>
+                                            </ToggleButton>
+                                            <Popup IsOpen="{Binding IsChecked, ElementName=DetailButton}" Width="300" Height="150" DockPanel.Dock="Right">
+                                                <Border Background="LightYellow">
+                                                        <TextBox x:Name="StatusHistoryTextBox"
+                                                            Text="{Binding ProgressMessageHistory, Mode=OneWay}"
+                                                            Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                                            IsReadOnly="True"
+                                                            TextWrapping="Wrap"
+                                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                            ScrollViewer.VerticalScrollBarVisibility="Auto" TextChanged="StatusHistoryTextBox_TextChanged" />
+                                                </Border>
+                                            </Popup>
+                                            <TextBlock
+                                                Text="{Binding ProgressMessage}"
+                                                HorizontalAlignment="Left" />
+                                        </DockPanel>
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger 
+                                            Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridCell}}" 
+                                            Value="True">
+                                            <Setter 
+                                                TargetName="DetailButton"
+                                                Property="Foreground"
+                                                Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=DataGridCell}}" 
+                                            />
+                                        </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status" IsReadOnly="True" Width="80"/>
                         <DataGridTextColumn Binding="{Binding RunCommand}" ClipboardContentBinding="{x:Null}" Header="Run Command" IsReadOnly="True" Width="*"/>
                     </DataGrid.Columns>

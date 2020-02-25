@@ -902,6 +902,18 @@ namespace PETBrowser
         {
             this.ViewModel.JobStore.SwitchToLocalExecution();
         }
+
+        private void StatusHistoryTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ((TextBox) sender).ScrollToEnd();
+        }
+
+        private void DetailButton_MouseClick(object sender, MouseButtonEventArgs e)
+        {
+            // Don't pass through double-click events (without this, they get sent to the DataGrid and it
+            // opens the results folder in Explorer)
+            e.Handled = true;
+        }
     }
 
     public class DatasetListWindowViewModel : INotifyPropertyChanged
