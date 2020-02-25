@@ -18,6 +18,27 @@
   <Component Directory="INSTALLDIR_BIN">
     <File Source="..\src\PETBrowser\bin\Release\Ookii.Dialogs.Wpf.dll" />
   </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\Google.Protobuf.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\grpc_csharp_ext.x86.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\Grpc.Core.Api.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\Grpc.Core.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\System.Buffers.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\System.Memory.dll" />
+  </Component>
+  <Component Directory="INSTALLDIR_BIN">
+    <File Source="..\src\PETBrowser\bin\Release\System.Runtime.CompilerServices.Unsafe.dll" />
+  </Component>
   <Component Directory="INSTALLDIR" Win64='no'>
     <RegistryKey Root='HKLM' Key='Software\META\PETBrowser\PETTools\ExportCSV'>
       <RegistryValue Type='string' Value='Export CSV'/>
