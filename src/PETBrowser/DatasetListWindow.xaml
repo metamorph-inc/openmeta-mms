@@ -446,7 +446,7 @@
                                                         </Path.Style>
                                                     </Path>
                                                 </ToggleButton>
-                                                <Popup IsOpen="{Binding IsChecked, ElementName=DetailButton}" Width="300" Height="150" DockPanel.Dock="Right">
+                                                <Popup IsOpen="{Binding IsChecked, ElementName=DetailButton}" Width="300" Height="150" DockPanel.Dock="Right" StaysOpen="False" AllowsTransparency="True">
                                                     <Border Background="LightYellow">
                                                         <TextBox x:Name="StatusHistoryTextBox"
                                                             Text="{Binding ProgressMessageHistory, Mode=OneWay}"
