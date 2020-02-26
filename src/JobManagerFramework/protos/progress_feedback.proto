@@ -4,16 +4,36 @@ option csharp_namespace = "JobManagerFramework.ProgressFeedback.Gen";
 
 package progress_feedback;
 
+// Results browser progress feedback management service
 service ProgressFeedback {
+	// Updates the progress of the specified job.
 	rpc UpdateProgress(ProgressUpdate) returns (ProgressResult) {}
 }
 
 message ProgressUpdate {
+	// ID of the job whose progress should be updated.  This job ID
+	// is provided to jobs in the OPENMETA_PROGRESS_FEEDBACK_ID environment
+	// variable.
 	string job_id = 1;
+	// Progress message to be displayed in the Job Manager UI.  This
+	// may be a simple message such as "3/10 completed", or may provide
+	// more a more detailed indication of progress (e.g. "CAD assembly in
+	// progress...").  In the Results Browser, this will be overlaid on top
+	// of the job's progress bar, and a complete history of messages sent
+	// is accessible via a popup window.
 	string message = 2;
 
+	// Current progress to be displayed in the Job Manager UI.  Send -1
+	// to indicate that the current progress should not be updated (for
+	// example, if sending status messages from a subprocess, to avoid
+	// overwriting the current progress values sent from a top-level PET).
 	sint32 current_progress = 3;
-	sint32 total_progress = 4; // If set to zero or below, total progress should be indicated as indeterminate
+	// Total progress to be displayed in the Job Manager UI.  Send 0 to
+	// indicate that progress should be displayed as indeterminate; send
+	// -1 to indicate that the total progress should not be updated (for
+	// example, if sending status messages from a subprocess, to avoid
+	// overwriting the total progress values sent from a top-level PET).
+	sint32 total_progress = 4;
 }
 
 message ProgressResult {

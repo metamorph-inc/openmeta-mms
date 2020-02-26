@@ -68,6 +68,8 @@ NuGet dependencies
   * `boost` - [Boost C++ Libraries](http://www.boost.org/) - Boost Software License
   * `CsvHelper` - [CSVHelper](https://joshclose.github.io/CsvHelper/) - Microsoft Public License *or* Apache License, Version 2.0
   * `gecode` - [Gecode](http://www.gecode.org/) - MIT License
+  * `Google.Protobuf` - [C# runtime library for Protocol Buffers][Protobuf] - BSD License
+  * `Grpc`, `Grpc.Core`, `Grpc.Core.Api`, `Grpc.Tools` - [Grpc](https://grpc.io/) - Apache License, Version 2.0
   * `jsoncpp` - [JsonCpp](https://github.com/open-source-parsers/jsoncpp) - Public Domain *or* MIT License
   * `log4cpp` - [Log for C++](http://log4cpp.sourceforge.net/) - LGPLv2.1+
   * `muparser` - [muParser][muparser] - MIT License
@@ -76,6 +78,9 @@ NuGet dependencies
   * `protobuf-net` - [Protocol Buffers for .NET][Protobuf.NET] - Apache License, Version 2.0
   * `protobuf-vc110` - [Protocol Buffers][Protobuf] - BSD License
   * `Selenium.Support`, `Selenium.WebDriver`, `Selenium.WebDriver.ChromeDriver` - [Selenium](http://www.seleniumhq.org/) - Apache License, Version 2.0
+  * `System.Buffers` - [System.Buffers](https://www.nuget.org/packages/System.Buffers/) - MIT License
+  * `System.Memory` - [System.Memory](https://www.nuget.org/packages/System.Memory/) - MIT License
+  * `System.Runtime.CompilerServices.Unsafe` - [System.Runtime.CompilerServices.Unsafe](https://www.nuget.org/packages/System.Runtime.CompilerServices.Unsafe/) - MIT License
 
 [muparser]: http://beltoforion.de/article.php?a=muparser
 [Protobuf]: https://developers.google.com/protocol-buffers/
@@ -92,13 +97,17 @@ Bundled Python packages
 * `BeautifulSoup.py`, `BeautifulSoupTests.py` - [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) - MIT License
 * `Cheetah` - [Cheetah Template](http://cheetahtemplate.org/) - BSD-like license
 * `colorama` - [Colorama](https://github.com/tartley/colorama) - BSD License
+* `concurrent.futures` - [futures](https://github.com/agronholm/pythonfutures) - Python Software Foundation License
 * `cycler.py` - [Cycler](https://github.com/matplotlib/cycler) - BSD License
 * `dateutil` - [python-dateutil](https://dateutil.readthedocs.io/en/stable/) - BSD License
 * `decorator.py` - [decorator](https://github.com/micheles/decorator) - BSD License
 * `docutils` - [docutils - Python Documentation Utilities](http://docutils.sourceforge.net/) - Mostly public domain, with some components licensed under BSD License or GPLv3
 * `elementtree-1.2.7_20070827_preview-py2.7-win32.egg` - [ElementTree](http://effbot.org/zone/element-index.htm) - Python License (MIT-style)
+* `enum` - [enum34](https://bitbucket.org/stoneleaf/enum34/src/default/) - BSD License
 * `euclid.py` - [Euclid](https://code.google.com/archive/p/pyeuclid/) - LGPLv2.1+
 * `excel_wrapper` - [OpenMDAO Excel Wrapper](https://github.com/metamorph-inc/excel_wrapper) - GPLv2
+* `google.protobuf` - [Google Protocol Buffers](https://developers.google.com/protocol-buffers/) - BSD License
+* `grpc` - [Grpc](https://grpc.io/) - Apache License, Version 2.0
 * `imagesize` - [imagesize](https://github.com/shibukawa/imagesize_py) - MIT License
 * `isodate` - [isodate](https://github.com/gweis/isodate/) - BSD License
 * `jinja2` - [Jinja](http://jinja.pocoo.org/) - BSD License
