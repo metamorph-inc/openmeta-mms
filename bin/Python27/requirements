@@ -72,7 +72,6 @@ requests
 matlab_wrapper
 matlab_proxy
 
-<<<<<<< HEAD
 pygame==1.9.2b1 # chipfit_display
 BeautifulSoup==3.2.1 # get_bom_with_eagle_xref
 pyqtgraph==0.9.10 # tonka/src/spice_viewer
@@ -82,8 +81,6 @@ ViTables==2.1
 nose==1.3.7
 
 mgardf==0.2.4  # used by user scripts
-=======
 # For run_mdao status updates
 grpcio==1.27.2
 protobuf==3.11.3
->>>>>>> meta-core/pet-progress-OPENMETA-714
