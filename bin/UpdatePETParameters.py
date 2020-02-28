@@ -4,6 +4,7 @@ import os
 import os.path
 import json
 import collections
+import copy
 # sys.path.append(r"C:\Program Files\ISIS\Udm\bin")
 # if os.environ.has_key("UDM_PATH"):
 #     sys.path.append(os.path.join(os.environ["UDM_PATH"], "bin"))
@@ -71,6 +72,7 @@ def invoke(focusObject, rootObject, componentParameters, udmProject, **kwargs):
             raise CyPhyPython.ErrorMessageException("Produce the file results/pet_config_refined.json first.")
         raise
 
+    driver_details = copy.deepcopy(args["drivers"].values()[0]["details"])
     for varName, var in args["drivers"].values()[0]["designVariables"].iteritems():
         if var.get("type") == "enum":
             var_dict[varName] = ";".join(map(json.dumps, var["items"]))
@@ -117,6 +119,9 @@ def invoke(focusObject, rootObject, componentParameters, udmProject, **kwargs):
     gmeCopy.Name = new_name.split("/")[-1]
     focusObject = udmProject.convert_gme2udm(gmeCopy)
     parameterStudy = [c for c in focusObject.children() if c.type.name == "ParameterStudy"][0]
+    parameterStudy.Code = driver_details["Code"]
+    parameterStudy.SurrogateType = driver_details["SurrogateType"]
+    parameterStudy.DOEType = driver_details["DOEType"]
     designVariables = [c for c in parameterStudy.children() if c.type.name == "DesignVariable"]
     for desVar in designVariables:
         if desVar.name not in var_dict:
