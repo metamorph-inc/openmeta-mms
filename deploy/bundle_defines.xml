@@ -7,5 +7,5 @@
 <?define UpdateURL="https://github.com/metamorph-inc/meta-core/" ?>
 <?define InstallerVersion="500" ?>
 <?define VcRedistVersion="v14.24.28127" ?>
-<?define GMEVersion="18.10.22" ?>
+<?define GMEVersion="20.2.12" ?>
 </Include>
