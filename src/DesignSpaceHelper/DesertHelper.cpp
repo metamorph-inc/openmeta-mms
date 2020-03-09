@@ -538,7 +538,7 @@ bool DesertHelper::getConstraint(int idx, std::string &name, std::string &contex
 		else if(cbasetype=="VisualConstraint" && !isnew)
 			ctype = "Visual Constraint";
 		else if(cbasetype=="VisualConstraint" && isnew)
-			ctype = "Visual Constraint(from selelctor)";
+			ctype = "Visual Constraint (from selector)";
 		else if(cbasetype=="PropertyConstraint")
 			ctype = "Property Constraint";
 
