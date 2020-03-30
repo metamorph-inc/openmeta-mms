@@ -15,7 +15,6 @@
 #include "StatusDialog.h"
 #include "DesertStatusDlg.h"
 
-#include <direct.h>
 #include "UdmConsole.h"
 #include "CyPhyUtil.h"
 #include "time.h"
@@ -26,7 +25,12 @@ using namespace DesertIface;
 template <typename T>
 struct UdmNameSort {
 	bool operator()(const T& o1, const T& o2) const {
-		return static_cast<std::string>(o1.name()) < static_cast<std::string>(o2.name());
+		auto str1 = static_cast<std::string>(o1.name());
+		auto str2 = static_cast<std::string>(o2.name());
+		if (str1 == str2) {
+			return o1 < o2;
+		}
+		return str1 < str2;
 	}
 };
 
@@ -292,15 +296,29 @@ bool DesertHelper::runCyPhy2Desert()
 {
 	DesertIface::DesertSystem dummy;
 	long configCount = -1;
-	CDesertStatusDlg s_dlg(dummy, "", des_map, inv_des_map, NULL, showGui == false, configCount);
+	CWnd* parent = nullptr;
+	if (this->parentWnd) {
+		parent = CWnd::FromHandle(this->parentWnd);
+	}
+	CDesertStatusDlg s_dlg(dummy, "", des_map, inv_des_map, parent, showGui == false, configCount);
 	m_realConfigCount = configCount;
 
+	struct WindowEnabler {
+		HWND hwnd;
+		~WindowEnabler() {
+			if (hwnd) {
+				::EnableWindow(hwnd, TRUE);
+			}
+		}
+	} windowEnabler = { 0 };
 	if (showGui)
 	{
 		s_dlg.Create(IDD_DESERTSTATUSDLG);
-		GetStatusDlg(&s_dlg);
-
 		s_dlg.SetStatus(_T("Initializing"),0);
+		if (this->parentWnd) {
+			::EnableWindow(this->parentWnd, FALSE);
+			windowEnabler.hwnd = this->parentWnd;
+		}
 	}
 
 	CyPhyML::RootFolder cyphy_rf = CyPhyML::RootFolder::Cast(cyphy_dn.GetRootObject());
@@ -859,7 +877,7 @@ int DesertHelper::runDesertFinit_2()
 		}
 		desertFinit_2_fail = false;
 
-		char cnt_buff[10];
+		char cnt_buff[12];
 		_itoa(cfgCount, cnt_buff, 10);
 		std::string cfgSizeStr = (std::string)cnt_buff;
 
@@ -1474,7 +1492,7 @@ void DesertHelper::updateNumAssociatedConfigs(CyPhyML::DesignContainer &containe
 	{
 		CyPhyML::DesignElement elem = *it;
 		int cnt = getElementInConfigsCount(elem.ID());
-		char buffer[10];
+		char buffer[12];
 		_itoa(cnt, buffer, 10);
 		std::string size_str = (std::string)buffer+"/"+cfgSizeStr;
 		elem.NumAssociatedConfigs() = size_str;
@@ -1486,7 +1504,7 @@ void DesertHelper::updateNumAssociatedConfigs(CyPhyML::DesignContainer &containe
 	{
 		CyPhyML::DesignContainer con = *cit;
 		int cnt = getElementInConfigsCount(con.ID());
-		char buffer[10];
+		char buffer[12];
 		_itoa(cnt, buffer, 10);
 		std::string size_str = (cnt == 0 && ((std::string)con.ContainerType()!="Compound"))? "" : (std::string)buffer+"/"+cfgSizeStr;
 		con.NumAssociatedConfigs() = size_str;
@@ -1499,7 +1517,7 @@ void DesertHelper::updateNumAssociatedConfigs(CyPhyML::DesignContainer &containe
 	{
 		CyPhyML::ComponentRef ref = *rit;
 		int cnt = getElementInConfigsCount(ref.ID());
-		char buffer[10];
+		char buffer[12];
 		_itoa(cnt, buffer, 10);
 		std::string size_str = (std::string)buffer+"/"+cfgSizeStr;
 		ref.NumAssociatedConfigs() = size_str;
@@ -1607,7 +1625,7 @@ std::wstring DesertHelper::importConfigsFromXml(std::wstring desertXmlPath, std:
 	}
 	desertFinit_2_fail = false;
 
-	char cnt_buff[10];
+	char cnt_buff[12];
 	_itoa(cfgCount, cnt_buff, 10);
 	std::string cfgSizeStr = (std::string)cnt_buff;
 
