@@ -18,3 +18,10 @@ reg add HKCU\SOFTWARE\META\PETBrowser\PETTools\OpenInJMP /f /v "ExecutableFilePa
 reg add HKCU\SOFTWARE\META\PETBrowser\PETTools\OpenInJMP /f /v "ProcessArguments" /d "\"%CD%\bin\PetBrowserOpenInJMP.py\" \"%%1\" \"%%4\" " /reg:32
 reg add HKCU\SOFTWARE\META\PETBrowser\PETTools\OpenInJMP /f /v "ShowConsoleWindow" /d "0" /t REG_DWORD /reg:32
 reg add HKCU\SOFTWARE\META\PETBrowser\PETTools\OpenInJMP /f /v "WorkingDirectory" /d "%%2" /reg:32
+
+reg add HKLM\SOFTWARE\META\PETBrowser\PETTools\ExportVisualizer /f /ve /d "Export Visualizer Package" /reg:32
+reg add HKLM\SOFTWARE\META\PETBrowser\PETTools\ExportVisualizer /f /v "ActionName" /d "Export Visualizer Package" /reg:32
+reg add HKLM\SOFTWARE\META\PETBrowser\PETTools\ExportVisualizer /f /v "ExecutableFilePath" /d "%CD%\bin\Python27\Scripts\python.exe" /reg:32
+reg add HKLM\SOFTWARE\META\PETBrowser\PETTools\ExportVisualizer /f /v "ProcessArguments" /d "\"%CD%\bin\PetBrowserExportVisualizerPackage.py\" \"%%1\" \"%%2\" \"%%4\"" /reg:32
+reg add HKLM\SOFTWARE\META\PETBrowser\PETTools\ExportVisualizer /f /v "ShowConsoleWindow" /d "0" /t REG_DWORD /reg:32
+reg add HKLM\SOFTWARE\META\PETBrowser\PETTools\ExportVisualizer /f /v "WorkingDirectory" /d "%%2" /reg:32
