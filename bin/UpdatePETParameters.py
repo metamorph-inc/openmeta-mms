@@ -167,7 +167,20 @@ if __name__ == '__main__':
 
         project.BeginTransactionInNewTerr()
         try:
-            pet = project.RootFolder.GetObjectByPathDisp(args["PETName"].replace("/", "/@"))
+            path_segments = args["PETName"].lstrip('/').split('/')
+            path_queue = collections.deque()
+            PETId = args.get("PETId")
+            path_queue.append((0, project.RootFolder))
+            while path_queue:
+                index, obj = path_queue.popleft()
+                for child in obj.ChildObjects:
+                    if child.Name == path_segments[index]:
+                        if index + 1 == len(path_segments):
+                            if PETId is None or PETId == child.GetGuidDisp():
+                                pet = child
+                                break
+                        else:
+                            path_queue.append((index + 1, child))
             if pet is None:
                 raise ValueError("Couldn't find PET '{}'".format(args["PETName"]))
         finally:

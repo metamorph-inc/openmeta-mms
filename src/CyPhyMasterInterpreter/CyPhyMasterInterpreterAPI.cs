@@ -292,7 +292,10 @@
                 return configurationSelectionInput;
             };
 
-            using (ConfigurationSelectionForm selectionForm = new ConfigurationSelectionForm(getInput, enableDebugging))
+            bool projectSaved = (context.Project.ProjectStatus & 4) == 0;
+            // FIXME this is unreliable with GME 20.2.12
+            projectSaved = true;
+            using (ConfigurationSelectionForm selectionForm = new ConfigurationSelectionForm(getInput, enableDebugging, projectSaved))
             {
                 System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.DialogResult.None;
                 if (this.IsInteractive)
@@ -369,6 +372,7 @@
                         EnableRaisingEvents = true
                     };
                     GME.CSharp.GMEConsole console = GME.CSharp.GMEConsole.CreateFromProject(this.Project);
+
                     int streamsOpen = 2;
                     Action streamClosed = () =>
                     {
@@ -606,10 +610,10 @@
                         // TODO else if (configuration.MetaBase.Name == typeof(CyPhy.ComponentAssembly).Name)
 
                     }
-                    if (this.Manager != null && this.Manager.Started)
-                    {
-                        this.Manager.JobCollection.Designs = Designs;
-                    }
+                }
+                if (this.Manager != null && this.Manager.Started)
+                {
+                    this.Manager.JobCollection.Designs = Designs;
                 }
 
                 this.OnMultipleConfigurationProgress(new ProgressCallbackEventArgs()
