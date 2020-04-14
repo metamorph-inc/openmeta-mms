@@ -7,10 +7,11 @@ import json
 import os
 import os.path
 import shutil
-import Tkinter
-import tkFileDialog
-import tkMessageBox
+import tempfile
 import traceback
+import zipfile
+import win32con
+import win32ui
 
 BLOCKED_TABS = ["PETRefinement.R", "SurrogateModeling.R"]
 
@@ -72,6 +73,28 @@ FOR /F "skip=2 tokens=2,*" %%A IN ('%SystemRoot%\SysWoW64\REG.exe query "HKLM\so
     with open(os.path.join(export_directory, "launch.cmd"), "w") as launch_script_file:
         launch_script_file.write(LAUNCH_SCRIPT)
 
+    README_TEXT = r"""To open this dataset in the OpenMETA Visualizer, install the OpenMETA
+Visualizer, extract this ZIP file to a location of your choice, and double-click
+"launch.cmd" in the extracted folder.
+
+Note that this ZIP *must* be extracted in order to launch in the visualizer.
+"""
+
+    with open(os.path.join(export_directory, "INSTRUCTIONS.txt"), "w") as readme_file:
+        readme_file.write(README_TEXT)
+
+def zip_directory(source_dir, zip_file):
+    relroot = os.path.abspath(source_dir)
+
+    for root, dirs, files in os.walk(source_dir):
+        # add directory (needed for empty dirs)
+        zip_file.write(root, os.path.relpath(root, relroot))
+        for file in files:
+            filename = os.path.join(root, file)
+            if os.path.isfile(filename): # regular files only
+                arcname = os.path.join(os.path.relpath(root, relroot), file)
+                zip_file.write(filename, arcname)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("visualizer_config_path")
@@ -91,27 +114,37 @@ def main():
 
     print("Merged directory:", merged_directory)
 
-    root = Tkinter.Tk()
-    root.withdraw()
-
-    export_directory = tkFileDialog.askdirectory(initialdir=args.project_dir, title="Export visualizer session to directory")
+    export_directory = tempfile.mkdtemp(prefix="vizexport") # tkFileDialog.askdirectory(initialdir=args.project_dir, title="Export visualizer session to directory")
     
-    if not export_directory:
-        parser.exit(status=1, message="No directory selected for export")
+    try:
+        # if not export_directory:
+        #     parser.exit(status=1, message="No directory selected for export")
+        
+        print("Exporting to:", export_directory)
+
+        #root.destroy()
+
+        copy_files(merged_directory, export_directory)
+        make_new_visualizer_config(visualizer_config, export_directory)
+        if os.path.exists(os.path.join(export_directory, "metadata.json")):
+            copy_artifacts(merged_directory, args.project_dir, export_directory)
+            rename_metadata_json(export_directory)
+        make_launch_script(export_directory)
+
+        dialog = win32ui.CreateFileDialog(0, ".zip", None, win32con.OFN_HIDEREADONLY|win32con.OFN_OVERWRITEPROMPT, "ZIP Files (*.zip)|*.zip|All Files (*.*)|*.*||")
+        dialog.SetOFNInitialDir(os.getcwd())
+        result = dialog.DoModal()
+        print(result)
+
+        if result == win32con.IDOK:
+            export_zip_filename = dialog.GetPathName()
+            with zipfile.ZipFile(export_zip_filename, "w", zipfile.ZIP_DEFLATED) as export_zip:
+                zip_directory(export_directory, export_zip)
+    finally:
+        shutil.rmtree(export_directory)
     
-    print("Exporting to:", export_directory)
 
-    #root.destroy()
-
-    copy_files(merged_directory, export_directory)
-    make_new_visualizer_config(visualizer_config, export_directory)
-    if os.path.exists(os.path.join(export_directory, "metadata.json")):
-        copy_artifacts(merged_directory, args.project_dir, export_directory)
-        rename_metadata_json(export_directory)
-    make_launch_script(export_directory)
-    
-
-    #raw_input("Press Enter to continue...")
+    # raw_input("Press Enter to continue...")
 
 if __name__ == "__main__":
     try:
@@ -119,4 +152,4 @@ if __name__ == "__main__":
     except SystemExit:
         pass
     except:
-        tkMessageBox.showerror("Error", traceback.format_exc())
+        win32ui.MessageBox("An error occurred while exporting the visualizer package:\n\n" + traceback.format_exc(), "Error", win32con.MB_OK | win32con.MB_ICONERROR)
