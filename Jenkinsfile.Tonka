@@ -13,7 +13,8 @@ pipeline {
                 }
             }
             steps {
-                checkout scm
+                checkout scm: [$class: 'GitSCM', 
+                  userRemoteConfigs: [[refspec: '+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*']]]
 
                 script {
                     releaseId = bat(script: '@git describe --match v*', returnStdout: true).trim()
@@ -21,30 +22,11 @@ pipeline {
 
                 bat("del deploy\\META_*.exe")
 
-                bat($/cmd /c register_interpreters.cmd || git clean -xdf
+                bat($/
+git tag
 
-"c:\Program Files\Git\Usr\bin\find.exe" -iname \*UnmanagedRegistration.cache -print -delete
+git ls-remote
 /$)
-
-                bat($/Setlocal EnableDelayedExpansion
-c:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make.msbuild /t:DownloadNuGetPackages && exit /b 0
-
-
-c:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild make_CAD.msbuild /t:All /fl /flp:diag;PerformanceSummary /m /nodeReuse:false || exit /b !ERRORLEVEL!
-
-pushd src\CADAssembler
-cmd /c ..\..\bin\Python27\Scripts\Python.exe CADCreoParametricCreateAssembly\build_nuget_package.py pack_nuget || exit /b !ERRORLEVEL!
-cmd /c ..\..\bin\Python27\Scripts\Python.exe ExtractACM-XMLfromCreoModels\build_nuget_package.py pack_nuget || exit /b !ERRORLEVEL!
-cmd /c ..\..\bin\Python27\Scripts\Python.exe CADCreoParametricMetaLink\build_nuget_package.py pack_nuget || exit /b !ERRORLEVEL!
-popd
-
-run_cadunittests.cmd/$)
-
-                bat($/jenkins_build.cmd/$)
-
-                bat("move /y deploy\\META_bundle_x64.exe deploy\\META_${releaseId}.exe")
-                bat("move /y deploy\\META_bundle_x64_offline.exe deploy\\META_${releaseId}_offline.exe")
-
                 bat($/echo TONKA_BUILD_NUMBER=%BUILD_NUMBER% > build.properties/$)
             }
             post {
@@ -52,59 +34,6 @@ run_cadunittests.cmd/$)
                     junit keepLongStdio: true, testResults: 'test/junit_results.xml'
                     archiveArtifacts artifacts: "deploy/META*.msi,deploy/META_x64.wixpdb,deploy/*.msp,deploy/META_${releaseId}.exe,deploy/META_${releaseId}_offline.exe"
                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'docs\\_build\\html', reportFiles: 'index.html', reportName: 'OpenMETA Documentation', reportTitles: ''])
-                }
-            }
-        }
-        stage("Deploy") {
-            agent {
-                node {
-                    label 'tonka-build'
-                    customWorkspace 'c:\\jenkins_tonka_pipeline'
-                }
-            }
-            when {
-                branch 'release'
-            }
-            steps {
-                script {
-                    releaseId = bat(script: '@git describe --match v*', returnStdout: true).trim()
-                }
-                //Need to grab the build artifacts that we want to upload, because
-                //Jenkins might switch nodes on us
-                unarchive(mapping: ["deploy/META_${releaseId}.exe": "deploy/META_${releaseId}.exe"])
-                unarchive(mapping: ["deploy/META_${releaseId}_offline.exe": "deploy/META_${releaseId}_offline.exe"])
-
-                //Build our release webpage
-                bat("bin\\Python27\\Scripts\\Python.exe  dist\\web\\generate_web.py ${releaseId}")
-
-                echo("This is our release ID: '${releaseId}'")
-
-                withCredentials([sshUserPrivateKey(credentialsId: 'fc1479fa-af84-4b86-a723-cd6ae1c9fb2c', keyFileVariable: 'SSH_KEY')]) {
-                    bat("""rmdir /s /q openmeta-site
-                    git clone git@bitbucket.org:metamorphsoftwareinc/openmeta-site.git""")
-
-                    dir("openmeta-site") {
-                        bat("""copy "..\\${releaseId}.html" ".\\_releases\\" """)
-                        bat("""git add ".\\_releases\\${releaseId}.html" """)
-                        bat("""git commit -m "Add release page for ${releaseId}" """)
-                        bat("""git push origin master""")
-                    }
-                }
-
-                withAWS(credentials:'AWS-jenkins-tonka-release-uploader', region:'us-east-2') {
-                  s3Upload(file: "deploy/META_${releaseId}.exe", bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/META_${releaseId}.exe")
-                  s3Upload(file: "deploy/META_${releaseId}_offline.exe", bucket: 'releases.metamorphsoftware.com', path: "releases/${releaseId}/META_${releaseId}_offline.exe")
-                }
-
-                //Build our updated docs
-                dir('docs') {
-                  bat('preparepublish.bat')
-                }
-
-                withAWS(credentials:'AWS-jenkins-tonka-release-uploader', region:'us-east-1') {
-                  //aws s3 sync publish_html/ s3://docs.metamorphsoftware.com/doc/ --delete
-                  s3Delete(bucket: 'docs.metamorphsoftware.com', path: 'doc/')
-                  s3Upload(file: 'docs/publish_html', bucket: 'docs.metamorphsoftware.com', path: 'doc/', cacheControl:'public,max-age=3600')
                 }
             }
         }
