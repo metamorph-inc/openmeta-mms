@@ -28,10 +28,9 @@ Requirements
 ------------
 
 In addition to Creo, as noted in the :ref:`installation` chapter, Metalink
-requires Java JDK 7 or higher.
+requires Java JRE 7 or higher.
 
-Since Java SDK 7 is considered an archived version of Java by Oracle, we
-recommend you download the Java 8 SDK from the Oracle `Java SE Development Kit 8
-Downloads
-<http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html>`_
+Since Java 7 is considered an archived version of Java by Oracle, we
+recommend you download the Java 8 JRE from the Oracle `Java Download
+<https://www.java.com/en/download/>`_
 page if you do not already have Java installed on your target system.

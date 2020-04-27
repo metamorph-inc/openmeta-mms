@@ -10,7 +10,7 @@ System Requirements
 -  **CPU:** 64-bit processor
 -  **RAM:** 1.5 GB minimum (4 GB or more recommended)
 -  **HDD:** 2 GB minimum (10 GB or more recommended)
--  **Java:** JDK 7 or higher (Required for :ref:`metalink`)
+-  **Java:** JRE 7 or higher (Required for :ref:`metalink`)
 -  Connection to the Internet (for downloading tools during installation)
 
 License
