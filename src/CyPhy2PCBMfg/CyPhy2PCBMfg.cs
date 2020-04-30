@@ -166,7 +166,7 @@ namespace CyPhy2PCBMfg
                 {
                     // Get the current directory. 
                     string path = this.mainParameters.ProjectDirectory;
-                    System.IO.Directory.SetCurrentDirectory(path);
+                    // System.IO.Directory.SetCurrentDirectory(path);
                     Logger.WriteInfo("The current directory is {0}", path);
                 }
                 catch (Exception e)
