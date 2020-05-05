@@ -128,7 +128,7 @@ namespace CyPhy2PCBMfg
                         {
                             if (param.Attributes.Value.ToUpper().Contains(".CAM"))
                             {
-                                camFilePath = param.Attributes.Value;
+                                camFilePath = Path.Combine(design.Impl.Project.GetRootDirectoryPath(), param.Attributes.Value);
                             }
                         }
                     }
