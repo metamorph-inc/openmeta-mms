@@ -64,6 +64,9 @@ CManager() : CCosmic()
   ui_refresh_needed = true;
   currentGenerationPosition = NULL;
   designSpaceSize = 0;
+  for (int i = 0; i < _countof(realNoOfConfigs); i++) {
+	  realNoOfConfigs[i] = DESIGN_SPACE_SIZE_NOT_COMPUTED;
+  }
 
   ClFunction::CreateAll();
 }
@@ -1598,13 +1601,22 @@ void * CManager::StoreConfigurations(const TCHAR *fname, tstring &errmsg,
   return configurations;
 }
 
-// Himanshu: Adding a function to calculate real no. of configurations
 long CManager::CalcRealNoOfConfigurations()
+{
+	bool cancel = false;
+	return CalcRealNoOfConfigurations(cancel);
+}
+
+// Himanshu: Adding a function to calculate real no. of configurations
+long CManager::CalcRealNoOfConfigurations(volatile bool& cancel)
 {
 	if (generations.IsEmpty()) GenerateNextHierarchy();
 
-	GET_CURRENTGENERATION
+	GET_CURRENTGENERATION;
 
+	if (realNoOfConfigs[currentGeneration] != DESIGN_SPACE_SIZE_NOT_COMPUTED) {
+		return realNoOfConfigs[currentGeneration];
+	}
 	// get design space and constraints corresponding to the current generation
 	CDynSpaceList& spaces = dynSpaces[currentGeneration];
 	CDynConstraintSetList& consets = dynConstraintSets[currentGeneration];
@@ -1679,7 +1691,7 @@ long CManager::CalcRealNoOfConfigurations()
 					CDynElement *root;
 					long& numCfgsInEachRoot;
 				} arg = { root, numCfgsInEachRoot };
-				auto callback = [](void *arg, const boost::dynamic_bitset<>& encVec) -> int {
+				auto callback = [](void *arg, int* encVec) -> int {
 					args* a = (args*)arg;
 					if (a->root->NotRedundant(encVec))
 					{
@@ -1687,11 +1699,12 @@ long CManager::CalcRealNoOfConfigurations()
 					}
 					return 0;
 				};
-				typedef int(*callback_t)(void *, const boost::dynamic_bitset<>&);
-				int count = CBdd::Satisfy(prun, encVectors, (callback_t)callback, &arg);
+				typedef int(*callback_t)(void *, int*);
+				int count = CBdd::Satisfy(prun, encVectors, (callback_t)callback, &arg, cancel);
 				if (count == DESIGN_SPACE_TOO_LARGE) {
 					CBdd::Finit();
 					toSet->RemoveAll();
+					realNoOfConfigs[currentGeneration] = DESIGN_SPACE_TOO_LARGE;
 					return DESIGN_SPACE_TOO_LARGE;
 				}
 			} //eo while(pos)
@@ -1712,6 +1725,7 @@ long CManager::CalcRealNoOfConfigurations()
 
 	toSet->RemoveAll();
 
+	realNoOfConfigs[currentGeneration] = totalNoOfConfigs;
 	return totalNoOfConfigs;
 }
 
@@ -1733,7 +1747,7 @@ void CManager::BuildConfigurationsCallback(BackIfaceFunctions::DBConfigurations 
 	arg.BuildConfigurationsCallbackFunction = BuildConfigurationsCallbackFunction;
 	arg.BuildConfigurationsCallbackFunctionArg = BuildConfigurationsCallbackFunctionArg;
 
-	auto callback = [](void *arg, const boost::dynamic_bitset<>& encVec) -> int {
+	auto callback = [](void *arg, int* encVec) -> int {
 		args* a = (args*)arg;
 		CBdd enc = CBdd::Encode(encVec, 0, a->encLen);
 		if (a->root->NotRedundant(encVec))
@@ -1745,23 +1759,21 @@ void CManager::BuildConfigurationsCallback(BackIfaceFunctions::DBConfigurations 
 		}
 		return 0;
 	};
-	typedef int(*callback_t)(void *, const boost::dynamic_bitset<>&);
-	int count = CBdd::Satisfy(config, encVectors, (callback_t)callback, (void*)&arg);
+	typedef int(*callback_t)(void *, int*);
+	bool cancel = false;
+	int count = CBdd::Satisfy(config, encVectors, (callback_t)callback, (void*)&arg, cancel);
 }
 
 void CManager::BuildConfigurations(BackIfaceFunctions::DBConfigurations *configs, CDynElement *root, CBdd& config, int encLen)
 {
 	std::deque<boost::dynamic_bitset<>> encVectors;
-	typedef struct {
+	struct Args {
 		int encLen;
 		CDynElement* root;
-	} args;
-	args arg;
-	arg.encLen = encLen;
-	arg.root = root;
+	} args = { encLen, root };
 
-	auto callback = [](void *arg, const boost::dynamic_bitset<>& encVec) -> int {
-		args* a = (args*)arg;
+	auto callback = [](void *arg, int* encVec) -> int {
+		Args* a = (Args*)arg;
 		CBdd enc = CBdd::Encode(encVec, 0, a->encLen);
 		if (a->root->NotRedundant(encVec))
 		{
@@ -1769,8 +1781,9 @@ void CManager::BuildConfigurations(BackIfaceFunctions::DBConfigurations *configs
 		}
 		return 0;
 	};
-	typedef int(*callback_t)(void *, const boost::dynamic_bitset<>&);
-	int count = CBdd::Satisfy(config, encVectors, (callback_t)callback, (void*)&arg);
+	typedef int(*callback_t)(void *, int*);
+	bool cancel = false;
+	int count = CBdd::Satisfy(config, encVectors, (callback_t)callback, (void*)&args, cancel);
 
 	for (auto it = encVectors.begin(); it != encVectors.end(); ++it)
 	{
@@ -1788,7 +1801,7 @@ void CManager::BuildConfigurations(BackIfaceFunctions::DBConfigurations *configs
 
 		// convert the value to bdd, to write configuration
 		CBdd enc = CBdd::Encode(encVec, 0, encLen);
-		if (root->NotRedundant(encVec))
+		// if (root->NotRedundant(encVec))
 		{
 
 			BackIfaceFunctions::DBConfiguration *conf = new BackIfaceFunctions::DBConfiguration;
