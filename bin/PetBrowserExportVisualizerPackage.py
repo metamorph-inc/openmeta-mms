@@ -66,7 +66,26 @@ def rename_metadata_json(export_directory):
 
 def make_launch_script(export_directory):
     LAUNCH_SCRIPT = r"""
-FOR /F "skip=2 tokens=2,*" %%A IN ('%SystemRoot%\SysWoW64\REG.exe query "HKLM\software\Metamorph\OpenMETA-Visualizer" /v "PATH"') DO SET DIG_PATH=%%B
+@echo off
+SETLOCAL
+FOR /F "skip=2 tokens=2,*" %%A IN ('%SystemRoot%\SysWoW64\REG.exe query "HKLM\software\Metamorph\OpenMETA-Visualizer" /v "PATH" 2^>nul') DO SET DIG_SYSTEM_PATH=%%B
+FOR /F "skip=2 tokens=2,*" %%A IN ('%SystemRoot%\SysWoW64\REG.exe query "HKCU\software\Metamorph\OpenMETA-Visualizer" /v "PATH" 2^>nul') DO SET DIG_USER_PATH=%%B
+
+IF EXIST "%DIG_SYSTEM_PATH%\Dig\run.cmd" (
+	echo ** Using system OpenMETA Visualizer at "%DIG_SYSTEM_PATH%"
+	set "DIG_PATH=%DIG_SYSTEM_PATH%"
+) ELSE (
+	IF EXIST "%DIG_USER_PATH%\Dig\run.cmd" (
+		echo ** Using user OpenMETA Visualizer at "%DIG_USER_PATH%"
+		set "DIG_PATH=%DIG_USER_PATH%"
+	) ELSE (
+		echo The OpenMETA Visualizer is not installed.
+		echo See INSTRUCTIONS.txt for details on how to use this package.
+		pause
+		exit /b 1
+	)
+)
+
 "%DIG_PATH%\Dig\run.cmd" ".\visualizer.vizconfig" "."
 """
 
