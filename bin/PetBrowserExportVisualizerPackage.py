@@ -33,7 +33,7 @@ def copy_files(original_dir, new_dir, ignore_exists=False):
 def make_new_visualizer_config(visualizer_config, export_directory):
     visualizer_config["tabs"] = [tab for tab in visualizer_config["tabs"] if tab not in BLOCKED_TABS]
 
-    with open(os.path.join(export_directory, "visualizer.vizconfig"), "w") as new_visualizer_config_file:
+    with open(os.path.join(export_directory, "visualizer.vizconfig.json"), "w") as new_visualizer_config_file:
         json.dump(visualizer_config, new_visualizer_config_file, indent=2)
 
 def copy_artifacts(merged_directory, project_directory, export_directory):
@@ -86,7 +86,7 @@ IF EXIST "%DIG_SYSTEM_PATH%\Dig\run.cmd" (
 	)
 )
 
-"%DIG_PATH%\Dig\run.cmd" ".\visualizer.vizconfig" "."
+"%DIG_PATH%\Dig\run.cmd" ".\visualizer.vizconfig.json" "."
 """
 
     with open(os.path.join(export_directory, "launch.cmd"), "w") as launch_script_file:
