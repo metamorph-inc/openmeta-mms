@@ -20,9 +20,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="2*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -57,8 +59,33 @@
             </Grid.Style>
         </Grid>
 
-        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
-        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{StaticResource GridStyle}">
+        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3" Text="Source&#xD;&#xA;Folders" TextAlignment="Right"/>
+        <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding SourceDirectories}"
+                  AutoGenerateColumns="False" RowHeight="20" MaxHeight="100" SelectionMode="Single"
+                  CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="None"
+                  CellStyle="{StaticResource GridStyle}">
+            <DataGrid.HorizontalGridLinesBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+            </DataGrid.HorizontalGridLinesBrush>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding}" Header="Path" IsReadOnly="True" SortDirection="Ascending" Width="*" />
+            </DataGrid.Columns>
+            <DataGrid.Resources>
+                <ContextMenu x:Key="RowMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                    <MenuItem Header="Open in Explorer" Click="showFolderInExplorer" />
+                    <MenuItem Header="Open all source folders in Explorer" Click="showAllFoldersInExplorer" />
+                </ContextMenu>
+            </DataGrid.Resources>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="showFolderInExplorer" />
+                    <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+
+        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3">Metrics</Label>
+        <DataGrid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Metrics}" AutoGenerateColumns="False" RowHeight="20" SelectionMode="Single" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" CellStyle="{StaticResource GridStyle}">
             <DataGrid.HorizontalGridLinesBrush>
                 <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
             </DataGrid.HorizontalGridLinesBrush>
@@ -98,8 +125,8 @@
             </DataGrid.GroupStyle>
         </DataGrid>
 
-        <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3" Text="Visualizer&#xD;&#xA;Sessions" TextAlignment="Right"/>
-        <DockPanel Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="4">
+        <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="3" Text="Visualizer&#xD;&#xA;Sessions" TextAlignment="Right"/>
+        <DockPanel Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Margin="4">
             <StackPanel Margin="0"  DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="NewSessionButton" Margin="4,4,4,0" Padding="5,3" Click="NewSessionButton_Click">New Session…</Button>
                 <Button x:Name="LaunchVisualizerButton" Margin="4,4,0,0" Padding="5,3" Content="{Binding AnalysisTools.DefaultAnalysisTool.ActionName}" Click="LaunchVisualizerButton_Click">

@@ -235,6 +235,32 @@ namespace PETBrowser
                         }
                         newDataset.Count = metadata.SourceDatasets.Aggregate(0, (total, nextDataset) => total + nextDataset.Folders.Count);
                         newDataset.Folders.Add(directoryName);
+                        
+                        metadata.SourceDatasets.ForEach(dataset => newDataset.SourceFolders.AddRange(dataset.Folders.Select(
+                            folder =>
+                            {
+                                string path;
+                                switch (dataset.Kind)
+                                {
+                                    case Dataset.DatasetKind.PetResult:
+                                        path = Path.Combine(DataDirectory, ResultsDirectory,
+                                            folder.Replace("testbench_manifest.json", "")); ;
+                                        break;
+                                    case Dataset.DatasetKind.Archive:
+                                        path = Path.Combine(DataDirectory, ArchiveDirectory, folder);
+                                        break;
+                                    case Dataset.DatasetKind.TestBenchResult:
+                                        throw new ArgumentException("Merged PETs should not include test benches");
+                                    case Dataset.DatasetKind.MergedPet:
+                                    case Dataset.DatasetKind.Pet:
+                                        path = Path.Combine(DataDirectory, MergedDirectory, folder);
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+
+                                return Path.GetFullPath(path);
+                            })));
 
                         MergedDatasets.Add(newDataset);
                     }
@@ -377,6 +403,8 @@ namespace PETBrowser
 
         public int Count { get; set; }
         public List<string> Folders { get; private set; }
+        [JsonIgnore] // Generated at runtime for datasets within a merged PET; shouldn't be serialized
+        public List<string> SourceFolders { get; private set; }
 
         private bool _selected;
 
@@ -395,6 +423,7 @@ namespace PETBrowser
             this.Status = "";
             this.Count = 0;
             this.Folders = new List<string>();
+            this.SourceFolders = new List<string>();
             this.Selected = false;
         }
     }

@@ -172,5 +172,32 @@ namespace PETBrowser
 
             VisualizerLauncher.LaunchAnalysisTool(analysisTool, selectedConfig.ConfigPath, ViewModel.DetailsDataset, DatasetViewModel.Store.DataDirectory);
         }
+
+        private void showFolderInExplorer(object sender, RoutedEventArgs e)
+        {
+            var row = sender as FrameworkElement;
+            if (row != null)
+            {
+                var path = row.DataContext as string;
+                OpenFolderInExplorer(path);
+            }
+        }
+
+        private void showAllFoldersInExplorer(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel.DetailsDataset.SourceFolders.ForEach(OpenFolderInExplorer);
+        }
+
+        private void OpenFolderInExplorer(string folderPath)
+        {
+            try
+            {
+                Process.Start("explorer.exe", folderPath);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("Error", "An error occurred while opening in Explorer.", "", ex.ToString());
+            }
+        }
     }
 }

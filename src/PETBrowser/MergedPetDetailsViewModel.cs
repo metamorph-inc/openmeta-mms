@@ -125,6 +125,8 @@ namespace PETBrowser
         public ICollectionView VisualizerSessions { get; set; }
         public string MergedDirectory { get; set; }
         public AnalysisTools AnalysisTools { get; set; }
+        public List<String> SourceDirectoriesList { get; set; }
+        public ICollectionView SourceDirectories { get; set; }
 
         public string CreatedTime
         {
@@ -182,10 +184,20 @@ namespace PETBrowser
                 VisualizerSessionsList = GetVisualizerSessions(mergedDirectory);
                 VisualizerSessions = new ListCollectionView(VisualizerSessionsList);
                 VisualizerSessions.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+
+                SourceDirectoriesList = GetSourceDirectories();
+                SourceDirectories = new ListCollectionView(SourceDirectoriesList);
             }
             else
             {
             }
+        }
+
+        private List<string> GetSourceDirectories()
+        {
+            // TODO: recurse into folders when a merged PET is referenced
+            Console.WriteLine(DetailsDataset.SourceFolders);
+            return new List<string>(DetailsDataset.SourceFolders);
         }
 
         public void RegisterForVisualizerExitedEvents()
