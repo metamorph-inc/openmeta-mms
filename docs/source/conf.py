@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'OpenMETA'
-copyright = u'2017-2018, Metamorph Software, Inc.'
+copyright = u'2017-2020, Metamorph Software, Inc.'
 author = u'Metamorph Software, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
