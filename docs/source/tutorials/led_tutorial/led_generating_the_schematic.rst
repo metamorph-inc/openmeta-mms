@@ -57,4 +57,4 @@ use nets like this that identify any number of pins that are connected
 together.
 
 If your job does not execute properly, send us a note at
-**beta@metamorphsoftware.com**.
+**support@metamorphsoftware.com**.

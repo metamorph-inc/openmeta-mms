@@ -18,9 +18,9 @@ Printed Circuit Boards (PCBs). When used in conjunction with OpenMETA, the user
 is able to compose designs using a rich library of components in the tools and
 automatically generate ``.brd`` files from the model.
 
-We recommend using the latest version of the EAGLE tools that can
-be found on the `Autodesk Eagle Download Page
-<https://www.autodesk.com/products/eagle/free-download>`_.
+.. note:: OpenMETA works with EAGLE version 8.7.1 and prior versions, but not with 9.0.0 or later. We will address this issue in a future release.
+          Autodesk EAGLE can be downloaded from:
+          http://eagle.autodesk.com/eagle/software-versions”
 
 Schematic Models
 ~~~~~~~~~~~~~~~~
