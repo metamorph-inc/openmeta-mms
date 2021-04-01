@@ -193,8 +193,8 @@
       </MsiPackage>
 
       <MsiPackage Id="OpenMETA_Visualizer"
-                  Name="openmeta-visualizer_v2.5.0.msi"
-                  DownloadUrl="https://github.com/metamorph-inc/openmeta-visualizer/releases/download/v2.5.0/openmeta-visualizer_x64.msi"
+                  Name="openmeta-visualizer_v2.6.0.msi"
+                  DownloadUrl="https://github.com/metamorph-inc/openmeta-visualizer/releases/download/v2.6.0/openmeta-visualizer_x64.msi"
                   Compressed="yes"
                   Visible="yes"
                   ForcePerMachine="yes"
