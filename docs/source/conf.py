@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'OpenMETA'
-copyright = u'2017-2018, Metamorph Software, Inc.'
+copyright = u'2017-2020, Metamorph Software, Inc.'
 author = u'Metamorph Software, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -111,6 +111,11 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_context = {
+    'css_files': [
+        '_static/css/fix_long_table_lines.css',  # overrides for wide tables in RTD theme
+    ],
+}
 
 # -- Options for HTMLHelp output ------------------------------------------
 

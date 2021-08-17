@@ -218,12 +218,15 @@ defined gradients (or Jacobian matrixes).
 
 *Code*
 
-==================  =====================================================================  =======
-Name                Description                                                            Default
-==================  =====================================================================  =======
-maxiter             maximum number of iterations when attempting to converge               200
-tol                 optimization tolerance                                                 1e-4
-==================  =====================================================================  =======
+==================  =====================================================================================================  =======
+Name                Description                                                                                            Default
+==================  =====================================================================================================  =======
+maxiter             maximum number of iterations when attempting to converge                                               200
+tol                 optimization tolerance                                                                                 1e-4
+opt_settings        additional settings passed directly to the COBYLA optimizer.  For                                      {}
+                    details on available options, see the `SciPy docs
+                    <https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html#optimize-minimize-cobyla>`_
+==================  =====================================================================================================  =======
 
 *Custom Optimizer*
 

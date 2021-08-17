@@ -11,7 +11,7 @@ import contextlib
 import itertools
 import numpy
 import six
-from collections import defaultdict
+from collections import defaultdict, Mapping
 
 from run_mdao.csv_recorder import MappingCsvRecorder, CsvRecorder
 from run_mdao.enum_mapper import EnumMapper
@@ -184,6 +184,18 @@ def with_problem(mdao_config, original_dir, override_driver=None, additional_rec
             else:
                 top.driver = ScipyOptimizer()
                 top.driver.options['optimizer'] = str(driver.get('details', {}).get('OptimizationFunction', 'SLSQP'))
+
+            opt_settings = driver_params.get("opt_settings", {})
+
+            # Pass through opt_settings dict to OpenMDAO; this allows the
+            # user to set options on ScipyOptimizer optimizers that OpenMDAO
+            # doesn't explicitly support, like COBYLA's rhobeg
+            # (We don't do this in the block above that initializes
+            # ScipyOptimizer to allow for other optimizers that also use
+            # opt_settings)
+            if type(opt_settings) is dict and hasattr(top.driver, "opt_settings") and isinstance(top.driver.opt_settings, Mapping):
+                for key, value in six.iteritems(opt_settings):
+                    top.driver.opt_settings[key] = value
 
             for key, value in six.iteritems(driver_params):
                 try:
@@ -389,6 +401,13 @@ def with_problem(mdao_config, original_dir, override_driver=None, additional_rec
         component = mdao_config['components'][component_name]
         mdao_component = instantiate_component(component, component_name, mdao_config, root, subProblemOutputMeta)
         root.add(component_name, mdao_component)
+        # Create directories for output FileRefs
+        if is_testbenchcomponent(component_name):
+            # Only create subdirectories if an Output FileRef needs it
+            for k, v in mdao_component.manifest_fileoutputs.items():
+                if os.path.dirname(v['FileName']) != "":  # Note: https://stackoverflow.com/a/8384788 but OpenMETA runs only on Windows anyway
+                    mdao_component.create_dirs = True
+                    break
 
     for component_name, component in six.iteritems(mdao_config['components']):
         for parameter_name, parameter in six.iteritems(component.get('parameters', {})):
