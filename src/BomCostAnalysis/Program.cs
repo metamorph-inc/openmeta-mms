@@ -14,12 +14,15 @@ namespace BomCostAnalysis
     {
         private static void Usage()
         {
-            String.Format("USAGE: {0} manifest_path");
-            Console.Out.WriteLine(Process.GetCurrentProcess().ProcessName);
+            Console.Out.WriteLine(String.Format("USAGE: {0} manifest_path", Process.GetCurrentProcess().ProcessName));
         }
 
         static int Main(string[] args)
         {
+            if (Console.IsOutputRedirected)
+            {
+                Console.OutputEncoding = System.Text.Encoding.UTF8;
+            }
             if (args.Length != 1)
             {
                 Usage();
