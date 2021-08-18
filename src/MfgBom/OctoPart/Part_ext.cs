@@ -17,7 +17,7 @@ namespace MfgBom.Bom
 {
     public partial class Part
     {
-        public const string OCTOPART_API_KEY = "22becbab";
+        public const string OCTOPART_API_KEY = "163127e3-e72a-4361-8a8b-46cbb33dbfa5";
 
 
         public bool QueryOctopartData(String apikey = OCTOPART_API_KEY,

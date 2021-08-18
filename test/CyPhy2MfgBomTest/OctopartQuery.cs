@@ -9,9 +9,9 @@ namespace CyPhy2MfgBomTest
 {
     public class OctopartQuery
     {
-        private static String API_KEY = "22becbab";
+        private static String API_KEY = "163127e3-e72a-4361-8a8b-46cbb33dbfa5";
 
-        [Fact(Skip="Octopart API key needed")]
+        [Fact]
         public void QueryAndParse_ManyMPNs()
         {
             var listMpn = new List<String>()

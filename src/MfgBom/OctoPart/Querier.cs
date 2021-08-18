@@ -86,7 +86,7 @@ namespace MfgBom.OctoPart
                 { { "mpn", mpn } }
             };
 
-            string octopartUrlBase = "http://octopart.com/api/v3";
+            string octopartUrlBase = "https://octopart.com/api/v4/rest";
             string octopartUrlEndpoint = "parts/match";
 
             // Create the search request
@@ -100,16 +100,15 @@ namespace MfgBom.OctoPart
             // Perform the search and obtain results
             var data = client.Execute(req).Content;
             var response = JsonConvert.DeserializeObject<dynamic>(data);
-
-            var classResponse = response["__class__"];
-            if (classResponse == "PartsMatchResponse")
+            var partMatchError = response["results"][0]["error"];
+            if (partMatchError == null)
             {
                 if (response["results"][0]["hits"] == 0 && !String.IsNullOrWhiteSpace(mpn))
                 {
                     throw new OctoPart.OctopartQueryException(String.Format("OctoPart MPN number {0} was not found in database", mpn));
-                
+
                 }
-                                
+
                 // If more than 1 match found, shouldn't just return the first
                 //   as it might not be the correct one.
                 if (!grab_first && response["results"][0]["hits"] > 1)
@@ -120,7 +119,7 @@ namespace MfgBom.OctoPart
             }
             else
             {
-                if (classResponse == "ClientErrorResponse")
+                if (partMatchError == "ClientErrorResponse")
                 {
                     var message = response["message"].ToString();
                     if (message == "Access denied by rate limiter")
@@ -132,7 +131,7 @@ namespace MfgBom.OctoPart
                         throw new OctopartQueryException(message);
                     }
                 }
-                else if (classResponse == "ServerErrorResponse ")
+                else if (partMatchError == "ServerErrorResponse ")
                 {
                     var message = response["message"].ToString();
                     throw new OctopartQueryServerException(message);
@@ -152,7 +151,7 @@ namespace MfgBom.OctoPart
                 { { "uid", uid } }
             };
 
-            string octopartUrlBase = "http://octopart.com/api/v3";
+            string octopartUrlBase = "http://octopart.com/api/v3";  //BROKEN: Octopart v4 rest API only supports /part requests. Need to switch to graphQL API for other
             string octopartUrlEndpoint = "categories/" + uid;
 
             // Create the search request
@@ -166,14 +165,14 @@ namespace MfgBom.OctoPart
             var data = client.Execute(req).Content;
             var response = JsonConvert.DeserializeObject<dynamic>(data);
 
-            var classResponse = response["__class__"];
-            if (classResponse == "Category")
+            var partMatchError = response["results"][0]["error"];
+            if (partMatchError == "Category")
             {
                 return response.ToString();
             }
             else
             {
-                if (classResponse == "ClientErrorResponse")
+                if (partMatchError == "ClientErrorResponse")
                 {
                     var message = response["message"].ToString();
                     if (message == "Access denied by rate limiter")
@@ -185,7 +184,7 @@ namespace MfgBom.OctoPart
                         throw new OctopartQueryException(message);
                     }
                 }
-                else if (classResponse == "ServerErrorResponse ")
+                else if (partMatchError == "ServerErrorResponse ")
                 {
                     var message = response["message"].ToString();
                     throw new OctopartQueryServerException(message);
