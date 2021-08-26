@@ -105,15 +105,92 @@ def generate_license_rtf():
         rtf.write('\n}')
 
 
-def build_msi(offline, source_wxs='META_x64.wxs'):
+def add_vcs_defines(defines):
+    def get_command_output(cmd):
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        return out.strip()
+
+    def get_vcsversion():
+        p = subprocess.Popen("git rev-list HEAD --count".split(), stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        return str(int(out.strip() or '651') - 650)
+
+    vcsversion = get_vcsversion()
+    def get_vcsdescribe():
+        out = get_command_output("git describe --match v*".split())
+        if out:
+            return out
+        # if there is no tag, use v0.1.1-[revision count]-g[short hash]
+        return "v0.1.1-" + vcsversion + "-g" + get_command_output("git rev-parse --short HEAD")
+    def parse_describe(describe):
+        m = re.match('^v(\\d+\\.\\d+\\.\\d+)((?:-[a-zA-Z_]+)?-(\\d+)-\\w+)?$', describe)
+        if not m:
+            raise ValueError('Invalid tag "{}". Must be in format v0.1.2 or v0.1.2-vendor'.format(describe))
+        return m.groups()[0] + '.' + (m.groups()[2] or '0')
+
+    assert parse_describe('v0.16.1') == '0.16.1.0'
+    assert parse_describe('v0.16.1-21-g57742becee') == '0.16.1.21'
+    assert parse_describe('v0.16.1-vendor-21-g57742becee') == '0.16.1.21'
+    vcsdescription = get_vcsdescribe()
+    version = parse_describe(vcsdescription)
+
+    def get_githash():
+        p = subprocess.Popen("git rev-parse --short HEAD".split(), stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        #if p.returncode:
+        #    raise subprocess.CalledProcessError(p.returncode, 'svnversion')
+        return out.strip() or 'unknown'
+
+    vcshash = get_githash()
+
+    print "Version description: " + vcsdescription
+    print "Installer version: " + version
+    defines.append(('VERSIONSTR', version))
+    defines.append(('VCSHASH', vcshash))
+    defines.append(('VCSDESCRIPTION', vcsdescription))
+
+
+def get_wixobj(file):
+    return os.path.splitext(file)[0] + ".wixobj"
+
+
+def compile_wix_source(sources, defines):
+    from multiprocessing.pool import ThreadPool
+    pool = ThreadPool()
+    pool_exceptions = []
+
+    def candle(source):
+        try:
+            arch = [ '-arch', ('x86' if source.find('x64') == -1 else 'x64') ]
+            try:
+                dest_mtime = os.stat(get_wixobj(source)).st_mtime
+                source_mtime = os.stat(source).st_mtime
+                if dest_mtime >= source_mtime:
+                    pass # return
+            except OSError as e:
+                pass
+            system(['candle', '-ext', 'WiXUtilExtension'] + ['-d' + d[0] + '=' + d[1] for d in defines ] + arch + [ '-out', get_wixobj(source), source] + ['-nologo'])
+        except Exception as e:
+            pool_exceptions.append(sys.exc_info())
+            raise
+    candle_results = pool.map_async(candle, sources, chunksize=1)
+    pool.close()
+    pool.join()
+    if pool_exceptions:
+        six.reraise(*pool_exceptions[0])
+    assert candle_results.successful()
+
+
+def build_msi(with_offline=False):
+    source_wxs='META_x64.wxs'
     get_nuget_packages()
 
     generate_license_rtf()
 
     add_wix_to_path()
 
-    def get_wixobj(file):
-        return os.path.splitext(file)[0] + ".wixobj"
+    defines = [ ('InterpreterBin', '../src/bin') ]
 
     def adjacent_file(file):
         return os.path.join(this_dir, file)
@@ -154,47 +231,9 @@ def build_msi(offline, source_wxs='META_x64.wxs'):
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\CADVisualizer")
     gen_dir_wxi.gen_dir_from_vc(r"..\src\Python27Packages\get_eagle_path")
 
-    def get_command_output(cmd):
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-        out, err = p.communicate()
-        return out.strip()
+    add_vcs_defines(defines)
 
-    def get_vcsversion():
-        p = subprocess.Popen("git rev-list HEAD --count".split(), stdout=subprocess.PIPE)
-        out, err = p.communicate()
-        return str(int(out.strip() or '651') - 650)
-
-    vcsversion = get_vcsversion()
-    def get_vcsdescribe():
-        out = get_command_output("git describe --match v*".split())
-        if out:
-            return out
-        # if there is no tag, use v0.1.1-[revision count]-g[short hash]
-        return "v0.1.1-" + vcsversion + "-g" + get_command_output("git rev-parse --short HEAD")
-    def parse_describe(describe):
-        m = re.match('^v(\\d+\\.\\d+\\.\\d+)((?:-[a-zA-Z_]+)?-(\\d+)-\\w+)?$', describe)
-        if not m:
-            raise ValueError('Invalid tag "{}". Must be in format v0.1.2 or v0.1.2-vendor'.format(describe))
-        return m.groups()[0] + '.' + (m.groups()[2] or '0')
-
-    assert parse_describe('v0.16.1') == '0.16.1.0'
-    assert parse_describe('v0.16.1-21-g57742becee') == '0.16.1.21'
-    assert parse_describe('v0.16.1-vendor-21-g57742becee') == '0.16.1.21'
-    vcsdescription = get_vcsdescribe()
-    version = parse_describe(vcsdescription)
-
-    print "Version description: " + vcsdescription
-    print "Installer version: " + version
     sourcedir = os.path.relpath(this_dir) + '/'
-
-    def get_githash():
-        p = subprocess.Popen("git rev-parse --short HEAD".split(), stdout=subprocess.PIPE)
-        out, err = p.communicate()
-        #if p.returncode:
-        #    raise subprocess.CalledProcessError(p.returncode, 'svnversion')
-        return out.strip() or 'unknown'
-
-    vcshash = get_githash()
 
     import glob
     sources_all = glob.glob(sourcedir + '*.wxi') + glob.glob(sourcedir + source_wxs)
@@ -246,8 +285,6 @@ def build_msi(offline, source_wxs='META_x64.wxs'):
     if len(sources) == 0:
         raise Exception("0 sources found in " + sourcedir)
 
-    defines = [ ('InterpreterBin', '../src/bin') ]
-
     def get_mta_versions(mta_file):
         import uuid
         metaproject = win32com.client.Dispatch("MGA.MgaMetaProject")
@@ -261,32 +298,12 @@ def build_msi(offline, source_wxs='META_x64.wxs'):
     defines.append(('GUIDSTRCYPHYML', cyphy_versions[0]))
     defines.append(('VERSIONSTRCYPHYML', cyphy_versions[1]))
 
-    defines.append(('VERSIONSTR', version))
-    defines.append(('VCSHASH', vcshash))
-    defines.append(('VCSDESCRIPTION', vcsdescription))
-    defines.append(('Compressed', ("yes" if offline else "no")))
-
-    from multiprocessing.pool import ThreadPool
-    pool = ThreadPool()
-    pool_exceptions = []
-
-    def candle(source):
-        try:
-            arch = [ '-arch', ('x86' if source.find('x64') == -1 else 'x64') ]
-            system(['candle', '-ext', 'WiXUtilExtension'] + ['-d' + d[0] + '=' + d[1] for d in defines ] + arch + [ '-out', get_wixobj(source), source] + ['-nologo'])
-        except Exception as e:
-            pool_exceptions.append(sys.exc_info())
-            raise
-    candle_results = pool.map_async(candle, sources, chunksize=1)
-    pool.close()
-    pool.join()
-    if pool_exceptions:
-        six.reraise(*pool_exceptions[0])
-    assert candle_results.successful()
+    compile_wix_source(sources, defines)
 
     #ignore warning 1055, ICE82 from VC10 merge modules
     # ICE69: Mismatched component reference. Entry 'reg491FAFEB7F990D99C4A4D719B2A95253' of the Registry table belongs to component 'CyPhySoT.dll'. However, the formatted string in column 'Value' references file 'CyPhySoT.ico' which belongs to component 'CyPhySoT.ico'
     # ICE60: The file fil_5b64d789d9ad5473bc580ea7258a0fac is not a Font, and its version is not a companion file reference. It should have a language specified in the Language column.
+    pool_exceptions = []
     if source_wxs.startswith("META"):
         def download():
             try:
@@ -300,17 +317,30 @@ def build_msi(offline, source_wxs='META_x64.wxs'):
 
         import datetime
         starttime = datetime.datetime.now()
-        system(['light', '-sw1055', '-sice:ICE82', '-sice:ICE57', '-sice:ICE60', '-sice:ICE69', '-ext', 'WixNetFxExtension', '-ext', 'WixUIExtension', '-ext', 'WixUtilExtension',
+	# '-sice:ICE03' is generated by some merge modules
+        system(['light', '-sice:ICE60', '-sice:ICE69', '-sice:ICE57',
+        #'-sw1055', '-sice:ICE03', '-sice:ICE82', 
+         '-ext', 'WixNetFxExtension', '-ext', 'WixUIExtension', '-ext', 'WixUtilExtension',
             # '-cc', os.path.join(this_dir, 'cab_cache'), '-reusecab', # we were getting errors during installation relating to corrupted cab files => disable cab cache
-            # udm.pyd depends on UdmDll_VC10
-            '-o', os.path.splitext(source_wxs)[0] + ".msi"] + [get_wixobj(file) for file in sources] + ['UdmDll_VS10.wixlib', 'UdmDll_VC11_x64.wixlib', 'UdmDll_VC14.wixlib'])
+            '-o', os.path.splitext(source_wxs)[0] + ".msi"] + [get_wixobj(file) for file in sources])
+
 
         download_thread.join()
         if pool_exceptions:
             six.reraise(*pool_exceptions[0])
-        system('candle.exe META_bundle_x64.wxs -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension'.split() + ['-d' + d[0] + '=' + d[1] for d in defines])
+
         system('candle.exe META_bundle_ba.wxi -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension'.split() + ['-d' + d[0] + '=' + d[1] for d in defines])
-        system(('light.exe -o META_bundle_x64' + ('_offline' if offline else '') + '.exe META_bundle_ba.wixobj META_bundle_x64.wixobj -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension -ext WixNetFxExtension').split())
+
+        bundle_offline_builds = [False]
+        if with_offline:
+            bundle_offline_builds.append(True)
+        
+        for offline in bundle_offline_builds:
+            bundle_defines = list(defines)
+            bundle_defines.append(('Compressed', ("yes" if offline else "no")))
+
+            system('candle.exe META_bundle_x64.wxs -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension'.split() + ['-d' + d[0] + '=' + d[1] for d in bundle_defines])
+            system(('light.exe -o META_bundle_x64' + ('_offline' if offline else '') + '.exe META_bundle_ba.wixobj META_bundle_x64.wixobj -ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension -ext WixNetFxExtension').split())
 
         print "elapsed time: %d seconds" % (datetime.datetime.now() - starttime).seconds
     else:
@@ -325,15 +355,16 @@ class MSBuildErrorWriter(object):
 
 if __name__ == '__main__':
     os.chdir(this_dir)
+
     import traceback
     try:
         import argparse
 
         parser = argparse.ArgumentParser(description='Build the installer')
-        parser.add_argument('--offline', action='store_true')
+        parser.add_argument('--with-offline', action='store_true')
         command_line_args = parser.parse_args()
 
-        build_msi(command_line_args.offline)
+        build_msi(command_line_args.with_offline)
     except:
         traceback.print_exc(None, MSBuildErrorWriter())
         sys.exit(2)

@@ -169,11 +169,20 @@ class WixProcessingInstructionHandler(ContentHandler):
         ContentHandler.__init__(self)
         self.defines = {}
 
+    # only this method is called by sax
     def processingInstruction(self, target, data):
         if target == 'define':
             eval(compile(data, '<string>', 'exec'), globals(), self.defines)
         elif target == 'include':
             pass  # TODO
+
+    def eval_vars(self, attr):
+        for name, val in self.defines.iteritems():
+            attr = attr.replace('$(var.{})'.format(name), str(val))
+        return attr
+
+    def parse(self, filename):
+        xml.sax.parse(filename, self)
 
 
 def download_bundle_deps(bundle_wxs):
@@ -181,21 +190,16 @@ def download_bundle_deps(bundle_wxs):
     xml.sax.parse("bundle_defines.xml", defines)
     xml.sax.parse("META_bundle_x64.wxs", defines)
 
-    def eval_vars(attr):
-        for name, val in defines.defines.iteritems():
-            attr = attr.replace('$(var.{})'.format(name), str(val))
-        return attr
-
     tree = ElementTree.parse(bundle_wxs, parser=CommentedTreeBuilder()).getroot()
     ElementTree.register_namespace("", "http://schemas.microsoft.com/wix/2006/wi")
 
     for package in itertools.chain(tree.findall(".//{http://schemas.microsoft.com/wix/2006/wi}ExePackage"),
             tree.findall(".//{http://schemas.microsoft.com/wix/2006/wi}MsuPackage"),
             tree.findall(".//{http://schemas.microsoft.com/wix/2006/wi}MsiPackage")):
-        url = eval_vars(package.get('DownloadUrl', ''))
+        url = defines.eval_vars(package.get('DownloadUrl', ''))
         if not url:
             continue
-        filename = eval_vars(package.get('SourceFile', '') or package.get('Name', ''))
+        filename = defines.eval_vars(package.get('SourceFile', '') or package.get('Name', ''))
         download_file(url, filename)
     # from https://github.com/wixtoolset/wix3/blob/develop/src/ext/NetFxExtension/wixlib/NetFx4.5.wxs
     download_file('http://go.microsoft.com/fwlink/?LinkId=225704', 'redist\\dotNetFx45_Full_setup.exe')

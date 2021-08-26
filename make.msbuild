@@ -79,7 +79,7 @@
   </Target>
   
   <Target Name="Installer" DependsOnTargets="All">
-    <Exec Command="..\bin\Python27\Scripts\python.exe build_msi.py META_x64.wxs" WorkingDirectory="deploy" Condition="'$(Platform)' != 'x64'"/>
+    <Exec Command="..\bin\Python27\Scripts\python.exe build_msi.py" WorkingDirectory="deploy" Condition="'$(Platform)' != 'x64'"/>
   </Target>
 
 </Project>
