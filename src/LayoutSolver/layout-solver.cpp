@@ -1101,9 +1101,9 @@ void LayoutSolver::processRelativeConstraint(const Json::Value& constraint, int 
 
 BoolVar LayoutSolver::relativeConstraint(const Json::Value& constraint, const Json::Value& packages, int pkg_idx, int rel_pkg, int lD, int rot, int computedChipGap)
 {
-	char xVar[8] = "x";
+	char xVar[12] = "x";
 	if (rot != 0)
-		sprintf(xVar, "x%d", rot);
+		sprintf_s(xVar, "x%d", rot);
 	const Json::Value x = constraint[xVar];
 	double dx, dy;
 	if (!x.isNull())
@@ -1118,9 +1118,9 @@ BoolVar LayoutSolver::relativeConstraint(const Json::Value& constraint, const Js
 			str << "Invalid relative constraint on package \"" << packages[pkg_idx]["name"].asString() << "\" index(" << pkg_idx << "), " << xVar << " value is null" << std::endl;
 			throw std::exception(str.str());
 	}
-	char yVar[8] = "y";
+	char yVar[12] = "y";
 	if (rot != 0)
-		sprintf(yVar, "y%d", rot);
+		sprintf_s(yVar, "y%d", rot);
 	const Json::Value y = constraint[yVar];
 	if (!y.isNull())
 	{

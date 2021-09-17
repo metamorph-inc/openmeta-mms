@@ -11,7 +11,7 @@
 		int  partSize[2];
 	} parts[MAXPARTS];
 	
-void UpdateTBManifestWithResult(std::string pathManifest, int failed_placement, double binWidth, double binHeight, float occupancy);
+int UpdateTBManifestWithResult(std::string pathManifest, int failed_placement, double binWidth, double binHeight, float occupancy);
 Json::Value PopulateOrCreateMetric(Json::Value list_Metrics, std::string nameMetricBeginsWith, std::string fullNameMetric, std::string valueMetric, std::string descriptionMetric);
 
 int main(int argc, char **argv)
@@ -135,13 +135,16 @@ int main(int argc, char **argv)
 	if (argc == 3)
 	{
 		std::string pathManifest = argv[2];
-		UpdateTBManifestWithResult(pathManifest, failed_placement, dBinWidth, dBinHeight, bin.Occupancy());
+		int failed = UpdateTBManifestWithResult(pathManifest, failed_placement, dBinWidth, dBinHeight, bin.Occupancy());
+		if (failed) {
+			return failed;
+		}
 	}
 
 	exit(0);
 }
 
-void UpdateTBManifestWithResult(std::string pathManifest, int failed_placement, double binWidth, double binHeight, float occupancy)
+int UpdateTBManifestWithResult(std::string pathManifest, int failed_placement, double binWidth, double binHeight, float occupancy)
 {
 	///// LOAD MANIFEST /////
 	Json::Reader reader;
@@ -153,18 +156,18 @@ void UpdateTBManifestWithResult(std::string pathManifest, int failed_placement, 
 	if (!ret)
 	{
 		std::cout << "Failed to Parse " << pathManifest << std::endl;
-		return;
+		return 2;
 	}
 
 	
 
 	///// GATHER AND SET NEW VALUES FOR METRICS /////
-	char dimensions[20];
-	sprintf(dimensions, "%f_by_%f", binHeight, binWidth);
+	char dimensions[120];
+	sprintf_s(dimensions, "%f_by_%f", binHeight, binWidth);
 	Json::Value result;
 
-	char namePassFailMetric[50];
-	sprintf(namePassFailMetric, "fits_%s", dimensions);
+	char namePassFailMetric[200];
+	sprintf_s(namePassFailMetric, "fits_%s", dimensions);
 	std::string valuePassFailMetric = (failed_placement == 0) 
 									  ? "true" 
 									  : "false";
@@ -175,10 +178,10 @@ void UpdateTBManifestWithResult(std::string pathManifest, int failed_placement, 
 									"Do the parts fit within the given dimensions?");	
 	root["Metrics"].swap(result);
 
-	char nameOccupancyMetric[50];
-	sprintf(nameOccupancyMetric, "pct_occupied_%s", dimensions);
-	char valOccupancyMetric[10];
-	sprintf(valOccupancyMetric, "%.2f", occupancy * 100.f);
+	char nameOccupancyMetric[200];
+	sprintf_s(nameOccupancyMetric, "pct_occupied_%s", dimensions);
+	char valOccupancyMetric[50];
+	sprintf_s(valOccupancyMetric, "%.2f", occupancy * 100.f);
 	result = PopulateOrCreateMetric(root["Metrics"],
 									"pct_occupied_",
 									nameOccupancyMetric, 
@@ -195,6 +198,10 @@ void UpdateTBManifestWithResult(std::string pathManifest, int failed_placement, 
 	manifest.open(pathManifest);
 	manifest << json;
 	manifest.close();
+	if (manifest.fail()) {
+		return 2;
+	}
+	return 0;
 }
 
 

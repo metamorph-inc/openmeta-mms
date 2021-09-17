@@ -80,6 +80,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\RectangleBinPack;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatSpecificWarningsAsErrors>4477;4777</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -93,6 +94,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\RectangleBinPack;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatSpecificWarningsAsErrors>4477;4777</TreatSpecificWarningsAsErrors>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
