@@ -1,7 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.props" Condition="Exists('..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<?xml version="1.0" ?><Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Condition="Exists('..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.props')" Project="..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.props"/>
+  <Import Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"/>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -176,8 +175,8 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\nuget\Grpc.Core.2.27.0\build\net45\Grpc.Core.targets" Condition="Exists('..\nuget\Grpc.Core.2.27.0\build\net45\Grpc.Core.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+  <Import Condition="Exists('..\nuget\Grpc.Core.2.27.0\build\net45\Grpc.Core.targets')" Project="..\nuget\Grpc.Core.2.27.0\build\net45\Grpc.Core.targets"/>
+  <Target BeforeTargets="PrepareForBuild" Name="EnsureNuGetPackageBuildImports">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
@@ -185,7 +184,7 @@
     <Error Condition="!Exists('..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.props'))" />
     <Error Condition="!Exists('..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.targets'))" />
   </Target>
-  <Import Project="..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.targets" Condition="Exists('..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.targets')" />
+  <Import Condition="Exists('..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.targets')" Project="..\nuget\Grpc.Tools.2.27.0\build\Grpc.Tools.targets"/>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
