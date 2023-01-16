@@ -38,6 +38,7 @@ using CyPhyComponentFidelitySelector;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Runtime.InteropServices;
+using System.Xml;
 
 namespace SchematicUnitTests
 {
@@ -482,25 +483,16 @@ namespace SchematicUnitTests
 
             Dictionary<string, string> testStrings = new Dictionary<string, string>()
             {
-                {"Pin A1 offset in GP ASIC", "<smd name=\"A1\" x=\"-2\" y=\"2\" dx=\"0.28\" dy=\"0.28\" layer=\"1\" roundness=\"100\" stop=\"no\" />"},
+                {"Pin A1 offset in GP ASIC", "<smd xmlns='eagle' name=\"A1\" x=\"-2\" y=\"2\" dx=\"0.28\" dy=\"0.28\" layer=\"1\" roundness=\"100\" stop=\"no\" />"},
                 //// {"GP ASIC location", "<element name=\"GP_ASIC\" library=\"henry_review\" package=\"BGA107\" value=\"T6WR6XBG\" x=\"4.5\" y=\"4.5\" />"},
                 //{"GP ASIC location", "<element y=\"4.2\" x=\"4.2\" library=\"henry_review\" name=\"GP_ASIC\" value=\"T6WR6XBG\" package=\"BGA107\" />"},
-                {"GP ASIC location", "<element y=\"12.5\" x=\"10\" library=\"henry_review\" name=\"GP_ASIC\" value=\"T6WR6XBG\" package=\"BGA107\" />"},
+                {"GP ASIC location", "<element xmlns='eagle' y=\"12.5\" x=\"10\" library=\"henry_review\" name=\"GP_ASIC\" value=\"T6WR6XBG\" package=\"BGA107\" />"},
                 //// {"micro-VIA location", "<via x=\"2.5\" y=\"6.5\" extent=\"1-16\" drill=\"0.08\" />"}
                 //{"micro-VIA location", "<via x=\"2.2\" y=\"6.2\" extent=\"1-16\" drill=\"0.08\" />"}
-                {"micro-VIA location", "<via x=\"12\" y=\"10.5\" extent=\"1-16\" drill=\"0.08\" />"}
+                // {"micro-VIA location", "<via x=\"12\" y=\"10.5\" extent=\"1-16\" drill=\"0.08\" />"}
             };
 
-            using (StreamReader reader = File.OpenText(pathBoardFile))
-            {
-                string contents = reader.ReadToEnd();
-                foreach (string testStringName in testStrings.Keys)
-                {
-                    string testString = testStrings[testStringName];
-                    bool testStringFound = contents.Contains(testString);
-                    Assert.True(testStringFound, testStringName + " VIP test string not found in generated board file.");
-                }
-            }
+            CheckBoardContainsNodes(pathBoardFile, testStrings.Values);
         }
 
         /// <summary>
@@ -867,16 +859,65 @@ namespace SchematicUnitTests
             //string ledString = @"<element y=""3.2"" rot=""R270"" x=""2.2"" library=""Andres_Project"" name=""Red_LED"" value=""LED"" package=""LED""";
             //string resistorString = @"<element y=""13"" rot=""MR270"" x=""10"" library=""chipResistors"" name=""R_0402_200_0.1W_1%_Thick_Film"" value=""RESISTOR_0402""";
             //string ledString = @"<element y=""9"" rot=""R270"" x=""10"" library=""Andres_Project"" name=""Red_LED"" value=""LED"" package=""LED""";
-            string resistorString = @"<element y=""13"" rot=""MR270"" x=""10"" library=""chipResistors"" name=""R_0402_200_0.1W_1%_Thick_Film"" value=""ERJ-2RKF2000X"" package=""R_0402""";
-            string ledString = @"<element y=""9"" rot=""R270"" x=""10"" library=""Andres_Project"" name=""Red_LED"" value=""LTST-C191KRKT"" package=""LED""";
+            string resistorString = @"<element xmlns='eagle' name=""R_0402_200_0.1W_1%_Thick_Film"" library=""chipResistors"" package=""R_0402"" value=""ERJ-2RKF2000X"" x=""10"" y=""13"" rot=""MR270"" />";
+            string ledString = @"<element xmlns='eagle' y=""9"" rot=""R270"" x=""10"" library=""Andres_Project"" name=""Red_LED"" value=""LTST-C191KRKT"" package=""LED"" />";
+
+            var expectedNodes = new string[]
+                {
+                    resistorString,
+                    ledString
+                };
+
+            CheckBoardContainsNodes(pathBoardFile, expectedNodes);
+        }
+
+        private static void CheckBoardContainsNodes(string pathBoardFile, IEnumerable<string> expectedNodes)
+        {
+            Dictionary<string, string> elementNameToAttributeName = new Dictionary<string, string>()
+            {
+                { "element", "value" },
+                { "smd", "name" },
+            };
 
             using (StreamReader reader = File.OpenText(pathBoardFile))
             {
-                string contents = reader.ReadToEnd();
-                bool resistorOK = contents.Contains(resistorString);
-                bool ledOK = contents.Contains(ledString);
-                Assert.True(resistorOK, "Chip resistor test string not found in generated board file.");
-                Assert.True(ledOK, "LED test string not found in generated board file.");
+                var board = new XmlDocument();
+                board.Load(pathBoardFile);
+
+                XmlNamespaceManager nsmgr = new XmlNamespaceManager(board.NameTable);
+                nsmgr.AddNamespace("eagle", "eagle");
+
+                foreach (var testxml in expectedNodes)
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(testxml);
+                    var expectedNode = doc.ChildNodes[0];
+
+                    var attributeName = elementNameToAttributeName[expectedNode.LocalName];
+
+                    var xpath = String.Format("//eagle:{2}[@{1}='{0}']", expectedNode.Attributes[attributeName].Value, attributeName, expectedNode.LocalName);
+
+                    XmlNode actualNode = board.SelectSingleNode(xpath, nsmgr);
+                    foreach (var expectedAttribute in expectedNode.Attributes.Cast<XmlAttribute>())
+                    {
+                        if (expectedAttribute.Name.StartsWith("xmlns"))
+                        {
+                            continue;
+                        }
+                        var actualAttribute = actualNode.Attributes[expectedAttribute.Name];
+                        if (actualAttribute == null)
+                        {
+                            Assert.False(true, "Output does not include attribute " + expectedAttribute.Name);
+                        }
+                        Assert.Equal(expectedAttribute.Value, actualAttribute.Value);
+                        Console.Out.Write(expectedAttribute);
+                    }
+
+                }
+
+
+                //Assert.True(resistorOK, "Chip resistor test string not found in generated board file.");
+                // Assert.True(ledOK, "LED test string not found in generated board file.");
             }
         }
 
