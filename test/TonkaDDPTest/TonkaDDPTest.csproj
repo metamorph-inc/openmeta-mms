@@ -1,4 +1,5 @@
-<?xml version="1.0" ?><Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,7 +11,7 @@
     <RootNamespace>TonkaDDPTest</RootNamespace>
     <AssemblyName>TonkaDDPTest</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <TargetFrameworkProfile/>
+    <TargetFrameworkProfile />
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -26,18 +27,25 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ComponentInterchangeTest">
+      <HintPath>..\InterchangeTest\ComponentInterchangeTest\ComponentInterchangeTest\bin\Release\ComponentInterchangeTest.exe</HintPath>
+    </Reference>
     <Reference Include="CyPhy2ComponentModel, Version=1.1.0.0, Culture=neutral, PublicKeyToken=9402ae1bf72622c4, processorArchitecture=MSIL">
       <HintPath>..\..\src\CyPhy2ComponentModel\bin\Release\CyPhy2ComponentModel.dll</HintPath>
     </Reference>
     <Reference Include="CyPhy2DesignInterchange, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52b4082c5bbd5f71, processorArchitecture=MSIL">
       <HintPath>..\..\src\CyPhy2DesignInterchange\bin\Release\CyPhy2DesignInterchange.dll</HintPath>
+    </Reference>
+    <Reference Include="CyPhyCOMInterfacesCS, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a2bc4de2a6ddf666, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\CyPhyCOMInterfacesCS\bin\Release\CyPhyCOMInterfacesCS.dll</HintPath>
     </Reference>
     <Reference Include="CyPhyComponentExporterCL">
       <HintPath>..\..\src\CyPhyComponentExporterCL\bin\Release\CyPhyComponentExporterCL.exe</HintPath>
@@ -110,6 +118,7 @@
     <Compile Include="PcbLayout.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GenericModel.cs" />
     <Compile Include="RF.cs" />
     <Compile Include="Schematic.cs" />
     <Compile Include="SystemC.cs" />
