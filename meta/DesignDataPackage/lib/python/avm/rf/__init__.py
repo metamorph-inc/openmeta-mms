@@ -1,7 +1,7 @@
 # .\_rf.py
 # -*- coding: utf-8 -*-
 # PyXB bindings for NM:22ee0097135072451429b5ac45630d52779cd49b
-# Generated 2016-02-15 11:24:52.073000 by PyXB version 1.2.3
+# Generated 2023-01-23 16:19:49.074000 by PyXB version 1.2.3
 # Namespace rf [xmlns:rf]
 
 import pyxb
@@ -13,7 +13,7 @@ import pyxb.utils.domutils
 import sys
 
 # Unique identifier for bindings created at the same time
-_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:057f9670-d409-11e5-9520-7429af7917c0')
+_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:0c832d0f-9b6c-11ed-be80-415645000030')
 
 # Version of PyXB used to generate the bindings
 _PyXBVersion = '1.2.3'
@@ -22,8 +22,8 @@ if pyxb.__version__ != _PyXBVersion:
     raise pyxb.PyXBVersionError(_PyXBVersion)
 
 # Import bindings for namespaces imported into schema
-import pyxb.binding.datatypes
 import avm as _ImportedBinding__avm
+import pyxb.binding.datatypes
 
 # NOTE: All namespace declarations are reserved within the binding
 Namespace = pyxb.namespace.NamespaceForURI(u'rf', create_if_missing=True)

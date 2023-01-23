@@ -1,7 +1,7 @@
 # .\_spice.py
 # -*- coding: utf-8 -*-
 # PyXB bindings for NM:7c05204dcfaf173d8b1e2cdd5fc900e3eadc4351
-# Generated 2016-02-15 11:24:52.075000 by PyXB version 1.2.3
+# Generated 2023-01-23 16:19:49.078000 by PyXB version 1.2.3
 # Namespace spice [xmlns:spice]
 
 import pyxb
@@ -13,7 +13,7 @@ import pyxb.utils.domutils
 import sys
 
 # Unique identifier for bindings created at the same time
-_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:057f9670-d409-11e5-9520-7429af7917c0')
+_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:0c832d0f-9b6c-11ed-be80-415645000030')
 
 # Version of PyXB used to generate the bindings
 _PyXBVersion = '1.2.3'
@@ -22,9 +22,9 @@ if pyxb.__version__ != _PyXBVersion:
     raise pyxb.PyXBVersionError(_PyXBVersion)
 
 # Import bindings for namespaces imported into schema
-import pyxb.binding.datatypes
 import avm as _ImportedBinding__avm
 import avm.schematic as _ImportedBinding__schematic
+import pyxb.binding.datatypes
 
 # NOTE: All namespace declarations are reserved within the binding
 Namespace = pyxb.namespace.NamespaceForURI(u'spice', create_if_missing=True)
@@ -92,11 +92,11 @@ class Parameter_ (_ImportedBinding__avm.DomainModelParameter_):
     Value = property(__Value.value, __Value.set, None, None)
 
     
+    # Attribute YPosition inherited from {avm}DomainModelParameter
+    
     # Attribute Notes inherited from {avm}DomainModelParameter
     
     # Attribute XPosition inherited from {avm}DomainModelParameter
-    
-    # Attribute YPosition inherited from {avm}DomainModelParameter
     
     # Attribute Locator uses Python identifier Locator
     __Locator = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, u'Locator'), 'Locator', '__spice_Parameter__Locator', pyxb.binding.datatypes.string, required=True)
