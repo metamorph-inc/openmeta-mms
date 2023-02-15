@@ -130,7 +130,9 @@ namespace TonkaACMTest
 
                 avm.GenericDomainModelParameter dmParameter = genericDomainModel.GenericDomainModelParameter.First();
                 Assert.Equal("attr4", dmParameter.GenericAttribute4);
-                Assert.Equal("1234", dmParameter.Value);
+                Assert.Equal(((avm.PrimitiveProperty)comp.Property[0]).Value.ID, ((avm.DerivedValue)dmParameter.Value.ValueExpression).ValueSource);
+                Assert.Equal(comp.Connector[0].Role[0].PortMap[0],
+                    genericDomainModel.GenericDomainModelPort[0].ID);
                 Assert.Equal("GenericDomainModelParameter_InDomainModel", dmParameter.Name);
 
                 avm.GenericDomainModelPort dmPort = genericDomainModel.GenericDomainModelPort.First();
