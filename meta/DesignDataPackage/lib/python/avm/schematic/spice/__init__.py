@@ -1,7 +1,7 @@
 # .\_spice.py
 # -*- coding: utf-8 -*-
 # PyXB bindings for NM:7c05204dcfaf173d8b1e2cdd5fc900e3eadc4351
-# Generated 2023-01-23 16:19:49.078000 by PyXB version 1.2.3
+# Generated 2023-02-15 11:25:44.107000 by PyXB version 1.2.3
 # Namespace spice [xmlns:spice]
 
 import pyxb
@@ -13,7 +13,7 @@ import pyxb.utils.domutils
 import sys
 
 # Unique identifier for bindings created at the same time
-_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:0c832d0f-9b6c-11ed-be80-415645000030')
+_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:c6a1c7b0-ad55-11ed-a747-50e085b81351')
 
 # Version of PyXB used to generate the bindings
 _PyXBVersion = '1.2.3'
@@ -22,9 +22,9 @@ if pyxb.__version__ != _PyXBVersion:
     raise pyxb.PyXBVersionError(_PyXBVersion)
 
 # Import bindings for namespaces imported into schema
+import pyxb.binding.datatypes
 import avm as _ImportedBinding__avm
 import avm.schematic as _ImportedBinding__schematic
-import pyxb.binding.datatypes
 
 # NOTE: All namespace declarations are reserved within the binding
 Namespace = pyxb.namespace.NamespaceForURI(u'spice', create_if_missing=True)

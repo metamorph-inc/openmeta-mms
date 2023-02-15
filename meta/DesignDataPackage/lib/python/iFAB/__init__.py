@@ -1,7 +1,7 @@
 # .\_iFAB.py
 # -*- coding: utf-8 -*-
 # PyXB bindings for NM:de45d6eea5b439c583053bcc995a5a07ca6f002d
-# Generated 2023-01-23 16:19:49.072000 by PyXB version 1.2.3
+# Generated 2023-02-15 11:25:44.103000 by PyXB version 1.2.3
 # Namespace iFAB [xmlns:iFAB]
 
 import pyxb
@@ -13,7 +13,7 @@ import pyxb.utils.domutils
 import sys
 
 # Unique identifier for bindings created at the same time
-_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:0c832d0f-9b6c-11ed-be80-415645000030')
+_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:c6a1c7b0-ad55-11ed-a747-50e085b81351')
 
 # Version of PyXB used to generate the bindings
 _PyXBVersion = '1.2.3'

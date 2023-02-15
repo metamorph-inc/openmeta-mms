@@ -8435,7 +8435,7 @@ namespace avm {
     [System.Xml.Serialization.XmlRootAttribute(Namespace="avm", IsNullable=false)]
     public partial class GenericDomainModelParameter : DomainModelParameter {
         
-        private string valueField;
+        private Value valueField;
         
         private string genericAttribute0Field;
         
@@ -8457,8 +8457,12 @@ namespace avm {
         
         private static System.Xml.Serialization.XmlSerializer serializer;
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Value {
+        public GenericDomainModelParameter() {
+            this.valueField = new Value();
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public Value Value {
             get {
                 return this.valueField;
             }
