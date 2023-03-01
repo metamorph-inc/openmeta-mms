@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using ComponentImporterUnitTests;
 using GME.MGA;
 using GME.Util;
+using CyPhyComponentExporter;
 
 namespace TonkaACMTest
 {
@@ -121,6 +122,8 @@ namespace TonkaACMTest
 
                 var cyphyComp = project.GetComponentsByName("Component1").First();
                 var comp = CyPhy2ComponentModel.Convert.CyPhyML2AVMComponent(cyphyComp);
+                CyPhyComponentExporterInterpreter.SerializeAvmComponent(comp, 
+                    Path.Combine(Path.GetDirectoryName(GenericModelTest.genericModelMgaPath), "Component1_test.acm"));
 
                 avm.GenericDomainModel genericDomainModel = (avm.GenericDomainModel)comp.DomainModel.First();
                 Assert.Equal("domain0", genericDomainModel.Domain);
@@ -130,9 +133,11 @@ namespace TonkaACMTest
 
                 avm.GenericDomainModelParameter dmParameter = genericDomainModel.GenericDomainModelParameter.First();
                 Assert.Equal("attr4", dmParameter.GenericAttribute4);
-                Assert.Equal(((avm.PrimitiveProperty)comp.Property[0]).Value.ID, ((avm.DerivedValue)dmParameter.Value.ValueExpression).ValueSource);
-                Assert.Equal(comp.Connector[0].Role[0].PortMap[0],
-                    genericDomainModel.GenericDomainModelPort[0].ID);
+                Assert.Equal(((avm.PrimitiveProperty)comp.Property.Single()).Value.ID, ((avm.DerivedValue)dmParameter.Value.ValueExpression).ValueSource);
+                Assert.Equal(comp.Connector.Where(c => c.Name == "Connector").Single().Role.Single().PortMap.Single(),
+                    genericDomainModel.GenericDomainModelPort.Single().ID);
+                Assert.Equal(comp.Connector.Where(c => c.Name == "Connector2").Single().Role.Single().ID,
+                    genericDomainModel.GenericDomainModelPort.Single().PortMap.Single());
                 Assert.Equal("GenericDomainModelParameter_InDomainModel", dmParameter.Name);
 
                 avm.GenericDomainModelPort dmPort = genericDomainModel.GenericDomainModelPort.First();
@@ -141,23 +146,23 @@ namespace TonkaACMTest
                 Assert.Equal("attr1", dmPort.GenericAttribute1);
 
 
-                var componentAssembly = project.GetComponentAssemblyByName("ToplevelComponentAssembly").First();
+                var componentAssembly = project.GetComponentAssemblyByName("ToplevelComponentAssembly").Single();
                 var dm = CyPhy2DesignInterchange.CyPhy2DesignInterchange.Convert(componentAssembly);
                 Assert.Equal("ToplevelComponentAssembly", dm.Name);
 
-                var lowestContainer = dm.RootContainer.Container1.First().Container1.First();
+                var lowestContainer = dm.RootContainer.Container1.Single().Container1.Single();
                 // lowest CA has GenericDomainModelPort that connects to the Component's port
-                Assert.True(lowestContainer.Connector.First().Role.First().PortMap.Contains(
+                Assert.True(lowestContainer.Connector.Single().Role.Single().PortMap.Contains(
                     lowestContainer.ComponentInstance.First().PortInstance.First().ID));
-                // lowest CA has Connector that connectos to Component's Connector
-                Assert.True(lowestContainer.Connector.First().ConnectorComposition.Contains(
-                    lowestContainer.ComponentInstance.First().ConnectorInstance.First().ID));
+                // lowest CA has Connector that connects to Component's Connector
+                Assert.True(lowestContainer.Connector.Single().ConnectorComposition.Intersect(
+                    lowestContainer.ComponentInstance.Single().ConnectorInstance.Select(ci => ci.ID)).Any());
 
                 var toplevelConnector1 = dm.RootContainer.Connector.First();
                 var toplevelConnector2 = dm.RootContainer.Connector.Skip(1).First();
-                Assert.True(toplevelConnector1.Role.First().PortMap.Contains(
-                    toplevelConnector2.Role.First().ID));
-                Assert.Equal(typeof(avm.GenericDomainModelPort), toplevelConnector1.Role.First().GetType());
+                Assert.True(toplevelConnector1.Role.Single().PortMap.Contains(
+                    toplevelConnector2.Role.Single().ID));
+                Assert.Equal(typeof(avm.GenericDomainModelPort), toplevelConnector1.Role.Single().GetType());
 
                 project.AbortTransaction();
             }

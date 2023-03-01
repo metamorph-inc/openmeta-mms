@@ -1585,6 +1585,13 @@ namespace CyPhyML2AVM
 
                 _cyPhyMLAVMObjectMap.Add(cyPhyMLGenericDomainModelPort, avmGenericDomainPort);
                 SetGenericDomainPortAttributes(avmGenericDomainPort, cyPhyMLGenericDomainModelPort);
+
+                foreach (CyPhyML.PortComposition cyPhyMLPortComposition in cyPhyMLGenericDomainModelPort.SrcConnections.PortCompositionCollection.Where(c => c.IsRefportConnection() == false))
+                {
+                    CyPhyML.DomainModelPort cyPhyMLDomainModelPort = cyPhyMLPortComposition.SrcEnds.DomainModelPort;
+                    string id = ensureIDAttribute(cyPhyMLDomainModelPort);
+                    avmGenericDomainPort.PortMap.Add(id);
+                }
             }
 
             foreach (CyPhyML.GenericDomainModelParameter cyPhyMLGenericDomainModelParameter in cyPhyGenericDomainModel.Children.GenericDomainModelParameterCollection)

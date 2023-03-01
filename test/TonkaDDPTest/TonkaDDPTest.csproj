@@ -47,6 +47,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\src\CyPhyCOMInterfacesCS\bin\Release\CyPhyCOMInterfacesCS.dll</HintPath>
     </Reference>
+    <Reference Include="CyPhyComponentExporter, Version=1.1.0.0, Culture=neutral, PublicKeyToken=90cfe5934d80b630, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\src\CyPhyComponentExporter\bin\Release\CyPhyComponentExporter.dll</HintPath>
+    </Reference>
     <Reference Include="CyPhyComponentExporterCL">
       <HintPath>..\..\src\CyPhyComponentExporterCL\bin\Release\CyPhyComponentExporterCL.exe</HintPath>
     </Reference>
