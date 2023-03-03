@@ -35,7 +35,7 @@ class SMOPEngine(object):
 
                 # FIXME won't work for files with dependencies
                 source = '\n\n'.join(imports + [smop.backend.backend(func_obj) for func_obj in func_list])
-                with open(name + '.py', 'wb') as out:
+                with open(name + '.py', 'wt') as out:
                     out.write(source)
                 code = compile(source, name + '.py', 'exec')
                 self.cache[name] = code
