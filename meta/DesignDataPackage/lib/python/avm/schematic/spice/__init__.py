@@ -1,7 +1,7 @@
 # .\_spice.py
 # -*- coding: utf-8 -*-
 # PyXB bindings for NM:7c05204dcfaf173d8b1e2cdd5fc900e3eadc4351
-# Generated 2016-02-15 11:24:52.075000 by PyXB version 1.2.3
+# Generated 2023-02-15 11:25:44.107000 by PyXB version 1.2.3
 # Namespace spice [xmlns:spice]
 
 import pyxb
@@ -13,7 +13,7 @@ import pyxb.utils.domutils
 import sys
 
 # Unique identifier for bindings created at the same time
-_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:057f9670-d409-11e5-9520-7429af7917c0')
+_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:c6a1c7b0-ad55-11ed-a747-50e085b81351')
 
 # Version of PyXB used to generate the bindings
 _PyXBVersion = '1.2.3'
@@ -92,11 +92,11 @@ class Parameter_ (_ImportedBinding__avm.DomainModelParameter_):
     Value = property(__Value.value, __Value.set, None, None)
 
     
+    # Attribute YPosition inherited from {avm}DomainModelParameter
+    
     # Attribute Notes inherited from {avm}DomainModelParameter
     
     # Attribute XPosition inherited from {avm}DomainModelParameter
-    
-    # Attribute YPosition inherited from {avm}DomainModelParameter
     
     # Attribute Locator uses Python identifier Locator
     __Locator = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, u'Locator'), 'Locator', '__spice_Parameter__Locator', pyxb.binding.datatypes.string, required=True)

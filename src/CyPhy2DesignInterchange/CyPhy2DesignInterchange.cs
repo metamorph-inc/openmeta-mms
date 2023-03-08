@@ -824,6 +824,21 @@ namespace CyPhy2DesignInterchange
                 SetLayoutData(con, mc.Impl);
             }
 
+            foreach (var cyPhyMLPort in de.GenericDomainModelPort)
+            {
+                var avmGenericDomainModelPort = new avm.GenericDomainModelPort()
+                {
+                    ID = GetOrSetID(cyPhyMLPort),
+                };
+                CyPhyML2AVM.AVMComponentBuilder.SetGenericDomainPortAttributes(avmGenericDomainModelPort, cyPhyMLPort);
+                
+                portMapping.Add(new PortRefport(cyPhyMLPort, null), avmGenericDomainModelPort);
+
+                SetLayoutData(avmGenericDomainModelPort, cyPhyMLPort.Impl);
+
+                rootContainer.Port.Add(avmGenericDomainModelPort);
+            }
+
             foreach (var cyPhyMLPort in de.SchematicModelPort)
             {
                 var avmPin = new avm.schematic.Pin()
@@ -1331,6 +1346,20 @@ namespace CyPhy2DesignInterchange
                     SetLayoutData(avmDomainModelPort, cyPhyMLDomainModelPort.Impl);
                     portMapping.Add(new PortRefport(cyPhyMLDomainModelPort, null), avmDomainModelPort);
                     xConnector.Role.Add(avmDomainModelPort);
+                }
+
+                foreach (var cyPhyMLPort in connector.Children.GenericDomainModelPortCollection)
+                {
+                    var genericDomainModelPort = new avm.GenericDomainModelPort()
+                    {
+                        ID = GetOrSetID(cyPhyMLPort)
+                    };
+                    CyPhyML2AVM.AVMComponentBuilder.SetGenericDomainPortAttributes(genericDomainModelPort, cyPhyMLPort);
+
+                    SetLayoutData(genericDomainModelPort, cyPhyMLPort.Impl);
+                    portMapping.Add(new PortRefport(cyPhyMLPort, null), genericDomainModelPort);
+
+                    xConnector.Role.Add(genericDomainModelPort);
                 }
 
                 foreach (var cyPhyMLPort in connector.Children.SchematicModelPortCollection)

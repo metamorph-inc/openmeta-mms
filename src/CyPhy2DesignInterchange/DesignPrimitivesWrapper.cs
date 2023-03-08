@@ -112,6 +112,17 @@ namespace CyPhy2DesignInterchange
             }
         }
 
+        public List<CyPhy.GenericDomainModelPort> GenericDomainModelPort
+        {
+            get
+            {
+                if (Primitive is CyPhy.ComponentAssembly)
+                    return new List<CyPhy.GenericDomainModelPort>(((CyPhy.ComponentAssembly)Primitive).Children.GenericDomainModelPortCollection);
+                else
+                    return new List<CyPhy.GenericDomainModelPort>(((CyPhy.DesignContainer)Primitive).Children.GenericDomainModelPortCollection);
+            }
+        }
+
         public List<CyPhy.SchematicModelPort> SchematicModelPort
         {
             get

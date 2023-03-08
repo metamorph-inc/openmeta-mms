@@ -1,7 +1,7 @@
 # .\_schematic.py
 # -*- coding: utf-8 -*-
 # PyXB bindings for NM:2b86b09e6504617c4541a8a2f53a65ea784d5722
-# Generated 2016-02-15 11:24:52.074000 by PyXB version 1.2.3
+# Generated 2023-02-15 11:25:44.107000 by PyXB version 1.2.3
 # Namespace schematic [xmlns:schematic]
 
 import pyxb
@@ -13,7 +13,7 @@ import pyxb.utils.domutils
 import sys
 
 # Unique identifier for bindings created at the same time
-_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:057f9670-d409-11e5-9520-7429af7917c0')
+_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:c6a1c7b0-ad55-11ed-a747-50e085b81351')
 
 # Version of PyXB used to generate the bindings
 _PyXBVersion = '1.2.3'

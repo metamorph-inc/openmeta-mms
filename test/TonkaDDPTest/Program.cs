@@ -14,6 +14,7 @@ namespace TonkaACMTest
             int ret = Xunit.ConsoleClient.Program.Main(new string[] {
                 Assembly.GetExecutingAssembly().CodeBase.Substring("file:///".Length),
                 //"/noshadow",
+                // "/trait", "THIS=ONE",
             });
             Console.In.ReadLine();
             return ret;
