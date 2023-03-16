@@ -61,14 +61,12 @@ Again, install Windows updates until everything is current. Restart your compute
 ## FreeCAD
 FreeCAD is an open-source parametric 3D CAD modeling program. META uses FreeCAD to assemble component CAD models to provide a 3D visual representation of a user's model. It is required for the CyPhy2CADPCB visualizing test benches.
 
-[Download FreeCAD v0.14 x64](http://sourceforge.net/projects/free-cad/files/FreeCAD%20Windows/FreeCAD%200.14/FreeCAD-0.14.3700_x64_setup.exe/download).
-
-[Download FreeCAD v0.14 x86](http://sourceforge.net/projects/free-cad/files/FreeCAD%20Windows/FreeCAD%200.14/FreeCAD%200.14.3700_x86_setup.exe/download).
+[Download FreeCAD v0.14 x64](https://github.com/FreeCAD/FreeCAD/releases/tag/0.14).
 
 ## CadQuery
 CadQuery is a plugin for FreeCAD that provides a library of Python functions for the manipulation of solid geometry. These functions are used to transform the local coordinate system of a component's CAD model to the correct position and orientation in the assembly coordinate system. It is required for the CyPhy2CADPCB visualizing test benches.
 
-[Download CadQuery](https://github.com/jmwright/cadquery-freecad-module/archive/master.zip).
+[Download CadQuery](https://github.com/metamorph-inc/cadquery-freecad-module/archive/579160f143d129ee649e5403ab2c7afa55360800.zip).
 
 To install:
 * Download zip file above and extract contents.
