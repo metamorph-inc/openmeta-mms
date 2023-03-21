@@ -512,6 +512,13 @@ namespace CyPhyML2AVM
                 avmDomainModelPort = avmRFPort;
                 hasBeenPortMapped = true;
             }
+            else if (cyPhyMLDomainModelPort is CyPhyML.GenericDomainModelPort)
+            {
+                avm.GenericDomainModelPort avmGenericPort;
+                createAVMGenericDomainModelPort(out avmGenericPort, (CyPhyML.GenericDomainModelPort)cyPhyMLDomainModelPort);
+                avmDomainModelPort = avmGenericPort;
+                hasBeenPortMapped = true;
+            }
             else
             {
                 _avmNameCreateMethodMap[cyPhyMLDomainModelPortTypeName].call(out avmDomainModelPort);
@@ -1452,6 +1459,42 @@ namespace CyPhyML2AVM
             avmPort.NominalImpedanceSpecified = true;
             avmPort.NominalImpedance = (float)cyPhyMLPort.Attributes.NominalImpedance;
             avmPort.Notes = cyPhyMLPort.Attributes.InstanceNotes;
+        }
+
+        public static void SetAVMGenericDomainPortAttributes(avm.GenericDomainModelPort avmPort, CyPhyML.GenericDomainModelPort cyPhyMLPort)
+        {
+            avmPort.Name = cyPhyMLPort.Name;
+            avmPort.Definition = cyPhyMLPort.Attributes.Definition;
+            avmPort.Notes = cyPhyMLPort.Attributes.InstanceNotes;
+
+            avmPort.Type = cyPhyMLPort.Attributes.Type;
+            avmPort.GenericAttribute0 = cyPhyMLPort.Attributes.GenericAttribute0;
+            avmPort.GenericAttribute1 = cyPhyMLPort.Attributes.GenericAttribute1;
+            avmPort.GenericAttribute2 = cyPhyMLPort.Attributes.GenericAttribute2;
+            avmPort.GenericAttribute3 = cyPhyMLPort.Attributes.GenericAttribute3;
+            avmPort.GenericAttribute4 = cyPhyMLPort.Attributes.GenericAttribute4;
+            avmPort.GenericAttribute5 = cyPhyMLPort.Attributes.GenericAttribute5;
+            avmPort.GenericAttribute6 = cyPhyMLPort.Attributes.GenericAttribute6;
+            avmPort.GenericAttribute7 = cyPhyMLPort.Attributes.GenericAttribute7;
+        }
+
+        private void createAVMGenericDomainModelPort(out avm.GenericDomainModelPort avmPort, CyPhyML.GenericDomainModelPort cyPhyMLPort)
+        {
+            avmPort = new avm.GenericDomainModelPort()
+            {
+                ID = ensureIDAttribute(cyPhyMLPort)
+            };
+
+            SetAVMGenericDomainPortAttributes(avmPort, cyPhyMLPort);
+
+            SetLayoutData(avmPort, cyPhyMLPort.Impl);
+
+            foreach (var cyPhyMLPortComposition in cyPhyMLPort.SrcConnections.PortCompositionCollection)
+            {
+                var cyPhyMLDomainModelPort = cyPhyMLPortComposition.SrcEnds.DomainModelPort;
+                string id = ensureIDAttribute(cyPhyMLDomainModelPort);
+                avmPort.PortMap.Add(id);
+            }
         }
 
         private void createAVMRFPort(out avm.rf.RFPort avmPort, CyPhyML.RFPort cyPhyMLPort)

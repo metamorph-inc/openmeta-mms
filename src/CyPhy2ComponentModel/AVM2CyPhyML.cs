@@ -71,6 +71,7 @@ namespace AVM2CyPhyML
             { typeof(avm.schematic.Pin).ToString(),                    CreateMethodProxy<CyPhyMLClasses.SchematicModelPort>.get_singleton() },
             { typeof(avm.systemc.SystemCPort).ToString(),              CreateMethodProxy<CyPhyMLClasses.SystemCPort>.get_singleton() },
             { typeof(avm.rf.RFPort).ToString(),                        CreateMethodProxy<CyPhyMLClasses.RFPort>.get_singleton() },
+            { typeof(avm.GenericDomainModelPort).ToString(),           CreateMethodProxy<CyPhyMLClasses.GenericDomainModelPort>.get_singleton() },
             { typeof(avm.DoDDistributionStatement).ToString(),         CreateMethodProxy<CyPhyMLClasses.DoDDistributionStatement>.get_singleton() } 
 
 			//{ typeof( CyPhyMLClasses.Axis ).Name,                      CreateMethodProxy<CyPhyMLClasses.Axis>.get_singleton() },
@@ -687,6 +688,7 @@ namespace AVM2CyPhyML
             {typeof(CyPhyMLClasses.SPICEModelParameterMap).Name, CyPhyMLClasses.SPICEModelParameterMap.Cast},
             {typeof(CyPhyMLClasses.EDAModelParameterMap).Name, CyPhyMLClasses.EDAModelParameterMap.Cast},
             {typeof(CyPhyMLClasses.CarParameterPortMap).Name, CyPhyMLClasses.CarParameterPortMap.Cast},
+            {typeof(CyPhyMLClasses.GenericParameterPortMap).Name, CyPhyMLClasses.GenericParameterPortMap.Cast},
             // TODO more kinds
         };
 
@@ -1221,6 +1223,10 @@ namespace AVM2CyPhyML
                             {
                                 connectAcrossHierarchy(cyPhyMLObjectSrc, cyPhyMLObjectDst, typeof(CyPhyML.SPICEModelParameterMap).Name);
                             }
+                            else if (cyPhyMLObjectDst is CyPhyML.GenericDomainModelParameter)
+                            {
+                                connectAcrossHierarchy(cyPhyMLObjectSrc, cyPhyMLObjectDst, typeof(CyPhyML.GenericParameterPortMap).Name);
+                            }
                             else
                             {
                                 connectAcrossHierarchy(cyPhyMLObjectSrc, cyPhyMLObjectDst, typeof(CyPhyML.ValueFlow).Name);
@@ -1468,6 +1474,22 @@ namespace AVM2CyPhyML
                 {
                     CyPhyMLPort.Attributes.Directionality = d_RFDirectionality[avmRFPort.Directionality];
                 }
+            }
+            else if (avmPort is avm.GenericDomainModelPort)
+            {
+                var avmGenericPort = avmPort as avm.GenericDomainModelPort;
+                var CyPhyMLPort = cyPhyMLDomainModelPort as CyPhyML.GenericDomainModelPort;
+
+                CyPhyMLPort.Attributes.Type = avmGenericPort.Type;
+
+                CyPhyMLPort.Attributes.GenericAttribute0 = avmGenericPort.GenericAttribute0;
+                CyPhyMLPort.Attributes.GenericAttribute1 = avmGenericPort.GenericAttribute1;
+                CyPhyMLPort.Attributes.GenericAttribute2 = avmGenericPort.GenericAttribute2;
+                CyPhyMLPort.Attributes.GenericAttribute3 = avmGenericPort.GenericAttribute3;
+                CyPhyMLPort.Attributes.GenericAttribute4 = avmGenericPort.GenericAttribute4;
+                CyPhyMLPort.Attributes.GenericAttribute5 = avmGenericPort.GenericAttribute5;
+                CyPhyMLPort.Attributes.GenericAttribute6 = avmGenericPort.GenericAttribute6;
+                CyPhyMLPort.Attributes.GenericAttribute7 = avmGenericPort.GenericAttribute7;
             }
 
             _avmCyPhyMLObjectMap.Add(avmPort, cyPhyMLDomainModelPort);
@@ -2313,6 +2335,59 @@ namespace AVM2CyPhyML
             CyPhy2ComponentModel.CyPhyComponentAutoLayout.LayoutChildrenByName(cyPhyMLRFModel);
         }
 
+        private void process(avm.GenericDomainModel avmGenericModel)
+        {
+            CyPhyML.GenericDomainModel cyPhyGenericModel = CyPhyMLClasses.GenericDomainModel.Create(_cyPhyMLComponent);
+            _avmCyPhyMLObjectMap.Add(avmGenericModel, cyPhyGenericModel);
+
+            cyPhyGenericModel.Name = avmGenericModel.Name;
+            cyPhyGenericModel.Attributes.Author = avmGenericModel.Author;
+            cyPhyGenericModel.Attributes.Notes = avmGenericModel.Notes;
+            cyPhyGenericModel.Attributes.Type = avmGenericModel.Type;
+            cyPhyGenericModel.Attributes.Domain = avmGenericModel.Domain;
+
+            cyPhyGenericModel.Attributes.GenericAttribute0 = avmGenericModel.GenericAttribute0;
+            cyPhyGenericModel.Attributes.GenericAttribute1 = avmGenericModel.GenericAttribute1;
+            cyPhyGenericModel.Attributes.GenericAttribute2 = avmGenericModel.GenericAttribute2;
+            cyPhyGenericModel.Attributes.GenericAttribute3 = avmGenericModel.GenericAttribute3;
+            cyPhyGenericModel.Attributes.GenericAttribute4 = avmGenericModel.GenericAttribute4;
+            cyPhyGenericModel.Attributes.GenericAttribute5 = avmGenericModel.GenericAttribute5;
+            cyPhyGenericModel.Attributes.GenericAttribute6 = avmGenericModel.GenericAttribute6;
+            cyPhyGenericModel.Attributes.GenericAttribute7 = avmGenericModel.GenericAttribute7;
+
+            foreach (var avmPort in avmGenericModel.GenericDomainModelPort)
+            {
+                process<CyPhyML.GenericDomainModel>(cyPhyGenericModel, avmPort);
+            }
+
+            foreach (var avmPort in avmGenericModel.GenericDomainModelParameter)
+            {
+                var avmCADParameter = avmPort;
+                var cyPhyMLCADModel = cyPhyGenericModel;
+                CyPhyML.GenericDomainModelParameter cyPhyMLCADParameter = CyPhyMLClasses.GenericDomainModelParameter.Create(cyPhyMLCADModel);
+                _avmCyPhyMLObjectMap.Add(avmCADParameter, cyPhyMLCADParameter);
+                cyPhyMLCADParameter.Name = avmCADParameter.Name;
+                cyPhyMLCADParameter.Attributes.GenericAttribute0 = avmCADParameter.GenericAttribute0;
+                cyPhyMLCADParameter.Attributes.GenericAttribute1 = avmCADParameter.GenericAttribute1;
+                cyPhyMLCADParameter.Attributes.GenericAttribute2 = avmCADParameter.GenericAttribute2;
+                cyPhyMLCADParameter.Attributes.GenericAttribute3 = avmCADParameter.GenericAttribute3;
+                cyPhyMLCADParameter.Attributes.GenericAttribute4 = avmCADParameter.GenericAttribute4;
+                cyPhyMLCADParameter.Attributes.GenericAttribute5 = avmCADParameter.GenericAttribute5;
+                cyPhyMLCADParameter.Attributes.GenericAttribute6 = avmCADParameter.GenericAttribute6;
+                cyPhyMLCADParameter.Attributes.GenericAttribute7 = avmCADParameter.GenericAttribute7;
+
+                if (avmCADParameter.Value.ValueExpression is avm.FixedValue)
+                {
+                    cyPhyMLCADParameter.Attributes.Value = ((avm.FixedValue)avmCADParameter.Value.ValueExpression).Value;
+                }
+
+                registerValueNode(avmCADParameter.Value, avmCADParameter);
+            }
+
+            CyPhy2ComponentModel.CyPhyComponentAutoLayout.LayoutChildrenByName(cyPhyGenericModel);
+        }
+
+
         private void processModelicaConnector(CyPhyML.ModelicaModel cyPhyMLModelicaModel, avm.modelica.Connector avmModelicaConnector)
         {
             CyPhyML.ModelicaConnector cyPhyMLModelicaConnector = null;
@@ -2804,6 +2879,11 @@ namespace AVM2CyPhyML
                                                    .OfType<avm.rf.RFModel>())
             {
                 process(avmRFModel);
+            }
+
+            foreach (var avmGenericModel in avmComponent.DomainModel.OfType<avm.GenericDomainModel>())
+            {
+                process(avmGenericModel);
             }
 
             foreach (var simpleFormula in avmComponent.Formula.OfType<avm.SimpleFormula>())

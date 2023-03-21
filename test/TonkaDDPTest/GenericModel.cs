@@ -56,11 +56,11 @@ namespace TonkaACMTest
             Assert.True(File.Exists(GenericModelTest.inputMgaPath), "InputModel.mga not found; import may have failed.");
 
             // Next, import the content model
-            File.Delete(GenericModelTest.inputMgaPath);
+            File.Delete(GenericModelTest.genericModelMgaPath);
             GME.MGA.MgaUtils.ImportXME(GenericModelTest.genericModelXMEPath, GenericModelTest.genericModelMgaPath);
             Assert.True(File.Exists(GenericModelTest.genericModelMgaPath),
                         String.Format("{0} not found; import may have failed.",
-                                      Path.GetFileName(GenericModelTest.inputMgaPath)
+                                      Path.GetFileName(GenericModelTest.genericModelMgaPath)
                                      )
                         );
         }
@@ -105,10 +105,12 @@ namespace TonkaACMTest
         public void TestExport()
         {
             // Next, export all component models from the content model
-            var args = String.Format("{0} -f {1}", GenericModelTest.genericModelMgaPath, GenericModelTest.modelOutputPath).Split();
-            CyPhyComponentExporterCL.CyPhyComponentExporterCL.Main(args);
+            {
+                var args = String.Format("{0} -f {1}", GenericModelTest.genericModelMgaPath, GenericModelTest.modelOutputPath).Split();
+                CyPhyComponentExporterCL.CyPhyComponentExporterCL.Main(args);
 
-            Assert.True(Directory.Exists(GenericModelTest.modelOutputPath), "Model output path doesn't exist; Exporter may have failed.");
+                Assert.True(Directory.Exists(GenericModelTest.modelOutputPath), "Model output path doesn't exist; Exporter may have failed.");
+            }
 
 
             MgaProject project = new MgaProject();
@@ -169,6 +171,19 @@ namespace TonkaACMTest
             finally
             {
                 project.Close(true);
+            }
+
+            {
+                // Run Importer
+                var args = String.Format("-r {0} {1}", modelOutputPath, inputMgaPath).Split();
+                var importer_result = CyPhyComponentImporterCL.CyPhyComponentImporterCL.Main(args);
+                Assert.True(0 == importer_result, "Importer had non-zero return code.");
+
+                // FIXME for this to work, design importer must run
+                // FIXME for this to work, PortComposition direction should be ignored
+                // Compare
+                // var comp_result = Common.RunCyPhyMLComparator(genericModelMgaPath, inputMgaPath);
+                // Assert.True(comp_result == 0, "Imported model doesn't match expected.");
             }
         }
     }
