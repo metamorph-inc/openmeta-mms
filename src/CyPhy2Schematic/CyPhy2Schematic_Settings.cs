@@ -21,6 +21,7 @@
             this.doChipFit = null;
             this.doPlaceRoute = null;
             this.doPlaceOnly = null;
+            this.doSchematicOnly = null;
             this.doSpice = null;
             this.doSpiceForSI = null;
             this.skipGUI = null;
@@ -40,6 +41,10 @@
         [CyPhyGUIs.WorkflowConfigItem]
         [System.Xml.Serialization.XmlIgnore]
         public string doPlaceOnly { get; set; }
+
+        [CyPhyGUIs.WorkflowConfigItem]
+        [System.Xml.Serialization.XmlIgnore]
+        public string doSchematicOnly { get; set; }
 
         [CyPhyGUIs.WorkflowConfigItem]
         [System.Xml.Serialization.XmlIgnore]

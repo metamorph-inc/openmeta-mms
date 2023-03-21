@@ -152,6 +152,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Readme.txt" />
+    <None Include="bat\buildschematiconly.bat" />
     <None Include="StaticFiles\PopulateSchemaTemplate.py" />
     <None Include="bat\chipFit.bat" />
     <None Include="bat\LaunchSpiceViewer.bat" />

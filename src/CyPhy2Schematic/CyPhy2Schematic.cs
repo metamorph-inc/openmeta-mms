@@ -619,7 +619,7 @@ namespace CyPhy2Schematic
             Schematic.CodeGenerator.Mode mode = Schematic.CodeGenerator.Mode.EDA;
 
             ISet<IMgaObject> selectedSpiceModels = null;
-            if (config.doSpice != null)
+            if (config.doSpice != null || config.doSchematicOnly != null)
             {
                 FidelitySelectionRules xpaths = FidelitySelectionRules.DeserializeSpiceFidelitySelection(this.mainParameters.CurrentFCO);
                 if (xpaths != null && xpaths.rules.Count > 0)
@@ -638,10 +638,17 @@ namespace CyPhy2Schematic
                         selectedSpiceModels.Add(map[e].Impl);
                     }
                 }
-
-
-                this.result.RunCommand = "runspice.bat";
-                mode = Schematic.CodeGenerator.Mode.SPICE;
+                
+                if (config.doSpice != null)
+                {
+                    this.result.RunCommand = "runspice.bat";
+                    mode = Schematic.CodeGenerator.Mode.SPICE;
+                }
+                else
+                {
+                    this.result.RunCommand = "buildschematiconly.bat";
+                    mode = Schematic.CodeGenerator.Mode.SCHEMATIC_ONLY;
+                }        
             }
             else if (config.doSpiceForSI != null)
             {

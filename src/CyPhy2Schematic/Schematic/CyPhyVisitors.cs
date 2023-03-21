@@ -112,7 +112,7 @@ namespace CyPhy2Schematic.Schematic
 
             var ca = obj.Impl;
 
-            if (mode == CodeGenerator.Mode.SPICE || mode == CodeGenerator.Mode.SPICE_SI)
+            if (mode == CodeGenerator.Mode.SPICE || mode == CodeGenerator.Mode.SPICE_SI || mode == CodeGenerator.Mode.SCHEMATIC_ONLY)
             {
                 var spiceModels = obj.Impl.Children.SPICEModelCollection;
                 Tonka.SPICEModel spiceModel = GetSpiceModel(obj, spiceModels);
@@ -296,7 +296,7 @@ namespace CyPhy2Schematic.Schematic
                 }
             }
             ///////////// SPICE //////////////
-            else if (mode == CodeGenerator.Mode.SPICE || mode == CodeGenerator.Mode.SPICE_SI)
+            else if (mode == CodeGenerator.Mode.SPICE || mode == CodeGenerator.Mode.SPICE_SI || mode == CodeGenerator.Mode.SCHEMATIC_ONLY)
             {
                 var spiceModels = obj.Impl.Children.SPICEModelCollection;
                 Tonka.SPICEModel spiceModel = GetSpiceModel(obj, spiceModels);
@@ -671,6 +671,7 @@ namespace CyPhy2Schematic.Schematic
                 case CodeGenerator.Mode.EDA:
                     SchematicModelType = typeof(Tonka.EDAModel);
                     break;
+                case CodeGenerator.Mode.SCHEMATIC_ONLY:
                 case CodeGenerator.Mode.SPICE:
                 case CodeGenerator.Mode.SPICE_SI:
                     SchematicModelType = typeof(Tonka.SPICEModel);

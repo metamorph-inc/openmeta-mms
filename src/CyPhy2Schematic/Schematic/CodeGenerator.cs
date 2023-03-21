@@ -36,7 +36,8 @@ namespace CyPhy2Schematic.Schematic
         {
             EDA,
             SPICE,
-            SPICE_SI
+            SPICE_SI,
+            SCHEMATIC_ONLY
         };
         public Mode mode { get; private set; }
 
@@ -387,6 +388,13 @@ namespace CyPhy2Schematic.Schematic
             System.IO.File.Copy(source, dest, overwrite: true);
         }
 
+        private void GenerateSchematicOnlyCommandFile()
+        {
+            var buildSchematicOnlyBat = new StreamWriter(Path.Combine(this.mainParameters.OutputDirectory, "buildschematiconly.bat"));
+            buildSchematicOnlyBat.Write(CyPhy2Schematic.Properties.Resources.buildschematiconly);
+            buildSchematicOnlyBat.Close();
+        }
+
         private void GenerateSpiceCommandFile(TestBench Testbench_obj)
         {
             var spiceBat = new StreamWriter(Path.Combine(this.mainParameters.OutputDirectory, "runspice.bat"));
@@ -506,6 +514,12 @@ namespace CyPhy2Schematic.Schematic
                     GeneratePopulateTemplateScriptFile();
                     GenerateSpiceCode(TestBench_obj);
                     GenerateSpiceCommandFile(TestBench_obj);
+                    GenerateSpiceViewerLauncher();
+                    break;
+                case Mode.SCHEMATIC_ONLY:
+                    GeneratePopulateTemplateScriptFile();
+                    GenerateSpiceCode(TestBench_obj);
+                    GenerateSchematicOnlyCommandFile();
                     GenerateSpiceViewerLauncher();
                     break;
                 default:

@@ -19,7 +19,7 @@ namespace CyPhy2Schematic.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -57,6 +57,31 @@ namespace CyPhy2Schematic.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @echo on
+        ///SetLocal EnableDelayedExpansion
+        ///pushd %~dp0
+        ///%SystemRoot%\SysWoW64\REG.exe query &quot;HKLM\software\META&quot; /v &quot;META_PATH&quot;
+        /// 
+        ///SET QUERY_ERRORLEVEL=%ERRORLEVEL%
+        /// 
+        ///IF %QUERY_ERRORLEVEL% == 0 (
+        ///    FOR /F &quot;skip=2 tokens=2,*&quot; %%A IN (&apos;%SystemRoot%\SysWoW64\REG.exe query &quot;HKLM\software\META&quot; /v &quot;META_PATH&quot;&apos;) DO SET META_PATH=%%B)
+        ///)
+        ///IF %QUERY_ERRORLEVEL% == 1 (
+        ///    echo on
+        ///    echo &quot;META tools not installed.&quot; &gt;&gt; _FAILED.txt
+        ///    echo &quot;META tools not installed.&quot;
+        ///	popd
+        ///    exit !QUERY_ERRORLEVEL!
+        ///)        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string buildschematiconly {
+            get {
+                return ResourceManager.GetString("buildschematiconly", resourceCulture);
             }
         }
         
@@ -138,22 +163,22 @@ namespace CyPhy2Schematic.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to @echo off
+        ///SetLocal EnableDelayedExpansion
         ///pushd %~dp0
         ///%SystemRoot%\SysWoW64\REG.exe query &quot;HKLM\software\META&quot; /v &quot;META_PATH&quot;
         ///
         ///SET QUERY_ERRORLEVEL=%ERRORLEVEL%
         ///
+        ///IF NOT &quot;%1&quot; == &quot;--only-consider-exact-constraints&quot; goto allconstraints
+        ///set ONLY_CONSIDER_EXACT_CONSTRAINTS=true
+        ///shift
+        ///:allconstraints
+        ///
         ///IF %QUERY_ERRORLEVEL% == 0 (
         ///    FOR /F &quot;skip=2 tokens=2,*&quot; %%A IN (&apos;%SystemRoot%\SysWoW64\REG.exe query &quot;HKLM\software\META&quot; /v &quot;META_PATH&quot;&apos;) DO SET META_PATH=%%B)
         ///)
         ///IF %QUERY_ERRORLEVEL% == 1 (
-        ///    echo on
-        ///    echo &quot;META tools not installed.&quot; &gt;&gt; _FAILED.txt
-        ///    echo &quot;META tools not installed.&quot;
-        ///    exit /b %QUERY_ERRORLEVEL%
-        ///)
-        ///
-        ///&quot;%META_PATH%\bin\LayoutSolver.exe&quot;  [rest of string was truncated]&quot;;.
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string placement {
             get {
@@ -191,7 +216,8 @@ namespace CyPhy2Schematic.Properties {
         ///   Looks up a localized string similar to #!/usr/bin/env
         ///
         ///import json
-        ///import string
+        ///from string import Template
+        ///import sys
         ///
         ///def main():
         ///    # Get Testbench Manifest Parameters
@@ -202,12 +228,10 @@ namespace CyPhy2Schematic.Properties {
         ///    for param in testbench_manifest[&quot;Parameters&quot;]:
         ///        parameters[param[&quot;Name&quot;]] = str(param[&quot;Value&quot;])
         ///
-        ///    with open(&quot;schema_template.cir&quot;, &apos;r&apos;) as f_in:
+        ///    with open(&quot;schema.cir.template&quot;, &apos;r&apos;) as f_in:
         ///        schema_template = f_in.read()
         ///    
-        ///    # Try to generate schema file from template
-        ///    try:
-        ///        schema [rest of string was truncated]&quot;;.
+        ///    # Try to generate schema file from template [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string PopulateSchemaTemplate {
             get {
