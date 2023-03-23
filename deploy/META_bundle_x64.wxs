@@ -203,8 +203,8 @@
       </MsiPackage>
 
       <MsiPackage Id="OpenMETA_Visualizer"
-                  Name="openmeta-visualizer_v2.7.1.msi"
-                  DownloadUrl="https://github.com/metamorph-inc/openmeta-visualizer/releases/download/v2.7.1/openmeta-visualizer_x64.msi"
+                  Name="openmeta-visualizer_v2.7.2.msi"
+                  DownloadUrl="https://github.com/metamorph-inc/openmeta-visualizer/releases/download/v2.7.2/openmeta-visualizer_x64.msi"
                   Compressed="yes"
                   Visible="yes"
                   ForcePerMachine="yes"
