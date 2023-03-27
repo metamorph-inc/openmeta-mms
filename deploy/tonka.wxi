@@ -29,7 +29,7 @@
         <File Source="..\bin\MaxRectsBinPack.exe"/>
       </Component>
       <Component Id="RectangleBinPackLib" Directory="INSTALLDIR_BIN">
-        <File Id="RectangleBinPackLib.lib" Name="RectangleBinPackLib.lib" KeyPath="yes" Source="..\Release\RectangleBinPackLib.lib" />
+        <File Id="RectangleBinPackLib.lib" Name="RectangleBinPackLib.lib" KeyPath="yes" Source="..\bin\RectangleBinPackLib.lib" />
      </Component>
      <Component Id="BomCostAnalysis" Directory="INSTALLDIR_BIN">
         <File Id="BomCostAnalysis.exe" Name="BomCostAnalysis.exe" KeyPath="yes" Source="..\src\BomCostAnalysis\bin\Release\BomCostAnalysis.exe" />
