@@ -206,6 +206,8 @@ namespace ComponentExporterUnitTests
         public int RunPropertiesWithinConnectorsTest()
         {
             var modelsDir = Path.Combine(_exportModelDirectory, "PropInCon");
+            var outputFilename = @"components\Components\bolt_hex__generic__m4x0p7x6_8p8_zin\bolt_hex__generic__m4x0p7x6_8p8_zin.component.acm";
+            File_TryDelete(outputFilename);
             var process = new Process
                           {
                               StartInfo =
@@ -234,7 +236,7 @@ namespace ComponentExporterUnitTests
                                   }
                               };
 
-            process.StartInfo.Arguments += String.Format("-d \"{0}\" -e \"{1}\" -m Component", @"expected.component.acm", @"components\Imported_Components\bolt_hex__generic__m4x0p7x6_8p8_zin\bolt_hex__generic__m4x0p7x6_8p8_zin.component.acm");
+            process.StartInfo.Arguments += String.Format("-d \"{0}\" -e \"{1}\" -m Component", @"expected.component.acm", outputFilename);
 
             var comparatorResult = Common.runProcessAndGetOutput(process, out output);
             Assert.True(comparatorResult == 0, output);
